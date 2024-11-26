@@ -1,7 +1,20 @@
 import org.codehaus.groovy.runtime.GStringImpl
 
+plugins {
+    id "java"
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_19
+    targetCompatibility = JavaVersion.VERSION_19
+}
+
 jar {
-    archiveBaseName = "engine"
+    archiveBaseName = "pine"
     from sourceSets.main.output
 }
 
