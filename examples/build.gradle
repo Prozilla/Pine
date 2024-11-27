@@ -1,0 +1,8 @@
+dependencies {
+    implementation project(":pine-engine")
+}
+
+tasks.register("runPacMan", JavaExec) {
+    mainClass = "dev.prozilla.pine.examples.pacman.Main"
+    classpath = sourceSets.main.runtimeClasspath
+}
