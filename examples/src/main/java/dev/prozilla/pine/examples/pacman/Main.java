@@ -6,7 +6,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		try {
-			Game game = new Game("PacMan", 1600, 900);
+			Game game = new Game("PacMan", 800, 600);
 			
 			game.init();
 			game.start();

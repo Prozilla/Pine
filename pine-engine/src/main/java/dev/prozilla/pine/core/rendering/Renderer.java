@@ -531,16 +531,27 @@ public class Renderer implements Lifecycle {
         numVertices += 6;
     }
     
+    /**
+     * Checks if a quad is outside the screen bounds.
+     */
     public boolean outOfBounds(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
-        return outOfBounds(x1, y1) && outOfBounds(x2, y2) && outOfBounds(x3, y3) && outOfBounds(x4, y4);
+        // TO DO: calculate intersection of quad with screen
+        return x1 < 0 && x2 < 0 && x3 < 0 && x4 < 0 || // Left
+            x1 >= viewWidth && x2 >= viewWidth && x3 >= viewWidth && x4 >= viewWidth || // Right
+            y1 < 0 && y2 < 0 && y3 < 0 && y4 < 0 || // Above
+            y1 >= viewHeight && y2 >= viewHeight && y3 >= viewHeight && y4 >= viewHeight; // Below
     }
     
+    /**
+     * Checks if a line is outside the screen bounds.
+     */
     public boolean outOfBounds(float x1, float y1, float x2, float y2) {
+        // TO DO: calculate intersection of line with screen
         return outOfBounds(x1, y1) && outOfBounds(x2, y2);
     }
     
     /**
-     * Check if coordinates are outside of bounds.
+     * Checks if coordinates are outside the screen bounds.
      * @param x X position
      * @param y Y position
      * @return True if the coordinate is outside of bounds
@@ -550,7 +561,7 @@ public class Renderer implements Lifecycle {
     }
 
     /**
-     * Dispose renderer and clean up its used data.
+     * Disposes renderer and cleans up its used data.
      */
     public void destroy() {
         MemoryUtil.memFree(vertices);
@@ -566,7 +577,7 @@ public class Renderer implements Lifecycle {
     }
 
     /**
-     * Setups the default shader program.
+     * Initializes the default shader program.
      */
     private void setupShaderProgram() {
         // Generate Vertex Array Object

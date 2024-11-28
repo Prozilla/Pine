@@ -157,11 +157,12 @@ public class Game implements Lifecycle {
 		// Game loop
 		while (!window.shouldClose() && !shouldStop) {
 			long startTime = (long) (timer.getTime() * 1000);
+			float deltaTime = timer.getDelta();
 			
 			// Handle input and update game
 			try {
-				input(timer.getDelta());
-				update(timer.getDelta());
+				input(deltaTime);
+				update(deltaTime);
 			} catch (Exception e) {
 				System.err.println("Failed to update game");
 				e.printStackTrace();
