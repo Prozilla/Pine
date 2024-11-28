@@ -347,9 +347,28 @@ public class Renderer implements Lifecycle {
             return;
         }
         
-        // Vertex positions
-	    float x2 = x + regWidth * renderScale;
-        float y2 = y + regHeight * renderScale;
+        // Calculate the rotation angle in radians
+        float radians = (float) Math.toRadians(r + 90f);
+        
+        // Calculate sin and cos (flip them to fix the incorrect orientation)
+        float cosAngle = (float) Math.cos(radians);
+        float sinAngle = (float) Math.sin(radians);
+        
+        // Calculate the center of the texture
+        float centerX = x + (regWidth * renderScale) / 2.0f;
+        float centerY = y + (regHeight * renderScale) / 2.0f;
+        
+        // Calculate the rotated width and height
+        float rotatedWidth = Math.abs(cosAngle * regWidth * renderScale) + Math.abs(sinAngle * regHeight * renderScale);
+        float rotatedHeight = Math.abs(sinAngle * regWidth * renderScale) + Math.abs(cosAngle * regHeight * renderScale);
+        
+        // Adjust the position so that the texture rotates around its center
+        float adjustedX = centerX - rotatedWidth / 2.0f;
+        float adjustedY = centerY - rotatedHeight / 2.0f;
+        
+        // Calculate the new x2 and y2
+        float x2 = adjustedX + rotatedWidth;
+        float y2 = adjustedY + rotatedHeight;
         
         // Texture coordinates
         float s1 = regX / texture.getWidth();
@@ -357,9 +376,11 @@ public class Renderer implements Lifecycle {
         float s2 = (regX + regWidth) / texture.getWidth();
         float t2 = (regY + regHeight) / texture.getHeight();
         
+        // Bind the texture
         texture.bind();
         
-        drawRotatedTextureRegion(x, y, x2, y2, s1, t1, s2, t2, c, r);
+        // Delegate to the rotation drawing method
+        drawRotatedTextureRegion(adjustedX, adjustedY, x2, y2, s1, t1, s2, t2, c, r);
     }
     
     public void drawRotatedTextureRegion(float x1, float y1, float x2, float y2, float s1, float t1, float s2, float t2, float r) {
