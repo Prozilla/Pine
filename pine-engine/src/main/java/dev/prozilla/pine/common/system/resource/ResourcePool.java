@@ -40,6 +40,7 @@ public final class ResourcePool {
 		
 		ByteBuffer imageBuffer;
 		int width, height;
+		int channels;
 		
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			// Prepare image buffers
@@ -64,9 +65,10 @@ public final class ResourcePool {
 			// Get image dimensions
 			width = w.get();
 			height = h.get();
+			channels = comp.get();
 		}
 		
-		Image image = new Image(imageBuffer, width, height);
+		Image image = new Image(imageBuffer, width, height, channels);
 		images.put(path, image);
 		return image;
 	}

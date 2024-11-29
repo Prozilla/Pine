@@ -3,7 +3,7 @@ package dev.prozilla.pine.examples.flappybird.object;
 import dev.prozilla.pine.core.Game;
 import dev.prozilla.pine.core.object.Sprite;
 import dev.prozilla.pine.examples.flappybird.Main;
-import dev.prozilla.pine.examples.flappybird.Scene;
+import dev.prozilla.pine.examples.flappybird.GameScene;
 
 public class Background extends Sprite {
 	
@@ -37,7 +37,7 @@ public class Background extends Sprite {
 	public void update(float deltaTime) {
 		super.update(deltaTime);
 		
-		if (!((Scene)scene).gameOver) {
+		if (!((GameScene)scene).gameOver) {
 			// Scroll position to the left
 			x -= deltaTime * SPEED;
 			

@@ -11,12 +11,13 @@ public class Main {
 	
 	public static void main(String[] args) {
 		// Create new scene and game
-		Scene scene = new Scene();
+		GameScene scene = new GameScene();
 		Game game = new Game("Flappy Bird", WIDTH, HEIGHT, scene);
 		
 		try {
 			// Initialize game and start game loop
 			game.init();
+			game.setIcons(new String[]{ "flappybird/icon.png" });
 			game.start();
 		} catch (RuntimeException e) {
 			// Quit game if anything goes wrong and throw exception

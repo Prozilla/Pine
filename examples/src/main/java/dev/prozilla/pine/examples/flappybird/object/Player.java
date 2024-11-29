@@ -6,7 +6,7 @@ import dev.prozilla.pine.core.object.Sprite;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.MouseButton;
 import dev.prozilla.pine.examples.flappybird.Main;
-import dev.prozilla.pine.examples.flappybird.Scene;
+import dev.prozilla.pine.examples.flappybird.GameScene;
 
 public class Player extends Sprite {
 	
@@ -14,25 +14,37 @@ public class Player extends Sprite {
 	private float age;
 	private float velocity;
 	
+	private GameScene gameScene;
+	
 	// Constants
 	public static final int WIDTH = 32;
 	public static final int HEIGHT = 32;
+	public static final float POSITION_X = Main.WIDTH / -4f;
 	public static final float ANIMATION_SPEED = 10f;
 	public static final float SPEED = 5f;
 	public static final float JUMP_VELOCITY = 0.65f;
 	
 	public Player(Game game) {
 		super(game, "Player", "flappybird/bird.png");
+	}
+	
+	@Override
+	public void init(long window) throws IllegalStateException {
+		super.init(window);
+		
+		// Store reference to scene
+		gameScene = (GameScene)scene;
 		
 		// Set player properties
 		animationFrame = 0;
 		age = 0;
 		velocity = JUMP_VELOCITY;
-		x = Main.WIDTH / -4f;
+		x = POSITION_X;
+		y = 0;
 		
 		// Set sprite properties
-		spriteRenderer.rotation = 0;
 		spriteRenderer.scale = 1.5f;
+		spriteRenderer.rotation = 0;
 	}
 	
 	@Override
@@ -40,13 +52,13 @@ public class Player extends Sprite {
 		super.update(deltaTime);
 		
 		if (y <= Main.HEIGHT / -2f || y + HEIGHT >= Main.HEIGHT / 2f) {
-			((Scene)scene).endGame();
+			gameScene.endGame();
 		}
 		
 		// Crop sprite to current frame
 		spriteRenderer.crop(animationFrame * WIDTH, 0, WIDTH, HEIGHT);
 		
-		if (!((Scene)scene).gameOver) {
+		if (!gameScene.gameOver) {
 			// Update age and calculate frame
 			age += deltaTime;
 			animationFrame = Math.round((age * ANIMATION_SPEED)) % 3;
@@ -68,7 +80,7 @@ public class Player extends Sprite {
 	public void input(float deltaTime) {
 		super.input(deltaTime);
 		
-		if (!((Scene)scene).gameOver) {
+		if (!gameScene.gameOver) {
 			// Jump
 			if (game.input.getKeyDown(Key.SPACE) || game.input.getMouseButtonDown(MouseButton.LEFT)) {
 				velocity = JUMP_VELOCITY;

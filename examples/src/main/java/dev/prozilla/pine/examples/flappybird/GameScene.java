@@ -1,16 +1,24 @@
 package dev.prozilla.pine.examples.flappybird;
 
+import dev.prozilla.pine.core.object.GameObject;
+import dev.prozilla.pine.core.object.canvas.Canvas;
 import dev.prozilla.pine.examples.flappybird.object.Background;
 import dev.prozilla.pine.examples.flappybird.object.Pipes;
 import dev.prozilla.pine.examples.flappybird.object.Player;
+import dev.prozilla.pine.examples.flappybird.object.ScoreText;
 
 import java.util.Random;
 
-public class Scene extends dev.prozilla.pine.core.state.Scene {
+public class GameScene extends dev.prozilla.pine.core.state.Scene {
 	
 	public boolean gameOver;
+	public int playerScore;
 	
 	private float timeUntilNextObstacle;
+	
+	// Game objects
+	private GameObject obstacles;
+	public Player player;
 	
 	private static final Random random = new Random();
 	
@@ -31,10 +39,18 @@ public class Scene extends dev.prozilla.pine.core.state.Scene {
 		}
 		
 		// Create player object
-		add(new Player(game));
+		player = (Player)add(new Player(game));
+		
+		// Prepare obstacles
+		obstacles = add(new GameObject(game, "Obstacles"));
+		
+		// Create user interface
+		Canvas canvas = (Canvas)add(new Canvas(game));
+		canvas.addChild(new ScoreText(game));
 		
 		timeUntilNextObstacle = 0;
 		gameOver = false;
+		playerScore = 0;
 	}
 	
 	@Override
@@ -44,7 +60,7 @@ public class Scene extends dev.prozilla.pine.core.state.Scene {
 		if (!gameOver) {
 			if (timeUntilNextObstacle <= 0) {
 				// Spawn obstacle
-				add(new Pipes(game));
+				obstacles.addChild(new Pipes(game));
 				timeUntilNextObstacle = random.nextFloat(MIN_OBSTACLE_TIME, MAX_OBSTACLE_TIME);
 			} else {
 				// Decrease time until next obstacle

@@ -126,15 +126,11 @@ public class Window implements Lifecycle {
 				icons.position(i)
 					.width(image.getWidth())
 					.height(image.getHeight())
-					.pixels(image.getImage());
+					.pixels(image.getFlippedImage());
 			}
 			
 			icons.position(0);
 			glfwSetWindowIcon(id, icons);
-			
-//			for (Image image : images) {
-//				image.destroy();
-//			}
 		}
 	}
 }
