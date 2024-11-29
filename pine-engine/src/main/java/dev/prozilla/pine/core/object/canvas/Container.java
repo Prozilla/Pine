@@ -16,6 +16,10 @@ public class Container extends CanvasElement {
 	
 	protected final CanvasGroup group;
 	
+	public Container(Game game) {
+		this(game, CanvasGroup.Direction.DOWN);
+	}
+	
 	public Container(Game game, CanvasGroup.Direction direction) {
 		super(game);
 		
