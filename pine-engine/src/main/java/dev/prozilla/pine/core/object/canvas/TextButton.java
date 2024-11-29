@@ -16,11 +16,16 @@ public class TextButton extends CanvasElement {
 	
 	protected final TextButtonRenderer textButtonRenderer;
 	
-	public TextButton(Game game, String name, String text) {
-		super(game, name);
+	public TextButton(Game game, String text) {
+		super(game);
 		
 		textButtonRenderer = new TextButtonRenderer(text);
 		addComponent(textButtonRenderer);
+	}
+	
+	@Override
+	public String getName() {
+		return "TextButton";
 	}
 	
 	public TextButton setText(String text) {

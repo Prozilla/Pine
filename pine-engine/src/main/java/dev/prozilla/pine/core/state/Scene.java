@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.state;
 
 import dev.prozilla.pine.core.Game;
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.core.context.Window;
 import dev.prozilla.pine.core.object.GameObject;
 import dev.prozilla.pine.core.object.World;
 import dev.prozilla.pine.core.object.camera.Camera;
@@ -16,9 +17,8 @@ public class Scene implements Lifecycle {
 	
 	// References
 	public Game game;
-	public Input input;
-	public World world;
-	public Camera camera;
+	protected World world;
+	protected Camera camera;
 	
 	// Scene state
 	public boolean loaded;
@@ -57,7 +57,6 @@ public class Scene implements Lifecycle {
 		}
 		
 		this.game = game;
-		this.input = game.input;
 	}
 	
 	/**
@@ -153,7 +152,6 @@ public class Scene implements Lifecycle {
 		
 		// Remove all references
 //		game = null;
-		input = null;
 		world = null;
 		camera = null;
 		
@@ -201,4 +199,31 @@ public class Scene implements Lifecycle {
 		return id;
 	}
 	
+	public Input getInput() {
+		return game.getInput();
+	}
+	
+	public Window getWindow() {
+		return game.getWindow();
+	}
+	
+	public Renderer getRenderer() {
+		return game.getRenderer();
+	}
+	
+	public Timer getTimer() {
+		return game.getTimer();
+	}
+	
+	public Tracker getTracker() {
+		return game.getTracker();
+	}
+	
+	public World getWorld() {
+		return world;
+	}
+	
+	public Camera getCamera() {
+		return camera;
+	}
 }

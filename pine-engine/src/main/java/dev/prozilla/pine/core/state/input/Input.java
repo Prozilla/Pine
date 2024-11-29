@@ -142,7 +142,7 @@ public class Input implements Lifecycle {
 	@Override
 	public void update() {
 		long cursor = glfwCreateStandardCursor(cursorType);
-		glfwSetCursor(game.window.id, cursor);
+		glfwSetCursor(game.getWindow().id, cursor);
 		
 		previousKeysDown.addAll(keysDown);
 		previousMouseButtonsDown.addAll(mouseButtonsDown);
@@ -333,7 +333,7 @@ public class Input implements Lifecycle {
 			return null;
 		}
 		
-		Camera camera = game.currentScene.camera;
+		Camera camera = game.currentScene.getCamera();
 		return camera.screenToWorldPosition(getCursor());
 	}
 	

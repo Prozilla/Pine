@@ -17,8 +17,6 @@ public class GridGroup extends Component {
 	public TileRenderer hoveringTile;
 	
 	public GridGroup(int size) {
-		super("GridGroup");
-		
 		this.size = size;
 		
 		coordinateToTile = new HashMap<>();
@@ -45,7 +43,7 @@ public class GridGroup extends Component {
 	public void input(float deltaTime) {
 		super.input(deltaTime);
 		
-		float[] cursor = gameObject.game.input.getWorldCursor();
+		float[] cursor = getInput().getWorldCursor();
 		
 		if (cursor != null && !coordinateToTile.isEmpty()) {
 			int coordinateX = Math.round(cursor[0] / size - 0.5f);
@@ -54,9 +52,14 @@ public class GridGroup extends Component {
 			
 			hoveringTile = getTile(coordinate);
 			if (hoveringTile != null) {
-				gameObject.game.input.blockCursor(hoveringTile.getGameObject());
+				getInput().blockCursor(hoveringTile.getGameObject());
 			}
 		}
+	}
+	
+	@Override
+	public String getName() {
+		return "GridGroup";
 	}
 	
 	public TileRenderer addTile(GameObject gameObject) {

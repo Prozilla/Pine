@@ -11,7 +11,7 @@ public class Pipe extends Sprite {
 	public static final int HEIGHT = 320;
 	
 	public Pipe(Game game, boolean top) {
-		super(game, "Pipe", "flappybird/pipe.png");
+		super(game, "flappybird/pipe.png");
 		
 		// Set sprite properties
 		spriteRenderer.crop(0, 0, WIDTH, HEIGHT);
@@ -23,5 +23,10 @@ public class Pipe extends Sprite {
 		
 		// Set initial position
 		x = Main.WIDTH / 2f;
+	}
+	
+	@Override
+	public String getName() {
+		return "Pipe";
 	}
 }

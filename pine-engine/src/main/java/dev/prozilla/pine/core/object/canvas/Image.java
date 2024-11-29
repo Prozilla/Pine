@@ -14,21 +14,22 @@ public class Image extends CanvasElement {
 	protected final ImageRenderer imageRenderer;
 	
 	public Image(Game game, String imagePath) {
-		super(game, "Image");
+		super(game);
 		
 		imageRenderer = new ImageRenderer(imagePath);
 		addComponent(imageRenderer);
 	}
 	
 	public Image(Game game, Texture image) {
-		this(game, "Image", image);
-	}
-	
-	public Image(Game game, String name, Texture image) {
-		super(game, name);
+		super(game);
 		
 		imageRenderer = new ImageRenderer(image);
 		addComponent(imageRenderer);
+	}
+	
+	@Override
+	public String getName() {
+		return "Image";
 	}
 	
 	@Override

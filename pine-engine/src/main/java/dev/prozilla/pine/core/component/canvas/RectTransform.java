@@ -46,7 +46,7 @@ public class RectTransform extends Component {
 	}
 	
 	public RectTransform(String name) {
-		super(name);
+		super();
 		
 		x = 0;
 		y = 0;
@@ -67,11 +67,10 @@ public class RectTransform extends Component {
 		super.input(deltaTime);
 		
 		if (!passThrough) {
-			Input input = gameObject.game.input;
-			Point cursor = input.getCursor();
+			Point cursor = getInput().getCursor();
 			int canvasHeight = getCanvas().getHeight();
 			if (cursor != null && isInside(cursor.x, canvasHeight - cursor.y, x, y, width, height)) {
-				input.blockCursor(gameObject);
+				getInput().blockCursor(gameObject);
 			}
 		}
 	}
@@ -129,6 +128,11 @@ public class RectTransform extends Component {
 		}
 		
 		super.attach(gameObject);
+	}
+	
+	@Override
+	public String getName() {
+		return "RectTransform";
 	}
 	
 	public boolean isInside(int x, int y) {
@@ -194,7 +198,6 @@ public class RectTransform extends Component {
 			", offsetY=" + offsetY +
 			", width=" + width +
 			", height=" + height +
-			", name='" + name + '\'' +
 			'}';
 	}
 	

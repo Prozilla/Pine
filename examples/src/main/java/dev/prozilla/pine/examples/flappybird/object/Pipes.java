@@ -21,7 +21,7 @@ public class Pipes extends GameObject {
 	public static final float SPEED = 200f;
 	
 	public Pipes(Game game) {
-		super(game, "Pipes");
+		super(game);
 		
 		// Randomize height and gap
 		int height = Math.round(random.nextFloat(Main.HEIGHT / -4f, Main.HEIGHT / 4f));
@@ -68,5 +68,10 @@ public class Pipes extends GameObject {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public String getName() {
+		return "Pipes";
 	}
 }

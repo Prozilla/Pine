@@ -61,7 +61,7 @@ public class ControllableCamera extends Camera {
 		
 		enableBounds = false;
 		
-		keyBindings = new KeyBindings<>(game.input);
+		keyBindings = new KeyBindings<>(getInput());
 		
 		keyBindings.addAction(Action.FORWARD, new Key[] { Key.UP_ARROW, Key.W });
 		keyBindings.addAction(Action.BACKWARDS, new Key[] { Key.DOWN_ARROW, Key.S });
@@ -183,9 +183,9 @@ public class ControllableCamera extends Camera {
 			deltaZoom -= 0.01f;
 		
 		// Handle zooming by scrolling
-		if (game.input.getScrollY() < 0) {
+		if (getInput().getScrollY() < 0) {
 			deltaZoom -= 0.1f;
-		} else if (game.input.getScrollY() > 0) {
+		} else if (getInput().getScrollY() > 0) {
 			deltaZoom += 0.1f;
 		}
 		

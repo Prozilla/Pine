@@ -11,16 +11,17 @@ public class CanvasRenderer extends Component {
 	private int width;
 	private int height;
 	
-	public CanvasRenderer() {
-		super("CanvasRenderer");
-	}
-	
 	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);
 		
-		width = gameObject.game.window.getWidth();
-		height = gameObject.game.window.getHeight();
+		width = getWindow().getWidth();
+		height = getWindow().getHeight();
+	}
+	
+	@Override
+	public String getName() {
+		return "CanvasRenderer";
 	}
 	
 	public void beforeRender(Renderer renderer) {

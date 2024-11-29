@@ -14,20 +14,14 @@ public class TextRenderer extends RectTransform {
 	public Font font;
 	
 	public TextRenderer() {
-		this("TextRenderer", null);
+		this(null);
 	}
 	
 	public TextRenderer(String text) {
-		this("TextRenderer", text);
+		this(text, Color.BLACK.clone());
 	}
 	
-	public TextRenderer(String name, String text) {
-		this(name, text, Color.BLACK.clone());
-	}
-	
-	public TextRenderer(String name, String text, Color color) {
-		super(name);
-		
+	public TextRenderer(String text, Color color) {
 		if (text == null) {
 			this.text = "";
 		} else {
@@ -68,6 +62,11 @@ public class TextRenderer extends RectTransform {
 		} else {
 			renderer.drawText(font, text, x, y, color);
 		}
+	}
+	
+	@Override
+	public String getName() {
+		return "TextRenderer";
 	}
 	
 	/**

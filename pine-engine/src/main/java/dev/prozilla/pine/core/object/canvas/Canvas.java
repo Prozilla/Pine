@@ -15,11 +15,7 @@ public class Canvas extends GameObject {
 	protected final CanvasRenderer canvasRenderer;
 	
 	public Canvas(Game game) {
-		this(game, "Canvas");
-	}
-	
-	public Canvas(Game game, String name) {
-		super(game, name);
+		super(game);
 		
 		canvasRenderer = new CanvasRenderer();
 		addComponent(canvasRenderer);
@@ -32,6 +28,11 @@ public class Canvas extends GameObject {
 	public void render(Renderer renderer) {
 		canvasRenderer.beforeRender(renderer);
 		super.render(renderer);
+	}
+	
+	@Override
+	public String getName() {
+		return "Canvas";
 	}
 	
 	/**

@@ -42,7 +42,7 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 		player = (Player)add(new Player(game));
 		
 		// Prepare obstacles
-		obstacles = add(new GameObject(game, "Obstacles"));
+		obstacles = add(new GameObject(game));
 		
 		// Create user interface
 		Canvas canvas = (Canvas)add(new Canvas(game));

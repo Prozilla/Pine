@@ -16,18 +16,19 @@ public class Text extends CanvasElement {
 	protected final TextRenderer textRenderer;
 	
 	public Text(Game game) {
-		this(game, "Text");
+		this(game, null);
 	}
 	
-	public Text(Game game, String name) {
-		this(game, name, null);
-	}
-	
-	public Text(Game game, String name, String text) {
-		super(game, name);
+	public Text(Game game, String text) {
+		super(game);
 		
 		textRenderer = new TextRenderer(text);
 		addComponent(textRenderer);
+	}
+	
+	@Override
+	public String getName() {
+		return "Text";
 	}
 	
 	@Override

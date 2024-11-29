@@ -38,7 +38,7 @@ public class ImageButtonRenderer extends ImageRenderer {
 	}
 	
 	public ImageButtonRenderer(Texture image, Color backgroundColor) {
-		super("ImageButtonRenderer", image);
+		super(image);
 		
 		this.backgroundColor = backgroundColor;
 		
@@ -54,15 +54,14 @@ public class ImageButtonRenderer extends ImageRenderer {
 	
 	@Override
 	public void input(float deltaTime) {
-		Input input = gameObject.game.input;
-		Point cursor = input.getCursor();
+		Point cursor = getInput().getCursor();
 		int canvasHeight = getCanvas().getHeight();
 		if (cursor != null && isInside(cursor.x, canvasHeight - cursor.y, x, y - paddingY * 2, width, height)) {
-			input.setCursorType(CursorType.HAND);
-			input.blockCursor(gameObject);
+			getInput().setCursorType(CursorType.HAND);
+			getInput().blockCursor(gameObject);
 			isHovering = true;
 			
-			if (clickCallback != null && input.getMouseButtonDown(MouseButton.LEFT)) {
+			if (clickCallback != null && getInput().getMouseButtonDown(MouseButton.LEFT)) {
 				clickCallback.run();
 			}
 		} else {
@@ -87,6 +86,11 @@ public class ImageButtonRenderer extends ImageRenderer {
 		int imageWidth = width - paddingX * 2;
 		int imageHeight = height - paddingY * 2;
 		renderImage(renderer, imageX, imageY, imageWidth, imageHeight, imageColor);
+	}
+	
+	@Override
+	public String getName() {
+		return "ImageButtonRenderer";
 	}
 	
 	@Override

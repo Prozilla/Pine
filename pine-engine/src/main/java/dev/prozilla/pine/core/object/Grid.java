@@ -11,11 +11,7 @@ public class Grid extends GameObject {
 	protected final GridGroup group;
 	
 	public Grid(Game game, int size) {
-		this(game, "Grid", size);
-	}
-	
-	public Grid(Game game, String name, int size) {
-		super(game, name);
+		super(game);
 		
 		group = new GridGroup(size);
 		addComponent(group);
@@ -32,6 +28,11 @@ public class Grid extends GameObject {
 	public void removeChild(GameObject child) throws IllegalStateException, IllegalArgumentException {
 		super.removeChild(child);
 		group.removeTile(child);
+	}
+	
+	@Override
+	public String getName() {
+		return "Grid";
 	}
 	
 	public Tile addTile(Tile tile) {

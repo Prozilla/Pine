@@ -17,17 +17,14 @@ public class Sprite extends GameObject {
 	}
 	
 	public Sprite(Game game, Texture texture) {
-		this(game, "Sprite", texture);
-	}
-	
-	public Sprite(Game game, String name, String texturePath) {
-		this(game, name, ResourcePool.loadTexture(texturePath));
-	}
-	
-	public Sprite(Game game, String name, Texture texture) {
-		super(game, name);
+		super(game);
 		
 		spriteRenderer = new SpriteRenderer(texture);
 		addComponent(spriteRenderer);
+	}
+	
+	@Override
+	public String getName() {
+		return "Sprite";
 	}
 }

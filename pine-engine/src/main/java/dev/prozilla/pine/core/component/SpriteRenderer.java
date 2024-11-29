@@ -30,16 +30,6 @@ public class SpriteRenderer extends Component {
 	}
 	
 	public SpriteRenderer(Texture texture, Color color) {
-		this("SpriteRenderer", texture, color);
-	}
-	
-	public SpriteRenderer(String name, Texture texture) {
-		this(name, texture, Color.WHITE.clone());
-	}
-	
-	public SpriteRenderer(String name, Texture texture, Color color) {
-		super(name);
-		
 		this.texture = texture;
 		this.color = color;
 		
@@ -57,11 +47,11 @@ public class SpriteRenderer extends Component {
 	public void render(Renderer renderer) {
 		super.render(renderer);
 		
-		float[] position = gameObject.scene.camera.applyTransform(gameObject.x, gameObject.y);
+		float[] position = getCamera().applyTransform(gameObject.x, gameObject.y);
 		float x = position[0];
 		float y = position[1];
 		
-		renderer.setScale(scale * gameObject.scene.camera.getZoom());
+		renderer.setScale(scale * getCamera().getZoom());
 		
 		if (!cropToRegion) {
 			renderer.drawRotatedTexture(texture, x, y, color, rotation);
@@ -69,6 +59,11 @@ public class SpriteRenderer extends Component {
 			renderer.drawRotatedTextureRegion(texture, x, y,
 				regionX, regionY, regionWidth, regionHeight, color, rotation);
 		}
+	}
+	
+	@Override
+	public String getName() {
+		return "SpriteRenderer";
 	}
 	
 	/**

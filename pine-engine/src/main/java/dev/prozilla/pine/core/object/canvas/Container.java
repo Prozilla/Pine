@@ -16,20 +16,8 @@ public class Container extends CanvasElement {
 	
 	protected final CanvasGroup group;
 	
-	public Container(Game game) {
-		this(game, "Container");
-	}
-	
 	public Container(Game game, CanvasGroup.Direction direction) {
-		this(game, "Container", direction);
-	}
-	
-	public Container(Game game, String name) {
-		this(game, name, null);
-	}
-	
-	public Container(Game game, String name, CanvasGroup.Direction direction) {
-		super(game, name);
+		super(game);
 		
 		group = new CanvasGroup();
 		addComponent(group);
@@ -50,6 +38,11 @@ public class Container extends CanvasElement {
 	public void removeChild(GameObject child) throws IllegalStateException {
 		super.removeChild(child);
 		group.getChildComponents();
+	}
+	
+	@Override
+	public String getName() {
+		return "Container";
 	}
 	
 	@Override

@@ -3,8 +3,13 @@ package dev.prozilla.pine.core.object;
 import dev.prozilla.pine.core.Game;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.context.Window;
+import dev.prozilla.pine.core.object.camera.Camera;
 import dev.prozilla.pine.core.state.Scene;
 import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.state.Timer;
+import dev.prozilla.pine.core.state.Tracker;
+import dev.prozilla.pine.core.state.input.Input;
 
 import java.util.ArrayList;
 
@@ -13,8 +18,6 @@ import java.util.ArrayList;
  */
 public class GameObject implements Lifecycle {
 	
-	/** The name of this game object */
-	public String name;
 	private final int id;
 	protected boolean active;
 	
@@ -45,22 +48,19 @@ public class GameObject implements Lifecycle {
 	/**
 	 * Creates a game object at the position (0, 0)
 	 * @param game Reference to game
-	 * @param name Name of this object
 	 */
-	public GameObject(Game game, String name) {
-		this(game, name, 0, 0);
+	public GameObject(Game game) {
+		this(game, 0, 0);
 	}
 	
 	/**
 	 * Creates a game object at the position (x, y)
 	 * @param game Reference to game
-	 * @param name Name of this object
 	 * @param x X value
 	 * @param y Y value
 	 */
-	public GameObject(Game game, String name, float x, float y) {
+	public GameObject(Game game, float x, float y) {
 		this.game = game;
-		this.name = name;
 		this.x = x;
 		this.y = y;
 		
@@ -298,13 +298,13 @@ public class GameObject implements Lifecycle {
 		
 		// Initialize and start child
 		if (initialized && !child.isInitialized()) {
-			child.init(game.window.id);
+			child.init(getWindow().id);
 		}
 		if (started && !child.isStarted()) {
 			child.start();
 		}
 		
-		game.tracker.addGameObject();
+		getTracker().addGameObject();
 		return child;
 	}
 	
@@ -332,7 +332,7 @@ public class GameObject implements Lifecycle {
 			throw new IllegalStateException("GameObject is not a child");
 		}
 		child.setParent(null);
-		game.tracker.removeGameObject();
+		getTracker().removeGameObject();
 	}
 	
 	/**
@@ -381,21 +381,13 @@ public class GameObject implements Lifecycle {
 		
 		this.active = active;
 		
-		if (active) {
+//		if (active) {
 //			restart();
-		}
+//		}
 	}
 	
 	public boolean isActive() {
 		return active && (parent == null || parent.isActive());
-	}
-	
-	/**
-	 * Setter for the name of this object.
-	 * @param name New name
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 	
 	/**
@@ -418,16 +410,6 @@ public class GameObject implements Lifecycle {
 		this.y = y;
 	}
 	
-	public World getWorld() throws IllegalStateException {
-		if (this instanceof World) {
-			return (World)this;
-		} else if (parent != null) {
-			return parent.getWorld();
-		} else {
-			throw new IllegalStateException("Game object has not been added to the world yet");
-		}
-	}
-	
 	/**
 	 * Adds a component to this game object.
 	 * @param component Component
@@ -440,7 +422,7 @@ public class GameObject implements Lifecycle {
 		component.attach(this);
 		
 		if (initialized) {
-			component.init(game.window.id);
+			component.init(getWindow().id);
 		}
 		if (started) {
 			component.start();
@@ -549,6 +531,38 @@ public class GameObject implements Lifecycle {
 		return id;
 	}
 	
+	public String getName() {
+		return "GameObject";
+	}
+	
+	public Input getInput() {
+		return game.getInput();
+	}
+	
+	public Window getWindow() {
+		return game.getWindow();
+	}
+	
+	public Renderer getRenderer() {
+		return game.getRenderer();
+	}
+	
+	public Timer getTimer() {
+		return game.getTimer();
+	}
+	
+	public Tracker getTracker() {
+		return game.getTracker();
+	}
+	
+	public World getWorld() {
+		return scene.getWorld();
+	}
+	
+	public Camera getCamera() {
+		return scene.getCamera();
+	}
+	
 	/**
 	 * Checks whether two game objects are equal.
 	 * @param gameObject Other game object
@@ -567,6 +581,6 @@ public class GameObject implements Lifecycle {
 	}
 	
 	public void print() {
-		System.out.printf("%s: %s (%s, %s)%n", getClass().getName(), name, x, y);
+		System.out.printf("%s: %s (%s, %s)%n", getClass().getName(), getName(), x, y);
 	}
 }

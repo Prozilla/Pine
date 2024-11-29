@@ -23,12 +23,6 @@ public class ImageRenderer extends RectTransform {
 	}
 	
 	public ImageRenderer(Texture image) {
-		this("ImageRenderer", image);
-	}
-	
-	public ImageRenderer(String name, Texture image) {
-		super(name);
-		
 		if (image == null) {
 			throw new IllegalArgumentException("Image can't be null");
 		}
@@ -66,6 +60,11 @@ public class ImageRenderer extends RectTransform {
 		} else {
 			renderer.drawTextureRegion(x, y, x2, y2, s1, t1, s2, t2, color);
 		}
+	}
+	
+	@Override
+	public String getName() {
+		return "ImageRenderer";
 	}
 	
 	public void setImage(Texture image) {

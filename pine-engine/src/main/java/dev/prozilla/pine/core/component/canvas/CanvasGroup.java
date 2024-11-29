@@ -47,20 +47,14 @@ public class CanvasGroup extends RectTransform {
 	}
 	
 	public CanvasGroup() {
-		this("CanvasGroup");
+		this(DEFAULT_DIRECTION);
 	}
 	
-	public CanvasGroup(String name) {
-		this(name, DEFAULT_DIRECTION);
+	public CanvasGroup(Direction direction) {
+		this(direction, DEFAULT_ALIGNMENT);
 	}
 	
-	public CanvasGroup(String name, Direction direction) {
-		this(name, direction, DEFAULT_ALIGNMENT);
-	}
-	
-	public CanvasGroup(String name, Direction direction, Alignment alignment) {
-		super(name);
-		
+	public CanvasGroup(Direction direction, Alignment alignment) {
 		this.direction = direction;
 		this.alignment = alignment;
 		
@@ -138,6 +132,11 @@ public class CanvasGroup extends RectTransform {
 		}
 		
 		super.render(renderer);
+	}
+	
+	@Override
+	public String getName() {
+		return "CanvasGroup";
 	}
 	
 	/**

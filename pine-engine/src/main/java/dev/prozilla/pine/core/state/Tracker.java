@@ -31,7 +31,7 @@ public class Tracker {
 	 * @return Frames per second
 	 */
 	public int getFps() {
-		return game.timer.getFPS();
+		return game.getTimer().getFPS();
 	}
 	
 	/**
@@ -39,7 +39,7 @@ public class Tracker {
 	 * @return Updates per second
 	 */
 	public int getUps() {
-		return game.timer.getUPS();
+		return game.getTimer().getUPS();
 	}
 	
 	/**
@@ -47,7 +47,7 @@ public class Tracker {
 	 * @return System time in seconds
 	 */
 	public double getTime() {
-		return game.timer.getTime();
+		return game.getTimer().getTime();
 	}
 	
 	/**
@@ -106,10 +106,10 @@ public class Tracker {
 	}
 	
 	public int getWindowWidth() {
-		return game.window.getWidth();
+		return game.getWindow().getWidth();
 	}
 	
 	public int getWindowHeight() {
-		return game.window.getHeight();
+		return game.getWindow().getHeight();
 	}
 }

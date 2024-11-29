@@ -5,12 +5,8 @@ import dev.prozilla.pine.core.state.Scene;
 
 public class World extends GameObject {
 	
-	/**
-	 * Creates a world object named "World".
-	 * @param game Reference to the game
-	 */
 	public World(Game game, Scene scene) {
-		super(game, "World");
+		super(game);
 		
 		this.scene = scene;
 	}
@@ -18,5 +14,10 @@ public class World extends GameObject {
 	@Override
 	public World getWorld() {
 		return this;
+	}
+	
+	@Override
+	public String getName() {
+		return "World";
 	}
 }

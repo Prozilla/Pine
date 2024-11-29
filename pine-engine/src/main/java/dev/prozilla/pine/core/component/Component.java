@@ -1,8 +1,14 @@
 package dev.prozilla.pine.core.component;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.core.context.Window;
 import dev.prozilla.pine.core.object.GameObject;
+import dev.prozilla.pine.core.object.World;
+import dev.prozilla.pine.core.object.camera.Camera;
 import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.state.Timer;
+import dev.prozilla.pine.core.state.Tracker;
+import dev.prozilla.pine.core.state.input.Input;
 
 /**
  * Represents the logics layer of a game object.
@@ -18,8 +24,6 @@ public class Component implements Lifecycle {
 	
 	public boolean enabled;
 	
-	/** The name of this component. */
-	public String name;
 	private final int id;
 	
 	/** The game object that this component is attached to. */
@@ -28,11 +32,6 @@ public class Component implements Lifecycle {
 	private static int lastId = 0;
 	
 	public Component() {
-		this("Component");
-	}
-	
-	public Component(String name) {
-		this.name = name;
 		id = generateId();
 		enabled = true;
 	}
@@ -107,6 +106,38 @@ public class Component implements Lifecycle {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public String getName() {
+		return "Component";
+	}
+	
+	public Input getInput() {
+		return gameObject.getInput();
+	}
+	
+	public Window getWindow() {
+		return gameObject.getWindow();
+	}
+	
+	public Renderer getRenderer() {
+		return gameObject.getRenderer();
+	}
+	
+	public Timer getTimer() {
+		return gameObject.getTimer();
+	}
+	
+	public Tracker getTracker() {
+		return gameObject.getTracker();
+	}
+	
+	public World getWorld() {
+		return gameObject.getWorld();
+	}
+	
+	public Camera getCamera() {
+		return gameObject.getCamera();
 	}
 	
 	public boolean equals(Component component) {

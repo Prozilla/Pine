@@ -16,15 +16,11 @@ public class Tile extends GameObject {
 	protected final TileRenderer tileRenderer;
 	
 	public Tile(Game game, Texture texture) {
-		this(game, "Tile", texture);
+		this(game, texture, new Point(0, 0));
 	}
 	
-	public Tile(Game game, String name, Texture texture) {
-		this(game, name, texture, new Point(0, 0));
-	}
-	
-	public Tile(Game game, String name, Texture texture, Point coordinate) {
-		super(game, name);
+	public Tile(Game game, Texture texture, Point coordinate) {
+		super(game);
 		
 		tileRenderer = new TileRenderer(texture, coordinate);
 		addComponent(tileRenderer);
@@ -39,6 +35,11 @@ public class Tile extends GameObject {
 		} else {
 			getGroup();
 		}
+	}
+	
+	@Override
+	public String getName() {
+		return "Tile";
 	}
 	
 	/**

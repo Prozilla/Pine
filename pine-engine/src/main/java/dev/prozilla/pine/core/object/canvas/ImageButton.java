@@ -20,19 +20,16 @@ public class ImageButton extends CanvasElement {
 		this(game, ResourcePool.loadTexture(imagePath));
 	}
 	
-	public ImageButton(Game game, Texture texture) {
-		this(game, "ImageButton", texture);
-	}
-	
-	public ImageButton(Game game, String name, String imagePath) {
-		this(game, name, ResourcePool.loadTexture(imagePath));
-	}
-	
-	public ImageButton(Game game, String name, Texture image) {
-		super(game, name);
+	public ImageButton(Game game, Texture image) {
+		super(game);
 		
 		imageButtonRenderer = new ImageButtonRenderer(image);
 		addComponent(imageButtonRenderer);
+	}
+	
+	@Override
+	public String getName() {
+		return "ImageButton";
 	}
 	
 	@Override

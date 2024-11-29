@@ -14,22 +14,19 @@ public class Rect extends CanvasElement {
 	protected final RectRenderer rectRenderer;
 	
 	public Rect(Game game, int width, int height) {
-		this(game, "Rect", width, height);
+		this(game, width, height, Color.WHITE);
 	}
 	
 	public Rect(Game game, int width, int height, Color color) {
-		this(game, "Rect", width, height, color);
-	}
-	
-	public Rect(Game game, String name, int width, int height) {
-		this(game, name, width, height, Color.WHITE);
-	}
-	
-	public Rect(Game game, String name, int width, int height, Color color) {
-		super(game, name);
+		super(game);
 		
 		rectRenderer = new RectRenderer(width, height, color);
 		addComponent(rectRenderer);
+	}
+	
+	@Override
+	public String getName() {
+		return "Rect";
 	}
 	
 	@Override

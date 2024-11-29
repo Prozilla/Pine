@@ -11,7 +11,7 @@ public class ScoreText extends Text {
 	private GameScene gameScene;
 	
 	public ScoreText(Game game) {
-		super(game, "ScoreText", "0");
+		super(game, "0");
 		
 		// Set position and appearance
 		setAnchor(RectTransform.Anchor.TOP_RIGHT);
@@ -33,5 +33,10 @@ public class ScoreText extends Text {
 		
 		// Update text field based on score value
 		setText(String.valueOf(gameScene.playerScore));
+	}
+	
+	@Override
+	public String getName() {
+		return "ScoreText";
 	}
 }

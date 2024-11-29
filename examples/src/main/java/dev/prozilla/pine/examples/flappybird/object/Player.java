@@ -25,7 +25,7 @@ public class Player extends Sprite {
 	public static final float JUMP_VELOCITY = 0.65f;
 	
 	public Player(Game game) {
-		super(game, "Player", "flappybird/bird.png");
+		super(game, "flappybird/bird.png");
 	}
 	
 	@Override
@@ -82,9 +82,14 @@ public class Player extends Sprite {
 		
 		if (!gameScene.gameOver) {
 			// Jump
-			if (game.input.getKeyDown(Key.SPACE) || game.input.getMouseButtonDown(MouseButton.LEFT)) {
+			if (getInput().getKeyDown(Key.SPACE) || getInput().getMouseButtonDown(MouseButton.LEFT)) {
 				velocity = JUMP_VELOCITY;
 			}
 		}
+	}
+	
+	@Override
+	public String getName() {
+		return "Player";
 	}
 }

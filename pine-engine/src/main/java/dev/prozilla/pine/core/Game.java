@@ -50,11 +50,11 @@ public class Game implements Lifecycle {
 	private final Map<Integer, Scene> scenes;
 	
 	// System
-	public final Timer timer;
+	protected final Timer timer;
 	protected final Renderer renderer;
-	public final Window window;
-	public final Input input;
-	public final Tracker tracker;
+	protected final Window window;
+	protected final Input input;
+	protected final Tracker tracker;
 	
 	private GLFWErrorCallback errorCallback;
 	
@@ -340,6 +340,13 @@ public class Game implements Lifecycle {
 	}
 	
 	/**
+	 * Reloads the current scene.
+	 */
+	public void reloadScene() {
+		loadScene(currentScene);
+	}
+	
+	/**
 	 * Loads a scene by reference.
 	 * @param scene Reference to the scene
 	 */
@@ -414,7 +421,23 @@ public class Game implements Lifecycle {
 		}
 	}
 	
+	public Input getInput() {
+		return input;
+	}
+	
+	public Window getWindow() {
+		return window;
+	}
+	
 	public Renderer getRenderer() {
 		return renderer;
+	}
+	
+	public Timer getTimer() {
+		return timer;
+	}
+	
+	public Tracker getTracker() {
+		return tracker;
 	}
 }

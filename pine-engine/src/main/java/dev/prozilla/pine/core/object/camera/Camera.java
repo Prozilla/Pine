@@ -18,31 +18,20 @@ public class Camera extends GameObject {
 	Color backgroundColor;
 	
 	/**
-	 * Creates a camera object with the name "Camera"
-	 * and a black background color
+	 * Creates a camera object with a black background color
 	 * @param game Reference to game
 	 */
 	public Camera(Game game) {
-		this(game, "Camera");
-	}
-	
-	/**
-	 * Creates a camera object with a black background color
-	 * @param game Reference to game
-	 * @param name Name of this camera
-	 */
-	public Camera(Game game, String name) {
-		this(game, name , Color.BLACK);
+		this(game , Color.BLACK);
 	}
 	
 	/**
 	 * Creates a camera object.
 	 * @param game Reference to game
-	 * @param name Name of this camera
 	 * @param backgroundColor Background color of this camera
 	 */
-	public Camera(Game game, String name, Color backgroundColor) {
-		super(game, name);
+	public Camera(Game game, Color backgroundColor) {
+		super(game);
 		
 		this.backgroundColor = backgroundColor;
 		
@@ -64,9 +53,14 @@ public class Camera extends GameObject {
 		setSize();
 	}
 	
+	@Override
+	public String getName() {
+		return "Camera";
+	}
+	
 	protected void setSize() {
-		width = game.window.getWidth();
-		height = game.window.getHeight();
+		width = getWindow().getWidth();
+		height = getWindow().getHeight();
 	}
 	
 	public float getWidth() {

@@ -35,7 +35,7 @@ public class TextButtonRenderer extends TextRenderer {
 	}
 	
 	public TextButtonRenderer(String text, Color color, Color backgroundColor) {
-		super("TextButtonRenderer", text, color);
+		super(text, color);
 		
 		this.backgroundColor = backgroundColor;
 		
@@ -51,15 +51,14 @@ public class TextButtonRenderer extends TextRenderer {
 	
 	@Override
 	public void input(float deltaTime) {
-		Input input = gameObject.game.input;
-		Point cursor = input.getCursor();
+		Point cursor = getInput().getCursor();
 		int canvasHeight = getCanvas().getHeight();
 		if (cursor != null && isInside(cursor.x, canvasHeight - cursor.y, x, y - paddingY * 2, width, height)) {
-			input.setCursorType(CursorType.HAND);
-			input.blockCursor(gameObject);
+			getInput().setCursorType(CursorType.HAND);
+			getInput().blockCursor(gameObject);
 			isHovering = true;
 			
-			if (clickCallback != null && input.getMouseButtonDown(MouseButton.LEFT)) {
+			if (clickCallback != null && getInput().getMouseButtonDown(MouseButton.LEFT)) {
 				clickCallback.run();
 			}
 		} else {
@@ -84,6 +83,11 @@ public class TextButtonRenderer extends TextRenderer {
 		// Render text
 		Color textColor = (isHovering && hoverColor != null) ? hoverColor : color;
 		renderText(renderer, x + paddingX, y - paddingY, textColor);
+	}
+	
+	@Override
+	public String getName() {
+		return "TextButtonRenderer";
 	}
 	
 	@Override

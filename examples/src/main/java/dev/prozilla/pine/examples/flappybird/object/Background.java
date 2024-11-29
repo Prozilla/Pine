@@ -15,7 +15,7 @@ public class Background extends Sprite {
 	public static final float SPEED = 100f;
 	
 	public Background(Game game, int index) {
-		super(game, "Background", "flappybird/background.png");
+		super(game, "flappybird/background.png");
 		
 		this.index = index;
 	}
@@ -46,5 +46,10 @@ public class Background extends Sprite {
 				x += Main.WIDTH + WIDTH;
 			}
 		}
+	}
+	
+	@Override
+	public String getName() {
+		return "Background";
 	}
 }

@@ -26,7 +26,7 @@ public class TileRenderer extends SpriteRenderer {
 	}
 	
 	public TileRenderer(Texture texture, Point coordinate, int size) {
-		super("TileRenderer", texture);
+		super(texture);
 		
 		this.coordinate = coordinate;
 		this.size = size;
@@ -41,5 +41,10 @@ public class TileRenderer extends SpriteRenderer {
 		
 		gameObject.x = coordinate.x * size + offsetX;
 		gameObject.y = coordinate.y * size + offsetY;
+	}
+	
+	@Override
+	public String getName() {
+		return "TileRenderer";
 	}
 }

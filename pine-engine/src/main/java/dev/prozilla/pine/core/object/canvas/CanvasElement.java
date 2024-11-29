@@ -16,11 +16,7 @@ public class CanvasElement extends GameObject {
 	private RectTransform rectTransform;
 	
 	public CanvasElement(Game game) {
-		this(game, "CanvasElement");
-	}
-	
-	public CanvasElement(Game game, String name) {
-		super(game, name);
+		super(game);
 	}
 	
 	@Override
@@ -33,6 +29,11 @@ public class CanvasElement extends GameObject {
 	public void render(Renderer renderer) {
 		renderComponents(renderer);
 		renderChildren(renderer);
+	}
+	
+	@Override
+	public String getName() {
+		return "CanvasElement";
 	}
 	
 	@Override

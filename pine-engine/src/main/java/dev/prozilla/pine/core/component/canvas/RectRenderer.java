@@ -15,12 +15,6 @@ public class RectRenderer extends RectTransform {
 	}
 	
 	public RectRenderer(int width, int height, Color color) {
-		this("RectRenderer", width, height, color);
-	}
-	
-	public RectRenderer(String name, int width, int height, Color color) {
-		super(name);
-		
 		this.width = width;
 		this.height = height;
 		this.color = color;
@@ -37,6 +31,11 @@ public class RectRenderer extends RectTransform {
 				renderer.drawRect(x, y, width, height, color);
 			}
 		}
+	}
+	
+	@Override
+	public String getName() {
+		return "RectRenderer";
 	}
 	
 	public void setWidth(int width) {
