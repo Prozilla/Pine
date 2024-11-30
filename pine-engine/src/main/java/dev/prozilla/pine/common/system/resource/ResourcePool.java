@@ -122,6 +122,10 @@ public final class ResourcePool {
 	}
 	
 	public static Font loadFont(String path) {
+		return loadFont(path, 16);
+	}
+	
+	public static Font loadFont(String path, int size) {
 		path = "/" + normalizePath(path);
 		
 		if (fonts.containsKey(path)) {
@@ -133,7 +137,7 @@ public final class ResourcePool {
 		Font font;
 		try {
 			InputStream stream = ResourcePool.class.getResourceAsStream(path);
-			font = new Font(stream, 16);
+			font = new Font(stream, size);
 		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();
 			font = new Font();

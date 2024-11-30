@@ -343,7 +343,9 @@ public class Game implements Lifecycle {
 	 * Reloads the current scene.
 	 */
 	public void reloadScene() {
-		loadScene(currentScene);
+		int id = currentScene.getId();
+		unloadScene();
+		loadScene(id);
 	}
 	
 	/**
@@ -359,12 +361,13 @@ public class Game implements Lifecycle {
 	 * @param id Scene ID
 	 */
 	public void loadScene(int id) {
-		if (currentScene.getId() == id) {
-			return;
-		}
-		
+		// Check if scene is already loaded
 		if (currentScene != null) {
-			unloadScene();
+			if (currentScene.getId() == id) {
+				return;
+			} else {
+				unloadScene();
+			}
 		}
 		
 		System.out.println("Loading scene: " + id);
