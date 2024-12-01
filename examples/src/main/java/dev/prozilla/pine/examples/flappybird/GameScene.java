@@ -1,11 +1,11 @@
 package dev.prozilla.pine.examples.flappybird;
 
+import dev.prozilla.pine.common.system.resource.ResourcePool;
+import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.object.GameObject;
 import dev.prozilla.pine.core.object.canvas.Canvas;
-import dev.prozilla.pine.examples.flappybird.object.Background;
-import dev.prozilla.pine.examples.flappybird.object.Pipes;
-import dev.prozilla.pine.examples.flappybird.object.Player;
-import dev.prozilla.pine.examples.flappybird.object.ScoreText;
+import dev.prozilla.pine.core.state.input.Key;
+import dev.prozilla.pine.examples.flappybird.object.*;
 
 import java.util.Random;
 
@@ -19,6 +19,10 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 	// Game objects
 	private GameObject obstacles;
 	public Player player;
+	public GameOverText gameOverText;
+	
+	// Common resources
+	public Font font;
 	
 	private static final Random random = new Random();
 	
@@ -45,12 +49,25 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 		obstacles = add(new GameObject(game));
 		
 		// Create user interface
+		font = ResourcePool.loadFont("flappybird/flappy-bird.ttf", 32);
 		Canvas canvas = (Canvas)add(new Canvas(game));
 		canvas.addChild(new ScoreText(game));
+		gameOverText = (GameOverText)canvas.addChild(new GameOverText(game));
 		
 		timeUntilNextObstacle = 0;
 		gameOver = false;
 		playerScore = 0;
+	}
+	
+	@Override
+	public void input(float deltaTime) throws IllegalStateException {
+		super.input(deltaTime);
+		
+		if (gameOver) {
+			if (getInput().getKeyDown(Key.R)) {
+				game.reloadScene();
+			}
+		}
 	}
 	
 	@Override
@@ -71,5 +88,7 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 	
 	public void endGame() {
 		gameOver = true;
+		player.resetVelocity();
+		gameOverText.setActive(true);
 	}
 }

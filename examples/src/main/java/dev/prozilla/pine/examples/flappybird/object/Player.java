@@ -92,4 +92,8 @@ public class Player extends Sprite {
 	public String getName() {
 		return "Player";
 	}
+	
+	public void resetVelocity() {
+		velocity = 0;
+	}
 }
