@@ -12,10 +12,6 @@ public class TileRenderer extends SpriteRenderer {
 	public Point coordinate;
 	/** Width and height of the tile, in pixels. */
 	public int size;
-	/** Horizontal offset for this sprite, in pixels. */
-	public float offsetX;
-	/** Vertical offset for this sprite, in pixels. */
-	public float offsetY;
 	
 	public TileRenderer(Texture texture) {
 		this(texture, new Point());
@@ -39,8 +35,8 @@ public class TileRenderer extends SpriteRenderer {
 	public void update(float deltaTime) {
 		super.update(deltaTime);
 		
-		gameObject.x = coordinate.x * size + offsetX;
-		gameObject.y = coordinate.y * size + offsetY;
+		gameObject.x = coordinate.x * size;
+		gameObject.y = coordinate.y * size;
 	}
 	
 	@Override

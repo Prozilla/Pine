@@ -16,6 +16,10 @@ public class SpriteRenderer extends Component {
 	// Transformations
 	public float scale;
 	public float rotation;
+	/** Horizontal offset for this sprite, in pixels. */
+	public float offsetX;
+	/** Vertical offset for this sprite, in pixels. */
+	public float offsetY;
 	
 	// Cropping
 	/** Determines whether the texture will be cropped to a given region. */
@@ -47,12 +51,15 @@ public class SpriteRenderer extends Component {
 	public void render(Renderer renderer) {
 		super.render(renderer);
 		
-		float[] position = getCamera().applyTransform(gameObject.x, gameObject.y);
+		// Calculate screen position
+		float[] position = getCamera().applyTransform(gameObject.x + offsetX, gameObject.y + offsetY);
 		float x = position[0];
 		float y = position[1];
 		
+		// Apply zoom scale
 		renderer.setScale(scale * getCamera().getZoom());
 		
+		// Draw cropped and rotated texture
 		if (!cropToRegion) {
 			renderer.drawRotatedTexture(texture, x, y, color, rotation);
 		} else {
