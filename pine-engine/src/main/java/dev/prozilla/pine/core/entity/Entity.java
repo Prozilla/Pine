@@ -1,10 +1,10 @@
-package dev.prozilla.pine.core.object;
+package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.core.Game;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.context.Window;
-import dev.prozilla.pine.core.object.camera.Camera;
+import dev.prozilla.pine.core.entity.camera.Camera;
 import dev.prozilla.pine.core.state.Scene;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Timer;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 /**
  * Represents a game object
  */
-public class GameObject implements Lifecycle {
+public class Entity implements Lifecycle {
 	
 	private final int id;
 	private final String name;
@@ -34,9 +34,9 @@ public class GameObject implements Lifecycle {
 	public Scene scene;
 	
 	/** Children of this game object */
-	protected final ArrayList<GameObject> children;
+	protected final ArrayList<Entity> children;
 	/** Parent of this game object */
-	protected GameObject parent;
+	protected Entity parent;
 	
 	/** Components of this game object */
 	protected final ArrayList<Component> components;
@@ -50,15 +50,15 @@ public class GameObject implements Lifecycle {
 	 * Creates a game object at the position (0, 0)
 	 * @param game Reference to game
 	 */
-	public GameObject(Game game) {
+	public Entity(Game game) {
 		this(game, 0, 0);
 	}
 	
-	public GameObject(Game game, String name) {
+	public Entity(Game game, String name) {
 		this(game, name, 0, 0);
 	}
 	
-	public GameObject(Game game, float x, float y) {
+	public Entity(Game game, float x, float y) {
 		this(game, null, x, y);
 	}
 	
@@ -68,7 +68,7 @@ public class GameObject implements Lifecycle {
 	 * @param x X value
 	 * @param y Y value
 	 */
-	public GameObject(Game game, String name, float x, float y) {
+	public Entity(Game game, String name, float x, float y) {
 		this.game = game;
 		this.name = name;
 		this.x = x;
@@ -99,7 +99,7 @@ public class GameObject implements Lifecycle {
 		}
 		
 		if (!children.isEmpty()) {
-			for (GameObject child : children) {
+			for (Entity child : children) {
 				child.init(window);
 			}
 		}
@@ -123,7 +123,7 @@ public class GameObject implements Lifecycle {
 		}
 		
 		if (!children.isEmpty()) {
-			for (GameObject child : children) {
+			for (Entity child : children) {
 				if (child.isActive()) {
 					child.start();
 				}
@@ -168,7 +168,7 @@ public class GameObject implements Lifecycle {
 				if (!game.running) {
 					break;
 				}
-				GameObject child = children.get(i);
+				Entity child = children.get(i);
 				if (child.isActive()) {
 					child.input(deltaTime);
 				}
@@ -201,7 +201,7 @@ public class GameObject implements Lifecycle {
 	
 	protected void updateChildren(float deltaTime) {
 		if (!children.isEmpty() && game.running) {
-			for (GameObject child : children) {
+			for (Entity child : children) {
 				if (!game.running) {
 					break;
 				}
@@ -236,7 +236,7 @@ public class GameObject implements Lifecycle {
 	
 	protected void renderChildren(Renderer renderer) {
 		if (!children.isEmpty() && game.running) {
-			for (GameObject child : children) {
+			for (Entity child : children) {
 				if (!game.running) {
 					break;
 				}
@@ -269,7 +269,7 @@ public class GameObject implements Lifecycle {
 			parent.removeChild(this);
 		}
 		if (!children.isEmpty()) {
-			for (GameObject child : children) {
+			for (Entity child : children) {
 				child.destroy();
 			}
 			children.clear();
@@ -295,7 +295,7 @@ public class GameObject implements Lifecycle {
 	 * Adds a child to this game object.
 	 * @param child Child object
 	 */
-	public GameObject addChild(GameObject child) throws IllegalStateException, IllegalArgumentException {
+	public Entity addChild(Entity child) throws IllegalStateException, IllegalArgumentException {
 		if (child == null) {
 			throw new IllegalArgumentException("Child can't be null");
 		}
@@ -322,8 +322,8 @@ public class GameObject implements Lifecycle {
 	 * Adds children to this game object.
 	 * @param children Child objects
 	 */
-	public void addChildren(GameObject... children) throws IllegalStateException, IllegalArgumentException {
-		for (GameObject child : children) {
+	public void addChildren(Entity... children) throws IllegalStateException, IllegalArgumentException {
+		for (Entity child : children) {
 			addChild(child);
 		}
 	}
@@ -332,7 +332,7 @@ public class GameObject implements Lifecycle {
 	 * Removes a child from this game object.
 	 * @param child Child object
 	 */
-	public void removeChild(GameObject child) throws IllegalStateException, IllegalArgumentException {
+	public void removeChild(Entity child) throws IllegalStateException, IllegalArgumentException {
 		if (child == null) {
 			throw new IllegalArgumentException("Child can't be null");
 		}
@@ -349,13 +349,13 @@ public class GameObject implements Lifecycle {
 	 * Removes children from this game object.
 	 * @param children Child objects
 	 */
-	public void removeChildren(GameObject... children) throws IllegalStateException, IllegalArgumentException {
-		for (GameObject child : children) {
+	public void removeChildren(Entity... children) throws IllegalStateException, IllegalArgumentException {
+		for (Entity child : children) {
 			removeChild(child);
 		}
 	}
 	
-	public ArrayList<GameObject> getChildren() {
+	public ArrayList<Entity> getChildren() {
 		return children;
 	}
 	
@@ -363,7 +363,7 @@ public class GameObject implements Lifecycle {
 	 * Setter for the parent object.
 	 * @param parent Parent object
 	 */
-	public void setParent(GameObject parent) {
+	public void setParent(Entity parent) {
 		this.parent = parent;
 		
 		if (parent != null) {
@@ -377,7 +377,7 @@ public class GameObject implements Lifecycle {
 	 * Getter for the parent object.
 	 * @return Parent object
 	 */
-	public GameObject getParent() {
+	public Entity getParent() {
 		return parent;
 	}
 	
@@ -476,7 +476,7 @@ public class GameObject implements Lifecycle {
 		
 		ArrayList<ComponentType> components = new ArrayList<>();
 		
-		for (GameObject child : children) {
+		for (Entity child : children) {
 			ComponentType component = child.getComponent(componentClass);
 			if (component != null) {
 				components.add(component);
@@ -585,11 +585,11 @@ public class GameObject implements Lifecycle {
 	
 	/**
 	 * Checks whether two game objects are equal.
-	 * @param gameObject Other game object
+	 * @param entity Other game object
 	 * @return True if the game objects are equal
 	 */
-	public boolean equals(GameObject gameObject) {
-		return (id == gameObject.getId());
+	public boolean equals(Entity entity) {
+		return (id == entity.getId());
 	}
 	
 	public boolean isInitialized() {

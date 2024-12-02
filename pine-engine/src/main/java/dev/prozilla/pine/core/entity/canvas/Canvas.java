@@ -1,7 +1,7 @@
-package dev.prozilla.pine.core.object.canvas;
+package dev.prozilla.pine.core.entity.canvas;
 
 import dev.prozilla.pine.core.Game;
-import dev.prozilla.pine.core.object.GameObject;
+import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.component.canvas.CanvasRenderer;
 import dev.prozilla.pine.core.rendering.Renderer;
 
@@ -10,7 +10,7 @@ import dev.prozilla.pine.core.rendering.Renderer;
  * This game object holds all elements of the user interface.
  * Wrapper object for the {@link CanvasRenderer} component.
  */
-public class Canvas extends GameObject {
+public class Canvas extends Entity {
 	
 	protected final CanvasRenderer canvasRenderer;
 	

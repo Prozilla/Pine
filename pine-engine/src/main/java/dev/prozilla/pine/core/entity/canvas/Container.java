@@ -1,7 +1,7 @@
-package dev.prozilla.pine.core.object.canvas;
+package dev.prozilla.pine.core.entity.canvas;
 
 import dev.prozilla.pine.core.Game;
-import dev.prozilla.pine.core.object.GameObject;
+import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.component.canvas.CanvasGroup;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.common.system.resource.Color;
@@ -32,14 +32,14 @@ public class Container extends CanvasElement {
 	}
 	
 	@Override
-	public GameObject addChild(GameObject child) throws IllegalStateException {
+	public Entity addChild(Entity child) throws IllegalStateException {
 		super.addChild(child);
 		group.getChildComponents();
 		return child;
 	}
 	
 	@Override
-	public void removeChild(GameObject child) throws IllegalStateException {
+	public void removeChild(Entity child) throws IllegalStateException {
 		super.removeChild(child);
 		group.getChildComponents();
 	}

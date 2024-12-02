@@ -3,9 +3,9 @@ package dev.prozilla.pine.core.state;
 import dev.prozilla.pine.core.Game;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.context.Window;
-import dev.prozilla.pine.core.object.GameObject;
-import dev.prozilla.pine.core.object.World;
-import dev.prozilla.pine.core.object.camera.Camera;
+import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.World;
+import dev.prozilla.pine.core.entity.camera.Camera;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.input.Input;
 
@@ -169,18 +169,18 @@ public class Scene implements Lifecycle {
 	
 	/**
 	 * Adds a game object to the scene.
-	 * @param gameObject GameObject
+	 * @param entity GameObject
 	 */
-	public GameObject add(GameObject gameObject) {
-		return world.addChild(gameObject);
+	public Entity add(Entity entity) {
+		return world.addChild(entity);
 	}
 	
 	/**
 	 * Removes a game object from the scene.
-	 * @param gameObject GameObject
+	 * @param entity GameObject
 	 */
-	public void remove(GameObject gameObject) {
-		world.removeChild(gameObject);
+	public void remove(Entity entity) {
+		world.removeChild(entity);
 	}
 	
 	/**

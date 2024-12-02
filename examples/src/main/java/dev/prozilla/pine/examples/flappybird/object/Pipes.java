@@ -1,13 +1,13 @@
 package dev.prozilla.pine.examples.flappybird.object;
 
 import dev.prozilla.pine.core.Game;
-import dev.prozilla.pine.core.object.GameObject;
+import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.examples.flappybird.Main;
 import dev.prozilla.pine.examples.flappybird.GameScene;
 
 import java.util.Random;
 
-public class Pipes extends GameObject {
+public class Pipes extends Entity {
 	
 	private final Pipe bottomPipe;
 	private final Pipe topPipe;

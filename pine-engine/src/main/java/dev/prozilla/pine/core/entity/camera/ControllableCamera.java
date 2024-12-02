@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.object.camera;
+package dev.prozilla.pine.core.entity.camera;
 
 import dev.prozilla.pine.core.Game;
 import dev.prozilla.pine.core.state.input.Key;

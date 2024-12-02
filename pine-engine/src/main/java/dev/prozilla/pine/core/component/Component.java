@@ -2,9 +2,9 @@ package dev.prozilla.pine.core.component;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.context.Window;
-import dev.prozilla.pine.core.object.GameObject;
-import dev.prozilla.pine.core.object.World;
-import dev.prozilla.pine.core.object.camera.Camera;
+import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.World;
+import dev.prozilla.pine.core.entity.camera.Camera;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
@@ -27,7 +27,7 @@ public class Component implements Lifecycle {
 	private final int id;
 	
 	/** The game object that this component is attached to. */
-	protected GameObject gameObject;
+	protected Entity entity;
 	
 	private static int lastId = 0;
 	
@@ -56,19 +56,19 @@ public class Component implements Lifecycle {
 	
 	/**
 	 * Attaches this component to a game object.
-	 * @param gameObject Game object
+	 * @param entity Game object
 	 */
-	public void attach(GameObject gameObject) {
-		this.gameObject = gameObject;
+	public void attach(Entity entity) {
+		this.entity = entity;
 	}
 	
 	/**
 	 * Removes this component from the game object it's attached to.
 	 */
 	public void remove() {
-		if (gameObject != null) {
-			gameObject.removeComponent(this);
-			gameObject = null;
+		if (entity != null) {
+			entity.removeComponent(this);
+			entity = null;
 			
 			destroy();
 		}
@@ -92,8 +92,8 @@ public class Component implements Lifecycle {
 	 * Getter for the game object this component is attached to.
 	 * @return Game object
 	 */
-	public GameObject getGameObject() {
-		return gameObject;
+	public Entity getGameObject() {
+		return entity;
 	}
 	
 	/**
@@ -113,31 +113,31 @@ public class Component implements Lifecycle {
 	}
 	
 	public Input getInput() {
-		return gameObject.getInput();
+		return entity.getInput();
 	}
 	
 	public Window getWindow() {
-		return gameObject.getWindow();
+		return entity.getWindow();
 	}
 	
 	public Renderer getRenderer() {
-		return gameObject.getRenderer();
+		return entity.getRenderer();
 	}
 	
 	public Timer getTimer() {
-		return gameObject.getTimer();
+		return entity.getTimer();
 	}
 	
 	public Tracker getTracker() {
-		return gameObject.getTracker();
+		return entity.getTracker();
 	}
 	
 	public World getWorld() {
-		return gameObject.getWorld();
+		return entity.getWorld();
 	}
 	
 	public Camera getCamera() {
-		return gameObject.getCamera();
+		return entity.getCamera();
 	}
 	
 	public boolean equals(Component component) {

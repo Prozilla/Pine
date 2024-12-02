@@ -1,10 +1,9 @@
 package dev.prozilla.pine.core.component.canvas;
 
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.object.GameObject;
-import dev.prozilla.pine.core.object.canvas.Canvas;
-import dev.prozilla.pine.core.object.canvas.CanvasElement;
-import dev.prozilla.pine.core.state.input.Input;
+import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.canvas.Canvas;
+import dev.prozilla.pine.core.entity.canvas.CanvasElement;
 
 import java.awt.*;
 
@@ -70,7 +69,7 @@ public class RectTransform extends Component {
 			Point cursor = getInput().getCursor();
 			int canvasHeight = getCanvas().getHeight();
 			if (cursor != null && isInside(cursor.x, canvasHeight - cursor.y, x, y, width, height)) {
-				getInput().blockCursor(gameObject);
+				getInput().blockCursor(entity);
 			}
 		}
 	}
@@ -122,12 +121,12 @@ public class RectTransform extends Component {
 	}
 	
 	@Override
-	public void attach(GameObject gameObject) throws IllegalArgumentException {
-		if (!(gameObject instanceof CanvasElement)) {
+	public void attach(Entity entity) throws IllegalArgumentException {
+		if (!(entity instanceof CanvasElement)) {
 			throw new IllegalArgumentException("TextRenderer component must be attached to a CanvasElement");
 		}
 		
-		super.attach(gameObject);
+		super.attach(entity);
 	}
 	
 	@Override
@@ -149,7 +148,7 @@ public class RectTransform extends Component {
 			return canvas;
 		}
 		
-		CanvasRenderer canvasRenderer = gameObject.getComponentInParent(CanvasRenderer.class);
+		CanvasRenderer canvasRenderer = entity.getComponentInParent(CanvasRenderer.class);
 		
 		if (canvasRenderer == null || !(canvasRenderer.getGameObject() instanceof Canvas)) {
 			throw new IllegalStateException("Canvas element must be a child of a canvas.");

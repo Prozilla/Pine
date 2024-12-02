@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.component;
 
-import dev.prozilla.pine.core.object.GameObject;
+import dev.prozilla.pine.core.entity.Entity;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class GridGroup extends Component {
 			coordinateToTile.clear();
 		}
 		
-		ArrayList<TileRenderer> tiles = gameObject.getComponentsInChildren(TileRenderer.class);
+		ArrayList<TileRenderer> tiles = entity.getComponentsInChildren(TileRenderer.class);
 		
 		if(tiles != null && !tiles.isEmpty()) {
 			for (TileRenderer tile : tiles) {
@@ -62,8 +62,8 @@ public class GridGroup extends Component {
 		return "GridGroup";
 	}
 	
-	public TileRenderer addTile(GameObject gameObject) {
-		return addTile(gameObject.getComponent(TileRenderer.class));
+	public TileRenderer addTile(Entity entity) {
+		return addTile(entity.getComponent(TileRenderer.class));
 	}
 	
 	public TileRenderer addTile(TileRenderer tile) {
@@ -80,8 +80,8 @@ public class GridGroup extends Component {
 		return removeTile(getTile(coordinate));
 	}
 	
-	public boolean removeTile(GameObject gameObject) {
-		return removeTile(gameObject.getComponent(TileRenderer.class));
+	public boolean removeTile(Entity entity) {
+		return removeTile(entity.getComponent(TileRenderer.class));
 	}
 	
 	public boolean removeTile(TileRenderer tile) {
@@ -108,10 +108,10 @@ public class GridGroup extends Component {
 		return isHovering(tile.getGameObject());
 	}
 	
-	public boolean isHovering(GameObject gameObject) {
-		if (hoveringTile == null || gameObject == null) {
+	public boolean isHovering(Entity entity) {
+		if (hoveringTile == null || entity == null) {
 			return false;
 		}
-		return gameObject.equals(hoveringTile.getGameObject());
+		return entity.equals(hoveringTile.getGameObject());
 	}
 }

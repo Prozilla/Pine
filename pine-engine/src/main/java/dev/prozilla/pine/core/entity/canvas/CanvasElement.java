@@ -1,8 +1,8 @@
-package dev.prozilla.pine.core.object.canvas;
+package dev.prozilla.pine.core.entity.canvas;
 
 import dev.prozilla.pine.core.Game;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
-import dev.prozilla.pine.core.object.GameObject;
+import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.component.canvas.CanvasGroup;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -11,7 +11,7 @@ import dev.prozilla.pine.core.rendering.Renderer;
  * A base game object for elements of the user interface.
  * Uses the {@link RectTransform} component.
  */
-public class CanvasElement extends GameObject {
+public class CanvasElement extends Entity {
 	
 	private RectTransform rectTransform;
 	

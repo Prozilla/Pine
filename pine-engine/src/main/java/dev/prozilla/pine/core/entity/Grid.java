@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.object;
+package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.core.Game;
 import dev.prozilla.pine.core.component.GridGroup;
@@ -6,7 +6,7 @@ import dev.prozilla.pine.core.component.TileRenderer;
 
 import java.awt.*;
 
-public class Grid extends GameObject {
+public class Grid extends Entity {
 	
 	protected final GridGroup group;
 	
@@ -18,14 +18,14 @@ public class Grid extends GameObject {
 	}
 	
 	@Override
-	public GameObject addChild(GameObject child) throws IllegalStateException, IllegalArgumentException {
+	public Entity addChild(Entity child) throws IllegalStateException, IllegalArgumentException {
 		super.addChild(child);
 		group.addTile(child);
 		return child;
 	}
 	
 	@Override
-	public void removeChild(GameObject child) throws IllegalStateException, IllegalArgumentException {
+	public void removeChild(Entity child) throws IllegalStateException, IllegalArgumentException {
 		super.removeChild(child);
 		group.removeTile(child);
 	}
@@ -39,7 +39,7 @@ public class Grid extends GameObject {
 		return (Tile)addTile(tile.getTileRenderer());
 	}
 	
-	public GameObject addTile(TileRenderer tile) {
+	public Entity addTile(TileRenderer tile) {
 		if (tile == null) {
 			return null;
 		}

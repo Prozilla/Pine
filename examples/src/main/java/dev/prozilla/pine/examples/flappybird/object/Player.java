@@ -2,7 +2,7 @@ package dev.prozilla.pine.examples.flappybird.object;
 
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.core.Game;
-import dev.prozilla.pine.core.object.Sprite;
+import dev.prozilla.pine.core.entity.Sprite;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.MouseButton;
 import dev.prozilla.pine.examples.flappybird.Main;

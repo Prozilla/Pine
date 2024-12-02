@@ -81,7 +81,7 @@ public class TextRenderer extends RectTransform {
 	 * Calculates the size of this text.
 	 */
 	public void calculateSize() {
-		Renderer renderer = gameObject.game.getRenderer();
+		Renderer renderer = entity.game.getRenderer();
 		
 		if (font == null) {
 			width = renderer.getTextWidth(text);

@@ -1,14 +1,14 @@
-package dev.prozilla.pine.core.object.camera;
+package dev.prozilla.pine.core.entity.camera;
 
 import dev.prozilla.pine.core.Game;
-import dev.prozilla.pine.core.object.GameObject;
+import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.common.system.resource.Color;
 
 import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.glClearColor;
 
-public class Camera extends GameObject {
+public class Camera extends Entity {
 	
 	protected float zoomFactor;
 	

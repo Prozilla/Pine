@@ -2,8 +2,8 @@ package dev.prozilla.pine.core.state.input;
 
 import dev.prozilla.pine.core.Game;
 import dev.prozilla.pine.common.Lifecycle;
-import dev.prozilla.pine.core.object.GameObject;
-import dev.prozilla.pine.core.object.camera.Camera;
+import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.camera.Camera;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
@@ -36,7 +36,7 @@ public class Input implements Lifecycle {
 	
 	private final Point cursor;
 	private int cursorType;
-	private GameObject cursorBlocker;
+	private Entity cursorBlocker;
 	
 	private GLFWKeyCallback keyCallback;
 	private GLFWScrollCallback scrollCallback;
@@ -361,20 +361,20 @@ public class Input implements Lifecycle {
 	
 	/**
 	 * Prevents the cursor from sending input to remaining game objects in the current frame.
-	 * @param gameObject Game object that is blocking the cursor
+	 * @param entity Game object that is blocking the cursor
 	 */
-	public void blockCursor(GameObject gameObject) {
+	public void blockCursor(Entity entity) {
 		if (cursorBlocker != null) {
 			return;
 		}
 		
-		cursorBlocker = gameObject;
+		cursorBlocker = entity;
 	}
 	
 	/**
 	 * Returns the game object that is blocking the cursor in the current frame.
 	 */
-	public GameObject getCursorBlocker() {
+	public Entity getCursorBlocker() {
 		return cursorBlocker;
 	}
 }

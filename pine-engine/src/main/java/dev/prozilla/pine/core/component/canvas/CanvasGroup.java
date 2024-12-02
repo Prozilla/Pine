@@ -197,6 +197,6 @@ public class CanvasGroup extends RectTransform {
 	 * Finds and stores rect components in children to be used in calculations later.
 	 */
 	public void getChildComponents() {
-		childRects = gameObject.getComponentsInChildren(RectTransform.class);
+		childRects = entity.getComponentsInChildren(RectTransform.class);
 	}
 }

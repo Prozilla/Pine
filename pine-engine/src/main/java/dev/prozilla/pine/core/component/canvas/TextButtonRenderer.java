@@ -4,7 +4,6 @@ import dev.prozilla.pine.common.Callback;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.input.CursorType;
-import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.MouseButton;
 
 import java.awt.*;
@@ -55,7 +54,7 @@ public class TextButtonRenderer extends TextRenderer {
 		int canvasHeight = getCanvas().getHeight();
 		if (cursor != null && isInside(cursor.x, canvasHeight - cursor.y, x, y - paddingY * 2, width, height)) {
 			getInput().setCursorType(CursorType.HAND);
-			getInput().blockCursor(gameObject);
+			getInput().blockCursor(entity);
 			isHovering = true;
 			
 			if (clickCallback != null && getInput().getMouseButtonDown(MouseButton.LEFT)) {

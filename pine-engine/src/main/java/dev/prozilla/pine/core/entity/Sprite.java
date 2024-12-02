@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.object;
+package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
@@ -8,7 +8,7 @@ import dev.prozilla.pine.core.component.SpriteRenderer;
 /**
  * Represents a 2D sprite inside the world.
  */
-public class Sprite extends GameObject {
+public class Sprite extends Entity {
 	
 	protected final SpriteRenderer spriteRenderer;
 	

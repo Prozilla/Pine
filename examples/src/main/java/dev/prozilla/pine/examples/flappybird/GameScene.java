@@ -2,8 +2,8 @@ package dev.prozilla.pine.examples.flappybird;
 
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.text.Font;
-import dev.prozilla.pine.core.object.GameObject;
-import dev.prozilla.pine.core.object.canvas.Canvas;
+import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.canvas.Canvas;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.examples.flappybird.object.*;
 
@@ -17,7 +17,7 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 	private float timeUntilNextObstacle;
 	
 	// Game objects
-	private GameObject obstacles;
+	private Entity obstacles;
 	public Player player;
 	public GameOverText gameOverText;
 	
@@ -46,7 +46,7 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 		player = (Player)add(new Player(game));
 		
 		// Prepare obstacles
-		obstacles = add(new GameObject(game));
+		obstacles = add(new Entity(game));
 		
 		// Create user interface
 		font = ResourcePool.loadFont("flappybird/flappy-bird.ttf", 32);

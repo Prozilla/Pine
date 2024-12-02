@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.object;
+package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.core.Game;
 import dev.prozilla.pine.core.component.GridGroup;
@@ -10,7 +10,7 @@ import java.awt.*;
 /**
  * Represents a 2D tile inside the world. Position is based on a Point.
  */
-public class Tile extends GameObject {
+public class Tile extends Entity {
 	
 	protected GridGroup group;
 	protected final TileRenderer tileRenderer;
@@ -27,7 +27,7 @@ public class Tile extends GameObject {
 	}
 	
 	@Override
-	public void setParent(GameObject parent) {
+	public void setParent(Entity parent) {
 		super.setParent(parent);
 		
 		if (parent == null) {
