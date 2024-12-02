@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class GameObject implements Lifecycle {
 	
 	private final int id;
+	private final String name;
 	protected boolean active;
 	
 	/** X position value */
@@ -53,14 +54,23 @@ public class GameObject implements Lifecycle {
 		this(game, 0, 0);
 	}
 	
+	public GameObject(Game game, String name) {
+		this(game, name, 0, 0);
+	}
+	
+	public GameObject(Game game, float x, float y) {
+		this(game, null, x, y);
+	}
+	
 	/**
 	 * Creates a game object at the position (x, y)
 	 * @param game Reference to game
 	 * @param x X value
 	 * @param y Y value
 	 */
-	public GameObject(Game game, float x, float y) {
+	public GameObject(Game game, String name, float x, float y) {
 		this.game = game;
+		this.name = name;
 		this.x = x;
 		this.y = y;
 		
@@ -532,7 +542,17 @@ public class GameObject implements Lifecycle {
 	}
 	
 	public String getName() {
-		return "GameObject";
+		return getName(null);
+	}
+	
+	public String getName(String defaultName) {
+		if (name != null) {
+			return name;
+		} else if (defaultName != null) {
+			return defaultName;
+		} else {
+			return "GameObject";
+		}
 	}
 	
 	public Input getInput() {

@@ -46,7 +46,7 @@ public class Container extends CanvasElement {
 	
 	@Override
 	public String getName() {
-		return "Container";
+		return getName("Container");
 	}
 	
 	@Override

@@ -28,7 +28,7 @@ public class Text extends CanvasElement {
 	
 	@Override
 	public String getName() {
-		return "Text";
+		return getName("Text");
 	}
 	
 	@Override

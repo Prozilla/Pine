@@ -25,6 +25,6 @@ public class Sprite extends GameObject {
 	
 	@Override
 	public String getName() {
-		return "Sprite";
+		return getName("Sprite");
 	}
 }

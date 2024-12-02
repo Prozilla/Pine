@@ -39,7 +39,7 @@ public class Tile extends GameObject {
 	
 	@Override
 	public String getName() {
-		return "Tile";
+		return getName("Tile");
 	}
 	
 	/**

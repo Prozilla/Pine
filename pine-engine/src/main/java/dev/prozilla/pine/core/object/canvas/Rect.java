@@ -26,7 +26,7 @@ public class Rect extends CanvasElement {
 	
 	@Override
 	public String getName() {
-		return "Rect";
+		return getName("Rect");
 	}
 	
 	@Override

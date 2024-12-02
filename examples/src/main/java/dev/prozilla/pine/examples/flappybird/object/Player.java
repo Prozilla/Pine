@@ -90,7 +90,7 @@ public class Player extends Sprite {
 	
 	@Override
 	public String getName() {
-		return "Player";
+		return getName("Player");
 	}
 	
 	public void resetVelocity() {

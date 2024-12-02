@@ -27,6 +27,6 @@ public class Pipe extends Sprite {
 	
 	@Override
 	public String getName() {
-		return "Pipe";
+		return getName("Pipe");
 	}
 }

@@ -32,7 +32,7 @@ public class Grid extends GameObject {
 	
 	@Override
 	public String getName() {
-		return "Grid";
+		return getName("Grid");
 	}
 	
 	public Tile addTile(Tile tile) {

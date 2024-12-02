@@ -25,7 +25,7 @@ public class TextButton extends CanvasElement {
 	
 	@Override
 	public String getName() {
-		return "TextButton";
+		return getName("TextButton");
 	}
 	
 	public TextButton setText(String text) {

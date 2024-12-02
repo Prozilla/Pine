@@ -33,7 +33,7 @@ public class CanvasElement extends GameObject {
 	
 	@Override
 	public String getName() {
-		return "CanvasElement";
+		return getName("CanvasElement");
 	}
 	
 	@Override

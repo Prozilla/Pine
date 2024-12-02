@@ -40,6 +40,6 @@ public class ScoreText extends Text {
 	
 	@Override
 	public String getName() {
-		return "ScoreText";
+		return getName("ScoreText");
 	}
 }

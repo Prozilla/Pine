@@ -18,6 +18,6 @@ public class World extends GameObject {
 	
 	@Override
 	public String getName() {
-		return "World";
+		return getName("World");
 	}
 }

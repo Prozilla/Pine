@@ -72,6 +72,6 @@ public class Pipes extends GameObject {
 	
 	@Override
 	public String getName() {
-		return "Pipes";
+		return getName("Pipes");
 	}
 }

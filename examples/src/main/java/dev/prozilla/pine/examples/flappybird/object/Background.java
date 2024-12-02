@@ -50,6 +50,6 @@ public class Background extends Sprite {
 	
 	@Override
 	public String getName() {
-		return "Background";
+		return getName("Background");
 	}
 }

@@ -32,7 +32,7 @@ public class Canvas extends GameObject {
 	
 	@Override
 	public String getName() {
-		return "Canvas";
+		return getName("Canvas");
 	}
 	
 	/**

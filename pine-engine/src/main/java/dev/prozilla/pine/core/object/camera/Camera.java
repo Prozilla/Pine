@@ -55,7 +55,7 @@ public class Camera extends GameObject {
 	
 	@Override
 	public String getName() {
-		return "Camera";
+		return getName("Camera");
 	}
 	
 	protected void setSize() {

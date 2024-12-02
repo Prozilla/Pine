@@ -29,7 +29,7 @@ public class ImageButton extends CanvasElement {
 	
 	@Override
 	public String getName() {
-		return "ImageButton";
+		return getName("ImageButton");
 	}
 	
 	@Override
