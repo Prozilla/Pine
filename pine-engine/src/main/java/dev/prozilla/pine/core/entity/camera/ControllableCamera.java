@@ -80,8 +80,8 @@ public class ControllableCamera extends Camera {
 	public void init(long window) {
 		super.init(window);
 		
-		targetX = x;
-		targetY = y;
+		targetX = transform.x;
+		targetY = transform.y;
 		targetZoom = zoomFactor;
 	}
 	
@@ -103,18 +103,16 @@ public class ControllableCamera extends Camera {
 		super.update(deltaTime);
 		
 		if (velocityDamping == 0) {
-			x = targetX;
-			y = targetY;
+			transform.setPosition(targetX, targetY);
 			zoomFactor = targetZoom;
 		} else {
 			// Calculate velocity towards the target position and zoom with damping
-			float velocityX = (targetX - x) * velocityDamping;
-			float velocityY = (targetY - y) * velocityDamping;
+			float velocityX = (targetX - transform.x) * velocityDamping;
+			float velocityY = (targetY - transform.y) * velocityDamping;
 			float velocityZoom = (targetZoom - zoomFactor) * velocityDamping;
 			
 			// Apply velocities to update position and zoom smoothly
-			x += velocityX;
-			y += velocityY;
+			transform.translate(velocityX, velocityY);
 			zoomFactor += velocityZoom;
 		}
 		
@@ -123,8 +121,10 @@ public class ControllableCamera extends Camera {
 		
 		// Clamp camera position and target position to bounds
 		if (enableBounds) {
-			x = MathUtils.clamp(x, getMinX(), getMaxX());
-			y = MathUtils.clamp(y, getMinY(), getMaxY());
+			float newX = MathUtils.clamp(transform.x, getMinX(), getMaxX());
+			float newY = MathUtils.clamp(transform.y, getMinY(), getMaxY());
+			transform.setPosition(newX, newY);
+			
 			targetX = MathUtils.clamp(targetX, getMinX(), getMaxX());
 			targetY = MathUtils.clamp(targetY, getMinY(), getMaxY());
 		}

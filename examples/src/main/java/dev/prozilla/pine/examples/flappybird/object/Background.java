@@ -29,8 +29,7 @@ public class Background extends Sprite {
 		spriteRenderer.scale = 1.0001f; // Fix lines appearing between sprites
 		
 		// Set initial position
-		x = Main.WIDTH / -2f + WIDTH * index;
-		y = Main.HEIGHT / -2f;
+		transform.setPosition(Main.WIDTH / -2f + WIDTH * index, Main.HEIGHT / -2f);
 	}
 	
 	@Override
@@ -39,11 +38,11 @@ public class Background extends Sprite {
 		
 		if (!((GameScene)scene).gameOver) {
 			// Scroll position to the left
-			x -= deltaTime * SPEED;
+			transform.x -= deltaTime * SPEED;
 			
 			// Reset position when edge is reached
-			if (x + WIDTH < Main.WIDTH / -2f) {
-				x += Main.WIDTH + WIDTH;
+			if (transform.x + WIDTH < Main.WIDTH / -2f) {
+				transform.x += Main.WIDTH + WIDTH;
 			}
 		}
 	}

@@ -139,8 +139,8 @@ public class Camera extends Entity {
 	 * @return Array of x and y values
 	 */
 	public float[] applyTransform(float x, float y) {
-		x = (x - this.x) * getZoom() + getCenterX();
-		y = (y - this.y) * getZoom() + getCenterY();
+		x = (x - transform.getGlobalX()) * getZoom() + getCenterX();
+		y = (y - transform.getGlobalY()) * getZoom() + getCenterY();
 		
 		return new float[]{ x, y };
 	}
@@ -154,8 +154,8 @@ public class Camera extends Entity {
 	}
 	
 	public float[] screenToWorldPosition(int screenX, int screenY) {
-		float x = ((float)screenX - getCenterX()) / getZoom() + this.x;
-		float y = (getCenterY() - (float)screenY) / getZoom() + this.y;
+		float x = ((float)screenX - getCenterX()) / getZoom() + transform.getGlobalX();
+		float y = (getCenterY() - (float)screenY) / getZoom() + transform.getGlobalY();
 		
 		return new float[]{ x, y };
 	}

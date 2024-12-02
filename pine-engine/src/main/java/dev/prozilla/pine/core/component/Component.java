@@ -10,6 +10,8 @@ import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.input.Input;
 
+import java.util.ArrayList;
+
 /**
  * Represents the logics layer of a game object.
  * Components can be attached to game objects to affect their behaviour and/or visuals.
@@ -89,10 +91,10 @@ public class Component implements Lifecycle {
 	}
 	
 	/**
-	 * Getter for the game object this component is attached to.
+	 * Getter for the entity this component is attached to.
 	 * @return Game object
 	 */
-	public Entity getGameObject() {
+	public Entity getEntity() {
 		return entity;
 	}
 	
@@ -138,6 +140,30 @@ public class Component implements Lifecycle {
 	
 	public Camera getCamera() {
 		return entity.getCamera();
+	}
+	
+	public Transform getTransform() {
+		return entity.transform;
+	}
+	
+	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass) {
+		return entity.getComponentInParent(componentClass);
+	}
+	
+	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass, boolean includeAncestors) {
+		return entity.getComponentInParent(componentClass, includeAncestors);
+	}
+	
+	public <ComponentType extends Component> ArrayList<ComponentType> getComponentsInChildren(Class<ComponentType> componentClass) {
+		return entity.getComponentsInChildren(componentClass);
+	}
+	
+	public <ComponentType extends Component> ComponentType getComponent(Class<ComponentType> componentClass) {
+		return entity.getComponent(componentClass);
+	}
+	
+	public <ComponentType extends Component> ArrayList<ComponentType> getComponents(Class<ComponentType> componentClass) {
+		return entity.getComponents(componentClass);
 	}
 	
 	public boolean equals(Component component) {

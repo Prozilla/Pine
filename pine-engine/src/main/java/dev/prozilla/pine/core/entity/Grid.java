@@ -48,9 +48,9 @@ public class Grid extends Entity {
 				+  System.lineSeparator() + "Use multiple grids to overlap tiles");
 		}
 		
-		super.addChild(tile.getGameObject());
+		super.addChild(tile.getEntity());
 		group.addTile(tile);
-		return tile.getGameObject();
+		return tile.getEntity();
 	}
 	
 	public void removeTile(Tile tile) {
@@ -61,7 +61,7 @@ public class Grid extends Entity {
 		if (tile == null) {
 			return;
 		}
-		super.removeChild(tile.getGameObject());
+		super.removeChild(tile.getEntity());
 		group.removeTile(tile);
 	}
 	

@@ -52,7 +52,7 @@ public class SpriteRenderer extends Component {
 		super.render(renderer);
 		
 		// Calculate screen position
-		float[] position = getCamera().applyTransform(entity.x + offsetX, entity.y + offsetY);
+		float[] position = getCamera().applyTransform(entity.transform.getGlobalX() + offsetX, entity.transform.getGlobalY() + offsetY);
 		float x = position[0];
 		float y = position[1];
 		

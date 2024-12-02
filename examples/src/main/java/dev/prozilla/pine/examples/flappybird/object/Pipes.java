@@ -32,8 +32,8 @@ public class Pipes extends Entity {
 		topPipe = (Pipe)addChild(new Pipe(game, true));
 		
 		// Position pipes
-		topPipe.y = height + gap / 2f;
-		bottomPipe.y = height - gap / 2f - Pipe.HEIGHT * 1.5f;
+		topPipe.transform.y = height + gap / 2f;
+		bottomPipe.transform.y = height - gap / 2f - Pipe.HEIGHT * 1.5f;
 		
 		passed = false;
 	}
@@ -52,17 +52,17 @@ public class Pipes extends Entity {
 		
 		if (!gameScene.gameOver) {
 			// Scroll position of pipes to the left
-			float newX = bottomPipe.x - deltaTime * SPEED;
-			bottomPipe.x = newX;
-			topPipe.x = newX;
+			float newX = bottomPipe.transform.x - deltaTime * SPEED;
+			bottomPipe.transform.x = newX;
+			topPipe.transform.x = newX;
 			
 			// Check if player hit one of the pipes
-			if (gameScene.player.x + Player.WIDTH > newX && gameScene.player.x < newX + Pipe.WIDTH
-				&& (gameScene.player.y + Player.HEIGHT > topPipe.y || gameScene.player.y < bottomPipe.y + Pipe.HEIGHT)) {
+			if (gameScene.player.transform.x + Player.WIDTH > newX && gameScene.player.transform.x < newX + Pipe.WIDTH
+				&& (gameScene.player.transform.y + Player.HEIGHT > topPipe.transform.y || gameScene.player.transform.y < bottomPipe.transform.y + Pipe.HEIGHT)) {
 				gameScene.endGame();
 			} else {
 				// Check if player has passed through pipes
-				if (newX < gameScene.player.x && !passed) {
+				if (newX < gameScene.player.transform.x && !passed) {
 					gameScene.playerScore++;
 					passed = true;
 				}

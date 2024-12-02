@@ -39,8 +39,8 @@ public class Player extends Sprite {
 		animationFrame = 0;
 		age = 0;
 		velocity = JUMP_VELOCITY;
-		x = POSITION_X;
-		y = 0;
+		
+		transform.setPosition(POSITION_X, 0);
 		
 		// Set sprite properties
 		spriteRenderer.scale = 1.5f;
@@ -51,7 +51,7 @@ public class Player extends Sprite {
 	public void update(float deltaTime) {
 		super.update(deltaTime);
 		
-		if (y <= Main.HEIGHT / -2f || y + HEIGHT >= Main.HEIGHT / 2f) {
+		if (transform.x <= Main.HEIGHT / -2f || transform.y + HEIGHT >= Main.HEIGHT / 2f) {
 			gameScene.endGame();
 		}
 		
@@ -69,11 +69,11 @@ public class Player extends Sprite {
 		
 		// Update velocity and move based on current velocity
 		velocity -= deltaTime / 2f;
-		y += velocity * SPEED;
+		transform.y += velocity * SPEED;
 		velocity -= deltaTime / 2f;
 		
 		// Clamp position inside screen bounds
-		y = MathUtils.clamp(y, Main.HEIGHT / -2f, Main.HEIGHT / 2f);
+		transform.y = MathUtils.clamp(transform.y, Main.HEIGHT / -2f, Main.HEIGHT / 2f);
 	}
 	
 	@Override

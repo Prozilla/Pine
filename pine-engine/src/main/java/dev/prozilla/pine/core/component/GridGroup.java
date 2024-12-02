@@ -52,7 +52,7 @@ public class GridGroup extends Component {
 			
 			hoveringTile = getTile(coordinate);
 			if (hoveringTile != null) {
-				getInput().blockCursor(hoveringTile.getGameObject());
+				getInput().blockCursor(hoveringTile.getEntity());
 			}
 		}
 	}
@@ -105,13 +105,13 @@ public class GridGroup extends Component {
 	}
 	
 	public boolean isHovering(TileRenderer tile) {
-		return isHovering(tile.getGameObject());
+		return isHovering(tile.getEntity());
 	}
 	
 	public boolean isHovering(Entity entity) {
 		if (hoveringTile == null || entity == null) {
 			return false;
 		}
-		return entity.equals(hoveringTile.getGameObject());
+		return entity.equals(hoveringTile.getEntity());
 	}
 }

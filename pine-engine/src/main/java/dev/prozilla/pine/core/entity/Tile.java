@@ -56,7 +56,7 @@ public class Tile extends Entity {
 	 * @param y Y value
 	 */
 	public void moveBy(int x, int y) {
-		moveTo(this.x + x, this.y + y);
+		moveTo(Math.round(transform.x) + x, Math.round(transform.y + y));
 	}
 	
 	/**

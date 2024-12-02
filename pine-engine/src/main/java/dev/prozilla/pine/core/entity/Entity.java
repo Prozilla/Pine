@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.entity;
 import dev.prozilla.pine.core.Game;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.context.Window;
 import dev.prozilla.pine.core.entity.camera.Camera;
 import dev.prozilla.pine.core.state.Scene;
@@ -22,21 +23,11 @@ public class Entity implements Lifecycle {
 	private final String name;
 	protected boolean active;
 	
-	/** X position value */
-	public float x;
-	/** Y position value */
-	public float y;
-	/** Rotation in degrees */
-	public float rotation;
+	public final Transform transform;
 	
 	/** Reference to the game */
 	public final Game game;
 	public Scene scene;
-	
-	/** Children of this game object */
-	protected final ArrayList<Entity> children;
-	/** Parent of this game object */
-	protected Entity parent;
 	
 	/** Components of this game object */
 	protected final ArrayList<Component> components;
@@ -71,18 +62,16 @@ public class Entity implements Lifecycle {
 	public Entity(Game game, String name, float x, float y) {
 		this.game = game;
 		this.name = name;
-		this.x = x;
-		this.y = y;
 		
-		rotation = 0;
-		
-		children = new ArrayList<>();
+		transform = new Transform(x, y);
 		components = new ArrayList<>();
 		id = generateId();
 		
 		initialized = false;
 		started = false;
 		active = true;
+		
+		addComponent(transform);
 	}
 	
 	/**
@@ -94,13 +83,13 @@ public class Entity implements Lifecycle {
 			throw new IllegalStateException("Game object has already been initialized");
 		}
 		
-		if (scene == null && parent != null) {
-			scene = parent.scene;
+		if (scene == null && transform.parent != null) {
+			scene = transform.parent.getEntity().scene;
 		}
 		
-		if (!children.isEmpty()) {
-			for (Entity child : children) {
-				child.init(window);
+		if (!transform.children.isEmpty()) {
+			for (Transform child : transform.children) {
+				child.getEntity().init(window);
 			}
 		}
 		if (!components.isEmpty()) {
@@ -122,10 +111,10 @@ public class Entity implements Lifecycle {
 			throw new IllegalStateException("Game object has already been started");
 		}
 		
-		if (!children.isEmpty()) {
-			for (Entity child : children) {
-				if (child.isActive()) {
-					child.start();
+		if (!transform.children.isEmpty()) {
+			for (Transform child : transform.children) {
+				if (child.getEntity().isActive()) {
+					child.getEntity().start();
 				}
 			}
 		}
@@ -162,15 +151,15 @@ public class Entity implements Lifecycle {
 	 * at the end of the list, these need to receive input first.
 	 */
 	protected void inputChildren(float deltaTime) {
-		if (!children.isEmpty() && game.running) {
-			int childCount = children.size();
+		if (!transform.children.isEmpty() && game.running) {
+			int childCount = transform.getChildCount();
 			for (int i = childCount - 1; i >= 0; i--) {
 				if (!game.running) {
 					break;
 				}
-				Entity child = children.get(i);
-				if (child.isActive()) {
-					child.input(deltaTime);
+				Transform child = transform.children.get(i);
+				if (child.getEntity().isActive()) {
+					child.getEntity().input(deltaTime);
 				}
 			}
 		}
@@ -200,13 +189,13 @@ public class Entity implements Lifecycle {
 	}
 	
 	protected void updateChildren(float deltaTime) {
-		if (!children.isEmpty() && game.running) {
-			for (Entity child : children) {
+		if (!transform.children.isEmpty() && game.running) {
+			for (Transform child : transform.children) {
 				if (!game.running) {
 					break;
 				}
-				if (child.isActive()) {
-					child.update(deltaTime);
+				if (child.getEntity().isActive()) {
+					child.getEntity().update(deltaTime);
 				}
 			}
 		}
@@ -235,13 +224,13 @@ public class Entity implements Lifecycle {
 	}
 	
 	protected void renderChildren(Renderer renderer) {
-		if (!children.isEmpty() && game.running) {
-			for (Entity child : children) {
+		if (!transform.children.isEmpty() && game.running) {
+			for (Transform child : transform.children) {
 				if (!game.running) {
 					break;
 				}
-				if (child.isActive()) {
-					child.render(renderer);
+				if (child.getEntity().isActive()) {
+					child.getEntity().render(renderer);
 				}
 			}
 		}
@@ -265,14 +254,14 @@ public class Entity implements Lifecycle {
 	 * Destroys this game object at the end of the game loop.
 	 */
 	public void destroy() {
-		if (parent != null && game.running) {
-			parent.removeChild(this);
+		if (transform.parent != null && game.running) {
+			transform.parent.getEntity().removeChild(this);
 		}
-		if (!children.isEmpty()) {
-			for (Entity child : children) {
-				child.destroy();
+		if (!transform.children.isEmpty()) {
+			for (Transform child : transform.children) {
+				child.getEntity().destroy();
 			}
-			children.clear();
+			transform.children.clear();
 		}
 		if (!components.isEmpty()) {
 			for (Component component : components) {
@@ -288,7 +277,6 @@ public class Entity implements Lifecycle {
 		// Remove all references
 //		game = null;
 		scene = null;
-		parent = null;
 	}
 	
 	/**
@@ -300,11 +288,11 @@ public class Entity implements Lifecycle {
 			throw new IllegalArgumentException("Child can't be null");
 		}
 		
-		boolean added = this.children.add(child);
+		boolean added = transform.children.add(child.transform);
 		if (!added) {
 			throw new IllegalStateException("GameObject is already a child");
 		}
-		child.setParent(this);
+		child.transform.setParent(transform);
 		
 		// Initialize and start child
 		if (initialized && !child.isInitialized()) {
@@ -337,11 +325,11 @@ public class Entity implements Lifecycle {
 			throw new IllegalArgumentException("Child can't be null");
 		}
 		
-		boolean removed = this.children.remove(child);
+		boolean removed = transform.children.remove(child.transform);
 		if (!removed) {
 			throw new IllegalStateException("GameObject is not a child");
 		}
-		child.setParent(null);
+		child.transform.setParent(transform);
 		getTracker().removeGameObject();
 	}
 	
@@ -355,30 +343,18 @@ public class Entity implements Lifecycle {
 		}
 	}
 	
-	public ArrayList<Entity> getChildren() {
-		return children;
-	}
-	
 	/**
 	 * Setter for the parent object.
 	 * @param parent Parent object
 	 */
 	public void setParent(Entity parent) {
-		this.parent = parent;
+		transform.setParent(parent.transform);
 		
 		if (parent != null) {
 			scene = parent.scene;
 		} else {
 			scene = null;
 		}
-	}
-	
-	/**
-	 * Getter for the parent object.
-	 * @return Parent object
-	 */
-	public Entity getParent() {
-		return parent;
 	}
 	
 	/**
@@ -397,27 +373,7 @@ public class Entity implements Lifecycle {
 	}
 	
 	public boolean isActive() {
-		return active && (parent == null || parent.isActive());
-	}
-	
-	/**
-	 * Moves this game object by an x and y amount.
-	 * @param x Amount to move on the x-axis
-	 * @param y Amount to move on the y-axis
-	 */
-	public void moveBy(float x, float y) {
-		this.x += x;
-		this.y += y;
-	}
-	
-	/**
-	 * Moves this game object to an XY-coordinate.
-	 * @param x X value
-	 * @param y Y value
-	 */
-	public void moveTo(float x, float y) {
-		this.x = x;
-		this.y = y;
+		return active && (transform.parent == null || transform.parent.getEntity().isActive());
 	}
 	
 	/**
@@ -456,27 +412,27 @@ public class Entity implements Lifecycle {
 	}
 	
 	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass, boolean includeAncestors) {
-		if (parent == null) {
+		if (transform.parent == null) {
 			return null;
 		}
 		
-		ComponentType component = parent.getComponent(componentClass);
+		ComponentType component = transform.parent.getComponent(componentClass);
 		
 		if (component == null && includeAncestors) {
-			return parent.getComponentInParent(componentClass);
+			return transform.parent.getComponentInParent(componentClass);
 		}
 		
 		return component;
 	}
 	
 	public <ComponentType extends Component> ArrayList<ComponentType> getComponentsInChildren(Class<ComponentType> componentClass) {
-		if (children.isEmpty()) {
-			return null;
+		if (transform.children.isEmpty()) {
+			return new ArrayList<>();
 		}
 		
 		ArrayList<ComponentType> components = new ArrayList<>();
 		
-		for (Entity child : children) {
+		for (Transform child : transform.children) {
 			ComponentType component = child.getComponent(componentClass);
 			if (component != null) {
 				components.add(component);
@@ -601,6 +557,6 @@ public class Entity implements Lifecycle {
 	}
 	
 	public void print() {
-		System.out.printf("%s: %s (%s, %s)%n", getClass().getName(), getName(), x, y);
+		System.out.printf("%s: %s (%s, %s)%n", getClass().getName(), getName(), transform.getGlobalX(), transform.getGlobalY());
 	}
 }

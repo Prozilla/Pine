@@ -35,8 +35,7 @@ public class TileRenderer extends SpriteRenderer {
 	public void update(float deltaTime) {
 		super.update(deltaTime);
 		
-		entity.x = coordinate.x * size;
-		entity.y = coordinate.y * size;
+		getTransform().setPosition(coordinate.x * size, coordinate.y * size);
 	}
 	
 	@Override

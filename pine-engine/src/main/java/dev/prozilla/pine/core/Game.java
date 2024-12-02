@@ -312,7 +312,9 @@ public class Game implements Lifecycle {
 		
 		// Destroy window and release callbacks
 		window.destroy();
-		currentScene.destroy();
+		if (currentScene.started) {
+			currentScene.destroy();
+		}
 		
 		// Terminate GLFW and release error callback
 		glfwTerminate();

@@ -150,11 +150,11 @@ public class RectTransform extends Component {
 		
 		CanvasRenderer canvasRenderer = entity.getComponentInParent(CanvasRenderer.class);
 		
-		if (canvasRenderer == null || !(canvasRenderer.getGameObject() instanceof Canvas)) {
+		if (canvasRenderer == null || !(canvasRenderer.getEntity() instanceof Canvas)) {
 			throw new IllegalStateException("Canvas element must be a child of a canvas.");
 		}
 		
-		canvas = (Canvas)canvasRenderer.getGameObject();
+		canvas = (Canvas)canvasRenderer.getEntity();
 		return canvas;
 	}
 	

@@ -22,7 +22,7 @@ public class Pipe extends Sprite {
 		}
 		
 		// Set initial position
-		x = Main.WIDTH / 2f;
+		transform.x = Main.WIDTH / 2f;
 	}
 	
 	@Override
