@@ -23,33 +23,34 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL43.GL_DEBUG_OUTPUT;
 
 /**
- * 2D game using the LWJGL library.
+ * 2D application using the LWJGL library.
  */
-public class Game implements Lifecycle {
+public class Application implements Lifecycle {
 	
-	// Game
-	/** Title of the game */
+	// Data
+	/** Title of the application */
 	public String title;
-	/** True if the game is paused */
-	public boolean paused = false;
 	protected final static int TARGET_FPS = 120;
 	
-	/** True if the game has been initialized */
+	// State
+	/** True if the application has been initialized */
 	public static boolean initialized = false;
 	/** True if OpenGL has been initialized */
 	public static boolean initializedOpenGL = false;
-	public boolean running;
+	public boolean isRunning;
 	private boolean shouldStop;
+	public boolean isPaused = false;
 	
 	// Window
 	public int windowWidth;
 	public int windowHeight;
+	public String[] icons;
 	
 	// Scene
 	public Scene currentScene;
 	private final Map<Integer, Scene> scenes;
 	
-	// System
+	// Helpers
 	protected final Timer timer;
 	protected final Renderer renderer;
 	protected final Window window;
@@ -59,39 +60,39 @@ public class Game implements Lifecycle {
 	private GLFWErrorCallback errorCallback;
 	
 	/**
-	 * Creates a game titled "Game".
+	 * Creates a application titled "Application".
 	 * @param width Width of the window
 	 * @param height height of the window
 	 */
-	public Game(int width, int height) {
-		this("Game", width, height);
+	public Application(int width, int height) {
+		this("Application", width, height);
 	}
 	
 	/**
-	 * Creates a game.
-	 * @param title Title of the game
+	 * Creates a application.
+	 * @param title Title of the application
 	 * @param width Width of the window
 	 * @param height height of the window
 	 */
-	public Game(String title, int width, int height) {
+	public Application(String title, int width, int height) {
 		this(title, width, height, null);
 	}
 	
 	/**
-	 * Creates a game.
-	 * @param title Title of the game
+	 * Creates a application.
+	 * @param title Title of the application
 	 * @param width Width of the window
 	 * @param height height of the window
 	 * @param scene Starting scene
 	 */
-	public Game(String title, int width, int height, Scene scene) {
+	public Application(String title, int width, int height, Scene scene) {
 		timer = new Timer();
 		tracker = new Tracker(this);
 		renderer = new Renderer(tracker);
 		window = new Window(width, height, title);
 		input = new Input(this);
 		
-		running = false;
+		isRunning = false;
 		shouldStop = false;
 
 		// Prepare scene
@@ -108,11 +109,36 @@ public class Game implements Lifecycle {
 	}
 	
 	/**
-	 * Initializes the game.
+	 * Initializes and starts the application and handles exceptions.
+	 */
+	public void run() {
+		try {
+			init();
+			start();
+		} catch (RuntimeException e) {
+			// Force application to quit if it is still running
+			if (isRunning) {
+				destroy();
+			}
+			
+			// Log exception
+			System.err.println("Application failed");
+			e.printStackTrace();
+		} finally {
+			System.out.println("Application finished");
+		}
+	}
+	
+	/**
+	 * Initializes the application.
 	 */
 	@Override
 	public void init() throws RuntimeException {
-		running = true;
+		if (initialized) {
+			throw new IllegalStateException("Application has already been initialized.");
+		}
+		
+		isRunning = true;
 		
 		// Set error callback
 		errorCallback = GLFWErrorCallback.createPrint(System.err).set();
@@ -134,53 +160,55 @@ public class Game implements Lifecycle {
 		initializedOpenGL = true;
 		System.out.println("Initialized OpenGL (Initialization: 3/4)");
 		
-		// Initialize game
+		// Initialize application
 		timer.init();
 		renderer.init();
 		input.init(window.id);
 		currentScene.init(window.id);
-		System.out.println("Initialized game (Initialization: 4/4)");
+		loadIcons();
+		System.out.println("Initialized application (Initialization: 4/4)");
 		
 		initialized = true;
 	}
 	
 	/**
-	 * Starts the game loop.
+	 * Starts the application loop.
+	 * Destroys the application after the application loop has been stopped.
 	 */
 	@Override
 	public void start() {
 		long targetTime = 1000L / TARGET_FPS;
 		
-		System.out.printf("Starting game (fps: %s)%n", TARGET_FPS);
+		System.out.printf("Starting application (fps: %s)%n", TARGET_FPS);
 		currentScene.start();
 		
-		// Game loop
+		// Application loop
 		while (!window.shouldClose() && !shouldStop) {
 			long startTime = (long) (timer.getTime() * 1000);
 			float deltaTime = timer.getDelta();
 			
-			// Handle input and update game
+			// Handle input and update application
 			try {
 				input(deltaTime);
 				update(deltaTime);
 			} catch (Exception e) {
-				System.err.println("Failed to update game");
+				System.err.println("Failed to update application");
 				e.printStackTrace();
 			} finally {
 				timer.updateUPS();
 			}
 			
-			// Abort game loop
+			// Abort application loop
 			if (shouldStop) {
 				break;
 			}
 			
-			// Render game
+			// Render application
 			try {
 				resize();
 				render(renderer);
 			} catch (Exception e) {
-				System.err.println("Failed to render game");
+				System.err.println("Failed to render application");
 				e.printStackTrace();
 				
 				// Abort rendering
@@ -213,12 +241,12 @@ public class Game implements Lifecycle {
 			}
 		}
 		
-		// Stop the game
+		// Stop the application
 		destroy();
 	}
 	
 	/**
-	 * Handles input for the game.
+	 * Handles input for the application.
 	 * @param deltaTime Delta time in seconds
 	 */
 	@Override
@@ -230,7 +258,7 @@ public class Game implements Lifecycle {
 	}
 	
 	/**
-	 * Updates the game.
+	 * Updates the application.
 	 * @param deltaTime Delta time in seconds
 	 */
 	@Override
@@ -242,7 +270,7 @@ public class Game implements Lifecycle {
 	}
 	
 	/**
-	 * Renders the game.
+	 * Renders the application.
 	 */
 	@Override
 	public void render(Renderer renderer) {
@@ -258,26 +286,26 @@ public class Game implements Lifecycle {
 	}
 	
 	/**
-	 * Pauses the game.
+	 * Pauses the application.
 	 */
 	public void pause() {
 		timer.timeScale = 0;
-		paused = true;
+		isPaused = true;
 	}
 	
 	/**
-	 * Resumes the game panel.
+	 * Resumes the application panel.
 	 */
 	public void resume() {
 		timer.timeScale = 1;
-		paused = false;
+		isPaused = false;
 	}
 	
 	/**
-	 * Pauses or resumes the game panel based on the current state.
+	 * Pauses or resumes the application panel based on the current state.
 	 */
 	public void togglePause() {
-		if (paused) {
+		if (isPaused) {
 			resume();
 		} else {
 			pause();
@@ -285,22 +313,22 @@ public class Game implements Lifecycle {
 	}
 	
 	/**
-	 * Tells the game to stop after the current frame.
+	 * Tells the application to stop after the current frame.
 	 */
 	public void stop() {
 		shouldStop = true;
-		running = false;
+		isRunning = false;
 	}
 	
 	/**
-	 * Stops the game and cleans up resources.
-	 * This should not be called before the game loop ends.
+	 * Stops the application and cleans up resources.
+	 * This should not be called before the application loop ends.
 	 */
 	@Override
 	public void destroy() {
-		running = false;
+		isRunning = false;
 		
-		System.out.println("Stopping game");
+		System.out.println("Stopping application");
 		
 		// Destroy instances
 		renderer.destroy();
@@ -337,7 +365,7 @@ public class Game implements Lifecycle {
 	public int addScene(Scene scene) {
 		int id = scene.getId();
 		scenes.put(id, scene);
-		scene.setGame(this);
+		scene.setApplication(this);
 		return id;
 	}
 	
@@ -375,7 +403,7 @@ public class Game implements Lifecycle {
 		System.out.println("Loading scene: " + id);
 		
 		currentScene = scenes.get(id);
-		running = true;
+		isRunning = true;
 		
 		if (!currentScene.initialized) {
 			currentScene.init(window.id);
@@ -390,7 +418,7 @@ public class Game implements Lifecycle {
 	 */
 	public void unloadScene() {
 		System.out.println("Unloading scene: " + currentScene.getId());
-		running = false;
+		isRunning = false;
 		
 		if (currentScene != null) {
 			if (currentScene.loaded) {
@@ -401,11 +429,23 @@ public class Game implements Lifecycle {
 		currentScene = null;
 	}
 	
+	public void setIcons(String... icons) {
+		this.icons = icons;
+		
+		// Reload icons if they were changed after initialization
+		if (initializedOpenGL) {
+			loadIcons();
+		}
+	}
+	
 	/**
-	 * Sets the window icons.
-	 * @param icons Array of paths to icons.
+	 * Loads the window icons.
 	 */
-	public void setIcons(String[] icons) {
+	public void loadIcons() {
+		if (icons == null || icons.length == 0) {
+			return;
+		}
+		
 		try {
 			Image[] images = new Image[icons.length];
 			for (int i = 0; i < icons.length; i++) {
@@ -413,12 +453,13 @@ public class Game implements Lifecycle {
 			}
 			window.setIcons(images);
 		} catch (Exception e) {
+			System.err.println("Failed to load icons.");
 			e.printStackTrace();
 		}
 	}
 	
 	/**
-	 * Resizes the game window.
+	 * Resizes the application window.
 	 */
 	public void resize() {
 		if (window.getWidth() != renderer.getHeight() || window.getHeight() != renderer.getHeight()) {

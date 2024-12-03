@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.system.resource;
 
 import dev.prozilla.pine.common.system.Path;
 import dev.prozilla.pine.common.system.resource.text.Font;
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.Application;
 import org.lwjgl.system.MemoryStack;
 
 import java.awt.*;
@@ -97,7 +97,7 @@ public final class ResourcePool {
 			return textures.get(path);
 		}
 		
-		if (!Game.initializedOpenGL) {
+		if (!Application.initializedOpenGL) {
 			throw new RuntimeException("Can't load textures before initialization");
 		}
 		

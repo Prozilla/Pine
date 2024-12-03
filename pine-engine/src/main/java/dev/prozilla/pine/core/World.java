@@ -18,11 +18,11 @@ public class World implements Lifecycle {
 	public ComponentManager componentManager;
 	public SystemManager systemManager;
 	
-	public final Game game;
+	public final Application application;
 	public final Scene scene;
 	
-	public World(Game game, Scene scene) {
-		this.game = game;
+	public World(Application application, Scene scene) {
+		this.application = application;
 		this.scene = scene;
 		
 		entityManager = new EntityManager(this);

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.state;
 
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.context.Window;
 import dev.prozilla.pine.core.entity.Entity;
@@ -16,7 +16,7 @@ public class Scene implements Lifecycle {
 	private final int id;
 	
 	// References
-	protected Game game;
+	protected Application application;
 	protected World world;
 	protected Camera camera;
 	
@@ -31,37 +31,30 @@ public class Scene implements Lifecycle {
 		this(null);
 	}
 	
-	public Scene(Game game) {
+	public Scene(Application application) {
 		this.id = generateId();
 		this.name = "Scene #" + this.id;
 		
-		setGame(game);
+		setApplication(application);
 		reset();
 	}
 	
-	public Scene(Game game, String name) {
+	public Scene(Application application, String name) {
 		this.name = name;
 		this.id = generateId();
 		
-		setGame(game);
+		setApplication(application);
 		reset();
 	}
 	
-	/**
-	 * Setter for the game reference.
-	 * @param game Reference to the game
-	 */
-	public void setGame(Game game) {
-		if (game == null) {
+	public void setApplication(Application application) {
+		if (application == null) {
 			return;
 		}
 		
-		this.game = game;
+		this.application = application;
 	}
 	
-	/**
-	 * Resets the scene.
-	 */
 	public void reset() {
 		loaded = false;
 		initialized = false;
@@ -73,7 +66,7 @@ public class Scene implements Lifecycle {
 	 */
 	protected void load() {
 		if (world == null) {
-			world = new World(game, this);
+			world = new World(application, this);
 		}
 		if (camera == null) {
 			camera = new Camera(world);
@@ -151,7 +144,7 @@ public class Scene implements Lifecycle {
 		world.destroy();
 		
 		// Remove all references
-//		game = null;
+//		application = null;
 		world = null;
 		camera = null;
 		
@@ -168,7 +161,7 @@ public class Scene implements Lifecycle {
 	}
 	
 	/**
-	 * Adds a game object to the scene.
+	 * Adds an entity to the scene.
 	 * @param entity GameObject
 	 */
 	public Entity add(Entity entity) {
@@ -176,7 +169,7 @@ public class Scene implements Lifecycle {
 	}
 	
 	/**
-	 * Removes a game object from the scene.
+	 * Removes an entity from the scene.
 	 * @param entity GameObject
 	 */
 	public void remove(Entity entity) {
@@ -200,23 +193,23 @@ public class Scene implements Lifecycle {
 	}
 	
 	public Input getInput() {
-		return game.getInput();
+		return application.getInput();
 	}
 	
 	public Window getWindow() {
-		return game.getWindow();
+		return application.getWindow();
 	}
 	
 	public Renderer getRenderer() {
-		return game.getRenderer();
+		return application.getRenderer();
 	}
 	
 	public Timer getTimer() {
-		return game.getTimer();
+		return application.getTimer();
 	}
 	
 	public Tracker getTracker() {
-		return game.getTracker();
+		return application.getTracker();
 	}
 	
 	public World getWorld() {

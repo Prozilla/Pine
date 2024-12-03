@@ -15,6 +15,6 @@ public abstract class InputSystem extends SystemBase {
 	public abstract void input(float deltaTime);
 	
 	public Input getInput() {
-		return world.game.getInput();
+		return world.application.getInput();
 	}
 }

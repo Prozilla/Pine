@@ -1,13 +1,13 @@
 package dev.prozilla.pine.core.state;
 
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.Application;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * Keeps track of the game's statistics.
+ * Keeps track of the application's statistics.
  */
 public class Tracker {
 	
@@ -16,10 +16,10 @@ public class Tracker {
 	private String version;
 	private int gameObjects;
 	
-	private final Game game;
+	private final Application application;
 	
-	public Tracker(Game game) {
-		this.game = game;
+	public Tracker(Application application) {
+		this.application = application;
 		
 		renderedVertices = 0;
 		totalVertices = 0;
@@ -31,7 +31,7 @@ public class Tracker {
 	 * @return Frames per second
 	 */
 	public int getFps() {
-		return game.getTimer().getFPS();
+		return application.getTimer().getFPS();
 	}
 	
 	/**
@@ -39,7 +39,7 @@ public class Tracker {
 	 * @return Updates per second
 	 */
 	public int getUps() {
-		return game.getTimer().getUPS();
+		return application.getTimer().getUPS();
 	}
 	
 	/**
@@ -47,7 +47,7 @@ public class Tracker {
 	 * @return System time in seconds
 	 */
 	public double getTime() {
-		return game.getTimer().getTime();
+		return application.getTimer().getTime();
 	}
 	
 	/**
@@ -106,10 +106,10 @@ public class Tracker {
 	}
 	
 	public int getWindowWidth() {
-		return game.getWindow().getWidth();
+		return application.getWindow().getWidth();
 	}
 	
 	public int getWindowHeight() {
-		return game.getWindow().getHeight();
+		return application.getWindow().getHeight();
 	}
 }

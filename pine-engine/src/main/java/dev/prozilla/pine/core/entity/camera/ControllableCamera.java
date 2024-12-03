@@ -43,7 +43,7 @@ public class ControllableCamera extends Camera {
 	/**
 	 * Creates a controllable camera.
 	 *
-	 * @param world           Reference to the game
+	 * @param world           Reference to the world
 	 * @param movementSpeed   Movement speed (Set to <code>0</code> to disable movement)
 	 * @param velocityDamping Velocity damping (Set to <code>0</code> to disable damping)
 	 * @param zoomSpeed       Zoom speed (Set to <code>0</code> to disable zooming)

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.camera;
 
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.common.system.resource.Color;
@@ -20,19 +20,11 @@ public class Camera extends Entity {
 	
 	/**
 	 * Creates a camera object with a black background color
-	 *
-	 * @param world Reference to game
 	 */
 	public Camera(World world) {
 		this(world, Color.BLACK);
 	}
 	
-	/**
-	 * Creates a camera object.
-	 *
-	 * @param world           Reference to game
-	 * @param backgroundColor Background color of this camera
-	 */
 	public Camera(World world, Color backgroundColor) {
 		super(world);
 		
@@ -79,7 +71,7 @@ public class Camera extends Entity {
 	}
 	
 	public void renderBackgroundColor(Color color) {
-		if (!Game.initializedOpenGL) {
+		if (!Application.initializedOpenGL) {
 			throw new RuntimeException("Can't render background color before initialization");
 		}
 		

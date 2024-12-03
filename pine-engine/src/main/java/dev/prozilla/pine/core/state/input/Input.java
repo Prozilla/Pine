@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.state.input;
 
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.camera.Camera;
@@ -43,13 +43,13 @@ public class Input implements Lifecycle {
 	private GLFWCursorPosCallback cursorPosCallback;
 	private GLFWMouseButtonCallback mouseButtonCallback;
 	
-	private final Game game;
+	private final Application application;
 	
 	/**
 	 * Creates an input system.
 	 */
-	public Input(Game game) {
-		this.game = game;
+	public Input(Application application) {
+		this.application = application;
 		
 		keysPressed = new ArrayList<>();
 		keysDown = new ArrayList<>();
@@ -142,7 +142,7 @@ public class Input implements Lifecycle {
 	@Override
 	public void update() {
 		long cursor = glfwCreateStandardCursor(cursorType);
-		glfwSetCursor(game.getWindow().id, cursor);
+		glfwSetCursor(application.getWindow().id, cursor);
 		
 		previousKeysDown.addAll(keysDown);
 		previousMouseButtonsDown.addAll(mouseButtonsDown);
@@ -333,7 +333,7 @@ public class Input implements Lifecycle {
 			return null;
 		}
 		
-		Camera camera = game.currentScene.getCamera();
+		Camera camera = application.currentScene.getCamera();
 		return camera.screenToWorldPosition(getCursor());
 	}
 	

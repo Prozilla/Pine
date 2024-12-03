@@ -73,7 +73,7 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 		
 		if (gameOver) {
 			if (getInput().getKeyDown(Key.R)) {
-				game.reloadScene();
+				application.reloadScene();
 			}
 		}
 	}

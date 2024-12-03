@@ -75,7 +75,7 @@ public class ComponentGroup {
 	public void checkStatus() {
 		boolean allComponentsEnabled = true;
 		for (Component component : components) {
-			if (!component.enabled) {
+			if (!component.isEnabled) {
 				allComponentsEnabled = false;
 				break;
 			}

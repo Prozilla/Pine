@@ -13,21 +13,15 @@ import dev.prozilla.pine.core.state.input.Input;
 import java.util.ArrayList;
 
 /**
- * Represents the logics layer of a game object.
- * Components can be attached to game objects to affect their behaviour and/or visuals.
- * Components are split into the following categories:
- * <ul>
- *     <li><strong>Renderers</strong>: Responsible for rendering game objects on the screen.</li>
- *     <li><strong>Transforms</strong>: Responsible for positioning different game objects on the screen.</li>
- *     <li><strong>Groups</strong>: Responsible for aligning the children of an game object on the screen.</li>
- * </ul>
+ * Contains the data of an entity.
  */
-public class Component implements Lifecycle {
+public abstract class Component implements Lifecycle {
 	
-	public boolean enabled;
-	
+	// Identifier
 	private final int id;
 	
+	// State
+	public boolean isEnabled;
 	/** The entity that this component is attached to. */
 	public Entity entity;
 	
@@ -35,7 +29,7 @@ public class Component implements Lifecycle {
 	
 	public Component() {
 		id = generateId();
-		enabled = true;
+		isEnabled = true;
 	}
 	
 	@Override
@@ -60,14 +54,14 @@ public class Component implements Lifecycle {
 	 * Enables this component.
 	 */
 	public void enable() {
-		enabled = true;
+		isEnabled = true;
 	}
 	
 	/**
 	 * Disables this component.
 	 */
 	public void disable() {
-		enabled = false;
+		isEnabled = false;
 	}
 	
 	/**

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.examples.flappybird;
 
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.examples.flappybird.entity.Background;
 
 public class Main {
@@ -12,20 +12,9 @@ public class Main {
 	public static void main(String[] args) {
 		// Create new scene and game
 		GameScene scene = new GameScene();
-		Game game = new Game("Flappy Bird", WIDTH, HEIGHT, scene);
+		Application game = new Application("Flappy Bird", WIDTH, HEIGHT, scene);
 		
-		try {
-			// Initialize game and start game loop
-			game.init();
-			game.setIcons(new String[]{ "flappybird/icon.png" });
-			game.start();
-		} catch (RuntimeException e) {
-			// Quit game if anything goes wrong and throw exception
-			if (game.running) {
-				game.destroy();
-			}
-			throw new RuntimeException(e);
-		}
+		game.setIcons("flappybird/icon.png");
+		game.run();
 	}
-	
 }

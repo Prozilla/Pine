@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity;
 
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.Component;
@@ -16,21 +16,21 @@ import dev.prozilla.pine.core.state.input.Input;
 import java.util.ArrayList;
 
 /**
- * Represents a game object
+ * Represents a unique entity in the world with a list of components.
  */
 public class Entity implements Lifecycle {
 	
 	private final int id;
 	private final String name;
-	protected boolean active;
+	protected boolean isActive;
 	
 	public final Transform transform;
 	
 	protected final World world;
-	protected final Game game;
+	protected final Application application;
 	protected final Scene scene;
 	
-	/** Components of this game object */
+	/** Components of this entity */
 	public final ArrayList<Component> components;
 	
 	protected boolean initialized;
@@ -66,7 +66,7 @@ public class Entity implements Lifecycle {
 		this.world = world;
 		this.name = name;
 
-		game = world.game;
+		application = world.application;
 		scene = world.scene;
 		
 		transform = new Transform(x, y);
@@ -75,7 +75,7 @@ public class Entity implements Lifecycle {
 		
 		initialized = false;
 		started = false;
-		active = true;
+		isActive = true;
 	}
 	
 	/**
@@ -124,7 +124,7 @@ public class Entity implements Lifecycle {
 		}
 		if (!components.isEmpty()) {
 			for (Component component : components) {
-				if (component.enabled) {
+				if (component.isEnabled) {
 					component.start();
 				}
 			}
@@ -155,10 +155,10 @@ public class Entity implements Lifecycle {
 	 * at the end of the list, these need to receive input first.
 	 */
 	protected void inputChildren(float deltaTime) {
-		if (!transform.children.isEmpty() && game.running) {
+		if (!transform.children.isEmpty() && application.isRunning) {
 			int childCount = transform.getChildCount();
 			for (int i = childCount - 1; i >= 0; i--) {
-				if (!game.running) {
+				if (!application.isRunning) {
 					break;
 				}
 				Transform child = transform.children.get(i);
@@ -170,12 +170,12 @@ public class Entity implements Lifecycle {
 	}
 	
 	protected void inputComponents(float deltaTime) {
-		if (!components.isEmpty() && game.running) {
+		if (!components.isEmpty() && application.isRunning) {
 			for (Component component : components) {
-				if (!game.running) {
+				if (!application.isRunning) {
 					break;
 				}
-				if (component.enabled) {
+				if (component.isEnabled) {
 					component.input(deltaTime);
 				}
 			}
@@ -193,9 +193,9 @@ public class Entity implements Lifecycle {
 	}
 	
 	protected void updateChildren(float deltaTime) {
-		if (!transform.children.isEmpty() && game.running) {
+		if (!transform.children.isEmpty() && application.isRunning) {
 			for (Transform child : transform.children) {
-				if (!game.running) {
+				if (!application.isRunning) {
 					break;
 				}
 				if (child.getEntity() != null && child.getEntity().isActive()) {
@@ -206,12 +206,12 @@ public class Entity implements Lifecycle {
 	}
 	
 	protected void updateComponents(float deltaTime) {
-		if (!components.isEmpty() && game.running) {
+		if (!components.isEmpty() && application.isRunning) {
 			for (Component component : components) {
-				if (!game.running) {
+				if (!application.isRunning) {
 					break;
 				}
-				if (component.enabled) {
+				if (component.isEnabled) {
 					component.update(deltaTime);
 				}
 			}
@@ -228,9 +228,9 @@ public class Entity implements Lifecycle {
 	}
 	
 	protected void renderChildren(Renderer renderer) {
-		if (!transform.children.isEmpty() && game.running) {
+		if (!transform.children.isEmpty() && application.isRunning) {
 			for (Transform child : transform.children) {
-				if (!game.running) {
+				if (!application.isRunning) {
 					break;
 				}
 				if (child.getEntity() != null && child.getEntity().isActive()) {
@@ -241,12 +241,12 @@ public class Entity implements Lifecycle {
 	}
 	
 	protected void renderComponents(Renderer renderer) {
-		if (!components.isEmpty() && game.running) {
+		if (!components.isEmpty() && application.isRunning) {
 			for (Component component : components) {
-				if (!game.running) {
+				if (!application.isRunning) {
 					break;
 				}
-				if (component.enabled) {
+				if (component.isEnabled) {
 					component.render(renderer);
 				}
 			}
@@ -258,7 +258,7 @@ public class Entity implements Lifecycle {
 	 * Destroys this game object at the end of the game loop.
 	 */
 	public void destroy() {
-		if (transform.parent != null && game.running) {
+		if (transform.parent != null && application.isRunning) {
 			transform.parent.getEntity().removeChild(this);
 		}
 //		if (!transform.children.isEmpty()) {
@@ -360,11 +360,11 @@ public class Entity implements Lifecycle {
 	 * Enables/disables this game object.
 	 */
 	public void setActive(boolean active) {
-		if (this.active == active) {
+		if (this.isActive == active) {
 			return;
 		}
 		
-		this.active = active;
+		this.isActive = active;
 		
 //		if (active) {
 //			restart();
@@ -372,7 +372,7 @@ public class Entity implements Lifecycle {
 	}
 	
 	public boolean isActive() {
-		return active && (transform.parent == null || transform.parent.getEntity().isActive());
+		return isActive && (transform.parent == null || transform.parent.getEntity().isActive());
 	}
 	
 	/**
@@ -500,23 +500,23 @@ public class Entity implements Lifecycle {
 	}
 	
 	public Input getInput() {
-		return game.getInput();
+		return application.getInput();
 	}
 	
 	public Window getWindow() {
-		return game.getWindow();
+		return application.getWindow();
 	}
 	
 	public Renderer getRenderer() {
-		return game.getRenderer();
+		return application.getRenderer();
 	}
 	
 	public Timer getTimer() {
-		return game.getTimer();
+		return application.getTimer();
 	}
 	
 	public Tracker getTracker() {
-		return game.getTracker();
+		return application.getTracker();
 	}
 	
 	public World getWorld() {
