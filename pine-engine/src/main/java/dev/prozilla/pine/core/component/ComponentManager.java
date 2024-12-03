@@ -30,6 +30,6 @@ public class ComponentManager extends ECSManager {
 		component.entity = entity;
 		entity.components.add(component);
 		
-		world.systemManager.registerComponent(component);
+		world.systemManager.register(entity);
 	}
 }

@@ -1,45 +1,75 @@
 package dev.prozilla.pine.core.component;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.core.entity.Entity;
 
 import java.util.ArrayList;
 
 /**
  * Utility class for collecting a certain type of component.
- * @param <C> Type of the components in this collection.
  */
-public class ComponentCollector<C extends Component> implements Lifecycle {
+public class ComponentCollector implements Lifecycle {
 	
 	/**
-	 * Collection of collected components.
+	 * Groups of components that belong to the same entity and match the requirements of the collection.
 	 */
-	public final ArrayList<C> components;
+	public final ArrayList<ComponentGroup> componentGroups;
 	
 	/**
-	 * Class this determines which components are included in the collection.
+	 * Entities must have components of these classes to be included in the collection.
 	 */
-	private final Class<C> componentClass;
+	private final Class<? extends Component>[] componentClasses;
 	
-	public ComponentCollector(Class<C> componentClass) {
-		this.componentClass = componentClass;
+	@SafeVarargs
+	public ComponentCollector(Class<? extends Component>... componentClasses) {
+		this.componentClasses = componentClasses;
 		
-		components = new ArrayList<>();
+		if (componentClasses.length == 0) {
+			throw new IllegalArgumentException("Length of componentClasses must be greater than 0.");
+		}
+		
+		componentGroups = new ArrayList<>();
 	}
 	
 	/**
-	 * Removes all components from the collection.
+	 * Removes all component groups.
 	 */
 	@Override
 	public void destroy() {
-		components.clear();
+		componentGroups.clear();
 	}
 	
 	/**
-	 * Adds a component to the collection, if it meets the requirements of the collection.
+	 * Adds components of a given entity to a component group, if it meets the requirements of the collection.
 	 */
-	public void register(Component component) {
-		if (componentClass.isInstance(component)) {
-			components.add(componentClass.cast(component));
+	public void register(Entity entity) {
+		if (entity.components.isEmpty()) {
+			return;
+		}
+		
+		Component[] components = new Component[componentClasses.length];
+		
+		boolean match = true;
+		for (int i = 0; i < componentClasses.length; i++) {
+			Component component = entity.getComponent(componentClasses[i]);
+			if (component == null) {
+				match = false;
+				break;
+			}
+			components[i] = component;
+		}
+		
+		if (!match) {
+			return;
+		}
+		
+		try {
+			ComponentGroup componentGroup = new ComponentGroup(componentClasses);
+			componentGroup.setComponents(components);
+			componentGroups.add(componentGroup);
+		} catch (Exception e) {
+			System.err.println("Failed to create component group.");
+			e.printStackTrace();
 		}
 	}
 }

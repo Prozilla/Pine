@@ -1,14 +1,14 @@
 package dev.prozilla.pine.core.system;
 
-import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.ComponentCollector;
 
 /**
  * System responsible for updating component data.
  */
-public abstract class UpdateSystem<T extends Component> extends SystemBase<T> {
+public abstract class UpdateSystem extends SystemBase {
 	
-	public UpdateSystem(Class<T> componentClass) {
-		super(componentClass);
+	public UpdateSystem(ComponentCollector collector) {
+		super(collector);
 	}
 	
 	public abstract void update(float deltaTime);

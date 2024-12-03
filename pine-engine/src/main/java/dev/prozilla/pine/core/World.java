@@ -79,7 +79,7 @@ public class World implements Lifecycle {
 		return component;
 	}
 	
-	public SystemBase<Component> addSystem(SystemBase<Component> systemBase) {
+	public SystemBase addSystem(SystemBase systemBase) {
 		systemManager.addSystem(systemBase);
 		return systemBase;
 	}

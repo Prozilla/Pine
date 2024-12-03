@@ -4,24 +4,28 @@ import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.ComponentCollector;
+import dev.prozilla.pine.core.component.ComponentGroup;
+import dev.prozilla.pine.core.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 // TO DO: ignore de-activated components
 
 /**
  * System responsible for running logic for a specific type of component.
- * @param <C> Type of component to collect in this system.
  */
-public abstract class SystemBase<C extends Component> implements Lifecycle {
+public abstract class SystemBase implements Lifecycle {
 	
-	private final ComponentCollector<C> collector;
+	private final ComponentCollector collector;
 	
 	protected World world;
 	
-	public SystemBase(Class<C> componentClass) {
-		collector = new ComponentCollector<C>(componentClass);
+	public SystemBase(ComponentCollector collector) {
+		Objects.requireNonNull(collector, "Collector must not be null.");
+		
+		this.collector = collector;
 	}
 	
 	public void init(World world) {
@@ -36,26 +40,29 @@ public abstract class SystemBase<C extends Component> implements Lifecycle {
 	}
 	
 	/**
-	 * Registers a component in this system's collection
+	 * Registers an entity's components in this system's collection.
 	 * @see ComponentCollector
 	 */
-	public void registerComponent(Component component) {
-		collector.register(component);
+	public void register(Entity entity) {
+		collector.register(entity);
 	}
 	
 	/**
-	 * Returns all components in this system's collection.
-	 * @see ComponentCollector
+	 * Iterates over each component group in this system's collection.
 	 */
-	protected ArrayList<C> getComponents() {
-		return collector.components;
+	protected void forEach(Consumer<ComponentGroup> consumer) {
+		for (ComponentGroup componentGroup : collector.componentGroups) {
+			if (componentGroup.isEnabled()) {
+				consumer.accept(componentGroup);
+			}
+		}
 	}
 	
 	/**
-	 * Returns true if this system has collected any components.
+	 * Returns true if this system has collected any component groups.
 	 * @see ComponentCollector
 	 */
-	public boolean hasComponents() {
-		return !collector.components.isEmpty();
+	public boolean hasComponentGroups() {
+		return !collector.componentGroups.isEmpty();
 	}
 }

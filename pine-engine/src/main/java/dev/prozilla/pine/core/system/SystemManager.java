@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.system;
 
 import dev.prozilla.pine.core.ECSManager;
-import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.World;
+import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.rendering.Renderer;
 
 import java.util.ArrayList;
@@ -10,9 +10,9 @@ import java.util.Objects;
 
 public class SystemManager extends ECSManager {
 	
-	private final ArrayList<InputSystem<Component>> inputSystems;
-	private final ArrayList<UpdateSystem<Component>> updateSystems;
-	private final ArrayList<RenderSystem<Component>> renderSystems;
+	private final ArrayList<InputSystem> inputSystems;
+	private final ArrayList<UpdateSystem> updateSystems;
+	private final ArrayList<RenderSystem> renderSystems;
 	
 	public SystemManager(World world) {
 		super(world);
@@ -31,8 +31,8 @@ public class SystemManager extends ECSManager {
 			return;
 		}
 		
-		for (InputSystem<Component> inputSystem : inputSystems) {
-			if (inputSystem.hasComponents()) {
+		for (InputSystem inputSystem : inputSystems) {
+			if (inputSystem.hasComponentGroups()) {
 				inputSystem.input(deltaTime);
 			}
 		}
@@ -47,8 +47,8 @@ public class SystemManager extends ECSManager {
 			return;
 		}
 		
-		for (UpdateSystem<Component> updateSystem : updateSystems) {
-			if (updateSystem.hasComponents()) {
+		for (UpdateSystem updateSystem : updateSystems) {
+			if (updateSystem.hasComponentGroups()) {
 				updateSystem.update(deltaTime);
 			}
 		}
@@ -63,8 +63,8 @@ public class SystemManager extends ECSManager {
 			return;
 		}
 		
-		for (RenderSystem<Component> renderSystem : renderSystems) {
-			if (renderSystem.hasComponents()) {
+		for (RenderSystem renderSystem : renderSystems) {
+			if (renderSystem.hasComponentGroups()) {
 				renderSystem.render(renderer);
 			}
 		}
@@ -81,32 +81,32 @@ public class SystemManager extends ECSManager {
 	}
 	
 	/**
-	 * Registers a component to all systems.
+	 * Registers an entity in all systems.
 	 */
-	public void registerComponent(Component component) {
-		Objects.requireNonNull(component, "System must not be null.");
+	public void register(Entity entity) {
+		Objects.requireNonNull(entity, "Entity must not be null.");
 		
-		for (InputSystem<Component> inputSystem : inputSystems) {
-			inputSystem.registerComponent(component);
+		for (InputSystem inputSystem : inputSystems) {
+			inputSystem.register(entity);
 		}
-		for (UpdateSystem<Component> updateSystem : updateSystems) {
-			updateSystem.registerComponent(component);
+		for (UpdateSystem updateSystem : updateSystems) {
+			updateSystem.register(entity);
 		}
-		for (RenderSystem<Component> renderSystem : renderSystems) {
-			renderSystem.registerComponent(component);
+		for (RenderSystem renderSystem : renderSystems) {
+			renderSystem.register(entity);
 		}
 	}
 	
-	public <C extends Component, S extends SystemBase<C>> void addSystem(S system) {
+	public void addSystem(SystemBase system) {
 		Objects.requireNonNull(system, "System must not be null.");
 		
 		boolean added = true;
 		if (system instanceof InputSystem) {
-			inputSystems.add((InputSystem<Component>)system);
+			inputSystems.add((InputSystem)system);
 		} else if (system instanceof UpdateSystem) {
-			updateSystems.add((UpdateSystem<Component>)system);
+			updateSystems.add((UpdateSystem)system);
 		} else if (system instanceof RenderSystem) {
-			renderSystems.add((RenderSystem<Component>)system);
+			renderSystems.add((RenderSystem)system);
 		} else {
 			added = false;
 		}

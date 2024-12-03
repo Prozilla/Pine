@@ -1,14 +1,14 @@
 package dev.prozilla.pine.core.system;
 
-import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.ComponentCollector;
 
 /**
  * System for handling input for components.
  */
-public abstract class InputSystem<T extends Component> extends SystemBase<T> {
+public abstract class InputSystem extends SystemBase {
 	
-	public InputSystem(Class<T> componentClass) {
-		super(componentClass);
+	public InputSystem(ComponentCollector collector) {
+		super(collector);
 	}
 	
 	public abstract void input(float deltaTime);

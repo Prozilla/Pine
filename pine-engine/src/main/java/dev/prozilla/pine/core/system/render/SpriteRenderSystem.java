@@ -1,23 +1,24 @@
 package dev.prozilla.pine.core.system.render;
 
-import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.ComponentCollector;
 import dev.prozilla.pine.core.component.SpriteRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.camera.Camera;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.RenderSystem;
 
-public class SpriteRenderSystem extends RenderSystem<SpriteRenderer> {
+public class SpriteRenderSystem extends RenderSystem {
 	
 	public SpriteRenderSystem() {
-		super(SpriteRenderer.class);
+		super(new ComponentCollector(SpriteRenderer.class));
 	}
 	
 	@Override
 	public void render(Renderer renderer) {
 		Camera camera = world.scene.getCamera();
 		
-		for (SpriteRenderer spriteRenderer : getComponents()) {
+		forEach(componentGroup -> {
+			SpriteRenderer spriteRenderer = componentGroup.getComponent(SpriteRenderer.class);
 			Entity entity = spriteRenderer.entity;
 			
 			// Calculate world position
@@ -37,10 +38,10 @@ public class SpriteRenderSystem extends RenderSystem<SpriteRenderer> {
 				renderer.drawRotatedTexture(spriteRenderer.texture, x, y, spriteRenderer.color, spriteRenderer.rotation);
 			} else {
 				renderer.drawRotatedTextureRegion(spriteRenderer.texture, x, y,
-					spriteRenderer.regionX, spriteRenderer.regionY,
-					spriteRenderer.regionWidth, spriteRenderer.regionHeight,
-					spriteRenderer.color, spriteRenderer.rotation);
+				 spriteRenderer.regionX, spriteRenderer.regionY,
+				 spriteRenderer.regionWidth, spriteRenderer.regionHeight,
+				 spriteRenderer.color, spriteRenderer.rotation);
 			}
-		}
+		});
 	}
 }
