@@ -2,12 +2,10 @@ package dev.prozilla.pine.core.system;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.World;
-import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.ComponentCollector;
 import dev.prozilla.pine.core.component.ComponentGroup;
 import dev.prozilla.pine.core.entity.Entity;
 
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -28,7 +26,7 @@ public abstract class SystemBase implements Lifecycle {
 		this.collector = collector;
 	}
 	
-	public void init(World world) {
+	public void initSystem(World world) {
 		Objects.requireNonNull(world, "World must not be null.");
 		
 		this.world = world;
@@ -53,7 +51,12 @@ public abstract class SystemBase implements Lifecycle {
 	protected void forEach(Consumer<ComponentGroup> consumer) {
 		for (ComponentGroup componentGroup : collector.componentGroups) {
 			if (componentGroup.isEnabled()) {
-				consumer.accept(componentGroup);
+				try {
+					consumer.accept(componentGroup);
+				} catch (Exception e) {
+					System.err.println("Failed to run system " + getClass().getName());
+					e.printStackTrace();
+				}
 			}
 		}
 	}

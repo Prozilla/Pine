@@ -16,6 +16,12 @@ public class ComponentCollector implements Lifecycle {
 	public final ArrayList<ComponentGroup> componentGroups;
 	
 	/**
+	 * IDs of entities that have been registered by this collector.
+	 * This is used to avoid duplication in cases where this collector is shared between multiple systems.
+	 */
+	private final ArrayList<Integer> registeredEntityIds;
+	
+	/**
 	 * Entities must have components of these classes to be included in the collection.
 	 */
 	private final Class<? extends Component>[] componentClasses;
@@ -29,6 +35,7 @@ public class ComponentCollector implements Lifecycle {
 		}
 		
 		componentGroups = new ArrayList<>();
+		registeredEntityIds = new ArrayList<>();
 	}
 	
 	/**
@@ -37,13 +44,14 @@ public class ComponentCollector implements Lifecycle {
 	@Override
 	public void destroy() {
 		componentGroups.clear();
+		registeredEntityIds.clear();
 	}
 	
 	/**
 	 * Adds components of a given entity to a component group, if it meets the requirements of the collection.
 	 */
 	public void register(Entity entity) {
-		if (entity.components.isEmpty()) {
+		if (entity.components.isEmpty() || registeredEntityIds.contains(entity.getId())) {
 			return;
 		}
 		
@@ -70,6 +78,8 @@ public class ComponentCollector implements Lifecycle {
 		} catch (Exception e) {
 			System.err.println("Failed to create component group.");
 			e.printStackTrace();
+		} finally {
+			registeredEntityIds.add(entity.getId());
 		}
 	}
 }

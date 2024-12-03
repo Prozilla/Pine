@@ -6,6 +6,9 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.canvas.Canvas;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.examples.flappybird.entity.*;
+import dev.prozilla.pine.examples.flappybird.system.PlayerInitializer;
+import dev.prozilla.pine.examples.flappybird.system.PlayerInputHandler;
+import dev.prozilla.pine.examples.flappybird.system.PlayerMover;
 
 import java.util.Random;
 
@@ -57,6 +60,11 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 		timeUntilNextObstacle = 0;
 		gameOver = false;
 		playerScore = 0;
+		
+		// Add systems
+		world.addSystem(new PlayerInitializer());
+		world.addSystem(new PlayerInputHandler());
+		world.addSystem(new PlayerMover());
 	}
 	
 	@Override
@@ -88,7 +96,7 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 	
 	public void endGame() {
 		gameOver = true;
-		player.resetVelocity();
+		player.playerData.resetVelocity();
 		gameOverText.setActive(true);
 	}
 }

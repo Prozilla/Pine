@@ -261,12 +261,12 @@ public class Entity implements Lifecycle {
 		if (transform.parent != null && game.running) {
 			transform.parent.getEntity().removeChild(this);
 		}
-		if (!transform.children.isEmpty()) {
-			for (Transform child : transform.children) {
-				child.getEntity().destroy();
-			}
-			transform.children.clear();
-		}
+//		if (!transform.children.isEmpty()) {
+//			for (Transform child : transform.children) {
+//				child.getEntity().destroy();
+//			}
+//			transform.children.clear();
+//		}
 		if (!components.isEmpty()) {
 			for (Component component : components) {
 				component.destroy();

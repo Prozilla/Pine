@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A wrapper for components of an entity.
+ * A wrapper for components of an entity that match certain types.
  */
 public class ComponentGroup {
 	

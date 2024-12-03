@@ -14,7 +14,7 @@ public class Pipe extends Sprite {
 		super(world, "flappybird/pipe.png");
 		
 		// Set sprite properties
-		spriteRenderer.crop(0, 0, WIDTH, HEIGHT);
+		spriteRenderer.setRegion(0, 0, WIDTH, HEIGHT);
 		spriteRenderer.scale = 1.25f;
 		if (top) {
 			// Flip sprite

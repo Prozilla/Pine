@@ -35,16 +35,12 @@ public class World implements Lifecycle {
 		systemManager.addSystem(new SpriteRenderSystem());
 		systemManager.addSystem(new TileUpdateSystem());
 		
-		for (Entity entity : entityManager.getEntities()) {
-			entity.init(window);
-		}
+		systemManager.init(window);
 	}
 	
 	@Override
 	public void start() {
-		for (Entity entity : entityManager.getEntities()) {
-			entity.start();
-		}
+		systemManager.start();
 	}
 	
 	@Override

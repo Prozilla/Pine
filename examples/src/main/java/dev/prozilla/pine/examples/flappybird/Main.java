@@ -21,7 +21,9 @@ public class Main {
 			game.start();
 		} catch (RuntimeException e) {
 			// Quit game if anything goes wrong and throw exception
-			game.destroy();
+			if (game.running) {
+				game.destroy();
+			}
 			throw new RuntimeException(e);
 		}
 	}

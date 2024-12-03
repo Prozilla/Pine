@@ -6,11 +6,11 @@ import dev.prozilla.pine.examples.flappybird.Main;
 
 public class PlayerData extends Component {
 	
-	private int animationFrame;
-	private float age;
-	private float velocity;
+	public int animationFrame;
+	public float age;
+	public float velocity;
 	
-	private GameScene gameScene;
+	public GameScene gameScene;
 	
 	// Constants
 	public static final int WIDTH = 32;
@@ -20,4 +20,7 @@ public class PlayerData extends Component {
 	public static final float SPEED = 5f;
 	public static final float JUMP_VELOCITY = 0.65f;
 	
+	public void resetVelocity() {
+		velocity = 0;
+	}
 }

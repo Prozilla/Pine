@@ -25,7 +25,7 @@ public class Background extends Sprite {
 		super.init(window);
 		
 		// Set sprite properties
-		spriteRenderer.crop(0, 0, WIDTH, HEIGHT);
+		spriteRenderer.setRegion(0, 0, WIDTH, HEIGHT);
 		spriteRenderer.scale = 1.0001f; // Fix lines appearing between sprites
 		
 		// Set initial position

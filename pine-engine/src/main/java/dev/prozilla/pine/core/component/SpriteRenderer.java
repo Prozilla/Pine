@@ -2,7 +2,6 @@ package dev.prozilla.pine.core.component;
 
 import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.core.rendering.Renderer;
 
 /**
  * A component for rendering 2D sprites in the world.
@@ -55,7 +54,7 @@ public class SpriteRenderer extends Component {
 	/**
 	 * Crops this sprite to a given region.
 	 */
-	public void crop(float regX, float regY, float regWidth, float regHeight) {
+	public void setRegion(float regX, float regY, float regWidth, float regHeight) {
 		this.regionX = regX;
 		this.regionY = regY;
 		this.regionWidth = regWidth;
@@ -66,7 +65,7 @@ public class SpriteRenderer extends Component {
 	/**
 	 * Disables cropping for this sprite.
 	 */
-	public void disableCropping() {
+	public void unsetRegion() {
 		cropToRegion = false;
 	}
 	

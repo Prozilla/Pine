@@ -2,84 +2,31 @@ package dev.prozilla.pine.examples.flappybird.entity;
 
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.core.World;
+import dev.prozilla.pine.core.component.ComponentCollector;
+import dev.prozilla.pine.core.component.SpriteRenderer;
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.entity.Sprite;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.MouseButton;
 import dev.prozilla.pine.examples.flappybird.Main;
 import dev.prozilla.pine.examples.flappybird.GameScene;
+import dev.prozilla.pine.examples.flappybird.component.PlayerData;
 
 public class Player extends Sprite {
+	
+	public PlayerData playerData;
+	
+	public static final ComponentCollector collector = new ComponentCollector(Transform.class, SpriteRenderer.class, PlayerData.class);
 	
 	public Player(World world) {
 		super(world, "flappybird/bird.png");
 		
-		// Store reference to scene
-		gameScene = (GameScene)scene;
-	}
-	
-	@Override
-	public void init(long window) throws IllegalStateException {
-		super.init(window);
-		
-		// Set player properties
-		animationFrame = 0;
-		age = 0;
-		velocity = JUMP_VELOCITY;
-		
-		transform.setPosition(POSITION_X, 0);
-		
-		// Set sprite properties
-		spriteRenderer.scale = 1.5f;
-		spriteRenderer.rotation = 0;
-	}
-	
-	@Override
-	public void update(float deltaTime) {
-		super.update(deltaTime);
-		
-		if (transform.x <= Main.HEIGHT / -2f || transform.y + HEIGHT >= Main.HEIGHT / 2f) {
-			gameScene.endGame();
-		}
-		
-		// Crop sprite to current frame
-		spriteRenderer.crop(animationFrame * WIDTH, 0, WIDTH, HEIGHT);
-		
-		if (!gameScene.gameOver) {
-			// Update age and calculate frame
-			age += deltaTime;
-			animationFrame = Math.round((age * ANIMATION_SPEED)) % 3;
-		} else {
-			// Flip sprite if player is dead
-			spriteRenderer.rotation = 180;
-		}
-		
-		// Update velocity and move based on current velocity
-		velocity -= deltaTime / 2f;
-		transform.y += velocity * SPEED;
-		velocity -= deltaTime / 2f;
-		
-		// Clamp position inside screen bounds
-		transform.y = MathUtils.clamp(transform.y, Main.HEIGHT / -2f, Main.HEIGHT / 2f);
-	}
-	
-	@Override
-	public void input(float deltaTime) {
-		super.input(deltaTime);
-		
-		if (!gameScene.gameOver) {
-			// Jump
-			if (getInput().getKeyDown(Key.SPACE) || getInput().getMouseButtonDown(MouseButton.LEFT)) {
-				velocity = JUMP_VELOCITY;
-			}
-		}
+		playerData = new PlayerData();
+		addComponent(playerData);
 	}
 	
 	@Override
 	public String getName() {
 		return getName("Player");
-	}
-	
-	public void resetVelocity() {
-		velocity = 0;
 	}
 }

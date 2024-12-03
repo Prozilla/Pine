@@ -4,6 +4,7 @@ import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.examples.flappybird.Main;
 import dev.prozilla.pine.examples.flappybird.GameScene;
+import dev.prozilla.pine.examples.flappybird.component.PlayerData;
 
 import java.util.Random;
 
@@ -57,8 +58,8 @@ public class Pipes extends Entity {
 			topPipe.transform.x = newX;
 			
 			// Check if player hit one of the pipes
-			if (gameScene.player.transform.x + Player.WIDTH > newX && gameScene.player.transform.x < newX + Pipe.WIDTH
-				&& (gameScene.player.transform.y + Player.HEIGHT > topPipe.transform.y || gameScene.player.transform.y < bottomPipe.transform.y + Pipe.HEIGHT)) {
+			if (gameScene.player.transform.x + PlayerData.WIDTH > newX && gameScene.player.transform.x < newX + Pipe.WIDTH
+				&& (gameScene.player.transform.y + PlayerData.HEIGHT > topPipe.transform.y || gameScene.player.transform.y < bottomPipe.transform.y + Pipe.HEIGHT)) {
 				gameScene.endGame();
 			} else {
 				// Check if player has passed through pipes
