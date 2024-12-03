@@ -3,7 +3,7 @@ package dev.prozilla.pine.core.entity.canvas;
 import dev.prozilla.pine.common.Callback;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.text.Font;
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.component.canvas.TextButtonRenderer;
 import dev.prozilla.pine.common.system.resource.Color;
@@ -16,8 +16,8 @@ public class TextButton extends CanvasElement {
 	
 	protected final TextButtonRenderer textButtonRenderer;
 	
-	public TextButton(Game game, String text) {
-		super(game);
+	public TextButton(World world, String text) {
+		super(world);
 		
 		textButtonRenderer = new TextButtonRenderer(text);
 		addComponent(textButtonRenderer);

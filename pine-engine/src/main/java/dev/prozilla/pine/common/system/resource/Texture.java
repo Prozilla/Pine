@@ -5,7 +5,6 @@ import dev.prozilla.pine.core.rendering.Renderer;
 
 import java.nio.ByteBuffer;
 
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
 
 /**

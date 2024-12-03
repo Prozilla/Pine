@@ -2,7 +2,7 @@ package dev.prozilla.pine.core.entity.canvas;
 
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.text.Font;
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.component.canvas.TextRenderer;
 import dev.prozilla.pine.common.system.resource.Color;
@@ -15,12 +15,12 @@ public class Text extends CanvasElement {
 	
 	protected final TextRenderer textRenderer;
 	
-	public Text(Game game) {
-		this(game, null);
+	public Text(World world) {
+		this(world, null);
 	}
 	
-	public Text(Game game, String text) {
-		super(game);
+	public Text(World world, String text) {
+		super(world);
 		
 		textRenderer = new TextRenderer(text);
 		addComponent(textRenderer);

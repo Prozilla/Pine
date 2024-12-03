@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity;
 
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.GridGroup;
 import dev.prozilla.pine.core.component.TileRenderer;
 import dev.prozilla.pine.common.system.resource.Texture;
@@ -15,12 +15,12 @@ public class Tile extends Entity {
 	protected GridGroup group;
 	protected final TileRenderer tileRenderer;
 	
-	public Tile(Game game, Texture texture) {
-		this(game, texture, new Point(0, 0));
+	public Tile(World world, Texture texture) {
+		this(world, texture, new Point(0, 0));
 	}
 	
-	public Tile(Game game, Texture texture, Point coordinate) {
-		super(game);
+	public Tile(World world, Texture texture, Point coordinate) {
+		super(world);
 		
 		tileRenderer = new TileRenderer(texture, coordinate);
 		addComponent(tileRenderer);

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.canvas;
 
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.component.canvas.CanvasGroup;
@@ -15,8 +15,8 @@ public class CanvasElement extends Entity {
 	
 	private RectTransform rectTransform;
 	
-	public CanvasElement(Game game) {
-		super(game);
+	public CanvasElement(World world) {
+		super(world);
 	}
 	
 	@Override

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity;
 
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.GridGroup;
 import dev.prozilla.pine.core.component.TileRenderer;
 
@@ -10,8 +10,8 @@ public class Grid extends Entity {
 	
 	protected final GridGroup group;
 	
-	public Grid(Game game, int size) {
-		super(game);
+	public Grid(World world, int size) {
+		super(world);
 		
 		group = new GridGroup(size);
 		addComponent(group);

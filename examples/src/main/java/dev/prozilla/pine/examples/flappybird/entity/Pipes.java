@@ -1,6 +1,6 @@
-package dev.prozilla.pine.examples.flappybird.object;
+package dev.prozilla.pine.examples.flappybird.entity;
 
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.examples.flappybird.Main;
 import dev.prozilla.pine.examples.flappybird.GameScene;
@@ -20,16 +20,16 @@ public class Pipes extends Entity {
 	// Constants
 	public static final float SPEED = 200f;
 	
-	public Pipes(Game game) {
-		super(game);
+	public Pipes(World world) {
+		super(world);
 		
 		// Randomize height and gap
 		int height = Math.round(random.nextFloat(Main.HEIGHT / -4f, Main.HEIGHT / 4f));
 		int gap = random.nextInt(150, 200);
 		
 		// Add pipes
-		bottomPipe = (Pipe)addChild(new Pipe(game, false));
-		topPipe = (Pipe)addChild(new Pipe(game, true));
+		bottomPipe = (Pipe)addChild(new Pipe(world, false));
+		topPipe = (Pipe)addChild(new Pipe(world, true));
 		
 		// Position pipes
 		topPipe.transform.y = height + gap / 2f;

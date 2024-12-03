@@ -2,7 +2,7 @@ package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.SpriteRenderer;
 
 /**
@@ -12,12 +12,12 @@ public class Sprite extends Entity {
 	
 	protected final SpriteRenderer spriteRenderer;
 	
-	public Sprite(Game game, String texturePath) {
-		this(game, ResourcePool.loadTexture(texturePath));
+	public Sprite(World world, String texturePath) {
+		this(world, ResourcePool.loadTexture(texturePath));
 	}
 	
-	public Sprite(Game game, Texture texture) {
-		super(game);
+	public Sprite(World world, Texture texture) {
+		super(world);
 		
 		spriteRenderer = new SpriteRenderer(texture);
 		addComponent(spriteRenderer);

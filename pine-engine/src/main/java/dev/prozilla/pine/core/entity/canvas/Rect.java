@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.canvas;
 
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.canvas.RectRenderer;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.common.system.resource.Color;
@@ -13,12 +13,12 @@ public class Rect extends CanvasElement {
 	
 	protected final RectRenderer rectRenderer;
 	
-	public Rect(Game game, int width, int height) {
-		this(game, width, height, Color.WHITE);
+	public Rect(World world, int width, int height) {
+		this(world, width, height, Color.WHITE);
 	}
 	
-	public Rect(Game game, int width, int height, Color color) {
-		super(game);
+	public Rect(World world, int width, int height, Color color) {
+		super(world);
 		
 		rectRenderer = new RectRenderer(width, height, color);
 		addComponent(rectRenderer);

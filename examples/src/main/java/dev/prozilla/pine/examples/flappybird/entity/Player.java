@@ -1,7 +1,7 @@
-package dev.prozilla.pine.examples.flappybird.object;
+package dev.prozilla.pine.examples.flappybird.entity;
 
 import dev.prozilla.pine.common.math.MathUtils;
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.Sprite;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.MouseButton;
@@ -10,30 +10,16 @@ import dev.prozilla.pine.examples.flappybird.GameScene;
 
 public class Player extends Sprite {
 	
-	private int animationFrame;
-	private float age;
-	private float velocity;
-	
-	private GameScene gameScene;
-	
-	// Constants
-	public static final int WIDTH = 32;
-	public static final int HEIGHT = 32;
-	public static final float POSITION_X = Main.WIDTH / -4f;
-	public static final float ANIMATION_SPEED = 10f;
-	public static final float SPEED = 5f;
-	public static final float JUMP_VELOCITY = 0.65f;
-	
-	public Player(Game game) {
-		super(game, "flappybird/bird.png");
+	public Player(World world) {
+		super(world, "flappybird/bird.png");
+		
+		// Store reference to scene
+		gameScene = (GameScene)scene;
 	}
 	
 	@Override
 	public void init(long window) throws IllegalStateException {
 		super.init(window);
-		
-		// Store reference to scene
-		gameScene = (GameScene)scene;
 		
 		// Set player properties
 		animationFrame = 0;

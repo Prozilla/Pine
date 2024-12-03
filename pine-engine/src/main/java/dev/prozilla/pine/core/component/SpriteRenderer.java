@@ -23,7 +23,7 @@ public class SpriteRenderer extends Component {
 	
 	// Cropping
 	/** Determines whether the texture will be cropped to a given region. */
-	protected boolean cropToRegion;
+	public boolean cropToRegion;
 	public float regionX;
 	public float regionY;
 	public float regionWidth;
@@ -45,27 +45,6 @@ public class SpriteRenderer extends Component {
 		regionY = 0;
 		regionWidth = texture.getWidth();
 		regionHeight = texture.getHeight();
-	}
-	
-	@Override
-	public void render(Renderer renderer) {
-		super.render(renderer);
-		
-		// Calculate screen position
-		float[] position = getCamera().applyTransform(entity.transform.getGlobalX() + offsetX, entity.transform.getGlobalY() + offsetY);
-		float x = position[0];
-		float y = position[1];
-		
-		// Apply zoom scale
-		renderer.setScale(scale * getCamera().getZoom());
-		
-		// Draw cropped and rotated texture
-		if (!cropToRegion) {
-			renderer.drawRotatedTexture(texture, x, y, color, rotation);
-		} else {
-			renderer.drawRotatedTextureRegion(texture, x, y,
-				regionX, regionY, regionWidth, regionHeight, color, rotation);
-		}
 	}
 	
 	@Override

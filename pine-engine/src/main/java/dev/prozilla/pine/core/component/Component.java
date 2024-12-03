@@ -3,7 +3,7 @@ package dev.prozilla.pine.core.component;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.context.Window;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.World;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.camera.Camera;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Timer;
@@ -28,8 +28,8 @@ public class Component implements Lifecycle {
 	
 	private final int id;
 	
-	/** The game object that this component is attached to. */
-	protected Entity entity;
+	/** The entity that this component is attached to. */
+	public Entity entity;
 	
 	private static int lastId = 0;
 	
@@ -55,26 +55,6 @@ public class Component implements Lifecycle {
 	
 	@Override
 	public void destroy() {}
-	
-	/**
-	 * Attaches this component to a game object.
-	 * @param entity Game object
-	 */
-	public void attach(Entity entity) {
-		this.entity = entity;
-	}
-	
-	/**
-	 * Removes this component from the game object it's attached to.
-	 */
-	public void remove() {
-		if (entity != null) {
-			entity.removeComponent(this);
-			entity = null;
-			
-			destroy();
-		}
-	}
 	
 	/**
 	 * Enables this component.

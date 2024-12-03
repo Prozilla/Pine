@@ -3,7 +3,7 @@ package dev.prozilla.pine.core.entity.canvas;
 import dev.prozilla.pine.common.Callback;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.canvas.ImageButtonRenderer;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.common.system.resource.Color;
@@ -16,12 +16,12 @@ public class ImageButton extends CanvasElement {
 	
 	protected final ImageButtonRenderer imageButtonRenderer;
 	
-	public ImageButton(Game game, String imagePath) {
-		this(game, ResourcePool.loadTexture(imagePath));
+	public ImageButton(World world, String imagePath) {
+		this(world, ResourcePool.loadTexture(imagePath));
 	}
 	
-	public ImageButton(Game game, Texture image) {
-		super(game);
+	public ImageButton(World world, Texture image) {
+		super(world);
 		
 		imageButtonRenderer = new ImageButtonRenderer(image);
 		addComponent(imageButtonRenderer);

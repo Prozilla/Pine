@@ -4,7 +4,6 @@ import dev.prozilla.pine.common.Lifecycle;
 
 import java.io.*;
 
-import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL20.*;
 
 /**

@@ -1,6 +1,6 @@
-package dev.prozilla.pine.examples.flappybird.object;
+package dev.prozilla.pine.examples.flappybird.entity;
 
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.Sprite;
 import dev.prozilla.pine.examples.flappybird.Main;
 
@@ -10,8 +10,8 @@ public class Pipe extends Sprite {
 	public static final int WIDTH = 52;
 	public static final int HEIGHT = 320;
 	
-	public Pipe(Game game, boolean top) {
-		super(game, "flappybird/pipe.png");
+	public Pipe(World world, boolean top) {
+		super(world, "flappybird/pipe.png");
 		
 		// Set sprite properties
 		spriteRenderer.crop(0, 0, WIDTH, HEIGHT);

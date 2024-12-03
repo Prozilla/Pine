@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.canvas.Canvas;
 import dev.prozilla.pine.core.state.input.Key;
-import dev.prozilla.pine.examples.flappybird.object.*;
+import dev.prozilla.pine.examples.flappybird.entity.*;
 
 import java.util.Random;
 
@@ -37,22 +37,22 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 		// Fill screen with background sprites
 		Background[] backgrounds = new Background[Math.round((float)Main.WIDTH / Background.WIDTH + 0.5f) + 1];
 		for (int i = 0; i < backgrounds.length; i++) {
-			Background background = new Background(game, i);
+			Background background = new Background(world, i);
 			add(background);
 			backgrounds[i] = background;
 		}
 		
 		// Create player object
-		player = (Player)add(new Player(game));
+		player = (Player)add(new Player(world));
 		
 		// Prepare obstacles
-		obstacles = add(new Entity(game));
+		obstacles = add(new Entity(world));
 		
 		// Create user interface
 		font = ResourcePool.loadFont("flappybird/flappy-bird.ttf", 32);
-		Canvas canvas = (Canvas)add(new Canvas(game));
-		canvas.addChild(new ScoreText(game));
-		gameOverText = (GameOverText)canvas.addChild(new GameOverText(game));
+		Canvas canvas = (Canvas)add(new Canvas(world));
+		canvas.addChild(new ScoreText(world));
+		gameOverText = (GameOverText)canvas.addChild(new GameOverText(world));
 		
 		timeUntilNextObstacle = 0;
 		gameOver = false;
@@ -77,7 +77,7 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 		if (!gameOver) {
 			if (timeUntilNextObstacle <= 0) {
 				// Spawn obstacle
-				obstacles.addChild(new Pipes(game));
+				obstacles.addChild(new Pipes(world));
 				timeUntilNextObstacle = random.nextFloat(MIN_OBSTACLE_TIME, MAX_OBSTACLE_TIME);
 			} else {
 				// Decrease time until next obstacle

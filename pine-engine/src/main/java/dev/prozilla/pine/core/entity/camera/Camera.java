@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.entity.camera;
 
 import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.common.system.resource.Color;
 
@@ -19,19 +20,21 @@ public class Camera extends Entity {
 	
 	/**
 	 * Creates a camera object with a black background color
-	 * @param game Reference to game
+	 *
+	 * @param world Reference to game
 	 */
-	public Camera(Game game) {
-		this(game , Color.BLACK);
+	public Camera(World world) {
+		this(world, Color.BLACK);
 	}
 	
 	/**
 	 * Creates a camera object.
-	 * @param game Reference to game
+	 *
+	 * @param world           Reference to game
 	 * @param backgroundColor Background color of this camera
 	 */
-	public Camera(Game game, Color backgroundColor) {
-		super(game);
+	public Camera(World world, Color backgroundColor) {
+		super(world);
 		
 		this.backgroundColor = backgroundColor;
 		

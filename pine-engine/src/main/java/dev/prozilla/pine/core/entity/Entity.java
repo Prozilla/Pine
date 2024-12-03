@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.core.Game;
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.context.Window;
@@ -25,12 +26,12 @@ public class Entity implements Lifecycle {
 	
 	public final Transform transform;
 	
-	/** Reference to the game */
-	public final Game game;
-	public Scene scene;
+	protected final World world;
+	protected final Game game;
+	protected final Scene scene;
 	
 	/** Components of this game object */
-	protected final ArrayList<Component> components;
+	public final ArrayList<Component> components;
 	
 	protected boolean initialized;
 	protected boolean started;
@@ -39,29 +40,34 @@ public class Entity implements Lifecycle {
 	
 	/**
 	 * Creates a game object at the position (0, 0)
-	 * @param game Reference to game
+	 *
+	 * @param world Reference to game
 	 */
-	public Entity(Game game) {
-		this(game, 0, 0);
+	public Entity(World world) {
+		this(world, 0, 0);
 	}
 	
-	public Entity(Game game, String name) {
-		this(game, name, 0, 0);
+	public Entity(World world, String name) {
+		this(world, name, 0, 0);
 	}
 	
-	public Entity(Game game, float x, float y) {
-		this(game, null, x, y);
+	public Entity(World world, float x, float y) {
+		this(world, null, x, y);
 	}
 	
 	/**
 	 * Creates a game object at the position (x, y)
-	 * @param game Reference to game
-	 * @param x X value
-	 * @param y Y value
+	 *
+	 * @param world Reference to game
+	 * @param x     X value
+	 * @param y     Y value
 	 */
-	public Entity(Game game, String name, float x, float y) {
-		this.game = game;
+	public Entity(World world, String name, float x, float y) {
+		this.world = world;
 		this.name = name;
+
+		game = world.game;
+		scene = world.scene;
 		
 		transform = new Transform(x, y);
 		components = new ArrayList<>();
@@ -70,8 +76,6 @@ public class Entity implements Lifecycle {
 		initialized = false;
 		started = false;
 		active = true;
-		
-		addComponent(transform);
 	}
 	
 	/**
@@ -83,13 +87,13 @@ public class Entity implements Lifecycle {
 			throw new IllegalStateException("Game object has already been initialized");
 		}
 		
-		if (scene == null && transform.parent != null) {
-			scene = transform.parent.getEntity().scene;
-		}
+		addComponent(transform);
 		
 		if (!transform.children.isEmpty()) {
 			for (Transform child : transform.children) {
-				child.getEntity().init(window);
+				if (child.getEntity() != null) {
+					child.getEntity().init(window);
+				}
 			}
 		}
 		if (!components.isEmpty()) {
@@ -113,7 +117,7 @@ public class Entity implements Lifecycle {
 		
 		if (!transform.children.isEmpty()) {
 			for (Transform child : transform.children) {
-				if (child.getEntity().isActive()) {
+				if (child.getEntity() != null && child.getEntity().isActive()) {
 					child.getEntity().start();
 				}
 			}
@@ -158,7 +162,7 @@ public class Entity implements Lifecycle {
 					break;
 				}
 				Transform child = transform.children.get(i);
-				if (child.getEntity().isActive()) {
+				if (child.getEntity() != null && child.getEntity().isActive()) {
 					child.getEntity().input(deltaTime);
 				}
 			}
@@ -194,7 +198,7 @@ public class Entity implements Lifecycle {
 				if (!game.running) {
 					break;
 				}
-				if (child.getEntity().isActive()) {
+				if (child.getEntity() != null && child.getEntity().isActive()) {
 					child.getEntity().update(deltaTime);
 				}
 			}
@@ -229,7 +233,7 @@ public class Entity implements Lifecycle {
 				if (!game.running) {
 					break;
 				}
-				if (child.getEntity().isActive()) {
+				if (child.getEntity() != null && child.getEntity().isActive()) {
 					child.getEntity().render(renderer);
 				}
 			}
@@ -276,7 +280,8 @@ public class Entity implements Lifecycle {
 		
 		// Remove all references
 //		game = null;
-		scene = null;
+//		world = null;
+//		scene = null;
 	}
 	
 	/**
@@ -349,12 +354,6 @@ public class Entity implements Lifecycle {
 	 */
 	public void setParent(Entity parent) {
 		transform.setParent(parent.transform);
-		
-		if (parent != null) {
-			scene = parent.scene;
-		} else {
-			scene = null;
-		}
 	}
 	
 	/**
@@ -381,18 +380,7 @@ public class Entity implements Lifecycle {
 	 * @param component Component
 	 */
 	public void addComponent(Component component) {
-		if (!components.add(component)) {
-			return;
-		}
-		
-		component.attach(this);
-		
-		if (initialized) {
-			component.init(getWindow().id);
-		}
-		if (started) {
-			component.start();
-		}
+		world.addComponent(this, component);
 	}
 	
 	/**
@@ -400,11 +388,11 @@ public class Entity implements Lifecycle {
 	 * @param component Component
 	 */
 	public void removeComponent(Component component) {
-		if (!components.remove(component)) {
-			return;
-		}
-		
-		component.remove();
+//		if (!components.remove(component)) {
+//			return;
+//		}
+//
+//		component.remove();
 	}
 	
 	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass) {
@@ -532,7 +520,11 @@ public class Entity implements Lifecycle {
 	}
 	
 	public World getWorld() {
-		return scene.getWorld();
+		return world;
+	}
+	
+	public Scene getScene() {
+		return scene;
 	}
 	
 	public Camera getCamera() {

@@ -4,7 +4,7 @@ import dev.prozilla.pine.core.Game;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.context.Window;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.World;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.camera.Camera;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.input.Input;
@@ -16,7 +16,7 @@ public class Scene implements Lifecycle {
 	private final int id;
 	
 	// References
-	public Game game;
+	protected Game game;
 	protected World world;
 	protected Camera camera;
 	
@@ -76,7 +76,7 @@ public class Scene implements Lifecycle {
 			world = new World(game, this);
 		}
 		if (camera == null) {
-			camera = new Camera(game);
+			camera = new Camera(world);
 			add(camera);
 		}
 		loaded = true;
@@ -172,7 +172,7 @@ public class Scene implements Lifecycle {
 	 * @param entity GameObject
 	 */
 	public Entity add(Entity entity) {
-		return world.addChild(entity);
+		return world.addEntity(entity);
 	}
 	
 	/**
@@ -180,7 +180,7 @@ public class Scene implements Lifecycle {
 	 * @param entity GameObject
 	 */
 	public void remove(Entity entity) {
-		world.removeChild(entity);
+//		world.removeChild(entity);
 	}
 	
 	/**

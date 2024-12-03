@@ -1,9 +1,7 @@
 package dev.prozilla.pine.core.component.canvas;
 
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.canvas.Canvas;
-import dev.prozilla.pine.core.entity.canvas.CanvasElement;
 
 import java.awt.*;
 
@@ -120,14 +118,14 @@ public class RectTransform extends Component {
 		}
 	}
 	
-	@Override
-	public void attach(Entity entity) throws IllegalArgumentException {
-		if (!(entity instanceof CanvasElement)) {
-			throw new IllegalArgumentException("TextRenderer component must be attached to a CanvasElement");
-		}
-		
-		super.attach(entity);
-	}
+//	@Override
+//	public void attach(Entity entity) throws IllegalArgumentException {
+//		if (!(entity instanceof CanvasElement)) {
+//			throw new IllegalArgumentException("TextRenderer component must be attached to a CanvasElement");
+//		}
+//
+//		super.attach(entity);
+//	}
 	
 	@Override
 	public String getName() {

@@ -1,6 +1,6 @@
-package dev.prozilla.pine.examples.flappybird.object;
+package dev.prozilla.pine.examples.flappybird.entity;
 
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.Sprite;
 import dev.prozilla.pine.examples.flappybird.Main;
 import dev.prozilla.pine.examples.flappybird.GameScene;
@@ -14,8 +14,8 @@ public class Background extends Sprite {
 	public static final int HEIGHT = 512;
 	public static final float SPEED = 100f;
 	
-	public Background(Game game, int index) {
-		super(game, "flappybird/background.png");
+	public Background(World world, int index) {
+		super(world, "flappybird/background.png");
 		
 		this.index = index;
 	}

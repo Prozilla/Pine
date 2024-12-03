@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.entity.canvas;
 
 import dev.prozilla.pine.common.system.resource.Texture;
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.canvas.ImageRenderer;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 
@@ -13,15 +13,15 @@ public class Image extends CanvasElement {
 	
 	protected final ImageRenderer imageRenderer;
 	
-	public Image(Game game, String imagePath) {
-		super(game);
+	public Image(World world, String imagePath) {
+		super(world);
 		
 		imageRenderer = new ImageRenderer(imagePath);
 		addComponent(imageRenderer);
 	}
 	
-	public Image(Game game, Texture image) {
-		super(game);
+	public Image(World world, Texture image) {
+		super(world);
 		
 		imageRenderer = new ImageRenderer(image);
 		addComponent(imageRenderer);

@@ -1,7 +1,7 @@
 package dev.prozilla.pine.examples.flappybird;
 
 import dev.prozilla.pine.core.Game;
-import dev.prozilla.pine.examples.flappybird.object.Background;
+import dev.prozilla.pine.examples.flappybird.entity.Background;
 
 public class Main {
 	

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.camera;
 
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.core.state.input.KeyBindings;
@@ -42,15 +42,16 @@ public class ControllableCamera extends Camera {
 	
 	/**
 	 * Creates a controllable camera.
-	 * @param game Reference to the game
-	 * @param movementSpeed Movement speed (Set to <code>0</code> to disable movement)
+	 *
+	 * @param world           Reference to the game
+	 * @param movementSpeed   Movement speed (Set to <code>0</code> to disable movement)
 	 * @param velocityDamping Velocity damping (Set to <code>0</code> to disable damping)
-	 * @param zoomSpeed Zoom speed (Set to <code>0</code> to disable zooming)
-	 * @param minZoom Minimum zoom factor
-	 * @param maxZoom Maximum zoom factor
+	 * @param zoomSpeed       Zoom speed (Set to <code>0</code> to disable zooming)
+	 * @param minZoom         Minimum zoom factor
+	 * @param maxZoom         Maximum zoom factor
 	 */
-	public ControllableCamera(Game game, float movementSpeed, float velocityDamping, float zoomSpeed, float minZoom, float maxZoom) {
-		super(game);
+	public ControllableCamera(World world, float movementSpeed, float velocityDamping, float zoomSpeed, float minZoom, float maxZoom) {
+		super(world);
 		
 		this.movementSpeed = movementSpeed;
 		this.velocityDamping = velocityDamping;

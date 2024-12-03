@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.canvas;
 
-import dev.prozilla.pine.core.Game;
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.component.canvas.CanvasGroup;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
@@ -16,12 +16,12 @@ public class Container extends CanvasElement {
 	
 	protected final CanvasGroup group;
 	
-	public Container(Game game) {
-		this(game, CanvasGroup.Direction.DOWN);
+	public Container(World world) {
+		this(world, CanvasGroup.Direction.DOWN);
 	}
 	
-	public Container(Game game, CanvasGroup.Direction direction) {
-		super(game);
+	public Container(World world, CanvasGroup.Direction direction) {
+		super(world);
 		
 		group = new CanvasGroup();
 		addComponent(group);
