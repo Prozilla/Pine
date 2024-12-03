@@ -1,6 +1,6 @@
 package dev.prozilla.pine.examples.flappybird;
 
-import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.ApplicationBuilder;
 import dev.prozilla.pine.examples.flappybird.entity.Background;
 
 public class Main {
@@ -10,11 +10,13 @@ public class Main {
 	public static final int HEIGHT = Background.HEIGHT;
 	
 	public static void main(String[] args) {
-		// Create new scene and game
-		GameScene scene = new GameScene();
-		Application game = new Application("Flappy Bird", WIDTH, HEIGHT, scene);
+		ApplicationBuilder flappyBird = new ApplicationBuilder();
 		
-		game.setIcons("flappybird/icon.png");
-		game.run();
+		flappyBird.setTitle("Flappy Bird");
+		flappyBird.setWindowSize(WIDTH, HEIGHT);
+		flappyBird.setInitialScene(new GameScene());
+		flappyBird.setIcons("flappybird/icon.png");
+		
+		flappyBird.buildAndRun();
 	}
 }

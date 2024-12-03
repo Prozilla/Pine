@@ -30,7 +30,7 @@ public class Application implements Lifecycle {
 	// Data
 	/** Title of the application */
 	public String title;
-	protected final static int TARGET_FPS = 120;
+	public int targetFps;
 	
 	// State
 	/** True if the application has been initialized */
@@ -60,7 +60,7 @@ public class Application implements Lifecycle {
 	private GLFWErrorCallback errorCallback;
 	
 	/**
-	 * Creates a application titled "Application".
+	 * Creates an application titled "Application".
 	 * @param width Width of the window
 	 * @param height height of the window
 	 */
@@ -69,7 +69,7 @@ public class Application implements Lifecycle {
 	}
 	
 	/**
-	 * Creates a application.
+	 * Creates an application.
 	 * @param title Title of the application
 	 * @param width Width of the window
 	 * @param height height of the window
@@ -79,13 +79,25 @@ public class Application implements Lifecycle {
 	}
 	
 	/**
-	 * Creates a application.
+	 * Creates an application.
 	 * @param title Title of the application
 	 * @param width Width of the window
 	 * @param height height of the window
 	 * @param scene Starting scene
 	 */
 	public Application(String title, int width, int height, Scene scene) {
+		this(title, width, height, scene, 60);
+	}
+	
+	/**
+	 * Creates an application.
+	 * @param title Title of the application
+	 * @param width Width of the window
+	 * @param height height of the window
+	 * @param scene Starting scene
+	 * @param targetFps Amount of frames per second to target
+	 */
+	public Application(String title, int width, int height, Scene scene, int targetFps) {
 		timer = new Timer();
 		tracker = new Tracker(this);
 		renderer = new Renderer(tracker);
@@ -106,6 +118,7 @@ public class Application implements Lifecycle {
 		this.title = title;
 		this.windowWidth = width;
 		this.windowHeight = height;
+		this.targetFps = targetFps;
 	}
 	
 	/**
@@ -177,9 +190,9 @@ public class Application implements Lifecycle {
 	 */
 	@Override
 	public void start() {
-		long targetTime = 1000L / TARGET_FPS;
+		long targetTime = 1000L / targetFps;
 		
-		System.out.printf("Starting application (fps: %s)%n", TARGET_FPS);
+		System.out.printf("Starting application (fps: %s)%n", targetFps);
 		currentScene.start();
 		
 		// Application loop
