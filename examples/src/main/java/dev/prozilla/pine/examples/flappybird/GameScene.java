@@ -37,6 +37,11 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 	protected void load() {
 		super.load();
 		
+		// Add systems
+		world.addSystem(new PlayerInitializer());
+		world.addSystem(new PlayerInputHandler());
+		world.addSystem(new PlayerMover());
+		
 		// Fill screen with background sprites
 		Background[] backgrounds = new Background[Math.round((float)Main.WIDTH / Background.WIDTH + 0.5f) + 1];
 		for (int i = 0; i < backgrounds.length; i++) {
@@ -60,11 +65,6 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 		timeUntilNextObstacle = 0;
 		gameOver = false;
 		playerScore = 0;
-		
-		// Add systems
-		world.addSystem(new PlayerInitializer());
-		world.addSystem(new PlayerInputHandler());
-		world.addSystem(new PlayerMover());
 	}
 	
 	@Override

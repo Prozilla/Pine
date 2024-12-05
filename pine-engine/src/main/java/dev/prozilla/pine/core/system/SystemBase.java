@@ -68,4 +68,11 @@ public abstract class SystemBase implements Lifecycle {
 	public boolean hasComponentGroups() {
 		return !collector.componentGroups.isEmpty();
 	}
+	
+	public void print() {
+		String systemName = getClass().getSimpleName();
+		int groupCount = collector.componentGroups.size();
+		
+		System.out.printf("%s: (%s)%n", systemName, groupCount);
+	}
 }

@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.component;
 
+import dev.prozilla.pine.core.entity.Entity;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,6 +75,11 @@ public class ComponentGroup {
 	}
 	
 	public void checkStatus() {
+		if (!getEntity().isActive()) {
+			isEnabled = false;
+			return;
+		}
+		
 		boolean allComponentsEnabled = true;
 		for (Component component : components) {
 			if (!component.isEnabled) {
@@ -83,6 +90,14 @@ public class ComponentGroup {
 		isEnabled = allComponentsEnabled;
 	}
 	
+	public Entity getEntity() throws IllegalStateException {
+		if (components.length == 0) {
+			throw new IllegalStateException("Component group is empty.");
+		}
+		
+		return components[0].entity;
+	}
+	
 	public boolean isEnabled() {
 		checkStatus();
 		return isEnabled;
@@ -90,5 +105,18 @@ public class ComponentGroup {
 	
 	public int size() {
 		return components.length;
+	}
+	
+	public void print() {
+		String entityName = getEntity().getName();
+		int componentCount = componentClasses.length;
+		String[] componentNames = new String[componentCount];
+		
+		for (int i = 0; i < componentCount; i++) {
+			Class<? extends Component> componentClass = componentClasses[i];
+			componentNames[i] = componentClass.getSimpleName();
+		}
+		
+		System.out.printf("ComponentGroup: %s: [%s] (%s)%n", entityName, String.join(", ", componentNames), componentCount);
 	}
 }

@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.entity.camera;
 
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.World;
+import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.common.system.resource.Color;
 
@@ -11,12 +12,7 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 
 public class Camera extends Entity {
 	
-	protected float zoomFactor;
-	
-	protected float width;
-	protected float height;
-	
-	Color backgroundColor;
+	public CameraData cameraData;
 	
 	/**
 	 * Creates a camera object with a black background color
@@ -28,24 +24,8 @@ public class Camera extends Entity {
 	public Camera(World world, Color backgroundColor) {
 		super(world);
 		
-		this.backgroundColor = backgroundColor;
-		
-		zoomFactor = 1f;
-	}
-	
-	@Override
-	public void init(long window) {
-		super.init(window);
-		renderBackgroundColor(backgroundColor);
-		
-		setSize();
-	}
-	
-	@Override
-	public void update(float deltaTime) {
-		super.update(deltaTime);
-		
-		setSize();
+		cameraData = new CameraData(backgroundColor);
+		addComponent(cameraData);
 	}
 	
 	@Override
@@ -53,29 +33,16 @@ public class Camera extends Entity {
 		return getName("Camera");
 	}
 	
-	protected void setSize() {
-		width = getWindow().getWidth();
-		height = getWindow().getHeight();
-	}
-	
 	public float getWidth() {
-		return width;
+		return cameraData.width;
 	}
 	
 	public float getHeight() {
-		return height;
+		return cameraData.height;
 	}
 	
 	public void setBackgroundColor(Color color) {
-		this.backgroundColor = color;
-	}
-	
-	public void renderBackgroundColor(Color color) {
-		if (!Application.initializedOpenGL) {
-			throw new RuntimeException("Can't render background color before initialization");
-		}
-		
-		glClearColor(color.getRed(), color.getGreen(), color.getBlue(), 1.0f);
+		cameraData.backgroundColor = color;
 	}
 	
 	/**
@@ -83,7 +50,7 @@ public class Camera extends Entity {
 	 * @param factor Zoom factor
 	 */
 	public void multiplyZoom(float factor) {
-		zoomFactor *= factor;
+		cameraData.zoomFactor *= factor;
 	}
 	
 	/**
@@ -92,7 +59,7 @@ public class Camera extends Entity {
 	 * @param zoom Zoom value
 	 */
 	public void zoomIn(float zoom) {
-		zoomFactor = zoomFactor + zoom;
+		cameraData.zoomFactor = cameraData.zoomFactor + zoom;
 	}
 	
 	/**
@@ -100,7 +67,7 @@ public class Camera extends Entity {
 	 * @return Scale
 	 */
 	public float getScale() {
-		return Math.max(width, height) / 800f;
+		return Math.max(cameraData.width, cameraData.height) / 800f;
 	}
 	
 	/**
@@ -108,7 +75,7 @@ public class Camera extends Entity {
 	 * @return Zoom value
 	 */
 	public float getZoom() {
-		return zoomFactor * zoomFactor * zoomFactor * getScale();
+		return cameraData.zoomFactor * cameraData.zoomFactor * cameraData.zoomFactor * getScale();
 	}
 	
 	/**
@@ -116,7 +83,7 @@ public class Camera extends Entity {
 	 * @return X value
 	 */
 	public float getCenterX() {
-		return this.width / 2f;
+		return cameraData.width / 2f;
 	}
 	
 	/**
@@ -124,7 +91,7 @@ public class Camera extends Entity {
 	 * @return Y value
 	 */
 	public float getCenterY() {
-		return this.height / 2f;
+		return cameraData.height / 2f;
 	}
 	
 	/**

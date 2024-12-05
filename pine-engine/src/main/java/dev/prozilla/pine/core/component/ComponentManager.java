@@ -29,7 +29,5 @@ public class ComponentManager extends ECSManager {
 		components.add(component);
 		component.entity = entity;
 		entity.components.add(component);
-		
-		world.systemManager.register(entity);
 	}
 }

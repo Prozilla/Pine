@@ -9,8 +9,15 @@ import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Scene;
 import dev.prozilla.pine.core.system.SystemBase;
 import dev.prozilla.pine.core.system.SystemManager;
+import dev.prozilla.pine.core.system.init.CameraControlInitializer;
+import dev.prozilla.pine.core.system.init.CameraInitializer;
+import dev.prozilla.pine.core.system.input.CameraControlInputHandler;
 import dev.prozilla.pine.core.system.render.SpriteRenderSystem;
-import dev.prozilla.pine.core.system.update.TileUpdateSystem;
+import dev.prozilla.pine.core.system.update.CameraControlUpdater;
+import dev.prozilla.pine.core.system.update.CameraUpdater;
+import dev.prozilla.pine.core.system.update.TileUpdater;
+
+import java.util.ArrayList;
 
 public class World implements Lifecycle {
 	
@@ -21,6 +28,8 @@ public class World implements Lifecycle {
 	public final Application application;
 	public final Scene scene;
 	
+	private final ArrayList<SystemBase> initialSystems;
+	
 	public World(Application application, Scene scene) {
 		this.application = application;
 		this.scene = scene;
@@ -28,13 +37,41 @@ public class World implements Lifecycle {
 		entityManager = new EntityManager(this);
 		componentManager = new ComponentManager(this);
 		systemManager = new SystemManager(this);
+		
+		initialSystems = new ArrayList<>();
+		useDefaultSystems();
+	}
+	
+	public void initSystems() {
+		for (SystemBase system : initialSystems) {
+			systemManager.addSystem(system);
+		}
+	}
+	
+	public void useDefaultSystems() {
+		if (systemManager.isInitialized()) {
+			throw new IllegalStateException("Initial systems must be specified before the initialization of the system manager.");
+		}
+		
+		initialSystems.add(new SpriteRenderSystem());
+		initialSystems.add(new TileUpdater());
+		initialSystems.add(new CameraInitializer());
+		initialSystems.add(new CameraUpdater());
+		initialSystems.add(new CameraControlInitializer());
+		initialSystems.add(new CameraControlInputHandler());
+		initialSystems.add(new CameraControlUpdater());
+	}
+	
+	private void useSystem(SystemBase system) {
+		if (systemManager.isInitialized()) {
+			throw new IllegalStateException("Initial systems must be specified before the initialization of the system manager.");
+		}
+		
+		initialSystems.add(system);
 	}
 	
 	@Override
 	public void init(long window) {
-		systemManager.addSystem(new SpriteRenderSystem());
-		systemManager.addSystem(new TileUpdateSystem());
-		
 		systemManager.init(window);
 	}
 	
@@ -67,16 +104,27 @@ public class World implements Lifecycle {
 	
 	public Entity addEntity(Entity entity) {
 		entityManager.addEntity(entity);
+		systemManager.register(entity);
 		return entity;
 	}
 	
 	public Component addComponent(Entity entity, Component component) {
 		componentManager.addComponent(entity, component);
+		systemManager.register(entity);
 		return component;
 	}
 	
 	public SystemBase addSystem(SystemBase systemBase) {
+		if (!systemManager.isInitialized()) {
+			useSystem(systemBase);
+			return systemBase;
+		}
+		
 		systemManager.addSystem(systemBase);
+		for (Entity entity : entityManager.getEntities()) {
+			systemManager.register(entity);
+		}
+		
 		return systemBase;
 	}
 }

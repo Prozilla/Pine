@@ -18,9 +18,13 @@ public class SystemManager extends ECSManager {
 	
 	private final SystemGroup<? extends SystemBase>[] systemGroups;
 	
+	private boolean initialized;
+	
 	@SuppressWarnings("unchecked")
 	public SystemManager(World world) {
 		super(world);
+		
+		initialized = false;
 		
 		initSystems = new SystemGroup<>(InitSystem.class);
 		startSystems = new SystemGroup<>(StartSystem.class);
@@ -42,6 +46,7 @@ public class SystemManager extends ECSManager {
 	 */
 	@Override
 	public void init(long window) {
+		initialized = true;
 		initSystems.forEach(initSystem -> initSystem.init(window));
 	}
 	
@@ -114,5 +119,9 @@ public class SystemManager extends ECSManager {
 		} else {
 			system.destroy();
 		}
+	}
+	
+	public boolean isInitialized() {
+		return initialized;
 	}
 }

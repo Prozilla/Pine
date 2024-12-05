@@ -67,6 +67,7 @@ public class Scene implements Lifecycle {
 	protected void load() {
 		if (world == null) {
 			world = new World(application, this);
+			world.initSystems();
 		}
 		if (camera == null) {
 			camera = new Camera(world);

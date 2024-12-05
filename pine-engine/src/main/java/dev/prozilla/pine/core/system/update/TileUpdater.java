@@ -5,9 +5,9 @@ import dev.prozilla.pine.core.component.TileRenderer;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.system.UpdateSystem;
 
-public class TileUpdateSystem extends UpdateSystem{
+public class TileUpdater extends UpdateSystem{
 	
-	public TileUpdateSystem() {
+	public TileUpdater() {
 		super( new ComponentCollector(Transform.class, TileRenderer.class));
 	}
 	
