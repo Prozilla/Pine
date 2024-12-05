@@ -124,7 +124,7 @@ public class Entity implements Lifecycle {
 		}
 		if (!components.isEmpty()) {
 			for (Component component : components) {
-				if (component.isEnabled) {
+				if (component.isActive) {
 					component.start();
 				}
 			}
@@ -175,7 +175,7 @@ public class Entity implements Lifecycle {
 				if (!application.isRunning) {
 					break;
 				}
-				if (component.isEnabled) {
+				if (component.isActive) {
 					component.input(deltaTime);
 				}
 			}
@@ -211,7 +211,7 @@ public class Entity implements Lifecycle {
 				if (!application.isRunning) {
 					break;
 				}
-				if (component.isEnabled) {
+				if (component.isActive) {
 					component.update(deltaTime);
 				}
 			}
@@ -246,7 +246,7 @@ public class Entity implements Lifecycle {
 				if (!application.isRunning) {
 					break;
 				}
-				if (component.isEnabled) {
+				if (component.isActive) {
 					component.render(renderer);
 				}
 			}

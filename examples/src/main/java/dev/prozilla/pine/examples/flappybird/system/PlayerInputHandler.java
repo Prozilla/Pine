@@ -17,8 +17,8 @@ public class PlayerInputHandler extends InputSystem {
 	public void input(float deltaTime) {
 		Input input = getInput();
 		
-		forEach(componentGroup -> {
-			PlayerData playerData = componentGroup.getComponent(PlayerData.class);
+		forEach(match -> {
+			PlayerData playerData = match.getComponent(PlayerData.class);
 			
 			if (!playerData.gameScene.gameOver) {
 				// Jump

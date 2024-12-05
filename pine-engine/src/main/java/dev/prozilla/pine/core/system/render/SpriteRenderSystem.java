@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.system.render;
 
-import dev.prozilla.pine.core.component.ComponentCollector;
+import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.component.SpriteRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.camera.Camera;
@@ -10,15 +10,15 @@ import dev.prozilla.pine.core.system.RenderSystem;
 public class SpriteRenderSystem extends RenderSystem {
 	
 	public SpriteRenderSystem() {
-		super(new ComponentCollector(SpriteRenderer.class));
+		super(new EntityQuery(SpriteRenderer.class));
 	}
 	
 	@Override
 	public void render(Renderer renderer) {
-		Camera camera = world.scene.getCamera();
+		Camera camera = scene.getCamera();
 		
-		forEach(componentGroup -> {
-			SpriteRenderer spriteRenderer = componentGroup.getComponent(SpriteRenderer.class);
+		forEach(match -> {
+			SpriteRenderer spriteRenderer = match.getComponent(SpriteRenderer.class);
 			Entity entity = spriteRenderer.entity;
 			
 			// Calculate world position

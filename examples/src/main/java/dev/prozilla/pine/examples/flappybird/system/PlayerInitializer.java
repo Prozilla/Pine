@@ -15,13 +15,13 @@ public class PlayerInitializer extends InitSystem {
 	
 	@Override
 	public void init(long window) {
-		forEach(componentGroup -> {
-			Transform transform = componentGroup.getComponent(Transform.class);
-			SpriteRenderer spriteRenderer = componentGroup.getComponent(SpriteRenderer.class);
-			PlayerData playerData = componentGroup.getComponent(PlayerData.class);
+		forEach(match -> {
+			Transform transform = match.getComponent(Transform.class);
+			SpriteRenderer spriteRenderer = match.getComponent(SpriteRenderer.class);
+			PlayerData playerData = match.getComponent(PlayerData.class);
 			
 			// Store reference to scene
-			playerData.gameScene = (GameScene)world.scene;
+			playerData.gameScene = (GameScene)scene;
 			
 			// Set player properties
 			playerData.animationFrame = 0;

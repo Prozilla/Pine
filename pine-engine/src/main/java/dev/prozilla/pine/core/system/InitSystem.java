@@ -1,15 +1,19 @@
 package dev.prozilla.pine.core.system;
 
-import dev.prozilla.pine.core.component.ComponentCollector;
+import dev.prozilla.pine.core.entity.EntityQuery;
 
 /**
- * System for handling initialization.
+ * System for handling entity initialization.
  */
 public abstract class InitSystem extends SystemBase {
 	
-	public InitSystem(ComponentCollector collector) {
+	public InitSystem(EntityQuery collector) {
 		super(collector, true);
 	}
 	
+	/**
+	 * Initializes each entity before it enters the world.
+	 * @param window Window ID
+	 */
 	public abstract void init(long window);
 }

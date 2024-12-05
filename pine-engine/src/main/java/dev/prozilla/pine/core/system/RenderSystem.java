@@ -1,17 +1,19 @@
 package dev.prozilla.pine.core.system;
 
-import dev.prozilla.pine.core.component.ComponentCollector;
+import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.rendering.Renderer;
 
 /**
- * System responsible for rendering components to the screen.
+ * System responsible for rendering entities to the screen.
  */
 public abstract class RenderSystem extends SystemBase {
 	
-	public RenderSystem(ComponentCollector collector) {
+	public RenderSystem(EntityQuery collector) {
 		super(collector);
 	}
 	
-	/** Renders every component to the screen, each frame. */
+	/**
+	 * Renders every entity to the screen, each frame.
+	 */
 	public abstract void render(Renderer renderer);
 }

@@ -19,6 +19,9 @@ import dev.prozilla.pine.core.system.update.TileUpdater;
 
 import java.util.ArrayList;
 
+/**
+ * An isolated collection of entities, components and systems that live inside a scene.
+ */
 public class World implements Lifecycle {
 	
 	public EntityManager entityManager;

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.system.init;
 
-import dev.prozilla.pine.core.component.ComponentCollector;
+import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.camera.CameraControlData;
 import dev.prozilla.pine.core.component.camera.CameraData;
@@ -12,17 +12,17 @@ import dev.prozilla.pine.core.system.InitSystem;
 public class CameraControlInitializer extends InitSystem {
 	
 	public CameraControlInitializer() {
-		super(new ComponentCollector(CameraControlData.class, Transform.class, CameraData.class));
+		super(new EntityQuery(CameraControlData.class, Transform.class, CameraData.class));
 	}
 	
 	@Override
 	public void init(long window) {
-		Input input = world.application.getInput();
+		Input input = application.getInput();
 		
-		forEach(componentGroup -> {
-			Transform transform = componentGroup.getComponent(Transform.class);
-			CameraData cameraData = componentGroup.getComponent(CameraData.class);
-			CameraControlData cameraControlData = componentGroup.getComponent(CameraControlData.class);
+		forEach(match -> {
+			Transform transform = match.getComponent(Transform.class);
+			CameraData cameraData = match.getComponent(CameraData.class);
+			CameraControlData cameraControlData = match.getComponent(CameraControlData.class);
 			
 			KeyBindings<CameraControlData.Action> keyBindings = new KeyBindings<>(input);
 			

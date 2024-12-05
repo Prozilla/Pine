@@ -21,7 +21,7 @@ public abstract class Component implements Lifecycle {
 	private final int id;
 	
 	// State
-	public boolean isEnabled;
+	public boolean isActive;
 	/** The entity that this component is attached to. */
 	public Entity entity;
 	
@@ -29,7 +29,7 @@ public abstract class Component implements Lifecycle {
 	
 	public Component() {
 		id = generateId();
-		isEnabled = true;
+		isActive = true;
 	}
 	
 	@Override
@@ -51,17 +51,11 @@ public abstract class Component implements Lifecycle {
 	public void destroy() {}
 	
 	/**
-	 * Enables this component.
+	 * Enables or disables this component.
+	 * @param active True enables this component, false disables it.
 	 */
-	public void enable() {
-		isEnabled = true;
-	}
-	
-	/**
-	 * Disables this component.
-	 */
-	public void disable() {
-		isEnabled = false;
+	public void setActive(boolean active) {
+		this.isActive = active;
 	}
 	
 	/**

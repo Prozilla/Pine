@@ -1,10 +1,12 @@
 package dev.prozilla.pine.core.system;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.World;
-import dev.prozilla.pine.core.component.ComponentCollector;
-import dev.prozilla.pine.core.component.ComponentGroup;
+import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.state.Scene;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -13,25 +15,33 @@ import java.util.function.Consumer;
 // TO DO: ignore de-activated components
 
 /**
- * System responsible for running logic for a specific type of component.
+ * System responsible for handling logic and behaviour for entities that match a query based on their components.
  */
 public abstract class SystemBase implements Lifecycle {
 	
-	private final ComponentCollector collector;
+	/** Query that entities must match in order to be processed by this system. */
+	private final EntityQuery query;
+	/** If true, this system will only process each entity once. */
 	private final boolean runOnce;
 	
+	/**
+	 * Keeps track of entities that have already been processed,
+	 * if <code>runOnce</code> is set to <code>true</code>.
+	 */
 	private final ArrayList<Integer> processedEntityIds;
 	
 	protected World world;
+	protected Application application;
+	protected Scene scene;
 	
-	public SystemBase(ComponentCollector collector) {
-		this(collector, false);
+	public SystemBase(EntityQuery query) {
+		this(query, false);
 	}
 	
-	public SystemBase(ComponentCollector collector, boolean runOnce) {
-		Objects.requireNonNull(collector, "Collector must not be null.");
+	public SystemBase(EntityQuery query, boolean runOnce) {
+		Objects.requireNonNull(query, "Collector must not be null.");
 		
-		this.collector = collector;
+		this.query = query;
 		this.runOnce = runOnce;
 		
 		processedEntityIds = new ArrayList<>();
@@ -41,6 +51,8 @@ public abstract class SystemBase implements Lifecycle {
 		Objects.requireNonNull(world, "World must not be null.");
 		
 		this.world = world;
+		application = world.application;
+		scene = world.scene;
 		
 		if (world.entityManager.hasEntities()) {
 			for (Entity entity : world.entityManager.getEntities()) {
@@ -51,18 +63,18 @@ public abstract class SystemBase implements Lifecycle {
 	
 	@Override
 	public void destroy() {
-		collector.destroy();
+		query.destroy();
 	}
 	
 	/**
-	 * Registers an entity's components in this system's collection.
-	 * @see ComponentCollector
+	 * Registers an entity in this system's query.
+	 * @see EntityQuery
 	 */
 	public void register(Entity entity) {
-		if (collector.register(entity)) {
+		if (query.register(entity)) {
 			if (runOnce && !processedEntityIds.contains(entity.getId())) {
 				if (this instanceof InitSystem) {
-					init(world.application.getWindow().id);
+					init(application.getWindow().id);
 				} else if (this instanceof StartSystem) {
 					start();
 				}
@@ -71,12 +83,12 @@ public abstract class SystemBase implements Lifecycle {
 	}
 	
 	/**
-	 * Iterates over each component group in this system's collection.
+	 * Iterates over each entity that matches the query of this system.
 	 */
-	protected void forEach(Consumer<ComponentGroup> consumer) {
-		for (ComponentGroup componentGroup : collector.componentGroups) {
-			int entityId = componentGroup.getEntityId();
-			boolean allowProcessing = componentGroup.isEnabled();
+	protected void forEach(Consumer<EntityMatch> consumer) {
+		for (EntityMatch entityMatch : query.entityMatches) {
+			int entityId = entityMatch.getEntityId();
+			boolean allowProcessing = entityMatch.isActive();
 			
 			if (runOnce && processedEntityIds.contains(entityId)) {
 				allowProcessing = false;
@@ -84,13 +96,13 @@ public abstract class SystemBase implements Lifecycle {
 			
 			if (allowProcessing) {
 				try {
-					consumer.accept(componentGroup);
+					consumer.accept(entityMatch);
 				} catch (Exception e) {
 					System.err.println("Failed to run system " + getClass().getName());
 					e.printStackTrace();
 				} finally {
 					if (runOnce) {
-						processedEntityIds.add(componentGroup.getEntityId());
+						processedEntityIds.add(entityMatch.getEntityId());
 					}
 				}
 			}
@@ -99,15 +111,15 @@ public abstract class SystemBase implements Lifecycle {
 	
 	/**
 	 * Returns true if this system has collected any component groups.
-	 * @see ComponentCollector
+	 * @see EntityQuery
 	 */
 	public boolean hasComponentGroups() {
-		return !collector.componentGroups.isEmpty();
+		return !query.entityMatches.isEmpty();
 	}
 	
 	public void print() {
 		String systemName = getClass().getSimpleName();
-		int groupCount = collector.componentGroups.size();
+		int groupCount = query.entityMatches.size();
 		
 		System.out.printf("%s: (%s)%n", systemName, groupCount);
 	}

@@ -16,10 +16,10 @@ public class PlayerMover extends UpdateSystem {
 	
 	@Override
 	public void update(float deltaTime) {
-		forEach(componentGroup -> {
-			Transform transform = componentGroup.getComponent(Transform.class);
-			SpriteRenderer spriteRenderer = componentGroup.getComponent(SpriteRenderer.class);
-			PlayerData playerData = componentGroup.getComponent(PlayerData.class);
+		forEach(match -> {
+			Transform transform = match.getComponent(Transform.class);
+			SpriteRenderer spriteRenderer = match.getComponent(SpriteRenderer.class);
+			PlayerData playerData = match.getComponent(PlayerData.class);
 			
 			if (transform.x <= Main.HEIGHT / -2f || transform.y + PlayerData.HEIGHT >= Main.HEIGHT / 2f) {
 				playerData.gameScene.endGame();

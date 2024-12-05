@@ -1,13 +1,16 @@
 package dev.prozilla.pine.core.system;
 
-import dev.prozilla.pine.core.component.ComponentCollector;
+import dev.prozilla.pine.core.entity.EntityQuery;
 
 /**
  * System for handling start.
+ * @deprecated Start systems are unused and planned to be deleted.
  */
+@Deprecated
 public abstract class StartSystem extends SystemBase {
 	
-	public StartSystem(ComponentCollector collector) {
+	@Deprecated
+	public StartSystem(EntityQuery collector) {
 		super(collector, true);
 	}
 	

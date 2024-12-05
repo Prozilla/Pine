@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system.update;
 
 import dev.prozilla.pine.common.math.MathUtils;
-import dev.prozilla.pine.core.component.ComponentCollector;
+import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.camera.CameraControlData;
 import dev.prozilla.pine.core.component.camera.CameraData;
@@ -10,15 +10,15 @@ import dev.prozilla.pine.core.system.UpdateSystem;
 public class CameraControlUpdater extends UpdateSystem {
 	
 	public CameraControlUpdater() {
-		super(new ComponentCollector(CameraControlData.class, CameraData.class, Transform.class));
+		super(new EntityQuery(CameraControlData.class, CameraData.class, Transform.class));
 	}
 	
 	@Override
 	public void update(float deltaTime) {
-		forEach(componentGroup -> {
-			Transform transform = componentGroup.getComponent(Transform.class);
-			CameraData cameraData = componentGroup.getComponent(CameraData.class);
-			CameraControlData cameraControlData = componentGroup.getComponent(CameraControlData.class);
+		forEach(match -> {
+			Transform transform = match.getComponent(Transform.class);
+			CameraData cameraData = match.getComponent(CameraData.class);
+			CameraControlData cameraControlData = match.getComponent(CameraControlData.class);
 			
 			if (cameraControlData.velocityDamping == 0) {
 				transform.setPosition(cameraControlData.targetX, cameraControlData.targetY);

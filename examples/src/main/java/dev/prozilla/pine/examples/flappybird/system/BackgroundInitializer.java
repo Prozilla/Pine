@@ -1,6 +1,6 @@
 package dev.prozilla.pine.examples.flappybird.system;
 
-import dev.prozilla.pine.core.component.ComponentCollector;
+import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.component.SpriteRenderer;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.system.InitSystem;
@@ -11,18 +11,18 @@ import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 public class BackgroundInitializer extends InitSystem {
 	
 	public BackgroundInitializer() {
-		super(new ComponentCollector(BackgroundData.class, SpriteRenderer.class, Transform.class));
+		super(new EntityQuery(BackgroundData.class, SpriteRenderer.class, Transform.class));
 	}
 	
 	@Override
 	public void init(long window) {
-		forEach(componentGroup -> {
-			Transform transform = componentGroup.getComponent(Transform.class);
-			BackgroundData backgroundData = componentGroup.getComponent(BackgroundData.class);
-			SpriteRenderer spriteRenderer = componentGroup.getComponent(SpriteRenderer.class);
+		forEach(match -> {
+			Transform transform = match.getComponent(Transform.class);
+			BackgroundData backgroundData = match.getComponent(BackgroundData.class);
+			SpriteRenderer spriteRenderer = match.getComponent(SpriteRenderer.class);
 			
 			// Store reference to scene
-			backgroundData.gameScene = (GameScene)world.scene;
+			backgroundData.gameScene = (GameScene)scene;
 			
 			// Set sprite properties
 			spriteRenderer.setRegion(0, 0, BackgroundData.WIDTH, BackgroundData.HEIGHT);
