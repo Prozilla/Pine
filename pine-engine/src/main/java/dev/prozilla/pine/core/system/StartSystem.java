@@ -8,7 +8,7 @@ import dev.prozilla.pine.core.component.ComponentCollector;
 public abstract class StartSystem extends SystemBase {
 	
 	public StartSystem(ComponentCollector collector) {
-		super(collector);
+		super(collector, true);
 	}
 	
 	public abstract void start();

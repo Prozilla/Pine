@@ -90,6 +90,10 @@ public class ComponentGroup {
 		isEnabled = allComponentsEnabled;
 	}
 	
+	public int getEntityId() {
+		return getEntity().getId();
+	}
+	
 	public Entity getEntity() throws IllegalStateException {
 		if (components.length == 0) {
 			throw new IllegalStateException("Component group is empty.");

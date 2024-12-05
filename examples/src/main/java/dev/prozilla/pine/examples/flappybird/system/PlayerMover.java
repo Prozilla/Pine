@@ -39,7 +39,7 @@ public class PlayerMover extends UpdateSystem {
 			
 			// Update velocity and move based on current velocity
 			playerData.velocity -= deltaTime / 2f;
-			transform.y += playerData.velocity * PlayerData.SPEED;
+			transform.y += playerData.velocity * PlayerData.SPEED * deltaTime;
 			playerData.velocity -= deltaTime / 2f;
 			
 			// Clamp position inside screen bounds

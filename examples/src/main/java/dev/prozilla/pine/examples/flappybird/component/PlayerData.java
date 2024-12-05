@@ -17,7 +17,7 @@ public class PlayerData extends Component {
 	public static final int HEIGHT = 32;
 	public static final float POSITION_X = Main.WIDTH / -4f;
 	public static final float ANIMATION_SPEED = 10f;
-	public static final float SPEED = 5f;
+	public static final float SPEED = 500f;
 	public static final float JUMP_VELOCITY = 0.65f;
 	
 	public void resetVelocity() {

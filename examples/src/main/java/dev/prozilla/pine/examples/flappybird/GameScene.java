@@ -42,6 +42,9 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 		world.addSystem(new PlayerMover());
 		world.addSystem(new BackgroundInitializer());
 		world.addSystem(new BackgroundMover());
+		world.addSystem(new PipeInitializer());
+		world.addSystem(new PipesInitializer());
+		world.addSystem(new PipesMover());
 		
 		// Fill screen with background sprites
 		Background[] backgrounds = new Background[Math.round((float)Main.WIDTH / BackgroundData.WIDTH + 0.5f) + 1];
