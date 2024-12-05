@@ -49,10 +49,11 @@ public class ComponentCollector implements Lifecycle {
 	
 	/**
 	 * Adds components of a given entity to a component group, if it meets the requirements of the collection.
+	 * @return True if the collection was modified.
 	 */
-	public void register(Entity entity) {
+	public boolean register(Entity entity) {
 		if (entity.components.isEmpty() || registeredEntityIds.contains(entity.getId())) {
-			return;
+			return false;
 		}
 		
 		Component[] components = new Component[componentClasses.length];
@@ -68,7 +69,7 @@ public class ComponentCollector implements Lifecycle {
 		}
 		
 		if (!match) {
-			return;
+			return false;
 		}
 		
 		try {
@@ -78,8 +79,23 @@ public class ComponentCollector implements Lifecycle {
 		} catch (Exception e) {
 			System.err.println("Failed to create component group.");
 			e.printStackTrace();
+			return false;
 		} finally {
 			registeredEntityIds.add(entity.getId());
 		}
+		
+		return true;
+	}
+	
+	public void print() {
+		int componentCount = componentClasses.length;
+		String[] componentNames = new String[componentCount];
+		
+		for (int i = 0; i < componentCount; i++) {
+			Class<? extends Component> componentClass = componentClasses[i];
+			componentNames[i] = componentClass.getSimpleName();
+		}
+		
+		System.out.printf("ComponentCollector: [%s] (%s)%n", String.join(", ", componentNames), componentCount);
 	}
 }

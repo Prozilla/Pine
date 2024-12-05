@@ -5,10 +5,9 @@ import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.canvas.Canvas;
 import dev.prozilla.pine.core.state.input.Key;
+import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 import dev.prozilla.pine.examples.flappybird.entity.*;
-import dev.prozilla.pine.examples.flappybird.system.PlayerInitializer;
-import dev.prozilla.pine.examples.flappybird.system.PlayerInputHandler;
-import dev.prozilla.pine.examples.flappybird.system.PlayerMover;
+import dev.prozilla.pine.examples.flappybird.system.*;
 
 import java.util.Random;
 
@@ -41,9 +40,11 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 		world.addSystem(new PlayerInitializer());
 		world.addSystem(new PlayerInputHandler());
 		world.addSystem(new PlayerMover());
+		world.addSystem(new BackgroundInitializer());
+		world.addSystem(new BackgroundMover());
 		
 		// Fill screen with background sprites
-		Background[] backgrounds = new Background[Math.round((float)Main.WIDTH / Background.WIDTH + 0.5f) + 1];
+		Background[] backgrounds = new Background[Math.round((float)Main.WIDTH / BackgroundData.WIDTH + 0.5f) + 1];
 		for (int i = 0; i < backgrounds.length; i++) {
 			Background background = new Background(world, i);
 			add(background);

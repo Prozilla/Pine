@@ -30,6 +30,12 @@ public abstract class SystemBase implements Lifecycle {
 		Objects.requireNonNull(world, "World must not be null.");
 		
 		this.world = world;
+		
+		if (world.entityManager.hasEntities()) {
+			for (Entity entity : world.entityManager.getEntities()) {
+				register(entity);
+			}
+		}
 	}
 	
 	@Override

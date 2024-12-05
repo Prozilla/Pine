@@ -43,9 +43,7 @@ public class World implements Lifecycle {
 	}
 	
 	public void initSystems() {
-		for (SystemBase system : initialSystems) {
-			systemManager.addSystem(system);
-		}
+		systemManager.initSystems(initialSystems);
 	}
 	
 	public void useDefaultSystems() {
@@ -102,29 +100,32 @@ public class World implements Lifecycle {
 		systemManager.destroy();
 	}
 	
+	// TO DO: Refactor component loading so components are always added after entity without explicit checks
 	public Entity addEntity(Entity entity) {
+		if (entityManager.contains(entity)) {
+			return entity;
+		}
 		entityManager.addEntity(entity);
 		systemManager.register(entity);
 		return entity;
 	}
 	
 	public Component addComponent(Entity entity, Component component) {
+		if (!entityManager.contains(entity)) {
+			entityManager.addEntity(entity);
+		}
 		componentManager.addComponent(entity, component);
 		systemManager.register(entity);
 		return component;
 	}
 	
-	public SystemBase addSystem(SystemBase systemBase) {
+	public SystemBase addSystem(SystemBase system) {
 		if (!systemManager.isInitialized()) {
-			useSystem(systemBase);
-			return systemBase;
+			useSystem(system);
+		} else {
+			systemManager.addSystem(system);
 		}
 		
-		systemManager.addSystem(systemBase);
-		for (Entity entity : entityManager.getEntities()) {
-			systemManager.register(entity);
-		}
-		
-		return systemBase;
+		return system;
 	}
 }

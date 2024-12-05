@@ -5,6 +5,7 @@ import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.rendering.Renderer;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class SystemManager extends ECSManager {
@@ -41,12 +42,19 @@ public class SystemManager extends ECSManager {
 		};
 	}
 	
+	public void initSystems(ArrayList<SystemBase> initialSystems) {
+		for (SystemBase system : initialSystems) {
+			addSystem(system);
+		}
+		
+		initialized = true;
+	}
+	
 	/**
 	 * Runs all systems that handle initialization.
 	 */
 	@Override
 	public void init(long window) {
-		initialized = true;
 		initSystems.forEach(initSystem -> initSystem.init(window));
 	}
 	

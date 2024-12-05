@@ -3,7 +3,6 @@ package dev.prozilla.pine.core.system;
 import dev.prozilla.pine.core.entity.Entity;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -24,10 +23,14 @@ public class SystemGroup<S extends SystemBase> {
 	 * Adds a system to this group if it matches the type of this group.
 	 * @return True if the system matched the type of this group.
 	 */
-	public boolean add(SystemBase system) {
+	public boolean add(SystemBase system) throws IllegalStateException {
 		boolean valid = type.isInstance(system);
 		if (valid) {
-			systems.add(type.cast(system));
+			S newSystem = type.cast(system);
+			if (systems.contains(newSystem)) {
+				throw new IllegalStateException("System has already been added.");
+			}
+			systems.add(newSystem);
 		}
 		return valid;
 	}
@@ -37,6 +40,10 @@ public class SystemGroup<S extends SystemBase> {
 	 */
 	public boolean isEmpty() {
 		return systems.isEmpty();
+	}
+	
+	public int size() {
+		return systems.size();
 	}
 	
 	/**

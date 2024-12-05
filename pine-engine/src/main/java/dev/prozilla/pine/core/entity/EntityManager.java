@@ -25,13 +25,25 @@ public class EntityManager extends ECSManager {
 		entities.clear();
 	}
 	
-	public void addEntity(Entity entity) {
+	public void addEntity(Entity entity) throws NullPointerException, IllegalStateException {
 		Objects.requireNonNull(entity, "Entity must not be null.");
+		
+		if (entities.contains(entity)) {
+			throw new IllegalStateException("Entity has already been added.");
+		}
 		
 		entities.add(entity);
 	}
 	
+	public boolean contains(Entity entity) {
+		return entities.contains(entity);
+	}
+	
 	public ArrayList<Entity> getEntities() {
 		return entities;
+	}
+	
+	public boolean hasEntities() {
+		return !entities.isEmpty();
 	}
 }

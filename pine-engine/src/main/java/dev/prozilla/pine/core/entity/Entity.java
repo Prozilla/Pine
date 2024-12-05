@@ -69,9 +69,11 @@ public class Entity implements Lifecycle {
 		application = world.application;
 		scene = world.scene;
 		
+		id = generateId();
+		
 		transform = new Transform(x, y);
 		components = new ArrayList<>();
-		id = generateId();
+		addComponent(transform);
 		
 		initialized = false;
 		started = false;
@@ -86,8 +88,6 @@ public class Entity implements Lifecycle {
 		if (initialized) {
 			throw new IllegalStateException("Game object has already been initialized");
 		}
-		
-		addComponent(transform);
 		
 		if (!transform.children.isEmpty()) {
 			for (Transform child : transform.children) {
@@ -550,6 +550,22 @@ public class Entity implements Lifecycle {
 	}
 	
 	public void print() {
-		System.out.printf("%s: %s (%s, %s)%n", getClass().getName(), getName(), transform.getGlobalX(), transform.getGlobalY());
+		String className = getClass().getSimpleName();
+		int componentCount = components.size();
+		String[] componentNames = new String[componentCount];
+		
+		for (int i = 0; i < componentCount; i++) {
+			Class<? extends Component> componentClass = components.get(i).getClass();
+			componentNames[i] = componentClass.getSimpleName();
+		}
+		
+		System.out.printf("%s: %s (%s, %s) [%s] (%s)%n",
+			className,
+			getName(),
+			transform.getGlobalX(),
+			transform.getGlobalY(),
+			String.join(", ", componentNames),
+			componentCount
+		);
 	}
 }
