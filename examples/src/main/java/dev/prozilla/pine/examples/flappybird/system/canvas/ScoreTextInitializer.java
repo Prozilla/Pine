@@ -2,26 +2,25 @@ package dev.prozilla.pine.examples.flappybird.system.canvas;
 
 import dev.prozilla.pine.core.component.canvas.TextRenderer;
 import dev.prozilla.pine.core.system.InitSystem;
+import dev.prozilla.pine.examples.flappybird.EntityTag;
 import dev.prozilla.pine.examples.flappybird.GameScene;
-import dev.prozilla.pine.examples.flappybird.component.ScoreTextData;
 
 public class ScoreTextInitializer extends InitSystem {
 	
 	public ScoreTextInitializer() {
-		super(ScoreTextData.class, TextRenderer.class);
+		super(TextRenderer.class);
+		requireTag(EntityTag.SCORE_TAG);
 	}
 	
 	@Override
 	public void init(long window) {
+		GameScene gameScene = (GameScene)scene;
+		
 		forEach(match -> {
-			ScoreTextData scoreTextData = match.getComponent(ScoreTextData.class);
 			TextRenderer textRenderer = match.getComponent(TextRenderer.class);
 			
-			// Store reference to scene
-			scoreTextData.gameScene = (GameScene)scene;
-			
 			// Set font
-			textRenderer.setFont(scoreTextData.gameScene.font);
+			textRenderer.setFont(gameScene.font);
 		});
 	}
 }

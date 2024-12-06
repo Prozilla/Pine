@@ -10,6 +10,8 @@ public class EntityManager extends ECSManager {
 	
 	private final ArrayList<Entity> entities;
 	
+	private static int lastEntityId = 0;
+	
 	public EntityManager(World world) {
 		super(world);
 		
@@ -45,5 +47,13 @@ public class EntityManager extends ECSManager {
 	
 	public boolean hasEntities() {
 		return !entities.isEmpty();
+	}
+	
+	/**
+	 * Generates a new unique entity ID.
+	 * @return Entity ID
+	 */
+	public static int generateEntityId() {
+		return lastEntityId++;
 	}
 }

@@ -86,11 +86,6 @@ public class EntityMatch {
 		return (C)components[index];
 	}
 	
-	
-	public int getEntityId() {
-		return entity.getId();
-	}
-	
 	public Entity getEntity() throws IllegalStateException {
 		return entity;
 	}

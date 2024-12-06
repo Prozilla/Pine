@@ -10,6 +10,8 @@ import java.util.Objects;
 public class ComponentManager extends ECSManager {
 	
 	private final ArrayList<Component> components;
+	
+	private static int lastComponentId = 0;
 
 	public ComponentManager(World world) {
 		super(world);
@@ -36,5 +38,13 @@ public class ComponentManager extends ECSManager {
 		components.add(component);
 		component.entity = entity;
 		entity.components.add(component);
+	}
+	
+	/**
+	 * Generates a new unique component ID.
+	 * @return Component ID
+	 */
+	public static int generateComponentId() {
+		return lastComponentId++;
 	}
 }

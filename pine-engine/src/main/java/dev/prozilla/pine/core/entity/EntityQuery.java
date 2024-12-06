@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Utility class for querying entities with specific components to be processed by a system.
@@ -19,14 +20,22 @@ public class EntityQuery implements Lifecycle {
 	 */
 	private final ArrayList<Integer> registeredEntityIds;
 	
-	/**
-	 * Entities must have components of these types to match this query.
-	 */
+	// Primary query options
+	/** Entities must have components of these types to match this query. */
 	private final Class<? extends Component>[] componentTypes;
 	
-	@SafeVarargs
-	public EntityQuery(Class<? extends Component>... componentTypes) {
+	// Secondary query options
+	/** Entities must have this tag to match this query, unless this tag is <code>null</code>. */
+	private final String entityTag;
+	/** Indicates whether results of this query may be disposed by the system that consumes it. */
+	private final boolean isDisposable;
+	
+	public EntityQuery(Class<? extends Component>[] componentTypes, boolean disposable, String tag) {
 		this.componentTypes = componentTypes;
+		this.isDisposable = disposable;
+		this.entityTag = tag;
+		
+		Objects.requireNonNull(componentTypes, "componentTypes must not be null.");
 		
 		if (componentTypes.length == 0) {
 			throw new IllegalArgumentException("Length of componentTypes must be greater than 0.");
@@ -50,7 +59,7 @@ public class EntityQuery implements Lifecycle {
 	 * @return True if the entity matches this query
 	 */
 	public boolean register(Entity entity) {
-		if (registeredEntityIds.contains(entity.getId())) {
+		if (registeredEntityIds.contains(entity.id)) {
 			return false;
 		}
 		
@@ -69,7 +78,7 @@ public class EntityQuery implements Lifecycle {
 			e.printStackTrace();
 			return false;
 		} finally {
-			registeredEntityIds.add(entity.getId());
+			registeredEntityIds.add(entity.id);
 		}
 		
 		return true;
@@ -80,12 +89,18 @@ public class EntityQuery implements Lifecycle {
 	 * Returns null if any component is missing.
 	 */
 	private Component[] getMatchingComponents(Entity entity) {
+		// Check if entity has any components
 		if (entity.components.isEmpty()) {
+			return null;
+		}
+		// Check if entity matches tag
+		if (entityTag != null && (entity.tag == null || !entity.tag.equals(entityTag))) {
 			return null;
 		}
 		
 		Component[] components = new Component[componentTypes.length];
 		
+		// Check if entity has components of all required types
 		boolean match = true;
 		for (int i = 0; i < componentTypes.length; i++) {
 			Component component = entity.getComponent(componentTypes[i]);

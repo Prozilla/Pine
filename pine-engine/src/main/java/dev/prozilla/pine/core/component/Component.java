@@ -18,17 +18,15 @@ import java.util.ArrayList;
 public abstract class Component implements Lifecycle {
 	
 	// Identifier
-	private final int id;
+	public final int id;
 	
 	// State
 	public boolean isActive;
 	/** The entity that this component is attached to. */
 	public Entity entity;
 	
-	private static int lastId = 0;
-	
 	public Component() {
-		id = generateId();
+		id = ComponentManager.generateComponentId();
 		isActive = true;
 	}
 	
@@ -61,18 +59,6 @@ public abstract class Component implements Lifecycle {
 	 */
 	public Entity getEntity() {
 		return entity;
-	}
-	
-	/**
-	 * Generates a new unique component ID.
-	 * @return Component ID
-	 */
-	public static int generateId() {
-		return lastId++;
-	}
-	
-	public int getId() {
-		return id;
 	}
 	
 	public String getName() {
@@ -132,6 +118,6 @@ public abstract class Component implements Lifecycle {
 	}
 	
 	public boolean equals(Component component) {
-		return component.getId() == id;
+		return component.id == id;
 	}
 }

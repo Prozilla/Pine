@@ -97,6 +97,10 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 	
 	@Override
 	public void update(float deltaTime) throws IllegalStateException {
+		if (gameOver) {
+			gameOverText.setActive(true);
+		}
+
 		super.update(deltaTime);
 		
 		if (!gameOver) {
@@ -114,6 +118,5 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 	public void endGame() {
 		gameOver = true;
 		player.playerData.resetVelocity();
-		gameOverText.setActive(true);
 	}
 }

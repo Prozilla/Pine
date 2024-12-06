@@ -138,6 +138,7 @@ public class World implements Lifecycle {
 	// TO DO: Refactor component loading so components are always added after entity without explicit checks
 	public Entity addEntity(Entity entity) {
 		if (entityManager.contains(entity)) {
+			systemManager.register(entity); // Check if entity was changed since it was added (e.g. tag changed after components added)
 			return entity;
 		}
 		entityManager.addEntity(entity);

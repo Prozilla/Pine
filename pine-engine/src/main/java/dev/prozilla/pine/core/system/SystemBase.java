@@ -25,6 +25,7 @@ public abstract class SystemBase implements Lifecycle {
 	private EntityQuery query;
 	/** If true, this system will only process each entity once. */
 	private final boolean runOnce;
+	private String entityTag;
 	
 	/**
 	 * Keeps track of entities that have already been processed,
@@ -36,7 +37,7 @@ public abstract class SystemBase implements Lifecycle {
 	protected Application application;
 	protected Scene scene;
 	
-	public SystemBase(Class<? extends Component>... componentTypes) {
+	public SystemBase(Class<? extends Component>[] componentTypes) {
 		this(componentTypes, false);
 	}
 	
@@ -49,6 +50,24 @@ public abstract class SystemBase implements Lifecycle {
 		processedEntityIds = new ArrayList<>();
 	}
 	
+	/**
+	 * Restricts this system's query to entities with a given tag.
+	 * If multiple entities have overlapping component types and you only want this system to process some of them,
+	 * you can use tags to select the right entities.
+	 * @throws IllegalStateException If the query has already been created.
+	 * @see EntityQuery
+	 */
+	protected void requireTag(String tag) throws IllegalStateException {
+		if (query != null) {
+			throw new IllegalStateException("Required tag must be specified before the creation of the query.");
+		}
+		this.entityTag = tag;
+	}
+	
+	/**
+	 * Initializes this system and creates the query.
+	 * If there are already entities in the world, this will register each entity in this system.
+	 */
 	public void initSystem(World world) {
 		Objects.requireNonNull(world, "World must not be null.");
 		
@@ -57,7 +76,7 @@ public abstract class SystemBase implements Lifecycle {
 		scene = world.scene;
 		
 		// Create entity query
-		query = world.queryPool.getQuery(componentTypes, runOnce);
+		query = world.queryPool.getQuery(componentTypes, runOnce, entityTag);
 		
 		// Process existing entities
 		if (world.entityManager.hasEntities()) {
@@ -73,7 +92,7 @@ public abstract class SystemBase implements Lifecycle {
 	 */
 	public void register(Entity entity) {
 		if (query.register(entity)) {
-			if (runOnce && !processedEntityIds.contains(entity.getId())) {
+			if (runOnce && !processedEntityIds.contains(entity.id)) {
 				if (this instanceof InitSystem) {
 					init(application.getWindow().id);
 				}
@@ -86,7 +105,7 @@ public abstract class SystemBase implements Lifecycle {
 	 */
 	protected void forEach(Consumer<EntityMatch> consumer) {
 		for (EntityMatch entityMatch : query.entityMatches) {
-			int entityId = entityMatch.getEntityId();
+			int entityId = entityMatch.getEntity().id;
 			boolean allowProcessing = entityMatch.isActive();
 			
 			if (runOnce && processedEntityIds.contains(entityId)) {
@@ -101,7 +120,7 @@ public abstract class SystemBase implements Lifecycle {
 					e.printStackTrace();
 				} finally {
 					if (runOnce) {
-						processedEntityIds.add(entityMatch.getEntityId());
+						processedEntityIds.add(entityMatch.getEntity().id);
 					}
 				}
 			}

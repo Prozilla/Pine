@@ -20,7 +20,8 @@ public class PlayerMover extends UpdateSystem {
 			SpriteRenderer spriteRenderer = match.getComponent(SpriteRenderer.class);
 			PlayerData playerData = match.getComponent(PlayerData.class);
 			
-			if (transform.x <= Main.HEIGHT / -2f || transform.y + PlayerData.HEIGHT >= Main.HEIGHT / 2f) {
+			// Check if player hit floor or ceiling
+			if (transform.y <= Main.HEIGHT / -2f || transform.y + PlayerData.HEIGHT >= Main.HEIGHT / 2f) {
 				playerData.gameScene.endGame();
 			}
 			

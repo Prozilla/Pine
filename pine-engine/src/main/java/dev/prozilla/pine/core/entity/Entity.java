@@ -20,8 +20,9 @@ import java.util.ArrayList;
  */
 public class Entity implements Lifecycle {
 	
-	private final int id;
+	public final int id;
 	private final String name;
+	public String tag;
 	protected boolean isActive;
 	
 	public final Transform transform;
@@ -32,11 +33,6 @@ public class Entity implements Lifecycle {
 	
 	/** Components of this entity */
 	public final ArrayList<Component> components;
-	
-	protected boolean initialized;
-	protected boolean started;
-	
-	private static int lastId = 0;
 	
 	/**
 	 * Creates a game object at the position (0, 0)
@@ -69,188 +65,13 @@ public class Entity implements Lifecycle {
 		application = world.application;
 		scene = world.scene;
 		
-		id = generateId();
+		id = EntityManager.generateEntityId();
 		
 		transform = new Transform(x, y);
 		components = new ArrayList<>();
 		addComponent(transform);
-		
-		initialized = false;
-		started = false;
+
 		isActive = true;
-	}
-	
-	/**
-	 * Initializes this game object before the start of the game loop.
-	 */
-	@Override
-	public void init(long window) throws IllegalStateException {
-		if (initialized) {
-			throw new IllegalStateException("Game object has already been initialized");
-		}
-		
-		if (!transform.children.isEmpty()) {
-			for (Transform child : transform.children) {
-				if (child.getEntity() != null) {
-					child.getEntity().init(window);
-				}
-			}
-		}
-		if (!components.isEmpty()) {
-			for (Component component : components) {
-				component.init(window);
-			}
-		}
-		
-		initialized = true;
-	}
-	
-	/**
-	 * Runs once at the start of the game loop and whenever this game object is activated.
-	 * Runs after the initialization.
-	 */
-	@Override
-	public void start() throws IllegalStateException {
-		if (started) {
-			throw new IllegalStateException("Game object has already been started");
-		}
-		
-		if (!transform.children.isEmpty()) {
-			for (Transform child : transform.children) {
-				if (child.getEntity() != null && child.getEntity().isActive()) {
-					child.getEntity().start();
-				}
-			}
-		}
-		if (!components.isEmpty()) {
-			for (Component component : components) {
-				if (component.isActive) {
-					component.start();
-				}
-			}
-		}
-		
-		started = true;
-	}
-	
-	// TO DO: must also restart children
-	private void restart() {
-		started = false;
-		start();
-	}
-	
-	/**
-	 * Runs every iteration of the game loop to handle input.
-	 * Runs before the update method.
-	 */
-	@Override
-	public void input(float deltaTime) {
-		inputChildren(deltaTime);
-		inputComponents(deltaTime);
-	}
-	
-	/**
-	 * Handle input of children in reverse order.
-	 * Children are rendered in order, so children that appear on top will be
-	 * at the end of the list, these need to receive input first.
-	 */
-	protected void inputChildren(float deltaTime) {
-		if (!transform.children.isEmpty() && application.isRunning) {
-			int childCount = transform.getChildCount();
-			for (int i = childCount - 1; i >= 0; i--) {
-				if (!application.isRunning) {
-					break;
-				}
-				Transform child = transform.children.get(i);
-				if (child.getEntity() != null && child.getEntity().isActive()) {
-					child.getEntity().input(deltaTime);
-				}
-			}
-		}
-	}
-	
-	protected void inputComponents(float deltaTime) {
-		if (!components.isEmpty() && application.isRunning) {
-			for (Component component : components) {
-				if (!application.isRunning) {
-					break;
-				}
-				if (component.isActive) {
-					component.input(deltaTime);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Runs every iteration of the game loop to update this game object.
-	 * Runs after the input method and before the render method.
-	 */
-	@Override
-	public void update(float deltaTime) {
-		updateChildren(deltaTime);
-		updateComponents(deltaTime);
-	}
-	
-	protected void updateChildren(float deltaTime) {
-		if (!transform.children.isEmpty() && application.isRunning) {
-			for (Transform child : transform.children) {
-				if (!application.isRunning) {
-					break;
-				}
-				if (child.getEntity() != null && child.getEntity().isActive()) {
-					child.getEntity().update(deltaTime);
-				}
-			}
-		}
-	}
-	
-	protected void updateComponents(float deltaTime) {
-		if (!components.isEmpty() && application.isRunning) {
-			for (Component component : components) {
-				if (!application.isRunning) {
-					break;
-				}
-				if (component.isActive) {
-					component.update(deltaTime);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Renders this game object for each frame.
-	 * Runs after the input and update methods.
-	 */
-	public void render(Renderer renderer) {
-		renderChildren(renderer);
-		renderComponents(renderer);
-	}
-	
-	protected void renderChildren(Renderer renderer) {
-		if (!transform.children.isEmpty() && application.isRunning) {
-			for (Transform child : transform.children) {
-				if (!application.isRunning) {
-					break;
-				}
-				if (child.getEntity() != null && child.getEntity().isActive()) {
-					child.getEntity().render(renderer);
-				}
-			}
-		}
-	}
-	
-	protected void renderComponents(Renderer renderer) {
-		if (!components.isEmpty() && application.isRunning) {
-			for (Component component : components) {
-				if (!application.isRunning) {
-					break;
-				}
-				if (component.isActive) {
-					component.render(renderer);
-				}
-			}
-		}
 	}
 	
 	/**
@@ -261,22 +82,12 @@ public class Entity implements Lifecycle {
 		if (transform.parent != null && application.isRunning) {
 			transform.parent.getEntity().removeChild(this);
 		}
-//		if (!transform.children.isEmpty()) {
-//			for (Transform child : transform.children) {
-//				child.getEntity().destroy();
-//			}
-//			transform.children.clear();
-//		}
 		if (!components.isEmpty()) {
 			for (Component component : components) {
 				component.destroy();
 			}
 			components.clear();
 		}
-		
-		// Reset state
-		initialized = false;
-		started = false;
 		
 		// Remove all references
 //		game = null;
@@ -298,14 +109,7 @@ public class Entity implements Lifecycle {
 			throw new IllegalStateException("GameObject is already a child");
 		}
 		child.transform.setParent(transform);
-		
-		// Initialize and start child
-		if (initialized && !child.isInitialized()) {
-			child.init(getWindow().id);
-		}
-		if (started && !child.isStarted()) {
-			child.start();
-		}
+		world.addEntity(child);
 		
 		getTracker().addGameObject();
 		return child;
@@ -474,18 +278,6 @@ public class Entity implements Lifecycle {
 		return matches;
 	}
 	
-	/**
-	 * Generates a new unique game object ID.
-	 * @return Game object ID
-	 */
-	public static int generateId() {
-		return lastId++;
-	}
-	
-	public int getId() {
-		return id;
-	}
-	
 	public String getName() {
 		return getName(null);
 	}
@@ -538,15 +330,7 @@ public class Entity implements Lifecycle {
 	 * @return True if the game objects are equal
 	 */
 	public boolean equals(Entity entity) {
-		return (id == entity.getId());
-	}
-	
-	public boolean isInitialized() {
-		return this.initialized;
-	}
-	
-	public boolean isStarted() {
-		return this.started;
+		return (id == entity.id);
 	}
 	
 	public void print() {
