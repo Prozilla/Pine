@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.system;
 
-import dev.prozilla.pine.core.entity.EntityQuery;
+import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.rendering.Renderer;
 
 /**
@@ -8,8 +8,9 @@ import dev.prozilla.pine.core.rendering.Renderer;
  */
 public abstract class RenderSystem extends SystemBase {
 	
-	public RenderSystem(EntityQuery collector) {
-		super(collector);
+	@SafeVarargs
+	public RenderSystem(Class<? extends Component>... componentTypes) {
+		super(componentTypes);
 	}
 	
 	/**

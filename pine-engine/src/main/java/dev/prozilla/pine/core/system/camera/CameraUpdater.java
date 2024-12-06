@@ -1,13 +1,12 @@
-package dev.prozilla.pine.core.system.update;
+package dev.prozilla.pine.core.system.camera;
 
-import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.system.UpdateSystem;
 
 public class CameraUpdater extends UpdateSystem {
 	
 	public CameraUpdater() {
-		super(new EntityQuery(CameraData.class));
+		super(CameraData.class);
 	}
 	
 	@Override

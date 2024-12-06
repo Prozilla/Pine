@@ -1,7 +1,6 @@
-package dev.prozilla.pine.examples.flappybird.system;
+package dev.prozilla.pine.examples.flappybird.system.obstacle;
 
-import dev.prozilla.pine.core.entity.EntityQuery;
-import dev.prozilla.pine.core.component.SpriteRenderer;
+import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.system.InitSystem;
 import dev.prozilla.pine.examples.flappybird.Main;
@@ -10,7 +9,7 @@ import dev.prozilla.pine.examples.flappybird.component.PipeData;
 public class PipeInitializer extends InitSystem {
 	
 	public PipeInitializer() {
-		super(new EntityQuery(PipeData.class, SpriteRenderer.class, Transform.class));
+		super(PipeData.class, SpriteRenderer.class, Transform.class);
 	}
 	
 	@Override

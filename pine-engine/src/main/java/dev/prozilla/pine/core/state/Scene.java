@@ -23,7 +23,6 @@ public class Scene implements Lifecycle {
 	// Scene state
 	public boolean loaded;
 	public boolean initialized;
-	public boolean started;
 	
 	private static int lastId = 0;
 	
@@ -58,7 +57,6 @@ public class Scene implements Lifecycle {
 	public void reset() {
 		loaded = false;
 		initialized = false;
-		started = false;
 	}
 	
 	/**
@@ -89,22 +87,6 @@ public class Scene implements Lifecycle {
 		
 		world.init(window);
 		initialized = true;
-	}
-	
-	/**
-	 * Starts the scene.
-	 */
-	@Override
-	public void start() throws IllegalStateException {
-		if (started) {
-			throw new IllegalStateException("Scene has already started");
-		}
-		if (!initialized) {
-			throw new IllegalStateException("Scene has not been initialized yet");
-		}
-		
-		world.start();
-		started = true;
 	}
 	
 	/**
@@ -156,7 +138,7 @@ public class Scene implements Lifecycle {
 	 * Checks whether the scene is ready.
 	 */
 	protected void checkStatus() throws IllegalStateException {
-		if (!started || !initialized || !loaded) {
+		if (!initialized || !loaded) {
 			throw new IllegalStateException("Scene is not ready yet");
 		}
 	}

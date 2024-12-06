@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.system;
 
+import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.state.input.Input;
 
@@ -8,8 +9,9 @@ import dev.prozilla.pine.core.state.input.Input;
  */
 public abstract class InputSystem extends SystemBase {
 	
-	public InputSystem(EntityQuery collector) {
-		super(collector);
+	@SafeVarargs
+	public InputSystem(Class<? extends Component>... componentTypes) {
+		super(componentTypes);
 	}
 	
 	/**

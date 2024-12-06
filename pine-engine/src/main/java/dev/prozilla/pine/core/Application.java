@@ -193,7 +193,6 @@ public class Application implements Lifecycle {
 		long targetTime = 1000L / targetFps;
 		
 		System.out.printf("Starting application (fps: %s)%n", targetFps);
-		currentScene.start();
 		
 		// Application loop
 		while (!window.shouldClose() && !shouldStop) {
@@ -265,7 +264,7 @@ public class Application implements Lifecycle {
 	@Override
 	public void input(float deltaTime) {
 		input.input();
-		if (currentScene != null && currentScene.started) {
+		if (currentScene != null && currentScene.initialized) {
 			currentScene.input(deltaTime);
 		}
 	}
@@ -277,7 +276,7 @@ public class Application implements Lifecycle {
 	@Override
 	public void update(float deltaTime) {
 		input.update();
-		if (currentScene != null && currentScene.started) {
+		if (currentScene != null && currentScene.initialized) {
 			currentScene.update(deltaTime);
 		}
 	}
@@ -291,7 +290,7 @@ public class Application implements Lifecycle {
 		renderer.clear();
 		
 		renderer.begin();
-		if (currentScene != null && currentScene.started) {
+		if (currentScene != null && currentScene.initialized) {
 			currentScene.render(renderer);
 		}
 		renderer.end();
@@ -353,7 +352,7 @@ public class Application implements Lifecycle {
 		
 		// Destroy window and release callbacks
 		window.destroy();
-		if (currentScene.started) {
+		if (currentScene.initialized) {
 			currentScene.destroy();
 		}
 		
@@ -420,9 +419,6 @@ public class Application implements Lifecycle {
 		
 		if (!currentScene.initialized) {
 			currentScene.init(window.id);
-		}
-		if (!currentScene.started) {
-			currentScene.start();
 		}
 	}
 	

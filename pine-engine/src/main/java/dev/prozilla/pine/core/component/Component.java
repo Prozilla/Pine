@@ -13,7 +13,7 @@ import dev.prozilla.pine.core.state.input.Input;
 import java.util.ArrayList;
 
 /**
- * Contains the data of an entity.
+ * Contains a partition of the data of an entity.
  */
 public abstract class Component implements Lifecycle {
 	
@@ -34,9 +34,6 @@ public abstract class Component implements Lifecycle {
 	
 	@Override
 	public void init(long window) {}
-	
-	@Override
-	public void start() {}
 	
 	@Override
 	public void input(float deltaTime) {}

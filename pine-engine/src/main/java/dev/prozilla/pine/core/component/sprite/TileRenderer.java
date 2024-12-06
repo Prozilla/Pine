@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.component;
+package dev.prozilla.pine.core.component.sprite;
 
 import dev.prozilla.pine.common.system.resource.Texture;
 

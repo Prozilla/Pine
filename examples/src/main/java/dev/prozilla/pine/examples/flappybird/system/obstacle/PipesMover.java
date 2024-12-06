@@ -1,6 +1,5 @@
-package dev.prozilla.pine.examples.flappybird.system;
+package dev.prozilla.pine.examples.flappybird.system.obstacle;
 
-import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.system.UpdateSystem;
 import dev.prozilla.pine.examples.flappybird.GameScene;
 import dev.prozilla.pine.examples.flappybird.component.PipeData;
@@ -10,7 +9,7 @@ import dev.prozilla.pine.examples.flappybird.component.PlayerData;
 public class PipesMover extends UpdateSystem {
 	
 	public PipesMover() {
-		super(new EntityQuery(PipesData.class));
+		super(PipesData.class);
 	}
 	
 	@Override

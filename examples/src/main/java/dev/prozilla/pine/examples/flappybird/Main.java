@@ -16,6 +16,7 @@ public class Main {
 		flappyBird.setWindowSize(WIDTH, HEIGHT);
 		flappyBird.setInitialScene(new GameScene());
 		flappyBird.setIcons("flappybird/icon.png");
+		flappyBird.setTargetFps(120);
 		
 		flappyBird.buildAndRun();
 	}

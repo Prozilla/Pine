@@ -1,6 +1,5 @@
-package dev.prozilla.pine.examples.flappybird.system;
+package dev.prozilla.pine.examples.flappybird.system.background;
 
-import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.system.UpdateSystem;
 import dev.prozilla.pine.examples.flappybird.Main;
@@ -9,7 +8,7 @@ import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 public class BackgroundMover extends UpdateSystem {
 	
 	public BackgroundMover() {
-		super(new EntityQuery(BackgroundData.class, Transform.class));
+		super(BackgroundData.class, Transform.class);
 	}
 	
 	@Override

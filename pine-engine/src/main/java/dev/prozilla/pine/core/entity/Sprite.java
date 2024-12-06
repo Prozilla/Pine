@@ -3,7 +3,7 @@ package dev.prozilla.pine.core.entity;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.core.World;
-import dev.prozilla.pine.core.component.SpriteRenderer;
+import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 
 /**
  * Represents a 2D sprite inside the world.

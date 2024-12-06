@@ -1,7 +1,6 @@
-package dev.prozilla.pine.core.system.input;
+package dev.prozilla.pine.core.system.camera;
 
 import dev.prozilla.pine.common.math.MathUtils;
-import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.component.camera.CameraControlData;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.state.input.Input;
@@ -10,7 +9,7 @@ import dev.prozilla.pine.core.system.InputSystem;
 public class CameraControlInputHandler extends InputSystem {
 	
 	public CameraControlInputHandler() {
-		super(new EntityQuery(CameraControlData.class, CameraData.class));
+		super(CameraControlData.class, CameraData.class);
 	}
 	
 	@Override

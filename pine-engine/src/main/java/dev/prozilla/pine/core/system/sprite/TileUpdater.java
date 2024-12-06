@@ -1,14 +1,13 @@
-package dev.prozilla.pine.core.system.update;
+package dev.prozilla.pine.core.system.sprite;
 
-import dev.prozilla.pine.core.entity.EntityQuery;
-import dev.prozilla.pine.core.component.TileRenderer;
+import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.system.UpdateSystem;
 
 public class TileUpdater extends UpdateSystem{
 	
 	public TileUpdater() {
-		super( new EntityQuery(Transform.class, TileRenderer.class));
+		super( Transform.class, TileRenderer.class);
 	}
 	
 	@Override

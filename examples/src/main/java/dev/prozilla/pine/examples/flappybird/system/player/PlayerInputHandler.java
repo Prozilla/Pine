@@ -1,16 +1,17 @@
-package dev.prozilla.pine.examples.flappybird.system;
+package dev.prozilla.pine.examples.flappybird.system.player;
 
+import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.MouseButton;
 import dev.prozilla.pine.core.system.InputSystem;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
-import dev.prozilla.pine.examples.flappybird.entity.Player;
 
 public class PlayerInputHandler extends InputSystem {
 	
 	public PlayerInputHandler() {
-		super(Player.collector);
+		super(Transform.class, SpriteRenderer.class, PlayerData.class);
 	}
 	
 	@Override

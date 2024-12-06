@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.component;
 
+import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 
 import java.awt.*;

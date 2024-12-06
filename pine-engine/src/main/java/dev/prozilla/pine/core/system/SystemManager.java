@@ -11,8 +11,6 @@ import java.util.Objects;
 public class SystemManager extends ECSManager {
 	
 	private final SystemGroup<InitSystem> initSystems;
-	private final SystemGroup<StartSystem> startSystems;
-	
 	private final SystemGroup<InputSystem> inputSystems;
 	private final SystemGroup<UpdateSystem> updateSystems;
 	private final SystemGroup<RenderSystem> renderSystems;
@@ -28,14 +26,12 @@ public class SystemManager extends ECSManager {
 		initialized = false;
 		
 		initSystems = new SystemGroup<>(InitSystem.class);
-		startSystems = new SystemGroup<>(StartSystem.class);
 		inputSystems = new SystemGroup<>(InputSystem.class);
 		updateSystems = new SystemGroup<>(UpdateSystem.class);
 		renderSystems = new SystemGroup<>(RenderSystem.class);
 		
 		systemGroups = new SystemGroup[]{
 			initSystems,
-			startSystems,
 			inputSystems,
 			updateSystems,
 			renderSystems
@@ -56,14 +52,6 @@ public class SystemManager extends ECSManager {
 	@Override
 	public void init(long window) {
 		initSystems.forEach(initSystem -> initSystem.init(window));
-	}
-	
-	/**
-	 * Runs all systems that handle start.
-	 */
-	@Override
-	public void start() {
-		startSystems.forEach(StartSystem::start);
 	}
 	
 	/**

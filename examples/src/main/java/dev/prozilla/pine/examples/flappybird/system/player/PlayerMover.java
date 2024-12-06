@@ -1,17 +1,16 @@
-package dev.prozilla.pine.examples.flappybird.system;
+package dev.prozilla.pine.examples.flappybird.system.player;
 
 import dev.prozilla.pine.common.math.MathUtils;
-import dev.prozilla.pine.core.component.SpriteRenderer;
+import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.system.UpdateSystem;
 import dev.prozilla.pine.examples.flappybird.Main;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
-import dev.prozilla.pine.examples.flappybird.entity.Player;
 
 public class PlayerMover extends UpdateSystem {
 	
 	public PlayerMover() {
-		super(Player.collector);
+		super(Transform.class, SpriteRenderer.class, PlayerData.class);
 	}
 	
 	@Override

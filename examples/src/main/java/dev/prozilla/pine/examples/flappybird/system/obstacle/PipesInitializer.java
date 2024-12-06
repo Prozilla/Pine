@@ -1,6 +1,5 @@
-package dev.prozilla.pine.examples.flappybird.system;
+package dev.prozilla.pine.examples.flappybird.system.obstacle;
 
-import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.system.InitSystem;
 import dev.prozilla.pine.examples.flappybird.GameScene;
 import dev.prozilla.pine.examples.flappybird.Main;
@@ -14,7 +13,7 @@ public class PipesInitializer extends InitSystem {
 	private static final Random random = new Random();
 	
 	public PipesInitializer() {
-		super(new EntityQuery(PipesData.class));
+		super(PipesData.class);
 	}
 	
 	@Override

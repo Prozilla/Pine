@@ -1,16 +1,15 @@
-package dev.prozilla.pine.examples.flappybird.system;
+package dev.prozilla.pine.examples.flappybird.system.player;
 
-import dev.prozilla.pine.core.component.SpriteRenderer;
+import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.system.InitSystem;
 import dev.prozilla.pine.examples.flappybird.GameScene;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
-import dev.prozilla.pine.examples.flappybird.entity.Player;
 
 public class PlayerInitializer extends InitSystem {
 	
 	public PlayerInitializer() {
-		super(Player.collector);
+		super(Transform.class, SpriteRenderer.class, PlayerData.class);
 	}
 	
 	@Override

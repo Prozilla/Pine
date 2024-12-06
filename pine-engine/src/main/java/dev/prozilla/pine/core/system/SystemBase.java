@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.system;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.World;
+import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.EntityMatch;
 import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.entity.Entity;
@@ -19,8 +20,9 @@ import java.util.function.Consumer;
  */
 public abstract class SystemBase implements Lifecycle {
 	
+	private final Class<? extends Component>[] componentTypes;
 	/** Query that entities must match in order to be processed by this system. */
-	private final EntityQuery query;
+	private EntityQuery query;
 	/** If true, this system will only process each entity once. */
 	private final boolean runOnce;
 	
@@ -34,14 +36,14 @@ public abstract class SystemBase implements Lifecycle {
 	protected Application application;
 	protected Scene scene;
 	
-	public SystemBase(EntityQuery query) {
-		this(query, false);
+	public SystemBase(Class<? extends Component>... componentTypes) {
+		this(componentTypes, false);
 	}
 	
-	public SystemBase(EntityQuery query, boolean runOnce) {
-		Objects.requireNonNull(query, "Collector must not be null.");
+	public SystemBase(Class<? extends Component>[] componentTypes, boolean runOnce) {
+		Objects.requireNonNull(componentTypes, "Array of componentTypes must not be null.");
 		
-		this.query = query;
+		this.componentTypes = componentTypes;
 		this.runOnce = runOnce;
 		
 		processedEntityIds = new ArrayList<>();
@@ -54,16 +56,15 @@ public abstract class SystemBase implements Lifecycle {
 		application = world.application;
 		scene = world.scene;
 		
+		// Create entity query
+		query = world.queryPool.getQuery(componentTypes, runOnce);
+		
+		// Process existing entities
 		if (world.entityManager.hasEntities()) {
 			for (Entity entity : world.entityManager.getEntities()) {
 				register(entity);
 			}
 		}
-	}
-	
-	@Override
-	public void destroy() {
-		query.destroy();
 	}
 	
 	/**
@@ -75,8 +76,6 @@ public abstract class SystemBase implements Lifecycle {
 			if (runOnce && !processedEntityIds.contains(entity.getId())) {
 				if (this instanceof InitSystem) {
 					init(application.getWindow().id);
-				} else if (this instanceof StartSystem) {
-					start();
 				}
 			}
 		}

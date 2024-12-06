@@ -1,6 +1,5 @@
-package dev.prozilla.pine.core.system.init;
+package dev.prozilla.pine.core.system.camera;
 
-import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.camera.CameraControlData;
 import dev.prozilla.pine.core.component.camera.CameraData;
@@ -12,7 +11,7 @@ import dev.prozilla.pine.core.system.InitSystem;
 public class CameraControlInitializer extends InitSystem {
 	
 	public CameraControlInitializer() {
-		super(new EntityQuery(CameraControlData.class, Transform.class, CameraData.class));
+		super(CameraControlData.class, Transform.class, CameraData.class);
 	}
 	
 	@Override

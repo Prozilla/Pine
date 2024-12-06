@@ -1,7 +1,6 @@
-package dev.prozilla.pine.core.system.update;
+package dev.prozilla.pine.core.system.camera;
 
 import dev.prozilla.pine.common.math.MathUtils;
-import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.camera.CameraControlData;
 import dev.prozilla.pine.core.component.camera.CameraData;
@@ -10,7 +9,7 @@ import dev.prozilla.pine.core.system.UpdateSystem;
 public class CameraControlUpdater extends UpdateSystem {
 	
 	public CameraControlUpdater() {
-		super(new EntityQuery(CameraControlData.class, CameraData.class, Transform.class));
+		super(CameraControlData.class, CameraData.class, Transform.class);
 	}
 	
 	@Override

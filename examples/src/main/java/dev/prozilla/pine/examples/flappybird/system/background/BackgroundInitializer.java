@@ -1,7 +1,6 @@
-package dev.prozilla.pine.examples.flappybird.system;
+package dev.prozilla.pine.examples.flappybird.system.background;
 
-import dev.prozilla.pine.core.entity.EntityQuery;
-import dev.prozilla.pine.core.component.SpriteRenderer;
+import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.system.InitSystem;
 import dev.prozilla.pine.examples.flappybird.GameScene;
@@ -11,7 +10,7 @@ import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 public class BackgroundInitializer extends InitSystem {
 	
 	public BackgroundInitializer() {
-		super(new EntityQuery(BackgroundData.class, SpriteRenderer.class, Transform.class));
+		super(BackgroundData.class, SpriteRenderer.class, Transform.class);
 	}
 	
 	@Override

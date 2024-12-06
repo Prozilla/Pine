@@ -5,17 +5,18 @@ import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.ComponentManager;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityManager;
+import dev.prozilla.pine.core.entity.EntityQueryPool;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Scene;
 import dev.prozilla.pine.core.system.SystemBase;
 import dev.prozilla.pine.core.system.SystemManager;
-import dev.prozilla.pine.core.system.init.CameraControlInitializer;
-import dev.prozilla.pine.core.system.init.CameraInitializer;
-import dev.prozilla.pine.core.system.input.CameraControlInputHandler;
-import dev.prozilla.pine.core.system.render.SpriteRenderSystem;
-import dev.prozilla.pine.core.system.update.CameraControlUpdater;
-import dev.prozilla.pine.core.system.update.CameraUpdater;
-import dev.prozilla.pine.core.system.update.TileUpdater;
+import dev.prozilla.pine.core.system.camera.CameraControlInitializer;
+import dev.prozilla.pine.core.system.camera.CameraInitializer;
+import dev.prozilla.pine.core.system.camera.CameraControlInputHandler;
+import dev.prozilla.pine.core.system.sprite.SpriteRenderSystem;
+import dev.prozilla.pine.core.system.camera.CameraControlUpdater;
+import dev.prozilla.pine.core.system.camera.CameraUpdater;
+import dev.prozilla.pine.core.system.sprite.TileUpdater;
 
 import java.util.ArrayList;
 
@@ -27,6 +28,8 @@ public class World implements Lifecycle {
 	public EntityManager entityManager;
 	public ComponentManager componentManager;
 	public SystemManager systemManager;
+	
+	public EntityQueryPool queryPool;
 	
 	public final Application application;
 	public final Scene scene;
@@ -40,6 +43,8 @@ public class World implements Lifecycle {
 		entityManager = new EntityManager(this);
 		componentManager = new ComponentManager(this);
 		systemManager = new SystemManager(this);
+		
+		queryPool = new EntityQueryPool();
 		
 		initialSystems = new ArrayList<>();
 		useDefaultSystems();
@@ -77,11 +82,6 @@ public class World implements Lifecycle {
 	}
 	
 	@Override
-	public void start() {
-		systemManager.start();
-	}
-	
-	@Override
 	public void input(float deltaTime) {
 		systemManager.input(deltaTime);
 	}
@@ -101,6 +101,7 @@ public class World implements Lifecycle {
 		entityManager.destroy();
 		componentManager.destroy();
 		systemManager.destroy();
+		queryPool.clear();
 	}
 	
 	// TO DO: Refactor component loading so components are always added after entity without explicit checks

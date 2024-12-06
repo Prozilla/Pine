@@ -1,7 +1,6 @@
-package dev.prozilla.pine.core.system.render;
+package dev.prozilla.pine.core.system.sprite;
 
-import dev.prozilla.pine.core.entity.EntityQuery;
-import dev.prozilla.pine.core.component.SpriteRenderer;
+import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.camera.Camera;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -10,7 +9,7 @@ import dev.prozilla.pine.core.system.RenderSystem;
 public class SpriteRenderSystem extends RenderSystem {
 	
 	public SpriteRenderSystem() {
-		super(new EntityQuery(SpriteRenderer.class));
+		super(SpriteRenderer.class);
 	}
 	
 	@Override

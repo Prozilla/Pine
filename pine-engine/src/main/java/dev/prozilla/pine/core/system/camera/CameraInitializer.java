@@ -1,8 +1,7 @@
-package dev.prozilla.pine.core.system.init;
+package dev.prozilla.pine.core.system.camera;
 
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.Application;
-import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.system.InitSystem;
 
@@ -11,7 +10,7 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 public class CameraInitializer extends InitSystem {
 	
 	public CameraInitializer() {
-		super(new EntityQuery(CameraData.class));
+		super(CameraData.class);
 	}
 	
 	@Override

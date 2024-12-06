@@ -7,7 +7,14 @@ import dev.prozilla.pine.core.entity.canvas.Canvas;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 import dev.prozilla.pine.examples.flappybird.entity.*;
-import dev.prozilla.pine.examples.flappybird.system.*;
+import dev.prozilla.pine.examples.flappybird.system.background.BackgroundInitializer;
+import dev.prozilla.pine.examples.flappybird.system.background.BackgroundMover;
+import dev.prozilla.pine.examples.flappybird.system.obstacle.PipeInitializer;
+import dev.prozilla.pine.examples.flappybird.system.obstacle.PipesInitializer;
+import dev.prozilla.pine.examples.flappybird.system.obstacle.PipesMover;
+import dev.prozilla.pine.examples.flappybird.system.player.PlayerInitializer;
+import dev.prozilla.pine.examples.flappybird.system.player.PlayerInputHandler;
+import dev.prozilla.pine.examples.flappybird.system.player.PlayerMover;
 
 import java.util.Random;
 

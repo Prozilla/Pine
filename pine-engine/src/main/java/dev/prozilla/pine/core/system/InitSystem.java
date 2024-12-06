@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.system;
 
+import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.EntityQuery;
 
 /**
@@ -7,8 +8,9 @@ import dev.prozilla.pine.core.entity.EntityQuery;
  */
 public abstract class InitSystem extends SystemBase {
 	
-	public InitSystem(EntityQuery collector) {
-		super(collector, true);
+	@SafeVarargs
+	public InitSystem(Class<? extends Component>... componentTypes) {
+		super(componentTypes, true);
 	}
 	
 	/**
