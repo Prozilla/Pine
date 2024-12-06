@@ -1,11 +1,14 @@
 package dev.prozilla.pine.examples.flappybird.system.canvas;
 
 import dev.prozilla.pine.core.component.canvas.TextRenderer;
-import dev.prozilla.pine.core.system.InitSystem;
+import dev.prozilla.pine.core.system.init.InitSystemBase;
 import dev.prozilla.pine.examples.flappybird.EntityTag;
 import dev.prozilla.pine.examples.flappybird.GameScene;
 
-public class ScoreTextInitializer extends InitSystem {
+/**
+ * Initializes the score text.
+ */
+public class ScoreTextInitializer extends InitSystemBase {
 	
 	public ScoreTextInitializer() {
 		super(TextRenderer.class);
@@ -13,7 +16,7 @@ public class ScoreTextInitializer extends InitSystem {
 	}
 	
 	@Override
-	public void init(long window) {
+	public void init() {
 		GameScene gameScene = (GameScene)scene;
 		
 		forEach(match -> {

@@ -30,44 +30,49 @@ public class ApplicationBuilder {
 	 * Sets the title of the application's window.
 	 * The default value is <code>"Untitled"</code>.
 	 */
-	public void setTitle(String title) {
+	public ApplicationBuilder setTitle(String title) {
 		if (title == null) {
 			title = "";
 		}
 		
 		this.title = title;
+		return this;
 	}
 	
 	/**
 	 * Sets the default width and height of the application's window.
 	 * The default value is <code>800x600</code>.
 	 */
-	public void setWindowSize(int width, int height) {
+	public ApplicationBuilder setWindowSize(int width, int height) {
 		setWindowWidth(width);
 		setWindowHeight(height);
+		return this;
 	}
 	
 	/**
 	 * Sets the default width of the application's window.
 	 * The default value is <code>800</code>.
 	 */
-	public void setWindowWidth(int width) {
+	public ApplicationBuilder setWindowWidth(int width) {
 		this.windowWidth = width;
+		return this;
 	}
 	
 	/**
 	 * Sets the default height of the application's window.
 	 * The default value is <code>600</code>.
 	 */
-	public void setWindowHeight(int height) {
+	public ApplicationBuilder setWindowHeight(int height) {
 		this.windowHeight = height;
+		return this;
 	}
 	
 	/**
 	 * Sets the initial scene of the application.
 	 */
-	public void setInitialScene(Scene scene) {
+	public ApplicationBuilder setInitialScene(Scene scene) {
 		this.initialScene = scene;
+		return this;
 	}
 	
 	/**
@@ -75,20 +80,22 @@ public class ApplicationBuilder {
 	 * The default value is <code>60</code>.
 	 * @param targetFps Frames per second
 	 */
-	public void setTargetFps(int targetFps) {
+	public ApplicationBuilder setTargetFps(int targetFps) {
 		this.targetFps = targetFps;
+		return this;
 	}
 	
 	/**
 	 * Sets the icons of the application's window.
 	 * @param icons String paths of the icons relative to the resources directory.
 	 */
-	public void setIcons(String... icons) {
+	public ApplicationBuilder setIcons(String... icons) {
 		this.icons = icons;
+		return this;
 	}
 	
 	/**
-	 * Creates an application.
+	 * Creates a new application.
 	 */
 	public Application build() {
 		Application application = new Application(title, windowWidth, windowHeight, initialScene, targetFps);
@@ -101,7 +108,7 @@ public class ApplicationBuilder {
 	}
 	
 	/**
-	 * Creates and runs the application.
+	 * Creates a new application and runs it.
 	 */
 	public Application buildAndRun() {
 		Application application = build();

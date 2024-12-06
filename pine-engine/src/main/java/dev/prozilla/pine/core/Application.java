@@ -259,7 +259,6 @@ public class Application implements Lifecycle {
 	
 	/**
 	 * Handles input for the application.
-	 * @param deltaTime Delta time in seconds
 	 */
 	@Override
 	public void input(float deltaTime) {
@@ -271,7 +270,6 @@ public class Application implements Lifecycle {
 	
 	/**
 	 * Updates the application.
-	 * @param deltaTime Delta time in seconds
 	 */
 	@Override
 	public void update(float deltaTime) {

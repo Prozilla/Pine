@@ -7,6 +7,7 @@ import java.util.Map;
 
 /**
  * A wrapper for an entity and its components that match a system's query.
+ * Provides quick access to the matching components of the entity.
  */
 public class EntityMatch {
 	

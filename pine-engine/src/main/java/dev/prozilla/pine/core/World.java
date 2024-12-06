@@ -9,15 +9,16 @@ import dev.prozilla.pine.core.entity.EntityQueryPool;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Scene;
 import dev.prozilla.pine.core.system.SystemBase;
+import dev.prozilla.pine.core.system.SystemBuilder;
 import dev.prozilla.pine.core.system.SystemManager;
-import dev.prozilla.pine.core.system.camera.CameraControlInitializer;
-import dev.prozilla.pine.core.system.camera.CameraInitializer;
-import dev.prozilla.pine.core.system.camera.CameraControlInputHandler;
-import dev.prozilla.pine.core.system.canvas.*;
-import dev.prozilla.pine.core.system.sprite.SpriteRenderSystem;
-import dev.prozilla.pine.core.system.camera.CameraControlUpdater;
-import dev.prozilla.pine.core.system.camera.CameraResizer;
-import dev.prozilla.pine.core.system.sprite.TileMover;
+import dev.prozilla.pine.core.system.standard.camera.CameraControlInitializer;
+import dev.prozilla.pine.core.system.standard.camera.CameraInitializer;
+import dev.prozilla.pine.core.system.standard.camera.CameraControlInputHandler;
+import dev.prozilla.pine.core.system.standard.canvas.*;
+import dev.prozilla.pine.core.system.standard.sprite.SpriteRenderSystem;
+import dev.prozilla.pine.core.system.standard.camera.CameraControlUpdater;
+import dev.prozilla.pine.core.system.standard.camera.CameraResizer;
+import dev.prozilla.pine.core.system.standard.sprite.TileMover;
 
 import java.util.ArrayList;
 
@@ -52,7 +53,7 @@ public class World implements Lifecycle {
 		queryPool = new EntityQueryPool();
 		
 		initialSystems = new ArrayList<>();
-		useDefaultSystems();
+		useStandardSystems();
 	}
 	
 	public void initSystems() {
@@ -60,9 +61,9 @@ public class World implements Lifecycle {
 	}
 	
 	/**
-	 * Prepares the default systems.
+	 * Prepares the standard systems.
 	 */
-	public void useDefaultSystems() {
+	public void useStandardSystems() {
 		if (systemManager.isInitialized()) {
 			throw new IllegalStateException("Initial systems must be specified before the initialization of the system manager.");
 		}
@@ -153,6 +154,10 @@ public class World implements Lifecycle {
 		componentManager.addComponent(entity, component);
 		systemManager.register(entity);
 		return component;
+	}
+	
+	public <S extends SystemBuilder<? extends SystemBase, S>> SystemBase addSystem(S systemBuilder) {
+		return addSystem(systemBuilder.build());
 	}
 	
 	public SystemBase addSystem(SystemBase system) {

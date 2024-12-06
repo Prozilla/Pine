@@ -4,16 +4,20 @@ import dev.prozilla.pine.core.ECSManager;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.system.init.InitSystemBase;
+import dev.prozilla.pine.core.system.input.InputSystemBase;
+import dev.prozilla.pine.core.system.render.RenderSystemBase;
+import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class SystemManager extends ECSManager {
 	
-	private final SystemGroup<InitSystem> initSystems;
-	private final SystemGroup<InputSystem> inputSystems;
-	private final SystemGroup<UpdateSystem> updateSystems;
-	private final SystemGroup<RenderSystem> renderSystems;
+	private final SystemGroup<InitSystemBase> initSystems;
+	private final SystemGroup<InputSystemBase> inputSystems;
+	private final SystemGroup<UpdateSystemBase> updateSystems;
+	private final SystemGroup<RenderSystemBase> renderSystems;
 	
 	private final SystemGroup<? extends SystemBase>[] systemGroups;
 	
@@ -25,10 +29,10 @@ public class SystemManager extends ECSManager {
 		
 		initialized = false;
 		
-		initSystems = new SystemGroup<>(InitSystem.class);
-		inputSystems = new SystemGroup<>(InputSystem.class);
-		updateSystems = new SystemGroup<>(UpdateSystem.class);
-		renderSystems = new SystemGroup<>(RenderSystem.class);
+		initSystems = new SystemGroup<>(InitSystemBase.class);
+		inputSystems = new SystemGroup<>(InputSystemBase.class);
+		updateSystems = new SystemGroup<>(UpdateSystemBase.class);
+		renderSystems = new SystemGroup<>(RenderSystemBase.class);
 		
 		systemGroups = new SystemGroup[]{
 			initSystems,
@@ -51,7 +55,7 @@ public class SystemManager extends ECSManager {
 	 */
 	@Override
 	public void init(long window) {
-		initSystems.forEach(initSystem -> initSystem.init(window));
+		initSystems.forEach(InitSystemBase::init);
 	}
 	
 	/**

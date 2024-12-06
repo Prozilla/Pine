@@ -8,6 +8,7 @@ import dev.prozilla.pine.core.entity.EntityMatch;
 import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.state.Scene;
+import dev.prozilla.pine.core.system.init.InitSystemBase;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -16,7 +17,7 @@ import java.util.function.Consumer;
 // TO DO: ignore de-activated components
 
 /**
- * System responsible for handling logic and behaviour for entities that match a query based on their components.
+ * Base class for system responsible for handling logic and behaviour for entities that match a query based on their components.
  */
 public abstract class SystemBase implements Lifecycle {
 	
@@ -93,8 +94,8 @@ public abstract class SystemBase implements Lifecycle {
 	public void register(Entity entity) {
 		if (query.register(entity)) {
 			if (runOnce && !processedEntityIds.contains(entity.id)) {
-				if (this instanceof InitSystem) {
-					init(application.getWindow().id);
+				if (this instanceof InitSystemBase) {
+					init();
 				}
 			}
 		}

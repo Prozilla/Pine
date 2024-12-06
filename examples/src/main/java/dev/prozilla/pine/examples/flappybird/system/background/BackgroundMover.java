@@ -1,10 +1,14 @@
 package dev.prozilla.pine.examples.flappybird.system.background;
 
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.system.UpdateSystem;
+import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.system.update.UpdateSystem;
 import dev.prozilla.pine.examples.flappybird.Main;
 import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 
+/**
+ * Scrolls background elements along the horizontal axis of the screen.
+ */
 public class BackgroundMover extends UpdateSystem {
 	
 	public BackgroundMover() {
@@ -12,20 +16,18 @@ public class BackgroundMover extends UpdateSystem {
 	}
 	
 	@Override
-	public void update(float deltaTime) {
-		forEach(match -> {
-			Transform transform = match.getComponent(Transform.class);
-			BackgroundData backgroundData = match.getComponent(BackgroundData.class);
+	protected void process(EntityMatch match, float deltaTime) {
+		Transform transform = match.getComponent(Transform.class);
+		BackgroundData backgroundData = match.getComponent(BackgroundData.class);
+		
+		if (!backgroundData.gameScene.gameOver) {
+			// Scroll position to the left
+			transform.x -= deltaTime * BackgroundData.SPEED;
 			
-			if (!backgroundData.gameScene.gameOver) {
-				// Scroll position to the left
-				transform.x -= deltaTime * BackgroundData.SPEED;
-				
-				// Reset position when edge is reached
-				if (transform.x + BackgroundData.WIDTH < Main.WIDTH / -2f) {
-					transform.x += Main.WIDTH + BackgroundData.WIDTH;
-				}
+			// Reset position when edge is reached
+			if (transform.x + BackgroundData.WIDTH < Main.WIDTH / -2f) {
+				transform.x += Main.WIDTH + BackgroundData.WIDTH;
 			}
-		});
+		}
 	}
 }
