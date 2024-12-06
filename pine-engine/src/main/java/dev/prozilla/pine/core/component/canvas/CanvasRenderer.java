@@ -8,24 +8,12 @@ import dev.prozilla.pine.core.rendering.Renderer;
  */
 public class CanvasRenderer extends Component {
 	
-	private int width;
-	private int height;
-	
-	@Override
-	public void update(float deltaTime) {
-		super.update(deltaTime);
-		
-		width = getWindow().getWidth();
-		height = getWindow().getHeight();
-	}
+	public int width;
+	public int height;
 	
 	@Override
 	public String getName() {
 		return "CanvasRenderer";
-	}
-	
-	public void beforeRender(Renderer renderer) {
-		renderer.setScale(1f);
 	}
 	
 	public int getWidth() {

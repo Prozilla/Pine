@@ -3,9 +3,9 @@ package dev.prozilla.pine.core.system.camera;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.system.UpdateSystem;
 
-public class CameraUpdater extends UpdateSystem {
+public class CameraResizer extends UpdateSystem {
 	
-	public CameraUpdater() {
+	public CameraResizer() {
 		super(CameraData.class);
 	}
 	

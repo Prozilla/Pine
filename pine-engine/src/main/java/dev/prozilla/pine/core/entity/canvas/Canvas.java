@@ -21,15 +21,6 @@ public class Canvas extends Entity {
 		addComponent(canvasRenderer);
 	}
 	
-	/**
-	 * Renders this canvas to the screen.
-	 */
-	@Override
-	public void render(Renderer renderer) {
-		canvasRenderer.beforeRender(renderer);
-		super.render(renderer);
-	}
-	
 	@Override
 	public String getName() {
 		return getName("Canvas");

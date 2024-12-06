@@ -9,6 +9,9 @@ import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 import dev.prozilla.pine.examples.flappybird.entity.*;
 import dev.prozilla.pine.examples.flappybird.system.background.BackgroundInitializer;
 import dev.prozilla.pine.examples.flappybird.system.background.BackgroundMover;
+import dev.prozilla.pine.examples.flappybird.system.canvas.GameOverTextInitializer;
+import dev.prozilla.pine.examples.flappybird.system.canvas.ScoreTextInitializer;
+import dev.prozilla.pine.examples.flappybird.system.canvas.ScoreTextUpdater;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipeInitializer;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipesInitializer;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipesMover;
@@ -52,6 +55,9 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 		world.addSystem(new PipeInitializer());
 		world.addSystem(new PipesInitializer());
 		world.addSystem(new PipesMover());
+		world.addSystem(new ScoreTextInitializer());
+		world.addSystem(new ScoreTextUpdater());
+		world.addSystem(new GameOverTextInitializer());
 		
 		// Fill screen with background sprites
 		Background[] backgrounds = new Background[Math.round((float)Main.WIDTH / BackgroundData.WIDTH + 0.5f) + 1];

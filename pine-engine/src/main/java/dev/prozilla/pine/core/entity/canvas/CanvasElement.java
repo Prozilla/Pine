@@ -20,18 +20,6 @@ public class CanvasElement extends Entity {
 	}
 	
 	@Override
-	public void update(float deltaTime) {
-		updateComponents(deltaTime);
-		updateChildren(deltaTime);
-	}
-	
-	@Override
-	public void render(Renderer renderer) {
-		renderComponents(renderer);
-		renderChildren(renderer);
-	}
-	
-	@Override
 	public String getName() {
 		return getName("CanvasElement");
 	}

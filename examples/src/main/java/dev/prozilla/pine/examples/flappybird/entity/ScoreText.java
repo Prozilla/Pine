@@ -5,10 +5,9 @@ import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.canvas.Text;
 import dev.prozilla.pine.examples.flappybird.GameScene;
+import dev.prozilla.pine.examples.flappybird.component.ScoreTextData;
 
 public class ScoreText extends Text {
-	
-	private GameScene gameScene;
 	
 	public ScoreText(World world) {
 		super(world, "0");
@@ -17,25 +16,8 @@ public class ScoreText extends Text {
 		setAnchor(RectTransform.Anchor.TOP_RIGHT);
 		setColor(Color.WHITE);
 		setOffset(16, 16);
-	}
-	
-	@Override
-	public void init(long window) throws IllegalStateException {
-		super.init(window);
 		
-		// Store reference to scene
-		gameScene = (GameScene)scene;
-		
-		// Set font
-		setFont(gameScene.font);
-	}
-	
-	@Override
-	public void update(float deltaTime) {
-		super.update(deltaTime);
-		
-		// Update text field based on score value
-		setText(String.valueOf(gameScene.playerScore));
+		addComponent(new ScoreTextData());
 	}
 	
 	@Override

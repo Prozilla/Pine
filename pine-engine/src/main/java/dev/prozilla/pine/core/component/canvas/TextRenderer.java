@@ -31,26 +31,12 @@ public class TextRenderer extends RectTransform {
 		this.color = color;
 	}
 	
-	@Override
-	public void init(long window) {
-		super.init(window);
-		calculateSize();
-	}
-	
-	/**
-	 * Renders this text on the screen.
-	 */
-	@Override
-	public void render(Renderer renderer) {
-		renderText(renderer, x, y, color);
-	}
-	
 	/**
 	 * Renders this text on the screen on a specific position.
 	 * @param x X position
 	 * @param y Y position
 	 */
-	protected void renderText(Renderer renderer, int x, int y, Color color) {
+	public void renderText(Renderer renderer, int x, int y, Color color) {
 		super.render(renderer);
 		
 		if (text.isBlank() || width == 0 || height == 0) {
@@ -74,6 +60,15 @@ public class TextRenderer extends RectTransform {
 	 */
 	public void setFont(Font font) {
 		this.font = font;
+		calculateSize();
+	}
+	
+	public void setText(String text) {
+		if (this.text.equals(text)) {
+			return;
+		}
+		
+		this.text = text;
 		calculateSize();
 	}
 	

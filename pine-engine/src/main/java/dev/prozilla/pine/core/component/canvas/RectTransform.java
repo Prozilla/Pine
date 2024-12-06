@@ -12,21 +12,21 @@ import java.awt.*;
  */
 public class RectTransform extends Component {
 	
-	protected int x;
-	protected int y;
+	public int x;
+	public int y;
 	
-	protected int offsetX;
-	protected int offsetY;
+	public int offsetX;
+	public int offsetY;
 	
-	protected int width;
-	protected int height;
+	public int width;
+	public int height;
 	
 	public Anchor anchor;
 	
 	/** If true, allows the cursor to pass through this element. */
 	public boolean passThrough;
 	
-	private Canvas canvas;
+	public Canvas canvas;
 	
 	public enum Anchor {
 		TOP_LEFT,
@@ -55,69 +55,6 @@ public class RectTransform extends Component {
 		passThrough = false;
 	}
 	
-	/**
-	 * Checks if the cursor is hovering this element and
-	 * whether the cursor is allowed to pass through.
-	 */
-	@Override
-	public void input(float deltaTime) {
-		super.input(deltaTime);
-		
-		if (!passThrough) {
-			Point cursor = getInput().getCursor();
-			int canvasHeight = getCanvas().getHeight();
-			if (cursor != null && isInside(cursor.x, canvasHeight - cursor.y, x, y, width, height)) {
-				getInput().blockCursor(entity);
-			}
-		}
-	}
-	
-	/**
-	 * Updates the position of the rect inside the canvas.
-	 */
-	@Override
-	public void update(float deltaTime) {
-		super.update(deltaTime);
-		
-		if (width == 0 || height == 0 || anchor == null) {
-			return;
-		}
-		
-		int canvasWidth = getCanvas().getWidth();
-		int canvasHeight = getCanvas().getHeight();
-		
-		switch (anchor) {
-			case BOTTOM_LEFT:
-				x = offsetX;
-				y = offsetY;
-				break;
-			case BOTTOM_RIGHT:
-				x = canvasWidth - width - offsetX;
-				y = offsetY;
-				break;
-			case BOTTOM_CENTER:
-				x = Math.round((float)(canvasWidth - width) / 2f) + offsetX;
-				y = offsetY;
-				break;
-			case CENTER:
-				x = Math.round((float)(canvasWidth - width) / 2f) + offsetX;
-				y = Math.round((float)(canvasHeight - height) / 2f) + offsetY;
-				break;
-			case TOP_LEFT:
-				x = offsetX;
-				y = canvasHeight - height - offsetY;
-				break;
-			case TOP_RIGHT:
-				x = canvasWidth - width - offsetX;
-				y = canvasHeight - height - offsetY;
-				break;
-			case TOP_CENTER:
-				x = Math.round((float)(canvasWidth - width) / 2f) + offsetX;
-				y = canvasHeight - height - offsetY;
-				break;
-		}
-	}
-	
 //	@Override
 //	public void attach(Entity entity) throws IllegalArgumentException {
 //		if (!(entity instanceof CanvasElement)) {
@@ -141,7 +78,7 @@ public class RectTransform extends Component {
 			&& y >= rectY && y < rectY + rectHeight;
 	}
 	
-	protected Canvas getCanvas() throws IllegalStateException {
+	public Canvas getCanvas() throws IllegalStateException {
 		if (canvas != null) {
 			return canvas;
 		}

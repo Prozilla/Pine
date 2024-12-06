@@ -21,19 +21,6 @@ public class RectRenderer extends RectTransform {
 	}
 	
 	@Override
-	public void render(Renderer renderer) {
-		super.render(renderer);
-		
-		if (width != 0 && height != 0) {
-			if (color == null) {
-				renderer.drawRect(x, y, width, height);
-			} else {
-				renderer.drawRect(x, y, width, height, color);
-			}
-		}
-	}
-	
-	@Override
 	public String getName() {
 		return "RectRenderer";
 	}
