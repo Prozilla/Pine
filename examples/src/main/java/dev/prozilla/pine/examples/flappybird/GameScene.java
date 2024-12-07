@@ -3,10 +3,9 @@ package dev.prozilla.pine.examples.flappybird;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.EntityMatch;
 import dev.prozilla.pine.core.entity.canvas.Canvas;
+import dev.prozilla.pine.core.state.Scene;
 import dev.prozilla.pine.core.state.input.Key;
-import dev.prozilla.pine.core.system.update.UpdateSystemBuilder;
 import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
 import dev.prozilla.pine.examples.flappybird.entity.*;
@@ -24,7 +23,7 @@ import dev.prozilla.pine.examples.flappybird.system.player.PlayerMover;
 
 import java.util.Random;
 
-public class GameScene extends dev.prozilla.pine.core.state.Scene {
+public class GameScene extends Scene {
 	
 	public boolean gameOver;
 	public int playerScore;
@@ -33,7 +32,7 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 	
 	// Game objects
 	private Entity obstacles;
-	public Player player;
+	public Entity player;
 	public GameOverText gameOverText;
 	
 	// Common resources
@@ -63,15 +62,14 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 		world.addSystem(new GameOverTextInitializer());
 		
 		// Fill screen with background sprites
-		Background[] backgrounds = new Background[Math.round((float)Main.WIDTH / BackgroundData.WIDTH + 0.5f) + 1];
-		for (int i = 0; i < backgrounds.length; i++) {
-			Background background = new Background(world, i);
-			add(background);
-			backgrounds[i] = background;
+		BackgroundPrefab backgroundPrefab = new BackgroundPrefab();
+		int backgroundCount = Math.round((float)Main.WIDTH / BackgroundData.WIDTH + 0.5f) + 1;
+		for (int i = 0; i < backgroundCount; i++) {
+			world.addEntity(backgroundPrefab.instantiate(world, i));
 		}
 		
 		// Create player object
-		player = (Player)add(new Player(world));
+		player = world.addEntity(new PlayerPrefab());
 		
 		// Prepare obstacles
 		obstacles = add(new Entity(world));
@@ -120,6 +118,6 @@ public class GameScene extends dev.prozilla.pine.core.state.Scene {
 	
 	public void endGame() {
 		gameOver = true;
-		player.playerData.resetVelocity();
+		player.getComponent(PlayerData.class).resetVelocity();
 	}
 }

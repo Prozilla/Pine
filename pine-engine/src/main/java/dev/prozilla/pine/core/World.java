@@ -6,6 +6,7 @@ import dev.prozilla.pine.core.component.ComponentManager;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityManager;
 import dev.prozilla.pine.core.entity.EntityQueryPool;
+import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Scene;
 import dev.prozilla.pine.core.system.SystemBase;
@@ -56,12 +57,15 @@ public class World implements Lifecycle {
 		useStandardSystems();
 	}
 	
+	/**
+	 * Initializes all systems in this world.
+	 */
 	public void initSystems() {
 		systemManager.initSystems(initialSystems);
 	}
 	
 	/**
-	 * Prepares the standard systems.
+	 * Adds all standard systems to the list of initial systems.
 	 */
 	public void useStandardSystems() {
 		if (systemManager.isInitialized()) {
@@ -100,6 +104,9 @@ public class World implements Lifecycle {
 		initialSystems.add(new TextRenderSystem());
 	}
 	
+	/**
+	 * Adds a system to the list of initial systems that will be added when this world is initialized.
+	 */
 	private void useSystem(SystemBase system) {
 		if (systemManager.isInitialized()) {
 			throw new IllegalStateException("Initial systems must be specified before the initialization of the system manager.");
@@ -108,21 +115,33 @@ public class World implements Lifecycle {
 		initialSystems.add(system);
 	}
 	
+	/**
+	 * Executes all initialization systems in this world.
+	 */
 	@Override
 	public void init(long window) {
 		systemManager.init(window);
 	}
 	
+	/**
+	 * Executes all input systems in this world.
+	 */
 	@Override
 	public void input(float deltaTime) {
 		systemManager.input(deltaTime);
 	}
 	
+	/**
+	 * Executes all update systems in this world.
+	 */
 	@Override
 	public void update(float deltaTime) {
 		systemManager.update(deltaTime);
 	}
 	
+	/**
+	 * Executes all render systems in this world.
+	 */
 	@Override
 	public void render(Renderer renderer) {
 		systemManager.render(renderer);
@@ -136,6 +155,31 @@ public class World implements Lifecycle {
 		queryPool.clear();
 	}
 	
+	/**
+	 * Instantiates a prefab into this world at (0, 0).
+	 * @param prefab The prefab to instantiate
+	 * @return The instantiated entity
+	 */
+	public Entity addEntity(Prefab prefab) {
+		return addEntity(prefab.instantiate(this));
+	}
+	
+	/**
+	 * Instantiates a prefab into this world.
+	 * @param prefab The prefab to instantiate
+	 * @param x X position
+	 * @param y Y position
+	 * @return The instantiated entity
+	 */
+	public Entity addEntity(Prefab prefab, float x, float y) {
+		return addEntity(prefab.instantiate(this, x, y));
+	}
+	
+	/**
+	 * Adds an entity into this world.
+	 * @param entity The entity to add
+	 * @return The added entity
+	 */
 	// TO DO: Refactor component loading so components are always added after entity without explicit checks
 	public Entity addEntity(Entity entity) {
 		if (entityManager.contains(entity)) {
@@ -147,6 +191,12 @@ public class World implements Lifecycle {
 		return entity;
 	}
 	
+	/**
+	 * Adds a component to an entity in this world.
+	 * @param entity The entity
+	 * @param component The component to add to the entity
+	 * @return The added component
+	 */
 	public Component addComponent(Entity entity, Component component) {
 		if (!entityManager.contains(entity)) {
 			entityManager.addEntity(entity);
@@ -156,10 +206,21 @@ public class World implements Lifecycle {
 		return component;
 	}
 	
+	/**
+	 * Builds a system and adds it to this world.
+	 * @param systemBuilder Builder of the system
+	 * @return System that was built and added
+	 * @param <S> Type of the system builder
+	 */
 	public <S extends SystemBuilder<? extends SystemBase, S>> SystemBase addSystem(S systemBuilder) {
 		return addSystem(systemBuilder.build());
 	}
 	
+	/**
+	 * Adds a system to this world.
+	 * @param system The system to add
+	 * @return The added system
+	 */
 	public SystemBase addSystem(SystemBase system) {
 		if (!systemManager.isInitialized()) {
 			useSystem(system);

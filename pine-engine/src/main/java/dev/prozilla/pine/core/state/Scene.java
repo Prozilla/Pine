@@ -145,18 +145,10 @@ public class Scene implements Lifecycle {
 	
 	/**
 	 * Adds an entity to the scene.
-	 * @param entity GameObject
 	 */
+	@Deprecated
 	public Entity add(Entity entity) {
 		return world.addEntity(entity);
-	}
-	
-	/**
-	 * Removes an entity from the scene.
-	 * @param entity GameObject
-	 */
-	public void remove(Entity entity) {
-//		world.removeChild(entity);
 	}
 	
 	/**
@@ -175,22 +167,27 @@ public class Scene implements Lifecycle {
 		return id;
 	}
 	
+	@Deprecated
 	public Input getInput() {
 		return application.getInput();
 	}
 	
+	@Deprecated
 	public Window getWindow() {
 		return application.getWindow();
 	}
 	
+	@Deprecated
 	public Renderer getRenderer() {
 		return application.getRenderer();
 	}
 	
+	@Deprecated
 	public Timer getTimer() {
 		return application.getTimer();
 	}
 	
+	@Deprecated
 	public Tracker getTracker() {
 		return application.getTracker();
 	}

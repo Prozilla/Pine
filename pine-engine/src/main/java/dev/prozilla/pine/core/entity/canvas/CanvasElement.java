@@ -24,34 +24,6 @@ public class CanvasElement extends Entity {
 		return getName("CanvasElement");
 	}
 	
-	@Override
-	public void addComponent(Component component) {
-		super.addComponent(component);
-		
-		if (component instanceof RectTransform) {
-			rectTransform = (RectTransform)component;
-			
-			CanvasGroup parentGroup = getComponentInParent(CanvasGroup.class, false);
-			if (parentGroup != null) {
-				parentGroup.getChildComponents();
-			}
-		}
-	}
-	
-	@Override
-	public void removeComponent(Component component) {
-		super.removeComponent(component);
-		
-		if (component instanceof RectTransform) {
-			rectTransform = null;
-			
-			CanvasGroup parentGroup = getComponentInParent(CanvasGroup.class, false);
-			if (parentGroup != null) {
-				parentGroup.getChildComponents();
-			}
-		}
-	}
-	
 	/**
 	 * Sets the position of this element on the canvas.
 	 * @param x Horizontal offset

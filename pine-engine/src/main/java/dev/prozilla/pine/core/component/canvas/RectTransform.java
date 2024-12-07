@@ -39,12 +39,6 @@ public class RectTransform extends Component {
 	}
 	
 	public RectTransform() {
-		this("RectTransform");
-	}
-	
-	public RectTransform(String name) {
-		super();
-		
 		x = 0;
 		y = 0;
 		width = 0;

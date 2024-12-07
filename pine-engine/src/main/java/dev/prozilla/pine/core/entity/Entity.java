@@ -184,8 +184,9 @@ public class Entity implements Lifecycle {
 	 * Adds a component to this game object.
 	 * @param component Component
 	 */
-	public void addComponent(Component component) {
+	public <C extends Component> C addComponent(C component) {
 		world.addComponent(this, component);
+		return component;
 	}
 	
 	/**

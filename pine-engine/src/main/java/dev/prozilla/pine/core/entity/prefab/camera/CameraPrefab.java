@@ -1,0 +1,24 @@
+package dev.prozilla.pine.core.entity.prefab.camera;
+
+import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.core.component.camera.CameraData;
+import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.prefab.Prefab;
+
+public class CameraPrefab extends Prefab {
+	
+	protected Color backgroundColor;
+	
+	public void setBackgroundColor(Color color) {
+		backgroundColor = color;
+	}
+	
+	@Override
+	protected void apply(Entity entity) {
+		CameraData cameraData = entity.addComponent(new CameraData());
+		
+		if (backgroundColor != null) {
+			cameraData.backgroundColor = backgroundColor;
+		}
+	}
+}
