@@ -7,7 +7,6 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.camera.Camera;
 import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.state.input.Input;
 
 public class Scene implements Lifecycle {
 	
@@ -165,31 +164,6 @@ public class Scene implements Lifecycle {
 	 */
 	public int getId() {
 		return id;
-	}
-	
-	@Deprecated
-	public Input getInput() {
-		return application.getInput();
-	}
-	
-	@Deprecated
-	public Window getWindow() {
-		return application.getWindow();
-	}
-	
-	@Deprecated
-	public Renderer getRenderer() {
-		return application.getRenderer();
-	}
-	
-	@Deprecated
-	public Timer getTimer() {
-		return application.getTimer();
-	}
-	
-	@Deprecated
-	public Tracker getTracker() {
-		return application.getTracker();
 	}
 	
 	public World getWorld() {

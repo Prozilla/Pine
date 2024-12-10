@@ -90,7 +90,7 @@ public class GameScene extends Scene {
 		super.input(deltaTime);
 		
 		if (gameOver) {
-			if (getInput().getKeyDown(Key.R)) {
+			if (application.getInput().getKeyDown(Key.R)) {
 				application.reloadScene();
 			}
 		}
