@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.component.canvas;
 
 import dev.prozilla.pine.common.Callback;
 import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.input.CursorType;
 import dev.prozilla.pine.core.state.input.MouseButton;
@@ -11,7 +12,7 @@ import java.awt.*;
 /**
  * A component for rendering buttons with text on the canvas.
  */
-public class TextButtonRenderer extends TextRenderer {
+public class TextButtonRenderer extends Component {
 	
 	public Color hoverColor;
 	public Color backgroundHoverColor;
@@ -23,19 +24,13 @@ public class TextButtonRenderer extends TextRenderer {
 	
 	public Callback clickCallback;
 	
-	protected boolean isHovering;
+	public boolean isHovering;
 	
-	public TextButtonRenderer(String text) {
-		this(text, Color.BLACK);
+	public TextButtonRenderer() {
+		this(Color.WHITE.clone());
 	}
 	
-	public TextButtonRenderer(String text, Color color) {
-		this(text, color, Color.WHITE);
-	}
-	
-	public TextButtonRenderer(String text, Color color, Color backgroundColor) {
-		super(text, color);
-		
+	public TextButtonRenderer(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
 		
 		if (backgroundColor != null) {
@@ -49,50 +44,7 @@ public class TextButtonRenderer extends TextRenderer {
 	}
 	
 	@Override
-	public void input(float deltaTime) {
-		Point cursor = getInput().getCursor();
-		int canvasHeight = getCanvas().getHeight();
-		if (cursor != null && isInside(cursor.x, canvasHeight - cursor.y, x, y - paddingY * 2, width, height)) {
-			getInput().setCursorType(CursorType.HAND);
-			getInput().blockCursor(entity);
-			isHovering = true;
-			
-			if (clickCallback != null && getInput().getMouseButtonDown(MouseButton.LEFT)) {
-				clickCallback.run();
-			}
-		} else {
-			isHovering = false;
-		}
-		
-		super.input(deltaTime);
-	}
-	
-	/**
-	 * Renders the button's background and text on the screen.
-	 * @param renderer Reference to the renderer
-	 */
-	@Override
-	public void render(Renderer renderer) {
-		// Render background
-		if (width != 0 && height != 0 && backgroundColor != null) {
-			Color backgroundColor = (isHovering && backgroundHoverColor != null) ? backgroundHoverColor : this.backgroundColor;
-			renderer.drawRect(x, y - paddingY * 2, width, height, backgroundColor);
-		}
-		
-		// Render text
-		Color textColor = (isHovering && hoverColor != null) ? hoverColor : color;
-		renderText(renderer, x + paddingX, y - paddingY, textColor);
-	}
-	
-	@Override
 	public String getName() {
 		return "TextButtonRenderer";
-	}
-	
-	@Override
-	public void calculateSize() {
-		super.calculateSize();
-		width += paddingX * 2;
-		height += paddingY * 2;
 	}
 }

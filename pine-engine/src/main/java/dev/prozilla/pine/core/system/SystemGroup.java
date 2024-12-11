@@ -75,6 +75,19 @@ public class SystemGroup<S extends SystemBase> {
 	}
 	
 	/**
+	 * Unregisters an entity from all systems in this group.
+	 */
+	public void unregister(Entity entity) {
+		if (systems.isEmpty()) {
+			return;
+		}
+		
+		for (SystemBase system : systems) {
+			system.unregister(entity);
+		}
+	}
+	
+	/**
 	 * Removes all systems from this group.
 	 */
 	public void clear() {

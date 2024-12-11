@@ -83,6 +83,7 @@ public class Scene implements Lifecycle {
 		}
 		
 		load();
+		System.out.println("Loaded scene");
 		
 		world.init(window);
 		initialized = true;

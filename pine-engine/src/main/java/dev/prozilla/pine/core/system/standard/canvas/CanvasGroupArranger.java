@@ -11,24 +11,29 @@ import dev.prozilla.pine.core.system.update.UpdateSystem;
 public class CanvasGroupArranger extends UpdateSystem {
 	
 	public CanvasGroupArranger() {
-		super(CanvasGroup.class);
+		super(CanvasGroup.class, RectTransform.class);
 	}
 	
 	@Override
 	protected void process(EntityMatch match, float deltaTime) {
 		CanvasGroup canvasGroup = match.getComponent(CanvasGroup.class);
+		RectTransform containerRect = match.getComponent(RectTransform.class);
+		
+//		match.getEntity().print();
+		
+		RectMover.anchorRect(containerRect);
 		
 		if (canvasGroup.childRects.isEmpty()) {
 			return;
 		}
 		
-		int offsetX = canvasGroup.x + canvasGroup.paddingX;
-		int offsetY = canvasGroup.y + canvasGroup.paddingY;
+		int offsetX = containerRect.x + canvasGroup.paddingX;
+		int offsetY = containerRect.y + canvasGroup.paddingY;
 		
 		if (canvasGroup.direction == CanvasGroup.Direction.DOWN) {
-			offsetY += canvasGroup.innerHeight - canvasGroup.childRects.get(0).getHeight();
+			offsetY += canvasGroup.innerHeight - canvasGroup.childRects.get(0).height;
 		} else if (canvasGroup.direction == CanvasGroup.Direction.LEFT) {
-			offsetX += canvasGroup.innerWidth - canvasGroup.childRects.get(0).getWidth();
+			offsetX += canvasGroup.innerWidth - canvasGroup.childRects.get(0).width;
 		}
 		
 		for (RectTransform childRect : canvasGroup.childRects) {
@@ -37,32 +42,24 @@ public class CanvasGroupArranger extends UpdateSystem {
 			// Calculate alignments
 			if (canvasGroup.direction == CanvasGroup.Direction.UP || canvasGroup.direction == CanvasGroup.Direction.DOWN) {
 				if (canvasGroup.alignment == CanvasGroup.Alignment.END) {
-					childRect.setOffsetX(offsetX + (canvasGroup.innerWidth - childRect.getWidth()));
+					childRect.setOffsetX(offsetX + (canvasGroup.innerWidth - childRect.width));
 				} else if (canvasGroup.alignment == CanvasGroup.Alignment.CENTER) {
-					childRect.setOffsetX(offsetX + (canvasGroup.innerWidth - childRect.getWidth()) / 2);
+					childRect.setOffsetX(offsetX + (canvasGroup.innerWidth - childRect.width) / 2);
 				}
 			} else if (canvasGroup.direction == CanvasGroup.Direction.LEFT || canvasGroup.direction == CanvasGroup.Direction.RIGHT) {
 				if (canvasGroup.alignment == CanvasGroup.Alignment.END) {
-					childRect.setOffsetY(offsetY + (canvasGroup.innerHeight - childRect.getHeight()));
+					childRect.setOffsetY(offsetY + (canvasGroup.innerHeight - childRect.height));
 				} else if (canvasGroup.alignment == CanvasGroup.Alignment.CENTER) {
-					childRect.setOffsetY(offsetY + (canvasGroup.innerHeight - childRect.getHeight()) / 2);
+					childRect.setOffsetY(offsetY + (canvasGroup.innerHeight - childRect.height) / 2);
 				}
 			}
 			
 			// Move offset for next child rect
 			switch (canvasGroup.direction) {
-				case RIGHT:
-					offsetX += childRect.getWidth() + canvasGroup.gap;
-					break;
-				case LEFT:
-					offsetX -= canvasGroup.innerWidth - childRect.getWidth();
-					break;
-				case UP:
-					offsetY += childRect.getHeight() + canvasGroup.gap;
-					break;
-				case DOWN:
-					offsetY -= childRect.getHeight() + canvasGroup.gap;
-					break;
+				case RIGHT -> offsetX += childRect.width + canvasGroup.gap;
+				case LEFT -> offsetX -= canvasGroup.innerWidth - childRect.width;
+				case UP -> offsetY += childRect.height + canvasGroup.gap;
+				case DOWN -> offsetY -= childRect.height + canvasGroup.gap;
 			}
 		}
 	}

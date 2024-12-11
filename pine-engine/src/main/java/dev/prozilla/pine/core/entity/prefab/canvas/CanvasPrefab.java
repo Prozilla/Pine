@@ -9,6 +9,10 @@ import dev.prozilla.pine.core.entity.prefab.Prefab;
  */
 public class CanvasPrefab extends Prefab {
 	
+	public CanvasPrefab() {
+		setName("Canvas");
+	}
+	
 	@Override
 	protected void apply(Entity entity) {
 		entity.addComponent(new CanvasRenderer());

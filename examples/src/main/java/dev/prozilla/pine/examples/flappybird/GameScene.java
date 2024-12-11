@@ -77,7 +77,7 @@ public class GameScene extends Scene {
 		// Create user interface
 		font = ResourcePool.loadFont("flappybird/flappy-bird.ttf", 32);
 		Canvas canvas = (Canvas)add(new Canvas(world));
-		canvas.addChild(new ScoreText(world));
+		canvas.addChild(new ScoreText().instantiate(world));
 		gameOverText = (GameOverText)canvas.addChild(new GameOverText(world));
 		
 		timeUntilNextObstacle = 0;

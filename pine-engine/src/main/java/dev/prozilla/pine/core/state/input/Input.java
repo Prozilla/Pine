@@ -371,6 +371,10 @@ public class Input implements Lifecycle {
 		cursorBlocker = entity;
 	}
 	
+	public boolean isCursorBlocked() {
+		return cursorBlocker != null;
+	}
+	
 	/**
 	 * Returns the game object that is blocking the cursor in the current frame.
 	 */

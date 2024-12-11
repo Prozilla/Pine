@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.math;
 
-public class MathUtils {
+public final class MathUtils {
 	
 	/**
 	 * Clamps a value between a min and a max value.

@@ -16,7 +16,10 @@ public class RectMover extends UpdateSystem {
 	@Override
 	protected void process(EntityMatch match, float deltaTime) {
 		RectTransform rect = match.getComponent(RectTransform.class);
-		
+		anchorRect(rect);
+	}
+	
+	public static void anchorRect(RectTransform rect) {
 		if (rect.width == 0 || rect.height == 0 || rect.anchor == null) {
 			return;
 		}

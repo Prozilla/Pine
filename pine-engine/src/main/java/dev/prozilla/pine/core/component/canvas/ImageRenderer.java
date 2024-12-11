@@ -10,7 +10,7 @@ import dev.prozilla.pine.core.rendering.Renderer;
  */
 public class ImageRenderer extends RectTransform {
 	
-	protected Texture image;
+	public Texture image;
 	public Color color;
 	
 	public int regionX;
@@ -35,31 +35,6 @@ public class ImageRenderer extends RectTransform {
 		regionY = 0;
 		regionWidth = width;
 		regionHeight = height;
-	}
-	
-	@Override
-	public void render(Renderer renderer) {
-		renderImage(renderer, x, y, width, height, color);
-	}
-	
-	protected void renderImage(Renderer renderer, int x, int y, int width, int height, Color color) {
-		super.render(renderer);
-		
-		int x2 = x + width;
-		int y2 = y + height;
-		
-		float s1 = (float)regionX / image.getWidth();
-		float t1 = (float)regionY / image.getHeight();
-		float s2 = (float)(regionX + regionWidth) / image.getWidth();
-		float t2 = (float)(regionY + regionHeight) / image.getHeight();
-
-		image.bind();
-		
-		if (color == null) {
-			renderer.drawTextureRegion(x, y, x2, y2, s1, t1, s2, t2);
-		} else {
-			renderer.drawTextureRegion(x, y, x2, y2, s1, t1, s2, t2, color);
-		}
 	}
 	
 	@Override

@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.component.canvas;
 
 import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.rendering.Renderer;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 /**
  * A component that groups multiple canvas elements together and aligns them.
  */
-public class CanvasGroup extends RectTransform {
+public class CanvasGroup extends Component {
 	
 	public Direction direction;
 	public Alignment alignment;

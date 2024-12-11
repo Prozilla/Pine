@@ -82,12 +82,6 @@ public class Entity implements Lifecycle {
 		if (transform.parent != null && application.isRunning) {
 			transform.parent.getEntity().removeChild(this);
 		}
-		if (!components.isEmpty()) {
-			for (Component component : components) {
-				component.destroy();
-			}
-			components.clear();
-		}
 		
 		// Remove all references
 //		game = null;
@@ -109,7 +103,10 @@ public class Entity implements Lifecycle {
 			throw new IllegalStateException("GameObject is already a child");
 		}
 		child.transform.setParent(transform);
-		world.addEntity(child);
+		
+		if (isRegistered()) {
+			world.addEntity(child);
+		}
 		
 		getTracker().addGameObject();
 		return child;
@@ -323,6 +320,10 @@ public class Entity implements Lifecycle {
 	
 	public Camera getCamera() {
 		return scene.getCamera();
+	}
+	
+	public boolean isRegistered() {
+		return world.entityManager.contains(this);
 	}
 	
 	/**

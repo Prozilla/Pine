@@ -40,6 +40,29 @@ public class ComponentManager extends ECSManager {
 		entity.components.add(component);
 	}
 	
+	public void removeComponents(Entity entity) {
+		for (Component component : entity.components) {
+			components.remove(component);
+			component.entity = null;
+		}
+		entity.components.clear();
+	}
+	
+	public void removeComponent(Entity entity, Component component) {
+		Objects.requireNonNull(component, "Component must not be null.");
+		
+		if (!components.contains(component)) {
+			throw new IllegalStateException("Component has not been added to an entity yet.");
+		}
+		if (!world.entityManager.contains(entity)) {
+			throw new IllegalStateException("Entity must be registered before removing components.");
+		}
+		
+		components.remove(component);
+		component.entity = null;
+		entity.components.remove(component);
+	}
+	
 	/**
 	 * Generates a new unique component ID.
 	 * @return Component ID

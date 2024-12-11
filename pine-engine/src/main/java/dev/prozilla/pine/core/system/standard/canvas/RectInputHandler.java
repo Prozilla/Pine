@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.system.standard.canvas;
 
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.system.input.InputSystemBase;
 
 import java.awt.*;
@@ -17,16 +18,20 @@ public class RectInputHandler extends InputSystemBase {
 	
 	@Override
 	public void input(float deltaTime) {
-		Point cursor = getInput().getCursor();
+		Input input = getInput();
+		Point cursor = input.getCursor();
 		
-		forEach(match -> {
+		forEachReverse(match -> {
 			Entity entity = match.getEntity();
 			RectTransform rect = match.getComponent(RectTransform.class);
 			
-			if (!rect.passThrough) {
+			rect.cursorHit = false;
+			
+			if (!rect.passThrough && !input.isCursorBlocked()) {
 				int canvasHeight = rect.getCanvas().getHeight();
 				if (cursor != null && rect.isInside(cursor.x, canvasHeight - cursor.y, rect.x, rect.y, rect.width, rect.height)) {
-					getInput().blockCursor(entity);
+					rect.cursorHit = true;
+					input.blockCursor(entity);
 				}
 			}
 		});

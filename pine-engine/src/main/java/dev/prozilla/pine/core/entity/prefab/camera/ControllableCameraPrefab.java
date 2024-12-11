@@ -32,6 +32,8 @@ public class ControllableCameraPrefab extends CameraPrefab {
 		this.maxZoom = maxZoom;
 		
 		enableBounds = false;
+		
+		setName("ControllableCamera");
 	}
 	
 	public void disableMovement() {

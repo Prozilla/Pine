@@ -9,6 +9,10 @@ public class CameraPrefab extends Prefab {
 	
 	protected Color backgroundColor;
 	
+	public CameraPrefab() {
+		setName("Camera");
+	}
+	
 	public void setBackgroundColor(Color color) {
 		backgroundColor = color;
 	}

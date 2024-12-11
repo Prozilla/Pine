@@ -3,9 +3,6 @@ package dev.prozilla.pine.core.entity.canvas;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.component.canvas.CanvasGroup;
-import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.rendering.Renderer;
 
 /**
  * A base game object for elements of the user interface.
@@ -66,7 +63,7 @@ public class CanvasElement extends Entity {
 			return 0;
 		}
 		
-		return rectTransform.getWidth();
+		return rectTransform.width;
 	}
 	
 	/**
@@ -77,6 +74,6 @@ public class CanvasElement extends Entity {
 			return 0;
 		}
 		
-		return rectTransform.getHeight();
+		return rectTransform.height;
 	}
 }

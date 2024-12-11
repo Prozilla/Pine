@@ -11,12 +11,13 @@ import dev.prozilla.pine.core.system.update.UpdateSystem;
 public class CanvasGroupResizer extends UpdateSystem {
 	
 	public CanvasGroupResizer() {
-		super(CanvasGroup.class);
+		super(CanvasGroup.class, RectTransform.class);
 	}
 	
 	@Override
 	protected void process(EntityMatch match, float deltaTime) {
 		CanvasGroup canvasGroup = match.getComponent(CanvasGroup.class);
+		RectTransform rect = match.getComponent(RectTransform.class);
 		
 		int newWidth = 0;
 		int newHeight = 0;
@@ -26,13 +27,13 @@ public class CanvasGroupResizer extends UpdateSystem {
 				switch (canvasGroup.direction) {
 					case UP:
 					case DOWN:
-						newWidth = Math.max(newWidth, childRect.getWidth());
-						newHeight += childRect.getHeight() + canvasGroup.gap;
+						newWidth = Math.max(newWidth, childRect.width);
+						newHeight += childRect.height + canvasGroup.gap;
 						break;
 					case LEFT:
 					case RIGHT:
-						newWidth += childRect.getWidth() + canvasGroup.gap;
-						newHeight = Math.max(newHeight, childRect.getHeight());
+						newWidth += childRect.width + canvasGroup.gap;
+						newHeight = Math.max(newHeight, childRect.height);
 						break;
 				}
 			}
@@ -48,7 +49,7 @@ public class CanvasGroupResizer extends UpdateSystem {
 		canvasGroup.innerWidth = newWidth;
 		canvasGroup.innerHeight = newHeight;
 		
-		canvasGroup.width = canvasGroup.innerWidth + canvasGroup.paddingX * 2;
-		canvasGroup.height = canvasGroup.innerHeight + canvasGroup.paddingY * 2;
+		rect.width = canvasGroup.innerWidth + canvasGroup.paddingX * 2;
+		rect.height = canvasGroup.innerHeight + canvasGroup.paddingY * 2;
 	}
 }

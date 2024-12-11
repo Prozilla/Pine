@@ -16,6 +16,8 @@ public class CanvasElementPrefab extends Prefab {
 	public CanvasElementPrefab() {
 		offsetX = 0;
 		offsetY = 0;
+		
+		setName("CanvasElement");
 	}
 	
 	/**

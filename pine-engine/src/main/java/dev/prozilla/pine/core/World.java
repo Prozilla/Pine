@@ -37,6 +37,8 @@ public class World implements Lifecycle {
 	public final Application application;
 	public final Scene scene;
 	
+	public boolean initialized;
+	
 	/**
 	 * List of all systems that are added during initialization.
 	 * Systems of the same type are executed in the order in which they appear in this list.
@@ -55,6 +57,8 @@ public class World implements Lifecycle {
 		
 		initialSystems = new ArrayList<>();
 		useStandardSystems();
+		
+		initialized = false;
 	}
 	
 	/**
@@ -87,21 +91,29 @@ public class World implements Lifecycle {
 		initialSystems.add(new SpriteRenderSystem());
 
 		// Canvas
+		initialSystems.add(new RectInitializer());
 		initialSystems.add(new CanvasGroupInitializer());
 		initialSystems.add(new TextInitializer());
 		
 		initialSystems.add(new CanvasGroupInputHandler());
 		initialSystems.add(new RectInputHandler());
+		initialSystems.add(new TextButtonInputHandler());
+		initialSystems.add(new ImageButtonInputHandler());
 		
 		initialSystems.add(new CanvasResizer());
+		initialSystems.add(new TextResizer());
+		initialSystems.add(new TextButtonResizer());
 		initialSystems.add(new CanvasGroupResizer());
-		initialSystems.add(new RectMover());
 		initialSystems.add(new CanvasGroupArranger());
+		initialSystems.add(new RectMover());
 
 		initialSystems.add(new CanvasRenderSystem());
 		initialSystems.add(new CanvasGroupRenderer());
 		initialSystems.add(new RectRenderSystem());
 		initialSystems.add(new TextRenderSystem());
+		initialSystems.add(new TextButtonRenderSystem());
+		initialSystems.add(new ImageRenderSystem());
+		initialSystems.add(new ImageButtonRenderSystem());
 	}
 	
 	/**
@@ -119,8 +131,13 @@ public class World implements Lifecycle {
 	 * Executes all initialization systems in this world.
 	 */
 	@Override
-	public void init(long window) {
+	public void init(long window) throws IllegalStateException {
+		if (initialized) {
+			throw new IllegalStateException("World has already been initialized.");
+		}
+		
 		systemManager.init(window);
+		initialized = true;
 	}
 	
 	/**
@@ -136,6 +153,7 @@ public class World implements Lifecycle {
 	 */
 	@Override
 	public void update(float deltaTime) {
+		System.out.println("Updating world");
 		systemManager.update(deltaTime);
 	}
 	
@@ -144,6 +162,7 @@ public class World implements Lifecycle {
 	 */
 	@Override
 	public void render(Renderer renderer) {
+		System.out.println("Rendering world");
 		systemManager.render(renderer);
 	}
 	
@@ -191,6 +210,12 @@ public class World implements Lifecycle {
 		return entity;
 	}
 	
+	public void removeEntity(Entity entity) {
+		entityManager.removeEntity(entity);
+		systemManager.unregister(entity);
+		componentManager.removeComponents(entity);
+	}
+	
 	/**
 	 * Adds a component to an entity in this world.
 	 * @param entity The entity
@@ -204,6 +229,16 @@ public class World implements Lifecycle {
 		componentManager.addComponent(entity, component);
 		systemManager.register(entity);
 		return component;
+	}
+	
+	/**
+	 * Removes a component from an entity in this world.
+	 * @param entity The entity
+	 * @param component The component to remove from the entity
+	 */
+	public void removeComponent(Entity entity, Component component) {
+		componentManager.removeComponent(entity, component);
+		systemManager.register(entity);
 	}
 	
 	/**

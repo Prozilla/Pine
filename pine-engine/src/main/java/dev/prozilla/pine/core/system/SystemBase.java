@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.system;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.array.ArrayUtils;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.Component;
@@ -21,7 +22,8 @@ import java.util.function.Consumer;
  */
 public abstract class SystemBase implements Lifecycle {
 	
-	private final Class<? extends Component>[] componentTypes;
+	private final Class<? extends Component>[] includedComponentTypes;
+	private Class<? extends Component>[] excludedComponentTypes;
 	/** Query that entities must match in order to be processed by this system. */
 	private EntityQuery query;
 	/** If true, this system will only process each entity once. */
@@ -45,7 +47,7 @@ public abstract class SystemBase implements Lifecycle {
 	public SystemBase(Class<? extends Component>[] componentTypes, boolean runOnce) {
 		Objects.requireNonNull(componentTypes, "Array of componentTypes must not be null.");
 		
-		this.componentTypes = componentTypes;
+		includedComponentTypes = componentTypes;
 		this.runOnce = runOnce;
 		
 		processedEntityIds = new ArrayList<>();
@@ -60,9 +62,21 @@ public abstract class SystemBase implements Lifecycle {
 	 */
 	protected void requireTag(String tag) throws IllegalStateException {
 		if (query != null) {
-			throw new IllegalStateException("Required tag must be specified before the creation of the query.");
+			throw new IllegalStateException("Required tag must be set before the query creation.");
 		}
 		this.entityTag = tag;
+	}
+	
+	@SafeVarargs
+	protected final void setExcludedComponentTypes(Class<? extends Component>... componentTypes) throws IllegalArgumentException {
+		if (query != null) {
+			throw new IllegalStateException("Excluded component types must be set before the query creation.");
+		}
+		if (ArrayUtils.overlaps(excludedComponentTypes, includedComponentTypes)) {
+			throw new IllegalArgumentException("Excluded component types must not overlap with included component types.");
+		}
+		
+		excludedComponentTypes = componentTypes;
 	}
 	
 	/**
@@ -77,7 +91,7 @@ public abstract class SystemBase implements Lifecycle {
 		scene = world.scene;
 		
 		// Create entity query
-		query = world.queryPool.getQuery(componentTypes, runOnce, entityTag);
+		query = world.queryPool.getQuery(includedComponentTypes, excludedComponentTypes, runOnce, entityTag);
 		
 		// Process existing entities
 		if (world.entityManager.hasEntities()) {
@@ -94,7 +108,7 @@ public abstract class SystemBase implements Lifecycle {
 	public void register(Entity entity) {
 		if (query.register(entity)) {
 			if (runOnce && !processedEntityIds.contains(entity.id)) {
-				if (this instanceof InitSystemBase) {
+				if (this instanceof InitSystemBase && world.initialized) {
 					init();
 				}
 			}
@@ -102,10 +116,47 @@ public abstract class SystemBase implements Lifecycle {
 	}
 	
 	/**
+	 * Unregisters an entity from this system's query.
+	 * @see EntityQuery
+	 */
+	public void unregister(Entity entity) {
+		query.unregister(entity);
+	}
+	
+	/**
 	 * Iterates over each entity that matches the query of this system.
 	 */
 	protected void forEach(Consumer<EntityMatch> consumer) {
 		for (EntityMatch entityMatch : query.entityMatches) {
+			int entityId = entityMatch.getEntity().id;
+			boolean allowProcessing = entityMatch.isActive();
+			
+			if (runOnce && processedEntityIds.contains(entityId)) {
+				allowProcessing = false;
+			}
+			
+			if (allowProcessing) {
+				try {
+					consumer.accept(entityMatch);
+				} catch (Exception e) {
+					System.err.println("Failed to run system " + getClass().getName());
+					e.printStackTrace();
+				} finally {
+					if (runOnce) {
+						processedEntityIds.add(entityMatch.getEntity().id);
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Iterates over each entity that matches the query of this system in reverse.
+	 */
+	protected void forEachReverse(Consumer<EntityMatch> consumer) {
+		int count = query.entityMatches.size();
+		for (int i = count - 1; i >= 0; i--) {
+			EntityMatch entityMatch = query.entityMatches.get(i);
 			int entityId = entityMatch.getEntity().id;
 			boolean allowProcessing = entityMatch.isActive();
 			

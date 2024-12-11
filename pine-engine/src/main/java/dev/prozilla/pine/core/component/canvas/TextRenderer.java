@@ -2,16 +2,20 @@ package dev.prozilla.pine.core.component.canvas;
 
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.rendering.Renderer;
 
 /**
  * A component for rendering text on the canvas.
  */
-public class TextRenderer extends RectTransform {
+public class TextRenderer extends Component {
 	
 	public String text;
 	public Color color;
 	public Font font;
+	
+	public int width;
+	public int height;
 	
 	public TextRenderer() {
 		this(null);
@@ -29,25 +33,6 @@ public class TextRenderer extends RectTransform {
 		}
 		
 		this.color = color;
-	}
-	
-	/**
-	 * Renders this text on the screen on a specific position.
-	 * @param x X position
-	 * @param y Y position
-	 */
-	public void renderText(Renderer renderer, int x, int y, Color color) {
-		super.render(renderer);
-		
-		if (text.isBlank() || width == 0 || height == 0) {
-			return;
-		}
-		
-		if (font == null) {
-			renderer.drawText(text, x, y, color);
-		} else {
-			renderer.drawText(font, text, x, y, color);
-		}
 	}
 	
 	@Override

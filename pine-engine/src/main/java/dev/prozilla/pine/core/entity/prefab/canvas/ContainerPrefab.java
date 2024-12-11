@@ -21,6 +21,8 @@ public class ContainerPrefab extends CanvasElementPrefab {
 		paddingX = 0;
 		paddingY = 0;
 		backgroundColor = null;
+		
+		setName("Container");
 	}
 	
 	public void setDirection(CanvasGroup.Direction direction) {

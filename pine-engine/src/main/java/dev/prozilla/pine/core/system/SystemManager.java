@@ -103,6 +103,17 @@ public class SystemManager extends ECSManager {
 		}
 	}
 	
+	/**
+	 * Unregisters an entity from all systems.
+	 */
+	public void unregister(Entity entity) {
+		Objects.requireNonNull(entity, "Entity must not be null.");
+		
+		for (SystemGroup<? extends SystemBase> systemGroup : systemGroups) {
+			systemGroup.unregister(entity);
+		}
+	}
+	
 	public void addSystem(SystemBase system) {
 		Objects.requireNonNull(system, "System must not be null.");
 		

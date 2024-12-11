@@ -9,7 +9,7 @@ import dev.prozilla.pine.core.entity.prefab.Prefab;
 /**
  * Prefab for text elements in the UI.
  */
-public class TextPrefab extends Prefab {
+public class TextPrefab extends CanvasElementPrefab {
 	
 	protected String text;
 	protected Color color;
@@ -21,6 +21,7 @@ public class TextPrefab extends Prefab {
 	
 	public TextPrefab(String text) {
 		this.text = text;
+		setName("Text");
 	}
 	
 	public void setText(String text) {
@@ -37,6 +38,8 @@ public class TextPrefab extends Prefab {
 	
 	@Override
 	protected void apply(Entity entity) {
+		super.apply(entity);
+		
 		TextRenderer textRenderer = entity.addComponent(new TextRenderer(text));
 		
 		if (color != null) {

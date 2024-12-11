@@ -20,13 +20,13 @@ public class ImageButtonRenderer extends ImageRenderer {
 	public Color backgroundColor;
 	
 	/** Horizontal padding around text. */
-	private int paddingX;
+	public int paddingX;
 	/** Vertical padding around text. */
-	private int paddingY;
+	public int paddingY;
 	
 	public Callback clickCallback;
 	
-	protected boolean isHovering;
+	public boolean isHovering;
 	
 	public ImageButtonRenderer(String imagePath) {
 		this(ResourcePool.loadTexture(imagePath));
@@ -49,42 +49,6 @@ public class ImageButtonRenderer extends ImageRenderer {
 		paddingX = 0;
 		paddingY = 0;
 		isHovering = false;
-	}
-	
-	@Override
-	public void input(float deltaTime) {
-		Point cursor = getInput().getCursor();
-		int canvasHeight = getCanvas().getHeight();
-		if (cursor != null && isInside(cursor.x, canvasHeight - cursor.y, x, y - paddingY * 2, width, height)) {
-			getInput().setCursorType(CursorType.HAND);
-			getInput().blockCursor(entity);
-			isHovering = true;
-			
-			if (clickCallback != null && getInput().getMouseButtonDown(MouseButton.LEFT)) {
-				clickCallback.run();
-			}
-		} else {
-			isHovering = false;
-		}
-		
-		super.input(deltaTime);
-	}
-	
-	@Override
-	public void render(Renderer renderer) {
-		// Render background
-		if (width != 0 && height != 0 && backgroundColor != null) {
-			Color backgroundColor = (isHovering && backgroundHoverColor != null) ? backgroundHoverColor : this.backgroundColor;
-			renderer.drawRect(x, y - paddingY * 2, width, height, backgroundColor);
-		}
-		
-		// Render image
-		Color imageColor = (isHovering && hoverColor != null) ? hoverColor : color;
-		int imageX = x + paddingX;
-		int imageY = y - paddingY;
-		int imageWidth = width - paddingX * 2;
-		int imageHeight = height - paddingY * 2;
-		renderImage(renderer, imageX, imageY, imageWidth, imageHeight, imageColor);
 	}
 	
 	@Override

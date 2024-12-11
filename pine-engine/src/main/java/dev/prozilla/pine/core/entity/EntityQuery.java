@@ -1,9 +1,12 @@
 package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.array.ArrayUtils;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -15,14 +18,15 @@ public class EntityQuery implements Lifecycle {
 	public final ArrayList<EntityMatch> entityMatches;
 	
 	/**
-	 * IDs of entities that have been registered by this collector.
-	 * This is used to avoid duplication in cases where this collector is shared between multiple systems.
+	 * Map of entity IDs to their respective match.
 	 */
-	private final ArrayList<Integer> registeredEntityIds;
+	private final Map<Integer, EntityMatch> entityIdToMatch;
 	
 	// Primary query options
-	/** Entities must have components of these types to match this query. */
-	private final Class<? extends Component>[] componentTypes;
+	/** Entities must have components of all these types to match this query. */
+	private final Class<? extends Component>[] includedComponentTypes;
+	/** Entities must not have any components of these types to match this query. */
+	private final Class<? extends Component>[] excludedeComponentTypes;
 	
 	// Secondary query options
 	/** Entities must have this tag to match this query, unless this tag is <code>null</code>. */
@@ -30,19 +34,24 @@ public class EntityQuery implements Lifecycle {
 	/** Indicates whether results of this query may be disposed by the system that consumes it. */
 	private final boolean isDisposable;
 	
-	public EntityQuery(Class<? extends Component>[] componentTypes, boolean disposable, String tag) {
-		this.componentTypes = componentTypes;
+	public EntityQuery(Class<? extends Component>[] includedComponentTypes, Class<? extends Component>[] excludedComponentTypes, boolean disposable, String tag) {
+		this.includedComponentTypes = includedComponentTypes;
+		this.excludedeComponentTypes = excludedComponentTypes;
 		this.isDisposable = disposable;
 		this.entityTag = tag;
 		
-		Objects.requireNonNull(componentTypes, "componentTypes must not be null.");
+		Objects.requireNonNull(includedComponentTypes, "includedComponentTypes must not be null.");
 		
-		if (componentTypes.length == 0) {
-			throw new IllegalArgumentException("Length of componentTypes must be greater than 0.");
+		if (includedComponentTypes.length == 0) {
+			throw new IllegalArgumentException("Length of includedComponentTypes must be greater than 0.");
+		}
+		
+		if (ArrayUtils.overlaps(excludedComponentTypes, includedComponentTypes)) {
+			throw new IllegalArgumentException("Excluded component types must not overlap with included component types.");
 		}
 		
 		entityMatches = new ArrayList<>();
-		registeredEntityIds = new ArrayList<>();
+		entityIdToMatch = new HashMap<>();
 	}
 	
 	/**
@@ -51,7 +60,7 @@ public class EntityQuery implements Lifecycle {
 	@Override
 	public void destroy() {
 		entityMatches.clear();
-		registeredEntityIds.clear();
+		entityIdToMatch.clear();
 	}
 	
 	/**
@@ -59,28 +68,48 @@ public class EntityQuery implements Lifecycle {
 	 * @return True if the entity matches this query
 	 */
 	public boolean register(Entity entity) {
-		if (registeredEntityIds.contains(entity.id)) {
+		Component[] matchComponents = getMatchingComponents(entity);
+		
+		if (matchComponents == null) {
+			unregister(entity);
 			return false;
 		}
 		
-		Component[] components = getMatchingComponents(entity);
-		
-		if (components == null) {
+		if (entityIdToMatch.containsKey(entity.id)) {
 			return false;
 		}
 		
+		EntityMatch entityMatch = null;
 		try {
-			EntityMatch entityMatch = new EntityMatch(componentTypes);
-			entityMatch.setComponents(components);
-			entityMatches.add(entityMatch);
+			entityMatch = new EntityMatch(includedComponentTypes);
+			entityMatch.setComponents(matchComponents);
 		} catch (Exception e) {
-			System.err.println("Failed to create component group.");
+			System.err.println("Failed to create entity match.");
 			e.printStackTrace();
 			return false;
 		} finally {
-			registeredEntityIds.add(entity.id);
+			if (entityMatch != null) {
+				entityMatches.add(entityMatch);
+				entityIdToMatch.put(entity.id, entityMatch);
+			}
 		}
 		
+		return true;
+	}
+	
+	/**
+	 * Unregisters an entity in this query.
+	 * @param entity The entity
+	 * @return True if this query was affected.
+	 */
+	public boolean unregister(Entity entity) {
+		if (!entityIdToMatch.containsKey(entity.id)) {
+			return false;
+		}
+		
+		EntityMatch match = entityIdToMatch.get(entity.id);
+		entityMatches.remove(match);
+		entityIdToMatch.remove(entity.id);
 		return true;
 	}
 	
@@ -98,12 +127,25 @@ public class EntityQuery implements Lifecycle {
 			return null;
 		}
 		
-		Component[] components = new Component[componentTypes.length];
+		Component[] components = new Component[includedComponentTypes.length];
 		
-		// Check if entity has components of all required types
+		// Check if entity has components of all included types and none of the excluded types
 		boolean match = true;
-		for (int i = 0; i < componentTypes.length; i++) {
-			Component component = entity.getComponent(componentTypes[i]);
+		if (excludedeComponentTypes != null) {
+			for (Class<? extends Component> componentType : excludedeComponentTypes) {
+				if (entity.getComponent(componentType) != null) {
+					match = false;
+					break;
+				}
+			}
+		}
+		
+		if (!match) {
+			return null;
+		}
+		
+		for (int i = 0; i < includedComponentTypes.length; i++) {
+			Component component = entity.getComponent(includedComponentTypes[i]);
 			if (component == null) {
 				match = false;
 				break;
@@ -119,11 +161,11 @@ public class EntityQuery implements Lifecycle {
 	}
 	
 	public void print() {
-		int componentCount = componentTypes.length;
+		int componentCount = includedComponentTypes.length;
 		String[] componentNames = new String[componentCount];
 		
 		for (int i = 0; i < componentCount; i++) {
-			Class<? extends Component> componentClass = componentTypes[i];
+			Class<? extends Component> componentClass = includedComponentTypes[i];
 			componentNames[i] = componentClass.getSimpleName();
 		}
 		

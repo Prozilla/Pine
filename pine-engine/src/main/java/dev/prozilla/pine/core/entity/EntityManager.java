@@ -37,6 +37,16 @@ public class EntityManager extends ECSManager {
 		entities.add(entity);
 	}
 	
+	public void removeEntity(Entity entity) {
+		Objects.requireNonNull(entity, "Entity must not be null.");
+		
+		if (!entities.contains(entity)) {
+			throw new IllegalStateException("Entity has not been added yet.");
+		}
+		
+		entities.remove(entity);
+	}
+	
 	public boolean contains(Entity entity) {
 		return entities.contains(entity);
 	}

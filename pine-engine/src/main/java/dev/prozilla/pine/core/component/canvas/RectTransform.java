@@ -1,9 +1,6 @@
 package dev.prozilla.pine.core.component.canvas;
 
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.entity.canvas.Canvas;
-
-import java.awt.*;
 
 /**
  * A base component for positioning canvas elements.
@@ -25,8 +22,9 @@ public class RectTransform extends Component {
 	
 	/** If true, allows the cursor to pass through this element. */
 	public boolean passThrough;
+	public boolean cursorHit;
 	
-	public Canvas canvas;
+	public CanvasRenderer canvas;
 	
 	public enum Anchor {
 		TOP_LEFT,
@@ -47,6 +45,7 @@ public class RectTransform extends Component {
 		offsetY = 0;
 		anchor = Anchor.BOTTOM_LEFT;
 		passThrough = false;
+		cursorHit = false;
 	}
 	
 //	@Override
@@ -64,7 +63,7 @@ public class RectTransform extends Component {
 	}
 	
 	public boolean isInside(int x, int y) {
-		return isInside(x, y, this.x, this.y, getWidth(), getHeight());
+		return isInside(x, y, this.x, this.y, width, height);
 	}
 	
 	public boolean isInside(int x, int y, int rectX, int rectY, int rectWidth, int rectHeight) {
@@ -72,19 +71,19 @@ public class RectTransform extends Component {
 			&& y >= rectY && y < rectY + rectHeight;
 	}
 	
-	public Canvas getCanvas() throws IllegalStateException {
+	public CanvasRenderer getCanvas() throws IllegalStateException {
 		if (canvas != null) {
 			return canvas;
 		}
 		
 		CanvasRenderer canvasRenderer = entity.getComponentInParent(CanvasRenderer.class);
 		
-		if (canvasRenderer == null || !(canvasRenderer.getEntity() instanceof Canvas)) {
+		if (canvasRenderer == null) {
 			throw new IllegalStateException("Canvas element must be a child of a canvas.");
 		}
 		
-		canvas = (Canvas)canvasRenderer.getEntity();
-		return canvas;
+		canvas = canvasRenderer;
+		return canvasRenderer;
 	}
 	
 	public void setPosition(Anchor anchor, int x, int y) {
@@ -107,14 +106,6 @@ public class RectTransform extends Component {
 	
 	public void setOffsetY(int offsetY) {
 		this.offsetY = offsetY;
-	}
-	
-	public int getWidth() {
-		return width;
-	}
-	
-	public int getHeight() {
-		return height;
 	}
 	
 	@Override

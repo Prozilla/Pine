@@ -203,6 +203,12 @@ public final class Color {
         return setAlpha(alpha / 255f);
     }
 
+    public Color multiply(float scalar) {
+        setRGB(red * scalar, green * scalar, blue * scalar);
+        setAlpha(alpha * scalar);
+        return this;
+    }
+    
     /**
      * Returns the color as a (x,y,z)-Vector.
      * @return The color as vec3.

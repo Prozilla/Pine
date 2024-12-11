@@ -30,21 +30,6 @@ public abstract class Component implements Lifecycle {
 		isActive = true;
 	}
 	
-	@Override
-	public void init(long window) {}
-	
-	@Override
-	public void input(float deltaTime) {}
-	
-	@Override
-	public void update(float deltaTime) {}
-	
-	@Override
-	public void render(Renderer renderer) {}
-	
-	@Override
-	public void destroy() {}
-	
 	/**
 	 * Enables or disables this component.
 	 * @param active True enables this component, false disables it.
