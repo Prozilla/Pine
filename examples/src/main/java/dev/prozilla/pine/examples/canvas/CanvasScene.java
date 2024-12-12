@@ -22,6 +22,7 @@ public class CanvasScene extends Scene {
 		ContainerPrefab menuPrefab = new ContainerPrefab();
 		menuPrefab.setGap(16);
 		menuPrefab.setAnchor(RectTransform.Anchor.CENTER);
+		menuPrefab.setAlignment(CanvasGroup.Alignment.CENTER);
 		menuPrefab.setDirection(CanvasGroup.Direction.DOWN);
 		menuPrefab.setBackgroundColor(Color.WHITE.clone().setAlpha(0.65f));
 		menuPrefab.setPadding(16, 16);
@@ -40,9 +41,6 @@ public class CanvasScene extends Scene {
 		Entity canvas = canvasPrefab.instantiate(world);
 		Entity menu = canvas.addChild(menuPrefab.instantiate(world));
 		menu.addChild(titleTextPrefab.instantiate(world));
-		menu.addChild(textPrefab.instantiate(world));
-		menu.addChild(textButtonPrefab.instantiate(world));
-		menu.addChild(textPrefab.instantiate(world));
 		menu.addChild(textPrefab.instantiate(world));
 		menu.addChild(textButtonPrefab.instantiate(world));
 		

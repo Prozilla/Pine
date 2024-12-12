@@ -4,6 +4,8 @@ import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.canvas.Canvas;
+import dev.prozilla.pine.core.entity.prefab.Prefab;
+import dev.prozilla.pine.core.entity.prefab.canvas.CanvasPrefab;
 import dev.prozilla.pine.core.state.Scene;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
@@ -25,15 +27,22 @@ import java.util.Random;
 
 public class GameScene extends Scene {
 	
+	// Game state
 	public boolean gameOver;
 	public int playerScore;
 	
 	private float timeUntilNextObstacle;
 	
-	// Game objects
+	// Prefabs
+	private BackgroundPrefab backgroundPrefab;
+	private PlayerPrefab playerPrefab;
+	private ScorePrefab scorePrefab;
+	private GameOverPrefab gameOverPrefab;
+	
+	// Entities
 	private Entity obstacles;
 	public Entity player;
-	public GameOverText gameOverText;
+	public Entity gameOverText;
 	
 	// Common resources
 	public Font font;
@@ -47,6 +56,15 @@ public class GameScene extends Scene {
 	@Override
 	protected void load() {
 		super.load();
+		
+		// Create prefabs for entities
+		backgroundPrefab = new BackgroundPrefab();
+		playerPrefab = new PlayerPrefab();
+		scorePrefab = new ScorePrefab();
+		gameOverPrefab = new GameOverPrefab();
+		
+		// Load resources
+		font = ResourcePool.loadFont("flappybird/flappy-bird.ttf", 32);
 		
 		// Add systems
 		world.addSystem(new PlayerInitializer());
@@ -62,24 +80,23 @@ public class GameScene extends Scene {
 		world.addSystem(new GameOverTextInitializer());
 		
 		// Fill screen with background sprites
-		BackgroundPrefab backgroundPrefab = new BackgroundPrefab();
 		int backgroundCount = Math.round((float)Main.WIDTH / BackgroundData.WIDTH + 0.5f) + 1;
 		for (int i = 0; i < backgroundCount; i++) {
 			world.addEntity(backgroundPrefab.instantiate(world, i));
 		}
 		
 		// Create player object
-		player = world.addEntity(new PlayerPrefab());
+		player = world.addEntity(playerPrefab);
 		
-		// Prepare obstacles
-		obstacles = add(new Entity(world));
+		// Create empty parent for obstacles
+		obstacles = world.addEntity(new Entity(world));
 		
 		// Create user interface
-		font = ResourcePool.loadFont("flappybird/flappy-bird.ttf", 32);
-		Canvas canvas = (Canvas)add(new Canvas(world));
-		canvas.addChild(new ScoreText().instantiate(world));
-		gameOverText = (GameOverText)canvas.addChild(new GameOverText(world));
+		Entity canvas = world.addEntity(new CanvasPrefab());
+		canvas.addChild(scorePrefab);
+		gameOverText = canvas.addChild(gameOverPrefab);
 		
+		// Set default values
 		timeUntilNextObstacle = 0;
 		gameOver = false;
 		playerScore = 0;

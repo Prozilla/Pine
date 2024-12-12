@@ -7,6 +7,7 @@ import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.context.Window;
 import dev.prozilla.pine.core.entity.camera.Camera;
+import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.state.Scene;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Timer;
@@ -90,8 +91,18 @@ public class Entity implements Lifecycle {
 	}
 	
 	/**
-	 * Adds a child to this game object.
-	 * @param child Child object
+	 * Instantiates a prefab and adds the instance as a child of this entity
+	 * @param prefab Prefab for the child entity
+	 * @return Child entity
+	 */
+	public Entity addChild(Prefab prefab) throws IllegalStateException, IllegalArgumentException {
+		return addChild(prefab.instantiate(world));
+	}
+	
+	/**
+	 * Adds a child to this entity.
+	 * @param child Entity to add as a child
+	 * @return Child entity
 	 */
 	public Entity addChild(Entity child) throws IllegalStateException, IllegalArgumentException {
 		if (child == null) {
@@ -113,7 +124,7 @@ public class Entity implements Lifecycle {
 	}
 	
 	/**
-	 * Adds children to this game object.
+	 * Adds children to this entity.
 	 * @param children Child objects
 	 */
 	public void addChildren(Entity... children) throws IllegalStateException, IllegalArgumentException {
@@ -123,7 +134,7 @@ public class Entity implements Lifecycle {
 	}
 	
 	/**
-	 * Removes a child from this game object.
+	 * Removes a child from this entity.
 	 * @param child Child object
 	 */
 	public void removeChild(Entity child) throws IllegalStateException, IllegalArgumentException {

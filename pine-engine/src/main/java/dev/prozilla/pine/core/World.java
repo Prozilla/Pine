@@ -153,7 +153,7 @@ public class World implements Lifecycle {
 	 */
 	@Override
 	public void update(float deltaTime) {
-		System.out.println("Updating world");
+//		System.out.println("Updating world");
 		systemManager.update(deltaTime);
 	}
 	
@@ -162,7 +162,7 @@ public class World implements Lifecycle {
 	 */
 	@Override
 	public void render(Renderer renderer) {
-		System.out.println("Rendering world");
+//		System.out.println("Rendering world");
 		systemManager.render(renderer);
 	}
 	

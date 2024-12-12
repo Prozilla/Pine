@@ -21,9 +21,7 @@ public class TextButtonRenderer extends Component {
 	public int paddingX;
 	/** Vertical padding around text. */
 	public int paddingY;
-	
 	public Callback clickCallback;
-	
 	public boolean isHovering;
 	
 	public TextButtonRenderer() {
