@@ -7,6 +7,11 @@ tasks.register("runFlappyBird", JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
+tasks.register("runSnake", JavaExec) {
+    mainClass = "dev.prozilla.pine.examples.snake.Main"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
 tasks.register("runCanvasDemo", JavaExec) {
     mainClass = "dev.prozilla.pine.examples.canvas.Main"
     classpath = sourceSets.main.runtimeClasspath
