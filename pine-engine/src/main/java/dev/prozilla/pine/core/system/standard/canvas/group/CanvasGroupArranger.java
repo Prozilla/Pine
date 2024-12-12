@@ -1,8 +1,9 @@
-package dev.prozilla.pine.core.system.standard.canvas;
+package dev.prozilla.pine.core.system.standard.canvas.group;
 
 import dev.prozilla.pine.core.component.canvas.CanvasGroup;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.system.standard.canvas.RectMover;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 
 /**

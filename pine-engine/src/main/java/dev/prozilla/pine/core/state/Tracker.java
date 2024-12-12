@@ -14,7 +14,9 @@ public class Tracker {
 	private int renderedVertices;
 	private int totalVertices;
 	private String version;
-	private int gameObjects;
+	private int entityCount;
+	private int systemCount;
+	private int componentCount;
 	
 	private final Application application;
 	
@@ -23,7 +25,9 @@ public class Tracker {
 		
 		renderedVertices = 0;
 		totalVertices = 0;
-		gameObjects = 0;
+		entityCount = 0;
+		systemCount = 0;
+		componentCount = 0;
 	}
 	
 	/**
@@ -87,18 +91,46 @@ public class Tracker {
 		return version;
 	}
 	
-	public void addGameObject() {
-		gameObjects++;
+	public void addEntity() {
+		entityCount++;
 	}
 	
-	public void removeGameObject() {
-		if (gameObjects > 0) {
-			gameObjects--;
+	public void removeEntity() {
+		if (entityCount > 0) {
+			entityCount--;
 		}
 	}
 	
-	public int getGameObjects() {
-		return gameObjects;
+	public int getEntityCount() {
+		return entityCount;
+	}
+	
+	public void addSystem() {
+		systemCount++;
+	}
+	
+	public void removeSystem() {
+		if (systemCount > 0) {
+			systemCount--;
+		}
+	}
+	
+	public int getSystemCount() {
+		return systemCount;
+	}
+	
+	public void addComponent() {
+		componentCount++;
+	}
+	
+	public void removeComponent() {
+		if (componentCount > 0) {
+			componentCount--;
+		}
+	}
+	
+	public int getComponentCount() {
+		return componentCount;
 	}
 	
 	public String getWindowSize() {

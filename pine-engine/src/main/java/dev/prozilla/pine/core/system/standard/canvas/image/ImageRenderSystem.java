@@ -1,9 +1,9 @@
-package dev.prozilla.pine.core.system.standard.canvas;
+package dev.prozilla.pine.core.system.standard.canvas.image;
 
 import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.Image;
 import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.core.component.canvas.ImageRenderer;
+import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.EntityMatch;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderSystem;
@@ -11,18 +11,19 @@ import dev.prozilla.pine.core.system.render.RenderSystem;
 public class ImageRenderSystem extends RenderSystem {
 	
 	public ImageRenderSystem() {
-		super(ImageRenderer.class);
+		super(ImageRenderer.class, RectTransform.class);
 	}
 	
 	@Override
 	protected void process(EntityMatch match, Renderer renderer) {
 		ImageRenderer imageRenderer = match.getComponent(ImageRenderer.class);
-		renderImage(renderer, imageRenderer);
+		RectTransform rect = match.getComponent(RectTransform.class);
+		renderImage(renderer, imageRenderer, rect);
 	}
 	
-	public static void renderImage(Renderer renderer, ImageRenderer imageRenderer) {
+	public static void renderImage(Renderer renderer, ImageRenderer imageRenderer, RectTransform rect) {
 		renderImage(renderer, imageRenderer,
-			imageRenderer.x, imageRenderer.y, imageRenderer.width, imageRenderer.height, imageRenderer.color);
+		 rect.x, rect.y, imageRenderer.width, imageRenderer.height, imageRenderer.color);
 	}
 	
 	public static void renderImage(Renderer renderer, ImageRenderer imageRenderer, int x, int y, int width, int height, Color color) {

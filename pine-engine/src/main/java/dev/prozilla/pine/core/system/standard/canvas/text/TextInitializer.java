@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.system.standard.canvas;
+package dev.prozilla.pine.core.system.standard.canvas.text;
 
 import dev.prozilla.pine.core.component.canvas.TextRenderer;
 import dev.prozilla.pine.core.entity.EntityMatch;

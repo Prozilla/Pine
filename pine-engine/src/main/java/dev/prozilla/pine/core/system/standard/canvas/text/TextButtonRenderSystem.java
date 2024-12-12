@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.system.standard.canvas;
+package dev.prozilla.pine.core.system.standard.canvas.text;
 
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
@@ -28,6 +28,9 @@ public class TextButtonRenderSystem extends RenderSystem {
 		
 		// Render text
 		Color textColor = (textButtonRenderer.isHovering && textButtonRenderer.hoverColor != null) ? textButtonRenderer.hoverColor : textRenderer.color;
-		TextRenderSystem.renderText(renderer, textRenderer, rect.x + textButtonRenderer.paddingX, rect.y + textButtonRenderer.paddingY, textColor);
+		int textX = rect.x + textButtonRenderer.paddingX;
+		int textY = rect.y + textButtonRenderer.paddingY;
+		
+		TextRenderSystem.renderText(renderer, textRenderer, textX, textY, textColor);
 	}
 }

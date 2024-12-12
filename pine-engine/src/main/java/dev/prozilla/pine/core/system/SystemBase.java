@@ -3,12 +3,12 @@ package dev.prozilla.pine.core.system;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.array.ArrayUtils;
 import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.Scene;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityMatch;
 import dev.prozilla.pine.core.entity.EntityQuery;
-import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.state.Scene;
 import dev.prozilla.pine.core.system.init.InitSystemBase;
 
 import java.util.ArrayList;

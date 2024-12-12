@@ -1,10 +1,7 @@
-package dev.prozilla.pine.core.state;
+package dev.prozilla.pine.core;
 
-import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.common.Lifecycle;
-import dev.prozilla.pine.core.context.Window;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.camera.Camera;
 import dev.prozilla.pine.core.rendering.Renderer;
 

@@ -8,17 +8,15 @@ import dev.prozilla.pine.core.entity.EntityManager;
 import dev.prozilla.pine.core.entity.EntityQueryPool;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.state.Scene;
 import dev.prozilla.pine.core.system.SystemBase;
 import dev.prozilla.pine.core.system.SystemBuilder;
 import dev.prozilla.pine.core.system.SystemManager;
-import dev.prozilla.pine.core.system.standard.camera.CameraControlInitializer;
-import dev.prozilla.pine.core.system.standard.camera.CameraInitializer;
-import dev.prozilla.pine.core.system.standard.camera.CameraControlInputHandler;
+import dev.prozilla.pine.core.system.standard.camera.*;
 import dev.prozilla.pine.core.system.standard.canvas.*;
+import dev.prozilla.pine.core.system.standard.canvas.group.*;
+import dev.prozilla.pine.core.system.standard.canvas.image.*;
+import dev.prozilla.pine.core.system.standard.canvas.text.*;
 import dev.prozilla.pine.core.system.standard.sprite.SpriteRenderSystem;
-import dev.prozilla.pine.core.system.standard.camera.CameraControlUpdater;
-import dev.prozilla.pine.core.system.standard.camera.CameraResizer;
 import dev.prozilla.pine.core.system.standard.sprite.TileMover;
 
 import java.util.ArrayList;
@@ -94,6 +92,7 @@ public class World implements Lifecycle {
 		initialSystems.add(new RectInitializer());
 		initialSystems.add(new CanvasGroupInitializer());
 		initialSystems.add(new TextInitializer());
+		initialSystems.add(new ImageInitializer());
 		
 		initialSystems.add(new CanvasGroupInputHandler());
 		initialSystems.add(new RectInputHandler());
@@ -103,6 +102,8 @@ public class World implements Lifecycle {
 		initialSystems.add(new CanvasResizer());
 		initialSystems.add(new TextResizer());
 		initialSystems.add(new TextButtonResizer());
+		initialSystems.add(new ImageResizer());
+		initialSystems.add(new ImageButtonResizer());
 		initialSystems.add(new CanvasGroupResizer());
 		initialSystems.add(new CanvasGroupArranger());
 		initialSystems.add(new RectMover());
@@ -207,6 +208,7 @@ public class World implements Lifecycle {
 		}
 		entityManager.addEntity(entity);
 		systemManager.register(entity);
+		application.getTracker().addEntity();
 		return entity;
 	}
 	
@@ -214,6 +216,7 @@ public class World implements Lifecycle {
 		entityManager.removeEntity(entity);
 		systemManager.unregister(entity);
 		componentManager.removeComponents(entity);
+		application.getTracker().removeEntity();
 	}
 	
 	/**
@@ -228,6 +231,7 @@ public class World implements Lifecycle {
 		}
 		componentManager.addComponent(entity, component);
 		systemManager.register(entity);
+		application.getTracker().addComponent();
 		return component;
 	}
 	
@@ -239,6 +243,7 @@ public class World implements Lifecycle {
 	public void removeComponent(Entity entity, Component component) {
 		componentManager.removeComponent(entity, component);
 		systemManager.register(entity);
+		application.getTracker().removeComponent();
 	}
 	
 	/**
@@ -260,7 +265,9 @@ public class World implements Lifecycle {
 		if (!systemManager.isInitialized()) {
 			useSystem(system);
 		} else {
-			systemManager.addSystem(system);
+			if (systemManager.addSystem(system)) {
+				application.getTracker().addSystem();
+			}
 		}
 		
 		return system;

@@ -114,7 +114,7 @@ public class SystemManager extends ECSManager {
 		}
 	}
 	
-	public void addSystem(SystemBase system) {
+	public boolean addSystem(SystemBase system) {
 		Objects.requireNonNull(system, "System must not be null.");
 		
 		boolean added = false;
@@ -130,6 +130,8 @@ public class SystemManager extends ECSManager {
 		} else {
 			system.destroy();
 		}
+		
+		return added;
 	}
 	
 	public boolean isInitialized() {

@@ -1,19 +1,13 @@
 package dev.prozilla.pine.core.component.canvas;
 
 import dev.prozilla.pine.common.Callback;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.state.input.CursorType;
-import dev.prozilla.pine.core.state.input.MouseButton;
-
-import java.awt.*;
+import dev.prozilla.pine.core.component.Component;
 
 /**
  * A component for rendering buttons with images on the canvas.
  */
-public class ImageButtonRenderer extends ImageRenderer {
+public class ImageButtonRenderer extends Component {
 	
 	public Color hoverColor;
 	public Color backgroundHoverColor;
@@ -28,17 +22,11 @@ public class ImageButtonRenderer extends ImageRenderer {
 	
 	public boolean isHovering;
 	
-	public ImageButtonRenderer(String imagePath) {
-		this(ResourcePool.loadTexture(imagePath));
+	public ImageButtonRenderer() {
+		this(Color.WHITE);
 	}
 	
-	public ImageButtonRenderer(Texture image) {
-		this(image, Color.WHITE);
-	}
-	
-	public ImageButtonRenderer(Texture image, Color backgroundColor) {
-		super(image);
-		
+	public ImageButtonRenderer(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
 		
 		if (backgroundColor != null) {
@@ -54,27 +42,5 @@ public class ImageButtonRenderer extends ImageRenderer {
 	@Override
 	public String getName() {
 		return "ImageButtonRenderer";
-	}
-	
-	@Override
-	public void setWidth(int width) {
-		super.setWidth(width + paddingX * 2);
-	}
-	
-	@Override
-	public void setHeight(int height) {
-		super.setHeight(height + paddingY * 2);
-	}
-	
-	public void setPaddingX(int paddingX) {
-		width = width - this.paddingX * 2;
-		this.paddingX = paddingX;
-		setWidth(width);
-	}
-	
-	public void setPaddingY(int paddingY) {
-		height = height - this.paddingY * 2;
-		this.paddingY = paddingY;
-		setHeight(height);
 	}
 }

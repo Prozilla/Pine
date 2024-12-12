@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.system.standard.canvas;
+package dev.prozilla.pine.core.system.standard.canvas.text;
 
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.text.Font;

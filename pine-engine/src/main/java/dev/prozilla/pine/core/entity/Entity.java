@@ -1,14 +1,14 @@
 package dev.prozilla.pine.core.entity;
 
-import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.Scene;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.context.Window;
 import dev.prozilla.pine.core.entity.camera.Camera;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
-import dev.prozilla.pine.core.state.Scene;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
@@ -119,7 +119,6 @@ public class Entity implements Lifecycle {
 			world.addEntity(child);
 		}
 		
-		getTracker().addGameObject();
 		return child;
 	}
 	
@@ -147,7 +146,7 @@ public class Entity implements Lifecycle {
 			throw new IllegalStateException("GameObject is not a child");
 		}
 		child.transform.setParent(transform);
-		getTracker().removeGameObject();
+		getTracker().removeEntity();
 	}
 	
 	/**

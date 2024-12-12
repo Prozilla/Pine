@@ -1,15 +1,14 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.system.resource.Image;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.core.context.Window;
+import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.input.Input;
-import dev.prozilla.pine.common.system.resource.Image;
-import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.state.Scene;
-import dev.prozilla.pine.core.state.Timer;
-import dev.prozilla.pine.core.context.Window;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;

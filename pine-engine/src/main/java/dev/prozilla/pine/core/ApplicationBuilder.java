@@ -1,7 +1,5 @@
 package dev.prozilla.pine.core;
 
-import dev.prozilla.pine.core.state.Scene;
-
 /**
  * Utility class for building applications.
  * @see Application

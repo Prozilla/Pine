@@ -2,13 +2,15 @@ package dev.prozilla.pine.core.entity.prefab.canvas;
 
 import dev.prozilla.pine.common.Callback;
 import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.core.component.canvas.TextButtonRenderer;
+import dev.prozilla.pine.common.system.resource.ResourcePool;
+import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.core.component.canvas.ImageButtonRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 
 /**
- * Prefab for text buttons in the UI.
+ * Prefab for image buttons in the UI.
  */
-public class TextButtonPrefab extends TextPrefab {
+public class ImageButtonPrefab extends ImagePrefab {
 	
 	protected Color hoverColor;
 	protected Color backgroundHoverColor;
@@ -20,13 +22,13 @@ public class TextButtonPrefab extends TextPrefab {
 	
 	protected Callback clickCallback;
 	
-	public TextButtonPrefab() {
-		this(null);
+	public ImageButtonPrefab(String imagePath) {
+		this(ResourcePool.loadTexture(imagePath));
 	}
 	
-	public TextButtonPrefab(String text) {
-		super(text);
-		setName("TextButton");
+	public ImageButtonPrefab(Texture image) {
+		super(image);
+		setName("ImageButton");
 		
 		paddingX = 0;
 		paddingY = 0;
@@ -91,23 +93,23 @@ public class TextButtonPrefab extends TextPrefab {
 	protected void apply(Entity entity) {
 		super.apply(entity);
 		
-		TextButtonRenderer textButtonRenderer = entity.addComponent(new TextButtonRenderer());
+		ImageButtonRenderer imageButtonRenderer = entity.addComponent(new ImageButtonRenderer());
 		
-		textButtonRenderer.paddingX = paddingX;
-		textButtonRenderer.paddingY = paddingY;
+		imageButtonRenderer.paddingX = paddingX;
+		imageButtonRenderer.paddingY = paddingY;
 		
 		if (hoverColor != null) {
-			textButtonRenderer.hoverColor = hoverColor;
+			imageButtonRenderer.hoverColor = hoverColor;
 		}
 		if (backgroundColor != null) {
-			textButtonRenderer.backgroundColor = backgroundColor;
+			imageButtonRenderer.backgroundColor = backgroundColor;
 		}
 		if (backgroundHoverColor != null) {
-			textButtonRenderer.backgroundHoverColor = backgroundHoverColor;
+			imageButtonRenderer.backgroundHoverColor = backgroundHoverColor;
 		}
 		
 		if (clickCallback != null) {
-			textButtonRenderer.clickCallback = clickCallback;
+			imageButtonRenderer.clickCallback = clickCallback;
 		}
 	}
 }

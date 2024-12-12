@@ -2,11 +2,9 @@ package dev.prozilla.pine.examples.flappybird;
 
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.text.Font;
+import dev.prozilla.pine.core.Scene;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.canvas.Canvas;
-import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.canvas.CanvasPrefab;
-import dev.prozilla.pine.core.state.Scene;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
