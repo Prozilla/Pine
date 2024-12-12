@@ -11,8 +11,12 @@ and where you want insert your own code.
 
 ## Examples
 
+These are some example projects made using Pine. You can check out their source code below by clicking on the link or try them out by running the commands below.
+
 - [Flappy Bird](./examples/src/main/java/dev/prozilla/pine/examples/flappybird)
   > ```gradle runFlappyBird```
+- [Snake](./examples/src/main/java/dev/prozilla/pine/examples/flappybird)
+  >```gradle runSnake```
   
 ## Links
 

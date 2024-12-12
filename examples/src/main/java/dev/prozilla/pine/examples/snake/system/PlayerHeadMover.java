@@ -36,6 +36,8 @@ public class PlayerHeadMover extends UpdateSystem {
 			
 			// Reset timer
 			playerData.timeUntilNextMove = PlayerData.TIME_BETWEEN_MOVES;
+			
+			playerData.previousMoveDirection = playerData.direction;
 		}
 	}
 }
