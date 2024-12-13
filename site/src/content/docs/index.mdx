@@ -1,0 +1,40 @@
+---
+title: Home
+description: Prozilla's lightweight Java game engine powered by LWJGL.
+template: splash
+hero:
+  title: Pine
+  tagline: Prozilla's lightweight Java game engine powered by LWJGL.
+  image:
+    file: ../../assets/logo.png
+  actions:
+    - text: Get started
+      link: /guides/getting-started/
+      icon: right-arrow
+    - text: View source
+      link: https://github.com/Prozilla/Pine
+      icon: external
+      variant: minimal
+	  attrs:
+        target: _blank
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+## Features
+
+<CardGrid stagger>
+	<Card title="Open Source" icon="github">
+		Pine is available under the [GNU GPLv3 license](https://github.com/Prozilla/Pine/blob/main/LICENSE). Visit the [GitHub repository](https://github.com/Prozilla/Pine) to monitor progress, report issues and even contribute with your own code!
+	</Card>
+	<Card title="Super Fast" icon="rocket">
+		Thanks to Pine's robust ECS implementation and many other optimizations, it runs blazingly fast.
+	</Card>
+	<Card title="Powered by LWJGL" icon="puzzle">
+		Pine implements the [LWJGL](https://www.lwjgl.org/) for you, making it easy to use while still keeping a lot of flexibility, without the need for complex low-level bindings.
+	</Card>
+</CardGrid>
+
+## Supporting Pine
+
+You can support the development of Pine by donating to the developer ([Prozilla](https://prozilla.dev/)) on [Ko-fi](https://ko-fi.com/prozilla). 
