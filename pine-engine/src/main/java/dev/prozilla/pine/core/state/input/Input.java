@@ -114,7 +114,7 @@ public class Input implements Lifecycle {
 	}
 	
 	/**
-	 * Prepare handling of input before game objects receive input.
+	 * Prepare handling of input before input systems.
 	 */
 	@Override
 	public void input() {
@@ -137,7 +137,7 @@ public class Input implements Lifecycle {
 	}
 	
 	/**
-	 * Finalize input handling after all game object have received input.
+	 * Finalize input handling after input systems.
 	 */
 	@Override
 	public void update() {
@@ -360,8 +360,8 @@ public class Input implements Lifecycle {
 	}
 	
 	/**
-	 * Prevents the cursor from sending input to remaining game objects in the current frame.
-	 * @param entity Game object that is blocking the cursor
+	 * Prevents the cursor from sending input to remaining entities in the current frame.
+	 * @param entity Entity that is blocking the cursor
 	 */
 	public void blockCursor(Entity entity) {
 		if (cursorBlocker != null) {
@@ -376,7 +376,7 @@ public class Input implements Lifecycle {
 	}
 	
 	/**
-	 * Returns the game object that is blocking the cursor in the current frame.
+	 * Returns the entity that is blocking the cursor in the current frame.
 	 */
 	public Entity getCursorBlocker() {
 		return cursorBlocker;

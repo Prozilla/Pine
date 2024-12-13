@@ -36,28 +36,28 @@ public class Entity implements Lifecycle {
 	public final ArrayList<Component> components;
 	
 	/**
-	 * Creates a game object at the position (0, 0)
-	 *
-	 * @param world Reference to game
+	 * Creates an entity at the position (0, 0)
 	 */
 	public Entity(World world) {
 		this(world, 0, 0);
 	}
 	
+	/**
+	 * Creates an entity at the position (0, 0)
+	 */
 	public Entity(World world, String name) {
 		this(world, name, 0, 0);
 	}
 	
+	/**
+	 * Creates an entity at the position (x, y)
+	 */
 	public Entity(World world, float x, float y) {
 		this(world, null, x, y);
 	}
 	
 	/**
-	 * Creates a game object at the position (x, y)
-	 *
-	 * @param world Reference to game
-	 * @param x     X value
-	 * @param y     Y value
+	 * Creates an entity at the position (x, y)
 	 */
 	public Entity(World world, String name, float x, float y) {
 		this.world = world;
@@ -76,8 +76,7 @@ public class Entity implements Lifecycle {
 	}
 	
 	/**
-	 * Removes this game object from the scene.
-	 * Destroys this game object at the end of the game loop.
+	 * Destroys this entity at the end of the game loop.
 	 */
 	public void destroy() {
 		if (transform.parent != null && application.isRunning) {
@@ -111,7 +110,7 @@ public class Entity implements Lifecycle {
 		
 		boolean added = transform.children.add(child.transform);
 		if (!added) {
-			throw new IllegalStateException("GameObject is already a child");
+			throw new IllegalStateException("Entity is already a child");
 		}
 		child.transform.setParent(transform);
 		
@@ -143,15 +142,15 @@ public class Entity implements Lifecycle {
 		
 		boolean removed = transform.children.remove(child.transform);
 		if (!removed) {
-			throw new IllegalStateException("GameObject is not a child");
+			throw new IllegalStateException("Entity is not a child");
 		}
 		child.transform.setParent(transform);
 		getTracker().removeEntity();
 	}
 	
 	/**
-	 * Removes children from this game object.
-	 * @param children Child objects
+	 * Removes children from this entity.
+	 * @param children Child entities
 	 */
 	public void removeChildren(Entity... children) throws IllegalStateException, IllegalArgumentException {
 		for (Entity child : children) {
@@ -160,15 +159,15 @@ public class Entity implements Lifecycle {
 	}
 	
 	/**
-	 * Setter for the parent object.
-	 * @param parent Parent object
+	 * Setter for the parent entity.
+	 * @param parent Parent entity
 	 */
 	public void setParent(Entity parent) {
 		transform.setParent(parent.transform);
 	}
 	
 	/**
-	 * Enables/disables this game object.
+	 * Enables/disables this entity.
 	 */
 	public void setActive(boolean active) {
 		if (this.isActive == active) {
@@ -188,7 +187,7 @@ public class Entity implements Lifecycle {
 	}
 	
 	/**
-	 * Adds a component to this game object.
+	 * Adds a component to this entity.
 	 * @param component Component
 	 */
 	public <C extends Component> C addComponent(C component) {
@@ -197,7 +196,7 @@ public class Entity implements Lifecycle {
 	}
 	
 	/**
-	 * Removes a component from this game object.
+	 * Removes a component from this entity.
 	 * @param component Component
 	 */
 	public void removeComponent(Component component) {
@@ -246,7 +245,7 @@ public class Entity implements Lifecycle {
 	/**
 	 * Returns a component of a given class or null of there isn't one.
 	 * @param componentClass Class of the component.
-	 * @return An instance of <code>componentClass</code> that is attached to this game object.
+	 * @return An instance of <code>componentClass</code> that is attached to this entity.
 	 */
 	public <ComponentType extends Component> ComponentType getComponent(Class<ComponentType> componentClass) {
 		if (components.isEmpty()) {
@@ -268,7 +267,7 @@ public class Entity implements Lifecycle {
 	/**
 	 * Returns all components of a given class.
 	 * @param componentClass Class of the components.
-	 * @return An ArrayList of instance of <code>componentClass</code> that are attached to this game object.
+	 * @return An ArrayList of instance of <code>componentClass</code> that are attached to this entity.
 	 */
 	public <ComponentType extends Component> ArrayList<ComponentType> getComponents(Class<ComponentType> componentClass) {
 		if (components.isEmpty()) {
@@ -296,7 +295,7 @@ public class Entity implements Lifecycle {
 		} else if (defaultName != null) {
 			return defaultName;
 		} else {
-			return "GameObject";
+			return "Entity";
 		}
 	}
 	
@@ -337,9 +336,9 @@ public class Entity implements Lifecycle {
 	}
 	
 	/**
-	 * Checks whether two game objects are equal.
-	 * @param entity Other game object
-	 * @return True if the game objects are equal
+	 * Checks whether two entities are equal.
+	 * @param entity Other entity
+	 * @return True if the entities are equal
 	 */
 	public boolean equals(Entity entity) {
 		return (id == entity.id);

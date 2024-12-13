@@ -2,7 +2,6 @@ package dev.prozilla.pine.core.component.canvas;
 
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.rendering.Renderer;
 
 import java.util.ArrayList;
 
@@ -24,7 +23,7 @@ public class CanvasGroup extends Component {
 	public int innerWidth;
 	public int innerHeight;
 	
-	/** Array of rect components in children of the attached game object */
+	/** Array of rect components in children of the attached entity */
 	public ArrayList<RectTransform> childRects;
 	
 	public static final Direction DEFAULT_DIRECTION = Direction.UP;

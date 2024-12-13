@@ -15,9 +15,9 @@ public class Transform extends Component {
 	/** Vertical velocity, Y position is increased by this value every frame. */
 	public float velocityY;
 	
-	/** Children of this game object */
+	/** Children of the entity */
 	public final ArrayList<Transform> children;
-	/** Parent of this game object */
+	/** Parent of the entity */
 	public Transform parent;
 
 	public Transform() {

@@ -40,7 +40,7 @@ public abstract class Component implements Lifecycle {
 	
 	/**
 	 * Getter for the entity this component is attached to.
-	 * @return Game object
+	 * @return Entity
 	 */
 	public Entity getEntity() {
 		return entity;
