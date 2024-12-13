@@ -4,7 +4,6 @@ import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.system.resource.Image;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
-import dev.prozilla.pine.core.context.Window;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;

@@ -2,7 +2,7 @@ package dev.prozilla.pine.examples.snake.entity;
 
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.prefab.SpritePrefab;
+import dev.prozilla.pine.core.entity.prefab.sprite.SpritePrefab;
 import dev.prozilla.pine.examples.snake.GameScene;
 
 public class BackgroundPrefab extends SpritePrefab {

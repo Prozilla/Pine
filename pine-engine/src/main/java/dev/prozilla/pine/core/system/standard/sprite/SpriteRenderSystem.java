@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.system.standard.sprite;
 
+import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.camera.Camera;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderSystemBase;
 
@@ -17,7 +17,7 @@ public class SpriteRenderSystem extends RenderSystemBase {
 	
 	@Override
 	public void render(Renderer renderer) {
-		Camera camera = scene.getCamera();
+		CameraData camera = scene.getCameraData();
 		
 		forEach(match -> {
 			SpriteRenderer spriteRenderer = match.getComponent(SpriteRenderer.class);

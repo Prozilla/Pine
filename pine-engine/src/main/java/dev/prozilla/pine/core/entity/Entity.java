@@ -3,11 +3,11 @@ package dev.prozilla.pine.core.entity;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.Scene;
+import dev.prozilla.pine.core.Window;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.context.Window;
-import dev.prozilla.pine.core.entity.camera.Camera;
+import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Timer;
@@ -328,8 +328,8 @@ public class Entity implements Lifecycle {
 		return scene;
 	}
 	
-	public Camera getCamera() {
-		return scene.getCamera();
+	public CameraData getCamera() {
+		return scene.getCameraData();
 	}
 	
 	public boolean isRegistered() {

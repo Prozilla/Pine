@@ -10,6 +10,7 @@ public class ScorePrefab extends TextPrefab {
 	
 	public ScorePrefab() {
 		super("0");
+		setName("ScoreText");
 		
 		// Set position and appearance
 		setAnchor(RectTransform.Anchor.TOP_RIGHT);

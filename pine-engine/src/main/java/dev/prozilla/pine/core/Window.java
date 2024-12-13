@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.context;
+package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.system.resource.Image;

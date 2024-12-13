@@ -32,10 +32,7 @@ public class GameScene extends Scene {
 	private float timeUntilNextObstacle;
 	
 	// Prefabs
-	private BackgroundPrefab backgroundPrefab;
-	private PlayerPrefab playerPrefab;
-	private ScorePrefab scorePrefab;
-	private GameOverPrefab gameOverPrefab;
+	private PipesPrefab pipesPrefab;
 	
 	// Entities
 	private Entity obstacles;
@@ -56,10 +53,11 @@ public class GameScene extends Scene {
 		super.load();
 		
 		// Create prefabs for entities
-		backgroundPrefab = new BackgroundPrefab();
-		playerPrefab = new PlayerPrefab();
-		scorePrefab = new ScorePrefab();
-		gameOverPrefab = new GameOverPrefab();
+		BackgroundPrefab backgroundPrefab = new BackgroundPrefab();
+		PlayerPrefab playerPrefab = new PlayerPrefab();
+		ScorePrefab scorePrefab = new ScorePrefab();
+		GameOverPrefab gameOverPrefab = new GameOverPrefab();
+		pipesPrefab = new PipesPrefab();
 		
 		// Load resources
 		font = ResourcePool.loadFont("flappybird/flappy-bird.ttf", 32);
@@ -122,8 +120,8 @@ public class GameScene extends Scene {
 		if (!gameOver) {
 			if (timeUntilNextObstacle <= 0) {
 				// Spawn obstacle
-				obstacles.addChild(new Pipes(world));
-				timeUntilNextObstacle = random.nextFloat(MIN_OBSTACLE_TIME, MAX_OBSTACLE_TIME);
+				obstacles.addChild(pipesPrefab.instantiate(world));
+				timeUntilNextObstacle += random.nextFloat(MIN_OBSTACLE_TIME, MAX_OBSTACLE_TIME);
 			} else {
 				// Decrease time until next obstacle
 				timeUntilNextObstacle -= deltaTime;

@@ -1,10 +1,10 @@
 package dev.prozilla.pine.core.component;
 
 import dev.prozilla.pine.common.Lifecycle;
-import dev.prozilla.pine.core.context.Window;
-import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.Window;
 import dev.prozilla.pine.core.World;
-import dev.prozilla.pine.core.entity.camera.Camera;
+import dev.prozilla.pine.core.component.camera.CameraData;
+import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
@@ -74,7 +74,7 @@ public abstract class Component implements Lifecycle {
 		return entity.getWorld();
 	}
 	
-	public Camera getCamera() {
+	public CameraData getCamera() {
 		return entity.getCamera();
 	}
 	

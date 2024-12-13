@@ -25,13 +25,13 @@ public class PipesMover extends UpdateSystem {
 		if (!gameScene.gameOver) {
 			// Scroll position of pipes to the left
 			float scrollX = deltaTime * PipesData.SPEED;
-			float newX = pipesData.bottomPipe.transform.x - scrollX;
-			pipesData.bottomPipe.transform.x = newX;
-			pipesData.topPipe.transform.x = newX;
+			float newX = pipesData.bottomPipePrefab.transform.x - scrollX;
+			pipesData.bottomPipePrefab.transform.x = newX;
+			pipesData.topPipePrefab.transform.x = newX;
 			
 			// Check if player hit one of the pipes
 			if (gameScene.player.transform.x + PlayerData.WIDTH > newX && gameScene.player.transform.x < newX + PipeData.WIDTH
-			     && (gameScene.player.transform.y + PlayerData.HEIGHT > pipesData.topPipe.transform.y || gameScene.player.transform.y < pipesData.bottomPipe.transform.y + PipeData.HEIGHT)) {
+			     && (gameScene.player.transform.y + PlayerData.HEIGHT > pipesData.topPipePrefab.transform.y || gameScene.player.transform.y < pipesData.bottomPipePrefab.transform.y + PipeData.HEIGHT)) {
 				gameScene.endGame();
 			} else {
 				// Check if player has passed through pipes

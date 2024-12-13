@@ -35,7 +35,7 @@ public class PlayerHeadMover extends UpdateSystem {
 			sprite.setRegion(0, spriteRegionY, GameScene.CELL_SIZE, GameScene.CELL_SIZE);
 			
 			// Reset timer
-			playerData.timeUntilNextMove = PlayerData.TIME_BETWEEN_MOVES;
+			playerData.timeUntilNextMove += PlayerData.TIME_BETWEEN_MOVES;
 			
 			playerData.previousMoveDirection = playerData.direction;
 		}

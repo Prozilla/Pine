@@ -10,6 +10,7 @@ public class GameOverPrefab extends TextPrefab {
 	
 	public GameOverPrefab() {
 		super("Game Over");
+		setName("GameOverText");
 
 		// Set position and appearance
 		setAnchor(RectTransform.Anchor.CENTER);

@@ -1,9 +1,9 @@
 package dev.prozilla.pine.core.state.input;
 
-import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.camera.Camera;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
@@ -333,7 +333,7 @@ public class Input implements Lifecycle {
 			return null;
 		}
 		
-		Camera camera = application.currentScene.getCamera();
+		CameraData camera = application.currentScene.getCameraData();
 		return camera.screenToWorldPosition(getCursor());
 	}
 	

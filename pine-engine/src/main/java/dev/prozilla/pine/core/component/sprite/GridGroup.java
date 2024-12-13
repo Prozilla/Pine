@@ -1,10 +1,9 @@
-package dev.prozilla.pine.core.component;
+package dev.prozilla.pine.core.component.sprite;
 
-import dev.prozilla.pine.core.component.sprite.TileRenderer;
+import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.Entity;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,41 +20,6 @@ public class GridGroup extends Component {
 		this.size = size;
 		
 		coordinateToTile = new HashMap<>();
-	}
-	
-	@Override
-	public void init(long window) {
-		super.init(window);
-		
-		if (!coordinateToTile.isEmpty()) {
-			coordinateToTile.clear();
-		}
-		
-		ArrayList<TileRenderer> tiles = entity.getComponentsInChildren(TileRenderer.class);
-		
-		if(tiles != null && !tiles.isEmpty()) {
-			for (TileRenderer tile : tiles) {
-				coordinateToTile.put(tile.coordinate, tile);
-			}
-		}
-	}
-	
-	@Override
-	public void input(float deltaTime) {
-		super.input(deltaTime);
-		
-		float[] cursor = getInput().getWorldCursor();
-		
-		if (cursor != null && !coordinateToTile.isEmpty()) {
-			int coordinateX = Math.round(cursor[0] / size - 0.5f);
-			int coordinateY = Math.round(cursor[1] / size - 0.5f);
-			Point coordinate = new Point(coordinateX, coordinateY);
-			
-			hoveringTile = getTile(coordinate);
-			if (hoveringTile != null) {
-				getInput().blockCursor(hoveringTile.getEntity());
-			}
-		}
 	}
 	
 	@Override

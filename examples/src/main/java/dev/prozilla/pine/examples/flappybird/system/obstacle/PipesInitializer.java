@@ -32,8 +32,8 @@ public class PipesInitializer extends InitSystem {
 		int gap = random.nextInt(150, 200);
 		
 		// Position pipes
-		pipesData.topPipe.transform.y = height + gap / 2f;
-		pipesData.bottomPipe.transform.y = height - gap / 2f - PipeData.HEIGHT * 1.5f;
+		pipesData.topPipePrefab.transform.y = height + gap / 2f;
+		pipesData.bottomPipePrefab.transform.y = height - gap / 2f - PipeData.HEIGHT * 1.5f;
 		
 		pipesData.passed = false;
 	}

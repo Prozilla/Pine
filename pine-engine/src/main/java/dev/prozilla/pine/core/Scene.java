@@ -1,8 +1,9 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.camera.Camera;
+import dev.prozilla.pine.core.entity.prefab.camera.CameraPrefab;
 import dev.prozilla.pine.core.rendering.Renderer;
 
 public class Scene implements Lifecycle {
@@ -14,7 +15,7 @@ public class Scene implements Lifecycle {
 	// References
 	protected Application application;
 	protected World world;
-	protected Camera camera;
+	protected CameraData cameraData;
 	
 	// Scene state
 	public boolean loaded;
@@ -63,9 +64,10 @@ public class Scene implements Lifecycle {
 			world = new World(application, this);
 			world.initSystems();
 		}
-		if (camera == null) {
-			camera = new Camera(world);
+		if (cameraData == null) {
+			Entity camera = new CameraPrefab().instantiate(world);
 			add(camera);
+			cameraData = camera.getComponent(CameraData.class);
 		}
 		loaded = true;
 	}
@@ -126,7 +128,7 @@ public class Scene implements Lifecycle {
 		// Remove all references
 //		application = null;
 		world = null;
-		camera = null;
+		cameraData = null;
 		
 //		Texture.reset();
 	}
@@ -168,7 +170,7 @@ public class Scene implements Lifecycle {
 		return world;
 	}
 	
-	public Camera getCamera() {
-		return camera;
+	public CameraData getCameraData() {
+		return cameraData;
 	}
 }

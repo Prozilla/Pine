@@ -67,7 +67,7 @@ public class GameScene extends Scene {
 			
 			world.addEntity(applePrefab, x * CELL_SIZE, y * CELL_SIZE);
 			
-			timeUntilNextSpawn = random.nextFloat(MIN_TIME_BETWEEN_SPAWNS, MAX_TIME_BETWEEN_SPAWNS);
+			timeUntilNextSpawn += random.nextFloat(MIN_TIME_BETWEEN_SPAWNS, MAX_TIME_BETWEEN_SPAWNS);
 		}
 	}
 }

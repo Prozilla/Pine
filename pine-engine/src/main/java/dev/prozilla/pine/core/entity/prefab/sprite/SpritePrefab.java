@@ -1,9 +1,10 @@
-package dev.prozilla.pine.core.entity.prefab;
+package dev.prozilla.pine.core.entity.prefab.sprite;
 
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.prefab.Prefab;
 
 import java.util.Objects;
 
