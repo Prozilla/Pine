@@ -1,5 +1,10 @@
 import org.codehaus.groovy.runtime.GStringImpl
 
+plugins {
+    id "java"
+    id "maven-publish"
+}
+
 repositories {
     mavenCentral()
     maven {
@@ -17,7 +22,12 @@ jar {
     }
 }
 
-project.ext.lwjglVersion = "3.3.4"
+ext {
+    lwjglVersion = "3.3.4"
+    groupId = "dev.prozilla"
+    artifactId = "pine"
+    version = "1.0.0"
+}
 
 switch (org.gradle.internal.os.OperatingSystem.current()) {
     case org.gradle.internal.os.OperatingSystem.LINUX:
@@ -65,4 +75,26 @@ tasks.register("runBuildTool", JavaExec) {
     mainClass = "dev.prozilla.pine.tools.BuildTool"
     classpath = sourceSets.main.runtimeClasspath
     args = []
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId = project.ext.groupId
+            artifactId = project.ext.artifactId
+            version = project.ext.version
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/prozilla/pine")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+                password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
 }

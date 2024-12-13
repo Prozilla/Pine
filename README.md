@@ -6,7 +6,7 @@ Pine uses a simple [ECS](https://en.wikipedia.org/wiki/Entity_component_system) 
 Entity data is stored in modular components. Systems perform logic based on that data to update the entity's state or render to the screen.
 
 As a framework, Pine makes working with the low-level LWJGL library a lot easier and more intuitive, without sacrificing control.
-Because everything is split into layers of abstraction, you can choose how much of Pine's existing functionality you want to utilize 
+Because everything is split into layers of abstraction, you can choose how much of Pine's existing functionality you want to utilize
 and where you want insert your own code.
 
 ## Examples
