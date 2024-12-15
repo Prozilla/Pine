@@ -1,10 +1,10 @@
 package dev.prozilla.pine.core.entity.prefab.canvas;
 
 import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.component.canvas.TextRenderer;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.prefab.Prefab;
 
 /**
  * Prefab for text elements in the UI.
@@ -32,6 +32,10 @@ public class TextPrefab extends CanvasElementPrefab {
 		this.color = color;
 	}
 	
+	public void setFont(String fontPath) {
+		setFont(ResourcePool.loadFont(fontPath));
+	}
+	
 	public void setFont(Font font) {
 		this.font = font;
 	}
@@ -47,6 +51,8 @@ public class TextPrefab extends CanvasElementPrefab {
 		}
 		if (font != null) {
 			textRenderer.setFont(font);
+		} else if (entity.getApplication().defaultFontPath != null) {
+			textRenderer.setFont(entity.getApplication().getDefaultFont());
 		}
 	}
 }

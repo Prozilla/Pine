@@ -1,11 +1,13 @@
 package dev.prozilla.pine.core.entity.prefab;
 
 import dev.prozilla.pine.core.World;
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.entity.Entity;
 
 /**
  * Abstract class representing a prefab for creating entities with predefined components and values.
  */
+@Components({ Transform.class })
 public abstract class Prefab {
 	
 	private String name;

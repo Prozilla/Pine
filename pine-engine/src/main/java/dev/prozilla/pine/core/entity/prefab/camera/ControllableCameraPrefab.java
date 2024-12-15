@@ -1,8 +1,12 @@
 package dev.prozilla.pine.core.entity.prefab.camera;
 
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.camera.CameraControlData;
+import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.prefab.Components;
 
+@Components({ CameraControlData.class, CameraData.class, Transform.class })
 public class ControllableCameraPrefab extends CameraPrefab {
 	
 	protected float movementSpeed;

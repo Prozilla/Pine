@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.system.resource.Image;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
@@ -29,6 +30,7 @@ public class Application implements Lifecycle {
 	/** Title of the application */
 	public String title;
 	public int targetFps;
+	public String defaultFontPath;
 	
 	// State
 	/** True if the application has been initialized */
@@ -461,6 +463,17 @@ public class Application implements Lifecycle {
 			System.err.println("Failed to load icons.");
 			e.printStackTrace();
 		}
+	}
+	
+	public void setDefaultFont(String fontPath) {
+		defaultFontPath = fontPath;
+	}
+	
+	public Font getDefaultFont() {
+		if (defaultFontPath == null) {
+			return null;
+		}
+		return ResourcePool.loadFont(defaultFontPath);
 	}
 	
 	/**

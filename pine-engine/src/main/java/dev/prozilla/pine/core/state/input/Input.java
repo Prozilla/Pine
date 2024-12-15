@@ -364,7 +364,7 @@ public class Input implements Lifecycle {
 	 * @param entity Entity that is blocking the cursor
 	 */
 	public void blockCursor(Entity entity) {
-		if (cursorBlocker != null) {
+		if (cursorBlocker != null || !entity.isActive()) {
 			return;
 		}
 		

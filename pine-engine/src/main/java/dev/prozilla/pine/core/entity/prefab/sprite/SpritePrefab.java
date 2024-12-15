@@ -2,8 +2,10 @@ package dev.prozilla.pine.core.entity.prefab.sprite;
 
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.prefab.Components;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 
 import java.util.Objects;
@@ -11,6 +13,7 @@ import java.util.Objects;
 /**
  * Prefab for 2D sprite entities.
  */
+@Components({ SpriteRenderer.class, Transform.class })
 public class SpritePrefab extends Prefab {
 	
 	protected Texture texture;

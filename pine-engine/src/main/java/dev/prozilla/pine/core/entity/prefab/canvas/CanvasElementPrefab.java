@@ -1,12 +1,15 @@
 package dev.prozilla.pine.core.entity.prefab.canvas;
 
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.prefab.Components;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 
 /**
  * Prefab for UI elements.
  */
+@Components({ RectTransform.class, Transform.class })
 public class CanvasElementPrefab extends Prefab {
 	
 	protected RectTransform.Anchor anchor;

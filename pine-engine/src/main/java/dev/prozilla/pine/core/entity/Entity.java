@@ -319,6 +319,10 @@ public class Entity implements Lifecycle {
 		return application.getTracker();
 	}
 	
+	public Application getApplication() {
+		return application;
+	}
+	
 	public World getWorld() {
 		return world;
 	}
