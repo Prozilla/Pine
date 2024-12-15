@@ -59,15 +59,14 @@ public class Scene implements Lifecycle {
 		initialized = false;
 	}
 	
-	protected void load(Prefab cameraPrefab) {
-		this.cameraPrefab = cameraPrefab;
-		load();
+	protected void load() {
+		load(null);
 	}
 	
 	/**
 	 * Fills the scene with a new world and camera.
 	 */
-	protected void load() throws IllegalStateException {
+	protected void load(Prefab cameraPrefab) throws IllegalStateException {
 		// Create new world
 		if (world == null) {
 			world = new World(application, this);
@@ -78,10 +77,11 @@ public class Scene implements Lifecycle {
 		if (cameraPrefab == null) {
 			cameraPrefab = new CameraPrefab();
 		}
+		this.cameraPrefab = cameraPrefab;
 		
 		// Create new camera from prefab
 		if (cameraData == null) {
-			Entity camera = world.addEntity(cameraPrefab);
+			Entity camera = world.addEntity(this.cameraPrefab);
 			cameraData = camera.getComponent(CameraData.class);
 			
 			if (cameraData == null) {

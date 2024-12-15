@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.component.sprite;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
+import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -26,6 +27,10 @@ public class GridGroup extends Component {
 	@Override
 	public String getName() {
 		return "GridGroup";
+	}
+	
+	public TileRenderer addTile(TilePrefab tilePrefab, Point coordinate) {
+		return addTile(tilePrefab.instantiate(entity.getWorld(), coordinate));
 	}
 	
 	public TileRenderer addTile(Prefab prefab) {

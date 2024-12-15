@@ -182,8 +182,12 @@ public class Entity implements Lifecycle {
 	}
 	
 	public boolean isActive() {
-//		return isActive && (transform.parent == null || transform.parent.getEntity().isActive());
-		return isActive;
+		if (transform.parent == null) {
+			return isActive;
+		} else {
+			Entity parent = transform.parent.getEntity();
+			return isActive && (parent == null || parent.isActive());
+		}
 	}
 	
 	/**
