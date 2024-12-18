@@ -20,7 +20,7 @@ public class PlayerInputHandler extends InputSystem {
 	
 	@Override
 	public void process(EntityMatch match, Input input, float deltaTime) {
-		PlayerData playerData = match.getComponent(PlayerData.class);
+		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		
 		if (!playerData.gameScene.gameOver) {
 			// Jump

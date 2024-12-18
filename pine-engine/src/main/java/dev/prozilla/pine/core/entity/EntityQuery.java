@@ -15,12 +15,12 @@ import java.util.Objects;
 public class EntityQuery implements Lifecycle {
 	
 	/** List of entities that match this query. */
-	public final ArrayList<EntityMatch> entityMatches;
+	public final ArrayList<EntityChunk> entityChunks;
 	
 	/**
 	 * Map of entity IDs to their respective match.
 	 */
-	private final Map<Integer, EntityMatch> entityIdToMatch;
+	private final Map<Integer, EntityChunk> entityChunkMap;
 	
 	// Primary query options
 	/** Entities must have components of all these types to match this query. */
@@ -50,8 +50,8 @@ public class EntityQuery implements Lifecycle {
 			throw new IllegalArgumentException("Excluded component types must not overlap with included component types.");
 		}
 		
-		entityMatches = new ArrayList<>();
-		entityIdToMatch = new HashMap<>();
+		entityChunks = new ArrayList<>();
+		entityChunkMap = new HashMap<>();
 	}
 	
 	/**
@@ -59,8 +59,8 @@ public class EntityQuery implements Lifecycle {
 	 */
 	@Override
 	public void destroy() {
-		entityMatches.clear();
-		entityIdToMatch.clear();
+		entityChunks.clear();
+		entityChunkMap.clear();
 	}
 	
 	/**
@@ -75,22 +75,22 @@ public class EntityQuery implements Lifecycle {
 			return false;
 		}
 		
-		if (entityIdToMatch.containsKey(entity.id)) {
+		if (entityChunkMap.containsKey(entity.id)) {
 			return false;
 		}
 		
-		EntityMatch entityMatch = null;
+		EntityChunk entityChunk = null;
 		try {
-			entityMatch = new EntityMatch(includedComponentTypes);
-			entityMatch.setComponents(matchComponents);
+			entityChunk = new EntityChunk(includedComponentTypes);
+			entityChunk.setComponents(matchComponents);
 		} catch (Exception e) {
 			System.err.println("Failed to create entity match.");
 			e.printStackTrace();
 			return false;
 		} finally {
-			if (entityMatch != null) {
-				entityMatches.add(entityMatch);
-				entityIdToMatch.put(entity.id, entityMatch);
+			if (entityChunk != null) {
+				entityChunks.add(entityChunk);
+				entityChunkMap.put(entity.id, entityChunk);
 			}
 		}
 		
@@ -103,13 +103,13 @@ public class EntityQuery implements Lifecycle {
 	 * @return True if this query was affected.
 	 */
 	public boolean unregister(Entity entity) {
-		if (!entityIdToMatch.containsKey(entity.id)) {
+		if (!entityChunkMap.containsKey(entity.id)) {
 			return false;
 		}
 		
-		EntityMatch match = entityIdToMatch.get(entity.id);
-		entityMatches.remove(match);
-		entityIdToMatch.remove(entity.id);
+		EntityChunk chunk = entityChunkMap.get(entity.id);
+		entityChunks.remove(chunk);
+		entityChunkMap.remove(entity.id);
 		return true;
 	}
 	

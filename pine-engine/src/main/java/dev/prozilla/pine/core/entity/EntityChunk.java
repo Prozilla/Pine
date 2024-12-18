@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.Transform;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +10,7 @@ import java.util.Map;
  * A wrapper for an entity and its components that match a system's query.
  * Provides quick access to the matching components of the entity.
  */
-public class EntityMatch {
+public class EntityChunk {
 	
 	private Entity entity;
 	/** Components of the entity that match the query. */
@@ -23,7 +24,7 @@ public class EntityMatch {
 	private boolean isActive;
 	
 	@SafeVarargs
-	public EntityMatch(Class<? extends Component>... componentTypes) {
+	public EntityChunk(Class<? extends Component>... componentTypes) {
 		this.components = new Component[componentTypes.length];
 		this.componentTypes = componentTypes;
 		
@@ -91,6 +92,10 @@ public class EntityMatch {
 		return entity;
 	}
 	
+	public Transform getTransform() {
+		return entity.transform;
+	}
+	
 	public boolean isActive() {
 		checkStatus();
 		return isActive;
@@ -129,6 +134,6 @@ public class EntityMatch {
 			componentNames[i] = componentClass.getSimpleName();
 		}
 		
-		System.out.printf("EntityMatch: %s: [%s] (%s)%n", entityName, String.join(", ", componentNames), componentCount);
+		System.out.printf("EntityChunk: %s: [%s] (%s)%n", entityName, String.join(", ", componentNames), componentCount);
 	}
 }

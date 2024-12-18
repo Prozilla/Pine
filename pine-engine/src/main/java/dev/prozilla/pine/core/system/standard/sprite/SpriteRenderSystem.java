@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.system.standard.sprite;
 
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.Entity;
@@ -19,8 +20,9 @@ public class SpriteRenderSystem extends RenderSystemBase {
 	public void render(Renderer renderer) {
 		CameraData camera = scene.getCameraData();
 		
-		forEach(match -> {
-			SpriteRenderer spriteRenderer = match.getComponent(SpriteRenderer.class);
+		forEach(chunk -> {
+			Transform transform = chunk.getTransform();
+			SpriteRenderer spriteRenderer = chunk.getComponent(SpriteRenderer.class);
 			Entity entity = spriteRenderer.entity;
 			
 			// Calculate world position
@@ -35,11 +37,13 @@ public class SpriteRenderSystem extends RenderSystemBase {
 			// Apply zoom scale
 			renderer.setScale(spriteRenderer.scale * camera.getZoom());
 			
+//			chunk.getEntity().print();
+			
 			// Draw cropped and rotated texture
 			if (!spriteRenderer.cropToRegion) {
-				renderer.drawRotatedTexture(spriteRenderer.texture, x, y, spriteRenderer.color, spriteRenderer.rotation);
+				renderer.drawRotatedTexture(spriteRenderer.texture, x, y, transform.getDepth(), spriteRenderer.color, spriteRenderer.rotation);
 			} else {
-				renderer.drawRotatedTextureRegion(spriteRenderer.texture, x, y,
+				renderer.drawRotatedTextureRegion(spriteRenderer.texture, x, y, transform.getDepth(),
 				 spriteRenderer.regionX, spriteRenderer.regionY,
 				 spriteRenderer.regionWidth, spriteRenderer.regionHeight,
 				 spriteRenderer.color, spriteRenderer.rotation);

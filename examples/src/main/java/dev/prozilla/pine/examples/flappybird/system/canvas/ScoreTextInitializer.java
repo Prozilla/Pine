@@ -19,8 +19,8 @@ public class ScoreTextInitializer extends InitSystemBase {
 	public void init() {
 		GameScene gameScene = (GameScene)scene;
 		
-		forEach(match -> {
-			TextRenderer textRenderer = match.getComponent(TextRenderer.class);
+		forEach(chunk -> {
+			TextRenderer textRenderer = chunk.getComponent(TextRenderer.class);
 			
 			// Set font
 			textRenderer.setFont(gameScene.font);

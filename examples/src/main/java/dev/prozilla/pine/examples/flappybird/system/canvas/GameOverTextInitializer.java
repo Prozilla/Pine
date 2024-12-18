@@ -20,9 +20,9 @@ public class GameOverTextInitializer extends InitSystemBase {
 	public void init() {
 		GameScene gameScene = (GameScene)scene;
 		
-		forEach(match -> {
-			Entity entity = match.getEntity();
-			TextRenderer textRenderer = match.getComponent(TextRenderer.class);
+		forEach(chunk -> {
+			Entity entity = chunk.getEntity();
+			TextRenderer textRenderer = chunk.getComponent(TextRenderer.class);
 			
 			// Set font
 			textRenderer.setFont(gameScene.font);

@@ -362,13 +362,14 @@ public class Entity implements Lifecycle {
 			componentNames[i] = componentClass.getSimpleName();
 		}
 		
-		System.out.printf("%s: %s (%s, %s) [%s] (%s)%n",
+		System.out.printf("%s: %s (%s, %s) [%s] (%s) {%S}%n",
 			className,
 			getName(),
 			transform.getGlobalX(),
 			transform.getGlobalY(),
 			String.join(", ", componentNames),
-			componentCount
+			componentCount,
+			transform.getDepth()
 		);
 	}
 }

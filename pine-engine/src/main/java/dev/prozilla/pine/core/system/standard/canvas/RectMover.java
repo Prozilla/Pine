@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system.standard.canvas;
 
 import dev.prozilla.pine.core.component.canvas.RectTransform;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 
 /**
@@ -14,8 +14,8 @@ public class RectMover extends UpdateSystem {
 	}
 	
 	@Override
-	protected void process(EntityMatch match, float deltaTime) {
-		RectTransform rect = match.getComponent(RectTransform.class);
+	protected void process(EntityChunk chunk, float deltaTime) {
+		RectTransform rect = chunk.getComponent(RectTransform.class);
 		anchorRect(rect);
 	}
 	

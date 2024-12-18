@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system.input;
 
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.system.SystemBuilder;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
@@ -37,8 +37,8 @@ public class InputSystemBuilder extends SystemBuilder<InputSystem, InputSystemBu
 		
 		InputSystem inputSystem = new InputSystem(componentTypes) {
 			@Override
-			protected void process(EntityMatch match, Input input, float deltaTime) {
-				callback.run(match, input, deltaTime);
+			protected void process(EntityChunk chunk, Input input, float deltaTime) {
+				callback.run(chunk, input, deltaTime);
 			}
 		};
 		
@@ -53,7 +53,7 @@ public class InputSystemBuilder extends SystemBuilder<InputSystem, InputSystemBu
 		 * @param match Entity that matches this system's query
 		 * @param deltaTime Delta time in seconds
 		 */
-		void run(EntityMatch match, Input input, float deltaTime);
+		void run(EntityChunk chunk, Input input, float deltaTime);
 		
 	}
 }

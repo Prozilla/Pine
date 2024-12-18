@@ -18,7 +18,7 @@ public class PipesMover extends UpdateSystem {
 	
 	@Override
 	protected void process(EntityMatch match, float deltaTime) {
-		PipesData pipesData = match.getComponent(PipesData.class);
+		PipesData pipesData = chunk.getComponent(PipesData.class);
 		
 		GameScene gameScene = pipesData.gameScene;
 		

@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system.update;
 
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.SystemBuilder;
 
 import java.util.Objects;
@@ -35,8 +35,8 @@ public class UpdateSystemBuilder extends SystemBuilder<UpdateSystem, UpdateSyste
 		
 		UpdateSystem updateSystem = new UpdateSystem(componentTypes) {
 			@Override
-			protected void process(EntityMatch match, float deltaTime) {
-				callback.run(match, deltaTime);
+			protected void process(EntityChunk chunk, float deltaTime) {
+				callback.run(chunk, deltaTime);
 			}
 		};
 		
@@ -51,7 +51,7 @@ public class UpdateSystemBuilder extends SystemBuilder<UpdateSystem, UpdateSyste
 		 * @param match Entity that matches this system's query
 		 * @param deltaTime Delta time in seconds
 		 */
-		void run(EntityMatch match, float deltaTime);
+		void run(EntityChunk chunk, float deltaTime);
 		
 	}
 }

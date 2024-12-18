@@ -21,8 +21,8 @@ public class CameraInitializer extends InitSystemBase {
 		int width = application.getWindow().getWidth();
 		int height = application.getWindow().getHeight();
 		
-		forEach(match -> {
-			CameraData cameraData = match.getComponent(CameraData.class);
+		forEach(chunk -> {
+			CameraData cameraData = chunk.getComponent(CameraData.class);
 			
 			renderBackgroundColor(cameraData.backgroundColor);
 			cameraData.setSize(width, height);

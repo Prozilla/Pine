@@ -18,9 +18,9 @@ public class PipeInitializer extends InitSystem {
 	
 	@Override
 	protected void process(EntityMatch match) {
-		PipeData pipeData = match.getComponent(PipeData.class);
-		SpriteRenderer spriteRenderer = match.getComponent(SpriteRenderer.class);
-		Transform transform = match.getComponent(Transform.class);
+		PipeData pipeData = chunk.getComponent(PipeData.class);
+		SpriteRenderer spriteRenderer = chunk.getComponent(SpriteRenderer.class);
+		Transform transform = chunk.getComponent(Transform.class);
 		
 		// Set sprite properties
 		spriteRenderer.setRegion(0, 0, PipeData.WIDTH, PipeData.HEIGHT);

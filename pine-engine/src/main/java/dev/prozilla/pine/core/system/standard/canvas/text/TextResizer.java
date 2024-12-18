@@ -3,7 +3,7 @@ package dev.prozilla.pine.core.system.standard.canvas.text;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.component.canvas.TextButtonRenderer;
 import dev.prozilla.pine.core.component.canvas.TextRenderer;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 
 public class TextResizer extends UpdateSystem {
@@ -14,9 +14,9 @@ public class TextResizer extends UpdateSystem {
 	}
 	
 	@Override
-	protected void process(EntityMatch match, float deltaTime) {
-		TextRenderer textRenderer = match.getComponent(TextRenderer.class);
-		RectTransform rect = match.getComponent(RectTransform.class);
+	protected void process(EntityChunk chunk, float deltaTime) {
+		TextRenderer textRenderer = chunk.getComponent(TextRenderer.class);
+		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
 		rect.width = textRenderer.width;
 		rect.height = textRenderer.height;

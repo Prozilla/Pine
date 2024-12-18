@@ -22,7 +22,7 @@ public class PipesInitializer extends InitSystem {
 	
 	@Override
 	protected void process(EntityMatch match) {
-		PipesData pipesData = match.getComponent(PipesData.class);
+		PipesData pipesData = chunk.getComponent(PipesData.class);
 		
 		// Store reference to scene
 		pipesData.gameScene = (GameScene)scene;

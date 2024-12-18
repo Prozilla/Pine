@@ -14,7 +14,7 @@ public class PlayerInput extends InputSystem {
 	
 	@Override
 	protected void process(EntityMatch match, Input input, float deltaTime) {
-		PlayerData playerData = match.getComponent(PlayerData.class);
+		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		
 		// Change player direction based on input and previous direction
 		if ((input.getKeyDown(Key.UP_ARROW) || input.getKeyDown(Key.W)) && playerData.previousMoveDirection != 2) {

@@ -17,8 +17,8 @@ public class CanvasResizer extends UpdateSystemBase {
 		int width = application.getWindow().getWidth();
 		int height = application.getWindow().getHeight();
 		
-		forEach(match -> {
-			CanvasRenderer canvasRenderer = match.getComponent(CanvasRenderer.class);
+		forEach(chunk -> {
+			CanvasRenderer canvasRenderer = chunk.getComponent(CanvasRenderer.class);
 			
 			canvasRenderer.width = width;
 			canvasRenderer.height = height;

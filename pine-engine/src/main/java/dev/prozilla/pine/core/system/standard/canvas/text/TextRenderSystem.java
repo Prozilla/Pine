@@ -2,10 +2,11 @@ package dev.prozilla.pine.core.system.standard.canvas.text;
 
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.text.Font;
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.component.canvas.TextButtonRenderer;
 import dev.prozilla.pine.core.component.canvas.TextRenderer;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderSystem;
 
@@ -20,19 +21,20 @@ public class TextRenderSystem extends RenderSystem {
 	}
 	
 	@Override
-	public void process(EntityMatch match, Renderer renderer) {
-		TextRenderer textRenderer = match.getComponent(TextRenderer.class);
-		RectTransform rect = match.getComponent(RectTransform.class);
-		renderText(renderer, textRenderer, rect);
+	public void process(EntityChunk chunk, Renderer renderer) {
+		Transform transform = chunk.getTransform();
+		TextRenderer textRenderer = chunk.getComponent(TextRenderer.class);
+		RectTransform rect = chunk.getComponent(RectTransform.class);
+		renderText(renderer, textRenderer, rect, transform.getDepth());
 	}
 	
-	public static void renderText(Renderer renderer, TextRenderer textRenderer, RectTransform rect) {
-		renderText(renderer, textRenderer, rect.x, rect.y, textRenderer.color);
+	public static void renderText(Renderer renderer, TextRenderer textRenderer, RectTransform rect, float z) {
+		renderText(renderer, textRenderer, rect.x, rect.y, z, textRenderer.color);
 	}
 	
-	public static void renderText(Renderer renderer, TextRenderer textRenderer, int x, int y, Color color) {
+	public static void renderText(Renderer renderer, TextRenderer textRenderer, int x, int y, float z, Color color) {
 		renderText(renderer, textRenderer.text, textRenderer.font, x, y,
-			textRenderer.width, textRenderer.height, color);
+			textRenderer.width, textRenderer.height, z, color);
 	}
 	
 	/**
@@ -40,15 +42,15 @@ public class TextRenderSystem extends RenderSystem {
 	 * @param x X position
 	 * @param y Y position
 	 */
-	public static void renderText(Renderer renderer, String text, Font font, int x, int y, int width, int height, Color color) {
+	public static void renderText(Renderer renderer, String text, Font font, int x, int y, int width, int height, float z, Color color) {
 		if (text.isBlank() || width == 0 || height == 0) {
 			return;
 		}
 		
 		if (font == null) {
-			renderer.drawText(text, x, y, color);
+			renderer.drawText(text, x, y, z, color);
 		} else {
-			renderer.drawText(font, text, x, y, color);
+			renderer.drawText(font, text, x, y, z, color);
 		}
 	}
 }

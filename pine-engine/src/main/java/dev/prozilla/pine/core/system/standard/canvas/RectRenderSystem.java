@@ -1,8 +1,9 @@
 package dev.prozilla.pine.core.system.standard.canvas;
 
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.canvas.RectRenderer;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderSystem;
 
@@ -16,15 +17,16 @@ public class RectRenderSystem extends RenderSystem {
 	}
 	
 	@Override
-	public void process(EntityMatch match, Renderer renderer) {
-		RectRenderer rectRenderer = match.getComponent(RectRenderer.class);
-		RectTransform rect = match.getComponent(RectTransform.class);
+	public void process(EntityChunk chunk, Renderer renderer) {
+		Transform transform = chunk.getTransform();
+		RectRenderer rectRenderer = chunk.getComponent(RectRenderer.class);
+		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
 		if (rect.width != 0 && rect.height != 0) {
 			if (rectRenderer.color == null) {
-				renderer.drawRect(rect.x, rect.y, rect.width, rect.height);
+				renderer.drawRect(rect.x, rect.y, transform.getDepth(), rect.width, rect.height);
 			} else {
-				renderer.drawRect(rect.x, rect.y, rect.width, rect.height, rectRenderer.color);
+				renderer.drawRect(rect.x, rect.y, transform.getDepth(), rect.width, rect.height, rectRenderer.color);
 			}
 		}
 	}

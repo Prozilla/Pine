@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system.render;
 
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
 
 /**
@@ -16,14 +16,14 @@ public abstract class RenderSystem extends RenderSystemBase {
 	
 	@Override
 	public final void render(Renderer renderer) {
-		forEach(match -> {
-			process(match, renderer);
+		forEach(chunk -> {
+			process(chunk, renderer);
 		});
 	}
 	
 	/**
 	 * Renders a single entity, each frame.
-	 * @param match Entity that matches this system's query
+	 * @param chunk Entity that matches this system's query
 	 */
-	protected abstract void process(EntityMatch match, Renderer renderer);
+	protected abstract void process(EntityChunk chunk, Renderer renderer);
 }

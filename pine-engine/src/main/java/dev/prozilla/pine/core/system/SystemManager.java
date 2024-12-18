@@ -134,6 +134,13 @@ public class SystemManager extends ECSManager {
 		return added;
 	}
 	
+	/**
+	 * Updates all systems that depend on entity depth.
+	 */
+	public void updateEntityDepth() {
+		renderSystems.forEach(RenderSystemBase::sort);
+	}
+	
 	public boolean isInitialized() {
 		return initialized;
 	}

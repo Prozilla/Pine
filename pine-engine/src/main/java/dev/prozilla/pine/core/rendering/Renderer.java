@@ -11,13 +11,14 @@ import org.lwjgl.system.MemoryUtil;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.system.resource.text.Font;
 
-import java.awt.*;
+import java.awt.FontFormatException;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.stream.IntStream;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL14.glBlendFuncSeparate;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
@@ -53,9 +54,11 @@ public class Renderer implements Lifecycle {
     private float renderScale;
     
     // Constants
-    private final static int STRIDE_LENGTH = 9;
+    private final static int STRIDE_LENGTH = 10;
     /** Matches the length of <code>uTextures</code> in the fragment shader. */
     public final static int MAX_TEXTURES = 32;
+    /** The amount of strides to fit into a single vertex buffer. */
+    private final static int VERTEX_BUFFER_SIZE = 1024;
     
     // Paths
     private final static String VERTEX_SHADER_PATH = "/shaders/default.vert";
@@ -75,6 +78,11 @@ public class Renderer implements Lifecycle {
         // Enable blending
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
+        // Enable depth test
+        // TO DO: improve depth handling to avoid sorting renderers and use only depth test instead
+        glEnable (GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
 
         // Create fonts
         try {
@@ -181,7 +189,7 @@ public class Renderer implements Lifecycle {
      * @param y    Y coordinate of the text position
      */
     public void drawDebugText(CharSequence text, float x, float y) {
-        debugFont.drawText(this, text, x, y);
+        debugFont.drawText(this, text, x, y, 0);
     }
     
     /**
@@ -191,8 +199,8 @@ public class Renderer implements Lifecycle {
      * @param y    Y coordinate of the text position
      * @param c    Color to use
      */
-    public void drawDebugText(CharSequence text, float x, float y, dev.prozilla.pine.common.system.resource.Color c) {
-        debugFont.drawText(this, text, x, y, c);
+    public void drawDebugText(CharSequence text, float x, float y, Color c) {
+        debugFont.drawText(this, text, x, y, 0, c);
     }
     
     public int getTextWidth(CharSequence text) {
@@ -221,8 +229,8 @@ public class Renderer implements Lifecycle {
         return font.getHeight(text);
     }
 
-    public void drawText(CharSequence text, float x, float y) {
-        drawText(defaultFont, text, x, y);
+    public void drawText(CharSequence text, float x, float y, float z) {
+        drawText(defaultFont, text, x, y, z);
     }
     
     /**
@@ -231,12 +239,12 @@ public class Renderer implements Lifecycle {
      * @param x    X coordinate of the text position
      * @param y    Y coordinate of the text position
      */
-    public void drawText(Font font, CharSequence text, float x, float y) {
-        font.drawText(this, text, x, y);
+    public void drawText(Font font, CharSequence text, float x, float y, float z) {
+        font.drawText(this, text, x, y, z);
     }
     
-    public void drawText(CharSequence text, float x, float y, dev.prozilla.pine.common.system.resource.Color c) {
-        drawText(defaultFont, text, x, y, c);
+    public void drawText(CharSequence text, float x, float y, float z, Color c) {
+        drawText(defaultFont, text, x, y, z, c);
     }
 
     /**
@@ -246,8 +254,8 @@ public class Renderer implements Lifecycle {
      * @param y    Y coordinate of the text position
      * @param c    Color to use
      */
-    public void drawText(Font font, CharSequence text, float x, float y, dev.prozilla.pine.common.system.resource.Color c) {
-        font.drawText(this, text, x, y, c);
+    public void drawText(Font font, CharSequence text, float x, float y, float z, Color c) {
+        font.drawText(this, text, x, y, z, c);
     }
     
     /**
@@ -257,8 +265,8 @@ public class Renderer implements Lifecycle {
      * @param width Width of the rectangle
      * @param height Height of the rectangle
      */
-    public void drawRect(float x, float y, float width, float height) {
-        drawRect(x, y, width, height, dev.prozilla.pine.common.system.resource.Color.WHITE);
+    public void drawRect(float x, float y, float z, float width, float height) {
+        drawRect(x, y, z, width, height, Color.WHITE);
     }
     
     /**
@@ -269,22 +277,22 @@ public class Renderer implements Lifecycle {
      * @param height Height of the rectangle
      * @param c Color
      */
-    public void drawRect(float x, float y, float width, float height, dev.prozilla.pine.common.system.resource.Color c) {
+    public void drawRect(float x, float y, float z, float width, float height, Color c) {
         float x2 = x + width;
         float y2 = y + height;
         
         Texture.currentTextureId = null;
         
-        drawTextureRegion(x, y, x2, y2, 0, 0, 0, 0, c);
+        drawTextureRegion(x, y, x2, y2, z, 0, 0, 0, 0, c);
     }
 
-    public void drawRotatedTexture(Texture texture, float x, float y, float r) {
-        drawRotatedTexture(texture, x, y, dev.prozilla.pine.common.system.resource.Color.WHITE, r);
+    public void drawRotatedTexture(Texture texture, float x, float y, float z, float r) {
+        drawRotatedTexture(texture, x, y, z, Color.WHITE, r);
     }
     
-    public void drawRotatedTexture(Texture texture, float x, float y, dev.prozilla.pine.common.system.resource.Color c, float r) {
+    public void drawRotatedTexture(Texture texture, float x, float y, float z, Color c, float r) {
         if (r == 0) {
-            drawTexture(texture, x, y, c);
+            drawTexture(texture, x, y, z, c);
             return;
         }
         
@@ -300,7 +308,7 @@ public class Renderer implements Lifecycle {
         
         texture.bind();
         
-        drawRotatedTextureRegion(x, y, x2, y2, s1, t1, s2, t2, c, r);
+        drawRotatedTextureRegion(x, y, x2, y2, z, s1, t1, s2, t2, c, r);
     }
     
     /**
@@ -309,8 +317,8 @@ public class Renderer implements Lifecycle {
      * @param x       X position of the texture
      * @param y       Y position of the texture
      */
-    public void drawTexture(Texture texture, float x, float y) {
-        drawTexture(texture, x, y, dev.prozilla.pine.common.system.resource.Color.WHITE);
+    public void drawTexture(Texture texture, float x, float y, float z) {
+        drawTexture(texture, x, y, z, Color.WHITE);
     }
 
     /**
@@ -321,7 +329,7 @@ public class Renderer implements Lifecycle {
      * @param y       Y position of the texture
      * @param c       The color to use
      */
-    public void drawTexture(Texture texture, float x, float y, dev.prozilla.pine.common.system.resource.Color c) {
+    public void drawTexture(Texture texture, float x, float y, float z, Color c) {
         // Vertex positions
 	    float x2 = x + texture.getWidth() * renderScale;
         float y2 = y + texture.getHeight() * renderScale;
@@ -334,16 +342,16 @@ public class Renderer implements Lifecycle {
         
         texture.bind();
         
-        drawTextureRegion(x, y, x2, y2, s1, t1, s2, t2, c);
+        drawTextureRegion(x, y, x2, y2, s1, t1, z, s2, t2, c);
     }
     
-    public void drawRotatedTextureRegion(Texture texture, float x, float y, float regX, float regY, float regWidth, float regHeight, float r) {
-        drawRotatedTextureRegion(texture, x, y, regX, regY, regWidth, regHeight, dev.prozilla.pine.common.system.resource.Color.WHITE, r);
+    public void drawRotatedTextureRegion(Texture texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, float r) {
+        drawRotatedTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, Color.WHITE, r);
     }
     
-    public void drawRotatedTextureRegion(Texture texture, float x, float y, float regX, float regY, float regWidth, float regHeight, dev.prozilla.pine.common.system.resource.Color c, float r) {
+    public void drawRotatedTextureRegion(Texture texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c, float r) {
         if (r == 0) {
-            drawTextureRegion(texture, x, y, regX, regY, regWidth, regHeight, c);
+            drawTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, c);
             return;
         }
         
@@ -380,16 +388,16 @@ public class Renderer implements Lifecycle {
         texture.bind();
         
         // Delegate to the rotation drawing method
-        drawRotatedTextureRegion(adjustedX, adjustedY, x2, y2, s1, t1, s2, t2, c, r);
+        drawRotatedTextureRegion(adjustedX, adjustedY, x2, y2, s1, t1, z, s2, t2, c, r);
     }
     
-    public void drawRotatedTextureRegion(float x1, float y1, float x2, float y2, float s1, float t1, float s2, float t2, float r) {
-        drawRotatedTextureRegion(x1, y1, x2, y2, s1, t1, s2, t2, dev.prozilla.pine.common.system.resource.Color.WHITE, r);
+    public void drawRotatedTextureRegion(float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, float r) {
+        drawRotatedTextureRegion(x1, y1, x2, y2, z, s1, t1, s2, t2, Color.WHITE, r);
     }
     
-    public void drawRotatedTextureRegion(float x1, float y1, float x2, float y2, float s1, float t1, float s2, float t2, dev.prozilla.pine.common.system.resource.Color c, float r) {
+    public void drawRotatedTextureRegion(float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, Color c, float r) {
         if (r == 0) {
-            drawTextureRegion(x1, y1, x2, y2, s1, t1, s2, t2, c);
+            drawTextureRegion(x1, y1, x2, y2, z, s1, t1, s2, t2, c);
             return;
         }
         
@@ -416,7 +424,7 @@ public class Renderer implements Lifecycle {
         float newX4 = cosAngle * (x1 - centerX) - sinAngle * (y2 - centerY) + centerX;
         float newY4 = sinAngle * (x1 - centerX) + cosAngle * (y2 - centerY) + centerY;
         
-        drawTextureRegion(newX1, newY1, newX2, newY2, newX3, newY3, newX4, newY4, s1, t1, s2, t2, c);
+        drawTextureRegion(newX1, newY1, newX2, newY2, newX3, newY3, newX4, newY4, z, s1, t1, s2, t2, c);
     }
 
     /**
@@ -429,8 +437,8 @@ public class Renderer implements Lifecycle {
      * @param regWidth  Width of the texture region
      * @param regHeight Height of the texture region
      */
-    public void drawTextureRegion(Texture texture, float x, float y, float regX, float regY, float regWidth, float regHeight) {
-        drawTextureRegion(texture, x, y, regX, regY, regWidth, regHeight, dev.prozilla.pine.common.system.resource.Color.WHITE);
+    public void drawTextureRegion(Texture texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight) {
+        drawTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, Color.WHITE);
     }
 
     /**
@@ -444,7 +452,7 @@ public class Renderer implements Lifecycle {
      * @param regHeight Height of the texture region
      * @param c         The color to use
      */
-    public void drawTextureRegion(Texture texture, float x, float y, float regX, float regY, float regWidth, float regHeight, dev.prozilla.pine.common.system.resource.Color c) {
+    public void drawTextureRegion(Texture texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c) {
         // Vertex positions
 	    float x2 = x + regWidth * renderScale;
         float y2 = y + regHeight * renderScale;
@@ -462,7 +470,7 @@ public class Renderer implements Lifecycle {
         
         texture.bind();
         
-        drawTextureRegion(x, y, x2, y2, s1, t1, s2, t2, c);
+        drawTextureRegion(x, y, x2, y2, z, s1, t1, s2, t2, c);
     }
 
     /**
@@ -476,8 +484,8 @@ public class Renderer implements Lifecycle {
      * @param s2 Top right s coordinate
      * @param t2 Top right t coordinate
      */
-    public void drawTextureRegion(float x1, float y1, float x2, float y2, float s1, float t1, float s2, float t2) {
-        drawTextureRegion(x1, y1, x2, y2, s1, t1, s2, t2, dev.prozilla.pine.common.system.resource.Color.WHITE);
+    public void drawTextureRegion(float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2) {
+        drawTextureRegion(x1, y1, x2, y2, z, s1, t1, s2, t2, Color.WHITE);
     }
 
     /**
@@ -492,14 +500,15 @@ public class Renderer implements Lifecycle {
      * @param t2 Top right t coordinate
      * @param c  The color to use
      */
-    public void drawTextureRegion(float x1, float y1, float x2, float y2, float s1, float t1, float s2, float t2, dev.prozilla.pine.common.system.resource.Color c) {
-        drawTextureRegion(x1, y1, x1, y2, x2, y2, x2, y1, s1, t1, s2, t2, c);
+    public void drawTextureRegion(float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, Color c) {
+        drawTextureRegion(x1, y1, x1, y2, x2, y2, x2, y1, z, s1, t1, s2, t2, c);
     }
     
     /**
      * Draws a texture region on specified coordinates.
      */
-    public void drawTextureRegion(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float s1, float t1, float s2, float t2, Color c) {
+    public void drawTextureRegion(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float z,
+        float s1, float t1, float s2, float t2, Color c) {
         totalVertices += 6;
         
         if (outOfBounds(x1, y1, x2, y2, x3, y3, x4, y4)) {
@@ -540,13 +549,13 @@ public class Renderer implements Lifecycle {
         y4 = Math.round(y4);
         
         // Push the vertices to the buffer (with the correct order for a quad)
-        vertices.put(x1).put(y1).put(r).put(g).put(b).put(a).put(s1).put(t1).put(textureId);
-        vertices.put(x2).put(y2).put(r).put(g).put(b).put(a).put(s1).put(t2).put(textureId);
-        vertices.put(x3).put(y3).put(r).put(g).put(b).put(a).put(s2).put(t2).put(textureId);
+        vertices.put(x1).put(y1).put(z).put(r).put(g).put(b).put(a).put(s1).put(t1).put(textureId);
+        vertices.put(x2).put(y2).put(z).put(r).put(g).put(b).put(a).put(s1).put(t2).put(textureId);
+        vertices.put(x3).put(y3).put(z).put(r).put(g).put(b).put(a).put(s2).put(t2).put(textureId);
         
-        vertices.put(x1).put(y1).put(r).put(g).put(b).put(a).put(s1).put(t1).put(textureId);
-        vertices.put(x3).put(y3).put(r).put(g).put(b).put(a).put(s2).put(t2).put(textureId);
-        vertices.put(x4).put(y4).put(r).put(g).put(b).put(a).put(s2).put(t1).put(textureId);
+        vertices.put(x1).put(y1).put(z).put(r).put(g).put(b).put(a).put(s1).put(t1).put(textureId);
+        vertices.put(x3).put(y3).put(z).put(r).put(g).put(b).put(a).put(s2).put(t2).put(textureId);
+        vertices.put(x4).put(y4).put(z).put(r).put(g).put(b).put(a).put(s2).put(t1).put(textureId);
         
         // Increment the number of vertices
         numVertices += 6;
@@ -610,7 +619,7 @@ public class Renderer implements Lifecycle {
         vbo.bind(GL_ARRAY_BUFFER);
 
         // Create FloatBuffer
-        vertices = MemoryUtil.memAllocFloat(1024 * STRIDE_LENGTH);
+        vertices = MemoryUtil.memAllocFloat(VERTEX_BUFFER_SIZE * STRIDE_LENGTH);
 
         // Upload null data to allocate storage for the VBO
         long size = (long) vertices.capacity() * Float.BYTES;
@@ -704,7 +713,7 @@ public class Renderer implements Lifecycle {
             throw new RuntimeException("Vertex position pointer not found. (vPosition)");
         }
         program.enableVertexAttribute(posAttrib);
-        program.pointVertexAttribute(posAttrib, 2, STRIDE_LENGTH * Float.BYTES, 0);
+        program.pointVertexAttribute(posAttrib, 3, STRIDE_LENGTH * Float.BYTES, 0);
 
         // Specify color pointer
         int colAttrib = program.getAttributeLocation("vColor");
@@ -712,7 +721,7 @@ public class Renderer implements Lifecycle {
             throw new RuntimeException("Color pointer not found. (vColor)");
         }
         program.enableVertexAttribute(colAttrib);
-        program.pointVertexAttribute(colAttrib, 4, STRIDE_LENGTH * Float.BYTES, 2 * Float.BYTES);
+        program.pointVertexAttribute(colAttrib, 4, STRIDE_LENGTH * Float.BYTES, 3 * Float.BYTES);
 
         // Specify texture pointer
         int texAttrib = program.getAttributeLocation("vTexCoords");
@@ -720,7 +729,7 @@ public class Renderer implements Lifecycle {
             throw new RuntimeException("Texture pointer not found. (vTexCoords)");
         }
         program.enableVertexAttribute(texAttrib);
-        program.pointVertexAttribute(texAttrib, 2, STRIDE_LENGTH * Float.BYTES, 6 * Float.BYTES);
+        program.pointVertexAttribute(texAttrib, 2, STRIDE_LENGTH * Float.BYTES, 7 * Float.BYTES);
         
         // Specify texture ID pointer
         int texIdAttrib = program.getAttributeLocation("vTexId");
@@ -728,7 +737,7 @@ public class Renderer implements Lifecycle {
             throw new RuntimeException("Texture ID pointer not found. (vTexId)");
         }
         program.enableVertexAttribute(texIdAttrib);
-        program.pointVertexAttribute(texIdAttrib, 1, STRIDE_LENGTH * Float.BYTES, 8 * Float.BYTES);
+        program.pointVertexAttribute(texIdAttrib, 1, STRIDE_LENGTH * Float.BYTES, 9 * Float.BYTES);
     }
 
     public int getWidth() {

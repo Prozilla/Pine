@@ -3,6 +3,7 @@ package dev.prozilla.pine.core;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.ComponentManager;
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityManager;
 import dev.prozilla.pine.core.entity.EntityQueryPool;
@@ -19,7 +20,9 @@ import dev.prozilla.pine.core.system.standard.canvas.text.*;
 import dev.prozilla.pine.core.system.standard.sprite.SpriteRenderSystem;
 import dev.prozilla.pine.core.system.standard.sprite.TileMover;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An isolated collection of entities, components and systems that live inside a scene.
@@ -36,6 +39,8 @@ public class World implements Lifecycle {
 	public final Scene scene;
 	
 	public boolean initialized;
+	
+	public int maxDepth;
 	
 	/**
 	 * List of all systems that are added during initialization.
@@ -137,6 +142,7 @@ public class World implements Lifecycle {
 			throw new IllegalStateException("World has already been initialized.");
 		}
 		
+		calculateDepth();
 		systemManager.init(window);
 		initialized = true;
 	}
@@ -207,6 +213,9 @@ public class World implements Lifecycle {
 			return entity;
 		}
 		entityManager.addEntity(entity);
+		if (initialized) {
+			calculateDepth();
+		}
 		systemManager.register(entity);
 		application.getTracker().addEntity();
 		return entity;
@@ -214,6 +223,9 @@ public class World implements Lifecycle {
 	
 	public void removeEntity(Entity entity) {
 		entityManager.removeEntity(entity);
+		if (initialized) {
+			calculateDepth();
+		}
 		systemManager.unregister(entity);
 		componentManager.removeComponents(entity);
 		application.getTracker().removeEntity();
@@ -271,5 +283,26 @@ public class World implements Lifecycle {
 		}
 		
 		return system;
+	}
+	
+	public void calculateDepth() {
+		ArrayList<Transform> rootParents = new ArrayList<>();
+		
+		// Get root parent transforms
+		for (Entity entity : entityManager.getEntities()) {
+			if (entity.transform.parent == null) {
+				rootParents.add(entity.transform);
+			}
+		}
+		
+		// Calculate depth for each root parent
+		int depth = 0;
+		for (Transform rootParent : rootParents) {
+			depth = rootParent.calculateDepth(depth);
+		}
+		maxDepth = depth;
+		
+		// Update systems that use depth
+		systemManager.updateEntityDepth();
 	}
 }

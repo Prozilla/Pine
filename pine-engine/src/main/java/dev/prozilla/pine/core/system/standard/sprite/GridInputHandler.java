@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system.standard.sprite;
 
 import dev.prozilla.pine.core.component.sprite.GridGroup;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.system.input.InputSystem;
 
@@ -14,8 +14,8 @@ public class GridInputHandler extends InputSystem {
 	}
 	
 	@Override
-	protected void process(EntityMatch match, Input input, float deltaTime) {
-		GridGroup gridGroup = match.getComponent(GridGroup.class);
+	protected void process(EntityChunk chunk, Input input, float deltaTime) {
+		GridGroup gridGroup = chunk.getComponent(GridGroup.class);
 		
 		float[] cursor = getInput().getWorldCursor();
 		

@@ -21,10 +21,10 @@ public class CameraControlInitializer extends InitSystemBase {
 	public void init() {
 		Input input = application.getInput();
 		
-		forEach(match -> {
-			Transform transform = match.getComponent(Transform.class);
-			CameraData cameraData = match.getComponent(CameraData.class);
-			CameraControlData cameraControlData = match.getComponent(CameraControlData.class);
+		forEach(chunk -> {
+			Transform transform = chunk.getComponent(Transform.class);
+			CameraData cameraData = chunk.getComponent(CameraData.class);
+			CameraControlData cameraControlData = chunk.getComponent(CameraControlData.class);
 			
 			KeyBindings<CameraControlData.Action> keyBindings = new KeyBindings<>(input);
 			

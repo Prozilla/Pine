@@ -15,9 +15,9 @@ public class PlayerHeadMover extends UpdateSystem {
 	
 	@Override
 	protected void process(EntityMatch match, float deltaTime) {
-		PlayerData playerData = match.getComponent(PlayerData.class);
-		Transform transform = match.getComponent(Transform.class);
-		SpriteRenderer sprite = match.getComponent(SpriteRenderer.class);
+		PlayerData playerData = chunk.getComponent(PlayerData.class);
+		Transform transform = chunk.getComponent(Transform.class);
+		SpriteRenderer sprite = chunk.getComponent(SpriteRenderer.class);
 		
 		// Check if it's time to move
 		playerData.timeUntilNextMove -= deltaTime;
