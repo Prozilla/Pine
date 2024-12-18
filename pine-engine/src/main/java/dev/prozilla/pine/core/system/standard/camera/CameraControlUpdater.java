@@ -22,6 +22,13 @@ public class CameraControlUpdater extends UpdateSystem {
 		CameraData cameraData = chunk.getComponent(CameraData.class);
 		CameraControlData cameraControlData = chunk.getComponent(CameraControlData.class);
 		
+		if (cameraControlData.disableControlsOnPause && application.isPaused) {
+			transform.x = cameraControlData.targetX;
+			transform.y = cameraControlData.targetY;
+			cameraData.zoomFactor = cameraControlData.targetZoom;
+			return;
+		}
+		
 		if (cameraControlData.velocityDamping == 0) {
 			transform.setPosition(cameraControlData.targetX, cameraControlData.targetY);
 			cameraData.zoomFactor = cameraControlData.targetZoom;

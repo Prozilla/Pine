@@ -11,6 +11,7 @@ public class ControllableCameraPrefab extends CameraPrefab {
 	
 	protected float movementSpeed;
 	protected float velocityDamping;
+	protected boolean disableControlsOnPause;
 	protected float zoomSpeed;
 	protected float minZoom;
 	protected float maxZoom;
@@ -36,6 +37,7 @@ public class ControllableCameraPrefab extends CameraPrefab {
 		this.maxZoom = maxZoom;
 		
 		enableBounds = false;
+		disableControlsOnPause = false;
 		
 		setName("ControllableCamera");
 	}
@@ -86,6 +88,10 @@ public class ControllableCameraPrefab extends CameraPrefab {
 		boundsHeight = height;
 	}
 	
+	public void setDisableControlsOnPause(boolean disableControlsOnPause) {
+		this.disableControlsOnPause = disableControlsOnPause;
+	}
+	
 	@Override
 	protected void apply(Entity entity) {
 		super.apply(entity);
@@ -94,6 +100,7 @@ public class ControllableCameraPrefab extends CameraPrefab {
 		
 		cameraControlData.movementSpeed = movementSpeed;
 		cameraControlData.velocityDamping = velocityDamping;
+		cameraControlData.disableControlsOnPause = disableControlsOnPause;
 		
 		cameraControlData.zoomSpeed = zoomSpeed;
 		cameraControlData.minZoom = minZoom;

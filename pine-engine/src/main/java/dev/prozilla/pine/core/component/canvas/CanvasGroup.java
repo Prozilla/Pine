@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A component that groups multiple canvas elements together and aligns them.
@@ -24,7 +25,7 @@ public class CanvasGroup extends Component {
 	public int innerHeight;
 	
 	/** Array of rect components in children of the attached entity */
-	public ArrayList<RectTransform> childRects;
+	public List<RectTransform> childRects;
 	
 	public static final Direction DEFAULT_DIRECTION = Direction.UP;
 	public static final Alignment DEFAULT_ALIGNMENT = Alignment.START;

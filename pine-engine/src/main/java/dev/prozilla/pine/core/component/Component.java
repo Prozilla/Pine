@@ -10,7 +10,7 @@ import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.input.Input;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Contains a partition of the data of an entity.
@@ -90,7 +90,7 @@ public abstract class Component implements Lifecycle {
 		return entity.getComponentInParent(componentClass, includeAncestors);
 	}
 	
-	public <ComponentType extends Component> ArrayList<ComponentType> getComponentsInChildren(Class<ComponentType> componentClass) {
+	public <ComponentType extends Component> List<ComponentType> getComponentsInChildren(Class<ComponentType> componentClass) {
 		return entity.getComponentsInChildren(componentClass);
 	}
 	
@@ -98,8 +98,13 @@ public abstract class Component implements Lifecycle {
 		return entity.getComponent(componentClass);
 	}
 	
-	public <ComponentType extends Component> ArrayList<ComponentType> getComponents(Class<ComponentType> componentClass) {
+	public <ComponentType extends Component> List<ComponentType> getComponents(Class<ComponentType> componentClass) {
 		return entity.getComponents(componentClass);
+	}
+	
+	@Override
+	public int hashCode() {
+		return id;
 	}
 	
 	public boolean equals(Component component) {

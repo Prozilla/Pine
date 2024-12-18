@@ -20,7 +20,6 @@ import dev.prozilla.pine.core.system.standard.canvas.text.*;
 import dev.prozilla.pine.core.system.standard.sprite.SpriteRenderSystem;
 import dev.prozilla.pine.core.system.standard.sprite.TileMover;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +45,7 @@ public class World implements Lifecycle {
 	 * List of all systems that are added during initialization.
 	 * Systems of the same type are executed in the order in which they appear in this list.
 	 */
-	private final ArrayList<SystemBase> initialSystems;
+	private final List<SystemBase> initialSystems;
 	
 	public World(Application application, Scene scene) {
 		this.application = application;
@@ -111,7 +110,7 @@ public class World implements Lifecycle {
 		initialSystems.add(new ImageButtonResizer());
 		initialSystems.add(new CanvasGroupResizer());
 		initialSystems.add(new CanvasGroupArranger());
-		initialSystems.add(new RectMover());
+		initialSystems.add(new RectUpdater());
 
 		initialSystems.add(new CanvasRenderSystem());
 		initialSystems.add(new CanvasGroupRenderer());
@@ -179,6 +178,7 @@ public class World implements Lifecycle {
 		componentManager.destroy();
 		systemManager.destroy();
 		queryPool.clear();
+		application.getTracker().reset();
 	}
 	
 	/**
@@ -217,7 +217,6 @@ public class World implements Lifecycle {
 			calculateDepth();
 		}
 		systemManager.register(entity);
-		application.getTracker().addEntity();
 		return entity;
 	}
 	
@@ -228,7 +227,10 @@ public class World implements Lifecycle {
 		}
 		systemManager.unregister(entity);
 		componentManager.removeComponents(entity);
-		application.getTracker().removeEntity();
+	}
+	
+	public void activateEntity(Entity entity) {
+		systemManager.activateEntity(entity);
 	}
 	
 	/**
@@ -243,7 +245,6 @@ public class World implements Lifecycle {
 		}
 		componentManager.addComponent(entity, component);
 		systemManager.register(entity);
-		application.getTracker().addComponent();
 		return component;
 	}
 	
@@ -255,7 +256,6 @@ public class World implements Lifecycle {
 	public void removeComponent(Entity entity, Component component) {
 		componentManager.removeComponent(entity, component);
 		systemManager.register(entity);
-		application.getTracker().removeComponent();
 	}
 	
 	/**
@@ -277,9 +277,7 @@ public class World implements Lifecycle {
 		if (!systemManager.isInitialized()) {
 			useSystem(system);
 		} else {
-			if (systemManager.addSystem(system)) {
-				application.getTracker().addSystem();
-			}
+			systemManager.addSystem(system);
 		}
 		
 		return system;

@@ -11,6 +11,7 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -20,14 +21,14 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Input implements Lifecycle {
 	
 	/** Array of keys that are currently pressed. */
-	private final ArrayList<Integer> keysPressed;
+	private final List<Integer> keysPressed;
 	/** Array of keys that are down in the current frame. */
-	private final ArrayList<Integer> keysDown;
-	private final ArrayList<Integer> previousKeysDown;
+	private final List<Integer> keysDown;
+	private final List<Integer> previousKeysDown;
 	
-	private final ArrayList<Integer> mouseButtonsPressed;
-	private final ArrayList<Integer> mouseButtonsDown;
-	private final ArrayList<Integer> previousMouseButtonsDown;
+	private final List<Integer> mouseButtonsPressed;
+	private final List<Integer> mouseButtonsDown;
+	private final List<Integer> previousMouseButtonsDown;
 	
 	private float scrollX;
 	private float scrollY;

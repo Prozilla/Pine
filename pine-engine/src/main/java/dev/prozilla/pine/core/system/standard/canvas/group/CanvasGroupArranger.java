@@ -3,7 +3,7 @@ package dev.prozilla.pine.core.system.standard.canvas.group;
 import dev.prozilla.pine.core.component.canvas.CanvasGroup;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.EntityChunk;
-import dev.prozilla.pine.core.system.standard.canvas.RectMover;
+import dev.prozilla.pine.core.system.standard.canvas.RectUpdater;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 
 /**
@@ -20,9 +20,7 @@ public class CanvasGroupArranger extends UpdateSystem {
 		CanvasGroup canvasGroup = chunk.getComponent(CanvasGroup.class);
 		RectTransform containerRect = chunk.getComponent(RectTransform.class);
 		
-//		match.getEntity().print();
-		
-		RectMover.anchorRect(containerRect);
+		RectUpdater.updateRect(containerRect);
 		
 		if (canvasGroup.childRects.isEmpty()) {
 			return;

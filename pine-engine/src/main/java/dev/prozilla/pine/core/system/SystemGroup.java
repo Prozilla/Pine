@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.system;
 import dev.prozilla.pine.core.entity.Entity;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -10,7 +11,7 @@ import java.util.function.Consumer;
  */
 public class SystemGroup<S extends SystemBase> {
 	
-	private final ArrayList<S> systems;
+	private final List<S> systems;
 	private final Class<S> type;
 	
 	public SystemGroup(Class<S> type) {

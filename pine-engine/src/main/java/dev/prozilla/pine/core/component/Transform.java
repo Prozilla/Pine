@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.component;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Transform extends Component {
 	
@@ -16,7 +17,7 @@ public class Transform extends Component {
 	public float velocityY;
 	
 	/** Children of the entity */
-	public final ArrayList<Transform> children;
+	public final List<Transform> children;
 	/** Parent of the entity */
 	public Transform parent;
 	

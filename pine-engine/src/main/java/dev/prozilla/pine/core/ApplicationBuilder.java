@@ -18,11 +18,11 @@ public final class ApplicationBuilder {
 	private String defaultFontPath;
 	
 	public ApplicationBuilder() {
-		title = "Untitled";
+		title = Application.DEFAULT_TITLE;
 		windowWidth = 800;
 		windowHeight = 600;
 		initialScene = null;
-		targetFps = 60;
+		targetFps = Application.DEFAULT_TARGET_FPS;
 	}
 	
 	/**
@@ -77,10 +77,16 @@ public final class ApplicationBuilder {
 	/**
 	 * Sets the target frames per second of the application.
 	 * The default value is <code>60</code>.
+	 * Value <code>0</code> disables the fps cap.
 	 * @param targetFps Frames per second
 	 */
 	public ApplicationBuilder setTargetFps(int targetFps) {
 		this.targetFps = targetFps;
+		return this;
+	}
+	
+	public ApplicationBuilder unsetTargetFps() {
+		targetFps = 0;
 		return this;
 	}
 	

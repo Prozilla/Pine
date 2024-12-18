@@ -4,11 +4,12 @@ import dev.prozilla.pine.core.ECSManager;
 import dev.prozilla.pine.core.World;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class EntityManager extends ECSManager {
 	
-	private final ArrayList<Entity> entities;
+	private final List<Entity> entities;
 	
 	private static int lastEntityId = 0;
 	
@@ -35,6 +36,8 @@ public class EntityManager extends ECSManager {
 		}
 		
 		entities.add(entity);
+		
+		world.application.getTracker().addEntity();
 	}
 	
 	public void removeEntity(Entity entity) {
@@ -45,13 +48,15 @@ public class EntityManager extends ECSManager {
 		}
 		
 		entities.remove(entity);
+		
+		world.application.getTracker().removeEntity();
 	}
 	
 	public boolean contains(Entity entity) {
 		return entities.contains(entity);
 	}
 	
-	public ArrayList<Entity> getEntities() {
+	public List<Entity> getEntities() {
 		return entities;
 	}
 	

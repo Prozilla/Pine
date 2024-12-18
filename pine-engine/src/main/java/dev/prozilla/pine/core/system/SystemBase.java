@@ -11,9 +11,7 @@ import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.system.init.InitSystemBase;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 // TO DO: ignore de-activated components
@@ -35,7 +33,7 @@ public abstract class SystemBase implements Lifecycle {
 	 * Keeps track of entities that have already been processed,
 	 * if <code>runOnce</code> is set to <code>true</code>.
 	 */
-	private final ArrayList<Integer> processedEntityIds;
+	private final Set<Integer> processedEntityIds;
 	
 	protected World world;
 	protected Application application;
@@ -51,7 +49,7 @@ public abstract class SystemBase implements Lifecycle {
 		includedComponentTypes = componentTypes;
 		this.runOnce = runOnce;
 		
-		processedEntityIds = new ArrayList<>();
+		processedEntityIds = new HashSet<>();
 	}
 	
 	/**
@@ -121,6 +119,10 @@ public abstract class SystemBase implements Lifecycle {
 	 * @see EntityQuery
 	 */
 	public void unregister(Entity entity) {
+		if (runOnce) {
+			processedEntityIds.remove(entity.id);
+		}
+		
 		query.unregister(entity);
 	}
 	

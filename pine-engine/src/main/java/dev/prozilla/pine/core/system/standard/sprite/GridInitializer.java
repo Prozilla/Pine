@@ -6,7 +6,7 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class GridInitializer extends InitSystem {
 	
@@ -23,7 +23,7 @@ public class GridInitializer extends InitSystem {
 			gridGroup.coordinateToTile.clear();
 		}
 		
-		ArrayList<TileRenderer> tiles = entity.getComponentsInChildren(TileRenderer.class);
+		List<TileRenderer> tiles = entity.getComponentsInChildren(TileRenderer.class);
 		
 		if(tiles != null && !tiles.isEmpty()) {
 			for (TileRenderer tile : tiles) {

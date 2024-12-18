@@ -21,8 +21,10 @@ public class CameraControlInputHandler extends InputSystem {
 		CameraControlData cameraControlData = chunk.getComponent(CameraControlData.class);
 		CameraData cameraData = chunk.getComponent(CameraData.class);
 		
-		handleMovementInput(deltaTime, cameraControlData, cameraData);
-		handleZoomInput(deltaTime, cameraControlData, input);
+		if (!cameraControlData.disableControlsOnPause || !application.isPaused) {
+			handleMovementInput(deltaTime, cameraControlData, cameraData);
+			handleZoomInput(deltaTime, cameraControlData, input);
+		}
 	}
 	
 	/**

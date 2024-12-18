@@ -15,6 +15,7 @@ import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.input.Input;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a unique entity in the world with a list of components.
@@ -33,7 +34,7 @@ public class Entity implements Lifecycle {
 	protected final Scene scene;
 	
 	/** Components of this entity */
-	public final ArrayList<Component> components;
+	public final List<Component> components;
 	
 	/**
 	 * Creates an entity at the position (0, 0)
@@ -176,9 +177,9 @@ public class Entity implements Lifecycle {
 		
 		this.isActive = active;
 		
-//		if (active) {
-//			restart();
-//		}
+		if (active) {
+			world.activateEntity(this);
+		}
 	}
 	
 	public boolean isActive() {
@@ -229,7 +230,7 @@ public class Entity implements Lifecycle {
 		return component;
 	}
 	
-	public <ComponentType extends Component> ArrayList<ComponentType> getComponentsInChildren(Class<ComponentType> componentClass) {
+	public <ComponentType extends Component> List<ComponentType> getComponentsInChildren(Class<ComponentType> componentClass) {
 		if (transform.children.isEmpty()) {
 			return new ArrayList<>();
 		}
@@ -273,7 +274,7 @@ public class Entity implements Lifecycle {
 	 * @param componentClass Class of the components.
 	 * @return An ArrayList of instance of <code>componentClass</code> that are attached to this entity.
 	 */
-	public <ComponentType extends Component> ArrayList<ComponentType> getComponents(Class<ComponentType> componentClass) {
+	public <ComponentType extends Component> List<ComponentType> getComponents(Class<ComponentType> componentClass) {
 		if (components.isEmpty()) {
 			return new ArrayList<>();
 		}
@@ -341,6 +342,11 @@ public class Entity implements Lifecycle {
 	
 	public boolean isRegistered() {
 		return world.entityManager.contains(this);
+	}
+	
+	@Override
+	public int hashCode() {
+		return id;
 	}
 	
 	/**
