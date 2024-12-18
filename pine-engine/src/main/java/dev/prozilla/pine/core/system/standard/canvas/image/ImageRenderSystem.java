@@ -2,9 +2,10 @@ package dev.prozilla.pine.core.system.standard.canvas.image;
 
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.canvas.ImageRenderer;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderSystem;
 
@@ -15,25 +16,26 @@ public class ImageRenderSystem extends RenderSystem {
 	}
 	
 	@Override
-	protected void process(EntityMatch match, Renderer renderer) {
-		ImageRenderer imageRenderer = match.getComponent(ImageRenderer.class);
-		RectTransform rect = match.getComponent(RectTransform.class);
-		renderImage(renderer, imageRenderer, rect);
+	protected void process(EntityChunk chunk, Renderer renderer) {
+		Transform transform = chunk.getTransform();
+		ImageRenderer imageRenderer = chunk.getComponent(ImageRenderer.class);
+		RectTransform rect = chunk.getComponent(RectTransform.class);
+		renderImage(renderer, imageRenderer, rect, transform.getDepth());
 	}
 	
-	public static void renderImage(Renderer renderer, ImageRenderer imageRenderer, RectTransform rect) {
+	public static void renderImage(Renderer renderer, ImageRenderer imageRenderer, RectTransform rect, float z) {
 		renderImage(renderer, imageRenderer,
-		 rect.x, rect.y, imageRenderer.width, imageRenderer.height, imageRenderer.color);
+		 rect.x, rect.y, imageRenderer.width, imageRenderer.height, z, imageRenderer.color);
 	}
 	
-	public static void renderImage(Renderer renderer, ImageRenderer imageRenderer, int x, int y, int width, int height, Color color) {
+	public static void renderImage(Renderer renderer, ImageRenderer imageRenderer, int x, int y, int width, int height, float z, Color color) {
 		renderImage(renderer, imageRenderer.image,
 			imageRenderer.regionX, imageRenderer.regionY,
 			imageRenderer.regionWidth, imageRenderer.regionHeight,
-			x, y, width, height, color);
+			x, y, width, height, z, color);
 	}
 	
-	public static void renderImage(Renderer renderer, Texture image, int regX, int regY, int regWidth, int regHeight, int x, int y, int width, int height, Color color) {
+	public static void renderImage(Renderer renderer, Texture image, int regX, int regY, int regWidth, int regHeight, int x, int y, int width, int height, float z, Color color) {
 		int x2 = x + width;
 		int y2 = y + height;
 		
@@ -45,9 +47,9 @@ public class ImageRenderSystem extends RenderSystem {
 		image.bind();
 		
 		if (color == null) {
-			renderer.drawTextureRegion(x, y, x2, y2, s1, t1, s2, t2);
+			renderer.drawTextureRegion(x, y, x2, y2, z, s1, t1, s2, t2);
 		} else {
-			renderer.drawTextureRegion(x, y, x2, y2, s1, t1, s2, t2, color);
+			renderer.drawTextureRegion(x, y, x2, y2, z, s1, t1, s2, t2, color);
 		}
 	}
 }

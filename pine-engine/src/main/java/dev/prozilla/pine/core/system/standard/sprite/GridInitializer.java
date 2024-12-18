@@ -3,10 +3,10 @@ package dev.prozilla.pine.core.system.standard.sprite;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class GridInitializer extends InitSystem {
 	
@@ -15,15 +15,15 @@ public class GridInitializer extends InitSystem {
 	}
 	
 	@Override
-	protected void process(EntityMatch match) {
-		Entity entity = match.getEntity();
-		GridGroup gridGroup = match.getComponent(GridGroup.class);
+	protected void process(EntityChunk chunk) {
+		Entity entity = chunk.getEntity();
+		GridGroup gridGroup = chunk.getComponent(GridGroup.class);
 		
 		if (!gridGroup.coordinateToTile.isEmpty()) {
 			gridGroup.coordinateToTile.clear();
 		}
 		
-		ArrayList<TileRenderer> tiles = entity.getComponentsInChildren(TileRenderer.class);
+		List<TileRenderer> tiles = entity.getComponentsInChildren(TileRenderer.class);
 		
 		if(tiles != null && !tiles.isEmpty()) {
 			for (TileRenderer tile : tiles) {

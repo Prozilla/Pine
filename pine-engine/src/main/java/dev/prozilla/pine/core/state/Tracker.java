@@ -144,4 +144,10 @@ public class Tracker {
 	public int getWindowHeight() {
 		return application.getWindow().getHeight();
 	}
+	
+	public void reset() {
+		entityCount = 0;
+		componentCount = 0;
+		systemCount = 0;
+	}
 }

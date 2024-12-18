@@ -2,7 +2,7 @@ package dev.prozilla.pine.core.system.standard.canvas.image;
 
 import dev.prozilla.pine.core.component.canvas.ImageButtonRenderer;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.state.input.CursorType;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.MouseButton;
@@ -15,9 +15,9 @@ public class ImageButtonInputHandler extends InputSystem {
 	}
 	
 	@Override
-	protected void process(EntityMatch match, Input input, float deltaTime) {
-		ImageButtonRenderer imageButtonRenderer = match.getComponent(ImageButtonRenderer.class);
-		RectTransform rect = match.getComponent(RectTransform.class);
+	protected void process(EntityChunk chunk, Input input, float deltaTime) {
+		ImageButtonRenderer imageButtonRenderer = chunk.getComponent(ImageButtonRenderer.class);
+		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
 		imageButtonRenderer.isHovering = rect.cursorHit;
 		

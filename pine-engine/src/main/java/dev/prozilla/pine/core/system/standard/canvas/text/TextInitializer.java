@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system.standard.canvas.text;
 
 import dev.prozilla.pine.core.component.canvas.TextRenderer;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
 /**
@@ -14,8 +14,8 @@ public class TextInitializer extends InitSystem {
 	}
 	
 	@Override
-	protected void process(EntityMatch match) {
-		TextRenderer textRenderer = match.getComponent(TextRenderer.class);
+	protected void process(EntityChunk chunk) {
+		TextRenderer textRenderer = chunk.getComponent(TextRenderer.class);
 		textRenderer.calculateSize();
 	}
 }

@@ -19,9 +19,9 @@ public class BackgroundInitializer extends InitSystem {
 	
 	@Override
 	protected void process(EntityMatch match) {
-		Transform transform = match.getComponent(Transform.class);
-		BackgroundData backgroundData = match.getComponent(BackgroundData.class);
-		SpriteRenderer spriteRenderer = match.getComponent(SpriteRenderer.class);
+		Transform transform = chunk.getComponent(Transform.class);
+		BackgroundData backgroundData = chunk.getComponent(BackgroundData.class);
+		SpriteRenderer spriteRenderer = chunk.getComponent(SpriteRenderer.class);
 		
 		// Store reference to scene
 		backgroundData.gameScene = (GameScene)scene;

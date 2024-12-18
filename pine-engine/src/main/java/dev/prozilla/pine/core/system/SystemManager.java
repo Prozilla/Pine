@@ -10,6 +10,8 @@ import dev.prozilla.pine.core.system.render.RenderSystemBase;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 public class SystemManager extends ECSManager {
@@ -42,7 +44,7 @@ public class SystemManager extends ECSManager {
 		};
 	}
 	
-	public void initSystems(ArrayList<SystemBase> initialSystems) {
+	public void initSystems(Collection<SystemBase> initialSystems) {
 		for (SystemBase system : initialSystems) {
 			addSystem(system);
 		}
@@ -114,6 +116,14 @@ public class SystemManager extends ECSManager {
 		}
 	}
 	
+	public void activateEntity(Entity entity) {
+		Objects.requireNonNull(entity, "Entity must not be null.");
+		
+		initSystems.forEach((initSystem) -> {
+			initSystem.activateEntity(entity);
+		});
+	}
+	
 	public boolean addSystem(SystemBase system) {
 		Objects.requireNonNull(system, "System must not be null.");
 		
@@ -127,11 +137,19 @@ public class SystemManager extends ECSManager {
 		
 		if (added) {
 			system.initSystem(world);
+			world.application.getTracker().addSystem();
 		} else {
 			system.destroy();
 		}
 		
 		return added;
+	}
+	
+	/**
+	 * Updates all systems that depend on entity depth.
+	 */
+	public void updateEntityDepth() {
+		renderSystems.forEach(RenderSystemBase::sort);
 	}
 	
 	public boolean isInitialized() {

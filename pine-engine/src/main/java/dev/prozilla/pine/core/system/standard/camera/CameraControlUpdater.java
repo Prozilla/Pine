@@ -4,7 +4,7 @@ import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.camera.CameraControlData;
 import dev.prozilla.pine.core.component.camera.CameraData;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 
 /**
@@ -17,10 +17,17 @@ public class CameraControlUpdater extends UpdateSystem {
 	}
 	
 	@Override
-	protected void process(EntityMatch match, float deltaTime) {
-		Transform transform = match.getComponent(Transform.class);
-		CameraData cameraData = match.getComponent(CameraData.class);
-		CameraControlData cameraControlData = match.getComponent(CameraControlData.class);
+	protected void process(EntityChunk chunk, float deltaTime) {
+		Transform transform = chunk.getComponent(Transform.class);
+		CameraData cameraData = chunk.getComponent(CameraData.class);
+		CameraControlData cameraControlData = chunk.getComponent(CameraControlData.class);
+		
+		if (cameraControlData.disableControlsOnPause && application.isPaused) {
+			transform.x = cameraControlData.targetX;
+			transform.y = cameraControlData.targetY;
+			cameraData.zoomFactor = cameraControlData.targetZoom;
+			return;
+		}
 		
 		if (cameraControlData.velocityDamping == 0) {
 			transform.setPosition(cameraControlData.targetX, cameraControlData.targetY);

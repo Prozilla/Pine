@@ -17,8 +17,8 @@ public class BackgroundMover extends UpdateSystem {
 	
 	@Override
 	protected void process(EntityMatch match, float deltaTime) {
-		Transform transform = match.getComponent(Transform.class);
-		BackgroundData backgroundData = match.getComponent(BackgroundData.class);
+		Transform transform = chunk.getComponent(Transform.class);
+		BackgroundData backgroundData = chunk.getComponent(BackgroundData.class);
 		
 		if (!backgroundData.gameScene.gameOver) {
 			// Scroll position to the left

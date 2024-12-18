@@ -1,8 +1,9 @@
 package dev.prozilla.pine.core.system.standard.canvas.group;
 
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.canvas.CanvasGroup;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderSystem;
 
@@ -16,12 +17,13 @@ public class CanvasGroupRenderer extends RenderSystem {
 	}
 	
 	@Override
-	public void process(EntityMatch match, Renderer renderer) {
-		CanvasGroup canvasGroup = match.getComponent(CanvasGroup.class);
-		RectTransform rect = match.getComponent(RectTransform.class);
+	public void process(EntityChunk chunk, Renderer renderer) {
+		Transform transform = chunk.getTransform();
+		CanvasGroup canvasGroup = chunk.getComponent(CanvasGroup.class);
+		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
 		if (rect.width != 0 && rect.height != 0 && canvasGroup.backgroundColor != null) {
-			renderer.drawRect(rect.x, rect.y, rect.width, rect.height, canvasGroup.backgroundColor);
+			renderer.drawRect(rect.x, rect.y, transform.getDepth(),  rect.width, rect.height, canvasGroup.backgroundColor);
 		}
 	}
 }

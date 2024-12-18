@@ -53,4 +53,16 @@ public class ImageRenderer extends Component {
 		regionWidth = image.getWidth();
 		regionHeight = image.getHeight();
 	}
+	
+	public void setSize(int width, int height) {
+		this.width = width;
+		this.height = height;
+	}
+	
+	public void setRegion(int regX, int regY, int regWidth, int regHeight) {
+		regionX = regX;
+		regionY = regY;
+		regionWidth = regWidth;
+		regionHeight = regHeight;
+	}
 }

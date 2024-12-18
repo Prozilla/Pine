@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system.init;
 
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.SystemBuilder;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 
@@ -36,8 +36,8 @@ public class InitSystemBuilder extends SystemBuilder<InitSystem, InitSystemBuild
 		
 		InitSystem initSystem = new InitSystem(componentTypes) {
 			@Override
-			protected void process(EntityMatch match) {
-				callback.run(match);
+			protected void process(EntityChunk chunk) {
+				callback.run(chunk);
 			}
 		};
 		
@@ -51,7 +51,7 @@ public class InitSystemBuilder extends SystemBuilder<InitSystem, InitSystemBuild
 		 * Initializes a single entity's data.
 		 * @param match Entity that matches this system's query
 		 */
-		void run(EntityMatch match);
+		void run(EntityChunk chunk);
 		
 	}
 }

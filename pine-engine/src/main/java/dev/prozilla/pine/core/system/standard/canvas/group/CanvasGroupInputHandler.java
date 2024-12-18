@@ -2,7 +2,7 @@ package dev.prozilla.pine.core.system.standard.canvas.group;
 
 import dev.prozilla.pine.core.component.canvas.CanvasGroup;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.system.input.InputSystem;
 
@@ -16,9 +16,9 @@ public class CanvasGroupInputHandler extends InputSystem {
 	}
 	
 	@Override
-	public void process(EntityMatch match, Input input, float deltaTime) {
-		CanvasGroup canvasGroup = match.getComponent(CanvasGroup.class);
-		RectTransform rect = match.getComponent(RectTransform.class);
+	public void process(EntityChunk chunk, Input input, float deltaTime) {
+		CanvasGroup canvasGroup = chunk.getComponent(CanvasGroup.class);
+		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
 		rect.passThrough = (canvasGroup.backgroundColor == null);
 	}

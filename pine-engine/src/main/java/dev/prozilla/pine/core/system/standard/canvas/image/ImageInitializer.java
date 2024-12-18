@@ -2,7 +2,7 @@ package dev.prozilla.pine.core.system.standard.canvas.image;
 
 import dev.prozilla.pine.core.component.canvas.ImageRenderer;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
 public class ImageInitializer extends InitSystem {
@@ -12,9 +12,9 @@ public class ImageInitializer extends InitSystem {
 	}
 	
 	@Override
-	protected void process(EntityMatch match) {
-		ImageRenderer imageRenderer = match.getComponent(ImageRenderer.class);
-		RectTransform rect = match.getComponent(RectTransform.class);
+	protected void process(EntityChunk chunk) {
+		ImageRenderer imageRenderer = chunk.getComponent(ImageRenderer.class);
+		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
 		rect.width = imageRenderer.regionWidth;
 		rect.height = imageRenderer.regionHeight;

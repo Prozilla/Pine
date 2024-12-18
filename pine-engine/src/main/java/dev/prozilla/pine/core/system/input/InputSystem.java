@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system.input;
 
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.state.input.Input;
 
 /**
@@ -18,15 +18,15 @@ public abstract class InputSystem extends InputSystemBase {
 	public final void input(float deltaTime) {
 		Input input = getInput();
 		
-		forEach(match -> {
-			process(match, input, deltaTime);
+		forEach(chunk -> {
+			process(chunk, input, deltaTime);
 		});
 	}
 	
 	/**
 	 * Updates a single entity's data based on input, each frame.
-	 * @param match Entity that matches this system's query
+	 * @param chunk Entity that matches this system's query
 	 * @param deltaTime Delta time in seconds
 	 */
-	protected abstract void process(EntityMatch match, Input input, float deltaTime);
+	protected abstract void process(EntityChunk chunk, Input input, float deltaTime);
 }

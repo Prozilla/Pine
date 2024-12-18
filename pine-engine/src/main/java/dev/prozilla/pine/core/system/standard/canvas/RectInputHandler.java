@@ -21,9 +21,9 @@ public class RectInputHandler extends InputSystemBase {
 		Input input = getInput();
 		Point cursor = input.getCursor();
 		
-		forEachReverse(match -> {
-			Entity entity = match.getEntity();
-			RectTransform rect = match.getComponent(RectTransform.class);
+		forEachReverse(chunk -> {
+			Entity entity = chunk.getEntity();
+			RectTransform rect = chunk.getComponent(RectTransform.class);
 			
 			rect.cursorHit = false;
 			

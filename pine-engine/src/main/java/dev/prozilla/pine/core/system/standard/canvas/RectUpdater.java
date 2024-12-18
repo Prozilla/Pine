@@ -1,22 +1,39 @@
 package dev.prozilla.pine.core.system.standard.canvas;
 
 import dev.prozilla.pine.core.component.canvas.RectTransform;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 
 /**
  * Positions canvas elements based on their offset and anchor point inside the canvas.
  */
-public class RectMover extends UpdateSystem {
+public class RectUpdater extends UpdateSystem {
 	
-	public RectMover() {
+	public RectUpdater() {
 		super( RectTransform.class);
 	}
 	
 	@Override
-	protected void process(EntityMatch match, float deltaTime) {
-		RectTransform rect = match.getComponent(RectTransform.class);
+	protected void process(EntityChunk chunk, float deltaTime) {
+		RectTransform rect = chunk.getComponent(RectTransform.class);
+		updateRect(rect);
+	}
+	
+	public static void updateRect(RectTransform rect) {
+		resizeRect(rect);
 		anchorRect(rect);
+	}
+	
+	public static void resizeRect(RectTransform rect) {
+		if (!rect.fillContainer) {
+			return;
+		}
+		
+		int canvasWidth = rect.getCanvas().getWidth();
+		int canvasHeight = rect.getCanvas().getHeight();
+		
+		rect.width = canvasWidth;
+		rect.height = canvasHeight;
 	}
 	
 	public static void anchorRect(RectTransform rect) {

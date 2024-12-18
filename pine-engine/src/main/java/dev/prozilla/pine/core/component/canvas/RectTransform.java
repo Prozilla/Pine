@@ -18,6 +18,9 @@ public class RectTransform extends Component {
 	public int width;
 	public int height;
 	
+	/** If true, the width and height of this rect will be changed each update to fill its container or the entire canvas.  */
+	public boolean fillContainer;
+	
 	public Anchor anchor;
 	
 	/** If true, allows the cursor to pass through this element. */
@@ -46,6 +49,7 @@ public class RectTransform extends Component {
 		anchor = Anchor.BOTTOM_LEFT;
 		passThrough = false;
 		cursorHit = false;
+		fillContainer = false;
 	}
 	
 //	@Override

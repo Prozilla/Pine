@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system.render;
 
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.SystemBuilder;
 
@@ -36,8 +36,8 @@ public class RenderSystemBuilder extends SystemBuilder<RenderSystem, RenderSyste
 		
 		RenderSystem renderSystem = new RenderSystem(componentTypes) {
 			@Override
-			protected void process(EntityMatch match, Renderer renderer) {
-				callback.run(match, renderer);
+			protected void process(EntityChunk chunk, Renderer renderer) {
+				callback.run(chunk, renderer);
 			}
 		};
 		
@@ -51,7 +51,7 @@ public class RenderSystemBuilder extends SystemBuilder<RenderSystem, RenderSyste
 		 * Renders a single entity, each frame.
 		 * @param match Entity that matches this system's query
 		 */
-		void run(EntityMatch match, Renderer renderer);
+		void run(EntityChunk chunk, Renderer renderer);
 		
 	}
 }

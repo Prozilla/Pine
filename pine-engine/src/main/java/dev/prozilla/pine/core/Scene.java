@@ -3,6 +3,7 @@ package dev.prozilla.pine.core;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.camera.CameraPrefab;
 import dev.prozilla.pine.core.rendering.Renderer;
 
@@ -16,6 +17,8 @@ public class Scene implements Lifecycle {
 	protected Application application;
 	protected World world;
 	protected CameraData cameraData;
+	/** Prefab that will be used during scene loading to create a camera entity. */
+	protected Prefab cameraPrefab;
 	
 	// Scene state
 	public boolean loaded;
@@ -56,19 +59,36 @@ public class Scene implements Lifecycle {
 		initialized = false;
 	}
 	
+	protected void load() {
+		load(null);
+	}
+	
 	/**
 	 * Fills the scene with a new world and camera.
 	 */
-	protected void load() {
+	protected void load(Prefab cameraPrefab) throws IllegalStateException {
+		// Create new world
 		if (world == null) {
 			world = new World(application, this);
 			world.initSystems();
 		}
-		if (cameraData == null) {
-			Entity camera = new CameraPrefab().instantiate(world);
-			add(camera);
-			cameraData = camera.getComponent(CameraData.class);
+		
+		// Prepare camera prefab
+		if (cameraPrefab == null) {
+			cameraPrefab = new CameraPrefab();
 		}
+		this.cameraPrefab = cameraPrefab;
+		
+		// Create new camera from prefab
+		if (cameraData == null) {
+			Entity camera = world.addEntity(this.cameraPrefab);
+			cameraData = camera.getComponent(CameraData.class);
+			
+			if (cameraData == null) {
+				throw new IllegalStateException("Camera prefab is missing a CameraData component.");
+			}
+		}
+		
 		loaded = true;
 	}
 	

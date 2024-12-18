@@ -7,12 +7,11 @@ import dev.prozilla.pine.core.Scene;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.system.init.InitSystemBase;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 // TO DO: ignore de-activated components
@@ -34,7 +33,7 @@ public abstract class SystemBase implements Lifecycle {
 	 * Keeps track of entities that have already been processed,
 	 * if <code>runOnce</code> is set to <code>true</code>.
 	 */
-	private final ArrayList<Integer> processedEntityIds;
+	private final Set<Integer> processedEntityIds;
 	
 	protected World world;
 	protected Application application;
@@ -50,7 +49,7 @@ public abstract class SystemBase implements Lifecycle {
 		includedComponentTypes = componentTypes;
 		this.runOnce = runOnce;
 		
-		processedEntityIds = new ArrayList<>();
+		processedEntityIds = new HashSet<>();
 	}
 	
 	/**
@@ -120,16 +119,20 @@ public abstract class SystemBase implements Lifecycle {
 	 * @see EntityQuery
 	 */
 	public void unregister(Entity entity) {
+		if (runOnce) {
+			processedEntityIds.remove(entity.id);
+		}
+		
 		query.unregister(entity);
 	}
 	
 	/**
 	 * Iterates over each entity that matches the query of this system.
 	 */
-	protected void forEach(Consumer<EntityMatch> consumer) {
-		for (EntityMatch entityMatch : query.entityMatches) {
-			int entityId = entityMatch.getEntity().id;
-			boolean allowProcessing = entityMatch.isActive();
+	protected void forEach(Consumer<EntityChunk> consumer) {
+		for (EntityChunk entityChunk : query.entityChunks) {
+			int entityId = entityChunk.getEntity().id;
+			boolean allowProcessing = entityChunk.isActive();
 			
 			if (runOnce && processedEntityIds.contains(entityId)) {
 				allowProcessing = false;
@@ -137,13 +140,13 @@ public abstract class SystemBase implements Lifecycle {
 			
 			if (allowProcessing) {
 				try {
-					consumer.accept(entityMatch);
+					consumer.accept(entityChunk);
 				} catch (Exception e) {
 					System.err.println("Failed to run system " + getClass().getName());
 					e.printStackTrace();
 				} finally {
 					if (runOnce) {
-						processedEntityIds.add(entityMatch.getEntity().id);
+						processedEntityIds.add(entityChunk.getEntity().id);
 					}
 				}
 			}
@@ -151,14 +154,21 @@ public abstract class SystemBase implements Lifecycle {
 	}
 	
 	/**
+	 * Sorts the entity chunks in this system.
+	 */
+	protected void sort(Comparator<EntityChunk> comparator) {
+		query.entityChunks.sort(comparator);
+	}
+	
+	/**
 	 * Iterates over each entity that matches the query of this system in reverse.
 	 */
-	protected void forEachReverse(Consumer<EntityMatch> consumer) {
-		int count = query.entityMatches.size();
+	protected void forEachReverse(Consumer<EntityChunk> consumer) {
+		int count = query.entityChunks.size();
 		for (int i = count - 1; i >= 0; i--) {
-			EntityMatch entityMatch = query.entityMatches.get(i);
-			int entityId = entityMatch.getEntity().id;
-			boolean allowProcessing = entityMatch.isActive();
+			EntityChunk entityChunk = query.entityChunks.get(i);
+			int entityId = entityChunk.getEntity().id;
+			boolean allowProcessing = entityChunk.isActive();
 			
 			if (runOnce && processedEntityIds.contains(entityId)) {
 				allowProcessing = false;
@@ -166,13 +176,13 @@ public abstract class SystemBase implements Lifecycle {
 			
 			if (allowProcessing) {
 				try {
-					consumer.accept(entityMatch);
+					consumer.accept(entityChunk);
 				} catch (Exception e) {
 					System.err.println("Failed to run system " + getClass().getName());
 					e.printStackTrace();
 				} finally {
 					if (runOnce) {
-						processedEntityIds.add(entityMatch.getEntity().id);
+						processedEntityIds.add(entityChunk.getEntity().id);
 					}
 				}
 			}
@@ -184,12 +194,12 @@ public abstract class SystemBase implements Lifecycle {
 	 * @see EntityQuery
 	 */
 	public boolean hasComponentGroups() {
-		return !query.entityMatches.isEmpty();
+		return !query.entityChunks.isEmpty();
 	}
 	
 	public void print() {
 		String systemName = getClass().getSimpleName();
-		int groupCount = query.entityMatches.size();
+		int groupCount = query.entityChunks.size();
 		
 		System.out.printf("%s: (%s)%n", systemName, groupCount);
 	}

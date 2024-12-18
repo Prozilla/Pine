@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.component;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Transform extends Component {
 	
@@ -16,9 +17,14 @@ public class Transform extends Component {
 	public float velocityY;
 	
 	/** Children of the entity */
-	public final ArrayList<Transform> children;
+	public final List<Transform> children;
 	/** Parent of the entity */
 	public Transform parent;
+	
+	/** Z-index in the world, highest values are rendered first. */
+	private int depthIndex;
+	/** If true, sets the depth of children to a lower value than the parent. */
+	public boolean renderChildrenBelow;
 
 	public Transform() {
 		this(0, 0);
@@ -36,6 +42,9 @@ public class Transform extends Component {
 		children = new ArrayList<>();
 		velocityX = 0;
 		velocityY = 0;
+		
+		depthIndex = 0;
+		renderChildrenBelow = false;
 	}
 	
 	public float getGlobalX() {
@@ -75,5 +84,34 @@ public class Transform extends Component {
 	public void setVelocity(float x, float y) {
 		velocityX = x;
 		velocityY = y;
+	}
+	
+	/**
+	 * Calculates the z-indices of this transform and its children based on a depth value.
+	 * @param depth Depth value before calculation
+	 * @return Depth value after calculation
+	 */
+	public int calculateDepth(int depth) {
+		if (!renderChildrenBelow) {
+			depthIndex = depth++;
+		}
+		
+		for (Transform child : children) {
+			depth = child.calculateDepth(depth);
+		}
+		
+		if (renderChildrenBelow) {
+			depthIndex = depth++;
+		}
+		
+		return depth;
+	}
+	
+	public int getDepthIndex() {
+		return depthIndex;
+	}
+	
+	public float getDepth() {
+		return ((float)depthIndex / getWorld().maxDepth);
 	}
 }

@@ -4,24 +4,25 @@ package dev.prozilla.pine.core;
  * Utility class for building applications.
  * @see Application
  */
-public class ApplicationBuilder {
+public final class ApplicationBuilder {
 	
-	// Constructor parameters
+	// App constructor parameters
 	private String title;
 	private int windowWidth;
 	private int windowHeight;
 	private Scene initialScene;
 	private int targetFps;
 	
-	// Setters parameters
+	// App setters parameters
 	private String[] icons;
+	private String defaultFontPath;
 	
 	public ApplicationBuilder() {
-		title = "Untitled";
+		title = Application.DEFAULT_TITLE;
 		windowWidth = 800;
 		windowHeight = 600;
 		initialScene = null;
-		targetFps = 60;
+		targetFps = Application.DEFAULT_TARGET_FPS;
 	}
 	
 	/**
@@ -76,10 +77,16 @@ public class ApplicationBuilder {
 	/**
 	 * Sets the target frames per second of the application.
 	 * The default value is <code>60</code>.
+	 * Value <code>0</code> disables the fps cap.
 	 * @param targetFps Frames per second
 	 */
 	public ApplicationBuilder setTargetFps(int targetFps) {
 		this.targetFps = targetFps;
+		return this;
+	}
+	
+	public ApplicationBuilder unsetTargetFps() {
+		targetFps = 0;
 		return this;
 	}
 	
@@ -92,6 +99,11 @@ public class ApplicationBuilder {
 		return this;
 	}
 	
+	public ApplicationBuilder setDefaultFont(String fontPath) {
+		defaultFontPath = fontPath;
+		return this;
+	}
+	
 	/**
 	 * Creates a new application.
 	 */
@@ -100,6 +112,9 @@ public class ApplicationBuilder {
 		
 		if (icons != null) {
 			application.setIcons(icons);
+		}
+		if (defaultFontPath != null) {
+			application.setDefaultFont(defaultFontPath);
 		}
 		
 		return application;

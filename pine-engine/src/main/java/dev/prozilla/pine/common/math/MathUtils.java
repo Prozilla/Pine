@@ -52,4 +52,8 @@ public final class MathUtils {
 		float normalized = (value - x) / (y - x);
 		return a + normalized * (b - a);
 	}
+	
+	public static float easeOutQuad(float time) {
+		return 1f - (1f - time) * (1f - time);
+	}
 }

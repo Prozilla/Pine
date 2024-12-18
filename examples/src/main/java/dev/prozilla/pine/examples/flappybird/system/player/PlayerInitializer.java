@@ -18,9 +18,9 @@ public class PlayerInitializer extends InitSystem {
 	
 	@Override
 	protected void process(EntityMatch match) {
-		Transform transform = match.getComponent(Transform.class);
-		SpriteRenderer spriteRenderer = match.getComponent(SpriteRenderer.class);
-		PlayerData playerData = match.getComponent(PlayerData.class);
+		Transform transform = chunk.getComponent(Transform.class);
+		SpriteRenderer spriteRenderer = chunk.getComponent(SpriteRenderer.class);
+		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		
 		// Store reference to scene
 		playerData.gameScene = (GameScene)scene;

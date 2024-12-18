@@ -17,8 +17,8 @@ public class CameraResizer extends UpdateSystemBase {
 		int width = application.getWindow().getWidth();
 		int height = application.getWindow().getHeight();
 		
-		forEach(match -> {
-			CameraData cameraData = match.getComponent(CameraData.class);
+		forEach(chunk -> {
+			CameraData cameraData = chunk.getComponent(CameraData.class);
 			cameraData.setSize(width, height);
 		});
 	}

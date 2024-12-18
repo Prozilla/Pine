@@ -19,8 +19,8 @@ public class ScoreTextUpdater extends UpdateSystemBase {
 	public void update(float deltaTime) {
 		GameScene gameScene = (GameScene)scene;
 		
-		forEach(match -> {
-			TextRenderer textRenderer = match.getComponent(TextRenderer.class);
+		forEach(chunk -> {
+			TextRenderer textRenderer = chunk.getComponent(TextRenderer.class);
 			
 			// Update text field based on score value
 			textRenderer.setText(String.valueOf(gameScene.playerScore));

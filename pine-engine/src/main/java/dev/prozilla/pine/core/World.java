@@ -3,6 +3,7 @@ package dev.prozilla.pine.core;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.ComponentManager;
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityManager;
 import dev.prozilla.pine.core.entity.EntityQueryPool;
@@ -20,6 +21,7 @@ import dev.prozilla.pine.core.system.standard.sprite.SpriteRenderSystem;
 import dev.prozilla.pine.core.system.standard.sprite.TileMover;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An isolated collection of entities, components and systems that live inside a scene.
@@ -37,11 +39,13 @@ public class World implements Lifecycle {
 	
 	public boolean initialized;
 	
+	public int maxDepth;
+	
 	/**
 	 * List of all systems that are added during initialization.
 	 * Systems of the same type are executed in the order in which they appear in this list.
 	 */
-	private final ArrayList<SystemBase> initialSystems;
+	private final List<SystemBase> initialSystems;
 	
 	public World(Application application, Scene scene) {
 		this.application = application;
@@ -106,7 +110,7 @@ public class World implements Lifecycle {
 		initialSystems.add(new ImageButtonResizer());
 		initialSystems.add(new CanvasGroupResizer());
 		initialSystems.add(new CanvasGroupArranger());
-		initialSystems.add(new RectMover());
+		initialSystems.add(new RectUpdater());
 
 		initialSystems.add(new CanvasRenderSystem());
 		initialSystems.add(new CanvasGroupRenderer());
@@ -137,6 +141,7 @@ public class World implements Lifecycle {
 			throw new IllegalStateException("World has already been initialized.");
 		}
 		
+		calculateDepth();
 		systemManager.init(window);
 		initialized = true;
 	}
@@ -173,6 +178,7 @@ public class World implements Lifecycle {
 		componentManager.destroy();
 		systemManager.destroy();
 		queryPool.clear();
+		application.getTracker().reset();
 	}
 	
 	/**
@@ -207,16 +213,24 @@ public class World implements Lifecycle {
 			return entity;
 		}
 		entityManager.addEntity(entity);
+		if (initialized) {
+			calculateDepth();
+		}
 		systemManager.register(entity);
-		application.getTracker().addEntity();
 		return entity;
 	}
 	
 	public void removeEntity(Entity entity) {
 		entityManager.removeEntity(entity);
+		if (initialized) {
+			calculateDepth();
+		}
 		systemManager.unregister(entity);
 		componentManager.removeComponents(entity);
-		application.getTracker().removeEntity();
+	}
+	
+	public void activateEntity(Entity entity) {
+		systemManager.activateEntity(entity);
 	}
 	
 	/**
@@ -231,7 +245,6 @@ public class World implements Lifecycle {
 		}
 		componentManager.addComponent(entity, component);
 		systemManager.register(entity);
-		application.getTracker().addComponent();
 		return component;
 	}
 	
@@ -243,7 +256,6 @@ public class World implements Lifecycle {
 	public void removeComponent(Entity entity, Component component) {
 		componentManager.removeComponent(entity, component);
 		systemManager.register(entity);
-		application.getTracker().removeComponent();
 	}
 	
 	/**
@@ -265,11 +277,30 @@ public class World implements Lifecycle {
 		if (!systemManager.isInitialized()) {
 			useSystem(system);
 		} else {
-			if (systemManager.addSystem(system)) {
-				application.getTracker().addSystem();
-			}
+			systemManager.addSystem(system);
 		}
 		
 		return system;
+	}
+	
+	public void calculateDepth() {
+		ArrayList<Transform> rootParents = new ArrayList<>();
+		
+		// Get root parent transforms
+		for (Entity entity : entityManager.getEntities()) {
+			if (entity.transform.parent == null) {
+				rootParents.add(entity.transform);
+			}
+		}
+		
+		// Calculate depth for each root parent
+		int depth = 0;
+		for (Transform rootParent : rootParents) {
+			depth = rootParent.calculateDepth(depth);
+		}
+		maxDepth = depth;
+		
+		// Update systems that use depth
+		systemManager.updateEntityDepth();
 	}
 }

@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.system.resource.Image;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
@@ -28,7 +29,9 @@ public class Application implements Lifecycle {
 	// Data
 	/** Title of the application */
 	public String title;
+	/** Target frames per second. When set to <code>0</code>, fps is uncapped. */
 	public int targetFps;
+	public String defaultFontPath;
 	
 	// State
 	/** True if the application has been initialized */
@@ -57,13 +60,16 @@ public class Application implements Lifecycle {
 	
 	private GLFWErrorCallback errorCallback;
 	
+	public static final String DEFAULT_TITLE = "Untitled";
+	public static final int DEFAULT_TARGET_FPS = 60;
+	
 	/**
 	 * Creates an application titled "Application".
 	 * @param width Width of the window
 	 * @param height height of the window
 	 */
 	public Application(int width, int height) {
-		this("Application", width, height);
+		this(DEFAULT_TITLE, width, height);
 	}
 	
 	/**
@@ -84,7 +90,7 @@ public class Application implements Lifecycle {
 	 * @param scene Starting scene
 	 */
 	public Application(String title, int width, int height, Scene scene) {
-		this(title, width, height, scene, 60);
+		this(title, width, height, scene, DEFAULT_TARGET_FPS);
 	}
 	
 	/**
@@ -188,7 +194,7 @@ public class Application implements Lifecycle {
 	 */
 	@Override
 	public void start() {
-		long targetTime = 1000L / targetFps;
+		long targetTime = (targetFps == 0) ? 0 : 1000L / targetFps;
 		
 		System.out.printf("Starting application (fps: %s)%n", targetFps);
 		
@@ -240,14 +246,18 @@ public class Application implements Lifecycle {
 			timer.update();
 			
 			long endTime = (long) (timer.getTime() * 1000);
-			try {
-				long timeout = startTime + targetTime - endTime;
-				
-				if (timeout > 0) {
-					sleep(timeout);
+			
+			// Sleep until target time is reached, to match target fps
+			if (targetFps != 0) {
+				try {
+					long timeout = startTime + targetTime - endTime;
+					
+					if (timeout > 0) {
+						sleep(timeout);
+					}
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
 				}
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
 			}
 		}
 		
@@ -461,6 +471,17 @@ public class Application implements Lifecycle {
 			System.err.println("Failed to load icons.");
 			e.printStackTrace();
 		}
+	}
+	
+	public void setDefaultFont(String fontPath) {
+		defaultFontPath = fontPath;
+	}
+	
+	public Font getDefaultFont() {
+		if (defaultFontPath == null) {
+			return null;
+		}
+		return ResourcePool.loadFont(defaultFontPath);
 	}
 	
 	/**

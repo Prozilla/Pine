@@ -2,6 +2,8 @@ package dev.prozilla.pine.core.component.sprite;
 
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.prefab.Prefab;
+import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -27,6 +29,14 @@ public class GridGroup extends Component {
 		return "GridGroup";
 	}
 	
+	public TileRenderer addTile(TilePrefab tilePrefab, Point coordinate) {
+		return addTile(tilePrefab.instantiate(entity.getWorld(), coordinate));
+	}
+	
+	public TileRenderer addTile(Prefab prefab) {
+		return addTile(prefab.instantiate(entity.getWorld()));
+	}
+	
 	public TileRenderer addTile(Entity entity) {
 		return addTile(entity.getComponent(TileRenderer.class));
 	}
@@ -38,6 +48,11 @@ public class GridGroup extends Component {
 		
 		tile.size = size;
 		coordinateToTile.put(tile.coordinate, tile);
+		
+		if (!entity.transform.children.contains(tile.getEntity().transform)) {
+			entity.addChild(tile.getEntity());
+		}
+		
 		return tile;
 	}
 	
@@ -52,6 +67,10 @@ public class GridGroup extends Component {
 	public boolean removeTile(TileRenderer tile) {
 		if (tile == null || !coordinateToTile.containsKey(tile.coordinate)) {
 			return false;
+		}
+		
+		if (entity.transform.children.contains(tile.getEntity().transform)) {
+			entity.removeChild(tile.getEntity());
 		}
 		
 		return (coordinateToTile.remove(tile.coordinate) != null);

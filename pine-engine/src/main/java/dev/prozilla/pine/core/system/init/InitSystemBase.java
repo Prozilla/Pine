@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.system.init;
 
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.system.SystemBase;
 
 /**
@@ -17,4 +18,9 @@ public abstract class InitSystemBase extends SystemBase {
 	 * Initializes each entity's data.
 	 */
 	public abstract void init();
+	
+	public void activateEntity(Entity entity) {
+		unregister(entity);
+		register(entity);
+	}
 }

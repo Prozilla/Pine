@@ -19,9 +19,9 @@ public class PlayerMover extends UpdateSystem {
 	
 	@Override
 	protected void process(EntityMatch match, float deltaTime) {
-		Transform transform = match.getComponent(Transform.class);
-		SpriteRenderer spriteRenderer = match.getComponent(SpriteRenderer.class);
-		PlayerData playerData = match.getComponent(PlayerData.class);
+		Transform transform = chunk.getComponent(Transform.class);
+		SpriteRenderer spriteRenderer = chunk.getComponent(SpriteRenderer.class);
+		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		
 		// Check if player hit floor or ceiling
 		if (transform.y <= Main.HEIGHT / -2f || transform.y + PlayerData.HEIGHT >= Main.HEIGHT / 2f) {

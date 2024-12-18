@@ -7,6 +7,7 @@ public class CameraControlData extends Component {
 	
 	public float movementSpeed;
 	public float velocityDamping;
+	public boolean disableControlsOnPause;
 	
 	public float zoomSpeed;
 	public float minZoom;
