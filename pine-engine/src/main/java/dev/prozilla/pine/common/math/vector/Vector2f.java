@@ -1,174 +1,65 @@
-/*
- * The MIT License (MIT)
- *
- * Copyright © 2015-2017, Heiko Brumme
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 package dev.prozilla.pine.common.math.vector;
 
 import java.nio.FloatBuffer;
 
 /**
- * Represents a (x,y)-Vector. GLSL equivalent to vec2.
+ * 2-dimensional vector with floating point precision. GLSL equivalent to <code>vec2</code>.
  */
-public class Vector2f {
+public class Vector2f implements VectorFloat<Vector2f> {
 
     public float x;
     public float y;
-
+    
     /**
-     * Creates a default 2-tuple vector with all values set to 0.
+     * Creates a default 2-dimensional vector with all values set to <code>0f</code>.
      */
     public Vector2f() {
-        this.x = 0f;
-        this.y = 0f;
+        this(0f, 0f);
     }
-
+    
     /**
-     * Creates a 2-tuple vector with specified values.
-     *
-     * @param x x value
-     * @param y y value
+     * Creates a 2-dimensional vector with given values.
      */
     public Vector2f(float x, float y) {
         this.x = x;
         this.y = y;
     }
-
-    /**
-     * Calculates the squared length of the vector.
-     *
-     * @return Squared length of this vector
-     */
+    
+    @Override
+    public Vector2f add(Vector2f vector2f) {
+        x += vector2f.x;
+        y += vector2f.y;
+        return this;
+    }
+    
+    @Override
+    public Vector2f scale(float scalar) {
+        x *= scalar;
+        y *= scalar;
+        return this;
+    }
+    
+    @Override
     public float lengthSquared() {
         return x * x + y * y;
     }
-
-    /**
-     * Calculates the length of the vector.
-     *
-     * @return Length of this vector
-     */
-    public float length() {
-        return (float) Math.sqrt(lengthSquared());
+    
+    @Override
+    public float dot(Vector2f vector2f) {
+        return this.x * vector2f.x + this.y * vector2f.y;
     }
-
-    /**
-     * Normalizes the vector.
-     *
-     * @return Normalized vector
-     */
-    public Vector2f normalize() {
-        float length = length();
-        return divide(length);
-    }
-
-    /**
-     * Adds this vector to another vector.
-     *
-     * @param other The other vector
-     *
-     * @return Sum of this + other
-     */
-    public Vector2f add(Vector2f other) {
-        float x = this.x + other.x;
-        float y = this.y + other.y;
-        return new Vector2f(x, y);
-    }
-
-    /**
-     * Negates this vector.
-     *
-     * @return Negated vector
-     */
-    public Vector2f negate() {
-        return scale(-1f);
-    }
-
-    /**
-     * Subtracts this vector from another vector.
-     *
-     * @param other The other vector
-     *
-     * @return Difference of this - other
-     */
-    public Vector2f subtract(Vector2f other) {
-        return this.add(other.negate());
-    }
-
-    /**
-     * Multiplies a vector by a scalar.
-     *
-     * @param scalar Scalar to multiply
-     *
-     * @return Scalar product of this * scalar
-     */
-    public Vector2f scale(float scalar) {
-        float x = this.x * scalar;
-        float y = this.y * scalar;
-        return new Vector2f(x, y);
-    }
-
-    /**
-     * Divides a vector by a scalar.
-     *
-     * @param scalar Scalar to multiply
-     *
-     * @return Scalar quotient of this / scalar
-     */
-    public Vector2f divide(float scalar) {
-        return scale(1f / scalar);
-    }
-
-    /**
-     * Calculates the dot product of this vector with another vector.
-     *
-     * @param other The other vector
-     *
-     * @return Dot product of this * other
-     */
-    public float dot(Vector2f other) {
-        return this.x * other.x + this.y * other.y;
-    }
-
-    /**
-     * Calculates a linear interpolation between this vector with another
-     * vector.
-     *
-     * @param other The other vector
-     * @param alpha The alpha value, must be between 0.0 and 1.0
-     *
-     * @return Linear interpolated vector
-     */
-    public Vector2f lerp(Vector2f other, float alpha) {
-        return this.scale(1f - alpha).add(other.scale(alpha));
-    }
-
-    /**
-     * Stores the vector in a given Buffer.
-     *
-     * @param buffer The buffer to store the vector data
-     */
+    
+    @Override
     public void toBuffer(FloatBuffer buffer) {
         buffer.put(x).put(y);
         buffer.flip();
     }
-
+    
+    /**
+     * Converts this vector to a string representation in the format "(x,y)".
+     */
+    @Override
+    public String toString() {
+        return String.format("(%s,%s)", x, y);
+    }
 }
