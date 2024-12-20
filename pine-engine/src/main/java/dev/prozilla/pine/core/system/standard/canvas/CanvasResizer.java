@@ -20,8 +20,8 @@ public class CanvasResizer extends UpdateSystemBase {
 		forEach(chunk -> {
 			CanvasRenderer canvasRenderer = chunk.getComponent(CanvasRenderer.class);
 			
-			canvasRenderer.width = width;
-			canvasRenderer.height = height;
+			canvasRenderer.size.x = width;
+			canvasRenderer.size.y = height;
 		});
 	}
 }

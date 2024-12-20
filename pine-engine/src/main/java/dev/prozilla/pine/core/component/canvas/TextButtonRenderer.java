@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.component.canvas;
 
 import dev.prozilla.pine.common.Callback;
+import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -17,10 +18,7 @@ public class TextButtonRenderer extends Component {
 	public Color hoverColor;
 	public Color backgroundHoverColor;
 	public Color backgroundColor;
-	/** Horizontal padding around text. */
-	public int paddingX;
-	/** Vertical padding around text. */
-	public int paddingY;
+	public Vector2i padding;
 	public Callback clickCallback;
 	public boolean isHovering;
 	
@@ -36,8 +34,7 @@ public class TextButtonRenderer extends Component {
 			backgroundHoverColor.setAlpha(backgroundHoverColor.getAlpha() * 0.75f);
 		}
 		
-		paddingX = 0;
-		paddingY = 0;
+		padding = new Vector2i();
 		isHovering = false;
 	}
 	

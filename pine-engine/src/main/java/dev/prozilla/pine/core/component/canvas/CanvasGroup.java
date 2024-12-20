@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.component.canvas;
 
+import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.math.vector.Vector4i;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Component;
 
@@ -16,13 +18,9 @@ public class CanvasGroup extends Component {
 	public Color backgroundColor;
 	/** Distance between elements. */
 	public int gap;
-	/** Horizontal padding around elements. */
-	public int paddingX;
-	/** Vertical padding around elements. */
-	public int paddingY;
+	public Vector2i padding;
 	
-	public int innerWidth;
-	public int innerHeight;
+	public Vector2i innerSize;
 	
 	/** Array of rect components in children of the attached entity */
 	public List<RectTransform> childRects;
@@ -61,10 +59,8 @@ public class CanvasGroup extends Component {
 		
 		childRects = new ArrayList<>();
 		gap = 0;
-		paddingX = 0;
-		paddingY = 0;
-		innerWidth = 0;
-		innerHeight = 0;
+		padding = new Vector2i();
+		innerSize = new Vector2i();
 	}
 	
 	@Override

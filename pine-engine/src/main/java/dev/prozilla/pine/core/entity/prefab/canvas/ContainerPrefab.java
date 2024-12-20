@@ -53,8 +53,8 @@ public class ContainerPrefab extends CanvasElementPrefab {
 		CanvasGroup canvasGroup = entity.addComponent(new CanvasGroup());
 		
 		canvasGroup.gap = gap;
-		canvasGroup.paddingX = paddingX;
-		canvasGroup.paddingY = paddingY;
+		canvasGroup.padding.x = paddingX;
+		canvasGroup.padding.y = paddingY;
 		canvasGroup.backgroundColor = backgroundColor;
 		
 		if (direction != null) {

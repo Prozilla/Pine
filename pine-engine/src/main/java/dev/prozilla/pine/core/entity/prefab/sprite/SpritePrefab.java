@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.sprite;
 
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.core.component.Transform;
@@ -19,10 +20,8 @@ public class SpritePrefab extends Prefab {
 	protected Texture texture;
 	
 	protected boolean cropToRegion;
-	protected float regionX;
-	protected float regionY;
-	protected float regionWidth;
-	protected float regionHeight;
+	protected Vector2f regionOffset;
+	protected Vector2f regionSize;
 	
 	public SpritePrefab(String texturePath) {
 		this(ResourcePool.loadTexture(texturePath));
@@ -33,6 +32,8 @@ public class SpritePrefab extends Prefab {
 		
 		this.texture = texture;
 		cropToRegion = false;
+		regionOffset = new Vector2f();
+		regionSize = new Vector2f(texture.getWidth(), texture.getHeight());
 		setName("Sprite");
 	}
 	
@@ -41,10 +42,10 @@ public class SpritePrefab extends Prefab {
 	 */
 	public void setRegion(float x, float y, float width, float height) {
 		cropToRegion = true;
-		regionX = x;
-		regionY = y;
-		regionWidth = width;
-		regionHeight = height;
+		regionOffset.x = x;
+		regionOffset.y = y;
+		regionSize.x = width;
+		regionSize.y = height;
 	}
 	
 	@Override
@@ -52,7 +53,7 @@ public class SpritePrefab extends Prefab {
 		SpriteRenderer spriteRenderer = entity.addComponent(new SpriteRenderer(texture));
 		
 		if (cropToRegion) {
-			spriteRenderer.setRegion(regionX, regionY, regionWidth, regionHeight);
+			spriteRenderer.setRegion(regionOffset, regionSize);
 		}
 	}
 }

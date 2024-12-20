@@ -29,12 +29,12 @@ public class TextRenderSystem extends RenderSystem {
 	}
 	
 	public static void renderText(Renderer renderer, TextRenderer textRenderer, RectTransform rect, float z) {
-		renderText(renderer, textRenderer, rect.x, rect.y, z, textRenderer.color);
+		renderText(renderer, textRenderer, rect.position.x, rect.position.y, z, textRenderer.color);
 	}
 	
 	public static void renderText(Renderer renderer, TextRenderer textRenderer, int x, int y, float z, Color color) {
 		renderText(renderer, textRenderer.text, textRenderer.font, x, y,
-			textRenderer.width, textRenderer.height, z, color);
+			textRenderer.size.x, textRenderer.size.y, z, color);
 	}
 	
 	/**

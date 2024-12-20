@@ -95,8 +95,8 @@ public class ImageButtonPrefab extends ImagePrefab {
 		
 		ImageButtonRenderer imageButtonRenderer = entity.addComponent(new ImageButtonRenderer());
 		
-		imageButtonRenderer.paddingX = paddingX;
-		imageButtonRenderer.paddingY = paddingY;
+		imageButtonRenderer.padding.x = paddingX;
+		imageButtonRenderer.padding.y = paddingY;
 		
 		if (hoverColor != null) {
 			imageButtonRenderer.hoverColor = hoverColor;

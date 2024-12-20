@@ -109,10 +109,11 @@ public class Entity implements Lifecycle {
 			throw new IllegalArgumentException("Child can't be null");
 		}
 		
-		boolean added = transform.children.add(child.transform);
-		if (!added) {
+		if (transform.children.contains(child.transform)) {
 			throw new IllegalStateException("Entity is already a child");
 		}
+		
+		transform.children.add(child.transform);
 		child.transform.setParent(transform);
 		
 		if (isRegistered()) {

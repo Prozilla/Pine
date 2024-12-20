@@ -1,6 +1,6 @@
 package dev.prozilla.pine.examples.flappybird.system.obstacle;
 
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 import dev.prozilla.pine.examples.flappybird.GameScene;
 import dev.prozilla.pine.examples.flappybird.Main;
@@ -21,7 +21,7 @@ public class PipesInitializer extends InitSystem {
 	}
 	
 	@Override
-	protected void process(EntityMatch match) {
+	protected void process(EntityChunk chunk) {
 		PipesData pipesData = chunk.getComponent(PipesData.class);
 		
 		// Store reference to scene
@@ -32,8 +32,8 @@ public class PipesInitializer extends InitSystem {
 		int gap = random.nextInt(150, 200);
 		
 		// Position pipes
-		pipesData.topPipePrefab.transform.y = height + gap / 2f;
-		pipesData.bottomPipePrefab.transform.y = height - gap / 2f - PipeData.HEIGHT * 1.5f;
+		pipesData.topPipePrefab.transform.position.y = height + gap / 2f;
+		pipesData.bottomPipePrefab.transform.position.y = height - gap / 2f - PipeData.HEIGHT * 1.5f;
 		
 		pipesData.passed = false;
 	}

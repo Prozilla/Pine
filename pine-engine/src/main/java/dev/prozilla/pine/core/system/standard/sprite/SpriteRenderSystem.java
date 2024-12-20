@@ -26,8 +26,8 @@ public class SpriteRenderSystem extends RenderSystemBase {
 			Entity entity = spriteRenderer.entity;
 			
 			// Calculate world position
-			float worldX = entity.transform.getGlobalX() + spriteRenderer.offsetX;
-			float worldY = entity.transform.getGlobalY() + spriteRenderer.offsetY;
+			float worldX = entity.transform.getGlobalX() + spriteRenderer.offset.x;
+			float worldY = entity.transform.getGlobalY() + spriteRenderer.offset.y;
 			
 			// Calculate screen position
 			float[] position = camera.applyTransform(worldX, worldY);
@@ -37,15 +37,13 @@ public class SpriteRenderSystem extends RenderSystemBase {
 			// Apply zoom scale
 			renderer.setScale(spriteRenderer.scale * camera.getZoom());
 			
-//			chunk.getEntity().print();
-			
 			// Draw cropped and rotated texture
 			if (!spriteRenderer.cropToRegion) {
 				renderer.drawRotatedTexture(spriteRenderer.texture, x, y, transform.getDepth(), spriteRenderer.color, spriteRenderer.rotation);
 			} else {
 				renderer.drawRotatedTextureRegion(spriteRenderer.texture, x, y, transform.getDepth(),
-				 spriteRenderer.regionX, spriteRenderer.regionY,
-				 spriteRenderer.regionWidth, spriteRenderer.regionHeight,
+				 spriteRenderer.regionOffset.x, spriteRenderer.regionOffset.y,
+				 spriteRenderer.regionSize.x, spriteRenderer.regionSize.y,
 				 spriteRenderer.color, spriteRenderer.rotation);
 			}
 		});

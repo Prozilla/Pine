@@ -11,8 +11,6 @@ import dev.prozilla.pine.examples.flappybird.component.PlayerData;
 import dev.prozilla.pine.examples.flappybird.entity.*;
 import dev.prozilla.pine.examples.flappybird.system.background.BackgroundInitializer;
 import dev.prozilla.pine.examples.flappybird.system.background.BackgroundMover;
-import dev.prozilla.pine.examples.flappybird.system.canvas.GameOverTextInitializer;
-import dev.prozilla.pine.examples.flappybird.system.canvas.ScoreTextInitializer;
 import dev.prozilla.pine.examples.flappybird.system.canvas.ScoreTextUpdater;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipeInitializer;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipesInitializer;
@@ -52,15 +50,15 @@ public class GameScene extends Scene {
 	protected void load() {
 		super.load();
 		
+		// Load resources
+		font = ResourcePool.loadFont("flappybird/flappy-bird.ttf", 32);
+		
 		// Create prefabs for entities
 		BackgroundPrefab backgroundPrefab = new BackgroundPrefab();
 		PlayerPrefab playerPrefab = new PlayerPrefab();
-		ScorePrefab scorePrefab = new ScorePrefab();
-		GameOverPrefab gameOverPrefab = new GameOverPrefab();
+		ScorePrefab scorePrefab = new ScorePrefab(font);
+		GameOverPrefab gameOverPrefab = new GameOverPrefab(font);
 		pipesPrefab = new PipesPrefab();
-		
-		// Load resources
-		font = ResourcePool.loadFont("flappybird/flappy-bird.ttf", 32);
 		
 		// Add systems
 		world.addSystem(new PlayerInitializer());
@@ -71,9 +69,7 @@ public class GameScene extends Scene {
 		world.addSystem(new PipeInitializer());
 		world.addSystem(new PipesInitializer());
 		world.addSystem(new PipesMover());
-		world.addSystem(new ScoreTextInitializer());
 		world.addSystem(new ScoreTextUpdater());
-		world.addSystem(new GameOverTextInitializer());
 		
 		// Fill screen with background sprites
 		int backgroundCount = Math.round((float)Main.WIDTH / BackgroundData.WIDTH + 0.5f) + 1;

@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.core.state.Tracker;
@@ -203,6 +204,14 @@ public class Renderer implements Lifecycle {
         debugFont.drawText(this, text, x, y, 0, c);
     }
     
+    public Vector2i getTextSize(CharSequence text) {
+        return getTextSize(defaultFont, text);
+    }
+    
+    public Vector2i getTextSize(Font font, CharSequence text) {
+        return new Vector2i(getTextWidth(font, text), getTextHeight(font, text));
+    }
+    
     public int getTextWidth(CharSequence text) {
         return getTextWidth(defaultFont, text);
     }
@@ -342,7 +351,7 @@ public class Renderer implements Lifecycle {
         
         texture.bind();
         
-        drawTextureRegion(x, y, x2, y2, s1, t1, z, s2, t2, c);
+        drawTextureRegion(x, y, x2, y2, z, s1, t1, s2, t2, c);
     }
     
     public void drawRotatedTextureRegion(Texture texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, float r) {
@@ -371,12 +380,12 @@ public class Renderer implements Lifecycle {
         float rotatedHeight = Math.abs(sinAngle * regWidth * renderScale) + Math.abs(cosAngle * regHeight * renderScale);
         
         // Adjust the position so that the texture rotates around its center
-        float adjustedX = centerX - rotatedWidth / 2.0f;
-        float adjustedY = centerY - rotatedHeight / 2.0f;
+        float newX = centerX - rotatedWidth / 2.0f;
+        float newY = centerY - rotatedHeight / 2.0f;
         
         // Calculate the new x2 and y2
-        float x2 = adjustedX + rotatedWidth;
-        float y2 = adjustedY + rotatedHeight;
+        float x2 = newX + rotatedWidth;
+        float y2 = newY + rotatedHeight;
         
         // Texture coordinates
         float s1 = regX / texture.getWidth();
@@ -388,7 +397,7 @@ public class Renderer implements Lifecycle {
         texture.bind();
         
         // Delegate to the rotation drawing method
-        drawRotatedTextureRegion(adjustedX, adjustedY, x2, y2, s1, t1, z, s2, t2, c, r);
+        drawRotatedTextureRegion(newX, newY, x2, y2, z, s1, t1, s2, t2, c, r);
     }
     
     public void drawRotatedTextureRegion(float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, float r) {

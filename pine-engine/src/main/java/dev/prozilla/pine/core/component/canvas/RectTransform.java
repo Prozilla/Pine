@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.component.canvas;
 
+import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Component;
 
 /**
@@ -9,14 +10,9 @@ import dev.prozilla.pine.core.component.Component;
  */
 public class RectTransform extends Component {
 	
-	public int x;
-	public int y;
-	
-	public int offsetX;
-	public int offsetY;
-	
-	public int width;
-	public int height;
+	public Vector2i position;
+	public Vector2i offset;
+	public Vector2i size;
 	
 	/** If true, the width and height of this rect will be changed each update to fill its container or the entire canvas.  */
 	public boolean fillContainer;
@@ -40,39 +36,33 @@ public class RectTransform extends Component {
 	}
 	
 	public RectTransform() {
-		x = 0;
-		y = 0;
-		width = 0;
-		height = 0;
-		offsetX = 0;
-		offsetY = 0;
+		position = new Vector2i();
+		offset = new Vector2i();
+		size = new Vector2i();
 		anchor = Anchor.BOTTOM_LEFT;
 		passThrough = false;
 		cursorHit = false;
 		fillContainer = false;
 	}
 	
-//	@Override
-//	public void attach(Entity entity) throws IllegalArgumentException {
-//		if (!(entity instanceof CanvasElement)) {
-//			throw new IllegalArgumentException("TextRenderer component must be attached to a CanvasElement");
-//		}
-//
-//		super.attach(entity);
-//	}
-	
 	@Override
 	public String getName() {
 		return "RectTransform";
 	}
 	
-	public boolean isInside(int x, int y) {
-		return isInside(x, y, this.x, this.y, width, height);
+	public boolean isInside(Vector2i point) {
+		return isInsideRect(point, position, size);
 	}
 	
-	public boolean isInside(int x, int y, int rectX, int rectY, int rectWidth, int rectHeight) {
-		return x >= rectX && x < rectX + rectWidth
-			&& y >= rectY && y < rectY + rectHeight;
+	/**
+	 * Checks if a given points is inside a given rectangle.
+	 * @param rectPosition Position of the rectangle
+	 * @param rectSize Size of the rectangle
+	 * @return True if the point is inside the rectangle
+	 */
+	public static boolean isInsideRect(Vector2i point, Vector2i rectPosition, Vector2i rectSize) {
+		return point.x >= rectPosition.x && point.x < rectPosition.x + rectSize.x
+			&& point.y >= rectPosition.y && point.y < rectPosition.y + rectSize.y;
 	}
 	
 	public CanvasRenderer getCanvas() throws IllegalStateException {
@@ -99,29 +89,34 @@ public class RectTransform extends Component {
 		this.anchor = anchor;
 	}
 	
+	public void setOffset(Vector2i offset) {
+		setOffset(offset.x, offset.y);
+	}
+	
 	public void setOffset(int x, int y) {
 		setOffsetX(x);
 		setOffsetY(y);
 	}
 	
 	public void setOffsetX(int offsetX) {
-		this.offsetX = offsetX;
+		offset.x = offsetX;
 	}
 	
 	public void setOffsetY(int offsetY) {
-		this.offsetY = offsetY;
+		offset.y = offsetY;
 	}
 	
 	@Override
 	public String toString() {
 		return "RectTransform{" +
-			"x=" + x +
-			", y=" + y +
-			", offsetX=" + offsetX +
-			", offsetY=" + offsetY +
-			", width=" + width +
-			", height=" + height +
-			'}';
+		        "cursorHit=" + cursorHit +
+		        ", passThrough=" + passThrough +
+		        ", anchor=" + anchor +
+		        ", fillContainer=" + fillContainer +
+		        ", size=" + size +
+		        ", offset=" + offset +
+		        ", position=" + position +
+		        '}';
 	}
 	
 	public void print() {

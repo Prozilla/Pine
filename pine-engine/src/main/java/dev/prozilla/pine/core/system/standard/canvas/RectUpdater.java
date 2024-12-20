@@ -32,12 +32,12 @@ public class RectUpdater extends UpdateSystem {
 		int canvasWidth = rect.getCanvas().getWidth();
 		int canvasHeight = rect.getCanvas().getHeight();
 		
-		rect.width = canvasWidth;
-		rect.height = canvasHeight;
+		rect.size.x = canvasWidth;
+		rect.size.y = canvasHeight;
 	}
 	
 	public static void anchorRect(RectTransform rect) {
-		if (rect.width == 0 || rect.height == 0 || rect.anchor == null) {
+		if (rect.size.x == 0 || rect.size.y == 0 || rect.anchor == null) {
 			return;
 		}
 		
@@ -46,32 +46,32 @@ public class RectUpdater extends UpdateSystem {
 		
 		switch (rect.anchor) {
 			case BOTTOM_LEFT:
-				rect.x = rect.offsetX;
-				rect.y = rect.offsetY;
+				rect.position.x = rect.offset.x;
+				rect.position.y = rect.offset.y;
 				break;
 			case BOTTOM_RIGHT:
-				rect.x = canvasWidth - rect.width - rect.offsetX;
-				rect.y = rect.offsetY;
+				rect.position.x = canvasWidth - rect.size.x - rect.offset.x;
+				rect.position.y = rect.offset.y;
 				break;
 			case BOTTOM_CENTER:
-				rect.x = Math.round((float)(canvasWidth - rect.width) / 2f) + rect.offsetX;
-				rect.y = rect.offsetY;
+				rect.position.x = Math.round((float)(canvasWidth - rect.size.x) / 2f) + rect.offset.x;
+				rect.position.y = rect.offset.y;
 				break;
 			case CENTER:
-				rect.x = Math.round((float)(canvasWidth - rect.width) / 2f) + rect.offsetX;
-				rect.y = Math.round((float)(canvasHeight - rect.height) / 2f) + rect.offsetY;
+				rect.position.x = Math.round((float)(canvasWidth - rect.size.x) / 2f) + rect.offset.x;
+				rect.position.y = Math.round((float)(canvasHeight - rect.size.y) / 2f) + rect.offset.y;
 				break;
 			case TOP_LEFT:
-				rect.x = rect.offsetX;
-				rect.y = canvasHeight - rect.height - rect.offsetY;
+				rect.position.x = rect.offset.x;
+				rect.position.y = canvasHeight - rect.size.y - rect.offset.y;
 				break;
 			case TOP_RIGHT:
-				rect.x = canvasWidth - rect.width - rect.offsetX;
-				rect.y = canvasHeight - rect.height - rect.offsetY;
+				rect.position.x = canvasWidth - rect.size.x - rect.offset.x;
+				rect.position.y = canvasHeight - rect.size.y - rect.offset.y;
 				break;
 			case TOP_CENTER:
-				rect.x = Math.round((float)(canvasWidth - rect.width) / 2f) + rect.offsetX;
-				rect.y = canvasHeight - rect.height - rect.offsetY;
+				rect.position.x = Math.round((float)(canvasWidth - rect.size.x) / 2f) + rect.offset.x;
+				rect.position.y = canvasHeight - rect.size.y - rect.offset.y;
 				break;
 		}
 	}

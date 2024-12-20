@@ -16,7 +16,7 @@ public class ImageInitializer extends InitSystem {
 		ImageRenderer imageRenderer = chunk.getComponent(ImageRenderer.class);
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
-		rect.width = imageRenderer.regionWidth;
-		rect.height = imageRenderer.regionHeight;
+		rect.size.x = imageRenderer.regionSize.x;
+		rect.size.y = imageRenderer.regionSize.y;
 	}
 }

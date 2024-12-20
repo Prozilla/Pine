@@ -2,7 +2,7 @@ package dev.prozilla.pine.examples.flappybird.system.player;
 
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.MouseButton;
@@ -19,7 +19,7 @@ public class PlayerInputHandler extends InputSystem {
 	}
 	
 	@Override
-	public void process(EntityMatch match, Input input, float deltaTime) {
+	public void process(EntityChunk chunk, Input input, float deltaTime) {
 		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		
 		if (!playerData.gameScene.gameOver) {

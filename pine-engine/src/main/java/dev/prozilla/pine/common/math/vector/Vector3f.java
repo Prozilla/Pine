@@ -5,7 +5,7 @@ import java.nio.FloatBuffer;
 /**
  * 3-dimensional vector with floating point precision. GLSL equivalent to <code>vec3</code>.
  */
-public class Vector3f implements Vector<Vector3f> {
+public class Vector3f implements VectorFloat<Vector3f> {
 
     public float x;
     public float y;
@@ -27,9 +27,11 @@ public class Vector3f implements Vector<Vector3f> {
         this.z = z;
     }
     
-    @Override
-    public float length() {
-        return (float)Math.sqrt(lengthSquared());
+    public Vector3f add(float x, float y, float z) {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+        return this;
     }
     
     @Override
@@ -48,25 +50,17 @@ public class Vector3f implements Vector<Vector3f> {
         return this;
     }
     
-    /**
-     * Calculates the squared length of this vector.
-     */
+    @Override
     public float lengthSquared() {
         return x * x + y * y + z * z;
     }
     
-    /**
-     * Calculates the dot product of this vector with another vector.
-     * @return Dot product of this vector multiplied by another vector
-     */
-    public float dot(Vector3f other) {
-        return x * other.x + y * other.y + z * other.z;
+    @Override
+    public float dot(Vector3f vector3f) {
+        return x * vector3f.x + y * vector3f.y + z * vector3f.z;
     }
     
-    /**
-     * Stores the vector in a given buffer.
-     * @param buffer The buffer to store the vector data in
-     */
+    @Override
     public void toBuffer(FloatBuffer buffer) {
         buffer.put(x).put(y).put(z);
         buffer.flip();

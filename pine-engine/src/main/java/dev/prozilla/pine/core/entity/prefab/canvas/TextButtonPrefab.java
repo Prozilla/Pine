@@ -93,8 +93,8 @@ public class TextButtonPrefab extends TextPrefab {
 		
 		TextButtonRenderer textButtonRenderer = entity.addComponent(new TextButtonRenderer());
 		
-		textButtonRenderer.paddingX = paddingX;
-		textButtonRenderer.paddingY = paddingY;
+		textButtonRenderer.padding.x = paddingX;
+		textButtonRenderer.padding.y = paddingY;
 		
 		if (hoverColor != null) {
 			textButtonRenderer.hoverColor = hoverColor;

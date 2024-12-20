@@ -23,17 +23,17 @@ public class ImageButtonRenderSystem extends RenderSystem {
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
 		// Render background
-		if (rect.width != 0 && rect.height != 0 && imageButtonRenderer.backgroundColor != null) {
+		if (rect.size.x != 0 && rect.size.y != 0 && imageButtonRenderer.backgroundColor != null) {
 			Color backgroundColor = (imageButtonRenderer.isHovering && imageButtonRenderer.backgroundHoverColor != null) ? imageButtonRenderer.backgroundHoverColor : imageButtonRenderer.backgroundColor;
-			renderer.drawRect(rect.x, rect.y - imageButtonRenderer.paddingY * 2, transform.getDepth(), rect.width, rect.height, backgroundColor);
+			renderer.drawRect(rect.position.x, rect.position.y - imageButtonRenderer.padding.y * 2, transform.getDepth(), rect.size.x, rect.size.y, backgroundColor);
 		}
 		
 		// Render image
 		Color imageColor = (imageButtonRenderer.isHovering && imageButtonRenderer.hoverColor != null) ? imageButtonRenderer.hoverColor : imageRenderer.color;
-		int imageX = rect.x + imageButtonRenderer.paddingX;
-		int imageY = rect.y - imageButtonRenderer.paddingY;
-		int imageWidth = rect.width - imageButtonRenderer.paddingX * 2;
-		int imageHeight = rect.height - imageButtonRenderer.paddingY * 2;
+		int imageX = rect.position.x + imageButtonRenderer.padding.x;
+		int imageY = rect.position.y - imageButtonRenderer.padding.y;
+		int imageWidth = rect.size.x - imageButtonRenderer.padding.x * 2;
+		int imageHeight = rect.size.y - imageButtonRenderer.padding.y * 2;
 		
 		ImageRenderSystem.renderImage(renderer, imageRenderer, imageX, imageY, imageWidth, imageHeight, transform.getDepth(), imageColor);
 	}

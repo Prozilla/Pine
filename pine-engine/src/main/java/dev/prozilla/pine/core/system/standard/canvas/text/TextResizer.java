@@ -18,7 +18,7 @@ public class TextResizer extends UpdateSystem {
 		TextRenderer textRenderer = chunk.getComponent(TextRenderer.class);
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
-		rect.width = textRenderer.width;
-		rect.height = textRenderer.height;
+		rect.size.x = textRenderer.size.x;
+		rect.size.y = textRenderer.size.y;
 	}
 }

@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.component.canvas;
 
+import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.rendering.Renderer;
 
@@ -8,8 +9,11 @@ import dev.prozilla.pine.core.rendering.Renderer;
  */
 public class CanvasRenderer extends Component {
 	
-	public int width;
-	public int height;
+	public Vector2i size;
+	
+	public CanvasRenderer() {
+		size = new Vector2i();
+	}
 	
 	@Override
 	public String getName() {
@@ -17,10 +21,10 @@ public class CanvasRenderer extends Component {
 	}
 	
 	public int getWidth() {
-		return width;
+		return size.x;
 	}
 	
 	public int getHeight() {
-		return height;
+		return size.y;
 	}
 }

@@ -25,6 +25,12 @@ public class Vector2f implements VectorFloat<Vector2f> {
         this.y = y;
     }
     
+    public Vector2f add(float x, float y) {
+        this.x += x;
+        this.y += y;
+        return this;
+    }
+    
     @Override
     public Vector2f add(Vector2f vector2f) {
         x += vector2f.x;

@@ -1,20 +1,19 @@
 package dev.prozilla.pine.core.component;
 
+import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Transform extends Component {
 	
-	/** Local X position value */
-	public float x;
-	/** Local Y position value */
-	public float y;
+	/** Local position */
+	public Vector2f position;
 	/** Rotation in degrees */
 	public float rotation;
-	/** Horizontal velocity, X position is increased by this value every frame. */
-	public float velocityX;
-	/** Vertical velocity, Y position is increased by this value every frame. */
-	public float velocityY;
+	/** The velocity vector is added to the position each frame. */
+	public Vector2f velocity;
 	
 	/** Children of the entity */
 	public final List<Transform> children;
@@ -35,13 +34,11 @@ public class Transform extends Component {
 	}
 	
 	public Transform(float x, float y, float rotation) {
-		this.x = x;
-		this.y = y;
+		position = new Vector2f(x, y);
 		this.rotation = rotation;
 		
 		children = new ArrayList<>();
-		velocityX = 0;
-		velocityY = 0;
+		velocity = new Vector2f();
 		
 		depthIndex = 0;
 		renderChildrenBelow = false;
@@ -49,22 +46,25 @@ public class Transform extends Component {
 	
 	public float getGlobalX() {
 		if (parent == null) {
-			return x;
+			return position.x;
 		} else {
-			return x + parent.getGlobalX();
+			return position.x + parent.getGlobalX();
 		}
 	}
 	
 	public float getGlobalY() {
 		if (parent == null) {
-			return y;
+			return position.y;
 		} else {
-			return y + parent.getGlobalY();
+			return position.y + parent.getGlobalY();
 		}
 	}
 	
 	public void setParent(Transform parent) {
 		this.parent = parent;
+		
+		// Temporarily borrow depth index from parent until depth is recalculated
+		depthIndex = parent.depthIndex;
 	}
 	
 	public int getChildCount() {
@@ -72,18 +72,17 @@ public class Transform extends Component {
 	}
 	
 	public void translate(float deltaX, float deltaY) {
-		x += deltaX;
-		y += deltaY;
+		position.add(deltaX, deltaY);
 	}
 	
 	public void setPosition(float x, float y) {
-		this.x = x;
-		this.y = y;
+		position.x = x;
+		position.y = y;
 	}
 	
 	public void setVelocity(float x, float y) {
-		velocityX = x;
-		velocityY = y;
+		velocity.x = x;
+		velocity.y = y;
 	}
 	
 	/**

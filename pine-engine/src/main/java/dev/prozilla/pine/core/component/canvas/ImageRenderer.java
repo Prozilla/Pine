@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.component.canvas;
 
+import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.math.vector.Vector4i;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
@@ -13,13 +15,11 @@ public class ImageRenderer extends Component {
 	public Texture image;
 	public Color color;
 	
-	public int width;
-	public int height;
+	/** The size at which the image is rendered on the canvas. */
+	public Vector2i size;
 	
-	public int regionX;
-	public int regionY;
-	public int regionWidth;
-	public int regionHeight;
+	public Vector2i regionOffset;
+	public Vector2i regionSize;
 	
 	public ImageRenderer(String imagePath) {
 		this(ResourcePool.loadTexture(imagePath));
@@ -32,13 +32,9 @@ public class ImageRenderer extends Component {
 		
 		this.image = image;
 		
-		width = 0;
-		height = 0;
-		
-		regionX = 0;
-		regionY = 0;
-		regionWidth = image.getWidth();
-		regionHeight = image.getHeight();
+		size = new Vector2i();
+		regionOffset = new Vector2i();
+		regionSize = new Vector2i();
 	}
 	
 	@Override
@@ -48,21 +44,21 @@ public class ImageRenderer extends Component {
 	
 	public void setImage(Texture image) {
 		this.image = image;
-		regionX = 0;
-		regionY = 0;
-		regionWidth = image.getWidth();
-		regionHeight = image.getHeight();
+		regionOffset.x = 0;
+		regionOffset.y = 0;
+		regionSize.x = image.getWidth();
+		regionSize.y = image.getHeight();
 	}
 	
 	public void setSize(int width, int height) {
-		this.width = width;
-		this.height = height;
+		size.x = width;
+		size.y = height;
 	}
 	
 	public void setRegion(int regX, int regY, int regWidth, int regHeight) {
-		regionX = regX;
-		regionY = regY;
-		regionWidth = regWidth;
-		regionHeight = regHeight;
+		regionOffset.x = regX;
+		regionOffset.y = regY;
+		regionSize.x = regWidth;
+		regionSize.y = regHeight;
 	}
 }

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.examples.snake.system;
 
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.system.input.InputSystem;
@@ -13,7 +13,7 @@ public class PlayerInput extends InputSystem {
 	}
 	
 	@Override
-	protected void process(EntityMatch match, Input input, float deltaTime) {
+	protected void process(EntityChunk chunk, Input input, float deltaTime) {
 		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		
 		// Change player direction based on input and previous direction

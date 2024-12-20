@@ -43,7 +43,7 @@ public class GameScene extends Scene {
 		
 		// Add systems to world
 		world.addSystem(new PlayerInput());
-		world.addSystem(new PlayerHeadMover());
+		world.addSystem(new PlayerHeadMover()); 
 		
 		// Add entities to world
 		for (int x = GRID_WIDTH / -2; x <= GRID_WIDTH / 2; x++) {

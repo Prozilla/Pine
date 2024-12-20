@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.system.standard.canvas;
 
+import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.state.input.Input;
@@ -29,7 +30,7 @@ public class RectInputHandler extends InputSystemBase {
 			
 			if (!rect.passThrough && !input.isCursorBlocked()) {
 				int canvasHeight = rect.getCanvas().getHeight();
-				if (cursor != null && rect.isInside(cursor.x, canvasHeight - cursor.y, rect.x, rect.y, rect.width, rect.height)) {
+				if (cursor != null && RectTransform.isInsideRect(new Vector2i(cursor.x, canvasHeight - cursor.y), rect.position, rect.size)) {
 					rect.cursorHit = true;
 					input.blockCursor(entity);
 				}

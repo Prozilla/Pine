@@ -26,32 +26,24 @@ package dev.prozilla.pine.common.math.vector;
 import java.nio.FloatBuffer;
 
 /**
- * Represents a (x,y,z,w)-Vector. GLSL equivalent to vec4.
+ * 4-dimensional vector with floating point precision. GLSL equivalent to <code>vec4</code>.
  */
-public class Vector4f {
-
+public class Vector4f implements VectorFloat<Vector4f> {
+    
     public float x;
     public float y;
     public float z;
     public float w;
-
+    
     /**
-     * Creates a default 4-tuple vector with all values set to 0.
+     * Creates a default 4-dimensional vector with all values set to <code>0f</code>.
      */
     public Vector4f() {
-        this.x = 0f;
-        this.y = 0f;
-        this.z = 0f;
-        this.w = 0f;
+        this(0f, 0f, 0f, 0f);
     }
-
+    
     /**
-     * Creates a 4-tuple vector with specified values.
-     *
-     * @param x x value
-     * @param y y value
-     * @param z z value
-     * @param w w value
+     * Creates a 4-dimensional vector with given values.
      */
     public Vector4f(float x, float y, float z, float w) {
         this.x = x;
@@ -59,128 +51,54 @@ public class Vector4f {
         this.z = z;
         this.w = w;
     }
-
-    /**
-     * Calculates the squared length of the vector.
-     *
-     * @return Squared length of this vector
-     */
+    
+    public Vector4f add(float x, float y, float z, float w) {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+        this.w += w;
+        return this;
+    }
+    
+    @Override
+    public Vector4f add(Vector4f vector4f) {
+        x += vector4f.x;
+        y += vector4f.y;
+        z += vector4f.z;
+        w += vector4f.w;
+        return this;
+    }
+    
+    @Override
+    public Vector4f scale(float scalar) {
+        x *= scalar;
+        y *= scalar;
+        z *= scalar;
+        w *= scalar;
+        return this;
+    }
+    
+    @Override
     public float lengthSquared() {
         return x * x + y * y + z * z + w * w;
     }
-
-    /**
-     * Calculates the length of the vector.
-     *
-     * @return Length of this vector
-     */
-    public float length() {
-        return (float) Math.sqrt(lengthSquared());
+    
+    @Override
+    public float dot(Vector4f vector4f) {
+        return x * vector4f.x + y * vector4f.y + z * vector4f.z + w * vector4f.w;
     }
-
-    /**
-     * Normalizes the vector.
-     *
-     * @return Normalized vector
-     */
-    public Vector4f normalize() {
-        float length = length();
-        return divide(length);
-    }
-
-    /**
-     * Adds this vector to another vector.
-     *
-     * @param other The other vector
-     *
-     * @return Sum of this + other
-     */
-    public Vector4f add(Vector4f other) {
-        float x = this.x + other.x;
-        float y = this.y + other.y;
-        float z = this.z + other.z;
-        float w = this.w + other.w;
-        return new Vector4f(x, y, z, w);
-    }
-
-    /**
-     * Negates this vector.
-     *
-     * @return Negated vector
-     */
-    public Vector4f negate() {
-        return scale(-1f);
-    }
-
-    /**
-     * Subtracts this vector from another vector.
-     *
-     * @param other The other vector
-     *
-     * @return Difference of this - other
-     */
-    public Vector4f subtract(Vector4f other) {
-        return this.add(other.negate());
-    }
-
-    /**
-     * Multiplies a vector by a scalar.
-     *
-     * @param scalar Scalar to multiply
-     *
-     * @return Scalar product of this * scalar
-     */
-    public Vector4f scale(float scalar) {
-        float x = this.x * scalar;
-        float y = this.y * scalar;
-        float z = this.z * scalar;
-        float w = this.w * scalar;
-        return new Vector4f(x, y, z, w);
-    }
-
-    /**
-     * Divides a vector by a scalar.
-     *
-     * @param scalar Scalar to multiply
-     *
-     * @return Scalar quotient of this / scalar
-     */
-    public Vector4f divide(float scalar) {
-        return scale(1f / scalar);
-    }
-
-    /**
-     * Calculates the dot product of this vector with another vector.
-     *
-     * @param other The other vector
-     *
-     * @return Dot product of this * other
-     */
-    public float dot(Vector4f other) {
-        return this.x * other.x + this.y * other.y + this.z * other.z + this.w * other.w;
-    }
-
-    /**
-     * Calculates a linear interpolation between this vector with another
-     * vector.
-     *
-     * @param other The other vector
-     * @param alpha The alpha value, must be between 0.0 and 1.0
-     *
-     * @return Linear interpolated vector
-     */
-    public Vector4f lerp(Vector4f other, float alpha) {
-        return this.scale(1f - alpha).add(other.scale(alpha));
-    }
-
-    /**
-     * Stores the vector in a given Buffer.
-     *
-     * @param buffer The buffer to store the vector data
-     */
+    
+    @Override
     public void toBuffer(FloatBuffer buffer) {
         buffer.put(x).put(y).put(z).put(w);
         buffer.flip();
     }
-
+    
+    /**
+     * Converts this vector to a string representation in the format "(x,y,z,w)".
+     */
+    @Override
+    public String toString() {
+        return String.format("(%s,%s,%s,%s)", x, y, z, w);
+    }
 }

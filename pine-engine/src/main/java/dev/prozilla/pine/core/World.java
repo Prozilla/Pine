@@ -17,6 +17,8 @@ import dev.prozilla.pine.core.system.standard.canvas.*;
 import dev.prozilla.pine.core.system.standard.canvas.group.*;
 import dev.prozilla.pine.core.system.standard.canvas.image.*;
 import dev.prozilla.pine.core.system.standard.canvas.text.*;
+import dev.prozilla.pine.core.system.standard.sprite.GridInitializer;
+import dev.prozilla.pine.core.system.standard.sprite.GridInputHandler;
 import dev.prozilla.pine.core.system.standard.sprite.SpriteRenderSystem;
 import dev.prozilla.pine.core.system.standard.sprite.TileMover;
 
@@ -88,6 +90,10 @@ public class World implements Lifecycle {
 		initialSystems.add(new CameraControlUpdater());
 		
 		// Sprites
+		initialSystems.add(new GridInitializer());
+		
+		initialSystems.add(new GridInputHandler());
+		
 		initialSystems.add(new TileMover());
 		
 		initialSystems.add(new SpriteRenderSystem());
@@ -210,6 +216,9 @@ public class World implements Lifecycle {
 	public Entity addEntity(Entity entity) {
 		if (entityManager.contains(entity)) {
 			systemManager.register(entity); // Check if entity was changed since it was added (e.g. tag changed after components added)
+			if (initialized) {
+				calculateDepth();
+			}
 			return entity;
 		}
 		entityManager.addEntity(entity);

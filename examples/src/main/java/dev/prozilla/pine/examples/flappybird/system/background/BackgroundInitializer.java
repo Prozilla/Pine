@@ -2,7 +2,7 @@ package dev.prozilla.pine.examples.flappybird.system.background;
 
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 import dev.prozilla.pine.examples.flappybird.GameScene;
 import dev.prozilla.pine.examples.flappybird.Main;
@@ -18,7 +18,7 @@ public class BackgroundInitializer extends InitSystem {
 	}
 	
 	@Override
-	protected void process(EntityMatch match) {
+	protected void process(EntityChunk chunk) {
 		Transform transform = chunk.getComponent(Transform.class);
 		BackgroundData backgroundData = chunk.getComponent(BackgroundData.class);
 		SpriteRenderer spriteRenderer = chunk.getComponent(SpriteRenderer.class);

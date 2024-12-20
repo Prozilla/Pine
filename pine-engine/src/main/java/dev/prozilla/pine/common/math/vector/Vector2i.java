@@ -25,6 +25,12 @@ public class Vector2i implements VectorInt<Vector2i> {
 		this.y = y;
 	}
 	
+	public Vector2i add(int x, int y) {
+		this.x += x;
+		this.y += y;
+		return this;
+	}
+	
 	@Override
 	public Vector2i add(Vector2i vector2i) {
 		x += vector2i.x;

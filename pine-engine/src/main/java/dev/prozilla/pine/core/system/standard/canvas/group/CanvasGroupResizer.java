@@ -27,13 +27,13 @@ public class CanvasGroupResizer extends UpdateSystem {
 				switch (canvasGroup.direction) {
 					case UP:
 					case DOWN:
-						newWidth = Math.max(newWidth, childRect.width);
-						newHeight += childRect.height + canvasGroup.gap;
+						newWidth = Math.max(newWidth, childRect.size.x);
+						newHeight += childRect.size.y + canvasGroup.gap;
 						break;
 					case LEFT:
 					case RIGHT:
-						newWidth += childRect.width + canvasGroup.gap;
-						newHeight = Math.max(newHeight, childRect.height);
+						newWidth += childRect.size.x + canvasGroup.gap;
+						newHeight = Math.max(newHeight, childRect.size.y);
 						break;
 				}
 			}
@@ -46,10 +46,10 @@ public class CanvasGroupResizer extends UpdateSystem {
 			}
 		}
 		
-		canvasGroup.innerWidth = newWidth;
-		canvasGroup.innerHeight = newHeight;
+		canvasGroup.innerSize.x = newWidth;
+		canvasGroup.innerSize.y = newHeight;
 		
-		rect.width = canvasGroup.innerWidth + canvasGroup.paddingX * 2;
-		rect.height = canvasGroup.innerHeight + canvasGroup.paddingY * 2;
+		rect.size.x = canvasGroup.innerSize.x + canvasGroup.padding.x * 2;
+		rect.size.y = canvasGroup.innerSize.y + canvasGroup.padding.y * 2;
 	}
 }

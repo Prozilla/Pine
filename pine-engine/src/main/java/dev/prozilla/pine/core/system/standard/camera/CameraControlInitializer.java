@@ -39,8 +39,8 @@ public class CameraControlInitializer extends InitSystemBase {
 			
 			cameraControlData.keyBindings = keyBindings;
 			
-			cameraControlData.targetX = transform.x;
-			cameraControlData.targetY = transform.y;
+			cameraControlData.targetX = transform.position.x;
+			cameraControlData.targetY = transform.position.y;
 			cameraControlData.targetZoom = cameraData.zoomFactor;
 		});
 	}

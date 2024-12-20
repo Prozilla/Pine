@@ -27,11 +27,11 @@ public class CanvasGroupArranger extends UpdateSystem {
 		}
 		
 		// Calculate initial offset
-		int offsetX = containerRect.x + canvasGroup.paddingX;
-		int offsetY = containerRect.y + canvasGroup.paddingY;
+		int offsetX = containerRect.position.x + canvasGroup.padding.x;
+		int offsetY = containerRect.position.y + canvasGroup.padding.y;
 		switch (canvasGroup.direction) {
-			case LEFT -> offsetX = containerRect.x + canvasGroup.innerWidth + canvasGroup.childRects.get(0).width;
-			case DOWN -> offsetY = containerRect.y + canvasGroup.innerHeight + canvasGroup.childRects.get(0).height;
+			case LEFT -> offsetX = containerRect.position.x + canvasGroup.innerSize.x + canvasGroup.childRects.get(0).size.x;
+			case DOWN -> offsetY = containerRect.position.y + canvasGroup.innerSize.y + canvasGroup.childRects.get(0).size.y;
 		}
 		
 		// Calculate individual offset for each child rect
@@ -42,11 +42,11 @@ public class CanvasGroupArranger extends UpdateSystem {
 			// Move offset for current child rect
 			switch (canvasGroup.direction) {
 				case LEFT -> offsetX -= (i == 0)
-					? childRect.width * 2 - canvasGroup.paddingX
-					: childRect.width + canvasGroup.gap;
+					? childRect.size.x * 2 - canvasGroup.padding.x
+					: childRect.size.x + canvasGroup.gap;
 				case DOWN -> offsetY -= (i == 0)
-					? childRect.height * 2 - canvasGroup.paddingY
-					: childRect.height + canvasGroup.gap;
+					? childRect.size.y * 2 - canvasGroup.padding.y
+					: childRect.size.y + canvasGroup.gap;
 			}
 			
 			// Set offset for current child rect
@@ -56,23 +56,23 @@ public class CanvasGroupArranger extends UpdateSystem {
 			if (canvasGroup.direction == CanvasGroup.Direction.UP || canvasGroup.direction == CanvasGroup.Direction.DOWN) {
 				// Vertical alignment
 				if (canvasGroup.alignment == CanvasGroup.Alignment.END) {
-					childRect.setOffsetX(offsetX + (canvasGroup.innerWidth - childRect.width));
+					childRect.setOffsetX(offsetX + (canvasGroup.innerSize.x - childRect.size.x));
 				} else if (canvasGroup.alignment == CanvasGroup.Alignment.CENTER) {
-					childRect.setOffsetX(offsetX + (canvasGroup.innerWidth - childRect.width) / 2);
+					childRect.setOffsetX(offsetX + (canvasGroup.innerSize.x - childRect.size.x) / 2);
 				}
 			} else if (canvasGroup.direction == CanvasGroup.Direction.LEFT || canvasGroup.direction == CanvasGroup.Direction.RIGHT) {
 				// Horizontal alignment
 				if (canvasGroup.alignment == CanvasGroup.Alignment.END) {
-					childRect.setOffsetY(offsetY + (canvasGroup.innerHeight - childRect.height));
+					childRect.setOffsetY(offsetY + (canvasGroup.innerSize.y - childRect.size.y));
 				} else if (canvasGroup.alignment == CanvasGroup.Alignment.CENTER) {
-					childRect.setOffsetY(offsetY + (canvasGroup.innerHeight - childRect.height) / 2);
+					childRect.setOffsetY(offsetY + (canvasGroup.innerSize.y - childRect.size.y) / 2);
 				}
 			}
 			
 			// Move offset for next child rect
 			switch (canvasGroup.direction) {
-				case RIGHT -> offsetX += childRect.width + canvasGroup.gap;
-				case UP -> offsetY += childRect.height + canvasGroup.gap;
+				case RIGHT -> offsetX += childRect.size.x + canvasGroup.gap;
+				case UP -> offsetY += childRect.size.y + canvasGroup.gap;
 			}
 		}
 	}

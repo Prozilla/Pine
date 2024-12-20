@@ -25,13 +25,13 @@ public class ImageRenderSystem extends RenderSystem {
 	
 	public static void renderImage(Renderer renderer, ImageRenderer imageRenderer, RectTransform rect, float z) {
 		renderImage(renderer, imageRenderer,
-		 rect.x, rect.y, imageRenderer.width, imageRenderer.height, z, imageRenderer.color);
+		 rect.position.x, rect.position.y, imageRenderer.size.x, imageRenderer.size.y, z, imageRenderer.color);
 	}
 	
 	public static void renderImage(Renderer renderer, ImageRenderer imageRenderer, int x, int y, int width, int height, float z, Color color) {
 		renderImage(renderer, imageRenderer.image,
-			imageRenderer.regionX, imageRenderer.regionY,
-			imageRenderer.regionWidth, imageRenderer.regionHeight,
+			imageRenderer.regionOffset.x, imageRenderer.regionOffset.y,
+			imageRenderer.regionSize.x, imageRenderer.regionSize.y,
 			x, y, width, height, z, color);
 	}
 	

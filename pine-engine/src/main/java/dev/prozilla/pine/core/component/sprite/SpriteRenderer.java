@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.component.sprite;
 
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Component;
@@ -16,18 +17,13 @@ public class SpriteRenderer extends Component {
 	// Transformations
 	public float scale;
 	public float rotation;
-	/** Horizontal offset for this sprite, in pixels. */
-	public float offsetX;
-	/** Vertical offset for this sprite, in pixels. */
-	public float offsetY;
+	public Vector2f offset;
 	
 	// Cropping
 	/** Determines whether the texture will be cropped to a given region. */
 	public boolean cropToRegion;
-	public float regionX;
-	public float regionY;
-	public float regionWidth;
-	public float regionHeight;
+	public Vector2f regionOffset;
+	public Vector2f regionSize;
 	
 	public SpriteRenderer(Texture texture) {
 		this(texture, Color.WHITE.clone());
@@ -39,12 +35,11 @@ public class SpriteRenderer extends Component {
 		
 		scale = 1f;
 		rotation = 0f;
+		offset = new Vector2f();
 		
 		cropToRegion = false;
-		regionX = 0;
-		regionY = 0;
-		regionWidth = texture.getWidth();
-		regionHeight = texture.getHeight();
+		regionOffset = new Vector2f();
+		regionSize = new Vector2f(texture.getWidth(), texture.getHeight());
 	}
 	
 	@Override
@@ -52,14 +47,18 @@ public class SpriteRenderer extends Component {
 		return "SpriteRenderer";
 	}
 	
+	public void setRegion(Vector2f regionOffset, Vector2f regionSize) {
+		setRegion(regionOffset.x, regionOffset.y, regionSize.x, regionSize.y);
+	}
+	
 	/**
 	 * Crops this sprite to a given region.
 	 */
 	public void setRegion(float regX, float regY, float regWidth, float regHeight) {
-		this.regionX = regX;
-		this.regionY = regY;
-		this.regionWidth = regWidth;
-		this.regionHeight = regHeight;
+		regionOffset.x = regX;
+		regionOffset.y = regY;
+		regionSize.x = regWidth;
+		regionSize.y = regHeight;
 		cropToRegion = true;
 	}
 	
@@ -73,7 +72,7 @@ public class SpriteRenderer extends Component {
 	// TO DO: apply rotation
 	public float getWidth() {
 		if (cropToRegion) {
-			return regionWidth * scale;
+			return regionSize.x * scale;
 		} else {
 			return (float)texture.getWidth() * scale;
 		}
@@ -82,7 +81,7 @@ public class SpriteRenderer extends Component {
 	// TO DO: apply rotation
 	public float getHeight() {
 		if (cropToRegion) {
-			return regionHeight * scale;
+			return regionSize.y * scale;
 		} else {
 			return (float)texture.getHeight() * scale;
 		}

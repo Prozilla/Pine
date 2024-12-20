@@ -68,15 +68,15 @@ public class ImagePrefab extends CanvasElementPrefab {
 		ImageRenderer imageRenderer = entity.addComponent(new ImageRenderer(image));
 		
 		// Set image dimensions
-		imageRenderer.width = width;
-		imageRenderer.height = height;
+		imageRenderer.size.x = width;
+		imageRenderer.size.y = height;
 		
 		// Crop image
 		if (cropToRegion) {
-			imageRenderer.regionX = regionX;
-			imageRenderer.regionY = regionY;
-			imageRenderer.regionWidth = regionWidth;
-			imageRenderer.regionHeight = regionHeight;
+			imageRenderer.regionOffset.x = regionX;
+			imageRenderer.regionOffset.y = regionY;
+			imageRenderer.regionSize.x = regionWidth;
+			imageRenderer.regionSize.y = regionHeight;
 		}
 		
 		if (color != null) {

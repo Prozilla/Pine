@@ -22,8 +22,8 @@ public class CanvasGroupRenderer extends RenderSystem {
 		CanvasGroup canvasGroup = chunk.getComponent(CanvasGroup.class);
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
-		if (rect.width != 0 && rect.height != 0 && canvasGroup.backgroundColor != null) {
-			renderer.drawRect(rect.x, rect.y, transform.getDepth(),  rect.width, rect.height, canvasGroup.backgroundColor);
+		if (rect.size.x != 0 && rect.size.y != 0 && canvasGroup.backgroundColor != null) {
+			renderer.drawRect(rect.position.x, rect.position.y, transform.getDepth(),  rect.size.x, rect.size.y, canvasGroup.backgroundColor);
 		}
 	}
 }

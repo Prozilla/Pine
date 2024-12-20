@@ -2,7 +2,7 @@ package dev.prozilla.pine.examples.flappybird.system.obstacle;
 
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.entity.EntityMatch;
+import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 import dev.prozilla.pine.examples.flappybird.Main;
 import dev.prozilla.pine.examples.flappybird.component.PipeData;
@@ -17,7 +17,7 @@ public class PipeInitializer extends InitSystem {
 	}
 	
 	@Override
-	protected void process(EntityMatch match) {
+	protected void process(EntityChunk chunk) {
 		PipeData pipeData = chunk.getComponent(PipeData.class);
 		SpriteRenderer spriteRenderer = chunk.getComponent(SpriteRenderer.class);
 		Transform transform = chunk.getComponent(Transform.class);
@@ -31,6 +31,6 @@ public class PipeInitializer extends InitSystem {
 		}
 		
 		// Set initial position
-		transform.x = Main.WIDTH / 2f;
+		transform.position.x = Main.WIDTH / 2f;
 	}
 }
