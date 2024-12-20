@@ -7,6 +7,7 @@ import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.system.input.InputSystemBase;
 
 import java.awt.*;
+import java.util.Comparator;
 
 /**
  * Handles clicks on canvas elements.
@@ -36,5 +37,10 @@ public class RectInputHandler extends InputSystemBase {
 				}
 			}
 		});
+	}
+	
+	@Override
+	public void sort() {
+		sort(Comparator.comparingInt(a -> a.getTransform().getDepthIndex()));
 	}
 }

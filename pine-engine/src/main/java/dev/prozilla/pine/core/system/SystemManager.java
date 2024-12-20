@@ -9,9 +9,7 @@ import dev.prozilla.pine.core.system.input.InputSystemBase;
 import dev.prozilla.pine.core.system.render.RenderSystemBase;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 public class SystemManager extends ECSManager {
@@ -150,6 +148,7 @@ public class SystemManager extends ECSManager {
 	 */
 	public void updateEntityDepth() {
 		renderSystems.forEach(RenderSystemBase::sort);
+		inputSystems.forEach(InputSystemBase::sort);
 	}
 	
 	public boolean isInitialized() {

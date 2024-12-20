@@ -91,11 +91,7 @@ public class World implements Lifecycle {
 		
 		// Sprites
 		initialSystems.add(new GridInitializer());
-		
-		initialSystems.add(new GridInputHandler());
-		
 		initialSystems.add(new TileMover());
-		
 		initialSystems.add(new SpriteRenderSystem());
 
 		// Canvas
@@ -125,6 +121,9 @@ public class World implements Lifecycle {
 		initialSystems.add(new TextButtonRenderSystem());
 		initialSystems.add(new ImageRenderSystem());
 		initialSystems.add(new ImageButtonRenderSystem());
+		
+		// Sprite input
+		initialSystems.add(new GridInputHandler());
 	}
 	
 	/**

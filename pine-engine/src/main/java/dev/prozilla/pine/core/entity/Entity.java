@@ -376,7 +376,7 @@ public class Entity implements Lifecycle {
 			transform.getGlobalY(),
 			String.join(", ", componentNames),
 			componentCount,
-			transform.getDepth()
+			transform.getDepthIndex()
 		);
 	}
 }
