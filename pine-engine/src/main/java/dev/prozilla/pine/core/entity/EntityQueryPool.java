@@ -63,7 +63,7 @@ public class EntityQueryPool {
 	 * @param tag Entity tag of the query
 	 * @return String key
 	 */
-	private static String generateQueryKey(Class<? extends Component>[] includedComponentTypes, Class<? extends Component>[] excludedComponentTypes, String tag) {
+	public static String generateQueryKey(Class<? extends Component>[] includedComponentTypes, Class<? extends Component>[] excludedComponentTypes, String tag) {
 		// Collect names of component types
 		ArrayList<String> includedTypeNames = new ArrayList<>();
 		for (Class<?> componentType : includedComponentTypes) {

@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.Scene;
 import dev.prozilla.pine.core.Window;
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * Represents a unique entity in the world with a list of components.
  */
-public class Entity implements Lifecycle {
+public class Entity implements Lifecycle, Printable {
 	
 	public final int id;
 	private final String name;
@@ -146,7 +147,7 @@ public class Entity implements Lifecycle {
 		if (!removed) {
 			throw new IllegalStateException("Entity is not a child");
 		}
-		child.transform.setParent(transform);
+		child.transform.parent = null;
 		getTracker().removeEntity();
 	}
 	
@@ -206,11 +207,11 @@ public class Entity implements Lifecycle {
 	 * @param component Component
 	 */
 	public void removeComponent(Component component) {
-//		if (!components.remove(component)) {
-//			return;
-//		}
-//
-//		component.remove();
+		if (!components.contains(component)) {
+			return;
+		}
+
+		world.removeComponent(this, component);
 	}
 	
 	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass) {
@@ -246,6 +247,15 @@ public class Entity implements Lifecycle {
 		}
 		
 		return components;
+	}
+	
+	/**
+	 * Checks if this entity has a component of a given class.
+	 * @param componentClass Class of the component.
+	 * @return True if this entity has a component of type <code>componentClass</code>.
+	 */
+	public <ComponentType extends Component> boolean hasComponent(Class<ComponentType> componentClass) {
+		return getComponent(componentClass) != null;
 	}
 	
 	/**
@@ -359,7 +369,8 @@ public class Entity implements Lifecycle {
 		return (id == entity.id);
 	}
 	
-	public void print() {
+	@Override
+	public String toString() {
 		String className = getClass().getSimpleName();
 		int componentCount = components.size();
 		String[] componentNames = new String[componentCount];
@@ -369,7 +380,7 @@ public class Entity implements Lifecycle {
 			componentNames[i] = componentClass.getSimpleName();
 		}
 		
-		System.out.printf("%s: %s (%s, %s) [%s] (%s) {%S}%n",
+		return String.format("%s: %s (%s, %s) [%s] (%s) {%S}",
 			className,
 			getName(),
 			transform.getGlobalX(),

@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.component.camera;
 
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Component;
 
@@ -88,25 +89,25 @@ public class CameraData extends Component {
 	 * @param y Y value
 	 * @return Array of x and y values
 	 */
-	public float[] applyTransform(float x, float y) {
+	public Vector2f applyTransform(float x, float y) {
 		x = (x - entity.transform.getGlobalX()) * getZoom() + getCenterX();
 		y = (y - entity.transform.getGlobalY()) * getZoom() + getCenterY();
 		
-		return new float[]{ x, y };
+		return new Vector2f(x, y);
 	}
 	
-	public float[] screenToWorldPosition(Point screenPosition) {
+	public Vector2f screenToWorldPosition(Point screenPosition) {
 		if (screenPosition == null) {
-			return new float[]{ 0, 0 };
+			return new Vector2f();
 		}
 		
 		return screenToWorldPosition(screenPosition.x, screenPosition.y);
 	}
 	
-	public float[] screenToWorldPosition(int screenX, int screenY) {
+	public Vector2f screenToWorldPosition(int screenX, int screenY) {
 		float x = ((float)screenX - getCenterX()) / getZoom() + entity.transform.getGlobalX();
 		float y = (getCenterY() - (float)screenY) / getZoom() + entity.transform.getGlobalY();
 		
-		return new float[]{ x, y };
+		return new Vector2f(x, y);
 	}
 }

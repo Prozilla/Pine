@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.system.standard.sprite;
 
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
@@ -30,18 +31,16 @@ public class SpriteRenderSystem extends RenderSystemBase {
 			float worldY = entity.transform.getGlobalY() + spriteRenderer.offset.y;
 			
 			// Calculate screen position
-			float[] position = camera.applyTransform(worldX, worldY);
-			float x = position[0];
-			float y = position[1];
+			Vector2f position = camera.applyTransform(worldX, worldY);
 			
 			// Apply zoom scale
 			renderer.setScale(spriteRenderer.scale * camera.getZoom());
 			
 			// Draw cropped and rotated texture
 			if (!spriteRenderer.cropToRegion) {
-				renderer.drawRotatedTexture(spriteRenderer.texture, x, y, transform.getDepth(), spriteRenderer.color, spriteRenderer.rotation);
+				renderer.drawRotatedTexture(spriteRenderer.texture, position.x, position.y, transform.getDepth(), spriteRenderer.color, spriteRenderer.rotation);
 			} else {
-				renderer.drawRotatedTextureRegion(spriteRenderer.texture, x, y, transform.getDepth(),
+				renderer.drawRotatedTextureRegion(spriteRenderer.texture, position.x, position.y, transform.getDepth(),
 				 spriteRenderer.regionOffset.x, spriteRenderer.regionOffset.y,
 				 spriteRenderer.regionSize.x, spriteRenderer.regionSize.y,
 				 spriteRenderer.color, spriteRenderer.rotation);

@@ -75,6 +75,16 @@ public class TileRenderer extends Component {
 		return group.isHovering(this);
 	}
 	
+	public void remove() {
+		GridGroup group = getGroup();
+		
+		if (group != null) {
+			group.removeTile(this);
+		}
+		
+		entity.destroy();
+	}
+	
 	public GridGroup getGroup() {
 		if (group != null) {
 			return group;

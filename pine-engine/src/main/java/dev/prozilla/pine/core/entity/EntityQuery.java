@@ -4,10 +4,7 @@ import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.array.ArrayUtils;
 import dev.prozilla.pine.core.component.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Utility class for querying entities with specific components to be processed by a system.
@@ -34,6 +31,12 @@ public class EntityQuery implements Lifecycle {
 	/** Indicates whether results of this query may be disposed by the system that consumes it. */
 	private final boolean isDisposable;
 	
+	public boolean isIterating;
+	/** List of entity chunks that will be added before the next iteration. */
+	private final List<EntityChunk> entityChunkAdditionQueue;
+	/** List of entity chunks that will be removed before the next iteration. */
+	private final List<EntityChunk> entityChunkRemovalQueue;
+	
 	public EntityQuery(Class<? extends Component>[] includedComponentTypes, Class<? extends Component>[] excludedComponentTypes, boolean disposable, String tag) {
 		this.includedComponentTypes = includedComponentTypes;
 		this.excludedeComponentTypes = excludedComponentTypes;
@@ -52,6 +55,10 @@ public class EntityQuery implements Lifecycle {
 		
 		entityChunks = new ArrayList<>();
 		entityChunkMap = new HashMap<>();
+		
+		isIterating = false;
+		entityChunkAdditionQueue = new ArrayList<>();
+		entityChunkRemovalQueue = new ArrayList<>();
 	}
 	
 	/**
@@ -61,6 +68,29 @@ public class EntityQuery implements Lifecycle {
 	public void destroy() {
 		entityChunks.clear();
 		entityChunkMap.clear();
+		entityChunkRemovalQueue.clear();
+		entityChunkAdditionQueue.clear();
+		isIterating = false;
+	}
+	
+	public void startIteration() throws IllegalStateException {
+		if (isIterating) {
+			throw new IllegalStateException("Entity query is already being iterated.");
+		}
+		
+		isIterating = true;
+		entityChunks.addAll(entityChunkAdditionQueue);
+		entityChunks.removeAll(entityChunkRemovalQueue);
+		entityChunkAdditionQueue.clear();
+		entityChunkRemovalQueue.clear();
+	}
+	
+	public void endIteration() throws IllegalStateException {
+		if (!isIterating) {
+			throw new IllegalStateException("Entity query is not being iterated.");
+		}
+		
+		isIterating = false;
 	}
 	
 	/**
@@ -79,19 +109,22 @@ public class EntityQuery implements Lifecycle {
 			return false;
 		}
 		
-		EntityChunk entityChunk = null;
 		try {
-			entityChunk = new EntityChunk(includedComponentTypes);
+			EntityChunk entityChunk = new EntityChunk(includedComponentTypes);
 			entityChunk.setComponents(matchComponents);
+			
+			if (isIterating) {
+				entityChunkRemovalQueue.remove(entityChunk);
+				entityChunkAdditionQueue.add(entityChunk);
+			} else {
+				entityChunks.add(entityChunk);
+			}
+			
+			entityChunkMap.put(entity.id, entityChunk);
 		} catch (Exception e) {
-			System.err.println("Failed to create entity match.");
+			System.err.println("Failed to create entity chunk.");
 			e.printStackTrace();
 			return false;
-		} finally {
-			if (entityChunk != null) {
-				entityChunks.add(entityChunk);
-				entityChunkMap.put(entity.id, entityChunk);
-			}
 		}
 		
 		return true;
@@ -108,7 +141,12 @@ public class EntityQuery implements Lifecycle {
 		}
 		
 		EntityChunk chunk = entityChunkMap.get(entity.id);
-		entityChunks.remove(chunk);
+		if (isIterating) {
+			entityChunkAdditionQueue.remove(chunk);
+			entityChunkRemovalQueue.add(chunk);
+		} else {
+			entityChunks.remove(chunk);
+		}
 		entityChunkMap.remove(entity.id);
 		return true;
 	}
@@ -158,6 +196,10 @@ public class EntityQuery implements Lifecycle {
 		} else {
 			return components;
 		}
+	}
+	
+	public boolean hasEntityChunks() {
+		return !entityChunks.isEmpty() || !entityChunkAdditionQueue.isEmpty();
 	}
 	
 	public void print() {

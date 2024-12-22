@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.entity;
 
+import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.Transform;
 
@@ -10,7 +11,7 @@ import java.util.Map;
  * A wrapper for an entity and its components that match a system's query.
  * Provides quick access to the matching components of the entity.
  */
-public class EntityChunk {
+public class EntityChunk implements Printable {
 	
 	private Entity entity;
 	/** Components of the entity that match the query. */
@@ -124,7 +125,21 @@ public class EntityChunk {
 		return components.length;
 	}
 	
-	public void print() {
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof EntityChunk) {
+			return equals((EntityChunk)obj);
+		} else {
+			return super.equals(obj);
+		}
+	}
+	
+	public boolean equals(EntityChunk entityChunk) {
+		return entity.id == entityChunk.getEntity().id;
+	}
+	
+	@Override
+	public String toString() {
 		String entityName = entity.getName();
 		int componentCount = componentTypes.length;
 		String[] componentNames = new String[componentCount];
@@ -134,6 +149,6 @@ public class EntityChunk {
 			componentNames[i] = componentClass.getSimpleName();
 		}
 		
-		System.out.printf("EntityChunk: %s: [%s] (%s)%n", entityName, String.join(", ", componentNames), componentCount);
+		return String.format("EntityChunk: %s: [%s] (%s)", entityName, String.join(", ", componentNames), componentCount);
 	}
 }

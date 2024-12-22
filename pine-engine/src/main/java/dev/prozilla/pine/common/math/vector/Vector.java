@@ -1,9 +1,11 @@
 package dev.prozilla.pine.common.math.vector;
 
+import dev.prozilla.pine.common.Printable;
+
 /**
  * Abstract interface for vectors.
  */
-public interface Vector<V extends Vector<V>> {
+public interface Vector<V extends Vector<V>> extends Printable {
 	
 	/**
 	 * Calculates the length of this vector.
@@ -66,11 +68,13 @@ public interface Vector<V extends Vector<V>> {
 	/**
 	 * Converts this vector to a string representation.
 	 */
+	@Override
 	String toString();
 	
 	/**
 	 * Prints the string representation of this vector.
 	 */
+	@Override
 	default void print() {
 		System.out.println(this);
 	}

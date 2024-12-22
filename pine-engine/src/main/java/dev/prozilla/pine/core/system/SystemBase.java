@@ -11,7 +11,10 @@ import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.system.init.InitSystemBase;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 
 // TO DO: ignore de-activated components
@@ -128,73 +131,82 @@ public abstract class SystemBase implements Lifecycle {
 	
 	/**
 	 * Iterates over each entity that matches the query of this system.
+	 * @param action Action to perform on each entity
 	 */
-	protected void forEach(Consumer<EntityChunk> consumer) {
-		for (EntityChunk entityChunk : query.entityChunks) {
-			int entityId = entityChunk.getEntity().id;
-			boolean allowProcessing = entityChunk.isActive();
-			
-			if (runOnce && processedEntityIds.contains(entityId)) {
-				allowProcessing = false;
+	protected void forEach(Consumer<EntityChunk> action) {
+		try {
+			query.startIteration();
+			int count = query.entityChunks.size();
+			for (int i = 0; i < count; i++) {
+				EntityChunk entityChunk = query.entityChunks.get(i);
+				accept(entityChunk, action);
 			}
-			
-			if (allowProcessing) {
-				try {
-					consumer.accept(entityChunk);
-				} catch (Exception e) {
-					System.err.println("Failed to run system " + getClass().getName());
-					e.printStackTrace();
-				} finally {
-					if (runOnce) {
-						processedEntityIds.add(entityChunk.getEntity().id);
-					}
-				}
+		} catch (Exception e) {
+			System.err.println("Failed to iterate over entities in system: " + getClass().getSimpleName());
+			e.printStackTrace();
+		} finally {
+			query.endIteration();
+		}
+	}
+	
+	/**
+	 * Iterates over each entity that matches the query of this system in reverse.
+	 * @param action Action to perform on each entity
+	 */
+	protected void forEachReverse(Consumer<EntityChunk> action) {
+		try {
+			query.startIteration();
+			int count = query.entityChunks.size();
+			for (int i = count - 1; i >= 0; i--) {
+				EntityChunk entityChunk = query.entityChunks.get(i);
+				accept(entityChunk, action);
+			}
+		} catch (Exception e) {
+			System.err.println("Failed to iterate over entities in reverse in system: " + getClass().getSimpleName());
+			e.printStackTrace();
+		} finally {
+			query.endIteration();
+		}
+	}
+	
+	/**
+	 * Performs an action on a single entity chunk in this system.
+	 * @param entityChunk Entity chunk to perform action on
+	 * @param action Action to perform on entity chunk
+	 */
+	private void accept(EntityChunk entityChunk, Consumer<EntityChunk> action) throws NullPointerException {
+		Objects.requireNonNull(entityChunk, "Entity chunk must not be null.");
+		Objects.requireNonNull(action, "Action must not be null.");
+		
+		if (!entityChunk.isActive() || (runOnce && processedEntityIds.contains(entityChunk.getEntity().id))) {
+			return;
+		}
+		
+		try {
+			action.accept(entityChunk);
+		} catch (Exception e) {
+			System.err.println("Failed to run action on entity in system: " + getClass().getSimpleName());
+			e.printStackTrace();
+		} finally {
+			if (runOnce) {
+				processedEntityIds.add(entityChunk.getEntity().id);
 			}
 		}
 	}
 	
 	/**
-	 * Sorts the entity chunks in this system.
+	 * Sorts the entity chunks in this system based on a comparator.
 	 */
 	protected void sort(Comparator<EntityChunk> comparator) {
 		query.entityChunks.sort(comparator);
 	}
 	
 	/**
-	 * Iterates over each entity that matches the query of this system in reverse.
-	 */
-	protected void forEachReverse(Consumer<EntityChunk> consumer) {
-		int count = query.entityChunks.size();
-		for (int i = count - 1; i >= 0; i--) {
-			EntityChunk entityChunk = query.entityChunks.get(i);
-			int entityId = entityChunk.getEntity().id;
-			boolean allowProcessing = entityChunk.isActive();
-			
-			if (runOnce && processedEntityIds.contains(entityId)) {
-				allowProcessing = false;
-			}
-			
-			if (allowProcessing) {
-				try {
-					consumer.accept(entityChunk);
-				} catch (Exception e) {
-					System.err.println("Failed to run system " + getClass().getName());
-					e.printStackTrace();
-				} finally {
-					if (runOnce) {
-						processedEntityIds.add(entityChunk.getEntity().id);
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Returns true if this system has collected any component groups.
+	 * Returns true if this system has any entity chunks.
 	 * @see EntityQuery
 	 */
-	public boolean hasComponentGroups() {
-		return !query.entityChunks.isEmpty();
+	public boolean hasEntityChunks() {
+		return query.hasEntityChunks();
 	}
 	
 	public void print() {

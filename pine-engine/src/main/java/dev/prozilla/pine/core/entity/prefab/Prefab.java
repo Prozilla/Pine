@@ -10,8 +10,9 @@ import dev.prozilla.pine.core.entity.Entity;
 @Components({ Transform.class })
 public abstract class Prefab {
 	
-	private String name;
-	private String tag;
+	protected String name;
+	protected String tag;
+	protected boolean isActive = true;
 	
 	public void setName(String name) {
 		this.name = name;
@@ -19,6 +20,10 @@ public abstract class Prefab {
 	
 	public void setTag(String tag) {
 		this.tag = tag;
+	}
+	
+	public void setActive(boolean active) {
+		isActive = active;
 	}
 	
 	/**
@@ -51,6 +56,11 @@ public abstract class Prefab {
 		}
 		
 		apply(entity);
+		
+		if (!isActive) {
+			entity.setActive(false);
+		}
+		
 		return entity;
 	}
 	

@@ -56,8 +56,13 @@ public class SystemGroup<S extends SystemBase> {
 		}
 		
 		for (S system : systems) {
-			if (system.hasComponentGroups()) {
-				consumer.accept(system);
+			try {
+				if (system.hasEntityChunks()) {
+					consumer.accept(system);
+				}
+			} catch (RuntimeException e) {
+				System.err.println("Failed to run system: " + system.getClass().getSimpleName());
+				e.printStackTrace();
 			}
 		}
 	}

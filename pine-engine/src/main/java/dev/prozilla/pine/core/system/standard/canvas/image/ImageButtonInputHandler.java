@@ -22,9 +22,9 @@ public class ImageButtonInputHandler extends InputSystem {
 		imageButtonRenderer.isHovering = rect.cursorHit;
 		
 		if (rect.cursorHit) {
-			getInput().setCursorType(CursorType.HAND);
+			input.setCursorType(CursorType.HAND);
 			
-			if (imageButtonRenderer.clickCallback != null && getInput().getMouseButtonDown(MouseButton.LEFT)) {
+			if (imageButtonRenderer.clickCallback != null && input.getMouseButtonDown(MouseButton.LEFT)) {
 				imageButtonRenderer.clickCallback.run();
 			}
 		}
