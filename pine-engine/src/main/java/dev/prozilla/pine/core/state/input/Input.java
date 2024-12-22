@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.state.input;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
@@ -46,6 +47,10 @@ public class Input implements Lifecycle {
 	
 	private final Application application;
 	
+	private static final int CURSOR_TYPE_DEFAULT = CursorType.DEFAULT.getValue();
+	private static final boolean IGNORE_CURSOR_BLOCK_DEFAULT = false;
+	private static final boolean STOP_PROPAGATION_DEFAULT = false;
+	
 	/**
 	 * Creates an input system.
 	 */
@@ -65,7 +70,7 @@ public class Input implements Lifecycle {
 		currentScrollX = 0;
 		currentScrollY = 0;
 		cursor = new Point(0, 0);
-		cursorType = CursorType.DEFAULT.getValue();
+		cursorType = CURSOR_TYPE_DEFAULT;
 	}
 	
 	/**
@@ -124,7 +129,7 @@ public class Input implements Lifecycle {
 		scrollX = 0;
 		scrollY = 0;
 		
-		cursorType = CursorType.DEFAULT.getValue();
+		cursorType = CURSOR_TYPE_DEFAULT;
 		cursorBlocker = null;
 		
 		if (!previousKeysDown.isEmpty()) {
@@ -243,11 +248,21 @@ public class Input implements Lifecycle {
 	 * @return True if the key is pressed
 	 */
 	public boolean getKey(Key key) {
+		return getKey(key, STOP_PROPAGATION_DEFAULT);
+	}
+	
+	/**
+	 * Checks whether a key is pressed.
+	 * Returns true in every frame that the key is pressed.
+	 * @param stopPropagation Whether to stop this key from affecting other listeners
+	 * @return True if the key is pressed
+	 */
+	public boolean getKey(Key key, boolean stopPropagation) {
 		if (key == null) {
 			return false;
 		}
 		
-		return getKey(key.getValue());
+		return getKey(key.getValue(), stopPropagation);
 	}
 	
 	/**
@@ -257,7 +272,26 @@ public class Input implements Lifecycle {
 	 * @return True if the key is pressed.
 	 */
 	public boolean getKey(int key) {
-		return keysPressed.contains(key);
+		return getKey(key, STOP_PROPAGATION_DEFAULT);
+	}
+	
+	/**
+	 * Checks whether a key is pressed.
+	 * Returns true in every frame that the key is pressed.
+	 * @param key GLFW integer value for a key
+	 * @param stopPropagation Whether to stop this key from affecting other listeners
+	 * @return True if the key is pressed.
+	 */
+	public boolean getKey(int key, boolean stopPropagation) {
+		boolean pressed = keysPressed.contains(key);
+		
+		if (pressed && stopPropagation) {
+			Integer keyInt = key;
+			keysPressed.remove(keyInt);
+			keysDown.remove(keyInt);
+		}
+		
+		return pressed;
 	}
 	
 	/**
@@ -266,11 +300,21 @@ public class Input implements Lifecycle {
 	 * @return True if the key is down in the current frame
 	 */
 	public boolean getKeyDown(Key key) {
+		return getKeyDown(key, STOP_PROPAGATION_DEFAULT);
+	}
+	
+	/**
+	 * Checks whether a key is down.
+	 * Returns true only in the first frame that the key is pressed.
+	 * @param stopPropagation Whether to stop this key from affecting other listeners
+	 * @return True if the key is down in the current frame
+	 */
+	public boolean getKeyDown(Key key, boolean stopPropagation) {
 		if (key == null) {
 			return false;
 		}
 		
-		return getKeyDown(key.getValue());
+		return getKeyDown(key.getValue(), stopPropagation);
 	}
 	
 	/**
@@ -280,23 +324,74 @@ public class Input implements Lifecycle {
 	 * @return True if the key is down in the current frame
 	 */
 	public boolean getKeyDown(int key) {
-		return keysDown.contains(key);
+		return getKeyDown(key, STOP_PROPAGATION_DEFAULT);
+	}
+	
+	/**
+	 * Checks whether a key is down.
+	 * Returns true only in the first frame that the key is pressed.
+	 * @param key GLFW integer value for a key
+	 * @param stopPropagation Whether to stop this key from affecting other listeners
+	 * @return True if the key is down in the current frame
+	 */
+	public boolean getKeyDown(int key, boolean stopPropagation) {
+		boolean down = keysDown.contains(key);
+		
+		if (down && stopPropagation) {
+			Integer keyInt = key;
+			keysPressed.remove(keyInt);
+			keysDown.remove(keyInt);
+		}
+		
+		return down;
 	}
 	
 	public boolean getMouseButton(MouseButton button) {
-		return getMouseButton(button.getValue());
+		return getMouseButton(button, STOP_PROPAGATION_DEFAULT);
+	}
+	
+	public boolean getMouseButton(MouseButton button, boolean stopPropagation) {
+		return getMouseButton(button.getValue(), stopPropagation);
 	}
 	
 	public boolean getMouseButton(int button) {
-		return mouseButtonsPressed.contains(button);
+		return getMouseButton(button, STOP_PROPAGATION_DEFAULT);
+	}
+	
+	public boolean getMouseButton(int button, boolean stopPropagation) {
+		boolean pressed = mouseButtonsPressed.contains(button);
+		
+		if (pressed && stopPropagation) {
+			Integer buttonInt = button;
+			mouseButtonsPressed.remove(buttonInt);
+			mouseButtonsDown.remove(buttonInt);
+		}
+		
+		return pressed;
 	}
 	
 	public boolean getMouseButtonDown(MouseButton button) {
-		return getMouseButtonDown(button.getValue());
+		return getMouseButtonDown(button, STOP_PROPAGATION_DEFAULT);
+	}
+	
+	public boolean getMouseButtonDown(MouseButton button, boolean stopPropagation) {
+		return getMouseButtonDown(button.getValue(), stopPropagation);
 	}
 	
 	public boolean getMouseButtonDown(int button) {
-		return mouseButtonsDown.contains(button);
+		return getMouseButtonDown(button, STOP_PROPAGATION_DEFAULT);
+	}
+	
+	public boolean getMouseButtonDown(int button, boolean stopPropagation) {
+		boolean down = mouseButtonsDown.contains(button);
+		
+		if (down && stopPropagation) {
+			Integer buttonInt = button;
+			mouseButtonsPressed.remove(buttonInt);
+			mouseButtonsDown.remove(buttonInt);
+		}
+		
+		return down;
 	}
 	
 	/**
@@ -321,7 +416,17 @@ public class Input implements Lifecycle {
 	 * @return Position of the cursor
 	 */
 	public Point getCursor() {
-		return (cursorBlocker != null) ? null : cursor;
+		return getCursor(IGNORE_CURSOR_BLOCK_DEFAULT);
+	}
+	
+	/**
+	 * Returns the position of the cursor on the screen.
+	 * Returns <code>null</code> if the cursor is being blocked, unless blocks are being ignored.
+	 * @param ignoreBlock Whether to ignore blocks.
+	 * @return Position of the cursor
+	 */
+	public Point getCursor(boolean ignoreBlock) {
+		return (!ignoreBlock && cursorBlocker != null) ? null : cursor;
 	}
 	
 	/**
@@ -329,13 +434,23 @@ public class Input implements Lifecycle {
 	 * Returns <code>null</code> if the cursor is being blocked.
 	 * @return Position of the cursor
 	 */
-	public float[] getWorldCursor() {
-		if (cursorBlocker != null) {
+	public Vector2f getWorldCursor() {
+		return getWorldCursor(IGNORE_CURSOR_BLOCK_DEFAULT);
+	}
+	
+	/**
+	 * Returns the position of the cursor inside the world.
+	 * Returns <code>null</code> if the cursor is being blocked, unless blocks are being ignored.
+	 * @param ignoreBlock Whether to ignore blocks.
+	 * @return Position of the cursor
+	 */
+	public Vector2f getWorldCursor(boolean ignoreBlock) {
+		if (!ignoreBlock && cursorBlocker != null) {
 			return null;
 		}
 		
 		CameraData camera = application.currentScene.getCameraData();
-		return camera.screenToWorldPosition(getCursor());
+		return camera.screenToWorldPosition(getCursor(ignoreBlock));
 	}
 	
 	/**
@@ -365,7 +480,16 @@ public class Input implements Lifecycle {
 	 * @param entity Entity that is blocking the cursor
 	 */
 	public void blockCursor(Entity entity) {
-		if (cursorBlocker != null || !entity.isActive()) {
+		blockCursor(entity, false);
+	}
+	
+	/**
+	 * Prevents the cursor from sending input to remaining entities in the current frame.
+	 * @param entity Entity that is blocking the cursor
+	 * @param override Whether to override any existing blocking entity.
+	 */
+	public void blockCursor(Entity entity, boolean override) {
+		if ((!override && cursorBlocker != null) || !entity.isActive()) {
 			return;
 		}
 		
