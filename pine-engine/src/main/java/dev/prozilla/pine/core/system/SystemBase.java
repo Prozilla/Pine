@@ -138,6 +138,11 @@ public abstract class SystemBase implements Lifecycle {
 			query.startIteration();
 			int count = query.entityChunks.size();
 			for (int i = 0; i < count; i++) {
+				if (!scene.isActive()) {
+					// Abort if the scene was unloaded during the iteration
+					break;
+				}
+				
 				EntityChunk entityChunk = query.entityChunks.get(i);
 				accept(entityChunk, action);
 			}
@@ -145,7 +150,9 @@ public abstract class SystemBase implements Lifecycle {
 			System.err.println("Failed to iterate over entities in system: " + getClass().getSimpleName());
 			e.printStackTrace();
 		} finally {
-			query.endIteration();
+			if (scene.isActive()) {
+				query.endIteration();
+			}
 		}
 	}
 	
@@ -158,6 +165,11 @@ public abstract class SystemBase implements Lifecycle {
 			query.startIteration();
 			int count = query.entityChunks.size();
 			for (int i = count - 1; i >= 0; i--) {
+				if (!scene.isActive()) {
+					// Abort if the scene was unloaded during the iteration
+					break;
+				}
+				
 				EntityChunk entityChunk = query.entityChunks.get(i);
 				accept(entityChunk, action);
 			}
@@ -165,7 +177,9 @@ public abstract class SystemBase implements Lifecycle {
 			System.err.println("Failed to iterate over entities in reverse in system: " + getClass().getSimpleName());
 			e.printStackTrace();
 		} finally {
-			query.endIteration();
+			if (scene.isActive()) {
+				query.endIteration();
+			}
 		}
 	}
 	

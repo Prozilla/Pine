@@ -25,7 +25,7 @@ public class ImageButtonInputHandler extends InputSystem {
 			input.setCursorType(CursorType.HAND);
 			
 			if (imageButtonRenderer.clickCallback != null && input.getMouseButtonDown(MouseButton.LEFT)) {
-				imageButtonRenderer.clickCallback.run();
+				imageButtonRenderer.click();
 			}
 		}
 	}

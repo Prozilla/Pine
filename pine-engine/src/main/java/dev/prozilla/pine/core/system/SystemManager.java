@@ -29,10 +29,10 @@ public class SystemManager extends ECSManager {
 		
 		initialized = false;
 		
-		initSystems = new SystemGroup<>(InitSystemBase.class);
-		inputSystems = new SystemGroup<>(InputSystemBase.class);
-		updateSystems = new SystemGroup<>(UpdateSystemBase.class);
-		renderSystems = new SystemGroup<>(RenderSystemBase.class);
+		initSystems = new SystemGroup<>(world, InitSystemBase.class);
+		inputSystems = new SystemGroup<>(world, InputSystemBase.class);
+		updateSystems = new SystemGroup<>(world, UpdateSystemBase.class);
+		renderSystems = new SystemGroup<>(world, RenderSystemBase.class);
 		
 		systemGroups = new SystemGroup[]{
 			initSystems,

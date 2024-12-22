@@ -1,6 +1,5 @@
 package dev.prozilla.pine.core.entity.prefab.canvas;
 
-import dev.prozilla.pine.common.Callback;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
@@ -20,7 +19,7 @@ public class ImageButtonPrefab extends ImagePrefab {
 	/** Vertical padding around text. */
 	protected int paddingY;
 	
-	protected Callback clickCallback;
+	protected ImageButtonRenderer.Callback clickCallback;
 	
 	public ImageButtonPrefab(String imagePath) {
 		this(ResourcePool.loadTexture(imagePath));
@@ -59,7 +58,7 @@ public class ImageButtonPrefab extends ImagePrefab {
 		this.paddingY = paddingY;
 	}
 	
-	public void setClickCallback(Callback callback) {
+	public void setClickCallback(ImageButtonRenderer.Callback callback) {
 		clickCallback = callback;
 	}
 	

@@ -1,9 +1,9 @@
 package dev.prozilla.pine.core.component.canvas;
 
-import dev.prozilla.pine.common.Callback;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.entity.Entity;
 
 /**
  * A component for rendering buttons with images on the canvas.
@@ -20,6 +20,12 @@ public class ImageButtonRenderer extends Component {
 	
 	public boolean isHovering;
 	
+	@FunctionalInterface
+	public interface Callback {
+		
+		void invoke(Entity entity);
+	}
+	
 	public ImageButtonRenderer() {
 		this(Color.WHITE);
 	}
@@ -34,6 +40,10 @@ public class ImageButtonRenderer extends Component {
 		
 		padding = new Vector2i();
 		isHovering = false;
+	}
+	
+	public void click() {
+		clickCallback.invoke(getEntity());
 	}
 	
 	@Override

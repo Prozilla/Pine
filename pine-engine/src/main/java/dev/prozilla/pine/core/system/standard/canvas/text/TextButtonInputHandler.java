@@ -24,8 +24,8 @@ public class TextButtonInputHandler extends InputSystem {
 		if (rect.cursorHit) {
 			getInput().setCursorType(CursorType.HAND);
 			
-			if (textButtonRenderer.clickCallback != null && getInput().getMouseButtonDown(MouseButton.LEFT)) {
-				textButtonRenderer.clickCallback.run();
+			if (textButtonRenderer.clickCallback != null && input.getMouseButtonDown(MouseButton.LEFT)) {
+				textButtonRenderer.click();
 			}
 		}
 	}

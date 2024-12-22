@@ -1,13 +1,14 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.camera.CameraPrefab;
 import dev.prozilla.pine.core.rendering.Renderer;
 
-public class Scene implements Lifecycle {
+public class Scene implements Lifecycle, Printable {
 	
 	// Scene properties
 	public String name;
@@ -26,34 +27,32 @@ public class Scene implements Lifecycle {
 	
 	private static int lastId = 0;
 	
+	/**
+	 * Creates a new scene with a generated name.
+	 * The name consists of <code>Scene #</code> followed by the scene ID.
+	 */
 	public Scene() {
 		this(null);
 	}
 	
-	public Scene(Application application) {
+	/**
+	 * Creates a new scene with a given name.
+	 * @param name Name of the scene
+	 */
+	public Scene(String name) {
 		this.id = generateId();
-		this.name = "Scene #" + this.id;
+		this.name = (name != null) ? name : "Scene #" + this.id;
 		
-		setApplication(application);
-		reset();
-	}
-	
-	public Scene(Application application, String name) {
-		this.name = name;
-		this.id = generateId();
-		
-		setApplication(application);
 		reset();
 	}
 	
 	public void setApplication(Application application) {
-		if (application == null) {
-			return;
-		}
-		
 		this.application = application;
 	}
 	
+	/**
+	 * Resets the state of this scene.
+	 */
 	public void reset() {
 		loaded = false;
 		initialized = false;
@@ -65,6 +64,7 @@ public class Scene implements Lifecycle {
 	
 	/**
 	 * Fills the scene with a new world and camera.
+	 * @param cameraPrefab Prefab for the camera entity.
 	 */
 	protected void load(Prefab cameraPrefab) throws IllegalStateException {
 		// Create new world
@@ -146,11 +146,8 @@ public class Scene implements Lifecycle {
 		world.destroy();
 		
 		// Remove all references
-//		application = null;
 		world = null;
 		cameraData = null;
-		
-//		Texture.reset();
 	}
 	
 	/**
@@ -163,14 +160,6 @@ public class Scene implements Lifecycle {
 	}
 	
 	/**
-	 * Adds an entity to the scene.
-	 */
-	@Deprecated
-	public Entity add(Entity entity) {
-		return world.addEntity(entity);
-	}
-	
-	/**
 	 * Generates a new unique scene ID.
 	 * @return Scene ID
 	 */
@@ -178,12 +167,29 @@ public class Scene implements Lifecycle {
 		return lastId++;
 	}
 	
-	/**
-	 * Getter for the scene ID.
-	 * @return Scene ID
-	 */
 	public int getId() {
 		return id;
+	}
+	
+	@Override
+	public int hashCode() {
+		return id;
+	}
+	
+	/**
+	 * Checks if this scene is equal to another scene by comparing both ID's.
+	 * @param scene Other scene
+	 * @return True if both scenes have the same ID.
+	 */
+	public boolean equals(Scene scene) {
+		return scene.id == id;
+	}
+	
+	/**
+	 * Checks whether this scene is the application's current scene.
+	 */
+	public boolean isActive() {
+		return application.currentScene.equals(this);
 	}
 	
 	public World getWorld() {
@@ -192,5 +198,10 @@ public class Scene implements Lifecycle {
 	
 	public CameraData getCameraData() {
 		return cameraData;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s (%s)", name, id);
 	}
 }

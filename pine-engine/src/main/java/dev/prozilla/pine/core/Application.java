@@ -113,7 +113,8 @@ public class Application implements Lifecycle {
 
 		// Prepare scene
 		if (scene == null) {
-			scene = new Scene(this);
+			scene = new Scene();
+			scene.setApplication(this);
 		}
 		scenes = new HashMap<>();
 		addScene(scene);
@@ -402,6 +403,20 @@ public class Application implements Lifecycle {
 	 */
 	public void loadScene(Scene scene) {
 		loadScene(scene.getId());
+	}
+	
+	/**
+	 * Loads the next scene.
+	 */
+	public void nextScene() {
+		loadScene((currentScene.getId() + 1) % scenes.size());
+	}
+	
+	/**
+	 * Loads the previous scene.
+	 */
+	public void previousScene() {
+		loadScene((currentScene.getId() + scenes.size() - 1) % scenes.size());
 	}
 	
 	/**

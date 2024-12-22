@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.system;
 
+import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.Entity;
 
 import java.util.ArrayList;
@@ -8,13 +9,23 @@ import java.util.function.Consumer;
 
 /**
  * A wrapper for systems of the same type.
+ * All systems in a group are executed during the same step of the game loop.
+ * @param <S> Type of the systems in this group.
  */
 public class SystemGroup<S extends SystemBase> {
 	
 	private final List<S> systems;
+	/** Type of the systems in this group. */
 	private final Class<S> type;
 	
-	public SystemGroup(Class<S> type) {
+	private final World world;
+	
+	/**
+	 * Creates a new system group in a world with systems of a given type.
+	 * @param type Type of the systems in this group
+	 */
+	public SystemGroup(World world, Class<S> type) {
+		this.world = world;
 		this.type = type;
 		
 		systems = new ArrayList<>();
@@ -43,6 +54,9 @@ public class SystemGroup<S extends SystemBase> {
 		return systems.isEmpty();
 	}
 	
+	/**
+	 * Returns the amount of systems in this group.
+	 */
 	public int size() {
 		return systems.size();
 	}
@@ -59,6 +73,11 @@ public class SystemGroup<S extends SystemBase> {
 			try {
 				if (system.hasEntityChunks()) {
 					consumer.accept(system);
+				}
+				
+				// Abort if the world was unloaded
+				if (!world.isActive()) {
+					break;
 				}
 			} catch (RuntimeException e) {
 				System.err.println("Failed to run system: " + system.getClass().getSimpleName());

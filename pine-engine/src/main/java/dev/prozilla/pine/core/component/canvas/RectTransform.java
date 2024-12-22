@@ -14,8 +14,10 @@ public class RectTransform extends Component {
 	public Vector2i offset;
 	public Vector2i size;
 	
-	/** If true, the width and height of this rect will be changed each update to fill its container or the entire canvas.  */
-	public boolean fillContainer;
+	/** If true, width of this rect will be changed each update to fill its container or the entire canvas.  */
+	public boolean fillContainerWidth;
+	/** If true, height of this rect will be changed each update to fill its container or the entire canvas.  */
+	public boolean fillContainerHeight;
 	
 	public Anchor anchor;
 	
@@ -42,7 +44,8 @@ public class RectTransform extends Component {
 		anchor = Anchor.BOTTOM_LEFT;
 		passThrough = false;
 		cursorHit = false;
-		fillContainer = false;
+		fillContainerWidth = false;
+		fillContainerHeight = false;
 	}
 	
 	@Override
@@ -112,7 +115,7 @@ public class RectTransform extends Component {
 		        "cursorHit=" + cursorHit +
 		        ", passThrough=" + passThrough +
 		        ", anchor=" + anchor +
-		        ", fillContainer=" + fillContainer +
+		        ", fillContainer=" + fillContainerWidth +
 		        ", size=" + size +
 		        ", offset=" + offset +
 		        ", position=" + position +

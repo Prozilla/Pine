@@ -25,15 +25,12 @@ public class RectUpdater extends UpdateSystem {
 	}
 	
 	public static void resizeRect(RectTransform rect) {
-		if (!rect.fillContainer) {
-			return;
+		if (rect.fillContainerWidth) {
+			rect.size.x = rect.getCanvas().getWidth();
 		}
-		
-		int canvasWidth = rect.getCanvas().getWidth();
-		int canvasHeight = rect.getCanvas().getHeight();
-		
-		rect.size.x = canvasWidth;
-		rect.size.y = canvasHeight;
+		if (rect.fillContainerHeight) {
+			rect.size.y = rect.getCanvas().getHeight();
+		}
 	}
 	
 	public static void anchorRect(RectTransform rect) {

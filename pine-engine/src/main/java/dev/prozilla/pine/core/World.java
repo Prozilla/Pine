@@ -311,4 +311,8 @@ public class World implements Lifecycle {
 		// Update systems that use depth
 		systemManager.updateEntityDepth();
 	}
+	
+	public boolean isActive() {
+		return scene.isActive();
+	}
 }

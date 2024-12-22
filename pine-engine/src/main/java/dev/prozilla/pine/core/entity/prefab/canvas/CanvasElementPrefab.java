@@ -15,12 +15,14 @@ public class CanvasElementPrefab extends Prefab {
 	protected RectTransform.Anchor anchor;
 	protected int offsetX;
 	protected int offsetY;
-	protected boolean fillContainer;
+	protected boolean fillContainerWidth;
+	protected boolean fillContainerHeight;
 	
 	public CanvasElementPrefab() {
 		offsetX = 0;
 		offsetY = 0;
-		fillContainer = false;
+		fillContainerWidth = false;
+		fillContainerHeight = false;
 		
 		setName("CanvasElement");
 	}
@@ -56,14 +58,24 @@ public class CanvasElementPrefab extends Prefab {
 	 * Sets the value that determines whether the rect should fill its container.
 	 */
 	public void setFillContainer(boolean fillContainer) {
-		this.fillContainer = fillContainer;
+		setFillContainerWidth(fillContainer);
+		setFillContainerHeight(fillContainer);
+	}
+	
+	public void setFillContainerWidth(boolean fillContainerWidth) {
+		this.fillContainerWidth = fillContainerWidth;
+	}
+	
+	public void setFillContainerHeight(boolean fillContainerHeight) {
+		this.fillContainerHeight = fillContainerHeight;
 	}
 	
 	@Override
 	protected void apply(Entity entity) {
 		RectTransform rectTransform = entity.addComponent(new RectTransform());
 		rectTransform.setOffset(offsetX, offsetY);
-		rectTransform.fillContainer = fillContainer;
+		rectTransform.fillContainerWidth = fillContainerWidth;
+		rectTransform.fillContainerHeight = fillContainerHeight;
 		
 		if (anchor != null) {
 			rectTransform.setAnchor(anchor);

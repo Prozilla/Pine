@@ -1,6 +1,5 @@
 package dev.prozilla.pine.core.entity.prefab.canvas;
 
-import dev.prozilla.pine.common.Callback;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.canvas.TextButtonRenderer;
 import dev.prozilla.pine.core.entity.Entity;
@@ -18,7 +17,7 @@ public class TextButtonPrefab extends TextPrefab {
 	/** Vertical padding around text. */
 	protected int paddingY;
 	
-	protected Callback clickCallback;
+	protected TextButtonRenderer.Callback clickCallback;
 	
 	public TextButtonPrefab() {
 		this(null);
@@ -57,7 +56,7 @@ public class TextButtonPrefab extends TextPrefab {
 		this.paddingY = paddingY;
 	}
 	
-	public void setClickCallback(Callback callback) {
+	public void setClickCallback(TextButtonRenderer.Callback callback) {
 		clickCallback = callback;
 	}
 	
