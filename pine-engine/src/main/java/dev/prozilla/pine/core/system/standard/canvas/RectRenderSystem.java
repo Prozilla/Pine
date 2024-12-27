@@ -22,11 +22,11 @@ public class RectRenderSystem extends RenderSystem {
 		RectRenderer rectRenderer = chunk.getComponent(RectRenderer.class);
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
-		if (rect.size.x != 0 && rect.size.y != 0) {
+		if (rect.currentSize.x != 0 && rect.currentSize.y != 0) {
 			if (rectRenderer.color == null) {
-				renderer.drawRect(rect.position.x, rect.position.y, transform.getDepth(), rect.size.x, rect.size.y);
+				renderer.drawRect(rect.currentPosition.x, rect.currentPosition.y, transform.getDepth(), rect.currentSize.x, rect.currentSize.y);
 			} else {
-				renderer.drawRect(rect.position.x, rect.position.y, transform.getDepth(), rect.size.x, rect.size.y, rectRenderer.color);
+				renderer.drawRect(rect.currentPosition.x, rect.currentPosition.y, transform.getDepth(), rect.currentSize.x, rect.currentSize.y, rectRenderer.color);
 			}
 		}
 	}

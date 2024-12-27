@@ -25,7 +25,7 @@ public class ImageRenderSystem extends RenderSystem {
 	
 	public static void renderImage(Renderer renderer, ImageRenderer imageRenderer, RectTransform rect, float z) {
 		renderImage(renderer, imageRenderer,
-		 rect.position.x, rect.position.y, imageRenderer.size.x, imageRenderer.size.y, z, imageRenderer.color);
+		 rect.currentPosition.x, rect.currentPosition.y, imageRenderer.size.x, imageRenderer.size.y, z, imageRenderer.color);
 	}
 	
 	public static void renderImage(Renderer renderer, ImageRenderer imageRenderer, int x, int y, int width, int height, float z, Color color) {

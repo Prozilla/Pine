@@ -18,7 +18,7 @@ public class TextButtonResizer extends UpdateSystem {
 		TextRenderer textRenderer = chunk.getComponent(TextRenderer.class);
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
-		rect.size.x = textRenderer.size.x + textButtonRenderer.padding.x * 2;
-		rect.size.y = textRenderer.size.y + textButtonRenderer.padding.y * 2;
+		rect.currentSize.x = textRenderer.size.x + textButtonRenderer.padding.x * 2;
+		rect.currentSize.y = textRenderer.size.y + textButtonRenderer.padding.y * 2;
 	}
 }

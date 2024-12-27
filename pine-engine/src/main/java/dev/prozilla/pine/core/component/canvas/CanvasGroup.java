@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.component.canvas;
 
+import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.common.math.vector.Vector4i;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Component;
 
@@ -18,7 +18,7 @@ public class CanvasGroup extends Component {
 	public Color backgroundColor;
 	/** Distance between elements. */
 	public int gap;
-	public Vector2i padding;
+	public DualDimension padding;
 	
 	public Vector2i innerSize;
 	
@@ -59,13 +59,17 @@ public class CanvasGroup extends Component {
 		
 		childRects = new ArrayList<>();
 		gap = 0;
-		padding = new Vector2i();
+		padding = new DualDimension();
 		innerSize = new Vector2i();
 	}
 	
 	@Override
 	public String getName() {
 		return "CanvasGroup";
+	}
+	
+	public void setPadding(DualDimension padding) {
+		this.padding = padding;
 	}
 	
 	/**

@@ -25,16 +25,19 @@ public class RectUpdater extends UpdateSystem {
 	}
 	
 	public static void resizeRect(RectTransform rect) {
-		if (rect.fillContainerWidth) {
-			rect.size.x = rect.getCanvas().getWidth();
+		int targetSizeX = rect.getSizeX();
+		int targetSizeY = rect.getSizeY();
+		
+		if (targetSizeX != 0) {
+			rect.currentSize.x = targetSizeX;
 		}
-		if (rect.fillContainerHeight) {
-			rect.size.y = rect.getCanvas().getHeight();
+		if (targetSizeY != 0) {
+			rect.currentSize.y = targetSizeY;
 		}
 	}
 	
 	public static void anchorRect(RectTransform rect) {
-		if (rect.size.x == 0 || rect.size.y == 0 || rect.anchor == null) {
+		if (rect.currentSize.x == 0 || rect.currentSize.y == 0 || rect.anchor == null) {
 			return;
 		}
 		
@@ -43,32 +46,32 @@ public class RectUpdater extends UpdateSystem {
 		
 		switch (rect.anchor) {
 			case BOTTOM_LEFT:
-				rect.position.x = rect.offset.x;
-				rect.position.y = rect.offset.y;
+				rect.currentPosition.x = rect.getPositionX();
+				rect.currentPosition.y = rect.getPositionY();
 				break;
 			case BOTTOM_RIGHT:
-				rect.position.x = canvasWidth - rect.size.x - rect.offset.x;
-				rect.position.y = rect.offset.y;
+				rect.currentPosition.x = canvasWidth - rect.currentSize.x - rect.getPositionX();
+				rect.currentPosition.y = rect.getPositionY();
 				break;
 			case BOTTOM_CENTER:
-				rect.position.x = Math.round((float)(canvasWidth - rect.size.x) / 2f) + rect.offset.x;
-				rect.position.y = rect.offset.y;
+				rect.currentPosition.x = Math.round((float)(canvasWidth - rect.currentSize.x) / 2f) + rect.getPositionX();
+				rect.currentPosition.y = rect.getPositionY();
 				break;
 			case CENTER:
-				rect.position.x = Math.round((float)(canvasWidth - rect.size.x) / 2f) + rect.offset.x;
-				rect.position.y = Math.round((float)(canvasHeight - rect.size.y) / 2f) + rect.offset.y;
+				rect.currentPosition.x = Math.round((float)(canvasWidth - rect.currentSize.x) / 2f) + rect.getPositionX();
+				rect.currentPosition.y = Math.round((float)(canvasHeight - rect.currentSize.y) / 2f) + rect.getPositionY();
 				break;
 			case TOP_LEFT:
-				rect.position.x = rect.offset.x;
-				rect.position.y = canvasHeight - rect.size.y - rect.offset.y;
+				rect.currentPosition.x = rect.getPositionX();
+				rect.currentPosition.y = canvasHeight - rect.currentSize.y - rect.getPositionY();
 				break;
 			case TOP_RIGHT:
-				rect.position.x = canvasWidth - rect.size.x - rect.offset.x;
-				rect.position.y = canvasHeight - rect.size.y - rect.offset.y;
+				rect.currentPosition.x = canvasWidth - rect.currentSize.x - rect.getPositionX();
+				rect.currentPosition.y = canvasHeight - rect.currentSize.y - rect.getPositionY();
 				break;
 			case TOP_CENTER:
-				rect.position.x = Math.round((float)(canvasWidth - rect.size.x) / 2f) + rect.offset.x;
-				rect.position.y = canvasHeight - rect.size.y - rect.offset.y;
+				rect.currentPosition.x = Math.round((float)(canvasWidth - rect.currentSize.x) / 2f) + rect.getPositionX();
+				rect.currentPosition.y = canvasHeight - rect.currentSize.y - rect.getPositionY();
 				break;
 		}
 	}

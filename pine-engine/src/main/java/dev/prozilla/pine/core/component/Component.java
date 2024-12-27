@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.component;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.core.Window;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.camera.CameraData;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * Contains a partition of the data of an entity.
  */
-public abstract class Component implements Lifecycle {
+public abstract class Component implements Lifecycle, Printable {
 	
 	// Identifier
 	public final int id;
@@ -109,5 +110,10 @@ public abstract class Component implements Lifecycle {
 	
 	public boolean equals(Component component) {
 		return component.id == id;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s: %s", getName(), getEntity().getName());
 	}
 }

@@ -31,7 +31,7 @@ public class RectInputHandler extends InputSystemBase {
 			
 			if (!rect.passThrough && !input.isCursorBlocked()) {
 				int canvasHeight = rect.getCanvas().getHeight();
-				if (cursor != null && RectTransform.isInsideRect(new Vector2i(cursor.x, canvasHeight - cursor.y), rect.position, rect.size)) {
+				if (cursor != null && RectTransform.isInsideRect(new Vector2i(cursor.x, canvasHeight - cursor.y), rect.currentPosition, rect.currentSize)) {
 					rect.cursorHit = true;
 					input.blockCursor(entity);
 				}

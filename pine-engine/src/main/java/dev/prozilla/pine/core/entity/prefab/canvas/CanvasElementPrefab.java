@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.canvas;
 
+import dev.prozilla.pine.common.math.dimension.Dimension;
+import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.Entity;
@@ -12,29 +14,43 @@ import dev.prozilla.pine.core.entity.prefab.Prefab;
 @Components({ RectTransform.class, Transform.class })
 public class CanvasElementPrefab extends Prefab {
 	
+	protected DualDimension position;
+	protected DualDimension size;
 	protected RectTransform.Anchor anchor;
-	protected int offsetX;
-	protected int offsetY;
-	protected boolean fillContainerWidth;
-	protected boolean fillContainerHeight;
 	
 	public CanvasElementPrefab() {
-		offsetX = 0;
-		offsetY = 0;
-		fillContainerWidth = false;
-		fillContainerHeight = false;
+		position = new DualDimension();
+		size = new DualDimension();
 		
 		setName("CanvasElement");
 	}
 	
 	/**
-	 * Sets the position of this element on the canvas.
-	 * @param x Horizontal offset
-	 * @param y Vertical offset
+	 * Sets the position of this element on the canvas relative to its anchor point.
 	 */
-	public void setPosition(RectTransform.Anchor anchor, int x, int y) {
-		setAnchor(anchor);
-		setOffset(x, y);
+	public void setPosition(Dimension x, Dimension y) {
+		setPosition(new DualDimension(x, y));
+	}
+	
+	/**
+	 * Sets the position of this element on the canvas relative to its anchor point.
+	 */
+	public void setPosition(DualDimension position) {
+		this.position = position;
+	}
+	
+	/**
+	 * Sets the size of this element on the canvas.
+	 */
+	public void setSize(Dimension x, Dimension y) {
+		setSize(new DualDimension(x, y));
+	}
+	
+	/**
+	 * Sets the size of this element on the canvas.
+	 */
+	public void setSize(DualDimension size) {
+		this.size = size;
 	}
 	
 	/**
@@ -44,38 +60,11 @@ public class CanvasElementPrefab extends Prefab {
 		this.anchor = anchor;
 	}
 	
-	/**
-	 * Sets the offset from the starting position of the anchor point on the canvas.
-	 * @param x Horizontal offset
-	 * @param y Vertical offset
-	 */
-	public void setOffset(int x, int y) {
-		offsetX = x;
-		offsetY = y;
-	}
-	
-	/**
-	 * Sets the value that determines whether the rect should fill its container.
-	 */
-	public void setFillContainer(boolean fillContainer) {
-		setFillContainerWidth(fillContainer);
-		setFillContainerHeight(fillContainer);
-	}
-	
-	public void setFillContainerWidth(boolean fillContainerWidth) {
-		this.fillContainerWidth = fillContainerWidth;
-	}
-	
-	public void setFillContainerHeight(boolean fillContainerHeight) {
-		this.fillContainerHeight = fillContainerHeight;
-	}
-	
 	@Override
 	protected void apply(Entity entity) {
 		RectTransform rectTransform = entity.addComponent(new RectTransform());
-		rectTransform.setOffset(offsetX, offsetY);
-		rectTransform.fillContainerWidth = fillContainerWidth;
-		rectTransform.fillContainerHeight = fillContainerHeight;
+		rectTransform.setPosition(position.clone());
+		rectTransform.setSize(size.clone());
 		
 		if (anchor != null) {
 			rectTransform.setAnchor(anchor);

@@ -25,13 +25,13 @@ public class TextButtonRenderSystem extends RenderSystem {
 		// Render background
 		if (textRenderer.size.x != 0 && textRenderer.size.y != 0 && textButtonRenderer.backgroundColor != null) {
 			Color backgroundColor = (textButtonRenderer.isHovering && textButtonRenderer.backgroundHoverColor != null) ? textButtonRenderer.backgroundHoverColor : textButtonRenderer.backgroundColor;
-			renderer.drawRect(rect.position.x, rect.position.y,  transform.getDepth(), rect.size.x, rect.size.y, backgroundColor);
+			renderer.drawRect(rect.currentPosition.x, rect.currentPosition.y,  transform.getDepth(), rect.currentSize.x, rect.currentSize.y, backgroundColor);
 		}
 		
 		// Render text
 		Color textColor = (textButtonRenderer.isHovering && textButtonRenderer.hoverColor != null) ? textButtonRenderer.hoverColor : textRenderer.color;
-		int textX = rect.position.x + textButtonRenderer.padding.x;
-		int textY = rect.position.y + textButtonRenderer.padding.y;
+		int textX = rect.currentPosition.x + textButtonRenderer.padding.x;
+		int textY = rect.currentPosition.y + textButtonRenderer.padding.y;
 		
 		TextRenderSystem.renderText(renderer, textRenderer, textX, textY, transform.getDepth(), textColor);
 	}

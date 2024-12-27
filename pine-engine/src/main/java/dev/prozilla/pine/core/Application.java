@@ -441,6 +441,9 @@ public class Application implements Lifecycle {
 		if (!currentScene.initialized) {
 			currentScene.init(window.id);
 		}
+		
+		// Make sure game is resumed when new scene is loaded
+		resume();
 	}
 	
 	/**
