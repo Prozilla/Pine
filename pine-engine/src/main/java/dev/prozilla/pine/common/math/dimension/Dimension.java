@@ -2,6 +2,9 @@ package dev.prozilla.pine.common.math.dimension;
 
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Dimension of a UI element, defined by the combination of a value and a unit or by a function that computes the value of a dimension.
  * The dimension system is based on the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/length">CSS length data type</a>,
@@ -69,6 +72,7 @@ public class Dimension extends DimensionBase {
 		return false;
 	}
 	
+	@Override
 	public boolean equals(DimensionBase dimensionBase) {
 		return dimensionBase instanceof Dimension dimension
 				&& dimension.value == this.value && dimension.unit.equals(this.unit);
@@ -122,6 +126,70 @@ public class Dimension extends DimensionBase {
 	@Override
 	public Dimension clone() {
 		return new Dimension(value, unit);
+	}
+	
+	/**
+	 * Parses a string into a dimension instance.
+	 * @param input Input string with a value and a unit
+	 * @return New dimension with parsed value and unit, or null if the string could not be parsed
+	 */
+	public static DimensionBase parse(String input) {
+		input = input.trim().toLowerCase();
+		
+		// Find index of first non-digit of string
+		int splitIndex = 0;
+		while (splitIndex < input.length() && Character.isDigit(input.charAt(splitIndex))) {
+			splitIndex++;
+		}
+		
+		// If input string starts with non-digit, parse it as a dimension function
+		if (splitIndex == 0) {
+			List<String> args = new java.util.ArrayList<>(List.of(input.split("\\s*[(,)]\\s*")));
+			String functionName = args.remove(0);
+			
+			// Parse each argument
+			List<DimensionBase> dimensions = new ArrayList<>();
+			for (String arg : args) {
+				if (arg.isBlank()) {
+					continue;
+				}
+				
+				DimensionBase dimension = Dimension.parse(arg);
+				if (dimension != null) {
+					dimensions.add(dimension);
+				} else {
+					// Stop parsing if any argument is invalid
+					return null;
+				}
+			}
+			int argCount = dimensions.size();
+			
+			if (argCount == 0) {
+				return null;
+			}
+			
+			return switch (functionName) {
+				case "max" -> (argCount == 2) ? Dimension.max(dimensions.get(0), dimensions.get(1)) : null;
+				case "min" -> (argCount == 2) ? Dimension.min(dimensions.get(0), dimensions.get(1)) : null;
+				case "clamp" -> (argCount == 3) ? Dimension.clamp(dimensions.get(0), dimensions.get(1), dimensions.get(2)) : null;
+				case "add" -> (argCount == 2) ? Dimension.add(dimensions.get(0), dimensions.get(1)) : null;
+				case "multiply" -> (argCount == 2) ? Dimension.multiply(dimensions.get(0), dimensions.get(1)) : null;
+				default -> null;
+			};
+		} else {
+			// Split input into value (digits) and unit (non-digits)
+			String valueString = input.substring(0, splitIndex);
+			String unitString = input.substring(splitIndex);
+			
+			int value = Integer.parseInt(valueString);
+			Unit unit = unitString.isBlank() ? Unit.PIXELS : Unit.parse(unitString);
+			
+			if (unit == null) {
+				return null;
+			}
+			
+			return new Dimension(value, unit);
+		}
 	}
 	
 	/**

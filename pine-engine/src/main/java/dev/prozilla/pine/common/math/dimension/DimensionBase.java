@@ -48,6 +48,11 @@ public abstract class DimensionBase implements Printable {
 	@Override
 	abstract public DimensionBase clone();
 	
+	@Override
+	public boolean equals(Object object) {
+		return (object instanceof DimensionBase dimensionBase) ? equals(dimensionBase) : super.equals(object);
+	}
+	
 	/**
 	 * Checks whether this dimension is equal to a given dimension.
 	 * @param dimensionBase Other dimension

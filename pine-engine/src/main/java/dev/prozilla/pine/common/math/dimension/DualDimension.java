@@ -3,6 +3,8 @@ package dev.prozilla.pine.common.math.dimension;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 
+import java.util.ArrayList;
+
 /**
  * Represents a pair of dimensions (X and Y) for a UI element. Each dimension is defined using a {@link DimensionBase}.
  * @see Dimension
@@ -90,6 +92,33 @@ public class DualDimension implements Printable {
 	@Override
 	public DualDimension clone() {
 		return new DualDimension(x.clone(), y.clone());
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof DualDimension dualDimension
+				&& dualDimension.x.equals(this.x) && dualDimension.y.equals(this.y);
+	}
+	
+	public static DualDimension parse(String input) {
+		String[] sections = input.trim().split("\\s+");
+		ArrayList<DimensionBase> dimensions = new ArrayList<>();
+		
+		for (String section : sections) {
+			DimensionBase dimension = Dimension.parse(section);
+			
+			if (dimension == null) {
+				return null;
+			}
+			
+			dimensions.add(dimension);
+		}
+		
+		return switch (dimensions.size()) {
+			case 1 -> new DualDimension(dimensions.get(0));
+			case 2 -> new DualDimension(dimensions.get(0), dimensions.get(1));
+			default -> null;
+		};
 	}
 	
 	/**

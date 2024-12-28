@@ -57,4 +57,15 @@ public enum Unit {
 			case VIEWPORT_HEIGHT -> "vh";
 		};
 	}
+	
+	public static Unit parse(String input) {
+		return switch (input) {
+			case "auto" -> AUTO;
+			case "px" -> PIXELS;
+			case "em" -> ELEMENT_SIZE;
+			case "vw" -> VIEWPORT_WIDTH;
+			case "vh" -> VIEWPORT_HEIGHT;
+			default -> null;
+		};
+	}
 }

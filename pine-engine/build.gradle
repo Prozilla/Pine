@@ -69,6 +69,9 @@ dependencies {
     // Gradle Tooling API
     implementation "org.gradle:gradle-tooling-api:8.8"
     runtimeOnly "org.slf4j:slf4j-simple:2.0.16"
+    
+    // JUnit Jupiter API
+    testImplementation "org.junit.jupiter:junit-jupiter:5.10.0"
 }
 
 tasks.register("runBuildTool", JavaExec) {
@@ -97,4 +100,8 @@ publishing {
             }
         }
     }
+}
+
+test {
+    useJUnitPlatform()
 }
