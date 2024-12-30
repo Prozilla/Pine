@@ -1,5 +1,6 @@
 package dev.prozilla.pine.examples.flappybird.entity;
 
+import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
@@ -16,7 +17,7 @@ public class ScorePrefab extends TextPrefab {
 		// Set position and appearance
 		setAnchor(RectTransform.Anchor.TOP_RIGHT);
 		setColor(Color.WHITE);
-		setOffset(16, 16);
+		setPosition(new DualDimension(16));
 		setFont(font);
 	}
 	

@@ -1,3 +1,2 @@
 rootProject.name = "pine"
-include "pine-engine", "examples"
-
+include "pine-engine", "pine-editor", "examples"

@@ -9,7 +9,7 @@ public class Main {
 	public static final int WIDTH = BackgroundData.WIDTH * 3;
 	public static final int HEIGHT = BackgroundData.HEIGHT;
 	
-	public static void main(String[] args) {
+	public static ApplicationBuilder getApplication() {
 		ApplicationBuilder flappyBird = new ApplicationBuilder();
 		
 		flappyBird.setTitle("Flappy Bird");
@@ -18,6 +18,11 @@ public class Main {
 		flappyBird.setIcons("flappybird/icon.png");
 		flappyBird.setTargetFps(120);
 		
+		return flappyBird;
+	}
+	
+	public static void main(String[] args) {
+		ApplicationBuilder flappyBird = getApplication();
 		flappyBird.buildAndRun();
 	}
 }

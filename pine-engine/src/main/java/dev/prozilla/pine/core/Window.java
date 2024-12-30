@@ -23,11 +23,14 @@ public class Window implements Lifecycle {
 	protected String title;
 	
 	private GLFWWindowSizeCallback windowSizeCallback;
+	private boolean isInitialized;
 	
 	public Window(int width, int height, String title) {
 		this.width = width;
 		this.height = height;
 		this.title = title;
+		
+		isInitialized = false;
 	}
 	
 	/**
@@ -54,6 +57,8 @@ public class Window implements Lifecycle {
 				setSize(width, height);
 			}
 		});
+		
+		isInitialized = true;
 	}
 	
 	/**
@@ -61,6 +66,10 @@ public class Window implements Lifecycle {
 	 */
 	@Override
 	public void update() {
+		if (!isInitialized) {
+			return;
+		}
+		
 		glfwSwapBuffers(id);
 		glfwPollEvents();
 	}
@@ -70,6 +79,10 @@ public class Window implements Lifecycle {
 	 */
 	@Override
 	public void destroy() {
+		if (!isInitialized) {
+			return;
+		}
+		
 		windowSizeCallback.free();
 		glfwDestroyWindow(id);
 	}
@@ -79,12 +92,22 @@ public class Window implements Lifecycle {
 	 * @return True if the window should be closed
 	 */
 	public boolean shouldClose() {
+		if (!isInitialized) {
+			return false;
+		}
+		
 		return glfwWindowShouldClose(id);
 	}
 	
 	private void setSize(int width, int height) {
 		setWidth(width);
 		setHeight(height);
+	}
+	
+	/**
+	 * Sets the size of the rendering viewport to match the window.
+	 */
+	public void refreshSize() {
 		glViewport(0, 0, width, height);
 	}
 	
@@ -109,7 +132,9 @@ public class Window implements Lifecycle {
 	 * @param title Title
 	 */
 	public void setTitle(String title) {
-		glfwSetWindowTitle(id, title);
+		if (isInitialized) {
+			glfwSetWindowTitle(id, title);
+		}
 		this.title = title;
 	}
 	
@@ -119,6 +144,10 @@ public class Window implements Lifecycle {
 	 * @param images Array of icon images
 	 */
 	public void setIcons(Image[] images) {
+		if (!isInitialized) {
+			throw new IllegalStateException("Window has not been initialized yet.");
+		}
+		
 		try (GLFWImage.Buffer icons = GLFWImage.malloc(images.length)) {
 			for (int i = 0; i < images.length; i++) {
 				Image image = images[i];

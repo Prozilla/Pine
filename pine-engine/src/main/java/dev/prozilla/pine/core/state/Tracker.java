@@ -150,4 +150,8 @@ public class Tracker {
 		componentCount = 0;
 		systemCount = 0;
 	}
+	
+	public void printRenderInfo() {
+		System.out.printf("Rendered %s/%s vertices%n", renderedVertices, totalVertices);
+	}
 }

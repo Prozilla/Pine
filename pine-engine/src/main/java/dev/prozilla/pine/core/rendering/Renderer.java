@@ -1,25 +1,24 @@
 package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.state.Tracker;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
-import dev.prozilla.pine.common.math.matrix.Matrix4f;
-import dev.prozilla.pine.common.system.resource.text.Font;
 
-import java.awt.FontFormatException;
+import java.awt.*;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.stream.IntStream;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL14.glBlendFuncSeparate;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
@@ -34,6 +33,7 @@ public class Renderer implements Lifecycle {
     private VertexArrayObject vao;
     private VertexBufferObject vbo;
     private ShaderProgram program;
+    private FrameBufferObject fbo;
 
     // Vertex buffer
     private FloatBuffer vertices;
@@ -75,17 +75,35 @@ public class Renderer implements Lifecycle {
     @Override
     public void init() {
         setupShaderProgram();
-
+        
         // Enable blending
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        
+
         // Enable depth test
         // TO DO: improve depth handling to avoid sorting renderers and use only depth test instead
-        glEnable (GL_DEPTH_TEST);
+        glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
 
-        // Create fonts
+        createFont();
+        reset();
+    }
+    
+    public void initPreview(int width, int height) {
+	    try {
+		    fbo = new FrameBufferObject(width, height);
+		    fbo.init();
+	    } catch (Exception e) {
+            System.err.println("Failed to create frame buffer");
+            e.printStackTrace();
+	    }
+        
+        setupShaderProgram();
+	    createFont();
+        reset();
+    }
+    
+    private void createFont() {
         try {
             defaultFont = new Font(getClass().getResourceAsStream(FONT_PATH), 16);
         } catch (FontFormatException | IOException e) {
@@ -93,8 +111,9 @@ public class Renderer implements Lifecycle {
             defaultFont = new Font();
         }
         debugFont = new Font(12, false);
-        
-        // Reset variables
+    }
+    
+    private void reset() {
         renderScale = 1;
         renderedVertices = 0;
         totalVertices = 0;
@@ -114,6 +133,11 @@ public class Renderer implements Lifecycle {
         if (drawing) {
             throw new IllegalStateException("Renderer is already drawing!");
         }
+        
+        if (fbo != null) {
+            fbo.bind();
+        }
+        
         drawing = true;
         numVertices = 0;
         renderedVertices = 0;
@@ -129,6 +153,11 @@ public class Renderer implements Lifecycle {
         }
         drawing = false;
         flush();
+        
+        if (fbo != null) {
+            fbo.unbind();
+        }
+        
         tracker.setVertices(renderedVertices, totalVertices);
     }
 
@@ -683,15 +712,21 @@ public class Renderer implements Lifecycle {
      * Updates the projection matrix according to the window's dimensions.
      */
     public void resize() {
-        // Get width and height of frame buffer
-        long window = GLFW.glfwGetCurrentContext();
         int width, height;
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            IntBuffer widthBuffer = stack.mallocInt(1);
-            IntBuffer heightBuffer = stack.mallocInt(1);
-            GLFW.glfwGetFramebufferSize(window, widthBuffer, heightBuffer);
-            width = widthBuffer.get();
-            height = heightBuffer.get();
+        
+        if (fbo == null) {
+            // Get width and height of frame buffer
+            long window = GLFW.glfwGetCurrentContext();
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                IntBuffer widthBuffer = stack.mallocInt(1);
+                IntBuffer heightBuffer = stack.mallocInt(1);
+                GLFW.glfwGetFramebufferSize(window, widthBuffer, heightBuffer);
+                width = widthBuffer.get();
+                height = heightBuffer.get();
+            }
+        } else {
+            width = fbo.getWidth();
+            height = fbo.getHeight();
         }
         
         if (width == viewWidth && height == viewHeight) {
@@ -759,5 +794,9 @@ public class Renderer implements Lifecycle {
     
     public boolean isDrawing() {
         return drawing;
+    }
+    
+    public FrameBufferObject getFbo() {
+        return fbo;
     }
 }

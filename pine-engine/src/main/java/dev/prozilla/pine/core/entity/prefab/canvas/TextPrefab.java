@@ -20,7 +20,12 @@ public class TextPrefab extends CanvasElementPrefab {
 	}
 	
 	public TextPrefab(String text) {
+		this(text, null);
+	}
+	
+	public TextPrefab(String text, Color color) {
 		this.text = text;
+		this.color = color;
 		setName("Text");
 	}
 	

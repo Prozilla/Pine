@@ -14,6 +14,8 @@ import dev.prozilla.pine.core.system.SystemBuilder;
 import dev.prozilla.pine.core.system.SystemManager;
 import dev.prozilla.pine.core.system.standard.camera.*;
 import dev.prozilla.pine.core.system.standard.canvas.*;
+import dev.prozilla.pine.core.system.standard.canvas.frame.FrameRenderSystem;
+import dev.prozilla.pine.core.system.standard.canvas.frame.FrameResizer;
 import dev.prozilla.pine.core.system.standard.canvas.group.*;
 import dev.prozilla.pine.core.system.standard.canvas.image.*;
 import dev.prozilla.pine.core.system.standard.canvas.text.*;
@@ -110,6 +112,7 @@ public class World implements Lifecycle {
 		initialSystems.add(new TextButtonResizer());
 		initialSystems.add(new ImageResizer());
 		initialSystems.add(new ImageButtonResizer());
+		initialSystems.add(new FrameResizer());
 		initialSystems.add(new CanvasGroupResizer());
 		initialSystems.add(new CanvasGroupArranger());
 		initialSystems.add(new RectUpdater());
@@ -121,6 +124,7 @@ public class World implements Lifecycle {
 		initialSystems.add(new TextButtonRenderSystem());
 		initialSystems.add(new ImageRenderSystem());
 		initialSystems.add(new ImageButtonRenderSystem());
+		initialSystems.add(new FrameRenderSystem());
 		
 		// Sprite input
 		initialSystems.add(new GridInputHandler());

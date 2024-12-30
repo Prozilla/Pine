@@ -35,12 +35,13 @@ public class Application implements Lifecycle {
 	
 	// State
 	/** True if the application has been initialized */
-	public static boolean initialized = false;
+	public boolean initialized;
 	/** True if OpenGL has been initialized */
 	public static boolean initializedOpenGL = false;
 	public boolean isRunning;
-	private boolean shouldStop;
-	public boolean isPaused = false;
+	protected boolean shouldStop;
+	public boolean isPaused;
+	protected boolean isPreview;
 	
 	// Window
 	public int windowWidth;
@@ -55,7 +56,7 @@ public class Application implements Lifecycle {
 	protected final Timer timer;
 	protected final Renderer renderer;
 	protected final Window window;
-	protected final Input input;
+	protected Input input;
 	protected final Tracker tracker;
 	
 	private GLFWErrorCallback errorCallback;
@@ -108,8 +109,11 @@ public class Application implements Lifecycle {
 		window = new Window(width, height, title);
 		input = new Input(this);
 		
+		initialized = false;
 		isRunning = false;
+		isPaused = false;
 		shouldStop = false;
+		isPreview = false;
 
 		// Prepare scene
 		if (scene == null) {
@@ -150,7 +154,6 @@ public class Application implements Lifecycle {
 	/**
 	 * Initializes the application.
 	 */
-	@Override
 	public void init() throws RuntimeException {
 		if (initialized) {
 			throw new IllegalStateException("Application has already been initialized.");
@@ -185,6 +188,24 @@ public class Application implements Lifecycle {
 		currentScene.init(window.id);
 		loadIcons();
 		System.out.println("Initialized application (Initialization: 4/4)");
+		
+		initialized = true;
+	}
+	
+	public void initPreview(Input input, int width, int height) {
+		if (initialized) {
+			throw new IllegalStateException("Preview has already been initialized.");
+		}
+		
+		isPreview = true;
+		isRunning = true;
+		
+		this.input = input;
+		
+		timer.init();
+		renderer.initPreview(width, height);
+		currentScene.init(renderer.getFbo().getId());
+		System.out.println("Initialized preview");
 		
 		initialized = true;
 	}
@@ -288,20 +309,35 @@ public class Application implements Lifecycle {
 		}
 	}
 	
+	public void updatePreview(float deltaTime) {
+		if (currentScene != null && currentScene.initialized) {
+			currentScene.update(deltaTime);
+		}
+		timer.updateFPS();
+		timer.update();
+	}
+	
 	/**
 	 * Renders the application.
 	 */
 	@Override
 	public void render(Renderer renderer) {
-//		System.out.println("-- Start of render --");
+		window.refreshSize();
 		renderer.clear();
-		
 		renderer.begin();
 		if (currentScene != null && currentScene.initialized) {
 			currentScene.render(renderer);
 		}
 		renderer.end();
-//		System.out.println("-- End of render --");
+	}
+	
+	public void renderPreview() {
+		try {
+			resize();
+			render(renderer);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -347,25 +383,35 @@ public class Application implements Lifecycle {
 	public void destroy() {
 		isRunning = false;
 		
-		System.out.println("Stopping application");
-		
-		// Destroy instances
-		renderer.destroy();
-		input.destroy();
-		
-		// Reset resources
-		Texture.reset();
-		ResourcePool.clear();
-		
-		// Destroy window and release callbacks
-		window.destroy();
-		if (currentScene.initialized) {
-			currentScene.destroy();
+		if (isStandalone()) {
+			System.out.println("Stopping application");
+		} else {
+			System.out.println("Stopping preview");
 		}
 		
-		// Terminate GLFW and release error callback
-		glfwTerminate();
-		errorCallback.free();
+		renderer.destroy();
+		
+		if (isStandalone()) {
+			input.destroy();
+			
+			// Reset resources
+			Texture.reset();
+			ResourcePool.clear();
+			
+			// Destroy window and release callbacks
+			window.destroy();
+			if (currentScene.initialized) {
+				currentScene.destroy();
+			}
+			
+			// Terminate GLFW and release error callback
+			glfwTerminate();
+			errorCallback.free();
+		} else {
+			if (currentScene.initialized) {
+				currentScene.destroy();
+			}
+		}
 	}
 	
 	/**
@@ -475,7 +521,7 @@ public class Application implements Lifecycle {
 	 * Loads the window icons.
 	 */
 	public void loadIcons() {
-		if (icons == null || icons.length == 0) {
+		if (icons == null || icons.length == 0 || isPreview()) {
 			return;
 		}
 		
@@ -509,6 +555,14 @@ public class Application implements Lifecycle {
 		if (window.getWidth() != renderer.getHeight() || window.getHeight() != renderer.getHeight()) {
 			renderer.resize();
 		}
+	}
+	
+	public boolean isPreview() {
+		return isPreview;
+	}
+	
+	public boolean isStandalone() {
+		return !isPreview;
 	}
 	
 	public Input getInput() {

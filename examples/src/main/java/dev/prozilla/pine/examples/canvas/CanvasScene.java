@@ -1,5 +1,6 @@
 package dev.prozilla.pine.examples.canvas;
 
+import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.Scene;
 import dev.prozilla.pine.core.component.canvas.CanvasGroup;
@@ -25,13 +26,13 @@ public class CanvasScene extends Scene {
 		menuPrefab.setAlignment(CanvasGroup.Alignment.CENTER);
 		menuPrefab.setDirection(CanvasGroup.Direction.DOWN);
 		menuPrefab.setBackgroundColor(Color.WHITE.clone().setAlpha(0.65f));
-		menuPrefab.setPadding(16, 16);
+		menuPrefab.setPadding(new DualDimension(16));
 		
 		TextPrefab titleTextPrefab = new TextPrefab(application.title);
 		
 		TextButtonPrefab textButtonPrefab = new TextButtonPrefab("This is a button");
 		textButtonPrefab.setPadding(16, 8);
-		textButtonPrefab.setClickCallback(() -> {
+		textButtonPrefab.setClickCallback((entity) -> {
 			System.out.println("Button clicked");
 		});
 		

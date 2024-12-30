@@ -1,9 +1,15 @@
 dependencies {
     implementation project(":pine-engine")
+    implementation project(":pine-editor")
 }
 
 tasks.register("runFlappyBird", JavaExec) {
     mainClass = "dev.prozilla.pine.examples.flappybird.Main"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+tasks.register("runFlappyBirdEditor", JavaExec) {
+    mainClass = "dev.prozilla.pine.examples.flappybird.Editor"
     classpath = sourceSets.main.runtimeClasspath
 }
 

@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.system.resource;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.core.rendering.Renderer;
 
 import java.nio.ByteBuffer;
@@ -10,7 +11,7 @@ import static org.lwjgl.opengl.GL13.*;
 /**
  * Represents an OpenGL texture.
  */
-public class Texture implements Lifecycle {
+public class Texture implements Lifecycle, Printable {
 
     /**
      * Stores the handle of the texture.
@@ -127,6 +128,11 @@ public class Texture implements Lifecycle {
         if (height > 0) {
             this.height = height;
         }
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("Texture #%s (%sx%s)", id, width, height);
     }
     
     /**
