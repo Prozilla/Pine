@@ -1,10 +1,10 @@
 package dev.prozilla.pine.common.system.resource.text;
 
 import dev.prozilla.pine.common.Lifecycle;
-import org.lwjgl.system.MemoryUtil;
 import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.core.rendering.Renderer;
+import org.lwjgl.system.MemoryUtil;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -381,5 +381,9 @@ public class Font implements Lifecycle {
     @Override
     public void destroy() {
         texture.destroy();
+    }
+    
+    public static String generateKey(String path, int size) {
+        return String.format("%s:%s", path, size);
     }
 }

@@ -1,9 +1,12 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.math.Numbers;
 import dev.prozilla.pine.common.system.resource.Image;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
+
+import java.util.Objects;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.glViewport;
@@ -26,6 +29,10 @@ public class Window implements Lifecycle {
 	private boolean isInitialized;
 	
 	public Window(int width, int height, String title) {
+		Numbers.requirePositive(width, "Window width must be a positive value.");
+		Numbers.requirePositive(height, "Window height must be a positive value.");
+		Objects.requireNonNull(title, "Window title must not be null.");
+		
 		this.width = width;
 		this.height = height;
 		this.title = title;

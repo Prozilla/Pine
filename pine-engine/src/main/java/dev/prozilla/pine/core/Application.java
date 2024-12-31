@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.math.Numbers;
 import dev.prozilla.pine.common.system.resource.Image;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
@@ -103,6 +104,8 @@ public class Application implements Lifecycle {
 	 * @param targetFps Amount of frames per second to target
 	 */
 	public Application(String title, int width, int height, Scene scene, int targetFps) {
+		Numbers.requirePositive(targetFps, "Target FPS must be a positive value.");
+		
 		timer = new Timer();
 		tracker = new Tracker(this);
 		renderer = new Renderer(tracker);

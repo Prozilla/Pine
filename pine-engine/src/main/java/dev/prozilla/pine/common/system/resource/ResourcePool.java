@@ -127,12 +127,13 @@ public final class ResourcePool {
 	
 	public static Font loadFont(String path, int size) {
 		path = "/" + normalizePath(path);
+		String key = Font.generateKey(path, size);
 		
-		if (fonts.containsKey(path)) {
-			return fonts.get(path);
+		if (fonts.containsKey(key)) {
+			return fonts.get(key);
 		}
 		
-		System.out.println("Loading font: " + path);
+		System.out.printf("Loading font: %s (size: %s)%n", path, size);
 		
 		Font font;
 		try {
@@ -143,7 +144,7 @@ public final class ResourcePool {
 			font = new Font();
 		}
 		
-		fonts.put(path, font);
+		fonts.put(key, font);
 		return font;
 	}
 	

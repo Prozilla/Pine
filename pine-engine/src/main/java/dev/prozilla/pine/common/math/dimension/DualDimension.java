@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Represents a pair of dimensions (X and Y) for a UI element. Each dimension is defined using a {@link DimensionBase}.
@@ -23,6 +24,16 @@ public class DualDimension implements Printable {
 		this(DEFAULT_VALUE);
 	}
 	
+	/**
+	 * Creates a pair of dimensions with two equal values based on a string.
+	 */
+	public DualDimension(String xy) {
+		this(Dimension.parse(xy));
+	}
+	
+	/**
+	 * Creates a pair of dimensions with two equal values, in pixels.
+	 */
 	public DualDimension(int xy) {
 		this(new Dimension(xy));
 	}
@@ -34,10 +45,25 @@ public class DualDimension implements Printable {
 		this(xy, xy);
 	}
 	
+	/**
+	 * Creates a pair of dimensions based on two strings.
+	 */
+	public DualDimension(String x, String y) {
+		this(Dimension.parse(x), Dimension.parse(y));
+	}
+	
+	/**
+	 * Creates a pair of dimensions.
+	 * @param x Value of x dimension, in pixels
+	 * @param y Value of y dimension, in pixels
+	 */
 	public DualDimension(int x, int y) {
 		this(new Dimension(x), new Dimension(y));
 	}
 	
+	/**
+	 * Creates a pair of dimensions
+	 */
 	public DualDimension(DimensionBase x, DimensionBase y) {
 		this.x = x;
 		this.y = y;
@@ -45,6 +71,10 @@ public class DualDimension implements Printable {
 	
 	public void reset() {
 		set(DEFAULT_VALUE);
+	}
+	
+	public void set(String xy) {
+		set(Dimension.parse(xy));
 	}
 	
 	public void set(int xy) {
@@ -55,11 +85,18 @@ public class DualDimension implements Printable {
 		set(xy, xy);
 	}
 	
+	public void set(String x, String y) {
+		set(Dimension.parse(x), Dimension.parse(y));
+	}
+	
 	public void set(int x, int y) {
 		set(new Dimension(x), new Dimension(y));
 	}
 	
 	public void set(DimensionBase x, DimensionBase y) {
+		Objects.requireNonNull(x, "Dimension must not be null.");
+		Objects.requireNonNull(y, "Dimension must not be null.");
+		
 		if (!x.equals(this.x)) {
 			this.x = x;
 		}

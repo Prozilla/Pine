@@ -634,14 +634,27 @@ public class Renderer implements Lifecycle {
     public void destroy() {
         MemoryUtil.memFree(vertices);
 
+        // Dispose of shader program
         if (vao != null) {
             vao.destroy();
         }
-        vbo.destroy();
-        program.destroy();
+        if (vbo != null) {
+            vbo.destroy();
+        }
+        if (program != null) {
+            program.destroy();
+        }
+        if (fbo != null) {
+            fbo.destroy();
+        }
 
-        defaultFont.destroy();
-        debugFont.destroy();
+        // Dispose of fonts
+        if (defaultFont != null) {
+            defaultFont.destroy();
+        }
+        if (debugFont != null) {
+            debugFont.destroy();
+        }
     }
 
     /**

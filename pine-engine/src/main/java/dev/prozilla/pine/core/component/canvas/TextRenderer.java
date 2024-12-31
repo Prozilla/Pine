@@ -41,6 +41,10 @@ public class TextRenderer extends Component {
 		return "TextRenderer";
 	}
 	
+	public void setFont(String fontPath, int size) {
+		setFont(ResourcePool.loadFont(fontPath, size));
+	}
+	
 	public void setFont(String fontPath) {
 		setFont(ResourcePool.loadFont(fontPath));
 	}
