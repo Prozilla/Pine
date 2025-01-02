@@ -1,4 +1,6 @@
-package dev.prozilla.pine.common.math;
+package dev.prozilla.pine.common.util;
+
+import dev.prozilla.pine.common.exception.InvalidNumberException;
 
 /**
  * Static utility methods for checking certain conditions before operation on numbers.
@@ -9,9 +11,9 @@ public class Numbers {
 	 * Checks that the given number is a positive number and throws a {@link InvalidNumberException} if it is not.
 	 * @param number The number to check
 	 * @return <code>number</code> if it is positive.
-	 * @throws InvalidNumberException If <code>number</code> is not positive
+	 * @throws InvalidNumberException If <code>number</code> is not positive.
 	 */
-	public static float requirePositive(float number) {
+	public static float requirePositive(float number) throws InvalidNumberException {
 		return requirePositive(number, null);
 	}
 	
@@ -20,11 +22,11 @@ public class Numbers {
 	 * @param number The number to check
 	 * @param message The message to be used in the event that a {@link InvalidNumberException} is thrown
 	 * @return <code>number</code> if it is positive.
-	 * @throws InvalidNumberException If <code>number</code> is not positive
+	 * @throws InvalidNumberException If <code>number</code> is not positive.
 	 */
-	public static float requirePositive(float number, String message) {
+	public static float requirePositive(float number, String message) throws InvalidNumberException {
 		if (number < 0) {
-			throw new InvalidNumberException(message != null ? message : "Number must be positive.");
+			throw new InvalidNumberException(message != null ? message : "number must be positive");
 		} else {
 			return number;
 		}
@@ -34,9 +36,9 @@ public class Numbers {
 	 * Checks that the given number is a positive number and throws a {@link InvalidNumberException} if it is not.
 	 * @param number The number to check
 	 * @return <code>number</code> if it is positive.
-	 * @throws InvalidNumberException If <code>number</code> is not positive
+	 * @throws InvalidNumberException If <code>number</code> is not positive.
 	 */
-	public static int requirePositive(int number) {
+	public static int requirePositive(int number) throws InvalidNumberException {
 		return requirePositive(number, null);
 	}
 	
@@ -45,11 +47,11 @@ public class Numbers {
 	 * @param number The number to check
 	 * @param message The message to be used in the event that a {@link InvalidNumberException} is thrown
 	 * @return <code>number</code> if it is positive.
-	 * @throws InvalidNumberException If <code>number</code> is not positive
+	 * @throws InvalidNumberException If <code>number</code> is not positive.
 	 */
 	public static int requirePositive(int number, String message) throws InvalidNumberException {
 		if (number < 0) {
-			throw new InvalidNumberException(message != null ? message : "Number must be positive.");
+			throw new InvalidNumberException(message != null ? message : "number must be positive");
 		} else {
 			return number;
 		}

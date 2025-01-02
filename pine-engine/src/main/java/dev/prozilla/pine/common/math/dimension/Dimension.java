@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.math.dimension;
 
+import dev.prozilla.pine.common.exception.InvalidStringException;
+import dev.prozilla.pine.common.util.Strings;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 
 import java.util.ArrayList;
@@ -128,12 +130,24 @@ public class Dimension extends DimensionBase {
 		return new Dimension(value, unit);
 	}
 	
+	public static boolean isValid(String input) {
+		try {
+			parse(input);
+			return true;
+		} catch (RuntimeException e) {
+			return false;
+		}
+	}
+	
 	/**
 	 * Parses a string into a dimension instance.
-	 * @param input Input string with a value and a unit
-	 * @return New dimension with parsed value and unit, or null if the string could not be parsed
+	 * @param input Input string
+	 * @return New dimension with based on input string
+	 * @throws IllegalArgumentException When <code>input</code> is not a valid dimension string
 	 */
-	public static DimensionBase parse(String input) {
+	public static DimensionBase parse(String input) throws IllegalArgumentException, InvalidStringException {
+		Strings.requireNonBlank(input, "Input string must not be blank");
+		
 		input = input.trim().toLowerCase();
 		
 		// Find index of first non-digit of string
@@ -144,7 +158,7 @@ public class Dimension extends DimensionBase {
 		
 		// If input string starts with non-digit, parse it as a dimension function
 		if (splitIndex == 0) {
-			List<String> args = new java.util.ArrayList<>(List.of(input.split("\\s*[(,)]\\s*")));
+			List<String> args = new ArrayList<>(List.of(input.split("\\s*[(,)]\\s*")));
 			String functionName = args.remove(0);
 			
 			// Parse each argument
@@ -158,14 +172,13 @@ public class Dimension extends DimensionBase {
 				if (dimension != null) {
 					dimensions.add(dimension);
 				} else {
-					// Stop parsing if any argument is invalid
-					return null;
+					throw new IllegalArgumentException("Input string contains invalid nested dimensions");
 				}
 			}
 			int argCount = dimensions.size();
 			
 			if (argCount == 0) {
-				return null;
+				throw new IllegalArgumentException("Input string contains dimension function without arguments");
 			}
 			
 			return switch (functionName) {
@@ -174,19 +187,19 @@ public class Dimension extends DimensionBase {
 				case "clamp" -> (argCount == 3) ? Dimension.clamp(dimensions.get(0), dimensions.get(1), dimensions.get(2)) : null;
 				case "add" -> (argCount == 2) ? Dimension.add(dimensions.get(0), dimensions.get(1)) : null;
 				case "multiply" -> (argCount == 2) ? Dimension.multiply(dimensions.get(0), dimensions.get(1)) : null;
-				default -> null;
+				default -> throw new IllegalArgumentException("Input string contains invalid function name");
 			};
 		} else {
 			// Split input into value (digits) and unit (non-digits)
 			String valueString = input.substring(0, splitIndex);
 			String unitString = input.substring(splitIndex);
 			
+			if (!Unit.isValid(unitString)) {
+				throw new IllegalArgumentException("Input string contains invalid unit");
+			}
+			
 			int value = Integer.parseInt(valueString);
 			Unit unit = unitString.isBlank() ? Unit.PIXELS : Unit.parse(unitString);
-			
-			if (unit == null) {
-				return null;
-			}
 			
 			return new Dimension(value, unit);
 		}

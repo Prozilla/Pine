@@ -58,14 +58,27 @@ public enum Unit {
 		};
 	}
 	
-	public static Unit parse(String input) {
-		return switch (input) {
-			case "auto" -> AUTO;
-			case "px" -> PIXELS;
-			case "em" -> ELEMENT_SIZE;
-			case "vw" -> VIEWPORT_WIDTH;
-			case "vh" -> VIEWPORT_HEIGHT;
-			default -> null;
-		};
+	public static boolean isValid(String input) {
+		if (input.isBlank()) {
+			return false;
+		}
+		
+		for (Unit unit : values()) {
+			if (toString(unit).equals(input)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public static Unit parse(String input) throws IllegalArgumentException {
+		for (Unit unit : values()) {
+			if (toString(unit).equals(input)) {
+				return unit;
+			}
+		}
+		
+		throw new IllegalArgumentException("Input string is not a valid unit");
 	}
 }

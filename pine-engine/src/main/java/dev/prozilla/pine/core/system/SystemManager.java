@@ -135,7 +135,7 @@ public class SystemManager extends ECSManager {
 		
 		if (added) {
 			system.initSystem(world);
-			world.application.getTracker().addSystem();
+			getTracker().addSystem();
 		} else {
 			system.destroy();
 		}

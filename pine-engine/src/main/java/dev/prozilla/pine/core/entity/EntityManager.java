@@ -37,7 +37,7 @@ public class EntityManager extends ECSManager {
 		
 		entities.add(entity);
 		
-		world.application.getTracker().addEntity();
+		getTracker().addEntity();
 	}
 	
 	public void removeEntity(Entity entity) {
@@ -49,7 +49,7 @@ public class EntityManager extends ECSManager {
 		
 		entities.remove(entity);
 		
-		world.application.getTracker().removeEntity();
+		getTracker().removeEntity();
 	}
 	
 	public boolean contains(Entity entity) {

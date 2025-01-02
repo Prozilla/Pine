@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Lifecycle;
-import dev.prozilla.pine.common.math.Numbers;
 import dev.prozilla.pine.common.system.resource.Image;
+import dev.prozilla.pine.common.util.Numbers;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 

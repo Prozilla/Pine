@@ -81,8 +81,13 @@ public class Entity implements Lifecycle, Printable {
 	 * Destroys this entity at the end of the game loop.
 	 */
 	public void destroy() {
-		if (transform.parent != null && application.isRunning) {
-			transform.parent.getEntity().removeChild(this);
+		if (application.isRunning) {
+			if (transform.parent != null) {
+				transform.parent.getEntity().removeChild(this);
+			}
+			if (isRegistered()) {
+				world.removeEntity(this);
+			}
 		}
 		
 		// Remove all references
@@ -101,7 +106,7 @@ public class Entity implements Lifecycle, Printable {
 	}
 	
 	/**
-	 * Adds a child to this entity.
+	 * Adds a child to this entity. Also adds the child to the world if this entity is inside the world.
 	 * @param child Entity to add as a child
 	 * @return Child entity
 	 */
@@ -135,7 +140,7 @@ public class Entity implements Lifecycle, Printable {
 	}
 	
 	/**
-	 * Removes a child from this entity.
+	 * Detaches a child from this entity without removing it from the world.
 	 * @param child Child object
 	 */
 	public void removeChild(Entity child) throws IllegalStateException, IllegalArgumentException {
@@ -147,12 +152,12 @@ public class Entity implements Lifecycle, Printable {
 		if (!removed) {
 			throw new IllegalStateException("Entity is not a child");
 		}
+		
 		child.transform.parent = null;
-		getTracker().removeEntity();
 	}
 	
 	/**
-	 * Removes children from this entity.
+	 * Detaches children from this entity without removing them from the world.
 	 * @param children Child entities
 	 */
 	public void removeChildren(Entity... children) throws IllegalStateException, IllegalArgumentException {

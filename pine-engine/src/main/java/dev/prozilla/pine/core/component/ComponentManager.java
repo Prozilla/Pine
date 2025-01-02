@@ -40,14 +40,14 @@ public class ComponentManager extends ECSManager {
 		component.entity = entity;
 		entity.components.add(component);
 		
-		world.application.getTracker().addComponent();
+		getTracker().addComponent();
 	}
 	
 	public void removeComponents(Entity entity) {
 		for (Component component : entity.components) {
 			components.remove(component);
 			component.entity = null;
-			world.application.getTracker().removeComponent();
+			getTracker().removeComponent();
 		}
 		entity.components.clear();
 	}
@@ -66,7 +66,7 @@ public class ComponentManager extends ECSManager {
 		component.entity = null;
 		entity.components.remove(component);
 		
-		world.application.getTracker().removeComponent();
+		getTracker().removeComponent();
 	}
 	
 	/**
