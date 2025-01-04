@@ -23,6 +23,6 @@ public class HeaderPrefab extends ContainerPrefab {
 	protected void apply(Entity entity) {
 		super.apply(entity);
 		
-		entity.addChild(new TextPrefab("Pine", Color.WHITE));
+		entity.addChild(new TextPrefab("Pine", Color.white()));
 	}
 }

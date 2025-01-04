@@ -1,6 +1,5 @@
 package dev.prozilla.pine;
 
-import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.Scene;
 import dev.prozilla.pine.entity.canvas.EditorCanvasPrefab;
@@ -18,8 +17,6 @@ public class EditorScene extends Scene {
 	@Override
 	protected void load() {
 		super.load();
-		
-		cameraData.setBackgroundColor(Color.BLUE);
 		
 		world.addSystem(new PreviewFrameUpdater());
 		

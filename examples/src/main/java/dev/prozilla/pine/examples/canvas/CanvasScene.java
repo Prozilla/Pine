@@ -25,7 +25,7 @@ public class CanvasScene extends Scene {
 		menuPrefab.setAnchor(RectTransform.Anchor.CENTER);
 		menuPrefab.setAlignment(CanvasGroup.Alignment.CENTER);
 		menuPrefab.setDirection(CanvasGroup.Direction.DOWN);
-		menuPrefab.setBackgroundColor(Color.WHITE.clone().setAlpha(0.65f));
+		menuPrefab.setBackgroundColor(Color.white().setAlpha(0.65f));
 		menuPrefab.setPadding(new DualDimension(16));
 		
 		TextPrefab titleTextPrefab = new TextPrefab(application.title);

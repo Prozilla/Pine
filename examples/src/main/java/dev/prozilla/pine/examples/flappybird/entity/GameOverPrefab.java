@@ -15,7 +15,7 @@ public class GameOverPrefab extends TextPrefab {
 
 		// Set position and appearance
 		setAnchor(RectTransform.Anchor.CENTER);
-		setColor(Color.WHITE);
+		setColor(Color.white());
 		setFont(font);
 	}
 	
