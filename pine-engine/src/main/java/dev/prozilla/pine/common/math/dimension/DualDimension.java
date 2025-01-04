@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.math.dimension;
 
+import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 
@@ -10,7 +11,7 @@ import java.util.Objects;
  * Represents a pair of dimensions (X and Y) for a UI element. Each dimension is defined using a {@link DimensionBase}.
  * @see Dimension
  */
-public class DualDimension implements Printable {
+public class DualDimension implements Printable, Cloneable<DualDimension> {
 	
 	public DimensionBase x;
 	public DimensionBase y;
@@ -133,8 +134,12 @@ public class DualDimension implements Printable {
 	
 	@Override
 	public boolean equals(Object obj) {
-		return obj instanceof DualDimension dualDimension
-				&& dualDimension.x.equals(this.x) && dualDimension.y.equals(this.y);
+		return (obj instanceof DualDimension dualDimension) ? equals(dualDimension) : super.equals(obj);
+	}
+	
+	@Override
+	public boolean equals(DualDimension other) {
+		return other.x.equals(this.x) && other.y.equals(this.y);
 	}
 	
 	public static DualDimension parse(String input) {
@@ -174,6 +179,6 @@ public class DualDimension implements Printable {
 	
 	@Override
 	public String toString() {
-		return String.format("(%s,%s)", x, y);
+		return String.format("%s %s", x, y);
 	}
 }

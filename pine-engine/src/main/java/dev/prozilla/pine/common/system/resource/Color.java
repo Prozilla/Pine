@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.system.resource;
 
+import dev.prozilla.pine.common.Cloneable;
+import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.math.vector.Vector4f;
@@ -7,13 +9,7 @@ import dev.prozilla.pine.common.math.vector.Vector4f;
 /**
  * Represents an RGBA color.
  */
-public final class Color {
-
-    public static final Color WHITE = new Color(1f, 1f, 1f);
-    public static final Color BLACK = new Color(0f, 0f, 0f);
-    public static final Color RED = new Color(1f, 0f, 0f);
-    public static final Color GREEN = new Color(0f, 1f, 0f);
-    public static final Color BLUE = new Color(0f, 0f, 1f);
+public final class Color implements Printable, Cloneable<Color> {
 
     /** This value specifies the red component. */
     private float red;
@@ -210,6 +206,30 @@ public final class Color {
     }
     
     /**
+     * Mixes half of this color with half of another color.
+     * @param color Color to mix with this color
+     */
+    public Color mix(Color color) {
+        return mix(color, 0.5f);
+    }
+    
+    /**
+     * Mixes this color with another color based on a factor.
+     * @param color Color to mix with this color
+     * @param factor Mixing factor, Range from 0f to 1f.
+     */
+    public Color mix(Color color, float factor) {
+        float antiFactor = 1 - factor;
+        
+        setRed(red * antiFactor + color.getRed() * factor);
+        setGreen(green * antiFactor + color.getGreen() * factor);
+        setBlue(blue * antiFactor + color.getBlue() * factor);
+        setAlpha(alpha * antiFactor + color.getAlpha() * factor);
+        
+        return this;
+    }
+    
+    /**
      * Returns the color as a (x,y,z)-Vector.
      * @return The color as vec3.
      */
@@ -226,12 +246,48 @@ public final class Color {
     }
     
     @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Color color) ? equals(color) : super.equals(obj);
+    }
+    
+    /**
+     * Checks if two colors are equal.
+     * Two colors are equal if they share the same R, G, B and A values.
+     * @param color Color to compare with
+     */
+    @Override
+    public boolean equals(Color color) {
+        return color.getRed() == red && color.getGreen() == green && color.getBlue() == blue && color.getAlpha() == alpha;
+    }
+    
+    @Override
     public Color clone() {
 	    return new Color(red, green, blue, alpha);
     }
     
-    public void print() {
-        System.out.printf("RGBA(%s, %s, %s, %s)%n", getRed(), getGreen(), getBlue(), getAlpha());
+    @Override
+    public String toString() {
+        return String.format("rgba(%s, %s, %s, %s)", red, green, blue, alpha);
+    }
+    
+    public static Color white() {
+        return new Color(1f, 1f, 1f);
+    }
+    
+    public static Color black() {
+        return new Color(0f, 0f, 0f);
+    }
+    
+    public static Color red() {
+        return new Color(1f, 0f, 0f);
+    }
+    
+    public static Color green() {
+        return new Color(0f, 1f, 0f);
+    }
+    
+    public static Color blue() {
+        return new Color(0f, 0f, 1f);
     }
     
     /**

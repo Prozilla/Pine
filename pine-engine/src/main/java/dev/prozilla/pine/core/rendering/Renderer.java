@@ -59,7 +59,8 @@ public class Renderer implements Lifecycle {
     /** Matches the length of <code>uTextures</code> in the fragment shader. */
     public final static int MAX_TEXTURES = 32;
     /** The amount of strides to fit into a single vertex buffer. */
-    private final static int VERTEX_BUFFER_SIZE = 1024;
+    public final static int VERTEX_BUFFER_SIZE = 1024;
+    public final static Color COLOR_DEFAULT = Color.white();
     
     // Paths
     private final static String VERTEX_SHADER_PATH = "/shaders/default.vert";
@@ -304,7 +305,7 @@ public class Renderer implements Lifecycle {
      * @param height Height of the rectangle
      */
     public void drawRect(float x, float y, float z, float width, float height) {
-        drawRect(x, y, z, width, height, Color.WHITE);
+        drawRect(x, y, z, width, height, COLOR_DEFAULT);
     }
     
     /**
@@ -325,7 +326,7 @@ public class Renderer implements Lifecycle {
     }
 
     public void drawRotatedTexture(Texture texture, float x, float y, float z, float r) {
-        drawRotatedTexture(texture, x, y, z, Color.WHITE, r);
+        drawRotatedTexture(texture, x, y, z, COLOR_DEFAULT, r);
     }
     
     public void drawRotatedTexture(Texture texture, float x, float y, float z, Color c, float r) {
@@ -356,7 +357,7 @@ public class Renderer implements Lifecycle {
      * @param y       Y position of the texture
      */
     public void drawTexture(Texture texture, float x, float y, float z) {
-        drawTexture(texture, x, y, z, Color.WHITE);
+        drawTexture(texture, x, y, z, COLOR_DEFAULT);
     }
 
     /**
@@ -384,7 +385,7 @@ public class Renderer implements Lifecycle {
     }
     
     public void drawRotatedTextureRegion(Texture texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, float r) {
-        drawRotatedTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, Color.WHITE, r);
+        drawRotatedTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, COLOR_DEFAULT, r);
     }
     
     public void drawRotatedTextureRegion(Texture texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c, float r) {
@@ -430,7 +431,7 @@ public class Renderer implements Lifecycle {
     }
     
     public void drawRotatedTextureRegion(float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, float r) {
-        drawRotatedTextureRegion(x1, y1, x2, y2, z, s1, t1, s2, t2, Color.WHITE, r);
+        drawRotatedTextureRegion(x1, y1, x2, y2, z, s1, t1, s2, t2, COLOR_DEFAULT, r);
     }
     
     public void drawRotatedTextureRegion(float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, Color c, float r) {
@@ -476,7 +477,7 @@ public class Renderer implements Lifecycle {
      * @param regHeight Height of the texture region
      */
     public void drawTextureRegion(Texture texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight) {
-        drawTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, Color.WHITE);
+        drawTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, COLOR_DEFAULT);
     }
 
     /**
@@ -523,7 +524,7 @@ public class Renderer implements Lifecycle {
      * @param t2 Top right t coordinate
      */
     public void drawTextureRegion(float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2) {
-        drawTextureRegion(x1, y1, x2, y2, z, s1, t1, s2, t2, Color.WHITE);
+        drawTextureRegion(x1, y1, x2, y2, z, s1, t1, s2, t2, COLOR_DEFAULT);
     }
 
     /**

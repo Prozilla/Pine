@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system;
 
 import dev.prozilla.pine.common.Lifecycle;
-import dev.prozilla.pine.common.array.ArrayUtils;
+import dev.prozilla.pine.common.util.Arrays;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.Scene;
 import dev.prozilla.pine.core.World;
@@ -66,6 +66,7 @@ public abstract class SystemBase implements Lifecycle {
 		if (query != null) {
 			throw new IllegalStateException("Required tag must be set before the query creation.");
 		}
+		
 		this.entityTag = tag;
 	}
 	
@@ -74,8 +75,9 @@ public abstract class SystemBase implements Lifecycle {
 		if (query != null) {
 			throw new IllegalStateException("Excluded component types must be set before the query creation.");
 		}
-		if (ArrayUtils.overlaps(excludedComponentTypes, includedComponentTypes)) {
-			throw new IllegalArgumentException("Excluded component types must not overlap with included component types.");
+		
+		if (excludedComponentTypes != null && includedComponentTypes != null) {
+			Arrays.requireDisjunct(excludedComponentTypes, includedComponentTypes, "excludedComponentTypes and includedComponentTypes must be disjunct");
 		}
 		
 		excludedComponentTypes = componentTypes;
@@ -86,7 +88,7 @@ public abstract class SystemBase implements Lifecycle {
 	 * If there are already entities in the world, this will register each entity in this system.
 	 */
 	public void initSystem(World world) {
-		Objects.requireNonNull(world, "World must not be null.");
+		Objects.requireNonNull(world, "world must not be null");
 		
 		this.world = world;
 		application = world.application;

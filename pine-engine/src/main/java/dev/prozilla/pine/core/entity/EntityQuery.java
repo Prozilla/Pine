@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.common.Lifecycle;
-import dev.prozilla.pine.common.array.ArrayUtils;
+import dev.prozilla.pine.common.util.Arrays;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.*;
@@ -43,14 +43,12 @@ public class EntityQuery implements Lifecycle {
 		this.isDisposable = disposable;
 		this.entityTag = tag;
 		
-		Objects.requireNonNull(includedComponentTypes, "includedComponentTypes must not be null.");
+		// Validate arguments
+		Objects.requireNonNull(includedComponentTypes, "includedComponentTypes must not be null");
+		Arrays.requireNonEmpty(includedComponentTypes, "length of includedComponentTypes must be greater than 0");
 		
-		if (includedComponentTypes.length == 0) {
-			throw new IllegalArgumentException("Length of includedComponentTypes must be greater than 0.");
-		}
-		
-		if (ArrayUtils.overlaps(excludedComponentTypes, includedComponentTypes)) {
-			throw new IllegalArgumentException("Excluded component types must not overlap with included component types.");
+		if (excludedComponentTypes != null) {
+			Arrays.requireDisjunct(excludedComponentTypes, includedComponentTypes, "excludedComponentTypes and includedComponentTypes must be disjunct");
 		}
 		
 		entityChunks = new ArrayList<>();

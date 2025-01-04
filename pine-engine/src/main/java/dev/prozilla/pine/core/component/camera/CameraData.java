@@ -16,7 +16,7 @@ public class CameraData extends Component {
 	public Color backgroundColor;
 	
 	public CameraData() {
-		this(Color.BLACK.clone());
+		this(Color.black());
 	}
 	
 	public CameraData(Color backgroundColor) {

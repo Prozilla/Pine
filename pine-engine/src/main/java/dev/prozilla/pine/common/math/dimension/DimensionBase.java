@@ -1,12 +1,13 @@
 package dev.prozilla.pine.common.math.dimension;
 
+import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 
 /**
  * Base class for dimensions of UI elements.
  */
-public abstract class DimensionBase implements Printable {
+public abstract class DimensionBase implements Printable, Cloneable<DimensionBase> {
 	
 	protected int computedValue;
 	

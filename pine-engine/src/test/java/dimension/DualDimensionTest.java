@@ -5,9 +5,13 @@ import dev.prozilla.pine.common.math.dimension.DualDimension;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
+import util.TestExtension;
+import util.TestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(TestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DualDimensionTest {
 
@@ -20,11 +24,17 @@ public class DualDimensionTest {
 	}
 	
 	@Test
-	void testParsing() {
-		String input = "20 30";
-		DualDimension expected = new DualDimension(new Dimension(20), new Dimension(30));
-		DualDimension actual = DualDimension.parse(input);
-		
-		assertEquals(expected, actual, "parsing of '20 30' should be equal to DualDimension(20, 30)");
+	void testParse() {
+		TestUtils.testParse("20 30", new DualDimension(new Dimension(20), new Dimension(30)), DualDimension::parse);
+	}
+	
+	@Test
+	void testClone() {
+		TestUtils.testClone(new DualDimension(new Dimension(20), new Dimension(30)));
+	}
+	
+	@Test
+	void testToString() {
+		TestUtils.testToString(new DualDimension(new Dimension(20), new Dimension(30)), DualDimension::parse);
 	}
 }

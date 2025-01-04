@@ -23,7 +23,7 @@ public class TextRenderer extends Component {
 	}
 	
 	public TextRenderer(String text) {
-		this(text, Color.BLACK.clone());
+		this(text, Color.black());
 	}
 	
 	public TextRenderer(String text, Color color) {

@@ -27,7 +27,7 @@ public class ImageButtonRenderer extends Component {
 	}
 	
 	public ImageButtonRenderer() {
-		this(Color.WHITE);
+		this(Color.white());
 	}
 	
 	public ImageButtonRenderer(Color backgroundColor) {

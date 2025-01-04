@@ -8,7 +8,7 @@ import dev.prozilla.pine.common.exception.InvalidNumberException;
 public class Numbers {
 	
 	/**
-	 * Checks that the given number is a positive number and throws a {@link InvalidNumberException} if it is not.
+	 * Checks that the given number is a positive number and throws an {@link InvalidNumberException} if it is not.
 	 * @param number The number to check
 	 * @return <code>number</code> if it is positive.
 	 * @throws InvalidNumberException If <code>number</code> is not positive.
@@ -20,7 +20,7 @@ public class Numbers {
 	/**
 	 * Checks that the given number is a positive number and throws a customized {@link InvalidNumberException} if it is not.
 	 * @param number The number to check
-	 * @param message The message to be used in the event that a {@link InvalidNumberException} is thrown
+	 * @param message The message to be used in the event that an {@link InvalidNumberException} is thrown
 	 * @return <code>number</code> if it is positive.
 	 * @throws InvalidNumberException If <code>number</code> is not positive.
 	 */
@@ -33,7 +33,7 @@ public class Numbers {
 	}
 	
 	/**
-	 * Checks that the given number is a positive number and throws a {@link InvalidNumberException} if it is not.
+	 * Checks that the given number is a positive number and throws an {@link InvalidNumberException} if it is not.
 	 * @param number The number to check
 	 * @return <code>number</code> if it is positive.
 	 * @throws InvalidNumberException If <code>number</code> is not positive.
@@ -45,7 +45,7 @@ public class Numbers {
 	/**
 	 * Checks that the given number is a positive number and throws a customized {@link InvalidNumberException} if it is not.
 	 * @param number The number to check
-	 * @param message The message to be used in the event that a {@link InvalidNumberException} is thrown
+	 * @param message The message to be used in the event that an {@link InvalidNumberException} is thrown
 	 * @return <code>number</code> if it is positive.
 	 * @throws InvalidNumberException If <code>number</code> is not positive.
 	 */

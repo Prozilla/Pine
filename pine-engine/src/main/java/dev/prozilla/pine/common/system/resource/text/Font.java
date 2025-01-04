@@ -36,6 +36,8 @@ public class Font implements Lifecycle {
      * Height of the font.
      */
     private int fontHeight;
+    
+    public final static Color COLOR_DEFAULT = Color.white();
 
     /**
      * Creates a default anti-aliased font with monospaced glyphs and default
@@ -372,7 +374,7 @@ public class Font implements Lifecycle {
      * @param y        Y coordinate of the text position
      */
     public void drawText(Renderer renderer, CharSequence text, float x, float y, float z) {
-        drawText(renderer, text, x, y, z, Color.WHITE);
+        drawText(renderer, text, x, y, z, COLOR_DEFAULT);
     }
 
     /**

@@ -24,7 +24,7 @@ public class TextButtonRenderer extends Component {
 	}
 	
 	public TextButtonRenderer() {
-		this(Color.WHITE.clone());
+		this(Color.white());
 	}
 	
 	public TextButtonRenderer(Color backgroundColor) {

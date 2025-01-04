@@ -1,14 +1,17 @@
 package dimension;
 
 import dev.prozilla.pine.common.math.dimension.Dimension;
-import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.Unit;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
+import util.TestExtension;
+import util.TestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(TestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DimensionTest {
 
@@ -21,20 +24,18 @@ public class DimensionTest {
 	}
 	
 	@Test
-	void testParsing() {
-		String input = "50vw";
-		Dimension expected = new Dimension(50, Unit.VIEWPORT_WIDTH);
-		DimensionBase actual = Dimension.parse(input);
-		
-		assertEquals(expected, actual, "parsing of '50vw' should be equal to Dimension(50, VIEWPORT_WIDTH)");
+	void testParse() {
+		TestUtils.testParse("50vw", new Dimension(50, Unit.VIEWPORT_WIDTH), Dimension::parse);
+		TestUtils.testParse("clamp(10vh, 5px, 10px)", Dimension.clamp(new Dimension(10, Unit.VIEWPORT_HEIGHT), new Dimension(5), new Dimension(10)), Dimension::parse);
 	}
-
+	
 	@Test
-	void testParsingFunction() {
-		String input = "clamp(10vh, 5px, 10px)";
-		DimensionBase expected = Dimension.clamp(new Dimension(10, Unit.VIEWPORT_HEIGHT), new Dimension(5), new Dimension(10));
-		DimensionBase actual = Dimension.parse(input);
-		
-		assertEquals(expected, actual, "parsing of 'clamp(10vh, 5px, 10px)' should be equal to Dimension.clamp");
+	void testClone() {
+		TestUtils.testClone(new Dimension(50, Unit.VIEWPORT_WIDTH));
+	}
+	
+	@Test
+	void testToString() {
+		TestUtils.testToString(new Dimension(50, Unit.VIEWPORT_WIDTH), Dimension::parse);
 	}
 }

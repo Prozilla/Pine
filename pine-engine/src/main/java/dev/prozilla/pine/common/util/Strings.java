@@ -9,7 +9,7 @@ import org.gradle.internal.impldep.javax.annotation.Nonnull;
 public class Strings {
 	
 	/**
-	 * Checks that the given string is not blank and throws a {@link InvalidStringException} if it is not.
+	 * Checks that the given string is not blank and throws an {@link InvalidStringException} if it is not.
 	 * @param string The string to check
 	 * @return <code>string</code> if it is not blank.
 	 * @throws InvalidStringException If <code>string</code> is blank.
@@ -21,7 +21,7 @@ public class Strings {
 	/**
 	 * Checks that the given string is not blank and throws a customized {@link InvalidStringException} if it is.
 	 * @param string The string to check
-	 * @param message The message to be used in the event that a {@link InvalidStringException} is thrown
+	 * @param message The message to be used in the event that an {@link InvalidStringException} is thrown
 	 * @return <code>string</code> if it is not blank.
 	 * @throws InvalidStringException If <code>string</code> is blank.
 	 */
@@ -34,7 +34,7 @@ public class Strings {
 	}
 	
 	/**
-	 * Checks that the given string is not empty and throws a {@link InvalidStringException} if it is not.
+	 * Checks that the given string is not empty and throws an {@link InvalidStringException} if it is not.
 	 * @param string The string to check
 	 * @return <code>string</code> if it is not empty.
 	 * @throws InvalidStringException If <code>string</code> is empty.
@@ -46,7 +46,7 @@ public class Strings {
 	/**
 	 * Checks that the given string is not empty and throws a customized {@link InvalidStringException} if it is.
 	 * @param string The string to check
-	 * @param message The message to be used in the event that a {@link InvalidStringException} is thrown
+	 * @param message The message to be used in the event that an {@link InvalidStringException} is thrown
 	 * @return <code>string</code> if it is not empty.
 	 * @throws InvalidStringException If <code>string</code> is empty.
 	 */

@@ -1,11 +1,14 @@
 package dev.prozilla.pine.common.math.dimension;
 
+import dev.prozilla.pine.common.exception.InvalidArrayException;
 import dev.prozilla.pine.common.exception.InvalidStringException;
+import dev.prozilla.pine.common.util.Arrays;
 import dev.prozilla.pine.common.util.Strings;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
 /**
  * Dimension of a UI element, defined by the combination of a value and a unit or by a function that computes the value of a dimension.
@@ -181,12 +184,14 @@ public class Dimension extends DimensionBase {
 				throw new IllegalArgumentException("Input string contains dimension function without arguments");
 			}
 			
+			DimensionBase[] dimensionsArray = dimensions.toArray(new DimensionBase[0]);
+			
 			return switch (functionName) {
-				case "max" -> (argCount == 2) ? Dimension.max(dimensions.get(0), dimensions.get(1)) : null;
-				case "min" -> (argCount == 2) ? Dimension.min(dimensions.get(0), dimensions.get(1)) : null;
+				case "max" -> Dimension.max(dimensionsArray);
+				case "min" -> Dimension.min(dimensionsArray);
 				case "clamp" -> (argCount == 3) ? Dimension.clamp(dimensions.get(0), dimensions.get(1), dimensions.get(2)) : null;
-				case "add" -> (argCount == 2) ? Dimension.add(dimensions.get(0), dimensions.get(1)) : null;
-				case "multiply" -> (argCount == 2) ? Dimension.multiply(dimensions.get(0), dimensions.get(1)) : null;
+				case "add" -> Dimension.add(dimensionsArray);
+				case "multiply" -> Dimension.multiply(dimensionsArray);
 				default -> throw new IllegalArgumentException("Input string contains invalid function name");
 			};
 		} else {
@@ -194,7 +199,7 @@ public class Dimension extends DimensionBase {
 			String valueString = input.substring(0, splitIndex);
 			String unitString = input.substring(splitIndex);
 			
-			if (!Unit.isValid(unitString)) {
+			if (!unitString.isBlank() && !Unit.isValid(unitString)) {
 				throw new IllegalArgumentException("Input string contains invalid unit");
 			}
 			
@@ -234,17 +239,17 @@ public class Dimension extends DimensionBase {
 	}
 	
 	/**
-	 * Creates a dimension based on the highest value of two dimensions.
+	 * Creates a dimension based on the highest value of two or more dimensions.
 	 */
-	public static Max max(DimensionBase dimensionA, DimensionBase dimensionB) {
-		return new Max(dimensionA, dimensionB);
+	public static Max max(DimensionBase ...dimensions) throws InvalidArrayException {
+		return chainDimensions(Max::new, dimensions);
 	}
 	
 	/**
-	 * Creates a dimension based on the lowest value of two dimensions.
+	 * Creates a dimension based on the lowest value of two or more dimensions.
 	 */
-	public static Min min(DimensionBase dimensionA, DimensionBase dimensionB) {
-		return new Min(dimensionA, dimensionB);
+	public static Min min(DimensionBase ...dimensions) throws InvalidArrayException {
+		return chainDimensions(Min::new, dimensions);
 	}
 	
 	/**
@@ -262,20 +267,40 @@ public class Dimension extends DimensionBase {
 	}
 	
 	/**
-	 * Creates a dimension based on the sum of the values of two dimensions.
+	 * Creates a dimension based on the sum of the values of two or more dimensions.
 	 */
-	public static Add add(DimensionBase dimensionA, DimensionBase dimensionB) {
-		return new Add(dimensionA, dimensionB);
+	public static Add add(DimensionBase ...dimensions) throws InvalidArrayException {
+		return chainDimensions(Add::new, dimensions);
 	}
 	
 	/**
-	 * Creates a dimension based on the product of the values of two dimensions.
+	 * Creates a dimension based on the product of the values of two or more dimensions.
 	 */
-	public static Multiply multiply(DimensionBase dimensionA, DimensionBase dimensionB) {
-		return new Multiply(dimensionA, dimensionB);
+	public static Multiply multiply(DimensionBase ...dimensions) throws InvalidArrayException {
+		return chainDimensions(Multiply::new, dimensions);
 	}
 	
-	// TO DO: Add static parse function to turn string into dimension
+	/**
+	 * Helper method to chain dimensions based on the given constructor.
+	 * @param constructor A constructor that creates a part of the dimension chain
+	 * @param dimensions The dimensions to create a chain of
+	 * @return The chain of dimensions
+	 * @param <D> The type of the chain dimension
+	 * @throws InvalidArrayException If less than two dimensions are passed
+	 */
+	public static <D extends DimensionBase> D chainDimensions(BiFunction<DimensionBase, DimensionBase, D> constructor, DimensionBase[] dimensions) throws InvalidArrayException {
+		Arrays.requireMinLength(dimensions, 2);
+		
+		// Start with the first two dimensions
+		D result = constructor.apply(dimensions[0], dimensions[1]);
+		
+		// Iterate over the remaining dimensions and create chain
+		for (int i = 2; i < dimensions.length; i++) {
+			result = constructor.apply(result, dimensions[i]);
+		}
+		
+		return result;
+	}
 	
 	public static class Max extends DimensionComparator {
 		
