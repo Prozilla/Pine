@@ -11,7 +11,7 @@ public class PlayerData extends Component {
 	public int previousMoveDirection;
 	public float timeUntilNextMove;
 	
-	public static final float TIME_BETWEEN_MOVES = 0.25f;
+	public static final float TIME_BETWEEN_MOVES = 0.15f;
 	
 	public PlayerData() {
 		direction = 0;

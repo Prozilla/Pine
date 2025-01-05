@@ -1,34 +1,50 @@
 package dev.prozilla.pine.examples.snake.system;
 
-import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
+import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
+import dev.prozilla.pine.examples.snake.EntityTag;
 import dev.prozilla.pine.examples.snake.GameScene;
 import dev.prozilla.pine.examples.snake.component.PlayerData;
+
+import java.awt.*;
 
 public class PlayerHeadMover extends UpdateSystem {
 	
 	public PlayerHeadMover() {
-		super(PlayerData.class, SpriteRenderer.class, Transform.class);
+		super(PlayerData.class, TileRenderer.class, SpriteRenderer.class);
 	}
 	
 	@Override
 	protected void process(EntityChunk chunk, float deltaTime) {
 		PlayerData playerData = chunk.getComponent(PlayerData.class);
-		Transform transform = chunk.getComponent(Transform.class);
+		TileRenderer tile = chunk.getComponent(TileRenderer.class);
 		SpriteRenderer sprite = chunk.getComponent(SpriteRenderer.class);
 		
 		// Check if it's time to move
 		playerData.timeUntilNextMove -= deltaTime;
 		if (playerData.timeUntilNextMove <= 0) {
-			// Move player
+			Point nextCoordinate = new Point(tile.coordinate.x, tile.coordinate.y);
+			
 			switch (playerData.direction) {
-				case 0 -> transform.position.y += GameScene.CELL_SIZE;
-				case 1 -> transform.position.x -= GameScene.CELL_SIZE;
-				case 2 -> transform.position.y -= GameScene.CELL_SIZE;
-				case 3 -> transform.position.x += GameScene.CELL_SIZE;
+				case 0 -> nextCoordinate.y += 1;
+				case 1 -> nextCoordinate.x -= 1;
+				case 2 -> nextCoordinate.y -= 1;
+				case 3 -> nextCoordinate.x += 1;
 			}
+			
+			TileRenderer nextTile = tile.getGroup().getTile(nextCoordinate);
+			if (nextTile != null) {
+				if (nextTile.getEntity().hasTag(EntityTag.APPLE_TAG)) {
+					// Eat apple
+					nextTile.remove();
+					System.out.println("Apple eaten");
+				}
+			}
+			
+			// Move player
+			tile.moveTo(nextCoordinate);
 			
 			// Change sprite based on current direction
 			int spriteRegionY = GameScene.CELL_SIZE * (3 - playerData.direction);

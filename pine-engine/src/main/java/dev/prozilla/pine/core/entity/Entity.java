@@ -320,6 +320,14 @@ public class Entity implements Lifecycle, Printable {
 		}
 	}
 	
+	public boolean hasTag(String tag) {
+		if (this.tag == null) {
+			return false;
+		}
+		
+		return this.tag.equals(tag);
+	}
+	
 	public Input getInput() {
 		return application.getInput();
 	}

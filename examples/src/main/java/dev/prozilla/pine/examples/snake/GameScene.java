@@ -1,6 +1,8 @@
 package dev.prozilla.pine.examples.snake;
 
 import dev.prozilla.pine.core.Scene;
+import dev.prozilla.pine.core.component.sprite.GridGroup;
+import dev.prozilla.pine.core.entity.prefab.sprite.GridPrefab;
 import dev.prozilla.pine.examples.snake.entity.ApplePrefab;
 import dev.prozilla.pine.examples.snake.entity.BackgroundPrefab;
 import dev.prozilla.pine.examples.snake.entity.PlayerHeadPrefab;
@@ -10,6 +12,10 @@ import dev.prozilla.pine.examples.snake.system.PlayerInput;
 import java.util.Random;
 
 public class GameScene extends Scene {
+	
+	// Grids
+	private GridGroup foregroundGrid;
+	private GridGroup backgroundGrid;
 	
 	// Prefabs
 	private ApplePrefab applePrefab;
@@ -46,12 +52,16 @@ public class GameScene extends Scene {
 		world.addSystem(new PlayerHeadMover()); 
 		
 		// Add entities to world
+		backgroundGrid = world.addEntity(new GridPrefab(CELL_SIZE)).getComponent(GridGroup.class);
+		foregroundGrid = world.addEntity(new GridPrefab(CELL_SIZE)).getComponent(GridGroup.class);
+		
 		for (int x = GRID_WIDTH / -2; x <= GRID_WIDTH / 2; x++) {
 			for (int y = GRID_WIDTH / -2; y <= GRID_HEIGHT / 2; y++) {
-				world.addEntity(backgroundPrefab, x * CELL_SIZE, y * CELL_SIZE);
+				backgroundGrid.addTile(backgroundPrefab, x, y);
 			}
 		}
-		world.addEntity(playerHeadPrefab);
+		
+		foregroundGrid.addTile(playerHeadPrefab);
 		
 		timeUntilNextSpawn = MIN_TIME_BETWEEN_SPAWNS;
 	}
@@ -65,7 +75,7 @@ public class GameScene extends Scene {
 			int x = random.nextInt(GRID_WIDTH) - GRID_WIDTH / 2;
 			int y = random.nextInt(GRID_HEIGHT) - GRID_WIDTH / 2;
 			
-			world.addEntity(applePrefab, x * CELL_SIZE, y * CELL_SIZE);
+			foregroundGrid.addTile(applePrefab.instantiate(world, x, y));
 			
 			timeUntilNextSpawn += random.nextFloat(MIN_TIME_BETWEEN_SPAWNS, MAX_TIME_BETWEEN_SPAWNS);
 		}

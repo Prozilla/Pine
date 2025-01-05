@@ -8,6 +8,7 @@ import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Components;
+import dev.prozilla.pine.core.system.standard.sprite.TileMover;
 
 import java.awt.*;
 
@@ -37,7 +38,7 @@ public class TilePrefab extends SpritePrefab {
 		
 		this.coordinate = coordinate;
 		size = texture.getWidth();
-		setName("Grid");
+		setName("Tile");
 	}
 	
 	public void setSize(int size) {
@@ -65,6 +66,8 @@ public class TilePrefab extends SpritePrefab {
 	protected void apply(Entity entity) {
 		super.apply(entity);
 		
-		entity.addComponent(new TileRenderer((Point)coordinate.clone(), size));
+		TileRenderer tileRenderer = entity.addComponent(new TileRenderer((Point)coordinate.clone(), size));
+		
+		TileMover.updateTilePosition(entity.transform, tileRenderer);
 	}
 }
