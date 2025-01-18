@@ -1,22 +1,31 @@
 package dev.prozilla.pine.common.math.vector;
 
+import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.exception.InvalidArrayException;
+import dev.prozilla.pine.common.exception.InvalidStringException;
+import dev.prozilla.pine.common.util.Arrays;
+import dev.prozilla.pine.common.util.Strings;
+
+import java.lang.reflect.Array;
+import java.util.Objects;
+import java.util.function.Function;
 
 /**
- * Abstract interface for vectors.
+ * Abstract class for vectors.
  */
-public interface Vector<V extends Vector<V>> extends Printable {
+public abstract class Vector<V extends Vector<V>> implements Printable, Cloneable<V> {
 	
 	/**
 	 * Calculates the length of this vector.
 	 */
-	float length();
+	abstract public float length();
 	
 	/**
 	 * Normalizes this vector.
 	 * @return Self.
 	 */
-	default V normalize() {
+	public V normalize() {
 		return divide(length());
 	}
 	
@@ -24,13 +33,13 @@ public interface Vector<V extends Vector<V>> extends Printable {
 	 * Adds another vector to this vector.
 	 * @return Self
 	 */
-	V add(V vector);
+	abstract public V add(V vector);
 	
 	/**
 	 * Negates this vector.
 	 * @return Self
 	 */
-	default V negate() {
+	public V negate() {
 		return scale(-1f);
 	}
 	
@@ -38,7 +47,7 @@ public interface Vector<V extends Vector<V>> extends Printable {
 	 * Subtracts another vector from this vector.
 	 * @return Self
 	 */
-	default V subtract(V vector) {
+	public V subtract(V vector) {
 		return add(vector.negate());
 	}
 	
@@ -46,13 +55,13 @@ public interface Vector<V extends Vector<V>> extends Printable {
 	 * Scales this vector by a scalar.
 	 * @return Self
 	 */
-	V scale(float scalar);
+	abstract public V scale(float scalar);
 	
 	/**
 	 * Divides this vector by a scalar.
 	 * @return Self
 	 */
-	default V divide(float scalar) {
+	public V divide(float scalar) {
 		return scale(1f / scalar);
 	}
 	
@@ -61,21 +70,62 @@ public interface Vector<V extends Vector<V>> extends Printable {
 	 * @param alpha The alpha value, in the range of <code>0f</code> and <code>1f</code>
 	 * @return Self
 	 */
-	default V lerp(V vector, float alpha) {
+	public V lerp(V vector, float alpha) {
 		return scale(1f - alpha).add(vector.scale(alpha));
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+		if (object == null || getClass() != object.getClass()) {
+			return false;
+		}
+		
+		@SuppressWarnings("unchecked")
+		V vector = (V) object;
+		
+		return equals(vector);
+	}
+	
+	abstract public boolean equals(V vector);
+	
+	abstract public V clone();
 	
 	/**
 	 * Converts this vector to a string representation.
 	 */
 	@Override
-	String toString();
+	abstract public String toString();
 	
-	/**
-	 * Prints the string representation of this vector.
-	 */
-	@Override
-	default void print() {
-		System.out.println(this);
+	protected static <T> T[] parseToNumbers(String input, Function<String, T> parser, Class<T> type) throws InvalidStringException {
+		Objects.requireNonNull(input, "input must not be null");
+		Strings.requirePrefix(input, "(");
+		Strings.requireSuffix(input, ")");
+		
+		String[] strings = input.substring(1, input.length() - 1).split(",");
+		T[] numbers = (T[])Array.newInstance(type, strings.length);
+		
+		for (int i = 0; i < strings.length; i++) {
+			numbers[i] = parser.apply(strings[i].trim());
+		}
+		return numbers;
+	}
+	
+	protected static Float[] parseToFloats(String input, int count) throws InvalidStringException, InvalidArrayException {
+		return Arrays.requireLength(parseToFloats(input), count);
+	}
+	
+	protected static Float[] parseToFloats(String input) throws InvalidStringException {
+		return parseToNumbers(input, Float::parseFloat, Float.class);
+	}
+	
+	protected static Integer[] parseToIntegers(String input, int count) throws InvalidStringException, InvalidArrayException {
+		return Arrays.requireLength(parseToIntegers(input), count);
+	}
+	
+	protected static Integer[] parseToIntegers(String input) throws InvalidStringException {
+		return parseToNumbers(input, Integer::parseInt, Integer.class);
 	}
 }

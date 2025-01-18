@@ -18,7 +18,7 @@ public class ImageButtonResizer extends UpdateSystem {
 		ImageRenderer imageRenderer = chunk.getComponent(ImageRenderer.class);
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
-		rect.currentSize.x = imageRenderer.size.x + imageButtonRenderer.padding.x * 2;
-		rect.currentSize.y = imageRenderer.size.y + imageButtonRenderer.padding.y * 2;
+		rect.currentSize.x = imageRenderer.size.computeX(rect) + imageButtonRenderer.padding.computeX(rect) * 2;
+		rect.currentSize.y = imageRenderer.size.computeY(rect) + imageButtonRenderer.padding.computeY(rect) * 2;
 	}
 }

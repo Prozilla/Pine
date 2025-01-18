@@ -6,7 +6,6 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.system.input.InputSystemBase;
 
-import java.awt.*;
 import java.util.Comparator;
 
 /**
@@ -21,7 +20,7 @@ public class RectInputHandler extends InputSystemBase {
 	@Override
 	public void input(float deltaTime) {
 		Input input = getInput();
-		Point cursor = input.getCursor();
+		Vector2i cursor = input.getCursor();
 		
 		forEachReverse(chunk -> {
 			Entity entity = chunk.getEntity();

@@ -18,7 +18,6 @@ public class ImageResizer extends UpdateSystem {
 		ImageRenderer imageRenderer = chunk.getComponent(ImageRenderer.class);
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
-		rect.currentSize.x = imageRenderer.size.x;
-		rect.currentSize.y = imageRenderer.size.y;
+		rect.computeCurrentSize(imageRenderer.size);
 	}
 }

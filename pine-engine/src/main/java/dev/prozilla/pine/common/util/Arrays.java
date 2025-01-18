@@ -124,4 +124,35 @@ public class Arrays {
 			return array;
 		}
 	}
+	
+	/**
+	 * Checks that the given array has a given length and throws an {@link InvalidArrayException} if it does not.
+	 * @param array The array to check
+	 * @param length The required length of the array
+	 * @return <code>array</code> if it matches the required length.
+	 * @param <E> Type of the array elements
+	 * @throws InvalidArrayException If <code>array</code> matches the required length.
+	 */
+	public static <E> E[] requireLength(E[] array, int length) throws InvalidArrayException {
+		return requireLength(array, length, null);
+	}
+	
+	/**
+	 * Checks that the given array has a given length and throws a customized {@link InvalidArrayException} if it does not.
+	 * @param array The array to check
+	 * @param length The required length of the array
+	 * @param message The message to be used in the event that an {@link InvalidArrayException} is thrown
+	 * @return <code>array</code> if it matches the required length.
+	 * @param <E> Type of the array elements
+	 * @throws InvalidArrayException If <code>array</code> matches the required length.
+	 */
+	public static <E> E[] requireLength(E[] array, int length, String message) throws InvalidArrayException {
+		Objects.requireNonNull(array, "array must not be null");
+		
+		if (array.length != length) {
+			throw new InvalidArrayException(message != null ? message : "length of array must be " + length);
+		} else {
+			return array;
+		}
+	}
 }

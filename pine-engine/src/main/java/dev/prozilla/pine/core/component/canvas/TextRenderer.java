@@ -16,6 +16,7 @@ public class TextRenderer extends Component {
 	public Color color;
 	public Font font;
 	
+	/** Result of size calculation */
 	public Vector2i size;
 	
 	public TextRenderer() {

@@ -23,12 +23,14 @@
  */
 package dev.prozilla.pine.common.math.vector;
 
+import dev.prozilla.pine.common.exception.InvalidStringException;
+
 import java.nio.FloatBuffer;
 
 /**
  * 4-dimensional vector with floating point precision. GLSL equivalent to <code>vec4</code>.
  */
-public class Vector4f implements VectorFloat<Vector4f> {
+public class Vector4f extends VectorFloat<Vector4f> {
     
     public float x;
     public float y;
@@ -94,11 +96,26 @@ public class Vector4f implements VectorFloat<Vector4f> {
         buffer.flip();
     }
     
+    @Override
+    public boolean equals(Vector4f vector) {
+        return vector.x == x && vector.y == y && vector.z == z && vector.w == w;
+    }
+    
+    @Override
+    public Vector4f clone() {
+        return new Vector4f(x, y, z, w);
+    }
+    
     /**
      * Converts this vector to a string representation in the format "(x,y,z,w)".
      */
     @Override
     public String toString() {
         return String.format("(%s,%s,%s,%s)", x, y, z, w);
+    }
+    
+    public static Vector4f parse(String input) throws InvalidStringException {
+        Float[] floats = Vector.parseToFloats(input, 4);
+        return new Vector4f(floats[0], floats[1], floats[2], floats[3]);
     }
 }

@@ -30,8 +30,8 @@ public class TextButtonRenderSystem extends RenderSystem {
 		
 		// Render text
 		Color textColor = (textButtonRenderer.isHovering && textButtonRenderer.hoverColor != null) ? textButtonRenderer.hoverColor : textRenderer.color;
-		int textX = rect.currentPosition.x + textButtonRenderer.padding.x;
-		int textY = rect.currentPosition.y + textButtonRenderer.padding.y;
+		int textX = rect.currentPosition.x + textButtonRenderer.padding.computeX(rect);
+		int textY = rect.currentPosition.y + textButtonRenderer.padding.computeY(rect);
 		
 		TextRenderSystem.renderText(renderer, textRenderer, textX, textY, transform.getDepth(), textColor);
 	}

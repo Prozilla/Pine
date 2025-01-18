@@ -1,12 +1,12 @@
 package dev.prozilla.pine.core.component.sprite;
 
+import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
 import dev.prozilla.pine.core.system.standard.sprite.TileMover;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -17,7 +17,7 @@ import java.util.Objects;
 public class GridGroup extends Component {
 	
 	public int size;
-	public final Map<Point, TileRenderer> coordinateToTile;
+	public final Map<Vector2i, TileRenderer> coordinateToTile;
 	public TileRenderer hoveringTile;
 	
 	public GridGroup(int size) {
@@ -31,7 +31,7 @@ public class GridGroup extends Component {
 		return "GridGroup";
 	}
 	
-	public TileRenderer addTile(TilePrefab tilePrefab, Point coordinate) {
+	public TileRenderer addTile(TilePrefab tilePrefab, Vector2i coordinate) {
 		return addTile(tilePrefab.instantiate(entity.getWorld(), coordinate));
 	}
 	
@@ -70,7 +70,7 @@ public class GridGroup extends Component {
 		return tile;
 	}
 	
-	public boolean removeTile(Point coordinate) {
+	public boolean removeTile(Vector2i coordinate) {
 		return removeTile(getTile(coordinate));
 	}
 	
@@ -91,14 +91,14 @@ public class GridGroup extends Component {
 	}
 	
 	public TileRenderer getTile(int x, int y) {
-		return getTile(new Point(x, y));
+		return getTile(new Vector2i(x, y));
 	}
 	
-	public TileRenderer getTile(Point coordinate) {
+	public TileRenderer getTile(Vector2i coordinate) {
 		return coordinateToTile.get(coordinate);
 	}
 	
-	public void moveTile(Point oldCoordinate, Point newCoordinate) {
+	public void moveTile(Vector2i oldCoordinate, Vector2i newCoordinate) {
 		TileRenderer tile = getTile(oldCoordinate);
 		if (removeTile(tile)) {
 			tile.coordinate = newCoordinate;

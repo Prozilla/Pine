@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.canvas;
 
+import dev.prozilla.pine.common.math.dimension.Dimension;
+import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
@@ -13,8 +15,7 @@ public class ImagePrefab extends CanvasElementPrefab {
 	
 	protected Texture image;
 	protected Color color;
-	protected int width;
-	protected int height;
+	protected DualDimension size;
 	
 	protected boolean cropToRegion;
 	protected int regionX;
@@ -29,8 +30,7 @@ public class ImagePrefab extends CanvasElementPrefab {
 	public ImagePrefab(Texture image) {
 		this.image = image;
 		
-		width = image.getWidth();
-		height = image.getHeight();
+		size = new DualDimension(image.getWidth(), image.getHeight());
 		cropToRegion = false;
 		
 		setName("Image");
@@ -40,17 +40,12 @@ public class ImagePrefab extends CanvasElementPrefab {
 		this.color = color;
 	}
 	
-	public void setSize(int width, int height) {
-		setWidth(width);
-		setHeight(height);
+	public void setSize(Dimension x, Dimension y) {
+		setSize(new DualDimension(x, y));
 	}
 	
-	public void setWidth(int width) {
-		this.width = width;
-	}
-	
-	public void setHeight(int height) {
-		this.height = height;
+	public void setSize(DualDimension size) {
+		this.size = size;
 	}
 	
 	public void setRegion(int x, int y, int width, int height) {
@@ -68,8 +63,7 @@ public class ImagePrefab extends CanvasElementPrefab {
 		ImageRenderer imageRenderer = entity.addComponent(new ImageRenderer(image));
 		
 		// Set image dimensions
-		imageRenderer.size.x = width;
-		imageRenderer.size.y = height;
+		imageRenderer.size = size;
 		
 		// Crop image
 		if (cropToRegion) {

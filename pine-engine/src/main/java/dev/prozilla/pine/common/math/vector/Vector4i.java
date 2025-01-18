@@ -1,11 +1,13 @@
 package dev.prozilla.pine.common.math.vector;
 
+import dev.prozilla.pine.common.exception.InvalidStringException;
+
 import java.nio.IntBuffer;
 
 /**
  * 4-dimensional vector with integer precision. GLSL equivalent to <code>ivec4</code>.
  */
-public class Vector4i implements VectorInt<Vector4i> {
+public class Vector4i extends VectorInt<Vector4i> {
 	
 	public int x;
 	public int y;
@@ -71,11 +73,26 @@ public class Vector4i implements VectorInt<Vector4i> {
 		buffer.flip();
 	}
 	
+	@Override
+	public boolean equals(Vector4i vector) {
+		return vector.x == x && vector.y == y && vector.z == z && vector.w == w;
+	}
+	
+	@Override
+	public Vector4i clone() {
+		return new Vector4i(x, y, z, w);
+	}
+	
 	/**
 	 * Converts this vector to a string representation in the format "(x,y,z,w)".
 	 */
 	@Override
 	public String toString() {
 		return String.format("(%s,%s,%s,%s)", x, y, z, w);
+	}
+	
+	public static Vector4i parse(String input) throws InvalidStringException {
+		Integer[] integers = Vector.parseToIntegers(input, 4);
+		return new Vector4i(integers[0], integers[1], integers[2], integers[3]);
 	}
 }

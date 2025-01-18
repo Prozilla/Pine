@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.state.input;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
@@ -10,7 +11,6 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,12 +31,10 @@ public class Input implements Lifecycle {
 	private final List<Integer> mouseButtonsDown;
 	private final List<Integer> previousMouseButtonsDown;
 	
-	private float scrollX;
-	private float scrollY;
-	private float currentScrollX;
-	private float currentScrollY;
+	private Vector2f scroll;
+	private Vector2f currentScroll;
 	
-	private final Point cursor;
+	private final Vector2i cursor;
 	private int cursorType;
 	private Entity cursorBlocker;
 	
@@ -65,11 +63,9 @@ public class Input implements Lifecycle {
 		mouseButtonsDown = new ArrayList<>();
 		previousMouseButtonsDown = new ArrayList<>();
 		
-		scrollX = 0;
-		scrollY = 0;
-		currentScrollX = 0;
-		currentScrollY = 0;
-		cursor = new Point(0, 0);
+		scroll = new Vector2f();
+		currentScroll = new Vector2f();
+		cursor = new Vector2i();
 		cursorType = CURSOR_TYPE_DEFAULT;
 	}
 	
@@ -93,8 +89,8 @@ public class Input implements Lifecycle {
 		glfwSetScrollCallback(window, scrollCallback = new GLFWScrollCallback() {
 			@Override
 			public void invoke(long window, double xOffset, double yOffset) {
-				scrollX = (float)xOffset;
-				scrollY = (float)yOffset;
+				scroll.x = (float)xOffset;
+				scroll.y = (float)yOffset;
 			}
 		});
 		
@@ -124,10 +120,10 @@ public class Input implements Lifecycle {
 	 */
 	@Override
 	public void input() {
-		currentScrollX = scrollX;
-		currentScrollY = scrollY;
-		scrollX = 0;
-		scrollY = 0;
+		currentScroll.x = scroll.x;
+		currentScroll.y = scroll.y;
+		scroll.x = 0;
+		scroll.y = 0;
 		
 		cursorType = CURSOR_TYPE_DEFAULT;
 		cursorBlocker = null;
@@ -399,7 +395,7 @@ public class Input implements Lifecycle {
 	 * @return Horizontal scroll
 	 */
 	public float getScrollX() {
-		return currentScrollX;
+		return currentScroll.x;
 	}
 	
 	/**
@@ -407,7 +403,7 @@ public class Input implements Lifecycle {
 	 * @return Vertical scroll
 	 */
 	public float getScrollY() {
-		return currentScrollY;
+		return currentScroll.y;
 	}
 	
 	/**
@@ -415,7 +411,7 @@ public class Input implements Lifecycle {
 	 * Returns <code>null</code> if the cursor is being blocked.
 	 * @return Position of the cursor
 	 */
-	public Point getCursor() {
+	public Vector2i getCursor() {
 		return getCursor(IGNORE_CURSOR_BLOCK_DEFAULT);
 	}
 	
@@ -425,7 +421,7 @@ public class Input implements Lifecycle {
 	 * @param ignoreBlock Whether to ignore blocks.
 	 * @return Position of the cursor
 	 */
-	public Point getCursor(boolean ignoreBlock) {
+	public Vector2i getCursor(boolean ignoreBlock) {
 		return (!ignoreBlock && cursorBlocker != null) ? null : cursor;
 	}
 	

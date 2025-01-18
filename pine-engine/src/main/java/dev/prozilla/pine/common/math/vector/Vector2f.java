@@ -1,11 +1,13 @@
 package dev.prozilla.pine.common.math.vector;
 
+import dev.prozilla.pine.common.exception.InvalidStringException;
+
 import java.nio.FloatBuffer;
 
 /**
  * 2-dimensional vector with floating point precision. GLSL equivalent to <code>vec2</code>.
  */
-public class Vector2f implements VectorFloat<Vector2f> {
+public class Vector2f extends VectorFloat<Vector2f> {
 
     public float x;
     public float y;
@@ -61,11 +63,26 @@ public class Vector2f implements VectorFloat<Vector2f> {
         buffer.flip();
     }
     
+    @Override
+    public boolean equals(Vector2f vector) {
+        return vector.x == x && vector.y == y;
+    }
+    
+    @Override
+    public Vector2f clone() {
+        return new Vector2f(x, y);
+    }
+    
     /**
      * Converts this vector to a string representation in the format "(x,y)".
      */
     @Override
     public String toString() {
         return String.format("(%s,%s)", x, y);
+    }
+    
+    public static Vector2f parse(String input) throws InvalidStringException {
+        Float[] floats = Vector.parseToFloats(input, 2);
+        return new Vector2f(floats[0], floats[1]);
     }
 }

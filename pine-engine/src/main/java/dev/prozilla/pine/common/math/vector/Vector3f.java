@@ -1,11 +1,13 @@
 package dev.prozilla.pine.common.math.vector;
 
+import dev.prozilla.pine.common.exception.InvalidStringException;
+
 import java.nio.FloatBuffer;
 
 /**
  * 3-dimensional vector with floating point precision. GLSL equivalent to <code>vec3</code>.
  */
-public class Vector3f implements VectorFloat<Vector3f> {
+public class Vector3f extends VectorFloat<Vector3f> {
 
     public float x;
     public float y;
@@ -66,11 +68,26 @@ public class Vector3f implements VectorFloat<Vector3f> {
         buffer.flip();
     }
     
+    @Override
+    public boolean equals(Vector3f vector) {
+        return vector.x == x && vector.y == y && vector.z == z;
+    }
+    
+    @Override
+    public Vector3f clone() {
+        return new Vector3f(x, y, z);
+    }
+    
     /**
      * Converts this vector to a string representation in the format "(x,y,z)".
      */
     @Override
     public String toString() {
         return String.format("(%s,%s,%s)", x, y, z);
+    }
+    
+    public static Vector3f parse(String input) throws InvalidStringException {
+        Float[] floats = Vector.parseToFloats(input, 3);
+        return new Vector3f(floats[0], floats[1], floats[2]);
     }
 }

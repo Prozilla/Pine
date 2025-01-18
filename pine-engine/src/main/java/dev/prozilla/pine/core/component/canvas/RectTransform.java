@@ -135,4 +135,9 @@ public class RectTransform extends Component {
 	public int getSizeY() {
 		return size.computeY(this);
 	}
+	
+	public void computeCurrentSize(DualDimension size) {
+		currentSize.x = size.computeX(this);
+		currentSize.y = size.computeY(this);
+	}
 }

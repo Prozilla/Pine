@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.canvas;
 
+import dev.prozilla.pine.common.math.dimension.Dimension;
+import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
@@ -14,10 +16,7 @@ public class ImageButtonPrefab extends ImagePrefab {
 	protected Color hoverColor;
 	protected Color backgroundHoverColor;
 	protected Color backgroundColor;
-	/** Horizontal padding around text. */
-	protected int paddingX;
-	/** Vertical padding around text. */
-	protected int paddingY;
+	protected DualDimension padding;
 	
 	protected ImageButtonRenderer.Callback clickCallback;
 	
@@ -29,33 +28,15 @@ public class ImageButtonPrefab extends ImagePrefab {
 		super(image);
 		setName("ImageButton");
 		
-		paddingX = 0;
-		paddingY = 0;
+		padding = new DualDimension();
 	}
 	
-	/**
-	 * Sets the padding around the text of this button.
-	 */
-	public void setPadding(int padding) {
-		setPadding(padding, padding);
+	public void setPadding(Dimension x, Dimension y) {
+		setPadding(new DualDimension(x, y));
 	}
 	
-	/**
-	 * Sets the horizontal and vertical padding around the text of this button.
-	 * @param paddingX Horizontal padding
-	 * @param paddingY Vertical padding
-	 */
-	public void setPadding(int paddingX, int paddingY) {
-		setHorizontalPadding(paddingX);
-		setVerticalPadding(paddingY);
-	}
-	
-	public void setHorizontalPadding(int paddingX) {
-		this.paddingX = paddingX;
-	}
-	
-	public void setVerticalPadding(int paddingY) {
-		this.paddingY = paddingY;
+	public void setPadding(DualDimension padding) {
+		this.padding = padding;
 	}
 	
 	public void setClickCallback(ImageButtonRenderer.Callback callback) {
@@ -94,8 +75,7 @@ public class ImageButtonPrefab extends ImagePrefab {
 		
 		ImageButtonRenderer imageButtonRenderer = entity.addComponent(new ImageButtonRenderer());
 		
-		imageButtonRenderer.padding.x = paddingX;
-		imageButtonRenderer.padding.y = paddingY;
+		imageButtonRenderer.padding = padding;
 		
 		if (hoverColor != null) {
 			imageButtonRenderer.hoverColor = hoverColor;
