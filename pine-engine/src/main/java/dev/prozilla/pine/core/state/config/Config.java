@@ -1,0 +1,113 @@
+package dev.prozilla.pine.core.state.config;
+
+import dev.prozilla.pine.common.system.resource.Color;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+/**
+ * Manages configuration of the application.
+ */
+public class Config {
+	
+	private final Map<ConfigKey<?>, ConfigOption<?>> options;
+	
+	// Predefined keys
+	public static final ConfigKey<Integer> FPS = new ConfigKey<>("fps", Integer.class);
+	public static final ConfigKey<Color> FALLBACK_RENDER_COLOR = new ConfigKey<>("fallbackRenderColor", Color.class);
+	public static final ConfigKey<Boolean> ENABLE_BLEND = new ConfigKey<>("enableBlend", Boolean.class);
+	public static final ConfigKey<Boolean> ENABLE_DEPTH_TEST = new ConfigKey<>("enableDepthTest", Boolean.class);
+	
+	// Predefines options
+	/** Target frames per second. When set to <code>0</code>, fps is uncapped. Defaults to <code>120</code>. */
+	public final ConfigOption<Integer> fps = new ConfigOption<>(120, (fps) -> fps >= 0);
+	/** Defaults to white. */
+	public final ConfigOption<Color> fallbackRenderColor = new ConfigOption<>(Color.white(), Objects::nonNull);
+	/** Defaults to <code>true</code>. */
+	public final ConfigOption<Boolean> enableBlend = new ConfigOption<>(true);
+	/** Defaults to <code>true</code>. */
+	public final ConfigOption<Boolean> enableDepthTest = new ConfigOption<>(true);
+	
+	public Config() {
+		options = new HashMap<>();
+		
+		// Add predefined options
+		addOption(FPS, fps);
+		addOption(FALLBACK_RENDER_COLOR, fallbackRenderColor);
+		addOption(ENABLE_BLEND, enableBlend);
+		addOption(ENABLE_DEPTH_TEST, enableDepthTest);
+	}
+	
+	/**
+	 * Adds a new config option with a given key.
+	 * @param key Key of the config option
+	 * @param option Config option
+	 * @param <T> Type of the option
+	 * @throws IllegalStateException If <code>key</code> is already associated with an option.
+	 */
+	public <T> void addOption(ConfigKey<T> key, ConfigOption<T> option) throws IllegalStateException {
+		if (options.containsKey(key)) {
+			throw new IllegalStateException(String.format("option with key '%s' already exists", key));
+		}
+		
+		options.put(key, option);
+	}
+	
+	/**
+	 * Returns the value of an option.
+	 * @param key Key of the config option
+	 * @return Value of the option associated with <code>key</code>
+	 * @param <T> Type of the option
+	 */
+	public <T> T getOption(ConfigKey<T> key) {
+		@SuppressWarnings("unchecked")
+		ConfigOption<T> option = (ConfigOption<T>)options.get(key);
+		
+		return option.get();
+	}
+	
+	/**
+	 * Sets the value of an option.
+	 * @param key Key of the config option
+	 * @param value New value for the option associated with <code>key</code>
+	 * @param <T> Type of the option
+	 * @throws IllegalArgumentException If the option has a validator that evaluates to <code>false</code> for <code>value</code>.
+	 */
+	public <T> void setOption(ConfigKey<T> key, T value) throws IllegalArgumentException {
+		@SuppressWarnings("unchecked")
+		ConfigOption<T> option = (ConfigOption<T>)options.get(key);
+		
+		if (!option.isValidValue(value)) {
+			throw new IllegalArgumentException(String.format("Invalid value for option with key '%s': %s", key, value));
+		}
+		
+		option.set(value);
+	}
+	
+	/**
+	 * Resets an option to its initial value.
+	 * @param key Key of the config option
+	 */
+	public void resetOption(ConfigKey<?> key) {
+		ConfigOption<?> option = options.get(key);
+		option.reset();
+	}
+	
+	/**
+	 * Returns the collection of options in this configuration.
+	 */
+	public Collection<ConfigOption<?>> getOptions() {
+		return options.values();
+	}
+	
+	/**
+	 * Resets all config options to their initial values.
+	 */
+	public void reset() {
+		for (ConfigOption<?> option : options.values()) {
+			option.reset();
+		}
+	}
+}

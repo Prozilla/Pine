@@ -9,6 +9,7 @@ import dev.prozilla.pine.common.util.Numbers;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
+import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.input.Input;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -30,8 +31,6 @@ public class Application implements Lifecycle {
 	// Data
 	/** Title of the application */
 	public String title;
-	/** Target frames per second. When set to <code>0</code>, fps is uncapped. */
-	public int targetFps;
 	public String defaultFontPath;
 	
 	// State
@@ -54,6 +53,7 @@ public class Application implements Lifecycle {
 	private final Map<Integer, Scene> scenes;
 	
 	// Helpers
+	protected final Config config;
 	protected final Timer timer;
 	protected final Renderer renderer;
 	protected final Window window;
@@ -106,9 +106,12 @@ public class Application implements Lifecycle {
 	public Application(String title, int width, int height, Scene scene, int targetFps) {
 		Numbers.requirePositive(targetFps, "Target FPS must be a positive value.");
 		
+		config = new Config();
+		config.fps.set(targetFps);
+		
 		timer = new Timer();
 		tracker = new Tracker(this);
-		renderer = new Renderer(tracker);
+		renderer = new Renderer(this);
 		window = new Window(width, height, title);
 		input = new Input(this);
 		
@@ -130,7 +133,6 @@ public class Application implements Lifecycle {
 		this.title = title;
 		this.windowWidth = width;
 		this.windowHeight = height;
-		this.targetFps = targetFps;
 	}
 	
 	/**
@@ -219,9 +221,10 @@ public class Application implements Lifecycle {
 	 */
 	@Override
 	public void start() {
-		long targetTime = (targetFps == 0) ? 0 : 1000L / targetFps;
+		int fps = config.fps.get();
+		long targetTime = (fps == 0) ? 0 : 1000L / fps;
 		
-		System.out.printf("Starting application (fps: %s)%n", targetFps);
+		System.out.printf("Starting application (fps: %s)%n", fps);
 		
 		// Application loop
 		while (!window.shouldClose() && !shouldStop) {
@@ -273,7 +276,7 @@ public class Application implements Lifecycle {
 			long endTime = (long) (timer.getTime() * 1000);
 			
 			// Sleep until target time is reached, to match target fps
-			if (targetFps != 0) {
+			if (fps != 0) {
 				try {
 					long timeout = startTime + targetTime - endTime;
 					
@@ -586,5 +589,9 @@ public class Application implements Lifecycle {
 	
 	public Tracker getTracker() {
 		return tracker;
+	}
+	
+	public Config getConfig() {
+		return config;
 	}
 }
