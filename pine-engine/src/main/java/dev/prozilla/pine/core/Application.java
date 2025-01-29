@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.common.util.Numbers;
+import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
@@ -59,6 +60,7 @@ public class Application implements Lifecycle {
 	protected final Window window;
 	protected Input input;
 	protected final Tracker tracker;
+	protected final ModManager modManager;
 	
 	private GLFWErrorCallback errorCallback;
 	
@@ -114,6 +116,7 @@ public class Application implements Lifecycle {
 		renderer = new Renderer(this);
 		window = new Window(width, height, title);
 		input = new Input(this);
+		modManager = new ModManager();
 		
 		initialized = false;
 		isRunning = false;
@@ -192,6 +195,7 @@ public class Application implements Lifecycle {
 		input.init(window.id);
 		currentScene.init(window.id);
 		loadIcons();
+		modManager.init();
 		System.out.println("Initialized application (Initialization: 4/4)");
 		
 		initialized = true;
@@ -302,6 +306,7 @@ public class Application implements Lifecycle {
 		if (currentScene != null && currentScene.initialized) {
 			currentScene.input(deltaTime);
 		}
+		modManager.input(deltaTime);
 	}
 	
 	/**
@@ -313,6 +318,7 @@ public class Application implements Lifecycle {
 		if (currentScene != null && currentScene.initialized) {
 			currentScene.update(deltaTime);
 		}
+		modManager.update(deltaTime);
 	}
 	
 	public void updatePreview(float deltaTime) {
@@ -334,6 +340,7 @@ public class Application implements Lifecycle {
 		if (currentScene != null && currentScene.initialized) {
 			currentScene.render(renderer);
 		}
+		modManager.render();
 		renderer.end();
 	}
 	
@@ -399,6 +406,7 @@ public class Application implements Lifecycle {
 		
 		if (isStandalone()) {
 			input.destroy();
+			modManager.destroy();
 			
 			// Reset resources
 			Texture.reset();
@@ -593,5 +601,9 @@ public class Application implements Lifecycle {
 	
 	public Config getConfig() {
 		return config;
+	}
+	
+	public ModManager getModManager() {
+		return modManager;
 	}
 }
