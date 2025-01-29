@@ -1,6 +1,7 @@
 package dev.prozilla.pine.tools;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.prozilla.pine.common.system.Ansi;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
 
@@ -33,16 +34,24 @@ public class BuildTool {
 			throw new IllegalArgumentException("Please specify the path to the game directory.");
 		}
 		
+		try {
+			run(args);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void run(String[] args) throws Exception {
 		// Check project directory
 		Path projectDir = Paths.get(args[0]).toAbsolutePath().normalize();
 		if (!Files.isDirectory(projectDir)) {
 			throw new IllegalArgumentException("The specified path is not a directory: " + projectDir);
 		}
 		
-		System.out.println("Working in project directory: " + projectDir);
+		System.out.println(Ansi.cyan("Working in project directory: " + projectDir));
 		
 		// Load configuration
-		System.out.println("Loading configuration file...");
+		System.out.println(Ansi.yellow("Loading configuration file..."));
 		Path configPath = projectDir.resolve(CONFIG_NAME);
 		if (!Files.exists(configPath)) {
 			throw new IllegalArgumentException(String.format("Configuration file %s not found.", CONFIG_NAME));
@@ -57,16 +66,17 @@ public class BuildTool {
 		buildShadowJar(config, projectDir);
 		Path jrePath = downloadAndExtractJRE(config, buildDir);
 		bundleResources(config, projectDir, buildDir);
+		bundleMods(config, buildDir);
 		
 		Path launch4jConfigPath = generateLaunch4jConfig(config, projectDir, buildDir, jrePath, launch4jDir);
 		runLaunch4j(launch4jConfigPath, launch4jDir);
 		
 		finalizeBuild(config, buildDir, launch4jDir);
-		System.out.println("Build completed in " + projectDir.relativize(buildDir));
+		System.out.println(Ansi.green("Build completed in " + projectDir.relativize(buildDir)));
 	}
 	
 	private static void buildShadowJar(BuildConfig config, Path projectDir) {
-		System.out.println("Building shadow jar...");
+		System.out.println(Ansi.yellow("Building shadow jar..."));
 		
 		Path gradleDir = projectDir;
 		
@@ -97,7 +107,7 @@ public class BuildTool {
 	}
 	
 	private static Path downloadAndExtractJRE(BuildConfig config, Path buildDir) throws IOException {
-		System.out.printf("Downloading and preparing JRE... (version: %S)%n", config.getJreVersion());
+		System.out.println(Ansi.yellow(String.format("Downloading and preparing JRE... (version: %S)", config.getJreVersion())));
 		
 		String os = System.getProperty("os.name").toLowerCase().contains("win") ? "windows" : "linux";
 		String jreUrl = "https://api.adoptium.net/v3/binary/latest/%s/ga/%s/x64/jdk/hotspot/normal/adoptium".formatted(config.getJreVersion(), os);
@@ -106,18 +116,18 @@ public class BuildTool {
 		Path jreOutputDir = buildDir.resolve("jre/");
 		
 		if (Files.isDirectory(jreOutputDir)) {
-			System.out.println("JRE output directory already exists, skipping download");
+			System.out.println(Ansi.green("JRE output directory already exists, skipping download"));
 			return jreOutputDir;
 		}
 		
 		// Download JRE
-		System.out.printf("Downloading JRE from: %s%n(This might take a while)%n", jreUrl);
+		System.out.printf(Ansi.yellow("Downloading JRE from: %s%n(This might take a while)%n"), jreUrl);
 		try (InputStream in = new URL(jreUrl).openStream()) {
 			Files.copy(in, tempZip, StandardCopyOption.REPLACE_EXISTING);
 		}
 		
 		// Extract JRE
-		System.out.println("Extracting JRE");
+		System.out.println(Ansi.yellow("Extracting JRE"));
 		try (ZipFile zipFile = new ZipFile(tempZip.toFile())) {
 			zipFile.stream().forEach(entry -> {
 				Path entryDestination = jreOutputDir.resolve(entry.getName());
@@ -142,7 +152,7 @@ public class BuildTool {
 	}
 	
 	private static Path generateLaunch4jConfig(BuildConfig config, Path projectDir, Path buildDir, Path jrePath, Path launch4jDir) throws IOException {
-		System.out.println("Generating Launch4j configuration...");
+		System.out.println(Ansi.yellow("Generating Launch4j configuration..."));
 		
 		Path jar = projectDir.resolve("build/libs/game-1.0-SNAPSHOT-all.jar").normalize();
 		if (!Files.exists(jar)) {
@@ -219,7 +229,7 @@ public class BuildTool {
 	}
 	
 	private static void bundleResources(BuildConfig config, Path projectDir, Path buildDir) throws IOException {
-		System.out.println("Bundling resources...");
+		System.out.println(Ansi.yellow("Bundling resources..."));
 		
 		Path targetDir = Files.createDirectories(buildDir.resolve("resources/"));
 		Path resourcesDir = projectDir.resolve(config.getResourcesPath());
@@ -227,10 +237,28 @@ public class BuildTool {
 		copyDirectory(resourcesDir.toFile(), targetDir.toFile());
 	}
 	
-	private static void runLaunch4j(Path configPath, Path launch4jDir) throws IOException, URISyntaxException {
-		System.out.println("Creating executable with Launch4j...");
+	private static void bundleMods(BuildConfig config, Path buildDir) throws IOException {
+		System.out.println(Ansi.yellow("Bundling mods..."));
 		
-		Path sourceDir = Paths.get(BuildTool.class.getResource("/tools/launch4j").toURI());
+		Path targetDir = buildDir.resolve("mods/");
+		Path modsDir = buildDir.resolve("resources/mods/");
+		
+		if (Files.exists(targetDir)) {
+			deleteDirectory(targetDir);
+		}
+		
+		if (Files.exists(modsDir)) {
+			Files.move(modsDir, targetDir);
+		} else {
+			Files.createDirectories(targetDir);
+		}
+	}
+	
+	private static void runLaunch4j(Path configPath, Path launch4jDir) throws IOException, URISyntaxException {
+		System.out.println(Ansi.yellow("Creating executable with Launch4j..."));
+		
+		URL resource = Objects.requireNonNull(BuildTool.class.getResource("/tools/launch4j"), "Launch4J is missing");
+		Path sourceDir = Paths.get(resource.toURI());
 		copyDirectory(sourceDir.toFile(), launch4jDir.toFile());
 		
 		Path launch4jcExecutable = launch4jDir.resolve("launch4jc.exe");
@@ -262,7 +290,7 @@ public class BuildTool {
 	}
 	
 	private static void finalizeBuild(BuildConfig config, Path buildDir, Path launch4jDir) throws IOException {
-		System.out.println("Finalizing build...");
+		System.out.println(Ansi.yellow("Finalizing build..."));
 		
 		deleteDirectory(launch4jDir);
 		Files.writeString(buildDir.resolve("version.txt"), config.getVersion());
@@ -303,8 +331,8 @@ public class BuildTool {
 	private static void deleteDirectory(Path directory) {
 		try (Stream<Path> pathStream = Files.walk(directory)) {
 			pathStream.sorted(Comparator.reverseOrder())
-			 .map(Path::toFile)
-			 .forEach(File::delete);
+				.map(Path::toFile)
+				.forEach(File::delete);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

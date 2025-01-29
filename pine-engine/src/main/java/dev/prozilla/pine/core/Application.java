@@ -116,7 +116,7 @@ public class Application implements Lifecycle {
 		renderer = new Renderer(this);
 		window = new Window(width, height, title);
 		input = new Input(this);
-		modManager = new ModManager();
+		modManager = new ModManager(this);
 		
 		initialized = false;
 		isRunning = false;
@@ -303,10 +303,11 @@ public class Application implements Lifecycle {
 	@Override
 	public void input(float deltaTime) {
 		input.input();
+		modManager.beforeInput(deltaTime);
 		if (currentScene != null && currentScene.initialized) {
 			currentScene.input(deltaTime);
 		}
-		modManager.input(deltaTime);
+		modManager.afterInput(deltaTime);
 	}
 	
 	/**
@@ -315,10 +316,11 @@ public class Application implements Lifecycle {
 	@Override
 	public void update(float deltaTime) {
 		input.update();
+		modManager.beforeUpdate(deltaTime);
 		if (currentScene != null && currentScene.initialized) {
 			currentScene.update(deltaTime);
 		}
-		modManager.update(deltaTime);
+		modManager.afterUpdate(deltaTime);
 	}
 	
 	public void updatePreview(float deltaTime) {
@@ -337,10 +339,11 @@ public class Application implements Lifecycle {
 		window.refreshSize();
 		renderer.clear();
 		renderer.begin();
+		modManager.beforeRender();
 		if (currentScene != null && currentScene.initialized) {
 			currentScene.render(renderer);
 		}
-		modManager.render();
+		modManager.afterRender();
 		renderer.end();
 	}
 	
