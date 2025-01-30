@@ -1,0 +1,72 @@
+---
+title: Configuration
+description: How to configure the Pine engine in a Java project.
+sidebar:
+  order: 1
+---
+
+import { Code } from "@astrojs/starlight/components";
+import { Badge } from "@astrojs/starlight/components";
+
+export const pineConfig = `{
+  "mainClass": "org.example.Main",
+  "gameName": "Game",
+  "developer": "Developer",
+  "version": "1.0.0.0",
+  "jreVersion": "19",
+  "iconPath": "resources/icon.ico",
+}`;
+
+You can configure the Pine engine inside the `pine-config.json` configuration file:
+
+<Code
+	code={pineConfig}
+	title="pine-config.json"
+	lang="json"
+/>
+
+Place this file at the root of your project. You can add the following options to your configuration file.
+
+## `mainClass`
+
+**Type:** `string`
+
+Set the main class of your application.
+
+## `gameName`
+
+**Type:** `string`
+
+Set the name of your application. This value must be a valid file name, as it will be used to generate the `.exe` file of your application.
+
+## `developer`
+
+**Type:** `string`
+
+Set the name of developer of your application.
+
+## `version`
+
+**Type:** `string`
+
+Set the version of your application. This value must match the pattern `x.x.x.x`, where `x` represents any number. The build tool will automatically add a `version.txt` file with the value of this option in your build.
+
+## `jreVersion`
+
+**Type:** `string`
+
+Set the JRE version for your application. This value must be a valid JRE version and must be at least `19`.
+
+## `iconPath`
+
+**Type:** `string`
+
+Set the path of the icon of your application. The icon file must be an `.ico` file.
+
+## `debug` <Badge text="Optional" size="large" variant="tip" />
+
+**Type:** `boolean`
+
+**Default:** `false`
+
+Enables debug mode for your application. If this value is set to `true`, running your application will also open a console window with the application's log output.

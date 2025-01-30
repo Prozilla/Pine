@@ -1,0 +1,49 @@
+---
+title: Distribution
+description: How to distribute Java games with the Pine engine.
+sidebar:
+  order: 3
+---
+
+import { Steps } from "@astrojs/starlight/components";
+import { Code } from "@astrojs/starlight/components";
+
+export const buildGradle = `
+tasks.register("createExe") {
+    doLast {
+        def buildTask = tasks.getByPath(":pine:runBuildTool")
+        buildTask.args = [projectDir.absolutePath] // Pass the project directory as an argument
+        buildTask.exec()
+    }
+}`;
+
+The Pine engine includes a build tool to distribute your games as executables, using [Launch4j](https://launch4j.sourceforge.net/). The build tool also bundles the resources and a JRE.
+
+Before running the build tool, make sure you create a [configuration file](/reference/configuration) for your application.
+
+<Steps>
+
+1. Build your project using `gradle build`.
+2. Start the build tool with `gradle :pine:runBuildTool ROOT_DIR`. Replace `ROOT_DIR` with the root directory of your project, which should include your `pine-config.json` file.
+3. Test your application by executing the `.exe` file in the subdirectory `/pine` inside your build directory.
+4. To distribute your application, copy the entire parent directory of your `.exe` file, including the `/JRE` and `/resources` folder and the `version.txt` file.
+
+</Steps>
+
+## Gradle task
+
+Alternatively, you can set up a gradle task to run the build tool with fewer steps:
+
+<Steps>
+
+1. Edit your `build.gradle` file and add the following lines:
+
+	<Code code={buildGradle} title="build.gradle" lang="groovy" />
+
+2. If you would like to automatically run the build tool every time your build your project, add the following line to `build.gradle`:
+
+	<Code code={"tasks.named(\"build\") { finalizedBy(\"createExe\") }"} lang="groovy" />
+
+3. To manually create an exe, run `gradle createExe`.
+
+</Steps>

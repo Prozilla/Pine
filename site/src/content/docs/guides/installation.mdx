@@ -1,0 +1,63 @@
+---
+title: Installation
+description: How to install the Pine engine in a Java project.
+sidebar:
+  order: 2
+---
+
+import { Steps } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { Code } from "@astrojs/starlight/components";
+
+The Pine engine is distributed using [GitHub Packages](https://github.com/Prozilla/Pine/packages/2343840).
+
+## Option 1: Use boilerplate project setup
+
+<Steps>
+
+1. Fork the [Pine-boilerplate repository](https://github.com/Prozilla/Pine-boilerplate).
+2. Read the setup guide in the README file
+3. Customize the project to suit your needs
+
+</Steps>
+
+## Option 2: Install using Gradle
+
+<Steps>
+
+1. In your `build.gradle` file, add the following lines:
+
+	```groovy
+	repositories {
+		mavenCentral()
+		maven {
+			url "https://repo.gradle.org/gradle/libs-releases"
+		}
+		maven {
+			url = uri("https://maven.pkg.github.com/prozilla/pine")
+			credentials {
+				username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+				password = project.findProperty("gpr.token") ?: System.getenv("TOKEN")
+			}
+		}
+	}
+
+	dependencies {
+		implementation "dev.prozilla:pine:1.0.0"
+	}
+	```
+
+2. Create a file with your environment variables. Replace `YOUR_USERNAME` and `YOUR_TOKEN` with your GitHub username and token respectively.
+
+	<Tabs>
+		<TabItem label="gradle.properties">
+			<Code code={"gpr.user=YOUR_USERNAME\ngpr.token=YOUR_TOKEN"} title="gradle.properties" lang="properties" />
+		</TabItem>
+		<TabItem label=".env">
+			<Code code={"USERNAME=YOUR_USERNAME\nTOKEN=YOUR_TOKEN"} title=".env" lang="properties" />
+		</TabItem>
+	</Tabs>
+
+	Make sure to add this file to `.gitignore` so it remains private.
+
+</Steps>

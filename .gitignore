@@ -84,3 +84,4 @@ out/
 
 # Windows
 **/desktop.ini
+gradle.properties
