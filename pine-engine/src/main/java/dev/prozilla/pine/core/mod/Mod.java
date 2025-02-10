@@ -5,7 +5,8 @@ import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.input.Input;
 
 /**
- * Interface for application mods.
+ * Interface for application modifications (mods).
+ * A mod has the possibility to inject logic before, after or during a step in the lifecycle of the application.
  */
 public interface Mod {
 	

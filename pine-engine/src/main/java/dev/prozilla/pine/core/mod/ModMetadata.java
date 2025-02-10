@@ -1,5 +1,8 @@
 package dev.prozilla.pine.core.mod;
 
+/**
+ * Object representation of mod metadata which is stored in JSON format.
+ */
 public class ModMetadata {
 
 	private String name;

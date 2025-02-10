@@ -2,6 +2,10 @@ package dev.prozilla.pine.core.mod;
 
 import dev.prozilla.pine.common.Printable;
 
+/**
+ * Represents a modification (mod) loaded by the {@link ModManager}.
+ * Serves as a container for mod functionality and metadata.
+ */
 public class ModEntry implements Printable {
 	
 	public final Mod mod;
@@ -12,6 +16,9 @@ public class ModEntry implements Printable {
 		this.metadata = metadata;
 	}
 	
+	/**
+	 * @return The string representation of this mod based on its metadata or <code>"Unknown mod"</code> if the metadata is missing.
+	 */
 	@Override
 	public String toString() {
 		if (metadata == null) {

@@ -16,6 +16,9 @@ import java.util.ServiceLoader;
 
 import static dev.prozilla.pine.common.system.Path.normalizePath;
 
+/**
+ * Class responsible for loading and keeping track of modifications (mods).
+ */
 public class ModManager implements Lifecycle {
 	
 	private final List<ModEntry> mods;
@@ -30,6 +33,9 @@ public class ModManager implements Lifecycle {
 		mods = new ArrayList<>();
 	}
 	
+	/**
+	 * Loads all mods from the <code>mods</code> directory by looking for jar files.
+	 */
 	@Override
 	public void init() {
 		String modsPath = null;
@@ -75,6 +81,10 @@ public class ModManager implements Lifecycle {
 		}
 	}
 	
+	/**
+	 * Loads a mod and its metadata based on the path of a jar file.
+	 * @param jarFile Jar file of the mod
+	 */
 	private void loadMod(File jarFile) {
 		try {
 			// Load mod class from jar file
@@ -102,6 +112,10 @@ public class ModManager implements Lifecycle {
 	}
 	
 	public void beforeInput(float deltaTime) {
+		if (isEmpty()) {
+			return;
+		}
+		
 		Input input = application.getInput();
 		for (ModEntry modEntry : mods) {
 			modEntry.mod.beforeInput(input, deltaTime);
@@ -109,6 +123,10 @@ public class ModManager implements Lifecycle {
 	}
 	
 	public void afterInput(float deltaTime) {
+		if (isEmpty()) {
+			return;
+		}
+		
 		Input input = application.getInput();
 		for (ModEntry modEntry : mods) {
 			modEntry.mod.afterInput(input, deltaTime);
@@ -116,18 +134,30 @@ public class ModManager implements Lifecycle {
 	}
 	
 	public void beforeUpdate(float deltaTime) {
+		if (isEmpty()) {
+			return;
+		}
+		
 		for (ModEntry modEntry : mods) {
 			modEntry.mod.beforeUpdate(deltaTime);
 		}
 	}
 	
 	public void afterUpdate(float deltaTime) {
+		if (isEmpty()) {
+			return;
+		}
+		
 		for (ModEntry modEntry : mods) {
 			modEntry.mod.afterUpdate(deltaTime);
 		}
 	}
 	
 	public void beforeRender() {
+		if (isEmpty()) {
+			return;
+		}
+		
 		Renderer renderer = application.getRenderer();
 		for (ModEntry modEntry : mods) {
 			modEntry.mod.beforeRender(renderer);
@@ -135,18 +165,50 @@ public class ModManager implements Lifecycle {
 	}
 	
 	public void afterRender() {
+		if (isEmpty()) {
+			return;
+		}
+		
 		Renderer renderer = application.getRenderer();
 		for (ModEntry modEntry : mods) {
 			modEntry.mod.afterRender(renderer);
 		}
 	}
 	
+	/**
+	 * Removes all mods.
+	 */
 	@Override
 	public void destroy() {
+		if (isEmpty()) {
+			return;
+		}
+		
 		for (ModEntry modEntry : mods) {
 			modEntry.mod.destroy();
 		}
 		
 		mods.clear();
+	}
+	
+	/**
+	 * Returns the metadata of all active mods.
+	 */
+	public ModMetadata[] getMods() {
+		int modCount = mods.size();
+		ModMetadata[] modsMetadata = new ModMetadata[modCount];
+		
+		for (int i = 0; i < modCount; i++) {
+			modsMetadata[i] = mods.get(i).metadata;
+		}
+		
+		return modsMetadata;
+	}
+	
+	/**
+	 * Returns true if there are no mods active.
+	 */
+	public boolean isEmpty() {
+		return mods.isEmpty();
 	}
 }
