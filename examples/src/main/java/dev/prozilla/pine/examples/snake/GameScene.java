@@ -49,11 +49,17 @@ public class GameScene extends Scene {
 		
 		// Add systems to world
 		world.addSystem(new PlayerInput());
-		world.addSystem(new PlayerHeadMover()); 
+		world.addSystem(new PlayerHeadMover());
+		
+		// Create grid prefabs
+		GridPrefab backgroundGridPrefab = new GridPrefab(CELL_SIZE);
+		backgroundGridPrefab.setName("BackgroundGrid");
+		GridPrefab foregroundGridPrefab = new GridPrefab(CELL_SIZE);
+		foregroundGridPrefab.setName("ForegroundGrid");
 		
 		// Add entities to world
-		backgroundGrid = world.addEntity(new GridPrefab(CELL_SIZE)).getComponent(GridGroup.class);
-		foregroundGrid = world.addEntity(new GridPrefab(CELL_SIZE)).getComponent(GridGroup.class);
+		backgroundGrid = world.addEntity(backgroundGridPrefab).getComponent(GridGroup.class);
+		foregroundGrid = world.addEntity(foregroundGridPrefab).getComponent(GridGroup.class);
 		
 		for (int x = GRID_WIDTH / -2; x <= GRID_WIDTH / 2; x++) {
 			for (int y = GRID_WIDTH / -2; y <= GRID_HEIGHT / 2; y++) {
@@ -76,6 +82,7 @@ public class GameScene extends Scene {
 			int y = random.nextInt(GRID_HEIGHT) - GRID_WIDTH / 2;
 			
 			foregroundGrid.addTile(applePrefab.instantiate(world, x, y));
+			System.out.printf("Placed apple at %s %s%n", x,  y);
 			
 			timeUntilNextSpawn += random.nextFloat(MIN_TIME_BETWEEN_SPAWNS, MAX_TIME_BETWEEN_SPAWNS);
 		}

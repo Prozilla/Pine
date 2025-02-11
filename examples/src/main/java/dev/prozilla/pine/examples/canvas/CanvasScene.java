@@ -31,7 +31,7 @@ public class CanvasScene extends Scene {
 		TextPrefab titleTextPrefab = new TextPrefab(application.title);
 		
 		TextButtonPrefab textButtonPrefab = new TextButtonPrefab("This is a button");
-		textButtonPrefab.setPadding(16, 8);
+		textButtonPrefab.setPadding(new DualDimension(16, 8));
 		textButtonPrefab.setClickCallback((entity) -> {
 			System.out.println("Button clicked");
 		});

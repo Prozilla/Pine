@@ -12,7 +12,7 @@ public class Editor extends Application {
 		this.preview = application;
 		
 		// Make sure preview is synced to editor
-		this.preview.targetFps = this.targetFps;
+		this.preview.getConfig().fps.set(this.getConfig().fps.get());
 	}
 	
 	@Override

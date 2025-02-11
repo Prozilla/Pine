@@ -84,8 +84,7 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 		}
 		
 		@SuppressWarnings("unchecked")
-		V vector = (V) object;
-		
+		V vector = (V)object;
 		return equals(vector);
 	}
 	

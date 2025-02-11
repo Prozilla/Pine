@@ -1,5 +1,6 @@
 package dev.prozilla.pine.examples.snake.system;
 
+import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -25,7 +26,7 @@ public class PlayerHeadMover extends UpdateSystem {
 		// Check if it's time to move
 		playerData.timeUntilNextMove -= deltaTime;
 		if (playerData.timeUntilNextMove <= 0) {
-			Point nextCoordinate = new Point(tile.coordinate.x, tile.coordinate.y);
+			Vector2i nextCoordinate = new Vector2i(tile.coordinate.x, tile.coordinate.y);
 			
 			switch (playerData.direction) {
 				case 0 -> nextCoordinate.y += 1;
@@ -36,6 +37,7 @@ public class PlayerHeadMover extends UpdateSystem {
 			
 			TileRenderer nextTile = tile.getGroup().getTile(nextCoordinate);
 			if (nextTile != null) {
+				nextTile.getEntity().print();
 				if (nextTile.getEntity().hasTag(EntityTag.APPLE_TAG)) {
 					// Eat apple
 					nextTile.remove();
