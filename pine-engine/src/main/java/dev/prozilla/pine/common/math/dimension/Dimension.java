@@ -79,6 +79,10 @@ public class Dimension extends DimensionBase {
 	
 	@Override
 	public boolean equals(DimensionBase dimensionBase) {
+		if (dimensionBase == this) {
+			return true;
+		}
+		
 		return dimensionBase instanceof Dimension dimension
 				&& dimension.value == this.value && dimension.unit.equals(this.unit);
 	}

@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.system.resource.Image;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
@@ -20,7 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.Thread.sleep;
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL43.GL_DEBUG_OUTPUT;
 
@@ -55,6 +57,7 @@ public class Application implements Lifecycle {
 	
 	// Helpers
 	protected final Config config;
+	protected final Logger logger;
 	protected final Timer timer;
 	protected final Renderer renderer;
 	protected final Window window;
@@ -111,6 +114,7 @@ public class Application implements Lifecycle {
 		config = new Config();
 		config.fps.set(targetFps);
 		
+		logger = new Logger(this);
 		timer = new Timer();
 		tracker = new Tracker(this);
 		renderer = new Renderer(this);
@@ -152,10 +156,9 @@ public class Application implements Lifecycle {
 			}
 			
 			// Log exception
-			System.err.println("Application failed");
-			e.printStackTrace();
+			logger.error("Application failed", e);
 		} finally {
-			System.out.println("Application finished");
+			logger.log("Application finished");
 		}
 	}
 	
@@ -169,25 +172,26 @@ public class Application implements Lifecycle {
 		
 		isRunning = true;
 		
+		logger.init();
+		
 		// Set error callback
 		errorCallback = GLFWErrorCallback.createPrint(System.err).set();
-		glfwSetErrorCallback(errorCallback);
 		
 		// Initialize GLFW
 		if (!glfwInit()) {
 			throw new IllegalStateException("Unable to initialize GLFW");
 		}
-		System.out.println("Initialized GLFW (Initialization: 1/4)");
+		logger.log("Initialized GLFW (Initialization: 1/4)");
 		
 		// Create window
 		window.init();
-		System.out.println("Created window (Initialization: 2/4)");
+		logger.log("Created window (Initialization: 2/4)");
 		
 		// Initialize OpenGL
 		GL.createCapabilities();
 		glEnable(GL_DEBUG_OUTPUT);
 		initializedOpenGL = true;
-		System.out.println("Initialized OpenGL (Initialization: 3/4)");
+		logger.log("Initialized OpenGL (Initialization: 3/4)");
 		
 		// Initialize application
 		timer.init();
@@ -196,7 +200,7 @@ public class Application implements Lifecycle {
 		currentScene.init(window.id);
 		loadIcons();
 		modManager.init();
-		System.out.println("Initialized application (Initialization: 4/4)");
+		logger.log("Initialized application (Initialization: 4/4)");
 		
 		initialized = true;
 	}
@@ -214,7 +218,7 @@ public class Application implements Lifecycle {
 		timer.init();
 		renderer.initPreview(width, height);
 		currentScene.init(renderer.getFbo().getId());
-		System.out.println("Initialized preview");
+		logger.log("Initialized preview");
 		
 		initialized = true;
 	}
@@ -228,7 +232,7 @@ public class Application implements Lifecycle {
 		int fps = config.fps.get();
 		long targetTime = (fps == 0) ? 0 : 1000L / fps;
 		
-		System.out.printf("Starting application (fps: %s)%n", fps);
+		logger.logf("Starting application (fps: %s)", fps);
 		
 		// Application loop
 		while (!window.shouldClose() && !shouldStop) {
@@ -240,8 +244,7 @@ public class Application implements Lifecycle {
 				input(deltaTime);
 				update(deltaTime);
 			} catch (Exception e) {
-				System.err.println("Failed to update application");
-				e.printStackTrace();
+				logger.error("Failed to update application", e);
 			} finally {
 				timer.updateUPS();
 			}
@@ -256,8 +259,7 @@ public class Application implements Lifecycle {
 				resize();
 				render(renderer);
 			} catch (Exception e) {
-				System.err.println("Failed to render application");
-				e.printStackTrace();
+				logger.error("Failed to render application", e);
 				
 				// Abort rendering
 				if (renderer.isDrawing()) {
@@ -270,7 +272,7 @@ public class Application implements Lifecycle {
 			// Check for OpenGL errors
 			int error = glGetError();
 			if (error != GL_NO_ERROR) {
-				System.err.println("OpenGL error: " + error);
+				logger.error("OpenGL error: " + error);
 			}
 			
 			// Update the window and timer
@@ -352,7 +354,7 @@ public class Application implements Lifecycle {
 			resize();
 			render(renderer);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.trace(e);
 		}
 	}
 	
@@ -400,9 +402,9 @@ public class Application implements Lifecycle {
 		isRunning = false;
 		
 		if (isStandalone()) {
-			System.out.println("Stopping application");
+			logger.log("Stopping application");
 		} else {
-			System.out.println("Stopping preview");
+			logger.log("Stopping preview");
 		}
 		
 		renderer.destroy();
@@ -496,7 +498,7 @@ public class Application implements Lifecycle {
 			}
 		}
 		
-		System.out.println("Loading scene: " + id);
+		logger.log("Loading scene: " + id);
 		
 		currentScene = scenes.get(id);
 		isRunning = true;
@@ -513,7 +515,7 @@ public class Application implements Lifecycle {
 	 * Unloads the current scene.
 	 */
 	public void unloadScene() {
-		System.out.println("Unloading scene: " + currentScene.getId());
+		logger.log("Unloading scene: " + currentScene.getId());
 		isRunning = false;
 		
 		if (currentScene != null) {
@@ -549,8 +551,7 @@ public class Application implements Lifecycle {
 			}
 			window.setIcons(images);
 		} catch (Exception e) {
-			System.err.println("Failed to load icons.");
-			e.printStackTrace();
+			logger.error("Failed to load icons.", e);
 		}
 	}
 	
@@ -608,5 +609,9 @@ public class Application implements Lifecycle {
 	
 	public ModManager getModManager() {
 		return modManager;
+	}
+	
+	public Logger getLogger() {
+		return logger;
 	}
 }

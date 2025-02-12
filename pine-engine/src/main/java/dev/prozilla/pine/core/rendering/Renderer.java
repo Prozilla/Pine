@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.Color;
@@ -74,10 +75,12 @@ public class Renderer implements Lifecycle {
     
     private final Application application;
     private final Tracker tracker;
+    private final Logger logger;
     
     public Renderer(Application application) {
         this.application = application;
         tracker = application.getTracker();
+        logger = application.getLogger();
     }
 
     @Override
@@ -86,15 +89,19 @@ public class Renderer implements Lifecycle {
         
         // Read config options
         Config config = application.getConfig();
-        if (config.render.enableBlend.get()) {
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        }
-        if (config.render.enableDepthTest.get()) {
-            // TO DO: improve depth handling to avoid sorting renderers and use only depth test instead
-            glEnable(GL_DEPTH_TEST);
-            glDepthFunc(GL_LEQUAL);
-        }
+        config.rendering.enableBlend.read(() -> {
+            if (config.rendering.enableBlend.get()) {
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            }
+        });
+        config.rendering.enableDepthTest.read(() -> {
+            if (config.rendering.enableDepthTest.get()) {
+                // TO DO: improve depth handling to avoid sorting renderers and use only depth test instead
+                glEnable(GL_DEPTH_TEST);
+                glDepthFunc(GL_LEQUAL);
+            }
+        });
         
         createFont();
         reset();
@@ -105,8 +112,7 @@ public class Renderer implements Lifecycle {
 		    fbo = new FrameBufferObject(width, height);
 		    fbo.init();
 	    } catch (Exception e) {
-            System.err.println("Failed to create frame buffer");
-            e.printStackTrace();
+            logger.error("Failed to create frame buffer", e);
 	    }
         
         setupShaderProgram();
@@ -118,7 +124,7 @@ public class Renderer implements Lifecycle {
         try {
             defaultFont = new Font(getClass().getResourceAsStream(FONT_PATH), 16);
         } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to create font", e);
             defaultFont = new Font();
         }
         debugFont = new Font(12, false);
@@ -131,9 +137,15 @@ public class Renderer implements Lifecycle {
         
         // Read config options
         Config config = application.getConfig();
-        fallbackColor = config.render.fallbackRenderColor.get();
-        renderMode = config.render.renderMode.get();
-        updateRenderMode();
+        
+        // Listen to config option changes
+        config.rendering.fallbackRenderColor.read(() -> {
+            fallbackColor = config.rendering.fallbackRenderColor.get();
+        });
+        config.rendering.renderMode.read(() -> {
+            renderMode = config.rendering.renderMode.get();
+            updateRenderMode();
+        });
     }
     
     private void updateRenderMode() {

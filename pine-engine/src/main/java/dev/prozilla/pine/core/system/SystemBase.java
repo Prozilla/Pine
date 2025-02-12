@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.system;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.util.Arrays;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.Scene;
@@ -41,6 +42,7 @@ public abstract class SystemBase implements Lifecycle {
 	protected World world;
 	protected Application application;
 	protected Scene scene;
+	protected Logger logger;
 	
 	public SystemBase(Class<? extends Component>[] componentTypes) {
 		this(componentTypes, false);
@@ -93,6 +95,7 @@ public abstract class SystemBase implements Lifecycle {
 		this.world = world;
 		application = world.application;
 		scene = world.scene;
+		logger = application.getLogger();
 		
 		// Create entity query
 		query = world.queryPool.getQuery(includedComponentTypes, excludedComponentTypes, runOnce, entityTag);
@@ -233,6 +236,6 @@ public abstract class SystemBase implements Lifecycle {
 		String systemName = getClass().getSimpleName();
 		int groupCount = query.entityChunks.size();
 		
-		System.out.printf("%s: (%s)%n", systemName, groupCount);
+		logger.logf("%s: (%s)", systemName, groupCount);
 	}
 }

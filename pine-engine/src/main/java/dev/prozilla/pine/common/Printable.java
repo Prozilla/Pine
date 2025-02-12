@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common;
 
+import dev.prozilla.pine.common.logging.Logger;
+
 /**
  * Abstract interface for printable objects.
  */
@@ -16,5 +18,9 @@ public interface Printable {
 	 */
 	default void print() {
 		System.out.println(this);
+	}
+	
+	default void print(Logger logger) {
+		logger.log(this);
 	}
 }

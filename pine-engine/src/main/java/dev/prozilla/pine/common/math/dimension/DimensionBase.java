@@ -51,6 +51,10 @@ public abstract class DimensionBase implements Printable, Cloneable<DimensionBas
 	
 	@Override
 	public boolean equals(Object object) {
+		if (object == this) {
+			return true;
+		}
+		
 		return (object instanceof DimensionBase dimensionBase) ? equals(dimensionBase) : super.equals(object);
 	}
 	
@@ -59,6 +63,11 @@ public abstract class DimensionBase implements Printable, Cloneable<DimensionBas
 	 * @param dimensionBase Other dimension
 	 */
 	abstract public boolean equals(DimensionBase dimensionBase);
+	
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
+	}
 	
 	/**
 	 * Returns the string representation of this dimension.

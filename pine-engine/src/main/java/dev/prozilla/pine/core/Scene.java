@@ -102,7 +102,7 @@ public class Scene implements Lifecycle, Printable {
 		}
 		
 		load();
-		System.out.println("Loaded scene");
+		application.getLogger().log("Loaded scene");
 		
 		world.init(window);
 		initialized = true;

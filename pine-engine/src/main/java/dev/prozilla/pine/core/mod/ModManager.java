@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.mod;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.input.Input;
@@ -24,11 +25,13 @@ public class ModManager implements Lifecycle {
 	private final List<ModEntry> mods;
 	
 	private final Application application;
+	private final Logger logger;
 	
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 	
 	public ModManager(Application application) {
 		this.application = application;
+		logger = application.getLogger();
 		
 		mods = new ArrayList<>();
 	}
@@ -55,7 +58,7 @@ public class ModManager implements Lifecycle {
 		}
 		
 		if (modsPath == null) {
-			System.out.println("No mods directory found.");
+			logger.log("No mods directory found.");
 			return;
 		}
 		
@@ -65,16 +68,16 @@ public class ModManager implements Lifecycle {
 			return;
 		}
 		
-		System.out.println("Loading mods from: " + modsPath);
+		logger.log("Loading mods from: " + modsPath);
 		
 		// Get all jar files
 		File[] files = modsFolder.listFiles((dir, name) -> name.endsWith(".jar"));
 		if (files == null || files.length == 0) {
-			System.out.println("No mods found");
+			logger.log("No mods found");
 			return;
 		}
 		
-		System.out.printf("Found %s mod(s)%n", files.length);
+		logger.logf("Found %s mod(s)", files.length);
 		
 		for (File file : files) {
 			loadMod(file);
@@ -101,13 +104,12 @@ public class ModManager implements Lifecycle {
 			// Initialize mod
 			for (Mod mod : serviceLoader) {
 				ModEntry modEntry = new ModEntry(mod, metadata);
-				System.out.println("Loading mod: " + modEntry);
+				logger.log("Loading mod: " + modEntry);
 				mod.init(application);
 				mods.add(modEntry);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("Failed to load mod: " + jarFile.getAbsolutePath());
+			logger.error("Failed to load mod: " + jarFile.getAbsolutePath(), e);
 		}
 	}
 	

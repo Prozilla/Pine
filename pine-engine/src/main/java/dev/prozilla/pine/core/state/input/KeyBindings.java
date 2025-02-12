@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.state.input;
 
+import dev.prozilla.pine.common.logging.Logger;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -103,16 +105,16 @@ public class KeyBindings<Action extends Enum<Action>> {
 	/**
 	 * Prints all key bindings.
 	 */
-	public void print() {
+	public void print(Logger logger) {
 		for (var keyBind : keyBindings.entrySet()) {
-			System.out.println(keyBind.getKey().name() + ": " + keyBind.getValue().name());
+			logger.log(keyBind.getKey().name() + ": " + keyBind.getValue().name());
 		}
 		for (var multiKeyBind : multiKeyBindings.entrySet()) {
 			ArrayList<String> keys = new ArrayList<>();
 			for (Key key : multiKeyBind.getValue()) {
 				keys.add(key.name());
 			}
-			System.out.println(multiKeyBind.getKey().name() + ": " + String.join(", ", keys));
+			logger.log(multiKeyBind.getKey().name() + ": " + String.join(", ", keys));
 		}
 	}
 }

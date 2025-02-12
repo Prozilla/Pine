@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.state;
 
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.Application;
 
 import java.io.BufferedReader;
@@ -19,9 +20,11 @@ public class Tracker {
 	private int componentCount;
 	
 	private final Application application;
+	private final Logger logger;
 	
 	public Tracker(Application application) {
 		this.application = application;
+		logger = application.getLogger();
 		
 		renderedVertices = 0;
 		totalVertices = 0;
@@ -152,10 +155,10 @@ public class Tracker {
 	}
 	
 	public void printRenderInfo() {
-		System.out.printf("Rendered %s/%s vertices%n", renderedVertices, totalVertices);
+		logger.logf("Rendered %s/%s vertices", renderedVertices, totalVertices);
 	}
 	
 	public void printECS() {
-		System.out.printf("Entities: %s, Components: %s, Systems: %s%n", entityCount, componentCount, systemCount);
+		logger.logf("Entities: %s, Components: %s, Systems: %s", entityCount, componentCount, systemCount);
 	}
 }

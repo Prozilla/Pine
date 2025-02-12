@@ -18,17 +18,23 @@ public class Config {
 	/** Target frames per second. When set to <code>0</code>, fps is uncapped. Defaults to <code>120</code>. */
 	public final ConfigOption<Integer> fps = new ConfigOption<>(120, (fps) -> fps >= 0);
 	/** Options related to rendering. */
-	public final RenderConfig render = new RenderConfig();
+	public final RenderConfig rendering = new RenderConfig();
+	/** Options related to logging. */
+	public final LogConfig logging = new LogConfig();
 	
 	public Config() {
 		options = new HashMap<>();
 		
 		// Add predefined options
 		addOption(FPS, fps);
-		addOption(RenderConfig.FALLBACK_RENDER_COLOR, render.fallbackRenderColor);
-		addOption(RenderConfig.ENABLE_BLEND, render.enableBlend);
-		addOption(RenderConfig.ENABLE_DEPTH_TEST, render.enableDepthTest);
-		addOption(RenderConfig.RENDER_MODE, render.renderMode);
+		addOption(RenderConfig.FALLBACK_RENDER_COLOR, rendering.fallbackRenderColor);
+		addOption(RenderConfig.ENABLE_BLEND, rendering.enableBlend);
+		addOption(RenderConfig.ENABLE_DEPTH_TEST, rendering.enableDepthTest);
+		addOption(RenderConfig.RENDER_MODE, rendering.renderMode);
+		addOption(LogConfig.ENABLE_LOGS, logging.enableLogs);
+		addOption(LogConfig.PREFIX, logging.prefix);
+		addOption(LogConfig.OUTPUT_LAYER, logging.outputLayer);
+		addOption(LogConfig.ERROR_LAYER, logging.errorLayer);
 	}
 	
 	/**

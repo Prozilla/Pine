@@ -88,6 +88,11 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 		return equals(vector);
 	}
 	
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
+	}
+	
 	abstract public boolean equals(V vector);
 	
 	abstract public V clone();

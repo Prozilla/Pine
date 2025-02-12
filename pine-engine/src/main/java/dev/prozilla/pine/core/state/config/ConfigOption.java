@@ -1,6 +1,8 @@
 package dev.prozilla.pine.core.state.config;
 
-import java.util.Objects;
+import dev.prozilla.pine.common.event.EventDispatcher;
+import dev.prozilla.pine.common.event.EventListener;
+
 import java.util.function.Predicate;
 
 /**
@@ -8,7 +10,7 @@ import java.util.function.Predicate;
  * @param <T> Type of the value of the option
  * @see Config
  */
-public class ConfigOption<T> {
+public class ConfigOption<T> extends EventDispatcher<ConfigOptionEvent> {
 	
 	private T value;
 	private final T initialValue;
@@ -28,7 +30,7 @@ public class ConfigOption<T> {
 	 * @throws IllegalArgumentException If <code>validator</code> does not evaluate to <code>true</code> for the initial value.
 	 */
 	public ConfigOption(T value, Predicate<T> validator) throws IllegalArgumentException {
-		this.value = Objects.requireNonNull(value, "value must not be null");
+		this.value = value;
 		this.initialValue = value;
 		this.validator = validator;
 		
@@ -53,9 +55,13 @@ public class ConfigOption<T> {
 			throw new IllegalArgumentException("invalid value for option");
 		}
 		
+		if (this.value != null && this.value.equals(value)) {
+			return;
+		}
+		
 		this.value = value;
 		
-		// TO DO: create event system to detect changes
+		invoke(ConfigOptionEvent.CHANGE);
 	}
 	
 	/**
@@ -85,6 +91,24 @@ public class ConfigOption<T> {
 	 * Resets this option to its initial value.
 	 */
 	public void reset() {
-		value = initialValue;
+		set(initialValue);
+		invoke(ConfigOptionEvent.RESET);
+	}
+	
+	/**
+	 * Invokes an event listener once and then every time this option changes.
+	 * @param listener Listener to invoke
+	 */
+	public void read(EventListener listener) {
+		onChange(listener);
+		listener.execute();
+	}
+	
+	public void onChange(EventListener listener) {
+		addListener(ConfigOptionEvent.CHANGE, listener);
+	}
+	
+	public void onReset(EventListener listener) {
+		addListener(ConfigOptionEvent.RESET, listener);
 	}
 }
