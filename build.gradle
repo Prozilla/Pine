@@ -6,8 +6,9 @@ subprojects {
     apply plugin: "java"
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_19
-        targetCompatibility = JavaVersion.VERSION_19
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        }
     }
 
     repositories {
