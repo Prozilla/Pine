@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.system;
 
 import java.nio.file.FileSystems;
+import java.nio.file.Paths;
 
 /**
  * Utility class for handling path strings.
@@ -40,4 +41,18 @@ public class Path {
 		
 		return path;
 	}
+	
+	public static String relativizePath(String path) {
+		java.nio.file.Path currentDir = Paths.get("").toAbsolutePath();
+		java.nio.file.Path absolute = Paths.get(path).toAbsolutePath();
+		java.nio.file.Path relative = currentDir.relativize(absolute);
+		
+		return relative.toString();
+	}
+	
+	public static String createLink(String path) {
+		java.nio.file.Path absolute = Paths.get(path).toAbsolutePath();
+		return "file:///" + absolute.toString().replace("\\", "/");
+	}
+	
 }

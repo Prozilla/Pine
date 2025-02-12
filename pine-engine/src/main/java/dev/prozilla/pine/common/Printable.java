@@ -17,7 +17,7 @@ public interface Printable {
 	 * Prints this object then terminates the line.
 	 */
 	default void print() {
-		System.out.println(this);
+		print(Logger.system);
 	}
 	
 	default void print(Logger logger) {

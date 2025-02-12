@@ -1,42 +1,37 @@
 package dev.prozilla.pine.common.logging;
 
 import dev.prozilla.pine.common.Lifecycle;
-import dev.prozilla.pine.core.Application;
-import dev.prozilla.pine.core.state.config.Config;
+import dev.prozilla.pine.common.system.Ansi;
+import dev.prozilla.pine.common.system.Path;
 
 public class Logger implements LogLayer, Lifecycle {
 	
 	// Options
-	private boolean enabled;
-	private String prefix;
+	protected boolean enabled;
+	protected String prefix;
 	
 	// Layers
-	private LogLayer outputLogLayer;
-	private LogLayer errorLogLayer;
+	protected LogLayer outputLogLayer;
+	protected LogLayer errorLogLayer;
 	
-	private final Application application;
+	public static final Logger system = new Logger(new DefaultOutputLogLayer(), new DefaultOutputLogLayer())
+	                                     .setPrefix(Ansi.purple("[SYSTEM] "));
 	
-	public Logger(Application application) {
-		this.application = application;
-		
+	/**
+	 * Creates a logger that is initially disabled.
+	 */
+	public Logger() {
 		enabled = false;
 	}
 	
-	public void init() {
-		Config config = application.getConfig();
+	/**
+	 * Creates a logger with an output and error log layer.
+	 */
+	public Logger(LogLayer outputLog, LogLayer errorLog) {
+		this.outputLogLayer = outputLog;
+		this.errorLogLayer = errorLog;
 		
-		config.logging.enableLogs.read(() -> {
-			enabled = config.logging.enableLogs.get();
-		});
-		config.logging.prefix.read(() -> {
-			prefix = config.logging.prefix.get();
-		});
-		config.logging.outputLayer.read(() -> {
-			outputLogLayer = config.logging.outputLayer.get();
-		});
-		config.logging.errorLayer.read(() -> {
-			errorLogLayer = config.logging.errorLayer.get();
-		});
+		enabled = true;
 	}
 	
 	@Override
@@ -160,7 +155,7 @@ public class Logger implements LogLayer, Lifecycle {
 			message = prefix + message;
 		}
 		
-		errorLogLayer.log(message);
+		errorLogLayer.log(Ansi.red(message));
 	}
 	
 	/**
@@ -172,18 +167,32 @@ public class Logger implements LogLayer, Lifecycle {
 		}
 		
 		// Print stack trace
-		log(throwable);
+		log(Ansi.red("[ERROR] " + throwable));
 		StackTraceElement[] trace = throwable.getStackTrace();
 		for (StackTraceElement traceElement : trace) {
-			log("\tat " + traceElement);
+			log(Ansi.red("\tat " + traceElement));
 		}
 	}
 	
-	private boolean isOutputActive() {
+	public void logFile(String text, String filePath) {
+		logf("%s: %s", text, formatPath(filePath));
+	}
+	
+	protected boolean isOutputActive() {
 		return enabled && outputLogLayer != null;
 	}
 	
-	private boolean isErrorActive() {
+	protected boolean isErrorActive() {
 		return enabled && errorLogLayer != null;
 	}
+	
+	public Logger setPrefix(String prefix) {
+		this.prefix = prefix;
+		return this;
+	}
+	
+	public static String formatPath(String path) {
+		return Path.createLink(path);
+	}
+	
 }

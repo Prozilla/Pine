@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.system;
 
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.Entity;
 
@@ -19,6 +20,7 @@ public class SystemGroup<S extends SystemBase> {
 	private final Class<S> type;
 	
 	private final World world;
+	private final Logger logger;
 	
 	/**
 	 * Creates a new system group in a world with systems of a given type.
@@ -27,6 +29,8 @@ public class SystemGroup<S extends SystemBase> {
 	public SystemGroup(World world, Class<S> type) {
 		this.world = world;
 		this.type = type;
+		
+		logger = world.application.getLogger();
 		
 		systems = new ArrayList<>();
 	}
@@ -80,8 +84,7 @@ public class SystemGroup<S extends SystemBase> {
 					break;
 				}
 			} catch (RuntimeException e) {
-				System.err.println("Failed to run system: " + system.getClass().getSimpleName());
-				e.printStackTrace();
+				logger.error("Failed to run system: " + system.getClass().getSimpleName(), e);
 			}
 		}
 	}

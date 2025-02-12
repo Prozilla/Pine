@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.state.config;
 
+import dev.prozilla.pine.common.logging.DefaultErrorLogLayer;
+import dev.prozilla.pine.common.logging.DefaultOutputLogLayer;
 import dev.prozilla.pine.common.logging.LogLayer;
-import dev.prozilla.pine.common.logging.SystemErrorLogLayer;
-import dev.prozilla.pine.common.logging.SystemOutputLogLayer;
 
 /**
  * Manages configuration options related to logging.
@@ -20,7 +20,7 @@ public class LogConfig {
 	public final ConfigOption<Boolean> enableLogs = new ConfigOption<>(true);
 	/** Defaults to <code>null</code>. */
 	public final ConfigOption<String> prefix = new ConfigOption<>(null);
-	public final ConfigOption<LogLayer> outputLayer = new ConfigOption<>(new SystemOutputLogLayer());
-	public final ConfigOption<LogLayer> errorLayer = new ConfigOption<>(new SystemErrorLogLayer());
+	public final ConfigOption<LogLayer> outputLayer = new ConfigOption<>(new DefaultOutputLogLayer());
+	public final ConfigOption<LogLayer> errorLayer = new ConfigOption<>(new DefaultErrorLogLayer());
 	
 }

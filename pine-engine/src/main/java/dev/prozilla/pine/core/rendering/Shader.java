@@ -1,8 +1,12 @@
 package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.logging.Logger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -93,7 +97,7 @@ public class Shader implements Lifecycle {
     public static Shader loadShader(int type, String path) {
         StringBuilder builder = new StringBuilder();
         
-        System.out.println("Loading shader: " + path);
+        Logger.system.logFile("Loading shader", path);
         
         try (InputStream in = Shader.class.getResourceAsStream(path)) {
 	        assert in != null;

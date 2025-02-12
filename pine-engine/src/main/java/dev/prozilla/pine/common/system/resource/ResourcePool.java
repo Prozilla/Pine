@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.system.resource;
 
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.system.Path;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.Application;
@@ -51,7 +52,7 @@ public final class ResourcePool {
 			// Get absolute path to image file
 			String filePath = ResourceUtils.getResourcePath(path);
 			
-			System.out.println("Loading image: " + filePath);
+			Logger.system.logFile("Loading image", filePath);
 			
 			// Load the image file
 			stbi_set_flip_vertically_on_load(true);
@@ -101,7 +102,7 @@ public final class ResourcePool {
 			throw new RuntimeException("Can't load textures before initialization");
 		}
 		
-		System.out.println("Loading texture: " + path);
+		Logger.system.logFile("Loading texture", path);
 		
 		// Create texture from image
 		Image image = loadImage(path);
@@ -133,14 +134,14 @@ public final class ResourcePool {
 			return fonts.get(key);
 		}
 		
-		System.out.printf("Loading font: %s (size: %s)%n", path, size);
+		Logger.system.logFile(String.format("Loading font (size: %s)", size), path);
 		
 		Font font;
 		try {
 			InputStream stream = ResourcePool.class.getResourceAsStream(path);
 			font = new Font(stream, size);
 		} catch (FontFormatException | IOException e) {
-			e.printStackTrace();
+			Logger.system.error("Failed to load font: " + path, e);
 			font = new Font();
 		}
 		

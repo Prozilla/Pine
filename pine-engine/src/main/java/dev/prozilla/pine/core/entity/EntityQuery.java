@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.util.Arrays;
 import dev.prozilla.pine.core.component.Component;
 
@@ -201,6 +202,10 @@ public class EntityQuery implements Lifecycle {
 	}
 	
 	public void print() {
+		print(Logger.system);
+	}
+	
+	public void print(Logger logger) {
 		int componentCount = includedComponentTypes.length;
 		String[] componentNames = new String[componentCount];
 		
@@ -209,6 +214,6 @@ public class EntityQuery implements Lifecycle {
 			componentNames[i] = componentClass.getSimpleName();
 		}
 		
-		System.out.printf("EntityQuery: [%s] (%s)%n", String.join(", ", componentNames), componentCount);
+		logger.logf("EntityQuery: [%s] (%s)", String.join(", ", componentNames), componentCount);
 	}
 }

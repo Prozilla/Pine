@@ -154,8 +154,7 @@ public abstract class SystemBase implements Lifecycle {
 				}
 			}
 		} catch (Exception e) {
-			System.err.println("Failed to iterate over entities in system: " + getClass().getSimpleName());
-			e.printStackTrace();
+			logger.error("Failed to iterate over entities in system: " + getClass().getSimpleName(), e);
 		} finally {
 			if (scene.isActive()) {
 				query.endIteration();
@@ -183,8 +182,7 @@ public abstract class SystemBase implements Lifecycle {
 				}
 			}
 		} catch (Exception e) {
-			System.err.println("Failed to iterate over entities in reverse in system: " + getClass().getSimpleName());
-			e.printStackTrace();
+			logger.error("Failed to iterate over entities in system: " + getClass().getSimpleName(), e);
 		} finally {
 			if (scene.isActive()) {
 				query.endIteration();
@@ -208,8 +206,7 @@ public abstract class SystemBase implements Lifecycle {
 		try {
 			action.accept(entityChunk);
 		} catch (Exception e) {
-			System.err.println("Failed to run action on entity in system: " + getClass().getSimpleName());
-			e.printStackTrace();
+			logger.error("Failed to run action on entity in system: " + getClass().getSimpleName(), e);
 		} finally {
 			if (runOnce) {
 				processedEntityIds.add(entityChunk.getEntity().id);

@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.logging.AppLogger;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.system.resource.Image;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
@@ -57,7 +58,7 @@ public class Application implements Lifecycle {
 	
 	// Helpers
 	protected final Config config;
-	protected final Logger logger;
+	protected final AppLogger logger;
 	protected final Timer timer;
 	protected final Renderer renderer;
 	protected final Window window;
@@ -111,10 +112,10 @@ public class Application implements Lifecycle {
 	public Application(String title, int width, int height, Scene scene, int targetFps) {
 		Numbers.requirePositive(targetFps, "Target FPS must be a positive value.");
 		
-		config = new Config();
+		logger = new AppLogger(this);
+		config = new Config(this);
 		config.fps.set(targetFps);
 		
-		logger = new Logger(this);
 		timer = new Timer();
 		tracker = new Tracker(this);
 		renderer = new Renderer(this);
@@ -437,8 +438,8 @@ public class Application implements Lifecycle {
 	 * Logs versions of libraries to the console
 	 */
 	public static void printVersions() {
-		System.out.println("Java " + System.getProperty("java.version"));
-		System.out.println("LWJGL " + Version.getVersion());
+		Logger.system.log("Java " + System.getProperty("java.version"));
+		Logger.system.log("LWJGL " + Version.getVersion());
 	}
 	
 	/**
