@@ -24,6 +24,8 @@ public class Config {
 	public final RenderConfig rendering = new RenderConfig();
 	/** Options related to logging. */
 	public final LogConfig logging = new LogConfig();
+	/** Options related to the application window. */
+	public final WindowConfig window = new WindowConfig();
 	
 	private final Logger logger;
 	
@@ -34,14 +36,19 @@ public class Config {
 		
 		// Add predefined options
 		addOption(FPS, fps);
+		
 		addOption(RenderConfig.FALLBACK_RENDER_COLOR, rendering.fallbackRenderColor);
 		addOption(RenderConfig.ENABLE_BLEND, rendering.enableBlend);
 		addOption(RenderConfig.ENABLE_DEPTH_TEST, rendering.enableDepthTest);
 		addOption(RenderConfig.RENDER_MODE, rendering.renderMode);
+		
 		addOption(LogConfig.ENABLE_LOGS, logging.enableLogs);
 		addOption(LogConfig.PREFIX, logging.prefix);
 		addOption(LogConfig.OUTPUT_LAYER, logging.outputLayer);
 		addOption(LogConfig.ERROR_LAYER, logging.errorLayer);
+		
+		addOption(WindowConfig.SHOW_DECORATIONS, window.showDecorations);
+		addOption(WindowConfig.FULLSCREEN, window.fullscreen);
 	}
 	
 	/**

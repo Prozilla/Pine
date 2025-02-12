@@ -119,7 +119,7 @@ public class Application implements Lifecycle {
 		timer = new Timer();
 		tracker = new Tracker(this);
 		renderer = new Renderer(this);
-		window = new Window(width, height, title);
+		window = new Window(this, width, height, title);
 		input = new Input(this);
 		modManager = new ModManager(this);
 		

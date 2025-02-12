@@ -3,7 +3,9 @@ package dev.prozilla.pine.core;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.system.resource.Image;
 import dev.prozilla.pine.common.util.Numbers;
+import dev.prozilla.pine.core.state.config.WindowConfig;
 import org.lwjgl.glfw.GLFWImage;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 
 import java.util.Objects;
@@ -28,14 +30,13 @@ public class Window implements Lifecycle {
 	private GLFWWindowSizeCallback windowSizeCallback;
 	private boolean isInitialized;
 	
-	public Window(int width, int height, String title) {
-		Numbers.requirePositive(width, "Window width must be a positive value.");
-		Numbers.requirePositive(height, "Window height must be a positive value.");
-		Objects.requireNonNull(title, "Window title must not be null.");
-		
-		this.width = width;
-		this.height = height;
-		this.title = title;
+	private final Application application;
+	
+	public Window(Application application, int width, int height, String title) {
+		this.application = application;
+		this.width = Numbers.requirePositive(width, "Window width must be a positive value.");
+		this.height = Numbers.requirePositive(height, "Window height must be a positive value.");
+		this.title = Objects.requireNonNull(title, "Window title must not be null.");
 		
 		isInitialized = false;
 	}
@@ -49,8 +50,29 @@ public class Window implements Lifecycle {
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
 		
+		long monitor = NULL;
+		
+		// Read config options
+		WindowConfig config = application.getConfig().window;
+		config.showDecorations.read(() -> {
+			if (config.showDecorations.get()) {
+				glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+			} else {
+				glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+			}
+		});
+		
+		if (config.fullscreen.get()) {
+			monitor = glfwGetPrimaryMonitor();
+			GLFWVidMode videoMode = glfwGetVideoMode(monitor);
+			if (videoMode != null) {
+				width = videoMode.width();
+				height = videoMode.height();
+			}
+		}
+		
 		// Create window
-		id = glfwCreateWindow(width, height, title, NULL, NULL);
+		id = glfwCreateWindow(width, height, title, monitor, NULL);
 		if (id == NULL) {
 			glfwTerminate();
 			throw new RuntimeException("Failed to create the GLFW window");
