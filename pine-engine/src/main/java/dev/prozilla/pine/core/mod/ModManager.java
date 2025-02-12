@@ -68,7 +68,7 @@ public class ModManager implements Lifecycle {
 			return;
 		}
 		
-		logger.log("Loading mods from: " + modsPath);
+		logger.logFile("Loading mods from", modsPath);
 		
 		// Get all jar files
 		File[] files = modsFolder.listFiles((dir, name) -> name.endsWith(".jar"));
