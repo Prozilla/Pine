@@ -10,5 +10,5 @@ repositories {
 }
 
 dependencies {
-    implementation project(":pine-engine")
+    implementation project(":pine:pine-engine")
 }

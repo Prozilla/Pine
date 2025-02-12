@@ -55,6 +55,10 @@ public class TileRenderer extends Component {
 	 * @param coordinate Coordinate
 	 */
 	public void moveTo(Vector2i coordinate) {
+		if (this.coordinate.equals(coordinate)) {
+			return;
+		}
+		
 		GridGroup group = getGroup();
 		
 		if (group != null) {

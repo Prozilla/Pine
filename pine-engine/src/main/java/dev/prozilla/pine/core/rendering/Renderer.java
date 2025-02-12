@@ -63,7 +63,9 @@ public class Renderer implements Lifecycle {
     /** The amount of strides to fit into a single vertex buffer. */
     public final static int VERTEX_BUFFER_SIZE = 1024;
     
+    // Config options
     private Color fallbackColor;
+    private RenderMode renderMode;
     
     // Paths
     private final static String VERTEX_SHADER_PATH = "/shaders/default.vert";
@@ -82,19 +84,18 @@ public class Renderer implements Lifecycle {
     public void init() {
         setupShaderProgram();
         
+        // Read config options
         Config config = application.getConfig();
-        
-        if (config.enableBlend.get()) {
+        if (config.render.enableBlend.get()) {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         }
-
-        if (config.enableDepthTest.get()) {
+        if (config.render.enableDepthTest.get()) {
             // TO DO: improve depth handling to avoid sorting renderers and use only depth test instead
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LEQUAL);
         }
-
+        
         createFont();
         reset();
     }
@@ -127,7 +128,19 @@ public class Renderer implements Lifecycle {
         renderScale = 1;
         renderedVertices = 0;
         totalVertices = 0;
-        fallbackColor = application.getConfig().fallbackRenderColor.get();
+        
+        // Read config options
+        Config config = application.getConfig();
+        fallbackColor = config.render.fallbackRenderColor.get();
+        renderMode = config.render.renderMode.get();
+        updateRenderMode();
+    }
+    
+    private void updateRenderMode() {
+        switch (renderMode) {
+            case NORMAL, DEPTH -> glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	        case WIREFRAME -> glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
     }
 
     /**
@@ -579,6 +592,16 @@ public class Renderer implements Lifecycle {
         float textureId = -1f;
         if (Texture.currentTextureId != null) {
             textureId = Texture.currentTextureId;
+        }
+        
+        // Handle depth render mode
+        if (renderMode == RenderMode.DEPTH) {
+            float depth = z * z;
+            r = depth;
+            g = depth;
+            b = depth;
+            a = 1f;
+            textureId = -1f;
         }
         
         // Ensure texture ID is within bounds

@@ -146,7 +146,9 @@ public abstract class SystemBase implements Lifecycle {
 				}
 				
 				EntityChunk entityChunk = query.entityChunks.get(i);
-				accept(entityChunk, action);
+				if (entityChunk.isActive()) {
+					accept(entityChunk, action);
+				}
 			}
 		} catch (Exception e) {
 			System.err.println("Failed to iterate over entities in system: " + getClass().getSimpleName());
@@ -173,7 +175,9 @@ public abstract class SystemBase implements Lifecycle {
 				}
 				
 				EntityChunk entityChunk = query.entityChunks.get(i);
-				accept(entityChunk, action);
+				if (entityChunk.isActive()) {
+					accept(entityChunk, action);
+				}
 			}
 		} catch (Exception e) {
 			System.err.println("Failed to iterate over entities in reverse in system: " + getClass().getSimpleName());

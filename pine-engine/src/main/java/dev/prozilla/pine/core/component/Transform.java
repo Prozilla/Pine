@@ -1,7 +1,6 @@
 package dev.prozilla.pine.core.component;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
-import dev.prozilla.pine.common.math.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,6 +109,9 @@ public class Transform extends Component {
 		return depthIndex;
 	}
 	
+	/**
+	 * @return Depth value between <code>0f</code> and <code>1f</code> based on the depth index.
+	 */
 	public float getDepth() {
 		return ((float)depthIndex / getWorld().maxDepth);
 	}

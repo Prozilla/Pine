@@ -59,6 +59,20 @@ public class ConfigOption<T> {
 	}
 	
 	/**
+	 * Copies the value of this option to another option.
+	 */
+	public void copyTo(ConfigOption<T> otherOption) {
+		otherOption.set(value);
+	}
+	
+	/**
+	 * Copies the value of another option to this option.
+	 */
+	public void copyFrom(ConfigOption<T> otherOption) {
+		otherOption.copyTo(this);
+	}
+	
+	/**
 	 * Checks whether a value is a valid value for this option.
 	 * @param value Value to check.
 	 * @return True if the value is valid
@@ -73,5 +87,4 @@ public class ConfigOption<T> {
 	public void reset() {
 		value = initialValue;
 	}
-	
 }

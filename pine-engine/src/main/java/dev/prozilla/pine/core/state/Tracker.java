@@ -154,4 +154,8 @@ public class Tracker {
 	public void printRenderInfo() {
 		System.out.printf("Rendered %s/%s vertices%n", renderedVertices, totalVertices);
 	}
+	
+	public void printECS() {
+		System.out.printf("Entities: %s, Components: %s, Systems: %s%n", entityCount, componentCount, systemCount);
+	}
 }

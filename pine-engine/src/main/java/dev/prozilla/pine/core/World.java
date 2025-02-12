@@ -220,13 +220,13 @@ public class World implements Lifecycle {
 		if (entityManager.contains(entity)) {
 			systemManager.register(entity); // Check if entity was changed since it was added (e.g. tag changed after components added)
 			if (initialized) {
-				calculateDepth();
+//				calculateDepth();
 			}
 			return entity;
 		}
 		entityManager.addEntity(entity);
 		if (initialized) {
-			calculateDepth();
+//			calculateDepth();
 		}
 		systemManager.register(entity);
 		return entity;
@@ -235,7 +235,7 @@ public class World implements Lifecycle {
 	public void removeEntity(Entity entity) {
 		entityManager.removeEntity(entity);
 		if (initialized) {
-			calculateDepth();
+//			calculateDepth();
 		}
 		systemManager.unregister(entity);
 		componentManager.removeComponents(entity);
@@ -311,6 +311,22 @@ public class World implements Lifecycle {
 			depth = rootParent.calculateDepth(depth);
 		}
 		maxDepth = depth;
+		
+		// Check if depth indexes are unique
+//		List<Integer> indexes = new ArrayList<>();
+//		boolean unique = true;
+//		for (Entity entity : entityManager.getEntities()) {
+//			int depthIndex = entity.transform.getDepthIndex();
+//			if (indexes.contains(depthIndex)) {
+//				unique = false;
+//				System.err.println("Duplicate depth index found: " + depthIndex);
+//			} else {
+//				indexes.add(depthIndex);
+//			}
+//		}
+//		if (unique) {
+//			System.out.println("Generated new unique depth indexes successfully");
+//		}
 		
 		// Update systems that use depth
 		systemManager.updateEntityDepth();

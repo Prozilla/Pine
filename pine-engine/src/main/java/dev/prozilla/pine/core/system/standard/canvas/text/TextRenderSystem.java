@@ -25,6 +25,7 @@ public class TextRenderSystem extends RenderSystem {
 		Transform transform = chunk.getTransform();
 		TextRenderer textRenderer = chunk.getComponent(TextRenderer.class);
 		RectTransform rect = chunk.getComponent(RectTransform.class);
+		
 		renderText(renderer, textRenderer, rect, transform.getDepth());
 	}
 	

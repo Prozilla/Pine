@@ -2,6 +2,7 @@ package dev.prozilla.pine;
 
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.state.config.Config;
 
 public class Editor extends Application {
 	
@@ -12,7 +13,7 @@ public class Editor extends Application {
 		this.preview = application;
 		
 		// Make sure preview is synced to editor
-		this.preview.getConfig().fps.set(this.getConfig().fps.get());
+		this.preview.getConfig().copyFrom(this.getConfig(), Config.FPS);
 	}
 	
 	@Override

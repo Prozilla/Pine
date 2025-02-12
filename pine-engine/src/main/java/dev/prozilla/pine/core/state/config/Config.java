@@ -1,11 +1,8 @@
 package dev.prozilla.pine.core.state.config;
 
-import dev.prozilla.pine.common.system.resource.Color;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Manages configuration of the application.
@@ -16,28 +13,22 @@ public class Config {
 	
 	// Predefined keys
 	public static final ConfigKey<Integer> FPS = new ConfigKey<>("fps", Integer.class);
-	public static final ConfigKey<Color> FALLBACK_RENDER_COLOR = new ConfigKey<>("fallbackRenderColor", Color.class);
-	public static final ConfigKey<Boolean> ENABLE_BLEND = new ConfigKey<>("enableBlend", Boolean.class);
-	public static final ConfigKey<Boolean> ENABLE_DEPTH_TEST = new ConfigKey<>("enableDepthTest", Boolean.class);
 	
 	// Predefines options
 	/** Target frames per second. When set to <code>0</code>, fps is uncapped. Defaults to <code>120</code>. */
 	public final ConfigOption<Integer> fps = new ConfigOption<>(120, (fps) -> fps >= 0);
-	/** Defaults to white. */
-	public final ConfigOption<Color> fallbackRenderColor = new ConfigOption<>(Color.white(), Objects::nonNull);
-	/** Defaults to <code>true</code>. */
-	public final ConfigOption<Boolean> enableBlend = new ConfigOption<>(true);
-	/** Defaults to <code>true</code>. */
-	public final ConfigOption<Boolean> enableDepthTest = new ConfigOption<>(true);
+	/** Options related to rendering. */
+	public final RenderConfig render = new RenderConfig();
 	
 	public Config() {
 		options = new HashMap<>();
 		
 		// Add predefined options
 		addOption(FPS, fps);
-		addOption(FALLBACK_RENDER_COLOR, fallbackRenderColor);
-		addOption(ENABLE_BLEND, enableBlend);
-		addOption(ENABLE_DEPTH_TEST, enableDepthTest);
+		addOption(RenderConfig.FALLBACK_RENDER_COLOR, render.fallbackRenderColor);
+		addOption(RenderConfig.ENABLE_BLEND, render.enableBlend);
+		addOption(RenderConfig.ENABLE_DEPTH_TEST, render.enableDepthTest);
+		addOption(RenderConfig.RENDER_MODE, render.renderMode);
 	}
 	
 	/**
@@ -53,6 +44,14 @@ public class Config {
 		}
 		
 		options.put(key, option);
+	}
+	
+	/**
+	 * Checks whether this config has an option with a given key.
+	 * @param key Key of the option
+	 */
+	public boolean hasOption(ConfigKey<?> key) {
+		return options.containsKey(key);
 	}
 	
 	/**
@@ -95,11 +94,47 @@ public class Config {
 		option.reset();
 	}
 	
+	public Collection<ConfigKey<?>> getKeys() {
+		return options.keySet();
+	}
+	
 	/**
 	 * Returns the collection of options in this configuration.
 	 */
 	public Collection<ConfigOption<?>> getOptions() {
 		return options.values();
+	}
+	
+	/**
+	 * Copies all options from another config.
+	 * @param otherConfig Config to copy from
+	 */
+	public void copyFrom(Config otherConfig) {
+		copyFrom(otherConfig, otherConfig.getKeys());
+	}
+	
+	/**
+	 * Copies all options from another config based on a collection of keys.
+	 * @param otherConfig The config to copy from
+	 * @param keys The keys of the options to copy
+	 */
+	public void copyFrom(Config otherConfig, Collection<ConfigKey<?>> keys) {
+		for (ConfigKey<?> key : keys) {
+			if (hasOption(key) && otherConfig.hasOption(key)) {
+				copyFrom(otherConfig, key);
+			}
+		}
+	}
+	
+	/**
+	 * Copies an option with a given key from another config.
+	 * @param otherConfig Config to copy from
+	 * @param key Key of the option to copy
+	 */
+	public <T> void copyFrom(Config otherConfig, ConfigKey<T> key) {
+		@SuppressWarnings("unchecked")
+		ConfigOption<T> option = (ConfigOption<T>)options.get(key);
+		option.set(otherConfig.getOption(key));
 	}
 	
 	/**
