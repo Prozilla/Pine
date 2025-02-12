@@ -10,7 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="runSnake" />
+          <option value="examples:runSnake" />
         </list>
       </option>
       <option name="vmOptions" />
