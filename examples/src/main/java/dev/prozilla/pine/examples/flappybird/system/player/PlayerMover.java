@@ -1,8 +1,8 @@
 package dev.prozilla.pine.examples.flappybird.system.player;
 
 import dev.prozilla.pine.common.math.MathUtils;
-import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.Transform;
+import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 import dev.prozilla.pine.examples.flappybird.Main;
@@ -35,9 +35,6 @@ public class PlayerMover extends UpdateSystem {
 			// Update age and calculate frame
 			playerData.age += deltaTime;
 			playerData.animationFrame = Math.round((playerData.age * PlayerData.ANIMATION_SPEED)) % 3;
-		} else {
-			// Flip sprite if player is dead
-			spriteRenderer.rotation = 180;
 		}
 		
 		// Update velocity and move based on current velocity
@@ -47,5 +44,11 @@ public class PlayerMover extends UpdateSystem {
 		
 		// Clamp position inside screen bounds
 		transform.position.y = MathUtils.clamp(transform.position.y, Main.HEIGHT / -2f, Main.HEIGHT / 2f);
+		
+		if (transform.position.y > Main.HEIGHT / -2f) {
+			// Apply rotation based on velocity, unless player is dead
+			float targetRotation = playerData.gameScene.gameOver ? 180 : playerData.velocity * PlayerData.ROTATION_FACTOR;
+			spriteRenderer.rotation = MathUtils.lerp(spriteRenderer.rotation, targetRotation, deltaTime * PlayerData.ROTATION_SPEED);
+		}
 	}
 }

@@ -31,8 +31,7 @@ public final class MathUtils {
 	 * @param step Amount to interpolate (between 0f and 1f)
 	 * @return Interpolated value between start and value
 	 */
-	public static float lerp(float start, float end, float step)
-	{
+	public static float lerp(float start, float end, float step) {
 		return (start * (1.0f - step)) + (end * step);
 	}
 	
