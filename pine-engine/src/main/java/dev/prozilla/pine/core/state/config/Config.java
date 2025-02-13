@@ -44,8 +44,8 @@ public class Config {
 		
 		addOption(LogConfig.ENABLE_LOGS, logging.enableLogs);
 		addOption(LogConfig.PREFIX, logging.prefix);
-		addOption(LogConfig.OUTPUT_LAYER, logging.outputLayer);
-		addOption(LogConfig.ERROR_LAYER, logging.errorLayer);
+		addOption(LogConfig.OUTPUT_LAYER, logging.outputHandler);
+		addOption(LogConfig.ERROR_LAYER, logging.errorHandler);
 		
 		addOption(WindowConfig.SHOW_DECORATIONS, window.showDecorations);
 		addOption(WindowConfig.FULLSCREEN, window.fullscreen);

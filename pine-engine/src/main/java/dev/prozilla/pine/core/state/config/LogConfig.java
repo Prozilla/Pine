@@ -1,8 +1,10 @@
 package dev.prozilla.pine.core.state.config;
 
-import dev.prozilla.pine.common.logging.DefaultErrorLogLayer;
-import dev.prozilla.pine.common.logging.DefaultOutputLogLayer;
-import dev.prozilla.pine.common.logging.LogLayer;
+import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.logging.handler.StandardErrorLogHandler;
+import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
+import dev.prozilla.pine.common.logging.handler.LogHandler;
+import dev.prozilla.pine.common.system.Ansi;
 
 /**
  * Manages configuration options related to logging.
@@ -12,15 +14,17 @@ public class LogConfig {
 	// Predefined keys
 	public static final ConfigKey<Boolean> ENABLE_LOGS = new ConfigKey<>("enableLogs", Boolean.class);
 	public static final ConfigKey<String> PREFIX = new ConfigKey<>("prefix", String.class);
-	public static final ConfigKey<LogLayer> OUTPUT_LAYER = new ConfigKey<>("outputLayer", LogLayer.class);
-	public static final ConfigKey<LogLayer> ERROR_LAYER = new ConfigKey<>("errorLayer", LogLayer.class);
+	public static final ConfigKey<LogHandler> OUTPUT_LAYER = new ConfigKey<>("outputLayer", LogHandler.class);
+	public static final ConfigKey<LogHandler> ERROR_LAYER = new ConfigKey<>("errorLayer", LogHandler.class);
 	
 	// Predefines options
 	/** Defaults to <code>true</code>. */
 	public final ConfigOption<Boolean> enableLogs = new ConfigOption<>(true);
-	/** Defaults to <code>null</code>. */
-	public final ConfigOption<String> prefix = new ConfigOption<>(null);
-	public final ConfigOption<LogLayer> outputLayer = new ConfigOption<>(new DefaultOutputLogLayer());
-	public final ConfigOption<LogLayer> errorLayer = new ConfigOption<>(new DefaultErrorLogLayer());
+	/** Prefix to add to all logged strings. Defaults to a formatted badge with label <code>"app"</code>. */
+	public final ConfigOption<String> prefix = new ConfigOption<>(Ansi.cyan(Logger.formatBadge("app")));
+	/** Log handler for the output log level. Defaults to {@link StandardOutputLogHandler}. */
+	public final ConfigOption<LogHandler> outputHandler = new ConfigOption<>(new StandardOutputLogHandler());
+	/** Log handler for the error log level. Defaults to {@link StandardErrorLogHandler}. */
+	public final ConfigOption<LogHandler> errorHandler = new ConfigOption<>(new StandardErrorLogHandler());
 	
 }

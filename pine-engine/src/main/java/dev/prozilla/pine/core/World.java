@@ -220,13 +220,13 @@ public class World implements Lifecycle {
 		if (entityManager.contains(entity)) {
 			systemManager.register(entity); // Check if entity was changed since it was added (e.g. tag changed after components added)
 			if (initialized) {
-//				calculateDepth();
+				calculateDepth();
 			}
 			return entity;
 		}
 		entityManager.addEntity(entity);
 		if (initialized) {
-//			calculateDepth();
+			calculateDepth();
 		}
 		systemManager.register(entity);
 		return entity;
@@ -235,7 +235,7 @@ public class World implements Lifecycle {
 	public void removeEntity(Entity entity) {
 		entityManager.removeEntity(entity);
 		if (initialized) {
-//			calculateDepth();
+			calculateDepth();
 		}
 		systemManager.unregister(entity);
 		componentManager.removeComponents(entity);

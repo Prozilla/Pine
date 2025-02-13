@@ -2,6 +2,7 @@ package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
@@ -16,6 +17,7 @@ public class Scene implements Lifecycle, Printable {
 	
 	// References
 	protected Application application;
+	protected Logger logger;
 	protected World world;
 	protected CameraData cameraData;
 	/** Prefab that will be used during scene loading to create a camera entity. */
@@ -48,6 +50,7 @@ public class Scene implements Lifecycle, Printable {
 	
 	public void setApplication(Application application) {
 		this.application = application;
+		logger = application.getLogger();
 	}
 	
 	/**
@@ -102,7 +105,7 @@ public class Scene implements Lifecycle, Printable {
 		}
 		
 		load();
-		application.getLogger().log("Loaded scene");
+		logger.log("Loaded scene");
 		
 		world.init(window);
 		initialized = true;

@@ -1,5 +1,9 @@
 package dev.prozilla.pine.core;
 
+import dev.prozilla.pine.core.state.config.Config;
+import dev.prozilla.pine.core.state.config.LogConfig;
+import dev.prozilla.pine.core.state.config.WindowConfig;
+
 /**
  * Utility class for building applications.
  * @see Application
@@ -17,12 +21,24 @@ public final class ApplicationBuilder {
 	private String[] icons;
 	private String defaultFontPath;
 	
+	// App configuration
+	private boolean fullscreen;
+	private boolean showWindowDecorations;
+	private boolean enableLogs;
+	
 	public ApplicationBuilder() {
 		title = Application.DEFAULT_TITLE;
 		windowWidth = 800;
 		windowHeight = 600;
 		initialScene = null;
 		targetFps = Application.DEFAULT_TARGET_FPS;
+		
+		LogConfig defaultLogConfig = new LogConfig();
+		enableLogs = defaultLogConfig.enableLogs.get();
+		
+		WindowConfig defaultWindowConfig = new WindowConfig();
+		showWindowDecorations = defaultWindowConfig.showDecorations.get();
+		fullscreen = defaultWindowConfig.fullscreen.get();
 	}
 	
 	/**
@@ -104,18 +120,40 @@ public final class ApplicationBuilder {
 		return this;
 	}
 	
+	public ApplicationBuilder setFullscreen(boolean fullscreen) {
+		this.fullscreen = fullscreen;
+		return this;
+	}
+	
+	public ApplicationBuilder setShowWindowDecorations(boolean showWindowDecorations) {
+		this.showWindowDecorations = showWindowDecorations;
+		return this;
+	}
+	
+	public ApplicationBuilder setEnableLogs(boolean enableLogs) {
+		this.enableLogs = enableLogs;
+		return this;
+	}
+	
 	/**
 	 * Creates a new application.
 	 */
 	public Application build() {
 		Application application = new Application(title, windowWidth, windowHeight, initialScene, targetFps);
 		
+		// Setters
 		if (icons != null) {
 			application.setIcons(icons);
 		}
 		if (defaultFontPath != null) {
 			application.setDefaultFont(defaultFontPath);
 		}
+		
+		// Configuration
+		Config config = application.getConfig();
+		config.window.fullscreen.set(fullscreen);
+		config.window.showDecorations.set(showWindowDecorations);
+		config.logging.enableLogs.set(enableLogs);
 		
 		return application;
 	}

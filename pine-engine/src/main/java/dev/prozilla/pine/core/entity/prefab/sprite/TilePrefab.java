@@ -37,6 +37,7 @@ public class TilePrefab extends SpritePrefab {
 		
 		this.coordinate = coordinate;
 		size = texture.getWidth();
+		setRegion(0, 0, size, size);
 		setName("Tile");
 	}
 	

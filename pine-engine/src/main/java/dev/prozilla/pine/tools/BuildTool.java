@@ -15,6 +15,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.Year;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.zip.ZipFile;
 
@@ -146,15 +147,37 @@ public class BuildTool {
 				}
 			});
 		}
-		
 		Files.delete(tempZip);
+		
+		// Pull contents of JDK directory up and remove JDK directory
+		try (Stream<Path> stream = Files.list(jreOutputDir)) {
+			Optional<Path> jdkDirOpt = stream.filter(Files::isDirectory).findFirst();
+			if (jdkDirOpt.isPresent()) {
+				Path jdkDir = jdkDirOpt.get();
+				
+				// Move contents of JDK directory
+				try (Stream<Path> files = Files.list(jdkDir)) {
+					files.forEach((src) -> {
+						try {
+							Files.move(src, jreOutputDir.resolve(src.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					});
+				}
+				
+				// Delete empty JDK directory
+				Files.delete(jdkDir);
+			}
+		}
+		
 		return jreOutputDir;
 	}
 	
 	private static Path generateLaunch4jConfig(BuildConfig config, Path projectDir, Path buildDir, Path jrePath, Path launch4jDir) throws IOException {
 		System.out.println(Ansi.yellow("Generating Launch4j configuration..."));
 		
-		Path jar = projectDir.resolve("build/libs/game-1.0-SNAPSHOT-all.jar").normalize();
+		Path jar = projectDir.resolve(config.getJar()).normalize();
 		if (!Files.exists(jar)) {
 			throw new IllegalStateException(String.format("Missing jar file: %s%nMake sure you have the shadowJar plugin installed.%n", jar));
 		}
@@ -204,7 +227,7 @@ public class BuildTool {
 			config.getMainClass(),
 		    output,
 			config.getJreVersion(),
-			jrePath,
+			buildDir.resolve(jrePath),
 		    icon,
 			config.getDeveloper(),
 			config.getGameName(),
@@ -345,6 +368,7 @@ public class BuildTool {
 		public String developer;
 		public String version;
 		public String jreVersion;
+		public String jar;
 		public String iconPath;
 		public boolean debug = false;
 		public String resourcesPath;
@@ -367,6 +391,10 @@ public class BuildTool {
 		
 		public String getJreVersion() {
 			return Objects.requireNonNullElse(jreVersion, "19");
+		}
+		
+		public String getJar() {
+			return Objects.requireNonNullElse(jar, "build/libs/game-1.0-SNAPSHOT-all.jar");
 		}
 		
 		public String getIconPath() {

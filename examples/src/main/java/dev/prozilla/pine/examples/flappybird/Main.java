@@ -17,6 +17,7 @@ public class Main {
 		flappyBird.setInitialScene(new GameScene());
 		flappyBird.setIcons("flappybird/icon.png");
 		flappyBird.setTargetFps(120);
+//		flappyBird.setFullscreen(true);
 		
 		return flappyBird;
 	}

@@ -17,13 +17,17 @@ public class RectInitializer extends InitSystem {
 	protected void process(EntityChunk chunk) {
 		Entity entity = chunk.getEntity();
 		Transform transform = chunk.getTransform();
+		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
 		transform.renderChildrenBelow = true;
 		
 		CanvasGroup group = entity.getComponentInParent(CanvasGroup.class, false);
-		
 		if (group != null) {
 			group.getChildComponents();
 		}
+		
+		// Make sure rect is correct positioned if activated after the RectUpdater system
+		// TO DO: optimize this so it only gets triggered if a rect was activated after the RectUpdater system
+		RectUpdater.updateRect(rect);
 	}
 }

@@ -1,8 +1,11 @@
-package dev.prozilla.pine.common.logging;
+package dev.prozilla.pine.common.logging.handler;
 
 import org.gradle.internal.impldep.javax.annotation.Nonnull;
 
-public interface LogLayer {
+/**
+ * Interface for log handlers that write logs.
+ */
+public interface LogHandler {
 	
 	/**
 	 * Logs an empty line.

@@ -1,21 +1,31 @@
 package dev.prozilla.pine.common.logging;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
+import dev.prozilla.pine.common.logging.handler.LogHandler;
 import dev.prozilla.pine.common.system.Ansi;
 import dev.prozilla.pine.common.system.Path;
 
-public class Logger implements LogLayer, Lifecycle {
+/**
+ * Represents the main access points for logging.
+ * Manages different log levels, each with their own log handler, and formats logs.
+ */
+public class Logger implements LogHandler, Lifecycle {
 	
-	// Options
+	// Formatting options
 	protected boolean enabled;
 	protected String prefix;
 	
-	// Layers
-	protected LogLayer outputLogLayer;
-	protected LogLayer errorLogLayer;
+	// Handlers
+	protected LogHandler outputLogHandler;
+	protected LogHandler errorLogHandler;
 	
-	public static final Logger system = new Logger(new DefaultOutputLogLayer(), new DefaultOutputLogLayer())
-	                                     .setPrefix(Ansi.purple("[SYSTEM] "));
+	/**
+	 * The global system logger for writing things to the console.
+	 * Equivalent of {@link System#out} and {@link System#err}.
+	 */
+	public static final Logger system = new Logger(new StandardOutputLogHandler(), new StandardOutputLogHandler())
+	                                     .setPrefix(Ansi.purple(formatBadge("system")));
 	
 	/**
 	 * Creates a logger that is initially disabled.
@@ -25,11 +35,11 @@ public class Logger implements LogLayer, Lifecycle {
 	}
 	
 	/**
-	 * Creates a logger with an output and error log layer.
+	 * Creates a logger with an output and error log level.
 	 */
-	public Logger(LogLayer outputLog, LogLayer errorLog) {
-		this.outputLogLayer = outputLog;
-		this.errorLogLayer = errorLog;
+	public Logger(LogHandler outputLogHandler, LogHandler errorLogHandler) {
+		this.outputLogHandler = outputLogHandler;
+		this.errorLogHandler = errorLogHandler;
 		
 		enabled = true;
 	}
@@ -39,7 +49,7 @@ public class Logger implements LogLayer, Lifecycle {
 		if (!isOutputActive()) {
 			return;
 		}
-		outputLogLayer.log();
+		outputLogHandler.log();
 	}
 	
 	@Override
@@ -47,7 +57,7 @@ public class Logger implements LogLayer, Lifecycle {
 		if (!isOutputActive()) {
 			return;
 		}
-		outputLogLayer.log(x);
+		outputLogHandler.log(x);
 	}
 	
 	@Override
@@ -55,7 +65,7 @@ public class Logger implements LogLayer, Lifecycle {
 		if (!isOutputActive()) {
 			return;
 		}
-		outputLogLayer.log(x);
+		outputLogHandler.log(x);
 	}
 	
 	@Override
@@ -63,7 +73,7 @@ public class Logger implements LogLayer, Lifecycle {
 		if (!isOutputActive()) {
 			return;
 		}
-		outputLogLayer.log(x);
+		outputLogHandler.log(x);
 	}
 	
 	@Override
@@ -71,7 +81,7 @@ public class Logger implements LogLayer, Lifecycle {
 		if (!isOutputActive()) {
 			return;
 		}
-		outputLogLayer.log(x);
+		outputLogHandler.log(x);
 	}
 	
 	@Override
@@ -79,7 +89,7 @@ public class Logger implements LogLayer, Lifecycle {
 		if (!isOutputActive()) {
 			return;
 		}
-		outputLogLayer.log(x);
+		outputLogHandler.log(x);
 	}
 	
 	@Override
@@ -87,7 +97,7 @@ public class Logger implements LogLayer, Lifecycle {
 		if (!isOutputActive()) {
 			return;
 		}
-		outputLogLayer.log(x);
+		outputLogHandler.log(x);
 	}
 	
 	@Override
@@ -95,7 +105,7 @@ public class Logger implements LogLayer, Lifecycle {
 		if (!isOutputActive()) {
 			return;
 		}
-		outputLogLayer.log(x);
+		outputLogHandler.log(x);
 	}
 	
 	@Override
@@ -103,7 +113,7 @@ public class Logger implements LogLayer, Lifecycle {
 		if (!isOutputActive()) {
 			return;
 		}
-		outputLogLayer.log(x);
+		outputLogHandler.log(x);
 	}
 	
 	@Override
@@ -117,7 +127,7 @@ public class Logger implements LogLayer, Lifecycle {
 			format = prefix + format;
 		}
 		
-		outputLogLayer.logf(format, args);
+		outputLogHandler.logf(format, args);
 	}
 	
 	@Override
@@ -131,7 +141,7 @@ public class Logger implements LogLayer, Lifecycle {
 			text = prefix + text;
 		}
 		
-		outputLogLayer.log(text);
+		outputLogHandler.log(text);
 	}
 	
 	/**
@@ -155,7 +165,7 @@ public class Logger implements LogLayer, Lifecycle {
 			message = prefix + message;
 		}
 		
-		errorLogLayer.log(Ansi.red(message));
+		errorLogHandler.log(Ansi.red(message));
 	}
 	
 	/**
@@ -167,25 +177,38 @@ public class Logger implements LogLayer, Lifecycle {
 		}
 		
 		// Print stack trace
-		log(Ansi.red("[ERROR] " + throwable));
+		log(Ansi.red(formatBadge("error") + throwable));
 		StackTraceElement[] trace = throwable.getStackTrace();
 		for (StackTraceElement traceElement : trace) {
 			log(Ansi.red("\tat " + traceElement));
 		}
 	}
 	
-	public void logFile(String text, String filePath) {
+	public void logPath(String text, String filePath) {
 		logf("%s: %s", text, formatPath(filePath));
 	}
 	
 	protected boolean isOutputActive() {
-		return enabled && outputLogLayer != null;
+		return enabled && outputLogHandler != null;
 	}
 	
 	protected boolean isErrorActive() {
-		return enabled && errorLogLayer != null;
+		return enabled && errorLogHandler != null;
 	}
 	
+	/**
+	 * Enables or disables this logger.
+	 * @param enabled If <code>true</code>, the logger will be enabled.
+	 */
+	public Logger setEnabled(boolean enabled) {
+		this.enabled = enabled;
+		return this;
+	}
+	
+	/**
+	 * Sets the prefix of this logger.
+	 * @param prefix Prefix to add to all logged strings.
+	 */
 	public Logger setPrefix(String prefix) {
 		this.prefix = prefix;
 		return this;
@@ -193,6 +216,10 @@ public class Logger implements LogLayer, Lifecycle {
 	
 	public static String formatPath(String path) {
 		return Path.createLink(path);
+	}
+	
+	public static String formatBadge(String label) {
+		return String.format("[%S] ", label);
 	}
 	
 }

@@ -158,7 +158,7 @@ public class Tracker {
 		logger.logf("Rendered %s/%s vertices", renderedVertices, totalVertices);
 	}
 	
-	public void printECS() {
+	public void printECSInfo() {
 		logger.logf("Entities: %s, Components: %s, Systems: %s", entityCount, componentCount, systemCount);
 	}
 }

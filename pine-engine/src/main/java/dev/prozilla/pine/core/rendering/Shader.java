@@ -97,7 +97,7 @@ public class Shader implements Lifecycle {
     public static Shader loadShader(int type, String path) {
         StringBuilder builder = new StringBuilder();
         
-        Logger.system.logFile("Loading shader", path);
+        Logger.system.logPath("Loading shader", path);
         
         try (InputStream in = Shader.class.getResourceAsStream(path)) {
 	        assert in != null;
