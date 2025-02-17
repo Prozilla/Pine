@@ -10,5 +10,6 @@ repositories {
 }
 
 dependencies {
-    implementation project(":pine-engine")
+    // Pine engine
+    implementation project(rootProject.name == "pine" ? ":pine-engine" : ":pine:pine-engine")
 }
