@@ -49,6 +49,7 @@ public class Config {
 		
 		addOption(WindowConfig.SHOW_DECORATIONS, window.showDecorations);
 		addOption(WindowConfig.FULLSCREEN, window.fullscreen);
+		addOption(WindowConfig.ENABLE_VSYNC, window.enableVSync);
 	}
 	
 	/**

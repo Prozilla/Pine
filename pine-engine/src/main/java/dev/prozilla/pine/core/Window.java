@@ -62,6 +62,7 @@ public class Window implements Lifecycle {
 			}
 		});
 		
+		// Prepare fullscreen window
 		if (config.fullscreen.get()) {
 			monitor = glfwGetPrimaryMonitor();
 			GLFWVidMode videoMode = glfwGetVideoMode(monitor);
@@ -78,6 +79,11 @@ public class Window implements Lifecycle {
 			throw new RuntimeException("Failed to create the GLFW window");
 		}
 		glfwMakeContextCurrent(id);
+		
+		// Enable VSync
+		if (config.enableVSync.get()) {
+			glfwSwapInterval(1);
+		}
 		
 		// Detect window resizes
 		glfwSetWindowSizeCallback(id, windowSizeCallback = new GLFWWindowSizeCallback() {
