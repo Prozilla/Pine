@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.Scene;
 import dev.prozilla.pine.core.Window;
@@ -32,6 +33,7 @@ public class Entity implements Lifecycle, Printable {
 	
 	protected final World world;
 	protected final Application application;
+	protected final Logger logger;
 	protected final Scene scene;
 	
 	/** Components of this entity */
@@ -66,6 +68,7 @@ public class Entity implements Lifecycle, Printable {
 		this.name = name;
 
 		application = world.application;
+		logger = application.getLogger();
 		scene = world.scene;
 		
 		id = EntityManager.generateEntityId();
@@ -362,6 +365,10 @@ public class Entity implements Lifecycle, Printable {
 	
 	public CameraData getCamera() {
 		return scene.getCameraData();
+	}
+	
+	public Logger getLogger() {
+		return logger;
 	}
 	
 	public boolean isRegistered() {

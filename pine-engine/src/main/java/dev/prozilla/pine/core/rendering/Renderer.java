@@ -55,7 +55,10 @@ public class Renderer implements Lifecycle {
 	private Font defaultFont;
 	private Font debugFont;
 	
+	// Transformation
 	private float renderScale;
+	private boolean mirrorHorizontally;
+	private boolean mirrorVertically;
 	
 	// Constants
 	private final static int STRIDE_LENGTH = 10;
@@ -131,7 +134,9 @@ public class Renderer implements Lifecycle {
 	}
 	
 	private void reset() {
-		renderScale = 1;
+		resetTransform();
+		
+		// Reset statistics
 		renderedVertices = 0;
 		totalVertices = 0;
 		
@@ -226,8 +231,30 @@ public class Renderer implements Lifecycle {
 		}
 	}
 	
+	public void resetTransform() {
+		resetScale();
+		resetMirror();
+	}
+	
 	public void setScale(float scale) {
 		this.renderScale = scale;
+	}
+	
+	public void resetScale() {
+		renderScale = 1f;
+	}
+	
+	public void setMirrorHorizontally(boolean mirrorHorizontally) {
+		this.mirrorHorizontally = mirrorHorizontally;
+	}
+	
+	public void setMirrorVertically(boolean mirrorVertically) {
+		this.mirrorVertically = mirrorVertically;
+	}
+	
+	public void resetMirror() {
+		mirrorHorizontally = false;
+		mirrorVertically = false;
 	}
 	
 	/**
@@ -352,8 +379,8 @@ public class Renderer implements Lifecycle {
 	 * @param c Color
 	 */
 	public void drawRect(float x, float y, float z, float width, float height, Color c) {
-		float x2 = x + width;
-		float y2 = y + height;
+		float x2 = x + width * renderScale;
+		float y2 = y + height * renderScale;
 		
 		Texture.currentTextureId = null;
 		
@@ -628,6 +655,18 @@ public class Renderer implements Lifecycle {
 		y2 = Math.round(y2);
 		y3 = Math.round(y3);
 		y4 = Math.round(y4);
+		
+		// Transform texture coordinates
+		if (mirrorHorizontally) {
+			float temp = s1;
+			s1 = s2;
+			s2 = temp;
+		}
+		if (mirrorVertically) {
+			float temp = t1;
+			t1 = t2;
+			t2 = temp;
+		}
 		
 		// Push the vertices to the buffer (with the correct order for a quad)
 		vertices.put(x1).put(y1).put(z).put(r).put(g).put(b).put(a).put(s1).put(t1).put(textureId);

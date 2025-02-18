@@ -18,6 +18,8 @@ public class SpriteRenderer extends Component {
 	public float scale;
 	public float rotation;
 	public Vector2f offset;
+	public boolean mirrorHorizontally;
+	public boolean mirrorVertically;
 	
 	// Cropping
 	/** Determines whether the texture will be cropped to a given region. */
@@ -36,6 +38,8 @@ public class SpriteRenderer extends Component {
 		scale = 1f;
 		rotation = 0f;
 		offset = new Vector2f();
+		mirrorHorizontally = false;
+		mirrorVertically = false;
 		
 		cropToRegion = false;
 		regionOffset = new Vector2f();

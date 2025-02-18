@@ -33,8 +33,10 @@ public class SpriteRenderSystem extends RenderSystemBase {
 			// Calculate screen position
 			Vector2f position = camera.applyTransform(worldX, worldY);
 			
-			// Apply zoom scale
+			// Apply render transformations
 			renderer.setScale(spriteRenderer.scale * camera.getZoom());
+			renderer.setMirrorHorizontally(spriteRenderer.mirrorHorizontally);
+			renderer.setMirrorVertically(spriteRenderer.mirrorVertically);
 			
 			// Draw cropped and rotated texture
 			if (!spriteRenderer.cropToRegion) {
@@ -45,6 +47,8 @@ public class SpriteRenderSystem extends RenderSystemBase {
 				 spriteRenderer.regionSize.x, spriteRenderer.regionSize.y,
 				 spriteRenderer.color, spriteRenderer.rotation);
 			}
+			
+			renderer.resetTransform();
 		});
 	}
 }

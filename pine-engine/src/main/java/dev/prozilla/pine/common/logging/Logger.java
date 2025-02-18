@@ -1,8 +1,8 @@
 package dev.prozilla.pine.common.logging;
 
 import dev.prozilla.pine.common.Lifecycle;
-import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
 import dev.prozilla.pine.common.logging.handler.LogHandler;
+import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
 import dev.prozilla.pine.common.system.Ansi;
 import dev.prozilla.pine.common.system.Path;
 
@@ -219,7 +219,15 @@ public class Logger implements LogHandler, Lifecycle {
 	}
 	
 	public static String formatBadge(String label) {
-		return String.format("[%S] ", label);
+		return formatBadge(label, null);
+	}
+	
+	public static String formatBadge(String label, String color) {
+		if (color != null) {
+			return String.format("%s[%S] %s", color, label, Ansi.RESET);
+		} else {
+			return String.format("[%S] ", label);
+		}
 	}
 	
 }

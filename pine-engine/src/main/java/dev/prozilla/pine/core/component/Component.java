@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.component;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.Window;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.camera.CameraData;
@@ -77,6 +78,10 @@ public abstract class Component implements Lifecycle, Printable {
 	
 	public CameraData getCamera() {
 		return entity.getCamera();
+	}
+	
+	public Logger getLogger() {
+		return entity.getLogger();
 	}
 	
 	public Transform getTransform() {
