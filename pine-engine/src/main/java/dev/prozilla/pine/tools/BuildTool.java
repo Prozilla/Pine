@@ -2,26 +2,24 @@ package dev.prozilla.pine.tools;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.logging.handler.StandardErrorLogHandler;
 import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
 import dev.prozilla.pine.common.system.Ansi;
 import dev.prozilla.pine.common.system.FileSystem;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
 
-import java.io.*;
-import java.net.URI;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.Year;
-import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Stream;
-import java.util.zip.ZipFile;
 
 /**
  * Tool for building games made with the Pine engine.
@@ -142,33 +140,15 @@ public class BuildTool {
 		
 		// Download JRE
 		logger.logf("Downloading JRE from: %s%n(This might take a while)", jreUrl);
-		try (InputStream in = new URI(jreUrl).toURL().openStream()) {
-			Files.copy(in, tempZip, StandardCopyOption.REPLACE_EXISTING);
+		try {
+			FileSystem.download(jreUrl, tempZip);
 		} catch (URISyntaxException e) {
 			logger.error("Failed to download JRE", e);
 		}
 		
 		// Extract JRE
 		logger.log("Extracting JRE");
-		try (ZipFile zipFile = new ZipFile(tempZip.toFile())) {
-			zipFile.stream().forEach(entry -> {
-				Path entryDestination = jreOutputDir.resolve(entry.getName());
-				if (entry.isDirectory()) {
-					try {
-						Files.createDirectories(entryDestination);
-					} catch (IOException e) {
-						logger.error("Extract JRE from downloaded ZIP", e);
-					}
-				} else {
-					try (InputStream in = zipFile.getInputStream(entry)) {
-						Files.copy(in, entryDestination, StandardCopyOption.REPLACE_EXISTING);
-					} catch (IOException e) {
-						logger.error("Extract JRE from downloaded ZIP", e);
-					}
-				}
-			});
-		}
-		Files.delete(tempZip);
+		FileSystem.unzip(tempZip, jreOutputDir);
 		
 		// Pull contents of JDK directory up and remove JDK directory
 		Path jdkDir = Objects.requireNonNull(FileSystem.getSubdirectory(jreOutputDir));
@@ -230,7 +210,7 @@ public class BuildTool {
 			config.getMainClass(),
 		    output,
 			config.getJreVersion(),
-			buildDir.resolve(jrePath),
+			buildDir.relativize(jrePath),
 		    icon,
 			config.getDeveloper(),
 			config.getGameName(),
@@ -297,14 +277,24 @@ public class BuildTool {
 			    configPath.toString(),
 			    DEBUG_LAUNCH4J ? "--l4j-debug-all" : ""
 			)
-			.directory(launch4jDir.toFile());
-		
-		if (DEBUG_LAUNCH4J) {
-			processBuilder.inheritIO();
-		}
+			.directory(launch4jDir.toFile())
+			.redirectErrorStream(true);
 		
 		Process process = processBuilder.start();
 		
+		// Read Launch4J output
+		Logger launch4jLogger = new Logger(new StandardOutputLogHandler(), new StandardErrorLogHandler())
+			.setPrefix(Ansi.purple(Logger.formatBadge("Launch4j")));
+		if (DEBUG_LAUNCH4J) {
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+				String line;
+				while ((line = reader.readLine()) != null) {
+					launch4jLogger.log(line.replaceAll("^launch4j: ", ""));
+				}
+			}
+		}
+		
+		// Check exit code
 		try {
 			if (process.waitFor() != 0) {
 				throw new RuntimeException("Failed to create executable.");

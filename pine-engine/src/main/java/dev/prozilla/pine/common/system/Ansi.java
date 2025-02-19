@@ -149,4 +149,11 @@ public final class Ansi {
 		}
 		return result;
 	}
+	
+	/**
+	 * Removes all ANSI escape codes from a given text.
+	 */
+	public static String strip(String text) {
+		return text.replaceAll("\u001B\\[[;\\d]*m", "");
+	}
 }

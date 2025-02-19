@@ -1,12 +1,15 @@
 package dev.prozilla.pine.common.system;
 
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Stream;
+import java.util.zip.ZipFile;
 
 /**
  * Utility class for manipulating files and directories.
@@ -84,6 +87,40 @@ public final class FileSystem {
 		}
 		
 		Files.delete(directory);
+	}
+	
+	/**
+	 * Downloads a URL into a target directory.
+	 */
+	public static void download(String url, Path target) throws URISyntaxException, IOException {
+		try (InputStream in = new URI(url).toURL().openStream()) {
+			Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
+		}
+	}
+	
+	/**
+	 * Unzips a zip file into a target directory and deletes it.
+	 */
+	public static void unzip(Path zip, Path target) throws IOException {
+		try (ZipFile zipFile = new ZipFile(zip.toFile())) {
+			zipFile.stream().forEach(entry -> {
+				Path entryDestination = target.resolve(entry.getName());
+				if (entry.isDirectory()) {
+					try {
+						Files.createDirectories(entryDestination);
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+				} else {
+					try (InputStream in = zipFile.getInputStream(entry)) {
+						Files.copy(in, entryDestination, StandardCopyOption.REPLACE_EXISTING);
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+				}
+			});
+		}
+		Files.delete(zip);
 	}
 	
 }

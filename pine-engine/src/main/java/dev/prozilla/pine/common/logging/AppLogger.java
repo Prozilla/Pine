@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.logging;
 
 import dev.prozilla.pine.core.Application;
-import dev.prozilla.pine.core.state.config.Config;
+import dev.prozilla.pine.core.state.config.LogConfig;
 
 /**
  * Logger for the core application.
@@ -20,20 +20,13 @@ public class AppLogger extends Logger {
 	 * Initializes this logger by reading the application's configuration and creating listeners.
 	 */
 	public void init() {
-		Config config = application.getConfig();
+		LogConfig config = application.getConfig().logging;
 		
-		config.logging.enableLogs.read(() -> {
-			enabled = config.logging.enableLogs.get();
-		});
-		config.logging.prefix.read(() -> {
-			prefix = config.logging.prefix.get();
-		});
-		config.logging.outputHandler.read(() -> {
-			outputLogHandler = config.logging.outputHandler.get();
-		});
-		config.logging.errorHandler.read(() -> {
-			errorLogHandler = config.logging.errorHandler.get();
-		});
+		config.enableLogs.read(() -> enabled = config.enableLogs.get());
+		config.prefix.read(() -> prefix = config.prefix.get());
+		config.outputHandler.read(() -> outputLogHandler = config.outputHandler.get());
+		config.errorHandler.read(() -> errorLogHandler = config.errorHandler.get());
+		config.enableAnsi.read(() -> enableAnsi = config.enableAnsi.get());
 	}
 	
 }
