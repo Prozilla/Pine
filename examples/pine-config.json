@@ -1,6 +1,6 @@
 {
-  "mainClass": "dev.prozilla.pine.examples.snake.Main",
-  "gameName": "Snake",
+  "mainClass": "dev.prozilla.pine.examples.flappybird.Main",
+  "gameName": "Flappy Bird",
   "developer": "Prozilla",
   "version": "1.0.0.0",
   "jreVersion": "21",

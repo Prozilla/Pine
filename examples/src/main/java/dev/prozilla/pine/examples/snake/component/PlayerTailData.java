@@ -5,12 +5,14 @@ import dev.prozilla.pine.core.component.sprite.TileRenderer;
 
 public class PlayerTailData extends Component {
 	
+	public PlayerData playerData;
 	public TileRenderer previousTile;
 	public TileRenderer currentTile;
 	public TileRenderer nextTile;
 	public boolean isDirty;
 	
-	public PlayerTailData(TileRenderer tile) {
+	public PlayerTailData(PlayerData playerData, TileRenderer tile) {
+		this.playerData = playerData;
 		currentTile = tile;
 		
 		previousTile = null;

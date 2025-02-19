@@ -13,7 +13,7 @@ public class GameOverPrefab extends TextPrefab {
 		setName("GameOverText");
 		
 		setAnchor(RectTransform.Anchor.CENTER);
-		setColor(Color.white());
+		setColor(Color.decode("#aa00ff"));
 		setFont(font);
 	}
 	

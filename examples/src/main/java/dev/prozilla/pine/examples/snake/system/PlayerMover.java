@@ -92,7 +92,7 @@ public class PlayerMover extends UpdateSystem {
 			
 			// Grow tail
 			if (shouldGrow) {
-				PlayerTailPrefab playerTailPrefab = new PlayerTailPrefab(newTailCoordinate.clone());
+				PlayerTailPrefab playerTailPrefab = new PlayerTailPrefab(newTailCoordinate.clone(), playerData);
 				playerTailPrefab.setRegion(0, 0, headTile.size, headTile.size);
 				
 				// Add tail segment and increase score
@@ -119,6 +119,17 @@ public class PlayerMover extends UpdateSystem {
 			playerData.timeUntilNextMove += PlayerData.TIME_BETWEEN_MOVES;
 			
 			playerData.previousMoveDirection = playerData.direction;
+		}
+		
+		// Interpolate movement between tiles
+		float offset = (0.5f - playerData.timeUntilNextMove / PlayerData.TIME_BETWEEN_MOVES) * GameScene.CELL_SIZE;
+		sprite.offset.x = 0;
+		sprite.offset.y = 0;
+		switch (playerData.direction) {
+			case 0 -> sprite.offset.y = offset;
+			case 1 -> sprite.offset.x = -offset;
+			case 2 -> sprite.offset.y = -offset;
+			case 3 -> sprite.offset.x = offset;
 		}
 	}
 }

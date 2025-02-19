@@ -114,6 +114,8 @@ public class GameScene extends Scene {
 	
 	@Override
 	public void update(float deltaTime) throws IllegalStateException {
+		gameOverText.setActive(gameOver);
+		
 		super.update(deltaTime);
 		
 		if (!gameOver) {
@@ -135,7 +137,6 @@ public class GameScene extends Scene {
 	
 	public void endGame() {
 		gameOver = true;
-		gameOverText.setActive(true);
 		logger.log("Player died");
 	}
 	
