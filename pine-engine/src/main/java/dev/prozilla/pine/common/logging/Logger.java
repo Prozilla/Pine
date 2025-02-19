@@ -4,7 +4,7 @@ import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
 import dev.prozilla.pine.common.logging.handler.LogHandler;
 import dev.prozilla.pine.common.system.Ansi;
-import dev.prozilla.pine.common.system.Path;
+import dev.prozilla.pine.common.system.PathUtils;
 
 /**
  * Represents the main access points for logging.
@@ -160,12 +160,14 @@ public class Logger implements LogHandler, Lifecycle {
 			return;
 		}
 		
+		message = Ansi.red(message);
+		
 		// Add prefix
 		if (prefix != null) {
 			message = prefix + message;
 		}
 		
-		errorLogHandler.log(Ansi.red(message));
+		errorLogHandler.log(message);
 	}
 	
 	/**
@@ -215,7 +217,7 @@ public class Logger implements LogHandler, Lifecycle {
 	}
 	
 	public static String formatPath(String path) {
-		return Path.createLink(path);
+		return PathUtils.createLink(path);
 	}
 	
 	public static String formatBadge(String label) {

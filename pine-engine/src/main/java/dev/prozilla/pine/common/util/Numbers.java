@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.exception.InvalidNumberException;
 /**
  * Static utility methods for checking certain conditions before operation on numbers.
  */
-public class Numbers {
+public final class Numbers {
 	
 	/**
 	 * Checks that the given number is a positive number and throws an {@link InvalidNumberException} if it is not.

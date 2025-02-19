@@ -109,6 +109,8 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 		Strings.requireSuffix(input, ")");
 		
 		String[] strings = input.substring(1, input.length() - 1).split(",");
+		
+		@SuppressWarnings("unchecked")
 		T[] numbers = (T[])Array.newInstance(type, strings.length);
 		
 		for (int i = 0; i < strings.length; i++) {

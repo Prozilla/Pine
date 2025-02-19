@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import static dev.prozilla.pine.common.system.Path.normalizePath;
+import static dev.prozilla.pine.common.system.PathUtils.normalizePath;
 
 /**
  * Class responsible for loading and keeping track of modifications (mods).

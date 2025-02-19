@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.system.resource;
 
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.system.Path;
+import dev.prozilla.pine.common.system.PathUtils;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.Application;
 import org.lwjgl.system.MemoryStack;
@@ -92,7 +92,7 @@ public final class ResourcePool {
 	 * @throws RuntimeException If OpenGL hasn't been initialized yet.
 	 */
 	public static Texture loadTexture(String path) throws RuntimeException {
-		path = Path.removeLeadingSlash(path);
+		path = PathUtils.removeLeadingSlash(path);
 		
 		if (textures.containsKey(path)) {
 			return textures.get(path);
@@ -171,6 +171,6 @@ public final class ResourcePool {
 	 * @return Normalized path
 	 */
 	private static String normalizePath(String path) {
-		return Path.removeLeadingSlash(path);
+		return PathUtils.removeLeadingSlash(path);
 	}
 }
