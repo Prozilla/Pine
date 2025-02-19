@@ -3,7 +3,7 @@ package dev.prozilla.pine.common.system;
 /**
  * Utility class for constructing <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">ANSI escape sequences</a>.
  */
-public class Ansi {
+public final class Ansi {
 	
 	public static final String RESET = "\u001B[0m";
 	
@@ -148,5 +148,12 @@ public class Ansi {
 			result += RESET;
 		}
 		return result;
+	}
+	
+	/**
+	 * Removes all ANSI escape codes from a given text.
+	 */
+	public static String strip(String text) {
+		return text.replaceAll("\u001B\\[[;\\d]*m", "");
 	}
 }

@@ -1,34 +1,41 @@
 package dev.prozilla.pine.tools;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.logging.handler.StandardErrorLogHandler;
+import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
 import dev.prozilla.pine.common.system.Ansi;
+import dev.prozilla.pine.common.system.FileSystem;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.Year;
-import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Stream;
-import java.util.zip.ZipFile;
 
 /**
  * Tool for building games made with the Pine engine.
  */
 public class BuildTool {
 	
+	// Files and folders
 	private static final String BUILD_PATH = "build/pine";
 	private static final String LAUNCH4J_TEMP_PATH = "launch4j";
 	private static final String CONFIG_NAME = "pine-config.json";
 	
+	// Debugging
 	private static final boolean DEBUG_LAUNCH4J = true;
+	
+	private static final Logger logger = new Logger(new StandardOutputLogHandler(), new StandardOutputLogHandler())
+		.setPrefix(Ansi.green(Logger.formatBadge("build")));
 	
 	public static void main(String[] args) throws Exception {
 		if (args.length == 0) {
@@ -38,7 +45,7 @@ public class BuildTool {
 		try {
 			run(args);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Build failed", e);
 		}
 	}
 	
@@ -49,10 +56,10 @@ public class BuildTool {
 			throw new IllegalArgumentException("The specified path is not a directory: " + projectDir);
 		}
 		
-		System.out.println(Ansi.cyan("Working in project directory: " + projectDir));
+		logger.logPath("Working in project directory", projectDir.toString());
 		
 		// Load configuration
-		System.out.println(Ansi.yellow("Loading configuration file..."));
+		logger.log("Loading configuration file...");
 		Path configPath = projectDir.resolve(CONFIG_NAME);
 		if (!Files.exists(configPath)) {
 			throw new IllegalArgumentException(String.format("Configuration file %s not found.", CONFIG_NAME));
@@ -62,6 +69,7 @@ public class BuildTool {
 		
 		// Prepare build directory
 		Path buildDir = Files.createDirectories(projectDir.resolve(BUILD_PATH));
+		prepareBuildDir(buildDir);
 		Path launch4jDir = Files.createDirectories(buildDir.resolve(LAUNCH4J_TEMP_PATH));
 		
 		buildShadowJar(config, projectDir);
@@ -73,11 +81,20 @@ public class BuildTool {
 		runLaunch4j(launch4jConfigPath, launch4jDir);
 		
 		finalizeBuild(config, buildDir, launch4jDir);
-		System.out.println(Ansi.green("Build completed in " + projectDir.relativize(buildDir)));
+		logger.logPath(Ansi.green("Build completed in"), buildDir.toAbsolutePath().toString());
+	}
+	
+	private static void prepareBuildDir(Path buildDir) {
+		logger.log("Clearing build directory...");
+		for(File file: Objects.requireNonNull(buildDir.toFile().listFiles())) {
+			if (!file.isDirectory() || !file.getName().equals("jre")) {
+				file.delete();
+			}
+		}
 	}
 	
 	private static void buildShadowJar(BuildConfig config, Path projectDir) {
-		System.out.println(Ansi.yellow("Building shadow jar..."));
+		logger.log("Building shadow jar...");
 		
 		Path gradleDir = projectDir;
 		
@@ -108,7 +125,7 @@ public class BuildTool {
 	}
 	
 	private static Path downloadAndExtractJRE(BuildConfig config, Path buildDir) throws IOException {
-		System.out.println(Ansi.yellow(String.format("Downloading and preparing JRE... (version: %S)", config.getJreVersion())));
+		logger.log(String.format("Downloading and preparing JRE... (version: %S)", config.getJreVersion()));
 		
 		String os = System.getProperty("os.name").toLowerCase().contains("win") ? "windows" : "linux";
 		String jreUrl = "https://api.adoptium.net/v3/binary/latest/%s/ga/%s/x64/jdk/hotspot/normal/adoptium".formatted(config.getJreVersion(), os);
@@ -117,65 +134,31 @@ public class BuildTool {
 		Path jreOutputDir = buildDir.resolve("jre/");
 		
 		if (Files.isDirectory(jreOutputDir)) {
-			System.out.println(Ansi.green("JRE output directory already exists, skipping download"));
+			logger.log(Ansi.green("JRE output directory already exists, skipping download"));
 			return jreOutputDir;
 		}
 		
 		// Download JRE
-		System.out.printf(Ansi.yellow("Downloading JRE from: %s%n(This might take a while)%n"), jreUrl);
-		try (InputStream in = new URL(jreUrl).openStream()) {
-			Files.copy(in, tempZip, StandardCopyOption.REPLACE_EXISTING);
+		logger.logf("Downloading JRE from: %s%n(This might take a while)", jreUrl);
+		try {
+			FileSystem.download(jreUrl, tempZip);
+		} catch (URISyntaxException e) {
+			logger.error("Failed to download JRE", e);
 		}
 		
 		// Extract JRE
-		System.out.println(Ansi.yellow("Extracting JRE"));
-		try (ZipFile zipFile = new ZipFile(tempZip.toFile())) {
-			zipFile.stream().forEach(entry -> {
-				Path entryDestination = jreOutputDir.resolve(entry.getName());
-				if (entry.isDirectory()) {
-					try {
-						Files.createDirectories(entryDestination);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				} else {
-					try (InputStream in = zipFile.getInputStream(entry)) {
-						Files.copy(in, entryDestination, StandardCopyOption.REPLACE_EXISTING);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-		}
-		Files.delete(tempZip);
+		logger.log("Extracting JRE");
+		FileSystem.unzip(tempZip, jreOutputDir);
 		
 		// Pull contents of JDK directory up and remove JDK directory
-		try (Stream<Path> stream = Files.list(jreOutputDir)) {
-			Optional<Path> jdkDirOpt = stream.filter(Files::isDirectory).findFirst();
-			if (jdkDirOpt.isPresent()) {
-				Path jdkDir = jdkDirOpt.get();
-				
-				// Move contents of JDK directory
-				try (Stream<Path> files = Files.list(jdkDir)) {
-					files.forEach((src) -> {
-						try {
-							Files.move(src, jreOutputDir.resolve(src.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					});
-				}
-				
-				// Delete empty JDK directory
-				Files.delete(jdkDir);
-			}
-		}
+		Path jdkDir = Objects.requireNonNull(FileSystem.getSubdirectory(jreOutputDir));
+		FileSystem.unwrapDirectory(jdkDir);
 		
 		return jreOutputDir;
 	}
 	
 	private static Path generateLaunch4jConfig(BuildConfig config, Path projectDir, Path buildDir, Path jrePath, Path launch4jDir) throws IOException {
-		System.out.println(Ansi.yellow("Generating Launch4j configuration..."));
+		logger.log("Generating Launch4j configuration...");
 		
 		Path jar = projectDir.resolve(config.getJar()).normalize();
 		if (!Files.exists(jar)) {
@@ -187,7 +170,7 @@ public class BuildTool {
 			throw new IllegalStateException(String.format("Missing icon file: %s%n", icon));
 		}
 		
-		String fileName = String.format("%s.exe", config.getGameName());
+		String fileName = config.getOutputFileName();
 		Path output = buildDir.resolve(fileName).toAbsolutePath();
 		
 		String copyright = String.format("Copyright (c) %s %s", Year.now(), config.getDeveloper());
@@ -227,7 +210,7 @@ public class BuildTool {
 			config.getMainClass(),
 		    output,
 			config.getJreVersion(),
-			buildDir.resolve(jrePath),
+			buildDir.relativize(jrePath),
 		    icon,
 			config.getDeveloper(),
 			config.getGameName(),
@@ -252,22 +235,22 @@ public class BuildTool {
 	}
 	
 	private static void bundleResources(BuildConfig config, Path projectDir, Path buildDir) throws IOException {
-		System.out.println(Ansi.yellow("Bundling resources..."));
+		logger.log("Bundling resources...");
 		
 		Path targetDir = Files.createDirectories(buildDir.resolve("resources/"));
 		Path resourcesDir = projectDir.resolve(config.getResourcesPath());
 		
-		copyDirectory(resourcesDir.toFile(), targetDir.toFile());
+		FileSystem.copyDirectory(resourcesDir.toFile(), targetDir.toFile());
 	}
 	
 	private static void bundleMods(BuildConfig config, Path buildDir) throws IOException {
-		System.out.println(Ansi.yellow("Bundling mods..."));
+		logger.log("Bundling mods...");
 		
 		Path targetDir = buildDir.resolve("mods/");
 		Path modsDir = buildDir.resolve("resources/mods/");
 		
 		if (Files.exists(targetDir)) {
-			deleteDirectory(targetDir);
+			FileSystem.deleteDirectory(targetDir);
 		}
 		
 		if (Files.exists(modsDir)) {
@@ -278,11 +261,11 @@ public class BuildTool {
 	}
 	
 	private static void runLaunch4j(Path configPath, Path launch4jDir) throws IOException, URISyntaxException {
-		System.out.println(Ansi.yellow("Creating executable with Launch4j..."));
+		logger.log("Creating executable with Launch4j...");
 		
 		URL resource = Objects.requireNonNull(BuildTool.class.getResource("/tools/launch4j"), "Launch4J is missing");
 		Path sourceDir = Paths.get(resource.toURI());
-		copyDirectory(sourceDir.toFile(), launch4jDir.toFile());
+		FileSystem.copyDirectory(sourceDir.toFile(), launch4jDir.toFile());
 		
 		Path launch4jcExecutable = launch4jDir.resolve("launch4jc.exe");
 		launch4jcExecutable.toFile().setExecutable(true);
@@ -294,17 +277,27 @@ public class BuildTool {
 			    configPath.toString(),
 			    DEBUG_LAUNCH4J ? "--l4j-debug-all" : ""
 			)
-			.directory(launch4jDir.toFile());
-		
-		if (DEBUG_LAUNCH4J) {
-			processBuilder.inheritIO();
-		}
+			.directory(launch4jDir.toFile())
+			.redirectErrorStream(true);
 		
 		Process process = processBuilder.start();
 		
+		// Read Launch4J output
+		Logger launch4jLogger = new Logger(new StandardOutputLogHandler(), new StandardErrorLogHandler())
+			.setPrefix(Ansi.purple(Logger.formatBadge("Launch4j")));
+		if (DEBUG_LAUNCH4J) {
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+				String line;
+				while ((line = reader.readLine()) != null) {
+					launch4jLogger.log(line.replaceAll("^launch4j: ", ""));
+				}
+			}
+		}
+		
+		// Check exit code
 		try {
 			if (process.waitFor() != 0) {
-				throw new RuntimeException("Launch4J failed to create executable.");
+				throw new RuntimeException("Failed to create executable.");
 			}
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
@@ -313,52 +306,10 @@ public class BuildTool {
 	}
 	
 	private static void finalizeBuild(BuildConfig config, Path buildDir, Path launch4jDir) throws IOException {
-		System.out.println(Ansi.yellow("Finalizing build..."));
+		logger.log("Finalizing build...");
 		
-		deleteDirectory(launch4jDir);
+		FileSystem.deleteDirectory(launch4jDir);
 		Files.writeString(buildDir.resolve("version.txt"), config.getVersion());
-	}
-	
-	/**
-	 * Helper method for copying a directory and its contents recursively.
-	 */
-	private static void copyDirectory(File source, File target) throws IOException {
-		if (source.isDirectory()) {
-			if (!target.exists()) {
-				target.mkdir();
-			}
-			
-			// List all files and directories
-			String[] files = source.list();
-			if (files != null) {
-				for (String file : files) {
-					copyDirectory(new File(source, file), new File(target, file));
-				}
-			}
-		} else {
-			// If it's a file, copy it
-			try (InputStream in = new FileInputStream(source);
-			     OutputStream out = new FileOutputStream(target)) {
-				byte[] buffer = new byte[1024];
-				int length;
-				while ((length = in.read(buffer)) > 0) {
-					out.write(buffer, 0, length);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Helper method for deleting non-empty directories.
-	 */
-	private static void deleteDirectory(Path directory) {
-		try (Stream<Path> pathStream = Files.walk(directory)) {
-			pathStream.sorted(Comparator.reverseOrder())
-				.map(Path::toFile)
-				.forEach(File::delete);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
 	}
 	
 	public static class BuildConfig {
@@ -407,6 +358,10 @@ public class BuildTool {
 		
 		public String getResourcesPath() {
 			return Objects.requireNonNullElse(resourcesPath, "src/main/resources");
+		}
+	
+		public String getOutputFileName() {
+			return String.format("%s.exe", getGameName().replaceAll("\\s+", ""));
 		}
 	}
 }

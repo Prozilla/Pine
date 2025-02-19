@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * Static utility methods for checking certain conditions before operation on arrays.
  */
-public class Arrays {
+public final class Arrays {
 	
 	/**
 	 * Checks that the given arrays are disjunct and throws an {@link InvalidArrayException} if it is not.

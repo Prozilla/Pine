@@ -6,7 +6,7 @@ import org.gradle.internal.impldep.javax.annotation.Nonnull;
 /**
  * Static utility methods for checking certain conditions before operation on strings.
  */
-public class Strings {
+public final class Strings {
 	
 	/**
 	 * Checks that the given string is not blank and throws an {@link InvalidStringException} if it is not.

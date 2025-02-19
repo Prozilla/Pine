@@ -4,7 +4,7 @@ import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.logging.handler.LogHandler;
 import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
 import dev.prozilla.pine.common.system.Ansi;
-import dev.prozilla.pine.common.system.Path;
+import dev.prozilla.pine.common.system.PathUtils;
 
 /**
  * Represents the main access points for logging.
@@ -15,6 +15,7 @@ public class Logger implements LogHandler, Lifecycle {
 	// Formatting options
 	protected boolean enabled;
 	protected String prefix;
+	protected boolean enableAnsi;
 	
 	// Handlers
 	protected LogHandler outputLogHandler;
@@ -25,13 +26,14 @@ public class Logger implements LogHandler, Lifecycle {
 	 * Equivalent of {@link System#out} and {@link System#err}.
 	 */
 	public static final Logger system = new Logger(new StandardOutputLogHandler(), new StandardOutputLogHandler())
-	                                     .setPrefix(Ansi.purple(formatBadge("system")));
+		.setPrefix(Ansi.purple(formatBadge("system")));
 	
 	/**
 	 * Creates a logger that is initially disabled.
 	 */
 	public Logger() {
 		enabled = false;
+		enableAnsi = true;
 	}
 	
 	/**
@@ -42,6 +44,7 @@ public class Logger implements LogHandler, Lifecycle {
 		this.errorLogHandler = errorLogHandler;
 		
 		enabled = true;
+		enableAnsi = true;
 	}
 	
 	@Override
@@ -121,13 +124,7 @@ public class Logger implements LogHandler, Lifecycle {
 		if (!isOutputActive()) {
 			return;
 		}
-		
-		// Add prefix
-		if (prefix != null) {
-			format = prefix + format;
-		}
-		
-		outputLogHandler.logf(format, args);
+		outputLogHandler.logf(applyFormat(format), args);
 	}
 	
 	@Override
@@ -135,13 +132,7 @@ public class Logger implements LogHandler, Lifecycle {
 		if (!isOutputActive()) {
 			return;
 		}
-		
-		// Add prefix
-		if (prefix != null) {
-			text = prefix + text;
-		}
-		
-		outputLogHandler.log(text);
+		outputLogHandler.log(applyFormat(text));
 	}
 	
 	/**
@@ -159,13 +150,21 @@ public class Logger implements LogHandler, Lifecycle {
 		if (!isErrorActive()) {
 			return;
 		}
-		
+		errorLogHandler.log(applyFormat(Ansi.red(message)));
+	}
+	
+	private String applyFormat(String text) {
 		// Add prefix
 		if (prefix != null) {
-			message = prefix + message;
+			text = prefix + text;
 		}
 		
-		errorLogHandler.log(Ansi.red(message));
+		// Strip ANSI, if ANSI is disabled
+		if (!enableAnsi) {
+			text = Ansi.strip(text);
+		}
+		
+		return text;
 	}
 	
 	/**
@@ -214,8 +213,18 @@ public class Logger implements LogHandler, Lifecycle {
 		return this;
 	}
 	
+	public Logger enableAnsi() {
+		enableAnsi = true;
+		return this;
+	}
+	
+	public Logger disableAnsi() {
+		enableAnsi = false;
+		return this;
+	}
+	
 	public static String formatPath(String path) {
-		return Path.createLink(path);
+		return PathUtils.createLink(path);
 	}
 	
 	public static String formatBadge(String label) {

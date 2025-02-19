@@ -1,11 +1,11 @@
 package dev.prozilla.pine.common.system.resource;
 
-import dev.prozilla.pine.common.system.Path;
+import dev.prozilla.pine.common.system.PathUtils;
 
 import java.io.File;
 import java.net.URL;
 
-import static dev.prozilla.pine.common.system.Path.normalizePath;
+import static dev.prozilla.pine.common.system.PathUtils.normalizePath;
 
 /**
  * Utility class for handling resources.
@@ -18,7 +18,7 @@ public class ResourceUtils {
 	 * @return Normalized path to the resource
 	 */
 	public static String getResourcePath(String path) throws RuntimeException {
-		path = Path.removeLeadingSlash(path);
+		path = PathUtils.removeLeadingSlash(path);
 		
 		// Attempt to load resource as file
 		File resourceFile = new File("resources/" + path);

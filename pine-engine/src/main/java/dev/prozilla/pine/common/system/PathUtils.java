@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 /**
  * Utility class for handling path strings.
  */
-public class Path {
+public final class PathUtils {
 	/**
 	 * Removes a leading slash from a path if there is one.
 	 * @param path Path with or without leading slash
@@ -33,7 +33,7 @@ public class Path {
 		
 		// Remove leading slash for Windows paths
 		if (path.charAt(2) == ':') {
-			path = Path.removeLeadingSlash(path);
+			path = PathUtils.removeLeadingSlash(path);
 		}
 		
 		// Replace path separator
