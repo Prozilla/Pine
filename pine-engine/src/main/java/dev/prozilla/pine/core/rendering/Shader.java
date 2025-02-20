@@ -97,7 +97,7 @@ public class Shader implements Lifecycle {
     public static Shader loadShader(int type, String path) {
         StringBuilder builder = new StringBuilder();
         
-        Logger.system.logPath("Loading shader", path);
+        Logger.system.logf("Loading shader: %s", path);
         
         try (InputStream in = Shader.class.getResourceAsStream(path)) {
 	        assert in != null;
@@ -108,7 +108,7 @@ public class Shader implements Lifecycle {
 	            }
 	        }
         } catch (IOException ex) {
-            throw new RuntimeException("Failed to load shader file"
+            throw new RuntimeException("Failed to load shader: " + path
                 + System.lineSeparator() + ex.getMessage());
         }
         CharSequence source = builder.toString();

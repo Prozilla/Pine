@@ -35,7 +35,7 @@ public class BuildTool {
 	private static final boolean DEBUG_LAUNCH4J = true;
 	
 	private static final Logger logger = new Logger(new StandardOutputLogHandler(), new StandardOutputLogHandler())
-		.setPrefix(Ansi.green(Logger.formatBadge("build")));
+		.setPrefix(Logger.formatBadge("build", Ansi.GREEN));
 	
 	public static void main(String[] args) throws Exception {
 		if (args.length == 0) {
@@ -284,7 +284,7 @@ public class BuildTool {
 		
 		// Read Launch4J output
 		Logger launch4jLogger = new Logger(new StandardOutputLogHandler(), new StandardErrorLogHandler())
-			.setPrefix(Ansi.purple(Logger.formatBadge("Launch4j")));
+			.setPrefix(Logger.formatBadge("Launch4j", Ansi.PURPLE));
 		if (DEBUG_LAUNCH4J) {
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
 				String line;

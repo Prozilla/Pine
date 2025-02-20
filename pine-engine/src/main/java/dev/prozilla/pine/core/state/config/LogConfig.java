@@ -22,7 +22,7 @@ public class LogConfig {
 	/** Defaults to <code>true</code>. */
 	public final ConfigOption<Boolean> enableLogs = new ConfigOption<>(true);
 	/** Prefix to add to all logged strings. Defaults to a formatted badge with label <code>"app"</code>. */
-	public final ConfigOption<String> prefix = new ConfigOption<>(Ansi.cyan(Logger.formatBadge("app")));
+	public final ConfigOption<String> prefix = new ConfigOption<>(Logger.formatBadge("app", Ansi.CYAN));
 	/** Log handler for the output log level. Defaults to {@link StandardOutputLogHandler}. */
 	public final ConfigOption<LogHandler> outputHandler = new ConfigOption<>(new StandardOutputLogHandler());
 	/** Log handler for the error log level. Defaults to {@link StandardErrorLogHandler}. */

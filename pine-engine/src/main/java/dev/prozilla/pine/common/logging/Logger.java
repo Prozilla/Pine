@@ -29,21 +29,27 @@ public class Logger implements LogHandler, Lifecycle {
 		.setPrefix(Ansi.purple(formatBadge("system")));
 	
 	/**
-	 * Creates a logger that is initially disabled.
+	 * Creates a logger without any log handlers.
 	 */
 	public Logger() {
-		enabled = false;
-		enableAnsi = true;
+		this(null);
 	}
 	
 	/**
-	 * Creates a logger with an output and error log level.
+	 * Creates a logger with an output log handler.
+	 */
+	public Logger(LogHandler outputLogHandler) {
+		this(outputLogHandler, null);
+	}
+	
+	/**
+	 * Creates a logger with an output and error log handler.
 	 */
 	public Logger(LogHandler outputLogHandler, LogHandler errorLogHandler) {
 		this.outputLogHandler = outputLogHandler;
 		this.errorLogHandler = errorLogHandler;
 		
-		enabled = true;
+		enabled = outputLogHandler != null || errorLogHandler != null;
 		enableAnsi = true;
 	}
 	
@@ -193,6 +199,25 @@ public class Logger implements LogHandler, Lifecycle {
 	
 	protected boolean isErrorActive() {
 		return enabled && errorLogHandler != null;
+	}
+	
+	/**
+	 * Redirects logs from one log level to another.
+	 * @param from Log level to redirect logs from
+	 * @param to Log level to redirect logs to
+	 */
+	public Logger redirect(LogLevel from, LogLevel to) {
+		LogHandler handler = switch (to) {
+			case OUTPUT -> outputLogHandler;
+			case ERROR -> errorLogHandler;
+		};
+		
+		switch (from) {
+			case OUTPUT -> outputLogHandler = handler;
+			case ERROR -> errorLogHandler = handler;
+		}
+		
+		return this;
 	}
 	
 	/**

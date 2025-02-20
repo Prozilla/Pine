@@ -102,7 +102,7 @@ public final class ResourcePool {
 			throw new RuntimeException("Can't load textures before initialization");
 		}
 		
-		Logger.system.logPath("Loading texture", path);
+		Logger.system.logf("Loading texture: %s", path);
 		
 		// Create texture from image
 		Image image = loadImage(path);
@@ -134,7 +134,7 @@ public final class ResourcePool {
 			return fonts.get(key);
 		}
 		
-		Logger.system.logPath(String.format("Loading font (size: %s)", size), path);
+		Logger.system.logPath(String.format("Loading font (size: %s)", size), ResourceUtils.getResourcePath(path));
 		
 		Font font;
 		try {
