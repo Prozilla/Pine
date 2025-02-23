@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.component.sprite;
 
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.Entity;
@@ -90,6 +91,14 @@ public class GridGroup extends Component {
 		return (coordinateToTile.remove(tile.coordinate) != null);
 	}
 	
+	public boolean hasTile(int x, int y) {
+		return hasTile(new Vector2i(x, y));
+	}
+	
+	public boolean hasTile(Vector2i coordinate) {
+		return coordinateToTile.containsKey(coordinate);
+	}
+	
 	public TileRenderer getTile(int x, int y) {
 		return getTile(new Vector2i(x, y));
 	}
@@ -115,5 +124,21 @@ public class GridGroup extends Component {
 			return false;
 		}
 		return entity.equals(hoveringTile.getEntity());
+	}
+	
+	public Vector2i positionToCoordinate(Vector2f position) {
+		return positionToCoordinate(position.x, position.y);
+	}
+	
+	public Vector2i positionToCoordinate(float x, float y) {
+		return new Vector2i((int)Math.floor(x / size), (int)Math.floor(y / size));
+	}
+	
+	public Vector2f coordinateToPosition(Vector2i coordinate) {
+		return coordinateToPosition(coordinate.x, coordinate.y);
+	}
+	
+	public Vector2f coordinateToPosition(int x, int y) {
+		return new Vector2f(x * size, y * size);
 	}
 }
