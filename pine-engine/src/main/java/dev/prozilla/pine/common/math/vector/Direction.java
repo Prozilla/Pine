@@ -4,43 +4,99 @@ package dev.prozilla.pine.common.math.vector;
  * Represents a 2-dimensional direction.
  */
 public enum Direction {
-	UP(0, 1) {
+	UP(0, 1, 90, "up") {
 		@Override
-		Direction opposite() {
+		public Direction opposite() {
 			return Direction.DOWN;
 		}
-	},
-	DOWN(0, -1) {
+		
 		@Override
-		Direction opposite() {
-			return Direction.UP;
+		public Direction rotateClockwise() {
+			return Direction.RIGHT;
+		}
+		
+		@Override
+		public Direction rotateCounterclockwise() {
+			return Direction.LEFT;
 		}
 	},
-	LEFT(-1, 0) {
+	DOWN(0, -1, 270, "down") {
 		@Override
-		Direction opposite() {
+		public Direction opposite() {
+			return Direction.UP;
+		}
+		
+		@Override
+		public Direction rotateClockwise() {
+			return Direction.LEFT;
+		}
+		
+		@Override
+		public Direction rotateCounterclockwise() {
 			return Direction.RIGHT;
 		}
 	},
-	RIGHT(1, 0) {
+	LEFT(-1, 0, 180, "left") {
 		@Override
-		Direction opposite() {
+		public Direction opposite() {
+			return Direction.RIGHT;
+		}
+		
+		@Override
+		public Direction rotateClockwise() {
+			return Direction.UP;
+		}
+		
+		@Override
+		public Direction rotateCounterclockwise() {
+			return Direction.DOWN;
+		}
+	},
+	RIGHT(1, 0, 0, "right") {
+		@Override
+		public Direction opposite() {
 			return Direction.LEFT;
+		}
+		
+		@Override
+		public Direction rotateClockwise() {
+			return Direction.DOWN;
+		}
+		
+		@Override
+		public Direction rotateCounterclockwise() {
+			return Direction.UP;
 		}
 	};
 	
 	public final int x;
 	public final int y;
+	public final float degrees;
+	public final String string;
 	
-	Direction(int x, int y) {
+	public static final int COUNT = 4;
+	
+	Direction(int x, int y, float degrees, String string) {
 		this.x = x;
 		this.y = y;
+		this.degrees = degrees;
+		this.string = string;
 	}
 	
 	/**
 	 * @return The opposite direction.
 	 */
-	abstract Direction opposite();
+	public abstract Direction opposite();
+	
+	/**
+	 * @return The next direction in clockwise rotation.
+	 */
+	public abstract Direction rotateClockwise();
+	
+	/**
+	 * @return The next direction in counterclockwise rotation.
+	 */
+	public abstract Direction rotateCounterclockwise();
 	
 	/**
 	 * @return This direction as a vector with float precision.
@@ -54,5 +110,10 @@ public enum Direction {
 	 */
 	public Vector2i toIntVector() {
 		return new Vector2i(x, y);
+	}
+	
+	@Override
+	public String toString() {
+		return string;
 	}
 }
