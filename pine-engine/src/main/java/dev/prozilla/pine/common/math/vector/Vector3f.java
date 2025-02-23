@@ -14,6 +14,11 @@ public class Vector3f extends VectorFloat<Vector3f> {
     public float z;
     
     /**
+     * Reusable temporary vector, to avoid repeatedly creating new instances in performance-critical contexts.
+     */
+    public static final Vector3f temp = new Vector3f();
+    
+    /**
      * Creates a default 3-dimensional vector with all values set to <code>0f</code>.
      */
     public Vector3f() {
@@ -89,5 +94,16 @@ public class Vector3f extends VectorFloat<Vector3f> {
     public static Vector3f parse(String input) throws InvalidStringException {
         Float[] floats = Vector.parseToFloats(input, 3);
         return new Vector3f(floats[0], floats[1], floats[2]);
+    }
+    
+    /**
+     * Returns a temporary vector with given values.
+     * Note that this temporary vector is a global instance, so avoid concurrent usage.
+     */
+    public static Vector3f getTemp(float x, float y, float z) {
+        temp.x = x;
+        temp.y = y;
+        temp.z = z;
+        return temp;
     }
 }

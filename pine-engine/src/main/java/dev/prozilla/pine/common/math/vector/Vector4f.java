@@ -38,6 +38,11 @@ public class Vector4f extends VectorFloat<Vector4f> {
     public float w;
     
     /**
+     * Reusable temporary vector, to avoid repeatedly creating new instances in performance-critical contexts.
+     */
+    public static final Vector4f temp = new Vector4f();
+    
+    /**
      * Creates a default 4-dimensional vector with all values set to <code>0f</code>.
      */
     public Vector4f() {
@@ -117,5 +122,17 @@ public class Vector4f extends VectorFloat<Vector4f> {
     public static Vector4f parse(String input) throws InvalidStringException {
         Float[] floats = Vector.parseToFloats(input, 4);
         return new Vector4f(floats[0], floats[1], floats[2], floats[3]);
+    }
+    
+    /**
+     * Returns a temporary vector with given values.
+     * Note that this temporary vector is a global instance, so avoid concurrent usage.
+     */
+    public static Vector4f getTemp(float x, float y, float z, float w) {
+        temp.x = x;
+        temp.y = y;
+        temp.z = z;
+        temp.w = w;
+        return temp;
     }
 }

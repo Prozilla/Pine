@@ -13,6 +13,11 @@ public class Vector2i extends VectorInt<Vector2i> {
 	public int y;
 	
 	/**
+	 * Reusable temporary vector, to avoid repeatedly creating new instances in performance-critical contexts.
+	 */
+	public static final Vector2i temp = new Vector2i();
+	
+	/**
 	 * Creates a default 2-dimensional vector with all values set to <code>0</code>.
 	 */
 	public Vector2i() {
@@ -84,5 +89,43 @@ public class Vector2i extends VectorInt<Vector2i> {
 	public static Vector2i parse(String input) throws InvalidStringException {
 		Integer[] integers = Vector.parseToIntegers(input, 2);
 		return new Vector2i(integers[0], integers[1]);
+	}
+	
+	/**
+	 * Creates a new vector (0, 1)
+	 */
+	public static Vector2i up() {
+		return new Vector2i(0, 1);
+	}
+	
+	/**
+	 * Creates a new vector (0, -1)
+	 */
+	public static Vector2i down() {
+		return new Vector2i(0, -1);
+	}
+	
+	/**
+	 * Creates a new vector (-1, 0)
+	 */
+	public static Vector2i left() {
+		return new Vector2i(-1, 0);
+	}
+	
+	/**
+	 * Creates a new vector (1, 0)
+	 */
+	public static Vector2i right() {
+		return new Vector2i(1, 0);
+	}
+	
+	/**
+	 * Returns a temporary vector with given values.
+	 * Note that this temporary vector is a global instance, so avoid concurrent usage.
+	 */
+	public static Vector2i getTemp(int x, int y) {
+		temp.x = x;
+		temp.y = y;
+		return temp;
 	}
 }

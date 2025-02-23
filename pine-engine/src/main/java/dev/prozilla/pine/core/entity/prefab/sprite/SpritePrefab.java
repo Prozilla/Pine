@@ -19,6 +19,8 @@ public class SpritePrefab extends Prefab {
 	
 	protected Texture texture;
 	
+	protected float scale;
+	
 	protected boolean cropToRegion;
 	protected Vector2f regionOffset;
 	protected Vector2f regionSize;
@@ -31,9 +33,13 @@ public class SpritePrefab extends Prefab {
 		Objects.requireNonNull(texture, "Texture must not be null.");
 		
 		this.texture = texture;
+		
+		scale = 1;
+		
 		cropToRegion = false;
 		regionOffset = new Vector2f();
 		regionSize = new Vector2f(texture.getWidth(), texture.getHeight());
+		
 		setName("Sprite");
 	}
 	
@@ -48,9 +54,15 @@ public class SpritePrefab extends Prefab {
 		regionSize.y = height;
 	}
 	
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
+	
 	@Override
 	protected void apply(Entity entity) {
 		SpriteRenderer spriteRenderer = entity.addComponent(new SpriteRenderer(texture));
+		
+		spriteRenderer.scale = scale;
 		
 		if (cropToRegion) {
 			spriteRenderer.setRegion(regionOffset, regionSize);

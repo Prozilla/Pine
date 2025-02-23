@@ -13,6 +13,11 @@ public class Vector2f extends VectorFloat<Vector2f> {
     public float y;
     
     /**
+     * Reusable temporary vector, to avoid repeatedly creating new instances in performance-critical contexts.
+     */
+    public static final Vector2f temp = new Vector2f();
+    
+    /**
      * Creates a default 2-dimensional vector with all values set to <code>0f</code>.
      */
     public Vector2f() {
@@ -84,5 +89,43 @@ public class Vector2f extends VectorFloat<Vector2f> {
     public static Vector2f parse(String input) throws InvalidStringException {
         Float[] floats = Vector.parseToFloats(input, 2);
         return new Vector2f(floats[0], floats[1]);
+    }
+    
+    /**
+     * Creates a new vector (0, 1)
+     */
+    public static Vector2f up() {
+        return new Vector2f(0, 1);
+    }
+    
+    /**
+     * Creates a new vector (0, -1)
+     */
+    public static Vector2f down() {
+        return new Vector2f(0, -1);
+    }
+    
+    /**
+     * Creates a new vector (-1, 0)
+     */
+    public static Vector2f left() {
+        return new Vector2f(-1, 0);
+    }
+    
+    /**
+     * Creates a new vector (1, 0)
+     */
+    public static Vector2f right() {
+        return new Vector2f(1, 0);
+    }
+    
+    /**
+     * Returns a temporary vector with given values.
+     * Note that this temporary vector is a global instance, so avoid concurrent usage.
+     */
+    public static Vector2f getTemp(float x, float y) {
+        temp.x = x;
+        temp.y = y;
+        return temp;
     }
 }

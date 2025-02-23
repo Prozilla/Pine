@@ -15,6 +15,11 @@ public class Vector4i extends VectorInt<Vector4i> {
 	public int w;
 	
 	/**
+	 * Reusable temporary vector, to avoid repeatedly creating new instances in performance-critical contexts.
+	 */
+	public static final Vector4i temp = new Vector4i();
+	
+	/**
 	 * Creates a default 4-dimensional vector with all values set to <code>0</code>.
 	 */
 	public Vector4i() {
@@ -94,5 +99,17 @@ public class Vector4i extends VectorInt<Vector4i> {
 	public static Vector4i parse(String input) throws InvalidStringException {
 		Integer[] integers = Vector.parseToIntegers(input, 4);
 		return new Vector4i(integers[0], integers[1], integers[2], integers[3]);
+	}
+	
+	/**
+	 * Returns a temporary vector with given values.
+	 * Note that this temporary vector is a global instance, so avoid concurrent usage.
+	 */
+	public static Vector4i getTemp(int x, int y, int z, int w) {
+		temp.x = x;
+		temp.y = y;
+		temp.z = z;
+		temp.w = w;
+		return temp;
 	}
 }

@@ -14,6 +14,11 @@ public class Vector3i extends VectorInt<Vector3i> {
 	public int z;
 	
 	/**
+	 * Reusable temporary vector, to avoid repeatedly creating new instances in performance-critical contexts.
+	 */
+	public static final Vector3i temp = new Vector3i();
+	
+	/**
 	 * Creates a default 3-dimensional vector with all values set to <code>0</code>.
 	 */
 	public Vector3i() {
@@ -89,5 +94,16 @@ public class Vector3i extends VectorInt<Vector3i> {
 	public static Vector3i parse(String input) throws InvalidStringException {
 		Integer[] integers = Vector.parseToIntegers(input, 3);
 		return new Vector3i(integers[0], integers[1], integers[2]);
+	}
+	
+	/**
+	 * Returns a temporary vector with given values.
+	 * Note that this temporary vector is a global instance, so avoid concurrent usage.
+	 */
+	public static Vector3i getTemp(int x, int y, int z) {
+		temp.x = x;
+		temp.y = y;
+		temp.z = z;
+		return temp;
 	}
 }
