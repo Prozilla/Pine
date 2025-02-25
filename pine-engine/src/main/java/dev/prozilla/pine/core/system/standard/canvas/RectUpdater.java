@@ -41,8 +41,8 @@ public class RectUpdater extends UpdateSystem {
 			return;
 		}
 		
-		int canvasWidth = rect.getCanvas().getWidth();
-		int canvasHeight = rect.getCanvas().getHeight();
+		int contextWidth = rect.getContext().getWidth();
+		int contextHeight = rect.getContext().getHeight();
 		
 		switch (rect.anchor) {
 			case BOTTOM_LEFT:
@@ -50,28 +50,28 @@ public class RectUpdater extends UpdateSystem {
 				rect.currentPosition.y = rect.getPositionY();
 				break;
 			case BOTTOM_RIGHT:
-				rect.currentPosition.x = canvasWidth - rect.currentSize.x - rect.getPositionX();
+				rect.currentPosition.x = contextWidth - rect.currentSize.x - rect.getPositionX();
 				rect.currentPosition.y = rect.getPositionY();
 				break;
 			case BOTTOM_CENTER:
-				rect.currentPosition.x = Math.round((float)(canvasWidth - rect.currentSize.x) / 2f) + rect.getPositionX();
+				rect.currentPosition.x = Math.round((float)(contextWidth - rect.currentSize.x) / 2f) + rect.getPositionX();
 				rect.currentPosition.y = rect.getPositionY();
 				break;
 			case CENTER:
-				rect.currentPosition.x = Math.round((float)(canvasWidth - rect.currentSize.x) / 2f) + rect.getPositionX();
-				rect.currentPosition.y = Math.round((float)(canvasHeight - rect.currentSize.y) / 2f) + rect.getPositionY();
+				rect.currentPosition.x = Math.round((float)(contextWidth - rect.currentSize.x) / 2f) + rect.getPositionX();
+				rect.currentPosition.y = Math.round((float)(contextHeight - rect.currentSize.y) / 2f) + rect.getPositionY();
 				break;
 			case TOP_LEFT:
 				rect.currentPosition.x = rect.getPositionX();
-				rect.currentPosition.y = canvasHeight - rect.currentSize.y - rect.getPositionY();
+				rect.currentPosition.y = contextHeight - rect.currentSize.y - rect.getPositionY();
 				break;
 			case TOP_RIGHT:
-				rect.currentPosition.x = canvasWidth - rect.currentSize.x - rect.getPositionX();
-				rect.currentPosition.y = canvasHeight - rect.currentSize.y - rect.getPositionY();
+				rect.currentPosition.x = contextWidth - rect.currentSize.x - rect.getPositionX();
+				rect.currentPosition.y = contextHeight - rect.currentSize.y - rect.getPositionY();
 				break;
 			case TOP_CENTER:
-				rect.currentPosition.x = Math.round((float)(canvasWidth - rect.currentSize.x) / 2f) + rect.getPositionX();
-				rect.currentPosition.y = canvasHeight - rect.currentSize.y - rect.getPositionY();
+				rect.currentPosition.x = Math.round((float)(contextWidth - rect.currentSize.x) / 2f) + rect.getPositionX();
+				rect.currentPosition.y = contextHeight - rect.currentSize.y - rect.getPositionY();
 				break;
 		}
 	}

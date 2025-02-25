@@ -2,12 +2,11 @@ package dev.prozilla.pine.core.component.canvas;
 
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.rendering.Renderer;
 
 /**
  * A component for rendering user interfaces.
  */
-public class CanvasRenderer extends Component {
+public class CanvasRenderer extends Component implements CanvasContext {
 	
 	public Vector2i size;
 	
@@ -20,10 +19,12 @@ public class CanvasRenderer extends Component {
 		return "CanvasRenderer";
 	}
 	
+	@Override
 	public int getWidth() {
 		return size.x;
 	}
 	
+	@Override
 	public int getHeight() {
 		return size.y;
 	}

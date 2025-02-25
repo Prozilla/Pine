@@ -22,7 +22,15 @@ public class CanvasGroupResizer extends UpdateSystem {
 		int newWidth = 0;
 		int newHeight = 0;
 		
-		if (!canvasGroup.childRects.isEmpty()) {
+		if (rect.size != null) {
+			newWidth = rect.size.computeX(rect);
+			newHeight = rect.size.computeY(rect);
+		}
+			
+		if (newWidth != 0 && newHeight != 0) {
+			newWidth -= canvasGroup.padding.computeX(rect) * 2;
+			newHeight -= canvasGroup.padding.computeY(rect) * 2;
+		} else if (!canvasGroup.childRects.isEmpty()) {
 			for (RectTransform childRect : canvasGroup.childRects) {
 				switch (canvasGroup.direction) {
 					case UP:

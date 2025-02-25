@@ -89,6 +89,15 @@ public class RectTransform extends Component {
 			&& y >= rectPosition.y && y < rectPosition.y + rectSize.y;
 	}
 	
+	public CanvasContext getContext() {
+		CanvasGroup canvasGroup = entity.getComponentInParent(CanvasGroup.class);
+		if (canvasGroup != null) {
+			return canvasGroup;
+		}
+		
+		return getCanvas();
+	}
+	
 	/**
 	 * Gets the canvas component in a parent entity.
 	 * @throws IllegalStateException When this entity is not a child of an entity with a canvas component.

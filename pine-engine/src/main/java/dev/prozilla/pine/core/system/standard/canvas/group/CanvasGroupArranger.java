@@ -22,7 +22,7 @@ public class CanvasGroupArranger extends UpdateSystem {
 		
 		RectUpdater.updateRect(containerRect);
 		
-		if (canvasGroup.childRects.isEmpty()) {
+		if (canvasGroup.childRects.isEmpty() || !canvasGroup.arrangeChildren) {
 			return;
 		}
 		

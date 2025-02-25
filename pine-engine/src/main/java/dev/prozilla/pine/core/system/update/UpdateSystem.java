@@ -8,6 +8,8 @@ import dev.prozilla.pine.core.entity.EntityChunk;
  */
 public abstract class UpdateSystem extends UpdateSystemBase {
 	
+	protected float timeScale;
+	
 	@SafeVarargs
 	public UpdateSystem(Class<? extends Component>... componentTypes) {
 		super(componentTypes);
@@ -15,6 +17,8 @@ public abstract class UpdateSystem extends UpdateSystemBase {
 	
 	@Override
 	public final void update(float deltaTime) {
+		timeScale = application.getTimer().timeScale;
+		
 		forEach(chunk -> {
 			process(chunk, deltaTime);
 		});

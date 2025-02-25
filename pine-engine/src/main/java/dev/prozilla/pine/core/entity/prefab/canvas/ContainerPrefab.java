@@ -16,11 +16,13 @@ public class ContainerPrefab extends CanvasElementPrefab {
 	protected Color backgroundColor;
 	protected int gap;
 	protected DualDimension padding;
+	protected boolean arrangeChildren;
 	
 	public ContainerPrefab() {
 		gap = 0;
 		padding = new DualDimension();
 		backgroundColor = null;
+		arrangeChildren = true;
 		
 		setName("Container");
 	}
@@ -49,6 +51,10 @@ public class ContainerPrefab extends CanvasElementPrefab {
 		this.padding = padding;
 	}
 	
+	public void setArrangeChildren(boolean arrangeChildren) {
+		this.arrangeChildren = arrangeChildren;
+	}
+	
 	@Override
 	protected void apply(Entity entity) {
 		super.apply(entity);
@@ -58,6 +64,7 @@ public class ContainerPrefab extends CanvasElementPrefab {
 		canvasGroup.gap = gap;
 		canvasGroup.backgroundColor = backgroundColor;
 		canvasGroup.setPadding(padding.clone());
+		canvasGroup.arrangeChildren = arrangeChildren;
 		
 		if (direction != null) {
 			canvasGroup.direction = direction;

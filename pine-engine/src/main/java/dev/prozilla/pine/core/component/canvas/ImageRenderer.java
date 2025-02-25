@@ -33,8 +33,8 @@ public class ImageRenderer extends Component {
 		this.image = image;
 		
 		size = new DualDimension();
-		regionOffset = new Vector2i();
-		regionSize = new Vector2i();
+		regionOffset = new Vector2i(0, 0);
+		regionSize = new Vector2i(image.getWidth(), image.getHeight());
 	}
 	
 	@Override

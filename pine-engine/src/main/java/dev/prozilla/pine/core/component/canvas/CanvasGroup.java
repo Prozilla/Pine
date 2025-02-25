@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * A component that groups multiple canvas elements together and aligns them.
  */
-public class CanvasGroup extends Component {
+public class CanvasGroup extends Component implements CanvasContext {
 	
 	public Direction direction;
 	public Alignment alignment;
@@ -19,6 +19,7 @@ public class CanvasGroup extends Component {
 	/** Distance between elements. */
 	public int gap;
 	public DualDimension padding;
+	public boolean arrangeChildren;
 	
 	public Vector2i innerSize;
 	
@@ -61,6 +62,7 @@ public class CanvasGroup extends Component {
 		gap = 0;
 		padding = new DualDimension();
 		innerSize = new Vector2i();
+		arrangeChildren = true;
 	}
 	
 	@Override
@@ -77,5 +79,15 @@ public class CanvasGroup extends Component {
 	 */
 	public void getChildComponents() {
 		childRects = entity.getComponentsInChildren(RectTransform.class);
+	}
+	
+	@Override
+	public int getWidth() {
+		return innerSize.x;
+	}
+	
+	@Override
+	public int getHeight() {
+		return innerSize.y;
 	}
 }
