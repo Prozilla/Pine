@@ -296,6 +296,10 @@ public class World implements Lifecycle {
 	}
 	
 	public void calculateDepth() {
+		if (initialized && !application.getConfig().enableDepthRecalculation.get()) {
+			return;
+		}
+		
 		ArrayList<Transform> rootParents = new ArrayList<>();
 		
 		// Get root parent transforms

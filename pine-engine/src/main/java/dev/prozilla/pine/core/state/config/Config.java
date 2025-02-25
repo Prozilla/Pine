@@ -16,10 +16,13 @@ public class Config {
 	
 	// Predefined keys
 	public static final ConfigKey<Integer> FPS = new ConfigKey<>("fps", Integer.class);
+	public static final ConfigKey<Boolean> ENABLE_DEPTH_RECALCULATION = new ConfigKey<>("enableDepthRecalculation", Boolean.class);
 	
 	// Predefines options
 	/** Target frames per second. When set to <code>0</code>, fps is uncapped. Defaults to <code>120</code>. */
 	public final ConfigOption<Integer> fps = new ConfigOption<>(120, (fps) -> fps >= 0);
+	/** Determines whether depth values will be recalculated when new entities are added to the world. Defaults to <code>true</code>. */
+	public final ConfigOption<Boolean> enableDepthRecalculation = new ConfigOption<>(true);
 	/** Options related to rendering. */
 	public final RenderConfig rendering = new RenderConfig();
 	/** Options related to logging. */
@@ -36,6 +39,7 @@ public class Config {
 		
 		// Add predefined options
 		addOption(FPS, fps);
+		addOption(ENABLE_DEPTH_RECALCULATION, enableDepthRecalculation);
 		
 		addOption(RenderConfig.FALLBACK_RENDER_COLOR, rendering.fallbackRenderColor);
 		addOption(RenderConfig.ENABLE_BLEND, rendering.enableBlend);
