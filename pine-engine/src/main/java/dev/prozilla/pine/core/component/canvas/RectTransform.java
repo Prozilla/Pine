@@ -22,6 +22,8 @@ public class RectTransform extends Component {
 	public Anchor anchor;
 	/** If true, allows the cursor to pass through this element. */
 	public boolean passThrough;
+	/** If true, this rect won't be arranged by a canvas group */
+	public boolean absolutePosition;
 	
 	public CanvasRenderer canvas;
 	

@@ -1,6 +1,5 @@
 package dev.prozilla.pine.core.system.standard.canvas;
 
-import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.canvas.CanvasGroup;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.Entity;
@@ -16,10 +15,7 @@ public class RectInitializer extends InitSystem {
 	@Override
 	protected void process(EntityChunk chunk) {
 		Entity entity = chunk.getEntity();
-		Transform transform = chunk.getTransform();
 		RectTransform rect = chunk.getComponent(RectTransform.class);
-		
-		transform.renderChildrenBelow = true;
 		
 		CanvasGroup group = entity.getComponentInParent(CanvasGroup.class, false);
 		if (group != null) {

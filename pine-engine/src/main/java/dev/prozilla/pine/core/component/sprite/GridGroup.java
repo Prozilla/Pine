@@ -131,7 +131,7 @@ public class GridGroup extends Component {
 	}
 	
 	public Vector2i positionToCoordinate(float x, float y) {
-		return new Vector2i((int)Math.floor(x / size), (int)Math.floor(y / size));
+		return new Vector2i((int)Math.floor(x / (float)size), (int)Math.floor(y / (float)size));
 	}
 	
 	public Vector2f coordinateToPosition(Vector2i coordinate) {
