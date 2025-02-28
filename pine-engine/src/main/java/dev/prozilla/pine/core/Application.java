@@ -7,7 +7,6 @@ import dev.prozilla.pine.common.system.resource.Image;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.common.system.resource.text.Font;
-import dev.prozilla.pine.common.util.Numbers;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Timer;
@@ -32,11 +31,6 @@ import static org.lwjgl.opengl.GL43.GL_DEBUG_OUTPUT;
  */
 public class Application implements Lifecycle {
 	
-	// Data
-	/** Title of the application */
-	public String title;
-	public String defaultFontPath;
-	
 	// State
 	/** True if the application has been initialized */
 	public boolean initialized;
@@ -46,11 +40,6 @@ public class Application implements Lifecycle {
 	protected boolean shouldStop;
 	public boolean isPaused;
 	protected boolean isPreview;
-	
-	// Window
-	public int windowWidth;
-	public int windowHeight;
-	public String[] icons;
 	
 	// Scene
 	public Scene currentScene;
@@ -110,16 +99,18 @@ public class Application implements Lifecycle {
 	 * @param targetFps Amount of frames per second to target
 	 */
 	public Application(String title, int width, int height, Scene scene, int targetFps) {
-		Numbers.requirePositive(targetFps, "Target FPS must be a positive value.");
-		
 		logger = new AppLogger(this);
 		config = new Config(this);
+		
 		config.fps.set(targetFps);
+		config.window.title.set(title);
+		config.window.width.set(width);
+		config.window.height.set(height);
 		
 		timer = new Timer();
 		tracker = new Tracker(this);
 		renderer = new Renderer(this);
-		window = new Window(this, width, height, title);
+		window = new Window(this);
 		input = new Input(this);
 		modManager = new ModManager(this);
 		
@@ -137,10 +128,6 @@ public class Application implements Lifecycle {
 		scenes = new HashMap<>();
 		addScene(scene);
 		currentScene = scene;
-		
-		this.title = title;
-		this.windowWidth = width;
-		this.windowHeight = height;
 	}
 	
 	/**
@@ -529,7 +516,7 @@ public class Application implements Lifecycle {
 	}
 	
 	public void setIcons(String... icons) {
-		this.icons = icons;
+		config.window.icon.set(icons);
 		
 		// Reload icons if they were changed after initialization
 		if (initializedOpenGL) {
@@ -541,7 +528,13 @@ public class Application implements Lifecycle {
 	 * Loads the window icons.
 	 */
 	public void loadIcons() {
-		if (icons == null || icons.length == 0 || isPreview()) {
+		if (!config.window.icon.exists()) {
+			return;
+		}
+		
+		String[] icons = config.window.icon.get();
+		
+		if (icons.length == 0 || isPreview()) {
 			return;
 		}
 		
@@ -557,14 +550,14 @@ public class Application implements Lifecycle {
 	}
 	
 	public void setDefaultFont(String fontPath) {
-		defaultFontPath = fontPath;
+		config.defaultFontPath.set(fontPath);
 	}
 	
 	public Font getDefaultFont() {
-		if (defaultFontPath == null) {
+		if (!config.defaultFontPath.exists()) {
 			return null;
 		}
-		return ResourcePool.loadFont(defaultFontPath);
+		return ResourcePool.loadFont(config.defaultFontPath.get());
 	}
 	
 	/**

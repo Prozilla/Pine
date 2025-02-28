@@ -56,8 +56,11 @@ public class TextPrefab extends CanvasElementPrefab {
 		}
 		if (font != null) {
 			textRenderer.setFont(font);
-		} else if (entity.getApplication().defaultFontPath != null) {
-			textRenderer.setFont(entity.getApplication().getDefaultFont());
+		} else {
+			Font defaultFont = entity.getApplication().getDefaultFont();
+			if (defaultFont != null) {
+				textRenderer.setFont(defaultFont);
+			}
 		}
 	}
 }

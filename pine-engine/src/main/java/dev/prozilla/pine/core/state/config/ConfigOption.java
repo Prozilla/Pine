@@ -65,6 +65,13 @@ public class ConfigOption<T> extends EventDispatcher<ConfigOptionEvent> {
 	}
 	
 	/**
+	 * @return <code>true</code> if the value is not null.
+	 */
+	public boolean exists() {
+		return value != null;
+	}
+	
+	/**
 	 * Copies the value of this option to another option.
 	 */
 	public void copyTo(ConfigOption<T> otherOption) {

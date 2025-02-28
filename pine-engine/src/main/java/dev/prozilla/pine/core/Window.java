@@ -2,13 +2,10 @@ package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.system.resource.Image;
-import dev.prozilla.pine.common.util.Numbers;
 import dev.prozilla.pine.core.state.config.WindowConfig;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
-
-import java.util.Objects;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.glViewport;
@@ -25,18 +22,13 @@ public class Window implements Lifecycle {
 	public int width;
 	public int height;
 	
-	protected String title;
-	
 	private GLFWWindowSizeCallback windowSizeCallback;
 	private boolean isInitialized;
 	
 	private final Application application;
 	
-	public Window(Application application, int width, int height, String title) {
+	public Window(Application application) {
 		this.application = application;
-		this.width = Numbers.requirePositive(width, "Window width must be a positive value.");
-		this.height = Numbers.requirePositive(height, "Window height must be a positive value.");
-		this.title = Objects.requireNonNull(title, "Window title must not be null.");
 		
 		isInitialized = false;
 	}
@@ -61,6 +53,11 @@ public class Window implements Lifecycle {
 				glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 			}
 		});
+		config.title.read(() -> {
+			if (isInitialized) {
+				glfwSetWindowTitle(id, config.title.get());
+			}
+		});
 		
 		// Prepare fullscreen window
 		if (config.fullscreen.get()) {
@@ -70,9 +67,13 @@ public class Window implements Lifecycle {
 				width = videoMode.width();
 				height = videoMode.height();
 			}
+		} else {
+			width = config.width.get();
+			height = config.height.get();
 		}
 		
 		// Create window
+		String title = config.title.get();
 		id = glfwCreateWindow(width, height, title, monitor, NULL);
 		if (id == NULL) {
 			glfwTerminate();
@@ -167,10 +168,7 @@ public class Window implements Lifecycle {
 	 * @param title Title
 	 */
 	public void setTitle(String title) {
-		if (isInitialized) {
-			glfwSetWindowTitle(id, title);
-		}
-		this.title = title;
+		application.getConfig().window.title.set(title);
 	}
 	
 	/**

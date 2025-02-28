@@ -20,9 +20,9 @@ public class RenderConfig {
 	/** Defaults to white. */
 	public final ConfigOption<Color> fallbackRenderColor = new ConfigOption<>(Color.white(), Objects::nonNull);
 	/** Defaults to <code>true</code>. */
-	public final ConfigOption<Boolean> enableBlend = new ConfigOption<>(true);
+	public final ConfigOption<Boolean> enableBlend = new ConfigOption<>(true, Objects::nonNull);
 	/** Defaults to <code>true</code>. */
-	public final ConfigOption<Boolean> enableDepthTest = new ConfigOption<>(true);
+	public final ConfigOption<Boolean> enableDepthTest = new ConfigOption<>(true, Objects::nonNull);
 	/** Defaults to <code>RenderMode.NORMAL</code>. */
-	public final ConfigOption<RenderMode> renderMode = new ConfigOption<>(RenderMode.NORMAL);
+	public final ConfigOption<RenderMode> renderMode = new ConfigOption<>(RenderMode.NORMAL, Objects::nonNull);
 }

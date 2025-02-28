@@ -6,6 +6,7 @@ import dev.prozilla.pine.core.Application;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Manages configuration of the application.
@@ -17,12 +18,14 @@ public class Config {
 	// Predefined keys
 	public static final ConfigKey<Integer> FPS = new ConfigKey<>("fps", Integer.class);
 	public static final ConfigKey<Boolean> ENABLE_DEPTH_RECALCULATION = new ConfigKey<>("enableDepthRecalculation", Boolean.class);
+	public static final ConfigKey<String> DEFAULT_FONT_PATH = new ConfigKey<>("defaultFontPath", String.class);
 	
 	// Predefines options
 	/** Target frames per second. When set to <code>0</code>, fps is uncapped. Defaults to <code>120</code>. */
-	public final ConfigOption<Integer> fps = new ConfigOption<>(120, (fps) -> fps >= 0);
+	public final ConfigOption<Integer> fps = new ConfigOption<>(120, (fps) -> fps != null && fps >= 0);
 	/** Determines whether depth values will be recalculated when new entities are added to the world. Defaults to <code>true</code>. */
-	public final ConfigOption<Boolean> enableDepthRecalculation = new ConfigOption<>(true);
+	public final ConfigOption<Boolean> enableDepthRecalculation = new ConfigOption<>(true, Objects::nonNull);
+	public final ConfigOption<String> defaultFontPath = new ConfigOption<>(null);
 	/** Options related to rendering. */
 	public final RenderConfig rendering = new RenderConfig();
 	/** Options related to logging. */
@@ -52,6 +55,10 @@ public class Config {
 		addOption(LogConfig.ERROR_LAYER, logging.errorHandler);
 		addOption(LogConfig.ENABLE_ANSI, logging.enableAnsi);
 		
+		addOption(WindowConfig.WIDTH, window.width);
+		addOption(WindowConfig.HEIGHT, window.height);
+		addOption(WindowConfig.TITLE, window.title);
+		addOption(WindowConfig.ICON, window.icon);
 		addOption(WindowConfig.SHOW_DECORATIONS, window.showDecorations);
 		addOption(WindowConfig.FULLSCREEN, window.fullscreen);
 		addOption(WindowConfig.ENABLE_VSYNC, window.enableVSync);
