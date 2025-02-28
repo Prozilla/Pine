@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.component.canvas;
 
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Component;
 
@@ -19,7 +20,7 @@ public class RectTransform extends Component {
 	// Attributes
 	public DualDimension position;
 	public DualDimension size;
-	public Anchor anchor;
+	public GridAlignment anchor;
 	/** If true, allows the cursor to pass through this element. */
 	public boolean passThrough;
 	/** If true, this rect won't be arranged by a canvas group */
@@ -27,24 +28,17 @@ public class RectTransform extends Component {
 	
 	public CanvasRenderer canvas;
 	
-	public enum Anchor {
-		TOP_LEFT,
-		TOP_RIGHT,
-		TOP_CENTER,
-		BOTTOM_LEFT,
-		BOTTOM_RIGHT,
-		BOTTOM_CENTER,
-		CENTER
-	}
+	public static final GridAlignment DEFAULT_ANCHOR = GridAlignment.BOTTOM_LEFT;
 	
 	public RectTransform() {
 		currentPosition = new Vector2i();
 		currentSize = new Vector2i();
 		position = new DualDimension();
 		size = new DualDimension();
-		anchor = Anchor.BOTTOM_LEFT;
+		anchor = DEFAULT_ANCHOR;
 		passThrough = false;
 		cursorHit = false;
+		absolutePosition = false;
 	}
 	
 	@Override
@@ -127,7 +121,7 @@ public class RectTransform extends Component {
 		this.size = size;
 	}
 	
-	public void setAnchor(Anchor anchor) {
+	public void setAnchor(GridAlignment anchor) {
 		this.anchor = anchor;
 	}
 	

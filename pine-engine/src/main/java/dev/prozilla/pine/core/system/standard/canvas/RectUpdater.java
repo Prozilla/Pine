@@ -41,38 +41,18 @@ public class RectUpdater extends UpdateSystem {
 			return;
 		}
 		
+		// Calculate remaining width and height
 		int contextWidth = rect.getContext().getWidth();
 		int contextHeight = rect.getContext().getHeight();
 		
-		switch (rect.anchor) {
-			case BOTTOM_LEFT:
-				rect.currentPosition.x = rect.getPositionX();
-				rect.currentPosition.y = rect.getPositionY();
-				break;
-			case BOTTOM_RIGHT:
-				rect.currentPosition.x = contextWidth - rect.currentSize.x - rect.getPositionX();
-				rect.currentPosition.y = rect.getPositionY();
-				break;
-			case BOTTOM_CENTER:
-				rect.currentPosition.x = Math.round((float)(contextWidth - rect.currentSize.x) / 2f) + rect.getPositionX();
-				rect.currentPosition.y = rect.getPositionY();
-				break;
-			case CENTER:
-				rect.currentPosition.x = Math.round((float)(contextWidth - rect.currentSize.x) / 2f) + rect.getPositionX();
-				rect.currentPosition.y = Math.round((float)(contextHeight - rect.currentSize.y) / 2f) + rect.getPositionY();
-				break;
-			case TOP_LEFT:
-				rect.currentPosition.x = rect.getPositionX();
-				rect.currentPosition.y = contextHeight - rect.currentSize.y - rect.getPositionY();
-				break;
-			case TOP_RIGHT:
-				rect.currentPosition.x = contextWidth - rect.currentSize.x - rect.getPositionX();
-				rect.currentPosition.y = contextHeight - rect.currentSize.y - rect.getPositionY();
-				break;
-			case TOP_CENTER:
-				rect.currentPosition.x = Math.round((float)(contextWidth - rect.currentSize.x) / 2f) + rect.getPositionX();
-				rect.currentPosition.y = contextHeight - rect.currentSize.y - rect.getPositionY();
-				break;
-		}
+		int remainingWidth = contextWidth - rect.currentSize.x;
+		int remainingHeight = contextHeight - rect.currentSize.y;
+
+		// Calculate offset based on anchor and position
+		float offsetX = (1 - 2 * rect.anchor.x) * rect.getPositionX();
+		float offsetY = (1 - 2 * rect.anchor.y) * rect.getPositionY();
+		
+		rect.currentPosition.x = Math.round(rect.anchor.x * remainingWidth + offsetX);
+		rect.currentPosition.y = Math.round(rect.anchor.y * remainingHeight + offsetY);
 	}
 }

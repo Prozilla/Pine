@@ -22,7 +22,7 @@ public class Transform extends Component {
 	/** Z-index in the world, highest values are rendered first. */
 	private int depthIndex;
 	/** If true, sets the depth of children to a lower value than the parent. */
-	public boolean renderChildrenBelow;
+	private boolean renderChildrenBelow;
 
 	public Transform() {
 		this(0, 0);
@@ -82,6 +82,15 @@ public class Transform extends Component {
 	public void setVelocity(float x, float y) {
 		velocity.x = x;
 		velocity.y = y;
+	}
+	
+	public void setRenderChildrenBelow(boolean renderChildrenBelow) {
+		if (this.renderChildrenBelow == renderChildrenBelow) {
+			return;
+		}
+		
+		this.renderChildrenBelow = renderChildrenBelow;
+		getWorld().calculateDepth();
 	}
 	
 	/**

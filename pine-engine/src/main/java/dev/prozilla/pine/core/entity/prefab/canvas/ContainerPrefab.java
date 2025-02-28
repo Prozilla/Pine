@@ -2,6 +2,8 @@ package dev.prozilla.pine.core.entity.prefab.canvas;
 
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.vector.Direction;
+import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.canvas.CanvasGroup;
 import dev.prozilla.pine.core.entity.Entity;
@@ -11,8 +13,8 @@ import dev.prozilla.pine.core.entity.Entity;
  */
 public class ContainerPrefab extends CanvasElementPrefab {
 	
-	protected CanvasGroup.Direction direction;
-	protected CanvasGroup.Alignment alignment;
+	protected Direction direction;
+	protected EdgeAlignment alignment;
 	protected Color backgroundColor;
 	protected int gap;
 	protected DualDimension padding;
@@ -27,11 +29,11 @@ public class ContainerPrefab extends CanvasElementPrefab {
 		setName("Container");
 	}
 	
-	public void setDirection(CanvasGroup.Direction direction) {
+	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}
 	
-	public void setAlignment(CanvasGroup.Alignment alignment) {
+	public void setAlignment(EdgeAlignment alignment) {
 		this.alignment = alignment;
 	}
 	

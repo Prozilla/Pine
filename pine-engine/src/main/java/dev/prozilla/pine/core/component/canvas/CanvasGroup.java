@@ -1,6 +1,8 @@
 package dev.prozilla.pine.core.component.canvas;
 
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.vector.Direction;
+import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Component;
@@ -14,7 +16,7 @@ import java.util.List;
 public class CanvasGroup extends Component implements CanvasContext {
 	
 	public Direction direction;
-	public Alignment alignment;
+	public EdgeAlignment alignment;
 	public Color backgroundColor;
 	/** Distance between elements. */
 	public int gap;
@@ -27,24 +29,8 @@ public class CanvasGroup extends Component implements CanvasContext {
 	public List<RectTransform> childRects;
 	
 	public static final Direction DEFAULT_DIRECTION = Direction.UP;
-	public static final Alignment DEFAULT_ALIGNMENT = Alignment.START;
+	public static final EdgeAlignment DEFAULT_ALIGNMENT = EdgeAlignment.START;
 	
-	public enum Direction {
-		/** From bottom to top. */
-		UP,
-		/** From top to bottom. */
-		DOWN,
-		/** From left to right. */
-		RIGHT,
-		/** From right to left. */
-		LEFT
-	}
-	
-	public enum Alignment {
-		START,
-		END,
-		CENTER,
-	}
 	
 	public CanvasGroup() {
 		this(DEFAULT_DIRECTION);
@@ -54,7 +40,7 @@ public class CanvasGroup extends Component implements CanvasContext {
 		this(direction, DEFAULT_ALIGNMENT);
 	}
 	
-	public CanvasGroup(Direction direction, Alignment alignment) {
+	public CanvasGroup(Direction direction, EdgeAlignment alignment) {
 		this.direction = direction;
 		this.alignment = alignment;
 		

@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.entity.prefab.canvas;
 
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.Entity;
@@ -16,7 +17,7 @@ public class CanvasElementPrefab extends Prefab {
 	
 	protected DualDimension position;
 	protected DualDimension size;
-	protected RectTransform.Anchor anchor;
+	protected GridAlignment anchor;
 	
 	public CanvasElementPrefab() {
 		position = new DualDimension();
@@ -56,7 +57,7 @@ public class CanvasElementPrefab extends Prefab {
 	/**
 	 * Sets the anchor point on the canvas.
 	 */
-	public void setAnchor(RectTransform.Anchor anchor) {
+	public void setAnchor(GridAlignment anchor) {
 		this.anchor = anchor;
 	}
 	

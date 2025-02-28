@@ -1,5 +1,8 @@
 package dev.prozilla.pine.core.system.standard.canvas.group;
 
+import dev.prozilla.pine.common.math.vector.Direction;
+import dev.prozilla.pine.common.math.vector.EdgeAlignment;
+import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.core.component.canvas.CanvasGroup;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -52,24 +55,24 @@ public class CanvasGroupArranger extends UpdateSystem {
 			// Adjust offset based on alignments
 			int childOffsetX = offsetX;
 			int childOffsetY = offsetY;
-			if (canvasGroup.direction == CanvasGroup.Direction.UP || canvasGroup.direction == CanvasGroup.Direction.DOWN) {
+			if (canvasGroup.direction == Direction.UP || canvasGroup.direction == Direction.DOWN) {
 				// Vertical alignment
-				if (canvasGroup.alignment == CanvasGroup.Alignment.END) {
+				if (canvasGroup.alignment == EdgeAlignment.END) {
 					childOffsetX = offsetX + (canvasGroup.innerSize.x - childRect.currentSize.x);
-				} else if (canvasGroup.alignment == CanvasGroup.Alignment.CENTER) {
+				} else if (canvasGroup.alignment == EdgeAlignment.CENTER) {
 					childOffsetX = offsetX + (canvasGroup.innerSize.x - childRect.currentSize.x) / 2;
 				}
-			} else if (canvasGroup.direction == CanvasGroup.Direction.LEFT || canvasGroup.direction == CanvasGroup.Direction.RIGHT) {
+			} else if (canvasGroup.direction == Direction.LEFT || canvasGroup.direction == Direction.RIGHT) {
 				// Horizontal alignment
-				if (canvasGroup.alignment == CanvasGroup.Alignment.END) {
+				if (canvasGroup.alignment == EdgeAlignment.END) {
 					childOffsetY = offsetY + (canvasGroup.innerSize.y - childRect.currentSize.y);
-				} else if (canvasGroup.alignment == CanvasGroup.Alignment.CENTER) {
+				} else if (canvasGroup.alignment == EdgeAlignment.CENTER) {
 					childOffsetY = offsetY + (canvasGroup.innerSize.y - childRect.currentSize.y) / 2;
 				}
 			}
 			
 			// Set offset for current child rect
-			childRect.setAnchor(RectTransform.Anchor.BOTTOM_LEFT);
+			childRect.setAnchor(GridAlignment.BOTTOM_LEFT);
 			childRect.position.set(childOffsetX, childOffsetY);
 			
 			// Move offset for next child rect

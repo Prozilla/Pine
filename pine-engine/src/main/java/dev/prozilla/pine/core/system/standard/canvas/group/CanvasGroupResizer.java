@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.system.standard.canvas.group;
 
+import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.core.component.canvas.CanvasGroup;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -47,7 +48,7 @@ public class CanvasGroupResizer extends UpdateSystem {
 			}
 			
 			// Subtract gap for last element
-			if (canvasGroup.direction == CanvasGroup.Direction.UP || canvasGroup.direction == CanvasGroup.Direction.DOWN) {
+			if (canvasGroup.direction == Direction.UP || canvasGroup.direction == Direction.DOWN) {
 				newHeight -= canvasGroup.gap;
 			} else {
 				newWidth -= canvasGroup.gap;
