@@ -140,6 +140,7 @@ public final class ResourcePool {
 		try {
 			InputStream stream = ResourcePool.class.getResourceAsStream(path);
 			font = new Font(stream, size);
+			font.path = path;
 		} catch (FontFormatException | IOException e) {
 			Logger.system.error("Failed to load font: " + path, e);
 			font = new Font();

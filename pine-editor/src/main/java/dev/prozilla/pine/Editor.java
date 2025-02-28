@@ -3,13 +3,14 @@ package dev.prozilla.pine;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.config.Config;
+import dev.prozilla.pine.core.state.config.WindowConfig;
 
 public class Editor extends Application {
 	
 	private final Application preview;
 	
 	public Editor(Application application) {
-		super("Pine Editor - " + application.title, 1200, 900, new EditorScene(application), 120);
+		super("Pine Editor - " + application.getConfig().window.title.get(), 1200, 900, new EditorScene(application), 120);
 		this.preview = application;
 		
 		// Make sure preview is synced to editor
@@ -25,7 +26,8 @@ public class Editor extends Application {
 	@Override
 	public void init() {
 		super.init();
-		preview.initPreview(input, preview.windowWidth, preview.windowHeight);
+		WindowConfig config = preview.getConfig().window;
+		preview.initPreview(input, config.width.get(), config.height.get());
 	}
 	
 	@Override

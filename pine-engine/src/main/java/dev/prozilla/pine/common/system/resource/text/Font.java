@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.system.resource.text;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.core.rendering.Renderer;
 import org.lwjgl.system.MemoryUtil;
@@ -36,6 +37,8 @@ public class Font implements Lifecycle {
      * Height of the font.
      */
     private int fontHeight;
+    
+    public String path;
     
     public final static Color COLOR_DEFAULT = Color.white();
 
@@ -375,6 +378,13 @@ public class Font implements Lifecycle {
      */
     public void drawText(Renderer renderer, CharSequence text, float x, float y, float z) {
         drawText(renderer, text, x, y, z, COLOR_DEFAULT);
+    }
+    
+    /**
+     * Creates a new font from the same font file, but with a different size.
+     */
+    public Font setSize(int size) {
+        return ResourcePool.loadFont(path, size);
     }
 
     /**

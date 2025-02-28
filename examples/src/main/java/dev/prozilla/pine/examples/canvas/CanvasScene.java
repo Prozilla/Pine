@@ -1,10 +1,11 @@
 package dev.prozilla.pine.examples.canvas;
 
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.vector.Direction;
+import dev.prozilla.pine.common.math.vector.EdgeAlignment;
+import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.Scene;
-import dev.prozilla.pine.core.component.canvas.CanvasGroup;
-import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.canvas.CanvasPrefab;
 import dev.prozilla.pine.core.entity.prefab.canvas.ContainerPrefab;
@@ -22,18 +23,18 @@ public class CanvasScene extends Scene {
 		
 		ContainerPrefab menuPrefab = new ContainerPrefab();
 		menuPrefab.setGap(16);
-		menuPrefab.setAnchor(RectTransform.Anchor.CENTER);
-		menuPrefab.setAlignment(CanvasGroup.Alignment.CENTER);
-		menuPrefab.setDirection(CanvasGroup.Direction.DOWN);
+		menuPrefab.setAnchor(GridAlignment.CENTER);
+		menuPrefab.setAlignment(EdgeAlignment.CENTER);
+		menuPrefab.setDirection(Direction.DOWN);
 		menuPrefab.setBackgroundColor(Color.white().setAlpha(0.65f));
 		menuPrefab.setPadding(new DualDimension(16));
 		
-		TextPrefab titleTextPrefab = new TextPrefab(application.title);
+		TextPrefab titleTextPrefab = new TextPrefab(application.getConfig().window.title.get());
 		
 		TextButtonPrefab textButtonPrefab = new TextButtonPrefab("This is a button");
 		textButtonPrefab.setPadding(new DualDimension(16, 8));
 		textButtonPrefab.setClickCallback((entity) -> {
-			System.out.println("Button clicked");
+			logger.log("Button clicked");
 		});
 		
 		TextPrefab textPrefab = new TextPrefab("This is a text element");

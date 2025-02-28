@@ -3,6 +3,7 @@ package dev.prozilla.pine.examples.flappybird;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.Scene;
+import dev.prozilla.pine.core.component.canvas.TextRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.canvas.CanvasPrefab;
 import dev.prozilla.pine.core.state.input.Key;
@@ -107,8 +108,9 @@ public class GameScene extends Scene {
 	
 	@Override
 	public void update(float deltaTime) throws IllegalStateException {
-		if (gameOver) {
+		if (gameOver && !gameOverText.isActive()) {
 			gameOverText.setActive(true);
+			gameOverText.getChildWithTag(EntityTag.FINAL_SCORE_TAG).getComponent(TextRenderer.class).setText(String.format("Your Score: %s", playerScore));
 		}
 
 		super.update(deltaTime);

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.canvas;
 
-import dev.prozilla.pine.common.math.dimension.Dimension;
+import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.core.component.Transform;
@@ -29,7 +29,7 @@ public class CanvasElementPrefab extends Prefab {
 	/**
 	 * Sets the position of this element on the canvas relative to its anchor point.
 	 */
-	public void setPosition(Dimension x, Dimension y) {
+	public void setPosition(DimensionBase x, DimensionBase y) {
 		setPosition(new DualDimension(x, y));
 	}
 	
@@ -43,7 +43,7 @@ public class CanvasElementPrefab extends Prefab {
 	/**
 	 * Sets the size of this element on the canvas.
 	 */
-	public void setSize(Dimension x, Dimension y) {
+	public void setSize(DimensionBase x, DimensionBase y) {
 		setSize(new DualDimension(x, y));
 	}
 	

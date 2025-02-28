@@ -18,6 +18,7 @@ import dev.prozilla.pine.core.state.input.Input;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a unique entity in the world with a list of components.
@@ -167,6 +168,18 @@ public class Entity implements Lifecycle, Printable {
 		for (Entity child : children) {
 			removeChild(child);
 		}
+	}
+	
+	public Entity getChildWithTag(String tag) {
+		Objects.requireNonNull(tag, "tag must not be null");
+		
+		for (Transform child : transform.children) {
+			if (child.entity.hasTag(tag)) {
+				return child.entity;
+			}
+		}
+		
+		return null;
 	}
 	
 	/**

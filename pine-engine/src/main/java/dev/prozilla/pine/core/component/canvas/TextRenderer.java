@@ -35,6 +35,8 @@ public class TextRenderer extends Component {
 		}
 		
 		this.color = color;
+		
+		size = new Vector2i();
 	}
 	
 	@Override
