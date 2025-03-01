@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.entity.prefab.canvas;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.core.component.canvas.ButtonData;
 import dev.prozilla.pine.core.component.canvas.TextButtonRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 
@@ -16,7 +17,7 @@ public class TextButtonPrefab extends TextPrefab {
 	protected Color backgroundColor;
 	protected DualDimension padding;
 	
-	protected TextButtonRenderer.Callback clickCallback;
+	protected ButtonData.ClickCallback clickCallback;
 	
 	public TextButtonPrefab() {
 		this(null);
@@ -37,7 +38,7 @@ public class TextButtonPrefab extends TextPrefab {
 		this.padding = padding;
 	}
 	
-	public void setClickCallback(TextButtonRenderer.Callback callback) {
+	public void setClickCallback(ButtonData.ClickCallback callback) {
 		clickCallback = callback;
 	}
 	
@@ -85,8 +86,10 @@ public class TextButtonPrefab extends TextPrefab {
 			textButtonRenderer.backgroundHoverColor = backgroundHoverColor;
 		}
 		
+		ButtonData buttonData = entity.addComponent(new ButtonData());
+		
 		if (clickCallback != null) {
-			textButtonRenderer.clickCallback = clickCallback;
+			buttonData.clickCallback = clickCallback;
 		}
 	}
 }

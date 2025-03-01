@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.core.component.canvas.ButtonData;
 import dev.prozilla.pine.core.component.canvas.ImageButtonRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 
@@ -18,7 +19,7 @@ public class ImageButtonPrefab extends ImagePrefab {
 	protected Color backgroundColor;
 	protected DualDimension padding;
 	
-	protected ImageButtonRenderer.Callback clickCallback;
+	protected ButtonData.ClickCallback clickCallback;
 	
 	public ImageButtonPrefab(String imagePath) {
 		this(ResourcePool.loadTexture(imagePath));
@@ -39,7 +40,7 @@ public class ImageButtonPrefab extends ImagePrefab {
 		this.padding = padding;
 	}
 	
-	public void setClickCallback(ImageButtonRenderer.Callback callback) {
+	public void setClickCallback(ButtonData.ClickCallback callback) {
 		clickCallback = callback;
 	}
 	
@@ -87,8 +88,10 @@ public class ImageButtonPrefab extends ImagePrefab {
 			imageButtonRenderer.backgroundHoverColor = backgroundHoverColor;
 		}
 		
+		ButtonData buttonData = entity.addComponent(new ButtonData());
+		
 		if (clickCallback != null) {
-			imageButtonRenderer.clickCallback = clickCallback;
+			buttonData.clickCallback = clickCallback;
 		}
 	}
 }

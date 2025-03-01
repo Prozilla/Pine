@@ -26,7 +26,7 @@ public class Logger implements LogHandler, Lifecycle {
 	 * Equivalent of {@link System#out} and {@link System#err}.
 	 */
 	public static final Logger system = new Logger(new StandardOutputLogHandler(), new StandardOutputLogHandler())
-		.setPrefix(Ansi.purple(formatBadge("system")));
+		.setPrefix(formatBadge("system", Ansi.PURPLE));
 	
 	/**
 	 * Creates a logger without any log handlers.
@@ -258,7 +258,7 @@ public class Logger implements LogHandler, Lifecycle {
 	
 	public static String formatBadge(String label, String color) {
 		if (color != null) {
-			return String.format("%s[%S] %s", color, label, Ansi.RESET);
+			return String.format("%s[%S]%s ", color, label, Ansi.RESET);
 		} else {
 			return String.format("[%S] ", label);
 		}

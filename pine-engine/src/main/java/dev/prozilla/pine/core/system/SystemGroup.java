@@ -1,10 +1,12 @@
 package dev.prozilla.pine.core.system;
 
+import dev.prozilla.pine.common.Container;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.entity.Entity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -13,7 +15,7 @@ import java.util.function.Consumer;
  * All systems in a group are executed during the same step of the game loop.
  * @param <S> Type of the systems in this group.
  */
-public class SystemGroup<S extends SystemBase> {
+public class SystemGroup<S extends SystemBase> implements Container<S> {
 	
 	private final List<S> systems;
 	/** Type of the systems in this group. */
@@ -39,6 +41,7 @@ public class SystemGroup<S extends SystemBase> {
 	 * Adds a system to this group if it matches the type of this group.
 	 * @return True if the system matched the type of this group.
 	 */
+	@Override
 	public boolean add(SystemBase system) throws IllegalStateException {
 		boolean valid = type.isInstance(system);
 		if (valid) {
@@ -54,6 +57,7 @@ public class SystemGroup<S extends SystemBase> {
 	/**
 	 * Returns true if this group is empty.
 	 */
+	@Override
 	public boolean isEmpty() {
 		return systems.isEmpty();
 	}
@@ -61,6 +65,7 @@ public class SystemGroup<S extends SystemBase> {
 	/**
 	 * Returns the amount of systems in this group.
 	 */
+	@Override
 	public int size() {
 		return systems.size();
 	}
@@ -68,7 +73,8 @@ public class SystemGroup<S extends SystemBase> {
 	/**
 	 * Iterates over each system in this group.
 	 */
-	public void forEach(Consumer<S> consumer) {
+	@Override
+	public void forEach(Consumer<? super S> consumer) {
 		if (systems.isEmpty()) {
 			return;
 		}
@@ -115,10 +121,16 @@ public class SystemGroup<S extends SystemBase> {
 		}
 	}
 	
+	@Override
+	public Iterator<S> iterator() {
+		return systems.iterator();
+	}
+	
 	/**
 	 * Removes all systems from this group.
 	 */
 	public void clear() {
 		systems.clear();
 	}
+	
 }

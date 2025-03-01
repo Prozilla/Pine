@@ -1,9 +1,11 @@
 package dev.prozilla.pine.core.component;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.core.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Transform extends Component {
 	
@@ -41,6 +43,57 @@ public class Transform extends Component {
 		
 		depthIndex = 0;
 		renderChildrenBelow = false;
+	}
+	
+	@Override
+	public Entity getChildWithTag(String tag) {
+		Objects.requireNonNull(tag, "tag must not be null");
+		
+		for (Transform child : children) {
+			if (child.entity.hasTag(tag)) {
+				return child.entity;
+			}
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass) {
+		return getComponentInParent(componentClass, true);
+	}
+	
+	@Override
+	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass, boolean includeAncestors) {
+		if (parent == null) {
+			return null;
+		}
+		
+		ComponentType component = parent.getComponent(componentClass);
+		
+		if (component == null && includeAncestors) {
+			return parent.getComponentInParent(componentClass);
+		}
+		
+		return component;
+	}
+	
+	@Override
+	public <ComponentType extends Component> List<ComponentType> getComponentsInChildren(Class<ComponentType> componentClass) {
+		if (children.isEmpty()) {
+			return new ArrayList<>();
+		}
+		
+		ArrayList<ComponentType> components = new ArrayList<>();
+		
+		for (Transform child : children) {
+			ComponentType component = child.getComponent(componentClass);
+			if (component != null) {
+				components.add(component);
+			}
+		}
+		
+		return components;
 	}
 	
 	public float getGlobalX() {

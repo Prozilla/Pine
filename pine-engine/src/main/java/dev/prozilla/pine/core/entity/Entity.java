@@ -8,6 +8,7 @@ import dev.prozilla.pine.core.Scene;
 import dev.prozilla.pine.core.Window;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.ComponentFinder;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
@@ -18,12 +19,11 @@ import dev.prozilla.pine.core.state.input.Input;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents a unique entity in the world with a list of components.
  */
-public class Entity implements Lifecycle, Printable {
+public class Entity implements Lifecycle, Printable, EntityFinder, ComponentFinder {
 	
 	public final int id;
 	private final String name;
@@ -170,16 +170,9 @@ public class Entity implements Lifecycle, Printable {
 		}
 	}
 	
+	@Override
 	public Entity getChildWithTag(String tag) {
-		Objects.requireNonNull(tag, "tag must not be null");
-		
-		for (Transform child : transform.children) {
-			if (child.entity.hasTag(tag)) {
-				return child.entity;
-			}
-		}
-		
-		return null;
+		return transform.getChildWithTag(tag);
 	}
 	
 	/**
@@ -235,39 +228,19 @@ public class Entity implements Lifecycle, Printable {
 		world.removeComponent(this, component);
 	}
 	
+	@Override
 	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass) {
-		return getComponentInParent(componentClass, true);
+		return transform.getComponentInParent(componentClass);
 	}
 	
+	@Override
 	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass, boolean includeAncestors) {
-		if (transform.parent == null) {
-			return null;
-		}
-		
-		ComponentType component = transform.parent.getComponent(componentClass);
-		
-		if (component == null && includeAncestors) {
-			return transform.parent.getComponentInParent(componentClass);
-		}
-		
-		return component;
+		return transform.getComponentInParent(componentClass, includeAncestors);
 	}
 	
+	@Override
 	public <ComponentType extends Component> List<ComponentType> getComponentsInChildren(Class<ComponentType> componentClass) {
-		if (transform.children.isEmpty()) {
-			return new ArrayList<>();
-		}
-		
-		ArrayList<ComponentType> components = new ArrayList<>();
-		
-		for (Transform child : transform.children) {
-			ComponentType component = child.getComponent(componentClass);
-			if (component != null) {
-				components.add(component);
-			}
-		}
-		
-		return components;
+		return transform.getComponentsInChildren(componentClass);
 	}
 	
 	/**
@@ -284,6 +257,7 @@ public class Entity implements Lifecycle, Printable {
 	 * @param componentClass Class of the component.
 	 * @return An instance of <code>componentClass</code> that is attached to this entity.
 	 */
+	@Override
 	public <ComponentType extends Component> ComponentType getComponent(Class<ComponentType> componentClass) {
 		if (components.isEmpty()) {
 			return null;
@@ -306,6 +280,7 @@ public class Entity implements Lifecycle, Printable {
 	 * @param componentClass Class of the components.
 	 * @return An ArrayList of instance of <code>componentClass</code> that are attached to this entity.
 	 */
+	@Override
 	public <ComponentType extends Component> List<ComponentType> getComponents(Class<ComponentType> componentClass) {
 		if (components.isEmpty()) {
 			return new ArrayList<>();

@@ -7,6 +7,7 @@ import dev.prozilla.pine.core.Window;
 import dev.prozilla.pine.core.World;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.EntityFinder;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
@@ -17,7 +18,7 @@ import java.util.List;
 /**
  * Contains a partition of the data of an entity.
  */
-public abstract class Component implements Lifecycle, Printable {
+public abstract class Component implements Lifecycle, Printable, EntityFinder, ComponentFinder {
 	
 	// Identifier
 	public final int id;
@@ -88,22 +89,32 @@ public abstract class Component implements Lifecycle, Printable {
 		return entity.transform;
 	}
 	
+	@Override
+	public Entity getChildWithTag(String tag) {
+		return entity.getChildWithTag(tag);
+	}
+	
+	@Override
 	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass) {
 		return entity.getComponentInParent(componentClass);
 	}
 	
+	@Override
 	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass, boolean includeAncestors) {
 		return entity.getComponentInParent(componentClass, includeAncestors);
 	}
 	
+	@Override
 	public <ComponentType extends Component> List<ComponentType> getComponentsInChildren(Class<ComponentType> componentClass) {
 		return entity.getComponentsInChildren(componentClass);
 	}
 	
+	@Override
 	public <ComponentType extends Component> ComponentType getComponent(Class<ComponentType> componentClass) {
 		return entity.getComponent(componentClass);
 	}
 	
+	@Override
 	public <ComponentType extends Component> List<ComponentType> getComponents(Class<ComponentType> componentClass) {
 		return entity.getComponents(componentClass);
 	}
