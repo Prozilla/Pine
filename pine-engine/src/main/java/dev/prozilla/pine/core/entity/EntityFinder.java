@@ -4,4 +4,6 @@ public interface EntityFinder {
 	
 	Entity getChildWithTag(String tag);
 	
+	Entity getParentWithTag(String tag);
+	
 }

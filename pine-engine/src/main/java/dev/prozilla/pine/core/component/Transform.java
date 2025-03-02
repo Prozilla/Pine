@@ -59,6 +59,17 @@ public class Transform extends Component {
 	}
 	
 	@Override
+	public Entity getParentWithTag(String tag) {
+		Objects.requireNonNull(tag, "tag must not be null");
+		
+		if (parent != null && parent.getEntity().hasTag(tag)) {
+			return parent.entity;
+		}
+		
+		return null;
+	}
+	
+	@Override
 	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass) {
 		return getComponentInParent(componentClass, true);
 	}

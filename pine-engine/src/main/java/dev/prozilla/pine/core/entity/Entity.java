@@ -175,6 +175,11 @@ public class Entity implements Lifecycle, Printable, EntityFinder, ComponentFind
 		return transform.getChildWithTag(tag);
 	}
 	
+	@Override
+	public Entity getParentWithTag(String tag) {
+		return transform.getChildWithTag(tag);
+	}
+	
 	/**
 	 * Setter for the parent entity.
 	 * @param parent Parent entity

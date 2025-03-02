@@ -95,6 +95,11 @@ public abstract class Component implements Lifecycle, Printable, EntityFinder, C
 	}
 	
 	@Override
+	public Entity getParentWithTag(String tag) {
+		return entity.getParentWithTag(tag);
+	}
+	
+	@Override
 	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass) {
 		return entity.getComponentInParent(componentClass);
 	}
