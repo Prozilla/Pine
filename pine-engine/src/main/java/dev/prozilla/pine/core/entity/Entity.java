@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.Scene;
@@ -23,7 +24,7 @@ import java.util.List;
 /**
  * Represents a unique entity in the world with a list of components.
  */
-public class Entity implements Lifecycle, Printable, EntityFinder, ComponentFinder {
+public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, Printable, EntityFinder, ComponentFinder {
 	
 	public final int id;
 	private final String name;
@@ -86,18 +87,21 @@ public class Entity implements Lifecycle, Printable, EntityFinder, ComponentFind
 	 */
 	public void destroy() {
 		if (application.isRunning) {
+			// Destroy children
+			for (Transform child : transform.children.toArray(new Transform[]{})) {
+				child.getEntity().destroy();
+			}
+			
+			// Remove child from parent
 			if (transform.parent != null) {
 				transform.parent.getEntity().removeChild(this);
 			}
+			
+			// Unregister entity from world
 			if (isRegistered()) {
 				world.removeEntity(this);
 			}
 		}
-		
-		// Remove all references
-//		game = null;
-//		world = null;
-//		scene = null;
 	}
 	
 	/**
@@ -130,6 +134,8 @@ public class Entity implements Lifecycle, Printable, EntityFinder, ComponentFind
 			world.addEntity(child);
 		}
 		
+		invoke(EntityEvent.CHILDREN_UPDATE);
+		
 		return child;
 	}
 	
@@ -158,6 +164,8 @@ public class Entity implements Lifecycle, Printable, EntityFinder, ComponentFind
 		}
 		
 		child.transform.parent = null;
+		
+		invoke(EntityEvent.CHILDREN_UPDATE);
 	}
 	
 	/**
@@ -218,6 +226,7 @@ public class Entity implements Lifecycle, Printable, EntityFinder, ComponentFind
 	 */
 	public <C extends Component> C addComponent(C component) {
 		world.addComponent(this, component);
+		invoke(EntityEvent.COMPONENTS_UPDATE);
 		return component;
 	}
 	
@@ -231,6 +240,7 @@ public class Entity implements Lifecycle, Printable, EntityFinder, ComponentFind
 		}
 
 		world.removeComponent(this, component);
+		invoke(EntityEvent.COMPONENTS_UPDATE);
 	}
 	
 	@Override

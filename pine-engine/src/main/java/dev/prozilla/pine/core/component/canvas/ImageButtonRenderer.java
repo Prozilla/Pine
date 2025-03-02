@@ -15,8 +15,11 @@ public class ImageButtonRenderer extends Component {
 	
 	public DualDimension padding;
 	
+	public static final Color DEFAULT_BACKGROUND_COLOR = Color.white();
+	public static final Color DEFAULT_BACKGROUND_HOVER_COLOR = Color.white().setAlpha(0.75f);
+	
 	public ImageButtonRenderer() {
-		this(Color.white());
+		this(DEFAULT_BACKGROUND_COLOR);
 	}
 	
 	public ImageButtonRenderer(Color backgroundColor) {
@@ -24,7 +27,7 @@ public class ImageButtonRenderer extends Component {
 		
 		if (backgroundColor != null) {
 			backgroundHoverColor = backgroundColor.clone();
-			backgroundHoverColor.setAlpha(backgroundHoverColor.getAlpha() * 0.75f);
+			backgroundHoverColor.setAlpha(backgroundHoverColor.getAlpha() * DEFAULT_BACKGROUND_HOVER_COLOR.getAlpha());
 		}
 		
 		padding = new DualDimension();

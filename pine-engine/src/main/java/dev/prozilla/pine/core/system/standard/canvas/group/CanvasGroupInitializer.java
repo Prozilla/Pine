@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.system.standard.canvas.group;
 
 import dev.prozilla.pine.core.component.canvas.CanvasGroup;
 import dev.prozilla.pine.core.entity.EntityChunk;
+import dev.prozilla.pine.core.entity.EntityEvent;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
 /**
@@ -17,5 +18,8 @@ public class CanvasGroupInitializer extends InitSystem {
 	protected void process(EntityChunk chunk) {
 		CanvasGroup canvasGroup = chunk.getComponent(CanvasGroup.class);
 		canvasGroup.getChildComponents();
+		
+		// Fetch child rects whenever children are added/removed
+		chunk.getEntity().addListener(EntityEvent.CHILDREN_UPDATE, canvasGroup::getChildComponents);
 	}
 }

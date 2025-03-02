@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.system.standard.canvas;
 
+import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.core.component.canvas.CanvasContext;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
@@ -41,9 +43,17 @@ public class RectUpdater extends UpdateSystem {
 			return;
 		}
 		
+		CanvasContext context;
+		try {
+			context = rect.getContext();
+		} catch (RuntimeException e) {
+			Logger.system.error("Failed to anchor rect: " + rect, e);
+			return;
+		}
+		
 		// Calculate remaining width and height
-		int contextWidth = rect.getContext().getWidth();
-		int contextHeight = rect.getContext().getHeight();
+		int contextWidth = context.getWidth();
+		int contextHeight = context.getHeight();
 		
 		int remainingWidth = contextWidth - rect.currentSize.x;
 		int remainingHeight = contextHeight - rect.currentSize.y;

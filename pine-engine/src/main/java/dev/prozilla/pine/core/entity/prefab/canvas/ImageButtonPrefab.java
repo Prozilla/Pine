@@ -30,6 +30,8 @@ public class ImageButtonPrefab extends ImagePrefab {
 		setName("ImageButton");
 		
 		padding = new DualDimension();
+		backgroundColor = ImageButtonRenderer.DEFAULT_BACKGROUND_COLOR;
+		backgroundHoverColor = ImageButtonRenderer.DEFAULT_BACKGROUND_HOVER_COLOR;
 	}
 	
 	public void setPadding(Dimension x, Dimension y) {
@@ -77,15 +79,11 @@ public class ImageButtonPrefab extends ImagePrefab {
 		ImageButtonRenderer imageButtonRenderer = entity.addComponent(new ImageButtonRenderer());
 		
 		imageButtonRenderer.padding = padding;
+		imageButtonRenderer.backgroundColor = backgroundColor;
+		imageButtonRenderer.backgroundHoverColor = backgroundHoverColor;
 		
 		if (hoverColor != null) {
 			imageButtonRenderer.hoverColor = hoverColor;
-		}
-		if (backgroundColor != null) {
-			imageButtonRenderer.backgroundColor = backgroundColor;
-		}
-		if (backgroundHoverColor != null) {
-			imageButtonRenderer.backgroundHoverColor = backgroundHoverColor;
 		}
 		
 		ButtonData buttonData = entity.addComponent(new ButtonData());
