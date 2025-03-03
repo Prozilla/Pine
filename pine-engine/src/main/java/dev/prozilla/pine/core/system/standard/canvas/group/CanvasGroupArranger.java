@@ -37,6 +37,13 @@ public class CanvasGroupArranger extends UpdateSystem {
 			case DOWN -> offsetY = containerRect.currentPosition.y + canvasGroup.innerSize.y + canvasGroup.childRects.get(0).currentSize.y;
 		}
 		
+		if (canvasGroup.distribution == CanvasGroup.Distribution.CENTER) {
+			switch (canvasGroup.direction) {
+				case LEFT, RIGHT -> offsetX += (canvasGroup.innerSize.x - (canvasGroup.totalChildrenSize.x + canvasGroup.gap * (canvasGroup.childRects.size() - 1))) / 2;
+				case UP, DOWN -> offsetY += (canvasGroup.innerSize.y - (canvasGroup.totalChildrenSize.y + canvasGroup.gap * (canvasGroup.childRects.size() - 1))) / 2;
+			}
+		}
+		
 		// Calculate individual offset for each child rect
 		int count = canvasGroup.childRects.size();
 		for (int i = 0; i < count; i++) {

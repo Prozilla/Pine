@@ -17,6 +17,7 @@ public class CanvasGroup extends Component implements CanvasContext {
 	
 	public Direction direction;
 	public EdgeAlignment alignment;
+	public Distribution distribution;
 	public Color backgroundColor;
 	/** Distance between elements. */
 	public int gap;
@@ -24,6 +25,7 @@ public class CanvasGroup extends Component implements CanvasContext {
 	public boolean arrangeChildren;
 	
 	public Vector2i innerSize;
+	public Vector2i totalChildrenSize;
 	
 	/** Array of rect components in children of the attached entity */
 	public List<RectTransform> childRects;
@@ -32,7 +34,14 @@ public class CanvasGroup extends Component implements CanvasContext {
 	
 	public static final Direction DEFAULT_DIRECTION = Direction.UP;
 	public static final EdgeAlignment DEFAULT_ALIGNMENT = EdgeAlignment.START;
+	public static final Distribution DEFAULT_DISTRIBUTION = Distribution.START;
 	
+	public enum Distribution {
+		START,
+		CENTER,
+		END,
+		SPACE_BETWEEN
+	}
 	
 	public CanvasGroup() {
 		this(DEFAULT_DIRECTION);
@@ -43,13 +52,19 @@ public class CanvasGroup extends Component implements CanvasContext {
 	}
 	
 	public CanvasGroup(Direction direction, EdgeAlignment alignment) {
+		this(direction, alignment, DEFAULT_DISTRIBUTION);
+	}
+	
+	public CanvasGroup(Direction direction, EdgeAlignment alignment, Distribution distribution) {
 		this.direction = direction;
 		this.alignment = alignment;
+		this.distribution = distribution;
 		
 		childRects = new ArrayList<>();
 		gap = 0;
 		padding = new DualDimension();
 		innerSize = new Vector2i();
+		totalChildrenSize = new Vector2i();
 		arrangeChildren = true;
 	}
 	

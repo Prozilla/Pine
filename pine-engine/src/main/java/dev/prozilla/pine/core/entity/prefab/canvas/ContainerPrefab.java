@@ -15,6 +15,7 @@ public class ContainerPrefab extends CanvasElementPrefab {
 	
 	protected Direction direction;
 	protected EdgeAlignment alignment;
+	protected CanvasGroup.Distribution distribution;
 	protected Color backgroundColor;
 	protected int gap;
 	protected DualDimension padding;
@@ -57,6 +58,10 @@ public class ContainerPrefab extends CanvasElementPrefab {
 		this.arrangeChildren = arrangeChildren;
 	}
 	
+	public void setDistribution(CanvasGroup.Distribution distribution) {
+		this.distribution = distribution;
+	}
+	
 	@Override
 	protected void apply(Entity entity) {
 		super.apply(entity);
@@ -73,6 +78,9 @@ public class ContainerPrefab extends CanvasElementPrefab {
 		}
 		if (alignment != null) {
 			canvasGroup.alignment = alignment;
+		}
+		if (distribution != null) {
+			canvasGroup.distribution = distribution;
 		}
 	}
 }
