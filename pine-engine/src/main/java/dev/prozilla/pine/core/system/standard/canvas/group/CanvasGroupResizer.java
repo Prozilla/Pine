@@ -20,18 +20,21 @@ public class CanvasGroupResizer extends UpdateSystem {
 	protected void process(EntityChunk chunk, float deltaTime) {
 		CanvasGroup canvasGroup = chunk.getComponent(CanvasGroup.class);
 		RectTransform rect = chunk.getComponent(RectTransform.class);
-		
+		resizeCanvasGroup(canvasGroup, rect);
+	}
+	
+	public static void resizeCanvasGroup(CanvasGroup canvasGroup, RectTransform containerRect) {
 		int newWidth = 0;
 		int newHeight = 0;
 		
-		if (rect.size != null) {
-			newWidth = rect.size.computeX(rect);
-			newHeight = rect.size.computeY(rect);
+		if (containerRect.size != null) {
+			newWidth = containerRect.size.computeX(containerRect);
+			newHeight = containerRect.size.computeY(containerRect);
 		}
 		
 		if (newWidth != 0 && newHeight != 0) {
-			newWidth -= canvasGroup.padding.computeX(rect) * 2;
-			newHeight -= canvasGroup.padding.computeY(rect) * 2;
+			newWidth -= canvasGroup.padding.computeX(containerRect) * 2;
+			newHeight -= canvasGroup.padding.computeY(containerRect) * 2;
 			
 			if (canvasGroup.distribution == CanvasGroup.Distribution.SPACE_BETWEEN && !canvasGroup.childRects.isEmpty()) {
 				canvasGroup.gap = canvasGroup.direction == Direction.UP || canvasGroup.direction == Direction.DOWN ? newHeight : newWidth;
@@ -92,11 +95,11 @@ public class CanvasGroupResizer extends UpdateSystem {
 				newWidth -= gap;
 			}
 			
-			if (canvasGroup.distribution == CanvasGroup.Distribution.SPACE_BETWEEN && rect.size != null) {
+			if (canvasGroup.distribution == CanvasGroup.Distribution.SPACE_BETWEEN && containerRect.size != null) {
 				if (canvasGroup.direction == Direction.UP || canvasGroup.direction == Direction.DOWN) {
-					canvasGroup.gap = rect.size.computeY(rect) - canvasGroup.padding.computeY(rect) * 2 - totalChildHeight;
+					canvasGroup.gap = containerRect.size.computeY(containerRect) - canvasGroup.padding.computeY(containerRect) * 2 - totalChildHeight;
 				} else {
-					canvasGroup.gap = rect.size.computeX(rect) - canvasGroup.padding.computeX(rect) * 2 - totalChildWidth;
+					canvasGroup.gap = containerRect.size.computeX(containerRect) - canvasGroup.padding.computeX(containerRect) * 2 - totalChildWidth;
 				}
 			}
 			
@@ -107,7 +110,7 @@ public class CanvasGroupResizer extends UpdateSystem {
 		canvasGroup.innerSize.x = newWidth;
 		canvasGroup.innerSize.y = newHeight;
 		
-		rect.currentSize.x = canvasGroup.innerSize.x + canvasGroup.padding.computeX(rect) * 2;
-		rect.currentSize.y = canvasGroup.innerSize.y + canvasGroup.padding.computeY(rect) * 2;
+		containerRect.currentSize.x = canvasGroup.innerSize.x + canvasGroup.padding.computeX(containerRect) * 2;
+		containerRect.currentSize.y = canvasGroup.innerSize.y + canvasGroup.padding.computeY(containerRect) * 2;
 	}
 }

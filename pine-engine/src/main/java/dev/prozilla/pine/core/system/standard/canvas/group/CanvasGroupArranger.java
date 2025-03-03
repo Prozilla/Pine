@@ -21,8 +21,11 @@ public class CanvasGroupArranger extends UpdateSystem {
 	@Override
 	protected void process(EntityChunk chunk, float deltaTime) {
 		CanvasGroup canvasGroup = chunk.getComponent(CanvasGroup.class);
-		RectTransform containerRect = chunk.getComponent(RectTransform.class);
-		
+		RectTransform rect = chunk.getComponent(RectTransform.class);
+		arrangeCanvasGroup(canvasGroup, rect);
+	}
+	
+	public static void arrangeCanvasGroup(CanvasGroup canvasGroup, RectTransform containerRect) {
 		RectUpdater.updateRect(containerRect);
 		
 		if (canvasGroup.childRects.isEmpty() || !canvasGroup.arrangeChildren) {
@@ -85,6 +88,11 @@ public class CanvasGroupArranger extends UpdateSystem {
 			// Set offset for current child rect
 			childRect.setAnchor(GridAlignment.BOTTOM_LEFT);
 			childRect.position.set(childOffsetX, childOffsetY);
+			childRect.iterations++;
+			
+			if (childRect.iterations > 4) {
+				childRect.readyToRender = true;
+			}
 			
 			// Move offset for next child rect
 			switch (canvasGroup.direction) {

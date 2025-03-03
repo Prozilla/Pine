@@ -19,7 +19,10 @@ public class RectUpdater extends UpdateSystem {
 	protected void process(EntityChunk chunk, float deltaTime) {
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		updateRect(rect);
-		rect.readyToRender = true;
+		
+		if (!rect.isInCanvasGroup() || rect.absolutePosition) {
+			rect.readyToRender = true;
+		}
 	}
 	
 	public static void updateRect(RectTransform rect) {
