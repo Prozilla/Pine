@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.system.standard.canvas.group;
 
+import dev.prozilla.pine.common.math.dimension.Unit;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.core.component.canvas.CanvasGroup;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
@@ -40,12 +41,16 @@ public class CanvasGroupResizer extends UpdateSystem {
 				switch (canvasGroup.direction) {
 					case UP:
 					case DOWN:
-						newWidth = Math.max(newWidth, childRect.currentSize.x);
+						if (childRect.size.x.getUnit() != Unit.PERCENTAGE) {
+							newWidth = Math.max(newWidth, childRect.currentSize.x);
+						}
 						newHeight += childRect.currentSize.y + canvasGroup.gap;
 						break;
 					case LEFT:
 					case RIGHT:
-						newWidth += childRect.currentSize.x + canvasGroup.gap;
+						if (childRect.size.y.getUnit() != Unit.PERCENTAGE) {
+							newWidth += childRect.currentSize.x + canvasGroup.gap;
+						}
 						newHeight = Math.max(newHeight, childRect.currentSize.y);
 						break;
 				}

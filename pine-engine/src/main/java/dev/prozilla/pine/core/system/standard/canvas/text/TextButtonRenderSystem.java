@@ -24,6 +24,10 @@ public class TextButtonRenderSystem extends RenderSystem {
 		TextRenderer textRenderer = chunk.getComponent(TextRenderer.class);
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
+		if (!rect.readyToRender) {
+			return;
+		}
+		
 		// Render background
 		if (textRenderer.size.x != 0 && textRenderer.size.y != 0 && textButtonRenderer.backgroundColor != null) {
 			Color backgroundColor = (buttonData.isHovering && textButtonRenderer.backgroundHoverColor != null) ? textButtonRenderer.backgroundHoverColor : textButtonRenderer.backgroundColor;

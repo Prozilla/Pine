@@ -18,14 +18,14 @@ public abstract class DimensionComparator extends DimensionBase {
 	}
 	
 	@Override
-	public boolean isDirty(RectTransform context) {
-		return isDirty || dimensionA.isDirty(context) || dimensionB.isDirty(context);
+	public boolean isDirty(RectTransform context, boolean isHorizontal) {
+		return isDirty || dimensionA.isDirty(context, isHorizontal) || dimensionB.isDirty(context, isHorizontal);
 	}
 	
 	@Override
-	protected final int recompute(RectTransform context) {
+	protected final int recompute(RectTransform context, boolean isHorizontal) {
 		isDirty = false;
-		return compare(dimensionA.compute(context), dimensionB.compute(context));
+		return compare(dimensionA.compute(context, isHorizontal), dimensionB.compute(context, isHorizontal));
 	}
 	
 	public boolean has(DimensionBase dimension) {

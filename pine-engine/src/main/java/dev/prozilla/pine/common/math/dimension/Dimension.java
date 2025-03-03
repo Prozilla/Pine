@@ -44,7 +44,7 @@ public class Dimension extends DimensionBase {
 	 * Computes the value of this dimension by multiplying the original value with a factor based on the unit.
 	 */
 	@Override
-	protected int recompute(RectTransform context) {
+	protected int recompute(RectTransform context, boolean isHorizontal) {
 		isDirty = false;
 		
 		if (value == 0 || currentFactor == 0) {
@@ -59,22 +59,27 @@ public class Dimension extends DimensionBase {
 	}
 	
 	@Override
-	public boolean isDirty(RectTransform context) {
+	public boolean isDirty(RectTransform context, boolean isHorizontal) {
 		if (isDirty) {
-			currentFactor = getFactor(context);
+			currentFactor = getFactor(context, isHorizontal);
 			return true;
 		} else if (Unit.isFixed(unit)) {
 			return false;
 		}
 		
 		// Check if factor was changed
-		float newFactor = getFactor(context);
+		float newFactor = getFactor(context, isHorizontal);
 		if (newFactor != currentFactor) {
 			currentFactor = newFactor;
 			return true;
 		}
 		
 		return false;
+	}
+	
+	@Override
+	public Unit getUnit() {
+		return unit;
 	}
 	
 	@Override
@@ -99,12 +104,13 @@ public class Dimension extends DimensionBase {
 	/**
 	 * Returns the factor based on this dimension's unit and a given context element.
 	 */
-	protected float getFactor(RectTransform context) {
+	protected float getFactor(RectTransform context, boolean isHorizontal) {
 		return switch (unit) {
 			case AUTO -> 0f;
 			case ELEMENT_SIZE -> 16f;
 			case VIEWPORT_WIDTH -> context.getCanvas().getWidth() / 100f;
 			case VIEWPORT_HEIGHT -> context.getCanvas().getHeight() / 100f;
+			case PERCENTAGE -> (isHorizontal ? context.getContext().getWidth() : context.getContext().getHeight()) / 100f;
 			default -> 1f;
 		};
 	}
@@ -240,6 +246,10 @@ public class Dimension extends DimensionBase {
 	 */
 	public static Dimension viewportHeight() {
 		return new Dimension(100, Unit.VIEWPORT_HEIGHT);
+	}
+	
+	public static Dimension parentSize() {
+		return new Dimension(100, Unit.PERCENTAGE);
 	}
 	
 	/**
@@ -470,20 +480,20 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		public boolean isDirty(RectTransform context) {
-			return dimension.isDirty(context) || dimensionMin.isDirty(context) || dimensionMax.isDirty(context);
+		public boolean isDirty(RectTransform context, boolean isHorizontal) {
+			return dimension.isDirty(context, isHorizontal) || dimensionMin.isDirty(context, isHorizontal) || dimensionMax.isDirty(context, isHorizontal);
 		}
 		
 		@Override
-		protected int recompute(RectTransform context) {
-			int value = dimension.compute(context);
-			int min = dimensionMin.compute(context);
+		protected int recompute(RectTransform context, boolean isHorizontal) {
+			int value = dimension.compute(context, isHorizontal);
+			int min = dimensionMin.compute(context, isHorizontal);
 			
 			if (value <= min) {
 				return min;
 			}
 			
-			int max = dimensionMax.compute(context);
+			int max = dimensionMax.compute(context, isHorizontal);
 			
 			return Math.min(value, max);
 		}

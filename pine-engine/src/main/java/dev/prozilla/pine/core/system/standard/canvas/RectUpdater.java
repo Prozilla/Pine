@@ -19,6 +19,7 @@ public class RectUpdater extends UpdateSystem {
 	protected void process(EntityChunk chunk, float deltaTime) {
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		updateRect(rect);
+		rect.readyToRender = true;
 	}
 	
 	public static void updateRect(RectTransform rect) {
@@ -52,6 +53,14 @@ public class RectUpdater extends UpdateSystem {
 		}
 		
 		// Calculate remaining width and height
+		int contextX = 0;
+		int contextY = 0;
+		
+		if (rect.absolutePosition) {
+			contextX = context.getX();
+			contextY = context.getY();
+		}
+		
 		int contextWidth = context.getWidth();
 		int contextHeight = context.getHeight();
 		
@@ -62,7 +71,7 @@ public class RectUpdater extends UpdateSystem {
 		float offsetX = (1 - 2 * rect.anchor.x) * rect.getPositionX();
 		float offsetY = (1 - 2 * rect.anchor.y) * rect.getPositionY();
 		
-		rect.currentPosition.x = Math.round(rect.anchor.x * remainingWidth + offsetX);
-		rect.currentPosition.y = Math.round(rect.anchor.y * remainingHeight + offsetY);
+		rect.currentPosition.x = contextX + Math.round(rect.anchor.x * remainingWidth + offsetX);
+		rect.currentPosition.y = contextY + Math.round(rect.anchor.y * remainingHeight + offsetY);
 	}
 }

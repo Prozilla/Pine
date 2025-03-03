@@ -16,6 +16,7 @@ public class RectTransform extends Component {
 	public Vector2i currentPosition;
 	public Vector2i currentSize;
 	public boolean cursorHit;
+	public boolean readyToRender;
 	
 	// Attributes
 	public DualDimension position;
@@ -39,6 +40,7 @@ public class RectTransform extends Component {
 		passThrough = false;
 		cursorHit = false;
 		absolutePosition = false;
+		readyToRender = false;
 	}
 	
 	@Override
@@ -92,6 +94,10 @@ public class RectTransform extends Component {
 		}
 		
 		return getCanvas();
+	}
+	
+	public boolean isInCanvasGroup() {
+		return entity.getComponentInParent(CanvasGroup.class) != null;
 	}
 	
 	/**

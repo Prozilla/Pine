@@ -110,14 +110,14 @@ public class DualDimension implements Printable, Cloneable<DualDimension> {
 	 * Computes the X-dimension for a given element.
 	 */
 	public int computeX(RectTransform element) {
-		return x.compute(element);
+		return x.compute(element, true);
 	}
 	
 	/**
 	 * Computes the Y-dimension for a given element.
 	 */
 	public int computeY(RectTransform element) {
-		return y.compute(element);
+		return y.compute(element, false);
 	}
 	
 	/**
@@ -175,6 +175,18 @@ public class DualDimension implements Printable, Cloneable<DualDimension> {
 	 */
 	public static DualDimension fullscreen() {
 		return new DualDimension(Dimension.viewportWidth(), Dimension.viewportHeight());
+	}
+	
+	public static DualDimension parentSize() {
+		return new DualDimension(Dimension.parentSize(), Dimension.parentSize());
+	}
+	
+	public static DualDimension parentWidth() {
+		return new DualDimension(Dimension.parentSize(), Dimension.auto());
+	}
+	
+	public static DualDimension parentHeight() {
+		return new DualDimension(Dimension.auto(), Dimension.parentSize());
 	}
 	
 	@Override

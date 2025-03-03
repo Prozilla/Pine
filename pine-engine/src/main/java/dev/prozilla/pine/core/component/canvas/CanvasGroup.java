@@ -28,6 +28,8 @@ public class CanvasGroup extends Component implements CanvasContext {
 	/** Array of rect components in children of the attached entity */
 	public List<RectTransform> childRects;
 	
+	public RectTransform rect;
+	
 	public static final Direction DEFAULT_DIRECTION = Direction.UP;
 	public static final EdgeAlignment DEFAULT_ALIGNMENT = EdgeAlignment.START;
 	
@@ -65,6 +67,30 @@ public class CanvasGroup extends Component implements CanvasContext {
 	 */
 	public void getChildComponents() {
 		childRects = entity.getComponentsInChildren(RectTransform.class);
+	}
+	
+	public RectTransform getRect() {
+		if (rect != null) {
+			return rect;
+		}
+		
+		rect = getComponent(RectTransform.class);
+		
+		if (rect == null) {
+			throw new IllegalStateException("CanvasGroup component requires RectTransform component");
+		}
+		
+		return rect;
+	}
+	
+	@Override
+	public int getX() {
+		return getRect().getPositionX();
+	}
+	
+	@Override
+	public int getY() {
+		return getRect().getPositionY();
 	}
 	
 	@Override

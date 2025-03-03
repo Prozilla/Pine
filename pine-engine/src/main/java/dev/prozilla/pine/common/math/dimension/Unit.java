@@ -33,11 +33,17 @@ public enum Unit {
 	 * Relative to viewport height, equivalent to <code>vh</code> in CSS.
 	 * Value <code>100</code> corresponds to the full height of the viewport.
 	 */
-	VIEWPORT_HEIGHT;
+	VIEWPORT_HEIGHT,
+	
+	/**
+	 * Relative to parent size, equivelent to <code>%</code> in CSS.
+	 */
+	PERCENTAGE;
 	
 	private static final Unit[] DYNAMIC_UNITS = new Unit[]{
 		Unit.VIEWPORT_WIDTH,
 	    Unit.VIEWPORT_HEIGHT,
+		Unit.PERCENTAGE,
 	};
 	
 	public static boolean isFixed(Unit unit) {
@@ -55,6 +61,7 @@ public enum Unit {
 			case ELEMENT_SIZE -> "em";
 			case VIEWPORT_WIDTH -> "vw";
 			case VIEWPORT_HEIGHT -> "vh";
+			case PERCENTAGE -> "%";
 		};
 	}
 	

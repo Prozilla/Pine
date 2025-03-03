@@ -18,12 +18,12 @@ public abstract class DimensionBase implements Printable, Cloneable<DimensionBas
 	 * @param context UI element, serving as the context of this dimension.
 	 * @return The computed value of this dimension in pixels.
 	 */
-	public final int compute(RectTransform context) {
-		if (!isDirty(context)) {
+	public final int compute(RectTransform context, boolean isHorizontal) {
+		if (!isDirty(context, isHorizontal)) {
 			return computedValue;
 		}
 		
-		computedValue = recompute(context);
+		computedValue = recompute(context, isHorizontal);
 		return computedValue;
 	}
 	
@@ -32,14 +32,18 @@ public abstract class DimensionBase implements Printable, Cloneable<DimensionBas
 	 * @param context UI element, serving as the context of this dimension.
 	 * @return The computed value of this dimension in pixels.
 	 */
-	abstract protected int recompute(RectTransform context);
+	abstract protected int recompute(RectTransform context, boolean isHorizontal);
 	
 	/**
 	 * Checks whether this dimension has been modified since the last calculation.
 	 * @return True if this dimension has been modified.
 	 */
-	public boolean isDirty(RectTransform context) {
+	public boolean isDirty(RectTransform context, boolean isHorizontal) {
 		return DEFAULT_DIRTY;
+	}
+	
+	public Unit getUnit() {
+		return null;
 	}
 	
 	/**

@@ -22,6 +22,10 @@ public class RectRenderSystem extends RenderSystem {
 		RectRenderer rectRenderer = chunk.getComponent(RectRenderer.class);
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
+		if (!rect.readyToRender) {
+			return;
+		}
+		
 		if (rect.currentSize.x != 0 && rect.currentSize.y != 0) {
 			if (rectRenderer.color == null) {
 				renderer.drawRect(rect.currentPosition.x, rect.currentPosition.y, transform.getDepth(), rect.currentSize.x, rect.currentSize.y);

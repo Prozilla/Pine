@@ -24,6 +24,10 @@ public class ImageButtonRenderSystem extends RenderSystem {
 		ImageRenderer imageRenderer = chunk.getComponent(ImageRenderer.class);
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
+		if (!rect.readyToRender) {
+			return;
+		}
+		
 		int paddingX = imageButtonRenderer.padding.computeX(rect);
 		int paddingY = imageButtonRenderer.padding.computeY(rect);
 		

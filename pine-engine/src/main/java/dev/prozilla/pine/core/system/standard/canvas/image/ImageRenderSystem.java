@@ -20,6 +20,11 @@ public class ImageRenderSystem extends RenderSystem {
 		Transform transform = chunk.getTransform();
 		ImageRenderer imageRenderer = chunk.getComponent(ImageRenderer.class);
 		RectTransform rect = chunk.getComponent(RectTransform.class);
+		
+		if (!rect.readyToRender) {
+			return;
+		}
+		
 		renderImage(renderer, imageRenderer, rect, transform.getDepth());
 	}
 	

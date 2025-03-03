@@ -94,14 +94,14 @@ public class QuadDimension extends DualDimension {
 	 * Computes the Z-dimension for a given element.
 	 */
 	public int computeZ(RectTransform element) {
-		return z.compute(element);
+		return z.compute(element, true);
 	}
 	
 	/**
 	 * Computes the W-dimension for a given element.
 	 */
 	public int computeW(RectTransform element) {
-		return w.compute(element);
+		return w.compute(element, false);
 	}
 	
 	/**
