@@ -55,7 +55,16 @@ public abstract class Prefab {
 			entity.tag = tag;
 		}
 		
-		apply(entity);
+		try {
+			apply(entity);
+		} catch (RuntimeException e) {
+			String message = "Failed to instantiate prefab";
+			if (name != null) {
+				message += ": " + name;
+			}
+			
+			world.application.getLogger().error(message, e);
+		}
 		
 		if (!isActive) {
 			entity.setActive(false);

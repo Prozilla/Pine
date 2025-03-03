@@ -392,6 +392,22 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 		return (id == entity.id);
 	}
 	
+	public void printHierarchy() {
+		if (transform.parent == null) {
+			logger.log(getName());
+		} else {
+			Entity parent = transform.parent.getEntity();
+			StringBuilder hierarchyString = new StringBuilder(getName());
+			
+			while (parent != null) {
+				hierarchyString.insert(0, parent.getName() + " > ");
+				parent = parent.transform.parent != null ? parent.transform.parent.getEntity() : null;
+			}
+			
+			logger.log(hierarchyString);
+		}
+	}
+	
 	@Override
 	public String toString() {
 		String className = getClass().getSimpleName();

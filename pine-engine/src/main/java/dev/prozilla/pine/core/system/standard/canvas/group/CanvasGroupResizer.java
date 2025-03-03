@@ -33,6 +33,10 @@ public class CanvasGroupResizer extends UpdateSystem {
 			newHeight -= canvasGroup.padding.computeY(rect) * 2;
 		} else if (!canvasGroup.childRects.isEmpty()) {
 			for (RectTransform childRect : canvasGroup.childRects) {
+				if (childRect.absolutePosition) {
+					continue;
+				}
+				
 				switch (canvasGroup.direction) {
 					case UP:
 					case DOWN:

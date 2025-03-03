@@ -106,7 +106,8 @@ public class RectTransform extends Component {
 		CanvasRenderer canvasRenderer = entity.getComponentInParent(CanvasRenderer.class);
 		
 		if (canvasRenderer == null) {
-			throw new IllegalStateException("Canvas element must be a child of a canvas.");
+			entity.printHierarchy();
+			throw new IllegalStateException("Canvas element must be a child of a canvas: " + entity);
 		}
 		
 		canvas = canvasRenderer;

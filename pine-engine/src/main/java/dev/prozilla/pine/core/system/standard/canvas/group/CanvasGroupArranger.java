@@ -42,6 +42,10 @@ public class CanvasGroupArranger extends UpdateSystem {
 		for (int i = 0; i < count; i++) {
 			RectTransform childRect = canvasGroup.childRects.get(i);
 			
+			if (childRect.absolutePosition) {
+				continue;
+			}
+			
 			// Move offset for current child rect
 			switch (canvasGroup.direction) {
 				case LEFT -> offsetX -= (i == 0)

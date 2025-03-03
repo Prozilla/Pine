@@ -29,6 +29,8 @@ public class GridInputHandler extends InputSystem {
 			if (gridGroup.hoveringTile != null) {
 				input.blockCursor(gridGroup.hoveringTile.getEntity());
 			}
+		} else {
+			gridGroup.hoveringTile = null;
 		}
 	}
 }
