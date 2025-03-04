@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  publish:
+  generate-docs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -27,7 +27,15 @@ jobs:
       - name: Generate Javadoc
         run: ./gradlew javadoc
 
-      - name: Deploy Javadoc to GitHub Pages
+  deploy:
+    needs: generate-docs
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
         with:
           folder: ./build/docs/javadoc
