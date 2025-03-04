@@ -21,5 +21,4 @@ jobs:
           javadoc-branch: javadoc
           javadoc-source-folder: pine-engine/build/docs/javadoc
           java-version: 21
-          target-folder: javadoc
           project: gradle
