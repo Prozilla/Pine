@@ -59,8 +59,10 @@ public class ParticlePrefab extends SpritePrefab {
 	protected void apply(Entity entity) {
 		super.apply(entity);
 		
-		SpriteRenderer spriteRenderer = entity.getComponent(SpriteRenderer.class);
-		spriteRenderer.scale = scale.getValue();
+		if (scale != null) {
+			SpriteRenderer spriteRenderer = entity.getComponent(SpriteRenderer.class);
+			spriteRenderer.scale = scale.getValue();
+		}
 		
 		ParticleRenderer particleRenderer = new ParticleRenderer(lifetime.getValue());
 		particleRenderer.frameCount = frameCount;

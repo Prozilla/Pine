@@ -4,19 +4,15 @@ import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.Scene;
-import dev.prozilla.pine.core.component.canvas.RectTransform;
+import dev.prozilla.pine.core.component.particle.ParticleBurstEmitter;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.canvas.CanvasPrefab;
 import dev.prozilla.pine.core.entity.prefab.sprite.GridPrefab;
 import dev.prozilla.pine.core.state.input.Key;
-import dev.prozilla.pine.core.system.standard.canvas.RectUpdater;
-import dev.prozilla.pine.examples.snake.entity.ApplePrefab;
-import dev.prozilla.pine.examples.snake.entity.BackgroundPrefab;
-import dev.prozilla.pine.examples.snake.entity.GameOverPrefab;
-import dev.prozilla.pine.examples.snake.entity.PlayerHeadPrefab;
-import dev.prozilla.pine.examples.snake.system.PlayerMover;
+import dev.prozilla.pine.examples.snake.entity.*;
 import dev.prozilla.pine.examples.snake.system.PlayerInput;
+import dev.prozilla.pine.examples.snake.system.PlayerMover;
 import dev.prozilla.pine.examples.snake.system.PlayerTailUpdater;
 
 import java.util.Random;
@@ -80,23 +76,27 @@ public class GameScene extends Scene {
 		GridPrefab foregroundGridPrefab = new GridPrefab(CELL_SIZE);
 		foregroundGridPrefab.setName("ForegroundGrid");
 		
-		// Add grid entities
+		// Add background grid filled with tiles
 		GridGroup backgroundGrid = world.addEntity(backgroundGridPrefab).getComponent(GridGroup.class);
-		foregroundGrid = world.addEntity(foregroundGridPrefab).getComponent(GridGroup.class);
-		
 		for (int x = MIN_GRID_X; x < MAX_GRID_X; x++) {
 			for (int y = MIN_GRID_Y; y < MAX_GRID_Y; y++) {
 				backgroundGrid.addTile(backgroundPrefab, x, y);
 			}
 		}
 		
-		// Add player entity
+		// Add particle emitter
+		ParticleBurstEmitter appleParticleEmitter = world.addEntity(new AppleParticleEmitterPrefab()).getComponent(ParticleBurstEmitter.class);
+		applePrefab.setParticleEmitter(appleParticleEmitter);
+		
+		// Add foreground grid with player
+		foregroundGrid = world.addEntity(foregroundGridPrefab).getComponent(GridGroup.class);
 		foregroundGrid.addTile(playerHeadPrefab, new Vector2i(0, MIN_GRID_Y));
 		
 		// Add user interface
 		Entity canvas = world.addEntity(new CanvasPrefab());
 		gameOverText = canvas.addChild(new GameOverPrefab(font));
 		
+		// Reset state
 		timeUntilNextSpawn = MIN_TIME_BETWEEN_SPAWNS;
 		gameOver = false;
 	}
@@ -122,14 +122,17 @@ public class GameScene extends Scene {
 			timeUntilNextSpawn -= deltaTime;
 			if (timeUntilNextSpawn <= 0) {
 				Vector2i appleCoordinate = new Vector2i();
-				
+
+				// Search for valid spawn coordinate
 				do {
 					appleCoordinate.x = random.nextInt(MIN_GRID_X, MAX_GRID_X);
 					appleCoordinate.y = random.nextInt(MIN_GRID_Y, MAX_GRID_Y);
 				} while (foregroundGrid.coordinateToTile.containsKey(appleCoordinate));
 				
+				// Spawn apple
 				foregroundGrid.addTile(applePrefab.instantiate(world, appleCoordinate));
 				
+				// Reset apple timer
 				timeUntilNextSpawn += random.nextFloat(MIN_TIME_BETWEEN_SPAWNS, MAX_TIME_BETWEEN_SPAWNS);
 			}
 		}
