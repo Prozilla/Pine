@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: javadoc-artifact
-          path: ./build/docs/javadoc
+          path: ./pine-engine/build/docs/javadoc
 
   deploy:
     needs: generate-docs
