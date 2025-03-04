@@ -18,7 +18,8 @@ jobs:
         uses: MathieuSoysal/Javadoc-publisher.yml@v3.0.2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          javadoc-branch: build/docs/javadoc
+          javadoc-branch: javadoc
+          javadoc-source-folder: pine-engine/build/docs/javadoc
           java-version: 21
           target-folder: javadoc
           project: gradle
