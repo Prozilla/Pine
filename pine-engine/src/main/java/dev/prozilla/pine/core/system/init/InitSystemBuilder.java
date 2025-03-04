@@ -49,7 +49,7 @@ public class InitSystemBuilder extends SystemBuilder<InitSystem, InitSystemBuild
 		
 		/**
 		 * Initializes a single entity's data.
-		 * @param match Entity that matches this system's query
+		 * @param chunk Entity that matches this system's query
 		 */
 		void run(EntityChunk chunk);
 		

@@ -48,7 +48,7 @@ public class UpdateSystemBuilder extends SystemBuilder<UpdateSystem, UpdateSyste
 		
 		/**
 		 * Updates a single entity's data, each frame.
-		 * @param match Entity that matches this system's query
+		 * @param chunk Entity that matches this system's query
 		 * @param deltaTime Delta time in seconds
 		 */
 		void run(EntityChunk chunk, float deltaTime);

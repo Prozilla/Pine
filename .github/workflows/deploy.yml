@@ -1,0 +1,21 @@
+name: Deploy Javadoc
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy javadoc to Github Pages
+        uses: dev-vince/actions-publish-javadoc@v1.0.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          java-version: "21"
+          project: gradle
+          branch: "gh-pages"

@@ -1,5 +1,7 @@
 import org.codehaus.groovy.runtime.GStringImpl
 
+import java.time.Year
+
 plugins {
     id "java"
     id "maven-publish"
@@ -26,9 +28,10 @@ ext {
     lwjglVersion = "3.3.4"
     groupId = "dev.prozilla"
     artifactId = "pine"
-    version = "1.0.1"
+    version = "1.0.2"
 }
 
+// Determine platform
 switch (org.gradle.internal.os.OperatingSystem.current()) {
     case org.gradle.internal.os.OperatingSystem.LINUX:
         project.ext.lwjglNatives = "natives-linux" as GStringImpl
@@ -102,6 +105,20 @@ publishing {
     }
 }
 
+// Javadoc generation
+tasks.withType(Javadoc).configureEach {
+    source = sourceSets.main.allJava
+    classpath += configurations.compileClasspath
+    options.addStringOption("Xdoclint:none", "-quiet")
+    options.encoding = "UTF-8"
+    options.windowTitle = "Pine ${project.ext.version}"
+    options.docTitle = "Pine API Docs"
+    options.header = "Pine API documentation."
+    options.bottom = "Copyright © ${Year.now().value} Prozilla"
+    options.links("https://javadoc.lwjgl.org/")
+}
+
+// Unit testing
 test {
     useJUnitPlatform()
 }
