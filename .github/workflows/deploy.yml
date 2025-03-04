@@ -30,6 +30,12 @@ jobs:
       - name: Generate Javadoc
         run: ./gradlew javadoc
 
+      - name: Upload Javadoc as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: javadoc
+          path: ./build/docs/javadoc
+
   deploy:
     needs: generate-docs
     runs-on: ubuntu-latest
@@ -37,8 +43,13 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Download Javadoc artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: javadoc
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          folder: ./build/docs/javadoc
+          folder: ./javadoc
