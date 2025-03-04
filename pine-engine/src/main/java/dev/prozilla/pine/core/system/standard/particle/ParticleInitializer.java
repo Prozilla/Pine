@@ -18,7 +18,7 @@ public class ParticleInitializer extends InitSystem {
 		
 		float textureWidth = spriteRenderer.texture.getWidth();
 		float textureHeight = spriteRenderer.texture.getHeight() / (float)particleRenderer.frameCount;
-		spriteRenderer.setRegion(0, textureHeight * (particleRenderer.frameCount - 1), textureWidth, textureHeight);
+		spriteRenderer.setRegion(0, textureHeight * (particleRenderer.frameCount - particleRenderer.initialFrame - 1), textureWidth, textureHeight);
 		
 		spriteRenderer.offset.x = -textureWidth / 2f;
 		spriteRenderer.offset.y = -textureHeight / 2f;

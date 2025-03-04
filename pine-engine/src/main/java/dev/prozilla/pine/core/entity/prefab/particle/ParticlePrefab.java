@@ -16,11 +16,14 @@ public class ParticlePrefab extends SpritePrefab {
 	protected VariableProperty<Float> scale;
 	
 	protected int frameCount;
+	protected boolean animateSprite;
+	protected VariableProperty<Integer> initialFrame;
 	
 	public ParticlePrefab(Texture texture, VariableProperty<Float> lifetime) {
 		super(texture);
 		this.lifetime = lifetime;
-		frameCount = 1;
+		frameCount = ParticleRenderer.DEFAULT_FRAME_COUNT;
+		animateSprite = ParticleRenderer.ANIMATE_SPRITE_DEFAULT;
 	}
 	
 	@Override
@@ -44,6 +47,14 @@ public class ParticlePrefab extends SpritePrefab {
 		this.frameCount = frameCount;
 	}
 	
+	public void setAnimateSprite(boolean animateSprite) {
+		this.animateSprite = animateSprite;
+	}
+	
+	public void setInitialFrame(VariableProperty<Integer> initialFrame) {
+		this.initialFrame = initialFrame;
+	}
+	
 	@Override
 	protected void apply(Entity entity) {
 		super.apply(entity);
@@ -53,9 +64,13 @@ public class ParticlePrefab extends SpritePrefab {
 		
 		ParticleRenderer particleRenderer = new ParticleRenderer(lifetime.getValue());
 		particleRenderer.frameCount = frameCount;
+		particleRenderer.animateSprite = animateSprite;
 		
 		if (velocity != null) {
 			particleRenderer.velocity = velocity.getValue();
+		}
+		if (initialFrame != null) {
+			particleRenderer.initialFrame = initialFrame.getValue();
 		}
 		
 		entity.addComponent(particleRenderer);

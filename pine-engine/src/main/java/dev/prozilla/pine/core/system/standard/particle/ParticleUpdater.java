@@ -26,9 +26,11 @@ public class ParticleUpdater extends UpdateSystem {
 		}
 		
 		// Update sprite region based on current frame
-		int currentFrame = (int)Math.floor((particleRenderer.lifetime / particleRenderer.initialLifetime) * particleRenderer.frameCount);
-		float textureHeight = (float)spriteRenderer.texture.getHeight() / particleRenderer.frameCount;
-		spriteRenderer.setRegion(0, currentFrame * textureHeight, spriteRenderer.texture.getWidth(), textureHeight);
+		if (particleRenderer.animateSprite) {
+			int currentFrame = (int)Math.floor((particleRenderer.lifetime / particleRenderer.initialLifetime) * particleRenderer.frameCount);
+			float textureHeight = (float)spriteRenderer.texture.getHeight() / particleRenderer.frameCount;
+			spriteRenderer.setRegion(0, currentFrame * textureHeight, spriteRenderer.texture.getWidth(), textureHeight);
+		}
 		
 		// Update position based on velocity
 		if (particleRenderer.velocity != null) {
