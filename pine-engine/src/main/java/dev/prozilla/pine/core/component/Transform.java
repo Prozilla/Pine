@@ -134,6 +134,10 @@ public class Transform extends Component {
 		return children.size();
 	}
 	
+	public void translate(Vector2f delta) {
+		translate(delta.x, delta.y);
+	}
+	
 	public void translate(float deltaX, float deltaY) {
 		position.add(deltaX, deltaY);
 	}

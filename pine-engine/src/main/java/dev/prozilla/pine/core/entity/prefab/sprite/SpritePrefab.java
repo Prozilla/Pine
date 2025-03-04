@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.sprite;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.core.component.Transform;
@@ -18,7 +19,7 @@ import java.util.Objects;
 public class SpritePrefab extends Prefab {
 	
 	protected Texture texture;
-	
+	protected Color color;
 	protected float scale;
 	
 	protected boolean cropToRegion;
@@ -34,6 +35,7 @@ public class SpritePrefab extends Prefab {
 		
 		this.texture = texture;
 		
+		color = null;
 		scale = 1;
 		
 		cropToRegion = false;
@@ -58,14 +60,19 @@ public class SpritePrefab extends Prefab {
 		this.scale = scale;
 	}
 	
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	
 	@Override
 	protected void apply(Entity entity) {
-		SpriteRenderer spriteRenderer = entity.addComponent(new SpriteRenderer(texture));
-		
+		SpriteRenderer spriteRenderer = color != null ? new SpriteRenderer(texture, color) : new SpriteRenderer(texture);
 		spriteRenderer.scale = scale;
 		
 		if (cropToRegion) {
 			spriteRenderer.setRegion(regionOffset, regionSize);
 		}
+		
+		entity.addComponent(spriteRenderer);
 	}
 }
