@@ -21,6 +21,9 @@ jobs:
           distribution: "temurin"
           java-version: "21"
 
+      - name: Set execute permissions for gradlew
+        run: chmod +x ./gradlew
+
       - name: Generate Javadoc
         run: ./gradlew javadoc
 
