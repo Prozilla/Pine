@@ -84,13 +84,13 @@ public class GameScene extends Scene {
 			}
 		}
 		
-		// Add particle emitter
-		ParticleBurstEmitter appleParticleEmitter = world.addEntity(new AppleParticleEmitterPrefab()).getComponent(ParticleBurstEmitter.class);
-		applePrefab.setParticleEmitter(appleParticleEmitter);
-		
 		// Add foreground grid with player
 		foregroundGrid = world.addEntity(foregroundGridPrefab).getComponent(GridGroup.class);
 		foregroundGrid.addTile(playerHeadPrefab, new Vector2i(0, MIN_GRID_Y));
+
+		// Add particle emitter
+		ParticleBurstEmitter appleParticleEmitter = world.addEntity(new AppleParticleEmitterPrefab()).getComponent(ParticleBurstEmitter.class);
+		applePrefab.setParticleEmitter(appleParticleEmitter);
 		
 		// Add user interface
 		Entity canvas = world.addEntity(new CanvasPrefab());
