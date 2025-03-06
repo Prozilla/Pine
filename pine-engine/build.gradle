@@ -1,4 +1,4 @@
-import org.codehaus.groovy.runtime.GStringImpl
+import java.time.Year
 
 plugins {
     id "java"
@@ -26,28 +26,30 @@ ext {
     lwjglVersion = "3.3.4"
     groupId = "dev.prozilla"
     artifactId = "pine"
-    version = "1.0.1"
+    version = "1.0.2"
 }
 
+// Determine platform
 switch (org.gradle.internal.os.OperatingSystem.current()) {
     case org.gradle.internal.os.OperatingSystem.LINUX:
-        project.ext.lwjglNatives = "natives-linux" as GStringImpl
+        project.ext.lwjglNatives = "natives-linux"
         def osArch = System.getProperty("os.arch")
         if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
             project.ext.lwjglNatives += osArch.contains("64") || osArch.startsWith("armv8") ? "-arm64" : "-arm32"
-        } else if  (osArch.startsWith("ppc")) {
+        } else if (osArch.startsWith("ppc")) {
             project.ext.lwjglNatives += "-ppc64le"
-        } else if  (osArch.startsWith("riscv")) {
+        } else if (osArch.startsWith("riscv")) {
             project.ext.lwjglNatives += "-riscv64"
         }
         break
     case org.gradle.internal.os.OperatingSystem.WINDOWS:
         def osArch = System.getProperty("os.arch")
         project.ext.lwjglNatives = osArch.contains("64")
-                ? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}" as GStringImpl
-                : "natives-windows-x86" as GStringImpl
+                ? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
+                : "natives-windows-x86"
         break
 }
+
 
 dependencies {
     // LWJGL
@@ -102,6 +104,20 @@ publishing {
     }
 }
 
+// Javadoc generation
+tasks.withType(Javadoc).configureEach {
+    source = sourceSets.main.allJava
+    classpath += configurations.compileClasspath
+    options.addStringOption("Xdoclint:none", "-quiet")
+    options.encoding = "UTF-8"
+    options.windowTitle = "Pine ${project.ext.version}"
+    options.docTitle = "Pine API Docs"
+    options.header = "Pine API documentation."
+    options.bottom = "Copyright © ${Year.now().value} Prozilla"
+    options.links("https://javadoc.lwjgl.org/")
+}
+
+// Unit testing
 test {
     useJUnitPlatform()
 }

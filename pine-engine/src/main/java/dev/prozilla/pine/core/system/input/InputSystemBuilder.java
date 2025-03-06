@@ -50,7 +50,7 @@ public class InputSystemBuilder extends SystemBuilder<InputSystem, InputSystemBu
 		
 		/**
 		 * Updates a single entity's data based on input, each frame.
-		 * @param match Entity that matches this system's query
+		 * @param chunk Entity that matches this system's query
 		 * @param deltaTime Delta time in seconds
 		 */
 		void run(EntityChunk chunk, Input input, float deltaTime);

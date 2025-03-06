@@ -8,9 +8,10 @@ import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 import dev.prozilla.pine.examples.snake.EntityTag;
 import dev.prozilla.pine.examples.snake.GameScene;
+import dev.prozilla.pine.examples.snake.component.AppleData;
 import dev.prozilla.pine.examples.snake.component.PlayerData;
-import dev.prozilla.pine.examples.snake.entity.PlayerTailPrefab;
 import dev.prozilla.pine.examples.snake.component.PlayerTailData;
+import dev.prozilla.pine.examples.snake.entity.PlayerTailPrefab;
 
 import static dev.prozilla.pine.examples.snake.GameScene.*;
 
@@ -58,7 +59,7 @@ public class PlayerMover extends UpdateSystem {
 				Entity entity = nextTile.getEntity();
 				if (entity.hasTag(EntityTag.APPLE_TAG)) {
 					// Eat apple
-					nextTile.remove();
+					entity.getComponent(AppleData.class).eat();
 					shouldGrow = true;
 				} else if (entity.hasTag(EntityTag.PLAYER)) {
 					// Die

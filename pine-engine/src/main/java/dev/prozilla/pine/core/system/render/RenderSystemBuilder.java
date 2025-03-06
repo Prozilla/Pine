@@ -49,7 +49,7 @@ public class RenderSystemBuilder extends SystemBuilder<RenderSystem, RenderSyste
 		
 		/**
 		 * Renders a single entity, each frame.
-		 * @param match Entity that matches this system's query
+		 * @param chunk Entity that matches this system's query
 		 */
 		void run(EntityChunk chunk, Renderer renderer);
 		

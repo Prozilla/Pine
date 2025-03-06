@@ -1,0 +1,23 @@
+name: Deploy Javadoc
+
+permissions:
+  contents: write
+
+on:
+  registry_package:
+    types: [published, updated]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Deploy Javadoc to GitHub Pages
+        uses: MathieuSoysal/Javadoc-publisher.yml@v3.0.2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          javadoc-branch: javadoc
+          javadoc-source-folder: pine-engine/build/docs/javadoc
+          java-version: 21
+          project: gradle
