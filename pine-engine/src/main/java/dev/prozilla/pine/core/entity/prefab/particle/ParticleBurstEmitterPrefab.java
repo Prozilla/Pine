@@ -17,7 +17,7 @@ public class ParticleBurstEmitterPrefab extends Prefab {
 	}
 	
 	public ParticleBurstEmitterPrefab(Texture texture) {
-		this(new ParticlePrefab(texture, ParticleBurstEmitter.DEFAULT_LIFETIME));
+		this(new ParticlePrefab(texture, ParticlePrefab.DEFAULT_LIFETIME));
 	}
 	
 	public ParticleBurstEmitterPrefab(ParticlePrefab particlePrefab) {

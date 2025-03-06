@@ -10,7 +10,6 @@ public abstract class ParticleEmitter extends Component {
 	public ParticlePrefab particlePrefab;
 	public VariableProperty<Integer> count;
 	
-	public static final VariableProperty<Float> DEFAULT_LIFETIME = new FixedProperty<>(5f);
 	public static final VariableProperty<Integer> DEFAULT_COUNT = new FixedProperty<>(5);
 	
 	public ParticleEmitter(ParticlePrefab particlePrefab, VariableProperty<Integer> count) {

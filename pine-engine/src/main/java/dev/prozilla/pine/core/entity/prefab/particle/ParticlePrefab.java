@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.entity.prefab.particle;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.random.property.FixedProperty;
 import dev.prozilla.pine.common.random.property.VariableProperty;
+import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.core.component.particle.ParticleRenderer;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
@@ -18,6 +19,20 @@ public class ParticlePrefab extends SpritePrefab {
 	protected int frameCount;
 	protected boolean animateSprite;
 	protected VariableProperty<Integer> initialFrame;
+	
+	public static final VariableProperty<Float> DEFAULT_LIFETIME = new FixedProperty<>(5f);
+	
+	public ParticlePrefab(String texturePath) {
+		this(ResourcePool.loadTexture(texturePath));
+	}
+	
+	public ParticlePrefab(Texture texture) {
+		this(texture, DEFAULT_LIFETIME);
+	}
+	
+	public ParticlePrefab(String texturePath, VariableProperty<Float> lifetime) {
+		this(ResourcePool.loadTexture(texturePath), lifetime);
+	}
 	
 	public ParticlePrefab(Texture texture, VariableProperty<Float> lifetime) {
 		super(texture);

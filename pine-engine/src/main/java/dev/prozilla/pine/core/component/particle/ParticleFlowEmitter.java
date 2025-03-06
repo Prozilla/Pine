@@ -3,9 +3,11 @@ package dev.prozilla.pine.core.component.particle;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.random.property.FixedProperty;
 import dev.prozilla.pine.common.random.property.VariableProperty;
-import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.core.entity.prefab.particle.ParticlePrefab;
 
+/**
+ * Continuously spawns particles
+ */
 public class ParticleFlowEmitter extends ParticleEmitter {
 	
 	public VariableProperty<Float> spawnDelay;
@@ -15,35 +17,41 @@ public class ParticleFlowEmitter extends ParticleEmitter {
 	
 	public static final VariableProperty<Float> DEFAULT_SPAWN_DELAY = new FixedProperty<>(1f);
 	
-	public ParticleFlowEmitter(Texture texture) {
-		this(texture, DEFAULT_LIFETIME);
+	public ParticleFlowEmitter(ParticlePrefab particlePrefab) {
+		this(particlePrefab, DEFAULT_SPAWN_DELAY);
 	}
 	
-	public ParticleFlowEmitter(Texture texture, VariableProperty<Float> lifetime) {
-		this(texture, lifetime, DEFAULT_SPAWN_DELAY);
-	}
-	
-	public ParticleFlowEmitter(Texture texture, VariableProperty<Float> lifetime, VariableProperty<Float> spawnDelay) {
-		this(texture, lifetime, spawnDelay, DEFAULT_COUNT);
-	}
-	
-	public ParticleFlowEmitter(Texture texture, VariableProperty<Float> lifetime, VariableProperty<Float> spawnDelay, VariableProperty<Integer> count) {
-		this(new ParticlePrefab(texture, lifetime), spawnDelay, count);
+	public ParticleFlowEmitter(ParticlePrefab particlePrefab, VariableProperty<Float> spawnDelay) {
+		this(particlePrefab, spawnDelay, DEFAULT_COUNT);
 	}
 	
 	public ParticleFlowEmitter(ParticlePrefab particlePrefab, VariableProperty<Float> spawnDelay, VariableProperty<Integer> count) {
 		super(particlePrefab, count);
 		this.spawnDelay = spawnDelay;
 		timeUntilSpawn = 0;
-		isSpawning = true;
+		isSpawning = false;
 		origin = new Vector2f();
 	}
 	
+	/**
+	 * Start timer for spawning particles.
+	 */
 	public void start() {
 		timeUntilSpawn = spawnDelay.getValue();
 		isSpawning = true;
 	}
 	
+	/**
+	 * Start spawning particles immediately.
+	 */
+	public void startImmediate() {
+		timeUntilSpawn = 0;
+		isSpawning = true;
+	}
+	
+	/**
+	 * Stop spawning particles.
+	 */
 	public void stop() {
 		isSpawning = false;
 	}
