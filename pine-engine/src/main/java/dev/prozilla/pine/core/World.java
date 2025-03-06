@@ -19,6 +19,7 @@ import dev.prozilla.pine.core.system.standard.canvas.frame.FrameResizer;
 import dev.prozilla.pine.core.system.standard.canvas.group.*;
 import dev.prozilla.pine.core.system.standard.canvas.image.*;
 import dev.prozilla.pine.core.system.standard.canvas.text.*;
+import dev.prozilla.pine.core.system.standard.particle.ParticleFlowUpdater;
 import dev.prozilla.pine.core.system.standard.particle.ParticleInitializer;
 import dev.prozilla.pine.core.system.standard.particle.ParticleUpdater;
 import dev.prozilla.pine.core.system.standard.sprite.GridInitializer;
@@ -95,6 +96,7 @@ public class World implements Lifecycle {
 		
 		// Particles
 		initialSystems.add(new ParticleInitializer());
+		initialSystems.add(new ParticleFlowUpdater());
 		initialSystems.add(new ParticleUpdater());
 		
 		// Sprites

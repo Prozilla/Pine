@@ -1,20 +1,12 @@
 package dev.prozilla.pine.core.component.particle;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
-import dev.prozilla.pine.common.random.property.FixedProperty;
 import dev.prozilla.pine.common.random.property.VariableProperty;
 import dev.prozilla.pine.common.system.resource.Texture;
-import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.particle.ParticlePrefab;
 
-public class ParticleBurstEmitter extends Component {
-	
-	public VariableProperty<Integer> count;
-	public ParticlePrefab particlePrefab;
-	
-	public static final VariableProperty<Float> DEFAULT_LIFETIME = new FixedProperty<>(5f);
-	public static final VariableProperty<Integer> DEFAULT_COUNT = new FixedProperty<>(5);
+public class ParticleBurstEmitter extends ParticleEmitter {
 	
 	public ParticleBurstEmitter(Texture texture) {
 		this(texture, DEFAULT_LIFETIME);
@@ -29,8 +21,7 @@ public class ParticleBurstEmitter extends Component {
 	}
 	
 	public ParticleBurstEmitter(ParticlePrefab particlePrefab, VariableProperty<Integer> count) {
-		this.particlePrefab = particlePrefab;
-		this.count = count;
+		super(particlePrefab, count);
 	}
 	
 	public void emit() {
