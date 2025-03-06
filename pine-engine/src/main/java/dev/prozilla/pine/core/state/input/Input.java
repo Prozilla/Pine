@@ -342,18 +342,38 @@ public class Input implements Lifecycle {
 		return down;
 	}
 	
+	/**
+	 * Checks whether a mouse button is pressed.
+	 * @return True if the key is pressed.
+	 */
 	public boolean getMouseButton(MouseButton button) {
 		return getMouseButton(button, STOP_PROPAGATION_DEFAULT);
 	}
 	
+	/**
+	 * Checks whether a mouse button is pressed.
+	 * @param stopPropagation Whether to stop this mouse button from affecting other listeners
+	 * @return True if the key is pressed.
+	 */
 	public boolean getMouseButton(MouseButton button, boolean stopPropagation) {
 		return getMouseButton(button.getValue(), stopPropagation);
 	}
 	
+	/**
+	 * Checks whether a mouse button is pressed.
+	 * @param button GLFW integer value for a mouse button
+	 * @return True if the key is pressed.
+	 */
 	public boolean getMouseButton(int button) {
 		return getMouseButton(button, STOP_PROPAGATION_DEFAULT);
 	}
 	
+	/**
+	 * Checks whether a mouse button is pressed.
+	 * @param button GLFW integer value for a mouse button
+	 * @param stopPropagation Whether to stop this mouse button from affecting other listeners
+	 * @return True if the key is pressed.
+	 */
 	public boolean getMouseButton(int button, boolean stopPropagation) {
 		boolean pressed = mouseButtonsPressed.contains(button);
 		
@@ -366,18 +386,38 @@ public class Input implements Lifecycle {
 		return pressed;
 	}
 	
+	/**
+	 * Checks whether a mouse button is down.
+	 * @return True if the mouse button is down in the current frame
+	 */
 	public boolean getMouseButtonDown(MouseButton button) {
 		return getMouseButtonDown(button, STOP_PROPAGATION_DEFAULT);
 	}
 	
+	/**
+	 * Checks whether a mouse button is down.
+	 * @param stopPropagation Whether to stop this mouse button from affecting other listeners
+	 * @return True if the mouse button is down in the current frame
+	 */
 	public boolean getMouseButtonDown(MouseButton button, boolean stopPropagation) {
 		return getMouseButtonDown(button.getValue(), stopPropagation);
 	}
 	
+	/**
+	 * Checks whether a mouse button is down.
+	 * @param button GLFW integer value for a mouse button
+	 * @return True if the mouse button is down in the current frame
+	 */
 	public boolean getMouseButtonDown(int button) {
 		return getMouseButtonDown(button, STOP_PROPAGATION_DEFAULT);
 	}
 	
+	/**
+	 * Checks whether a mouse button is down.
+	 * @param button GLFW integer value for a mouse button
+	 * @param stopPropagation Whether to stop this mouse button from affecting other listeners
+	 * @return True if the mouse button is down in the current frame
+	 */
 	public boolean getMouseButtonDown(int button, boolean stopPropagation) {
 		boolean down = mouseButtonsDown.contains(button);
 		
@@ -391,25 +431,21 @@ public class Input implements Lifecycle {
 	}
 	
 	/**
-	 * Returns the horizontal scroll factor.
-	 * @return Horizontal scroll
+	 * @return Horizontal scroll factor.
 	 */
 	public float getScrollX() {
 		return currentScroll.x;
 	}
 	
 	/**
-	 * Returns the vertical scroll factor.
-	 * @return Vertical scroll
+	 * @return Vertical scroll factor.
 	 */
 	public float getScrollY() {
 		return currentScroll.y;
 	}
 	
 	/**
-	 * Returns the position of the cursor on the screen.
-	 * Returns <code>null</code> if the cursor is being blocked.
-	 * @return Position of the cursor
+	 * @return Position of the cursor on the screen, or <code>null</code> if the cursor is being blocked.
 	 */
 	public Vector2i getCursor() {
 		return getCursor(IGNORE_CURSOR_BLOCK_DEFAULT);
@@ -492,6 +528,9 @@ public class Input implements Lifecycle {
 		cursorBlocker = entity;
 	}
 	
+	/**
+	 * Checks whether the cursor is being blocked.
+	 */
 	public boolean isCursorBlocked() {
 		return cursorBlocker != null;
 	}

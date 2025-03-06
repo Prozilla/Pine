@@ -14,7 +14,7 @@ import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.state.Timer;
+import dev.prozilla.pine.core.state.ApplicationTimer;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.input.Input;
 
@@ -197,7 +197,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	}
 	
 	/**
-	 * Enables/disables this entity.
+	 * Toggles the active state of this entity.
 	 */
 	public void setActive(boolean active) {
 		if (this.isActive == active) {
@@ -326,6 +326,9 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 		}
 	}
 	
+	/**
+	 * Checks whether this entity has a given tag.
+	 */
 	public boolean hasTag(String tag) {
 		if (this.tag == null) {
 			return false;
@@ -346,7 +349,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 		return application.getRenderer();
 	}
 	
-	public Timer getTimer() {
+	public ApplicationTimer getTimer() {
 		return application.getTimer();
 	}
 	
@@ -374,6 +377,9 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 		return logger;
 	}
 	
+	/**
+	 * Checks whether this entity is registered in the entity manager.
+	 */
 	public boolean isRegistered() {
 		return world.entityManager.contains(this);
 	}
@@ -392,6 +398,9 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 		return (id == entity.id);
 	}
 	
+	/**
+	 * Formats and prints the names of this entity's parents.
+	 */
 	public void printHierarchy() {
 		if (transform.parent == null) {
 			logger.log(getName());

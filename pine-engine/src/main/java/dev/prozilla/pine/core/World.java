@@ -35,6 +35,7 @@ import java.util.List;
  */
 public class World implements Lifecycle {
 	
+	// ECS managers
 	public EntityManager entityManager;
 	public ComponentManager componentManager;
 	public SystemManager systemManager;

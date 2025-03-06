@@ -7,8 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Manages entities in the world.
+ */
 public class EntityManager extends ECSManager {
 	
+	/** List of all entities */
 	private final List<Entity> entities;
 	
 	private static int lastEntityId = 0;
@@ -19,6 +23,9 @@ public class EntityManager extends ECSManager {
 		entities = new ArrayList<>();
 	}
 	
+	/**
+	 * Destroys all entities.
+	 */
 	@Override
 	public void destroy() {
 		for (Entity entity : entities) {
@@ -28,7 +35,12 @@ public class EntityManager extends ECSManager {
 		entities.clear();
 	}
 	
-	public void addEntity(Entity entity) throws NullPointerException, IllegalStateException {
+	/**
+	 * Registers an entity.
+	 * @param entity Entity to register
+	 * @throws IllegalStateException If the entity is already registered.
+	 */
+	public void addEntity(Entity entity) throws IllegalStateException {
 		Objects.requireNonNull(entity, "Entity must not be null.");
 		
 		if (entities.contains(entity)) {
@@ -40,7 +52,12 @@ public class EntityManager extends ECSManager {
 		getTracker().addEntity();
 	}
 	
-	public void removeEntity(Entity entity) {
+	/**
+	 * Unregisters an entity.
+	 * @param entity Entity to unregister.
+	 * @throws IllegalStateException If the entity has not been registered yet.
+	 */
+	public void removeEntity(Entity entity) throws IllegalStateException {
 		Objects.requireNonNull(entity, "Entity must not be null.");
 		
 		if (!entities.contains(entity)) {
@@ -52,14 +69,23 @@ public class EntityManager extends ECSManager {
 		getTracker().removeEntity();
 	}
 	
+	/**
+	 * Checks whether a given entity has been registered.
+	 */
 	public boolean contains(Entity entity) {
 		return entities.contains(entity);
 	}
 	
+	/**
+	 * @return List of all entities.
+	 */
 	public List<Entity> getEntities() {
 		return entities;
 	}
 	
+	/**
+	 * Checks if there are any entities.
+	 */
 	public boolean hasEntities() {
 		return !entities.isEmpty();
 	}

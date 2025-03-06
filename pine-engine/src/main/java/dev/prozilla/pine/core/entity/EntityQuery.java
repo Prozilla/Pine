@@ -15,9 +15,7 @@ public class EntityQuery implements Lifecycle {
 	/** List of entities that match this query. */
 	public final ArrayList<EntityChunk> entityChunks;
 	
-	/**
-	 * Map of entity IDs to their respective match.
-	 */
+	/** Map of entity IDs to their respective match. */
 	private final Map<Integer, EntityChunk> entityChunkMap;
 	
 	// Primary query options
@@ -72,6 +70,10 @@ public class EntityQuery implements Lifecycle {
 		isIterating = false;
 	}
 	
+	/**
+	 * Prepares this entity query for an iteration.
+	 * @throws IllegalStateException If this entity query is already being iterated.
+	 */
 	public void startIteration() throws IllegalStateException {
 		if (isIterating) {
 			throw new IllegalStateException("Entity query is already being iterated.");
@@ -84,6 +86,10 @@ public class EntityQuery implements Lifecycle {
 		entityChunkRemovalQueue.clear();
 	}
 	
+	/**
+	 * Marks the ongoing iteration of this entity query as done.
+	 * @throws IllegalStateException If this entity query is not being iterated.
+	 */
 	public void endIteration() throws IllegalStateException {
 		if (!isIterating) {
 			throw new IllegalStateException("Entity query is not being iterated.");
@@ -197,6 +203,9 @@ public class EntityQuery implements Lifecycle {
 		}
 	}
 	
+	/**
+	 * Checks if this entity query has matched any entities.
+	 */
 	public boolean hasEntityChunks() {
 		return !entityChunks.isEmpty() || !entityChunkAdditionQueue.isEmpty();
 	}

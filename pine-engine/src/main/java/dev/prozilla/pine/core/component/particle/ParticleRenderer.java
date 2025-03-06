@@ -6,11 +6,26 @@ import dev.prozilla.pine.core.component.Component;
 public class ParticleRenderer extends Component {
 	
 	public float initialLifetime;
+	/**
+	 * Remaining life of this particle, in seconds.
+	 */
 	public float lifetime;
+	/**
+	 * Current velocity vector.
+	 */
 	public Vector2f velocity;
 	
+	/**
+	 * Amount of frames in the texture of this particle.
+	 */
 	public int frameCount;
+	/**
+	 * Whether to animate the sprite of this particle depending on its remaining lifetime.
+	 */
 	public boolean animateSprite;
+	/**
+	 * Initial frame of the sprite of this particle.
+	 */
 	public int initialFrame;
 	
 	public static final int DEFAULT_FRAME_COUNT = 1;

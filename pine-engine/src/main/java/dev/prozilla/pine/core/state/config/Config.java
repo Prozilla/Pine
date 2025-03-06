@@ -25,6 +25,7 @@ public class Config {
 	public final ConfigOption<Integer> fps = new ConfigOption<>(120, (fps) -> fps != null && fps >= 0);
 	/** Determines whether depth values will be recalculated when new entities are added to the world. Defaults to <code>true</code>. */
 	public final ConfigOption<Boolean> enableDepthRecalculation = new ConfigOption<>(true, Objects::nonNull);
+	/** Default font used to render text elements. Defaults to <code>null</code>. */
 	public final ConfigOption<String> defaultFontPath = new ConfigOption<>(null);
 	/** Options related to rendering. */
 	public final RenderConfig rendering = new RenderConfig();
@@ -43,6 +44,7 @@ public class Config {
 		// Add predefined options
 		addOption(FPS, fps);
 		addOption(ENABLE_DEPTH_RECALCULATION, enableDepthRecalculation);
+		addOption(DEFAULT_FONT_PATH, defaultFontPath);
 		
 		addOption(RenderConfig.FALLBACK_RENDER_COLOR, rendering.fallbackRenderColor);
 		addOption(RenderConfig.ENABLE_BLEND, rendering.enableBlend);

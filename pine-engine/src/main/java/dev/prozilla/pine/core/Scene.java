@@ -9,6 +9,9 @@ import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.camera.CameraPrefab;
 import dev.prozilla.pine.core.rendering.Renderer;
 
+/**
+ * Responsible for loading objects into the world.
+ */
 public class Scene implements Lifecycle, Printable {
 	
 	// Scene properties
@@ -61,12 +64,15 @@ public class Scene implements Lifecycle, Printable {
 		initialized = false;
 	}
 	
+	/**
+	 * Loads this scene with the default camera prefab.
+	 */
 	protected void load() {
 		load(null);
 	}
 	
 	/**
-	 * Fills the scene with a new world and camera.
+	 * Fills this scene with a new world and camera.
 	 * @param cameraPrefab Prefab for the camera entity.
 	 */
 	protected void load(Prefab cameraPrefab) throws IllegalStateException {
@@ -141,7 +147,7 @@ public class Scene implements Lifecycle, Printable {
 	}
 	
 	/**
-	 * Destroys the scene.
+	 * Destroys this scene.
 	 */
 	@Override
 	public void destroy() throws IllegalStateException {

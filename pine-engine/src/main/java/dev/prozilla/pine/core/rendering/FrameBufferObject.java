@@ -13,8 +13,8 @@ public class FrameBufferObject implements Lifecycle {
 	
 	private final int id;
 	private Texture texture;
-	private int width;
-	private int height;
+	private final int width;
+	private final int height;
 	
 	public FrameBufferObject(int width, int height) {
 		this.width = width;

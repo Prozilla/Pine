@@ -13,6 +13,7 @@ import java.util.Map;
  */
 public class EntityChunk implements Printable {
 	
+	/** The corresponding entity. */
 	private Entity entity;
 	/** Components of the entity that match the query. */
 	private final Component[] components;

@@ -7,7 +7,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
 /**
  * Keeps track of time and time-related values like FPS and UPS.
  */
-public class Timer implements Lifecycle {
+public class ApplicationTimer implements Lifecycle {
 	
 	/**
 	 * System time since last loop.

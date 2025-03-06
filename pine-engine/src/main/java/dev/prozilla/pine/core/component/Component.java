@@ -9,7 +9,7 @@ import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityFinder;
 import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.state.Timer;
+import dev.prozilla.pine.core.state.ApplicationTimer;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.input.Input;
 
@@ -65,7 +65,7 @@ public abstract class Component implements Lifecycle, Printable, EntityFinder, C
 		return entity.getRenderer();
 	}
 	
-	public Timer getTimer() {
+	public ApplicationTimer getTimer() {
 		return entity.getTimer();
 	}
 	

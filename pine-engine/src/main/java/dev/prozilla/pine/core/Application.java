@@ -9,7 +9,7 @@ import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.state.Timer;
+import dev.prozilla.pine.core.state.ApplicationTimer;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.input.Input;
@@ -48,7 +48,7 @@ public class Application implements Lifecycle {
 	// Helpers
 	protected final Config config;
 	protected final AppLogger logger;
-	protected final Timer timer;
+	protected final ApplicationTimer timer;
 	protected final Renderer renderer;
 	protected final Window window;
 	protected Input input;
@@ -107,7 +107,7 @@ public class Application implements Lifecycle {
 		config.window.width.set(width);
 		config.window.height.set(height);
 		
-		timer = new Timer();
+		timer = new ApplicationTimer();
 		tracker = new Tracker(this);
 		renderer = new Renderer(this);
 		window = new Window(this);
@@ -515,6 +515,10 @@ public class Application implements Lifecycle {
 		currentScene = null;
 	}
 	
+	/**
+	 * Sets the icons of the application's window.
+	 * @param icons Paths of icons
+	 */
 	public void setIcons(String... icons) {
 		config.window.icon.set(icons);
 		
@@ -549,10 +553,17 @@ public class Application implements Lifecycle {
 		}
 	}
 	
+	/**
+	 * Sets the default font path for text elements.
+	 * @param fontPath Path to the font file
+	 */
 	public void setDefaultFont(String fontPath) {
 		config.defaultFontPath.set(fontPath);
 	}
 	
+	/**
+	 * @return The default font of this application.
+	 */
 	public Font getDefaultFont() {
 		if (!config.defaultFontPath.exists()) {
 			return null;
@@ -589,7 +600,7 @@ public class Application implements Lifecycle {
 		return renderer;
 	}
 	
-	public Timer getTimer() {
+	public ApplicationTimer getTimer() {
 		return timer;
 	}
 	

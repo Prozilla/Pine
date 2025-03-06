@@ -49,6 +49,9 @@ public class EntityQueryPool {
 		return entityQuery;
 	}
 	
+	/**
+	 * Destroys all entity queries.
+	 */
 	public void clear() {
 		for (EntityQuery query : entityQueries.values()) {
 			query.destroy();
