@@ -22,10 +22,10 @@ public class TooltipInputHandler extends InputSystemBase {
 			RectTransform rect = chunk.getComponent(RectTransform.class);
 			TooltipRenderer tooltipRenderer = chunk.getComponent(TooltipRenderer.class);
 			
-			tooltipRenderer.offsetX.setValue(cursorPosition.x);
-			tooltipRenderer.offsetY.setValue(cursorPosition.y);
-			tooltipRenderer.cursorX.setValue(Math.round(windowWidth * rect.anchor.x));
-			tooltipRenderer.cursorY.setValue(Math.round(windowHeight * (1 - rect.anchor.y)));
+			tooltipRenderer.cursorX.setValue(Math.round(cursorPosition.x * (1f - (rect.anchor.x * 2))));
+			tooltipRenderer.cursorY.setValue(Math.round(cursorPosition.y * ((rect.anchor.y * 2) - 1f)));
+			tooltipRenderer.baseX.setValue(Math.round(windowWidth * (rect.anchor.x)));
+			tooltipRenderer.baseY.setValue(Math.round(windowHeight * (1f - rect.anchor.y)));
 		});
 	}
 }

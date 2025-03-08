@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.system.standard.canvas;
 
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
+import dev.prozilla.pine.core.component.canvas.TooltipRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.system.input.InputSystemBase;
@@ -15,6 +16,7 @@ public class RectInputHandler extends InputSystemBase {
 	
 	public RectInputHandler() {
 		super(RectTransform.class);
+		setExcludedComponentTypes(TooltipRenderer.class);
 	}
 	
 	@Override
@@ -34,6 +36,10 @@ public class RectInputHandler extends InputSystemBase {
 					rect.cursorHit = true;
 					input.blockCursor(entity);
 				}
+			}
+			
+			if (rect.tooltip != null) {
+				rect.tooltip.setActive(rect.cursorHit);
 			}
 		});
 	}

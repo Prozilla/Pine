@@ -20,6 +20,7 @@ public class CanvasElementPrefab extends Prefab {
 	protected GridAlignment anchor;
 	protected boolean absolutePosition;
 	protected boolean passThrough;
+	protected String tooltipText;
 	
 	public CanvasElementPrefab() {
 		position = new DualDimension();
@@ -73,6 +74,10 @@ public class CanvasElementPrefab extends Prefab {
 		this.passThrough = passThrough;
 	}
 	
+	public void setTooltipText(String tooltipText) {
+		this.tooltipText = tooltipText;
+	}
+	
 	@Override
 	protected void apply(Entity entity) {
 		RectTransform rectTransform = entity.addComponent(new RectTransform());
@@ -83,6 +88,9 @@ public class CanvasElementPrefab extends Prefab {
 		
 		if (anchor != null) {
 			rectTransform.setAnchor(anchor);
+		}
+		if (tooltipText != null) {
+			rectTransform.tooltipText = tooltipText;
 		}
 	}
 }

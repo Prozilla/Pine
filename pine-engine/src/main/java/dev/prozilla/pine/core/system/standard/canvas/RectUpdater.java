@@ -18,6 +18,11 @@ public class RectUpdater extends UpdateSystem {
 	@Override
 	protected void process(EntityChunk chunk, float deltaTime) {
 		RectTransform rect = chunk.getComponent(RectTransform.class);
+		
+		if (rect.tooltipText != null && rect.tooltip == null) {
+			rect.setTooltipText(rect.tooltipText);
+		}
+		
 		updateRect(rect);
 		
 		if (!rect.isInCanvasGroup() || rect.absolutePosition) {

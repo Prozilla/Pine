@@ -1,9 +1,14 @@
 package dev.prozilla.pine.core.component.canvas;
 
+import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.prefab.canvas.TextPrefab;
+import dev.prozilla.pine.core.entity.prefab.canvas.TooltipPrefab;
 
 /**
  * A base component for positioning canvas elements.
@@ -27,8 +32,10 @@ public class RectTransform extends Component {
 	public boolean passThrough;
 	/** If true, this rect won't be arranged by a canvas group */
 	public boolean absolutePosition;
+	public String tooltipText;
 	
 	public CanvasRenderer canvas;
+	public Entity tooltip;
 	
 	public static final GridAlignment DEFAULT_ANCHOR = GridAlignment.BOTTOM_LEFT;
 	
@@ -163,5 +170,30 @@ public class RectTransform extends Component {
 	public void computeCurrentSize(DualDimension size) {
 		currentSize.x = size.computeX(this);
 		currentSize.y = size.computeY(this);
+	}
+	
+	public void setTooltipText(String text) {
+		if (text == null) {
+			if (tooltip != null) {
+				tooltip.destroy();
+			}
+			return;
+		}
+		
+		if (tooltipText.equals(text) && tooltip != null) {
+			return;
+		}
+		
+		tooltipText = text;
+		
+		TooltipPrefab tooltipPrefab = new TooltipPrefab();
+		tooltipPrefab.setAnchor(GridAlignment.TOP_LEFT);
+		tooltipPrefab.setOffsetX(new Dimension(16));
+		tooltipPrefab.setActive(cursorHit);
+		tooltip = getCanvas().getEntity().addChild(tooltipPrefab);
+		
+		TextPrefab textPrefab = new TextPrefab(tooltipText);
+		textPrefab.setColor(Color.white());
+		tooltip.addChild(textPrefab);
 	}
 }

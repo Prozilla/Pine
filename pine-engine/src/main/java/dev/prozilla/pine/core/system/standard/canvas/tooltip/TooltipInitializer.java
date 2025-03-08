@@ -19,8 +19,8 @@ public class TooltipInitializer extends InitSystem {
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
 		rect.position = new DualDimension(
-			Dimension.subtract(tooltipRenderer.offsetX, tooltipRenderer.cursorX),
-			Dimension.subtract(tooltipRenderer.offsetY, tooltipRenderer.cursorY)
+			Dimension.add(tooltipRenderer.cursorX, tooltipRenderer.baseX, tooltipRenderer.offset.x),
+			Dimension.add(tooltipRenderer.cursorY, tooltipRenderer.baseY, tooltipRenderer.offset.y)
 		);
 	}
 }
