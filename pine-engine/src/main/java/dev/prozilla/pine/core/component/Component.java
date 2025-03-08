@@ -50,7 +50,7 @@ public abstract class Component implements Lifecycle, Printable, EntityFinder, C
 	}
 	
 	public String getName() {
-		return "Component";
+		return getClass().getSimpleName();
 	}
 	
 	public Input getInput() {

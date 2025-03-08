@@ -82,15 +82,19 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 		isActive = true;
 	}
 	
+	public void destroyChildren() {
+		for (Transform child : transform.children.toArray(new Transform[]{})) {
+			child.getEntity().destroy();
+		}
+	}
+	
 	/**
 	 * Destroys this entity at the end of the game loop.
 	 */
+	@Override
 	public void destroy() {
 		if (application.isRunning) {
-			// Destroy children
-			for (Transform child : transform.children.toArray(new Transform[]{})) {
-				child.getEntity().destroy();
-			}
+			destroyChildren();
 			
 			// Remove child from parent
 			if (transform.parent != null) {
@@ -175,6 +179,12 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	public void removeChildren(Entity... children) throws IllegalStateException, IllegalArgumentException {
 		for (Entity child : children) {
 			removeChild(child);
+		}
+	}
+	
+	public void removeAllChildren() {
+		for (Transform child : transform.children) {
+			removeChild(child.getEntity());
 		}
 	}
 	

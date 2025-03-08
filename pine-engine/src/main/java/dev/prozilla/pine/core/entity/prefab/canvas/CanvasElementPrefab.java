@@ -19,11 +19,13 @@ public class CanvasElementPrefab extends Prefab {
 	protected DualDimension size;
 	protected GridAlignment anchor;
 	protected boolean absolutePosition;
+	protected boolean passThrough;
 	
 	public CanvasElementPrefab() {
 		position = new DualDimension();
 		size = new DualDimension();
 		absolutePosition = false;
+		passThrough = false;
 		
 		setName("CanvasElement");
 	}
@@ -67,12 +69,17 @@ public class CanvasElementPrefab extends Prefab {
 		this.absolutePosition = absolutePosition;
 	}
 	
+	public void setPassThrough(boolean passThrough) {
+		this.passThrough = passThrough;
+	}
+	
 	@Override
 	protected void apply(Entity entity) {
 		RectTransform rectTransform = entity.addComponent(new RectTransform());
 		rectTransform.setPosition(position.clone());
 		rectTransform.setSize(size.clone());
 		rectTransform.absolutePosition = absolutePosition;
+		rectTransform.passThrough = passThrough;
 		
 		if (anchor != null) {
 			rectTransform.setAnchor(anchor);

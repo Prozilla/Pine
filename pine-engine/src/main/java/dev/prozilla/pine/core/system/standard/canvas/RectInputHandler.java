@@ -28,7 +28,7 @@ public class RectInputHandler extends InputSystemBase {
 			
 			rect.cursorHit = false;
 			
-			if (!rect.passThrough && !input.isCursorBlocked()) {
+			if (!rect.passThrough && !rect.isInTooltip() && !input.isCursorBlocked()) {
 				int canvasHeight = rect.getCanvas().getHeight();
 				if (cursor != null && RectTransform.isInsideRect(new Vector2i(cursor.x, canvasHeight - cursor.y), rect.currentPosition, rect.currentSize)) {
 					rect.cursorHit = true;

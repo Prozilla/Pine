@@ -82,6 +82,12 @@ public class CanvasGroup extends Component implements CanvasContext {
 	 */
 	public void getChildComponents() {
 		childRects = entity.getComponentsInChildren(RectTransform.class);
+		
+		if (getRect().passThrough) {
+			for (RectTransform childRect : childRects) {
+				childRect.passThrough = true;
+			}
+		}
 	}
 	
 	public RectTransform getRect() {

@@ -108,6 +108,10 @@ public class RectTransform extends Component {
 		return canvasGroup.arrangeChildren;
 	}
 	
+	public boolean isInTooltip() {
+		return getComponentInParent(TooltipRenderer.class) != null;
+	}
+	
 	/**
 	 * Gets the canvas component in a parent entity.
 	 * @throws IllegalStateException When this entity is not a child of an entity with a canvas component.

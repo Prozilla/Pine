@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.state.input;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.Application;
@@ -44,6 +45,7 @@ public class Input implements Lifecycle {
 	private GLFWMouseButtonCallback mouseButtonCallback;
 	
 	private final Application application;
+	private final Logger logger;
 	
 	private static final int CURSOR_TYPE_DEFAULT = CursorType.DEFAULT.getValue();
 	private static final boolean IGNORE_CURSOR_BLOCK_DEFAULT = false;
@@ -54,6 +56,7 @@ public class Input implements Lifecycle {
 	 */
 	public Input(Application application) {
 		this.application = application;
+		logger = application.getLogger();
 		
 		keysPressed = new ArrayList<>();
 		keysDown = new ArrayList<>();
@@ -540,5 +543,13 @@ public class Input implements Lifecycle {
 	 */
 	public Entity getCursorBlocker() {
 		return cursorBlocker;
+	}
+	
+	public void printCursorBlocker() {
+		if (cursorBlocker == null) {
+			return;
+		}
+		
+		cursorBlocker.print(logger);
 	}
 }

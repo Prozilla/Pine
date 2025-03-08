@@ -288,6 +288,13 @@ public class Dimension extends DimensionBase {
 	}
 	
 	/**
+	 * Creates a dimension based on the difference of the values of two or more dimensions.
+	 */
+	public static Subtract subtract(DimensionBase ...dimensions) throws InvalidArrayException {
+		return chainDimensions(Subtract::new, dimensions);
+	}
+	
+	/**
 	 * Creates a dimension based on the product of the values of two or more dimensions.
 	 */
 	public static Multiply multiply(DimensionBase ...dimensions) throws InvalidArrayException {
@@ -436,6 +443,31 @@ public class Dimension extends DimensionBase {
 		@Override
 		public String toString() {
 			return String.format("(%s + %s)", dimensionA, dimensionB);
+		}
+	}
+	
+	public static class Subtract extends DimensionComparator {
+		
+		/**
+		 * Creates a function that returns the difference of the values of two dimensions.
+		 */
+		public Subtract(DimensionBase dimensionA, DimensionBase dimensionB) {
+			super(dimensionA, dimensionB);
+		}
+		
+		@Override
+		protected int compare(int valueA, int valueB) {
+			return valueA - valueB;
+		}
+		
+		@Override
+		public Subtract clone() {
+			return new Subtract(dimensionA, dimensionB);
+		}
+		
+		@Override
+		public String toString() {
+			return String.format("(%s - %s)", dimensionA, dimensionB);
 		}
 	}
 	
