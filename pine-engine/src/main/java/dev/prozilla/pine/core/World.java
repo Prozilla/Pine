@@ -114,6 +114,7 @@ public class World implements Lifecycle {
 		initialSystems.add(new TextInitializer());
 		initialSystems.add(new ImageInitializer());
 		
+		initialSystems.add(new CanvasInputHandler());
 		initialSystems.add(new CanvasGroupInputHandler());
 		initialSystems.add(new RectInputHandler());
 		initialSystems.add(new TooltipInputHandler());

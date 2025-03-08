@@ -38,8 +38,8 @@ public class RectInputHandler extends InputSystemBase {
 				}
 			}
 			
-			if (rect.tooltip != null) {
-				rect.tooltip.setActive(rect.cursorHit);
+			if (rect.tooltipText != null && rect.cursorHit) {
+				rect.getCanvas().showTooltip(rect, rect.tooltipText);
 			}
 		});
 	}
