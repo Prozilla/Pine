@@ -1,9 +1,6 @@
 package dev.prozilla.pine.core.entity;
 
-/**
- * Interface with utility methods for finding certain entities in the current context.
- */
-public interface EntityFinder {
+public interface EntityContext {
 	
 	/**
 	 * Gets a child entity with a given tag.

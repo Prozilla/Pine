@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core;
 
+import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.config.LogConfig;
 import dev.prozilla.pine.core.state.config.WindowConfig;

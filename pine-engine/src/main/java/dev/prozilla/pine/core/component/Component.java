@@ -2,23 +2,19 @@ package dev.prozilla.pine.core.component;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
-import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.core.Window;
-import dev.prozilla.pine.core.World;
-import dev.prozilla.pine.core.component.camera.CameraData;
+import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.EntityFinder;
-import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.state.ApplicationTimer;
-import dev.prozilla.pine.core.state.Tracker;
-import dev.prozilla.pine.core.state.input.Input;
+import dev.prozilla.pine.core.entity.EntityProvider;
+import dev.prozilla.pine.core.scene.Scene;
+import dev.prozilla.pine.core.scene.SceneProvider;
 
 import java.util.List;
 
 /**
  * Contains a partition of the data of an entity.
  */
-public abstract class Component implements Lifecycle, Printable, EntityFinder, ComponentFinder {
+public abstract class Component implements Lifecycle, Printable, EntityProvider, ComponentProvider, ApplicationProvider, SceneProvider {
 	
 	// Identifier
 	public final int id;
@@ -49,44 +45,18 @@ public abstract class Component implements Lifecycle, Printable, EntityFinder, C
 		return entity;
 	}
 	
+	@Override
+	public Application getApplication() {
+		return entity.getApplication();
+	}
+	
+	@Override
+	public Scene getScene() {
+		return entity.getScene();
+	}
+	
 	public String getName() {
 		return getClass().getSimpleName();
-	}
-	
-	public Input getInput() {
-		return entity.getInput();
-	}
-	
-	public Window getWindow() {
-		return entity.getWindow();
-	}
-	
-	public Renderer getRenderer() {
-		return entity.getRenderer();
-	}
-	
-	public ApplicationTimer getTimer() {
-		return entity.getTimer();
-	}
-	
-	public Tracker getTracker() {
-		return entity.getTracker();
-	}
-	
-	public World getWorld() {
-		return entity.getWorld();
-	}
-	
-	public CameraData getCamera() {
-		return entity.getCamera();
-	}
-	
-	public Logger getLogger() {
-		return entity.getLogger();
-	}
-	
-	public Transform getTransform() {
-		return entity.transform;
 	}
 	
 	@Override

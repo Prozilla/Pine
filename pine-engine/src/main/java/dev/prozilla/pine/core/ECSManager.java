@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.state.Tracker;
 
 /**

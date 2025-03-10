@@ -1,7 +1,7 @@
 package dev.prozilla.pine;
 
 import dev.prozilla.pine.core.Application;
-import dev.prozilla.pine.core.Scene;
+import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.entity.canvas.EditorCanvasPrefab;
 import dev.prozilla.pine.system.canvas.PreviewFrameUpdater;
 

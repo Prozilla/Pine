@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Interface with utility methods for finding certain components in the current context.
  */
-public interface ComponentFinder {
+public interface ComponentProvider {
 	
 	<ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass);
 	

@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system;
 
 import dev.prozilla.pine.core.ECSManager;
-import dev.prozilla.pine.core.World;
+import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.init.InitSystemBase;

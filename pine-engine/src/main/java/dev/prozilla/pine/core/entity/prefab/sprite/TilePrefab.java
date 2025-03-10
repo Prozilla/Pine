@@ -3,7 +3,7 @@ package dev.prozilla.pine.core.entity.prefab.sprite;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
-import dev.prozilla.pine.core.World;
+import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;

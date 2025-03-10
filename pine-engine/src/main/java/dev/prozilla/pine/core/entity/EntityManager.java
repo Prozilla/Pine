@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.core.ECSManager;
-import dev.prozilla.pine.core.World;
+import dev.prozilla.pine.core.scene.World;
 
 import java.util.ArrayList;
 import java.util.List;

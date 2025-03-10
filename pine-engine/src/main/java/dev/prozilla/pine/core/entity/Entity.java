@@ -4,19 +4,14 @@ import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.core.Application;
-import dev.prozilla.pine.core.Scene;
-import dev.prozilla.pine.core.Window;
-import dev.prozilla.pine.core.World;
+import dev.prozilla.pine.core.*;
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.component.ComponentFinder;
+import dev.prozilla.pine.core.component.ComponentProvider;
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
-import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.state.ApplicationTimer;
-import dev.prozilla.pine.core.state.Tracker;
-import dev.prozilla.pine.core.state.input.Input;
+import dev.prozilla.pine.core.scene.Scene;
+import dev.prozilla.pine.core.scene.SceneProvider;
+import dev.prozilla.pine.core.scene.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +19,7 @@ import java.util.List;
 /**
  * Represents a unique entity in the world with a list of components.
  */
-public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, Printable, EntityFinder, ComponentFinder {
+public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, Printable, EntityContext, ComponentProvider, ApplicationProvider, SceneProvider {
 	
 	public final int id;
 	private final String name;
@@ -350,44 +345,14 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 		return this.tag.equals(tag);
 	}
 	
-	public Input getInput() {
-		return application.getInput();
-	}
-	
-	public Window getWindow() {
-		return application.getWindow();
-	}
-	
-	public Renderer getRenderer() {
-		return application.getRenderer();
-	}
-	
-	public ApplicationTimer getTimer() {
-		return application.getTimer();
-	}
-	
-	public Tracker getTracker() {
-		return application.getTracker();
-	}
-	
+	@Override
 	public Application getApplication() {
 		return application;
 	}
 	
-	public World getWorld() {
-		return world;
-	}
-	
+	@Override
 	public Scene getScene() {
 		return scene;
-	}
-	
-	public CameraData getCamera() {
-		return scene.getCameraData();
-	}
-	
-	public Logger getLogger() {
-		return logger;
 	}
 	
 	/**

@@ -1,8 +1,10 @@
-package dev.prozilla.pine.core;
+package dev.prozilla.pine.core.scene;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
@@ -12,7 +14,7 @@ import dev.prozilla.pine.core.rendering.Renderer;
 /**
  * Responsible for loading objects into the world.
  */
-public class Scene implements Lifecycle, Printable {
+public class Scene implements Lifecycle, Printable, SceneContext, ApplicationProvider {
 	
 	// Scene properties
 	public String name;
@@ -198,13 +200,20 @@ public class Scene implements Lifecycle, Printable {
 	 * Checks whether this scene is the application's current scene.
 	 */
 	public boolean isActive() {
-		return application.currentScene.equals(this);
+		return application.getScene().equals(this);
 	}
 	
+	@Override
+	public Application getApplication() {
+		return application;
+	}
+	
+	@Override
 	public World getWorld() {
 		return world;
 	}
 	
+	@Override
 	public CameraData getCameraData() {
 		return cameraData;
 	}

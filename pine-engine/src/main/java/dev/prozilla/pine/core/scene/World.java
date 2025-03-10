@@ -1,6 +1,7 @@
-package dev.prozilla.pine.core;
+package dev.prozilla.pine.core.scene;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.ComponentManager;
 import dev.prozilla.pine.core.component.Transform;

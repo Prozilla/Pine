@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab;
 
-import dev.prozilla.pine.core.World;
+import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.entity.Entity;
 

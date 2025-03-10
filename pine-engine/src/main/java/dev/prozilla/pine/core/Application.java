@@ -9,10 +9,8 @@ import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.state.ApplicationState;
-import dev.prozilla.pine.core.state.ApplicationTimer;
-import dev.prozilla.pine.core.state.StateMachine;
-import dev.prozilla.pine.core.state.Tracker;
+import dev.prozilla.pine.core.scene.Scene;
+import dev.prozilla.pine.core.state.*;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.input.Input;
 import org.lwjgl.Version;
@@ -31,7 +29,7 @@ import static org.lwjgl.opengl.GL43.GL_DEBUG_OUTPUT;
 /**
  * 2D application using the LWJGL library.
  */
-public class Application implements Lifecycle {
+public class Application implements Lifecycle, ApplicationContext, StateProvider<Application, ApplicationState> {
 	
 	// State
 	/** True if OpenGL has been initialized */
@@ -515,6 +513,9 @@ public class Application implements Lifecycle {
 		return currentScene;
 	}
 	
+	/**
+	 * Checks whether this application hasn't been stopped yet.
+	 */
 	public boolean isRunning() {
 		return !stateMachine.isState(ApplicationState.STOPPED);
 	}
@@ -525,6 +526,30 @@ public class Application implements Lifecycle {
 	
 	public boolean isPaused() {
 		return stateMachine.isState(ApplicationState.PAUSED);
+	}
+	
+	/**
+	 * @return The state of this application
+	 */
+	@Override
+	public ApplicationState getState() {
+		return stateMachine.getState();
+	}
+	
+	/**
+	 * Checks whether this application is in a given state.
+	 */
+	@Override
+	public boolean isState(ApplicationState state) {
+		return StateProvider.super.isState(state);
+	}
+	
+	/**
+	 * Checks whether this application is in any of the given states.
+	 */
+	@Override
+	public boolean isAnyState(ApplicationState[] states) {
+		return StateProvider.super.isAnyState(states);
 	}
 	
 	/**
@@ -600,34 +625,42 @@ public class Application implements Lifecycle {
 		return !isPreview;
 	}
 	
+	@Override
 	public Input getInput() {
 		return input;
 	}
 	
+	@Override
 	public Window getWindow() {
 		return window;
 	}
 	
+	@Override
 	public Renderer getRenderer() {
 		return renderer;
 	}
 	
+	@Override
 	public ApplicationTimer getTimer() {
 		return timer;
 	}
 	
+	@Override
 	public Tracker getTracker() {
 		return tracker;
 	}
 	
+	@Override
 	public Config getConfig() {
 		return config;
 	}
 	
+	@Override
 	public ModManager getModManager() {
 		return modManager;
 	}
 	
+	@Override
 	public Logger getLogger() {
 		return logger;
 	}
