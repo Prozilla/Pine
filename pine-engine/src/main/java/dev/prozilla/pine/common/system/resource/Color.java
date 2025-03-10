@@ -80,8 +80,26 @@ public final class Color implements Printable, Cloneable<Color> {
         setAlpha(alpha);
     }
     
+    public Color copyFrom(Color color) {
+        copyRGB(color);
+        setAlpha(color.getAlpha());
+        return this;
+    }
+    
     public Color copyRGB(Color color) {
         setRGB(color.getRed(), color.getGreen(), color.getBlue());
+        return this;
+    }
+    
+    public Color set(int red, int green, int blue, int alpha) {
+        setRGB(red, green, blue);
+        setAlpha(alpha);
+        return this;
+    }
+    
+    public Color set(float red, float green, float blue, float alpha) {
+        setRGB(red, green, blue);
+        setAlpha(alpha);
         return this;
     }
     

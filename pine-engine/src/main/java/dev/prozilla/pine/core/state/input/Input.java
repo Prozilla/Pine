@@ -524,7 +524,7 @@ public class Input implements Lifecycle {
 	 * @param override Whether to override any existing blocking entity.
 	 */
 	public void blockCursor(Entity entity, boolean override) {
-		if ((!override && cursorBlocker != null) || !entity.isActive()) {
+		if (entity == null || (!override && cursorBlocker != null) || !entity.isActive()) {
 			return;
 		}
 		

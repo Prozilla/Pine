@@ -105,6 +105,9 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 			if (isRegistered()) {
 				world.removeEntity(this);
 			}
+			
+			invoke(EntityEvent.DESTROY);
+			super.destroy();
 		}
 	}
 	
@@ -405,7 +408,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	 * @return True if the entities are equal
 	 */
 	public boolean equals(Entity entity) {
-		return (id == entity.id);
+		return entity == this || id == entity.id;
 	}
 	
 	/**

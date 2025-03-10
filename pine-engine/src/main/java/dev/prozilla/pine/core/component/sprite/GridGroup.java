@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.EntityEvent;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
 import dev.prozilla.pine.core.system.standard.sprite.TileMover;
@@ -68,7 +69,25 @@ public class GridGroup extends Component {
 			entity.addChild(tile.getEntity());
 		}
 		
+		tile.getEntity().addListener(EntityEvent.DESTROY, () -> {
+			coordinateToTile.remove(tile.coordinate);
+		});
+		
 		return tile;
+	}
+	
+	public boolean destroyTile(Vector2i coordinate) {
+		return destroyTile(getTile(coordinate));
+	}
+	
+	public boolean destroyTile(Entity entity) {
+		return destroyTile(entity.getComponent(TileRenderer.class));
+	}
+	
+	public boolean destroyTile(TileRenderer tile) {
+		boolean removed = removeTile(tile);
+		tile.getEntity().destroy();
+		return removed;
 	}
 	
 	public boolean removeTile(Vector2i coordinate) {
@@ -123,7 +142,14 @@ public class GridGroup extends Component {
 		if (hoveringTile == null || entity == null) {
 			return false;
 		}
-		return entity.equals(hoveringTile.getEntity());
+		
+		Entity hoveringEntity = hoveringTile.getEntity();
+		
+		if (hoveringEntity == null) {
+			return false;
+		}
+		
+		return entity.equals(hoveringEntity);
 	}
 	
 	public Vector2i positionToCoordinate(Vector2f position) {
