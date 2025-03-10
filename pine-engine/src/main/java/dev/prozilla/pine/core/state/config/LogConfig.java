@@ -19,6 +19,7 @@ public class LogConfig {
 	public static final ConfigKey<LogHandler> OUTPUT_LAYER = new ConfigKey<>("outputLayer", LogHandler.class);
 	public static final ConfigKey<LogHandler> ERROR_LAYER = new ConfigKey<>("errorLayer", LogHandler.class);
 	public static final ConfigKey<Boolean> ENABLE_ANSI = new ConfigKey<>("enableAnsi", Boolean.class);
+	public static final ConfigKey<Boolean> ENABLE_APPLICATION_STATE_LOGS = new ConfigKey<>("enableApplicationStateLogs", Boolean.class);
 	
 	// Predefines options
 	/** Defaults to <code>true</code>. */
@@ -29,7 +30,9 @@ public class LogConfig {
 	public final ConfigOption<LogHandler> outputHandler = new ConfigOption<>(new StandardOutputLogHandler());
 	/** Log handler for the error log level. Defaults to {@link StandardErrorLogHandler}. */
 	public final ConfigOption<LogHandler> errorHandler = new ConfigOption<>(new StandardErrorLogHandler());
-	/** Defaults to <code>true</code>. */
+	/** When set to <code>false</code>, all ANSI escape sequences will be stripped from logs. Defaults to <code>true</code>. */
 	public final ConfigOption<Boolean> enableAnsi = new ConfigOption<>(true, Objects::nonNull);
+	/** Enables logging of state changes of the application. Defaults to <code>true</code>. */
+	public final ConfigOption<Boolean> enableApplicationStateLogs = new ConfigOption<>(true, Objects::nonNull);
 	
 }

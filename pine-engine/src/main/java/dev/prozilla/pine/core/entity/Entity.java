@@ -93,7 +93,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	 */
 	@Override
 	public void destroy() {
-		if (application.isRunning) {
+		if (application.isRunning() && !application.isLoading()) {
 			destroyChildren();
 			
 			// Remove child from parent

@@ -56,6 +56,7 @@ public class Config {
 		addOption(LogConfig.OUTPUT_LAYER, logging.outputHandler);
 		addOption(LogConfig.ERROR_LAYER, logging.errorHandler);
 		addOption(LogConfig.ENABLE_ANSI, logging.enableAnsi);
+		addOption(LogConfig.ENABLE_APPLICATION_STATE_LOGS, logging.enableApplicationStateLogs);
 		
 		addOption(WindowConfig.WIDTH, window.width);
 		addOption(WindowConfig.HEIGHT, window.height);

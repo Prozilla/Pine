@@ -9,7 +9,9 @@ import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.state.ApplicationState;
 import dev.prozilla.pine.core.state.ApplicationTimer;
+import dev.prozilla.pine.core.state.StateMachine;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.input.Input;
@@ -32,17 +34,13 @@ import static org.lwjgl.opengl.GL43.GL_DEBUG_OUTPUT;
 public class Application implements Lifecycle {
 	
 	// State
-	/** True if the application has been initialized */
-	public boolean initialized;
 	/** True if OpenGL has been initialized */
 	public static boolean initializedOpenGL = false;
-	public boolean isRunning;
 	protected boolean shouldStop;
-	public boolean isPaused;
 	protected boolean isPreview;
 	
 	// Scene
-	public Scene currentScene;
+	protected Scene currentScene;
 	private final Map<Integer, Scene> scenes;
 	
 	// Helpers
@@ -54,6 +52,7 @@ public class Application implements Lifecycle {
 	protected Input input;
 	protected final Tracker tracker;
 	protected final ModManager modManager;
+	protected final StateMachine<Application, ApplicationState> stateMachine;
 	
 	private GLFWErrorCallback errorCallback;
 	
@@ -101,6 +100,7 @@ public class Application implements Lifecycle {
 	public Application(String title, int width, int height, Scene scene, int targetFps) {
 		logger = new AppLogger(this);
 		config = new Config(this);
+		stateMachine = new StateMachine<>(ApplicationState.INITIALIZING, this);
 		
 		config.fps.set(targetFps);
 		config.window.title.set(title);
@@ -114,9 +114,6 @@ public class Application implements Lifecycle {
 		input = new Input(this);
 		modManager = new ModManager(this);
 		
-		initialized = false;
-		isRunning = false;
-		isPaused = false;
 		shouldStop = false;
 		isPreview = false;
 
@@ -139,7 +136,7 @@ public class Application implements Lifecycle {
 			start();
 		} catch (RuntimeException e) {
 			// Force application to quit if it is still running
-			if (isRunning) {
+			if (isRunning()) {
 				destroy();
 			}
 			
@@ -154,20 +151,21 @@ public class Application implements Lifecycle {
 	 * Initializes the application.
 	 */
 	public void init() throws RuntimeException {
-		if (initialized) {
-			throw new IllegalStateException("Application has already been initialized.");
+		if (!stateMachine.isState(ApplicationState.INITIALIZING)) {
+			throw new IllegalStateException("Application has already been initialized");
 		}
 		
-		isRunning = true;
-		
 		logger.init();
+		if (config.logging.enableApplicationStateLogs.get()) {
+			logger.log("Initializing application");
+		}
 		
 		// Set error callback
 		errorCallback = GLFWErrorCallback.createPrint(System.err).set();
 		
 		// Initialize GLFW
 		if (!glfwInit()) {
-			throw new IllegalStateException("Unable to initialize GLFW");
+			throw new IllegalStateException("Failed to initialize GLFW");
 		}
 		logger.log("Initialized GLFW (Initialization: 1/4)");
 		
@@ -188,27 +186,29 @@ public class Application implements Lifecycle {
 		currentScene.init(window.id);
 		loadIcons();
 		modManager.init();
-		logger.log("Initialized application (Initialization: 4/4)");
 		
-		initialized = true;
+		stateMachine.changeState(ApplicationState.LOADING);
 	}
 	
 	public void initPreview(Input input, int width, int height) {
-		if (initialized) {
-			throw new IllegalStateException("Preview has already been initialized.");
+		if (!stateMachine.isState(ApplicationState.INITIALIZING)) {
+			throw new IllegalStateException("Preview has already been initialized");
+		}
+		
+		logger.init();
+		if (config.logging.enableApplicationStateLogs.get()) {
+			logger.log("Initializing preview");
 		}
 		
 		isPreview = true;
-		isRunning = true;
 		
 		this.input = input;
 		
 		timer.init();
 		renderer.initPreview(width, height);
 		currentScene.init(renderer.getFbo().getId());
-		logger.log("Initialized preview");
 		
-		initialized = true;
+		stateMachine.changeState(ApplicationState.LOADING);
 	}
 	
 	/**
@@ -220,6 +220,7 @@ public class Application implements Lifecycle {
 		int fps = config.fps.get();
 		long targetTime = (fps == 0) ? 0 : 1000L / fps;
 		
+		stateMachine.changeState(ApplicationState.RUNNING);
 		logger.logf("Starting application (fps: %s)", fps);
 		
 		// Application loop
@@ -351,7 +352,7 @@ public class Application implements Lifecycle {
 	 */
 	public void pause() {
 		timer.timeScale = 0;
-		isPaused = true;
+		stateMachine.changeState(ApplicationState.RUNNING, ApplicationState.PAUSED);
 	}
 	
 	/**
@@ -359,14 +360,14 @@ public class Application implements Lifecycle {
 	 */
 	public void resume() {
 		timer.timeScale = 1;
-		isPaused = false;
+		stateMachine.changeState(ApplicationState.PAUSED, ApplicationState.RUNNING);
 	}
 	
 	/**
 	 * Pauses or resumes the application panel based on the current state.
 	 */
 	public void togglePause() {
-		if (isPaused) {
+		if (stateMachine.isState(ApplicationState.PAUSED)) {
 			resume();
 		} else {
 			pause();
@@ -378,7 +379,7 @@ public class Application implements Lifecycle {
 	 */
 	public void stop() {
 		shouldStop = true;
-		isRunning = false;
+		stateMachine.changeState(ApplicationState.STOPPED);
 	}
 	
 	/**
@@ -387,13 +388,7 @@ public class Application implements Lifecycle {
 	 */
 	@Override
 	public void destroy() {
-		isRunning = false;
-		
-		if (isStandalone()) {
-			logger.log("Stopping application");
-		} else {
-			logger.log("Stopping preview");
-		}
+		stateMachine.changeState(ApplicationState.STOPPED);
 		
 		renderer.destroy();
 		
@@ -489,7 +484,7 @@ public class Application implements Lifecycle {
 		logger.log("Loading scene: " + id);
 		
 		currentScene = scenes.get(id);
-		isRunning = true;
+		stateMachine.changeState(ApplicationState.LOADING);
 		
 		if (!currentScene.initialized) {
 			currentScene.init(window.id);
@@ -497,6 +492,7 @@ public class Application implements Lifecycle {
 		
 		// Make sure game is resumed when new scene is loaded
 		resume();
+		stateMachine.changeState(ApplicationState.RUNNING);
 	}
 	
 	/**
@@ -504,7 +500,7 @@ public class Application implements Lifecycle {
 	 */
 	public void unloadScene() {
 		logger.log("Unloading scene: " + currentScene.getId());
-		isRunning = false;
+		stateMachine.changeState(ApplicationState.LOADING);
 		
 		if (currentScene != null) {
 			if (currentScene.loaded) {
@@ -513,6 +509,22 @@ public class Application implements Lifecycle {
 			currentScene.reset();
 		}
 		currentScene = null;
+	}
+	
+	public Scene getScene() {
+		return currentScene;
+	}
+	
+	public boolean isRunning() {
+		return !stateMachine.isState(ApplicationState.STOPPED);
+	}
+	
+	public boolean isLoading() {
+		return stateMachine.isState(ApplicationState.LOADING);
+	}
+	
+	public boolean isPaused() {
+		return stateMachine.isState(ApplicationState.PAUSED);
 	}
 	
 	/**
@@ -549,7 +561,7 @@ public class Application implements Lifecycle {
 			}
 			window.setIcons(images);
 		} catch (Exception e) {
-			logger.error("Failed to load icons.", e);
+			logger.error("Failed to load icons", e);
 		}
 	}
 	
