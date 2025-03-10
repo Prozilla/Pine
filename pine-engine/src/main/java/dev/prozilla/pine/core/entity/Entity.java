@@ -4,9 +4,10 @@ import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.core.*;
+import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.component.ComponentProvider;
+import dev.prozilla.pine.core.component.ComponentsContext;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.scene.Scene;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * Represents a unique entity in the world with a list of components.
  */
-public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, Printable, EntityContext, ComponentProvider, ApplicationProvider, SceneProvider {
+public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, Printable, EntityContext, ComponentsContext, ApplicationProvider, SceneProvider {
 	
 	public final int id;
 	private final String name;

@@ -2,10 +2,7 @@ package dev.prozilla.pine.core.component;
 
 import java.util.List;
 
-/**
- * Interface with utility methods for finding certain components in the current context.
- */
-public interface ComponentProvider {
+public interface ComponentsContext {
 	
 	<ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass);
 	

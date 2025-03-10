@@ -9,12 +9,10 @@ import dev.prozilla.pine.core.entity.EntityProvider;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.scene.SceneProvider;
 
-import java.util.List;
-
 /**
  * Contains a partition of the data of an entity.
  */
-public abstract class Component implements Lifecycle, Printable, EntityProvider, ComponentProvider, ApplicationProvider, SceneProvider {
+public abstract class Component implements Lifecycle, Printable, EntityProvider, ComponentsProvider, ApplicationProvider, SceneProvider {
 	
 	// Identifier
 	public final int id;
@@ -57,41 +55,6 @@ public abstract class Component implements Lifecycle, Printable, EntityProvider,
 	
 	public String getName() {
 		return getClass().getSimpleName();
-	}
-	
-	@Override
-	public Entity getChildWithTag(String tag) {
-		return entity.getChildWithTag(tag);
-	}
-	
-	@Override
-	public Entity getParentWithTag(String tag) {
-		return entity.getParentWithTag(tag);
-	}
-	
-	@Override
-	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass) {
-		return entity.getComponentInParent(componentClass);
-	}
-	
-	@Override
-	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass, boolean includeAncestors) {
-		return entity.getComponentInParent(componentClass, includeAncestors);
-	}
-	
-	@Override
-	public <ComponentType extends Component> List<ComponentType> getComponentsInChildren(Class<ComponentType> componentClass) {
-		return entity.getComponentsInChildren(componentClass);
-	}
-	
-	@Override
-	public <ComponentType extends Component> ComponentType getComponent(Class<ComponentType> componentClass) {
-		return entity.getComponent(componentClass);
-	}
-	
-	@Override
-	public <ComponentType extends Component> List<ComponentType> getComponents(Class<ComponentType> componentClass) {
-		return entity.getComponents(componentClass);
 	}
 	
 	@Override
