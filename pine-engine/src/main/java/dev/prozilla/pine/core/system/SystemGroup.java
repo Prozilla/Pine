@@ -2,8 +2,8 @@ package dev.prozilla.pine.core.system;
 
 import dev.prozilla.pine.common.Container;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.scene.World;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -81,7 +81,7 @@ public class SystemGroup<S extends SystemBase> implements Container<S> {
 		
 		for (S system : systems) {
 			try {
-				if (system.hasEntityChunks()) {
+				if (system.shouldRun()) {
 					consumer.accept(system);
 				}
 				

@@ -4,12 +4,12 @@ import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.util.Arrays;
 import dev.prozilla.pine.core.Application;
-import dev.prozilla.pine.core.scene.Scene;
-import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.entity.EntityQuery;
+import dev.prozilla.pine.core.scene.Scene;
+import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.system.init.InitSystemBase;
 
 import java.util.Comparator;
@@ -17,8 +17,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
-
-// TO DO: ignore de-activated components
 
 /**
  * Base class for system responsible for handling logic and behaviour for entities that match a query based on their components.
@@ -29,8 +27,10 @@ public abstract class SystemBase implements Lifecycle {
 	private Class<? extends Component>[] excludedComponentTypes;
 	/** Query that entities must match in order to be processed by this system. */
 	private EntityQuery query;
-	/** If true, this system will only process each entity once. */
+	/** When set to <code>true</code>, this system will only process each entity once. */
 	private final boolean runOnce;
+	/** When set to <code>false</code>, this system will not process entities when the application is paused. */
+	private boolean runWhenPaused;
 	private String entityTag;
 	
 	/**
@@ -64,7 +64,7 @@ public abstract class SystemBase implements Lifecycle {
 	 * @throws IllegalStateException If the query has already been created.
 	 * @see EntityQuery
 	 */
-	protected void requireTag(String tag) throws IllegalStateException {
+	protected void setRequiredTag(String tag) throws IllegalStateException {
 		if (query != null) {
 			throw new IllegalStateException("Required tag must be set before the query creation.");
 		}
@@ -83,6 +83,10 @@ public abstract class SystemBase implements Lifecycle {
 		}
 		
 		excludedComponentTypes = componentTypes;
+	}
+	
+	protected void setRunWhenPaused(boolean runWhenPaused) {
+		this.runWhenPaused = runWhenPaused;
 	}
 	
 	/**
@@ -227,6 +231,10 @@ public abstract class SystemBase implements Lifecycle {
 	 */
 	public boolean hasEntityChunks() {
 		return query.hasEntityChunks();
+	}
+	
+	public boolean shouldRun() {
+		return hasEntityChunks() && (runWhenPaused || !application.isPaused());
 	}
 	
 	public void print() {

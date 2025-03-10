@@ -10,7 +10,7 @@ public class PreviewFrameUpdater extends UpdateSystem {
 	
 	public PreviewFrameUpdater() {
 		super(FrameRenderer.class, PreviewData.class);
-		requireTag(EntityTag.PREVIEW_FRAME_TAG);
+		setRequiredTag(EntityTag.PREVIEW_FRAME_TAG);
 	}
 	
 	@Override

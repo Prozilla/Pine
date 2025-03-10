@@ -33,7 +33,7 @@ public abstract class SystemBuilder<S extends SystemBase, B extends SystemBuilde
 	
 	protected S finishBuild(S system) {
 		if (entityTag != null) {
-			system.requireTag(entityTag);
+			system.setRequiredTag(entityTag);
 		}
 		
 		return system;
