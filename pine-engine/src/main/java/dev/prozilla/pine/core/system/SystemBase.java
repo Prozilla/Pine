@@ -53,6 +53,7 @@ public abstract class SystemBase implements Lifecycle {
 		
 		includedComponentTypes = componentTypes;
 		this.runOnce = runOnce;
+		runWhenPaused = true;
 		
 		processedEntityIds = new HashSet<>();
 	}
