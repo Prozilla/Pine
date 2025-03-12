@@ -20,7 +20,7 @@ public class StateMachine<Context, State extends dev.prozilla.pine.core.state.St
 		this.context = context;
 		
 		try {
-			initialState.enter(context);
+			initialState.onEnter(context);
 		} catch (Exception e) {
 			getLogger().error("Failed to enter initial state: " + initialState, e);
 		}
@@ -50,7 +50,7 @@ public class StateMachine<Context, State extends dev.prozilla.pine.core.state.St
 		
 		// Exit previous state
 		try {
-			currentState.exit(context);
+			currentState.onExit(context);
 		} catch (Exception e) {
 			getLogger().error("Failed to exit state: " + currentState, e);
 		}
@@ -58,7 +58,7 @@ public class StateMachine<Context, State extends dev.prozilla.pine.core.state.St
 		// Enter new state
 		currentState = newState;
 		try {
-			newState.enter(context);
+			newState.onEnter(context);
 		} catch (Exception e) {
 			getLogger().error("Failed to enter state: " + newState, e);
 		}

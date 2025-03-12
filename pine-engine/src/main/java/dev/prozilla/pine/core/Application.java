@@ -52,6 +52,8 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	protected final ModManager modManager;
 	protected final StateMachine<Application, ApplicationState> stateMachine;
 	
+	protected ApplicationManager applicationManager;
+	
 	private GLFWErrorCallback errorCallback;
 	
 	public static final String DEFAULT_TITLE = "Untitled";
@@ -181,6 +183,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		timer.init();
 		renderer.init();
 		input.init(window.id);
+		applicationManager.onInit(window.id);
 		currentScene.init(window.id);
 		loadIcons();
 		modManager.init();
@@ -220,6 +223,8 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		
 		stateMachine.changeState(ApplicationState.RUNNING);
 		logger.logf("Starting application (fps: %s)", fps);
+		
+		applicationManager.onStart();
 		
 		// Application loop
 		while (!window.shouldClose() && !shouldStop) {
@@ -293,6 +298,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	public void input(float deltaTime) {
 		input.input();
 		modManager.beforeInput(deltaTime);
+		applicationManager.onInput(deltaTime);
 		if (currentScene != null && currentScene.initialized) {
 			currentScene.input(deltaTime);
 		}
@@ -306,6 +312,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	public void update(float deltaTime) {
 		input.update();
 		modManager.beforeUpdate(deltaTime);
+		applicationManager.onUpdate(deltaTime);
 		if (currentScene != null && currentScene.initialized) {
 			currentScene.update(deltaTime);
 		}
@@ -329,6 +336,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		renderer.clear();
 		renderer.begin();
 		modManager.beforeRender();
+		applicationManager.onRender(renderer);
 		if (currentScene != null && currentScene.initialized) {
 			currentScene.render(renderer);
 		}
@@ -351,6 +359,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	public void pause() {
 		timer.timeScale = 0;
 		stateMachine.changeState(ApplicationState.RUNNING, ApplicationState.PAUSED);
+		applicationManager.onPause();
 	}
 	
 	/**
@@ -359,6 +368,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	public void resume() {
 		timer.timeScale = 1;
 		stateMachine.changeState(ApplicationState.PAUSED, ApplicationState.RUNNING);
+		applicationManager.onResume();
 	}
 	
 	/**
@@ -400,6 +410,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 			
 			// Destroy window and release callbacks
 			window.destroy();
+			applicationManager.onDestroy();
 			if (currentScene.initialized) {
 				currentScene.destroy();
 			}
@@ -509,8 +520,12 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		currentScene = null;
 	}
 	
-	public Scene getScene() {
+	public Scene getCurrentScene() {
 		return currentScene;
+	}
+	
+	protected void setApplicationManager(ApplicationManager applicationManager) {
+		this.applicationManager = applicationManager;
 	}
 	
 	/**

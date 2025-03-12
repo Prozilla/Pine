@@ -5,41 +5,41 @@ import dev.prozilla.pine.core.Application;
 public enum ApplicationState implements State<Application> {
 	INITIALIZING {
 		@Override
-		public void enter(Application application) {
+		public void onEnter(Application application) {
 			ApplicationState.logStatus(application, "Initializing application");
 		}
 		
 		@Override
-		public void exit(Application application) {
+		public void onExit(Application application) {
 			ApplicationState.logStatus(application, "Initialized application");
 		}
 	},
 	LOADING {
 		@Override
-		public void enter(Application application) {
+		public void onEnter(Application application) {
 			ApplicationState.logStatus(application, "Loading application");
 		}
 		
 		@Override
-		public void exit(Application application) {
+		public void onExit(Application application) {
 			ApplicationState.logStatus(application, "Loaded application");
 		}
 	},
 	RUNNING,
 	PAUSED {
 		@Override
-		public void enter(Application application) {
+		public void onEnter(Application application) {
 			ApplicationState.logStatus(application, "Paused application");
 		}
 		
 		@Override
-		public void exit(Application application) {
+		public void onExit(Application application) {
 			ApplicationState.logStatus(application, "Resumed application");
 		}
 	},
 	STOPPED {
 		@Override
-		public void enter(Application application) {
+		public void onEnter(Application application) {
 			ApplicationState.logStatus(application, "Stopping application");
 		}
 	};

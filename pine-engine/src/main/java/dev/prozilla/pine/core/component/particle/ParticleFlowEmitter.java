@@ -14,8 +14,10 @@ public class ParticleFlowEmitter extends ParticleEmitter {
 	public float timeUntilSpawn;
 	public boolean isSpawning;
 	public Vector2f origin;
+	public boolean applyTimeScale;
 	
 	public static final VariableProperty<Float> DEFAULT_SPAWN_DELAY = new FixedProperty<>(1f);
+	public static final boolean APPLY_TIME_SCALE_DEFAULT = true;
 	
 	public ParticleFlowEmitter(ParticlePrefab particlePrefab) {
 		this(particlePrefab, DEFAULT_SPAWN_DELAY);
@@ -31,6 +33,7 @@ public class ParticleFlowEmitter extends ParticleEmitter {
 		timeUntilSpawn = 0;
 		isSpawning = false;
 		origin = new Vector2f();
+		applyTimeScale = APPLY_TIME_SCALE_DEFAULT;
 	}
 	
 	/**

@@ -19,6 +19,10 @@ public class ParticleFlowUpdater extends UpdateSystem {
 			return;
 		}
 		
+		if (particleFlowEmitter.applyTimeScale) {
+			deltaTime *= application.getTimer().timeScale;
+		}
+		
 		particleFlowEmitter.timeUntilSpawn -= deltaTime;
 		
 		if (particleFlowEmitter.timeUntilSpawn <= 0) {

@@ -18,6 +18,10 @@ public class ParticleUpdater extends UpdateSystem {
 		ParticleRenderer particleRenderer = chunk.getComponent(ParticleRenderer.class);
 		SpriteRenderer spriteRenderer = chunk.getComponent(SpriteRenderer.class);
 		
+		if (particleRenderer.applyTimeScale) {
+			deltaTime *= application.getTimer().timeScale;
+		}
+		
 		// Update lifetime
 		particleRenderer.lifetime -= deltaTime;
 		if (particleRenderer.lifetime <= 0) {
@@ -34,7 +38,7 @@ public class ParticleUpdater extends UpdateSystem {
 		
 		// Update position based on velocity
 		if (particleRenderer.velocity != null) {
-			transform.translate(particleRenderer.velocity);
+			transform.translate(particleRenderer.velocity.x * deltaTime, particleRenderer.velocity.y * deltaTime);
 		}
 	}
 }

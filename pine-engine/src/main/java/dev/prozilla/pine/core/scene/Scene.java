@@ -200,7 +200,7 @@ public class Scene implements Lifecycle, Printable, SceneContext, ApplicationPro
 	 * Checks whether this scene is the application's current scene.
 	 */
 	public boolean isActive() {
-		return application.getScene().equals(this);
+		return application.getCurrentScene().equals(this);
 	}
 	
 	@Override

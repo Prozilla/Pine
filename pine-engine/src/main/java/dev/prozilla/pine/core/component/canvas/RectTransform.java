@@ -110,7 +110,7 @@ public class RectTransform extends Component {
 	}
 	
 	public boolean isInTooltip() {
-		return getComponentInParent(TooltipRenderer.class) != null;
+		return entity != null && getComponentInParent(TooltipRenderer.class) != null;
 	}
 	
 	/**

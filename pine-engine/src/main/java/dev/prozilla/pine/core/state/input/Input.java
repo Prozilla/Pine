@@ -484,7 +484,7 @@ public class Input implements Lifecycle {
 			return null;
 		}
 		
-		CameraData camera = application.getScene().getCameraData();
+		CameraData camera = application.getCurrentScene().getCameraData();
 		return camera.screenToWorldPosition(getCursor(ignoreBlock));
 	}
 	
