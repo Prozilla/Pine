@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.core.Scene;
+import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.canvas.CanvasPrefab;
 import dev.prozilla.pine.core.entity.prefab.canvas.ContainerPrefab;

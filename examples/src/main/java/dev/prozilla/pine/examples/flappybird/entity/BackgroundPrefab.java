@@ -1,6 +1,6 @@
 package dev.prozilla.pine.examples.flappybird.entity;
 
-import dev.prozilla.pine.core.World;
+import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.sprite.SpritePrefab;
 import dev.prozilla.pine.examples.flappybird.component.BackgroundData;

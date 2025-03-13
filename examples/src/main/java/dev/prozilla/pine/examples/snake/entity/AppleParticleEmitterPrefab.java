@@ -10,7 +10,7 @@ import dev.prozilla.pine.core.entity.prefab.particle.ParticlePrefab;
 
 public class AppleParticleEmitterPrefab extends ParticleBurstEmitterPrefab {
 	
-	private static final float VELOCITY = 0.75f;
+	private static final float VELOCITY = 45.0f;
 	
 	public AppleParticleEmitterPrefab() {
 		super("snake/apple_parts.png");

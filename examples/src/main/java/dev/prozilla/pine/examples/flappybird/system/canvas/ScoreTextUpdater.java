@@ -12,7 +12,7 @@ public class ScoreTextUpdater extends UpdateSystemBase {
 	
 	public ScoreTextUpdater() {
 		super(TextRenderer.class);
-		requireTag(EntityTag.SCORE_TAG);
+		setRequiredTag(EntityTag.SCORE_TAG);
 	}
 	
 	@Override

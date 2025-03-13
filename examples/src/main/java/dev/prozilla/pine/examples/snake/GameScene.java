@@ -3,7 +3,7 @@ package dev.prozilla.pine.examples.snake;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.text.Font;
-import dev.prozilla.pine.core.Scene;
+import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.component.particle.ParticleBurstEmitter;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.entity.Entity;
