@@ -2,7 +2,7 @@ package dev.prozilla.pine.examples.flappybird;
 
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.text.Font;
-import dev.prozilla.pine.core.Scene;
+import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.component.canvas.TextRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.canvas.CanvasPrefab;
