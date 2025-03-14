@@ -1,10 +1,12 @@
 package dev.prozilla.pine.common.system.resource;
 
 import dev.prozilla.pine.common.Lifecycle;
+import org.lwjgl.glfw.GLFWImage;
+import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
 
-import static org.lwjgl.stb.STBImage.*;
+import static org.lwjgl.stb.STBImage.stbi_image_free;
 
 /**
  * Represents an STB image with a width and a height.
@@ -46,6 +48,17 @@ public class Image implements Lifecycle {
 	@Override
 	public void destroy() {
 		stbi_image_free(buffer);
+	}
+	
+	public GLFWImage toGLFWImage() {
+		GLFWImage glfwImage;
+		try (MemoryStack s = MemoryStack.stackPush()) {
+			glfwImage = GLFWImage.malloc(s)
+				.width(getWidth())
+				.height(getHeight())
+				.pixels(getFlippedImage());
+		}
+		return glfwImage;
 	}
 	
 	public static ByteBuffer flipImageVertically(ByteBuffer image, int width, int height, int channels) {

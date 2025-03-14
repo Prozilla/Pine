@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.system.resource.Image;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
@@ -32,12 +33,17 @@ public class Input implements Lifecycle {
 	private final List<Integer> mouseButtonsDown;
 	private final List<Integer> previousMouseButtonsDown;
 	
-	private Vector2f scroll;
-	private Vector2f currentScroll;
+	private final Vector2f scroll;
+	private final Vector2f currentScroll;
 	
-	private final Vector2i cursor;
-	private int cursorType;
+	private final Vector2i cursorPosition;
 	private Entity cursorBlocker;
+	private int cursorType;
+	private Image cursorImage;
+	private Image previousCursorImage;
+	private final Vector2i cursorImageOffset;
+	private long cursorHandle;
+	private long previousCursorHandle;
 	
 	private GLFWKeyCallback keyCallback;
 	private GLFWScrollCallback scrollCallback;
@@ -68,8 +74,9 @@ public class Input implements Lifecycle {
 		
 		scroll = new Vector2f();
 		currentScroll = new Vector2f();
-		cursor = new Vector2i();
+		cursorPosition = new Vector2i();
 		cursorType = CURSOR_TYPE_DEFAULT;
+		cursorImageOffset = new Vector2i();
 	}
 	
 	/**
@@ -100,8 +107,8 @@ public class Input implements Lifecycle {
 		glfwSetCursorPosCallback(window, cursorPosCallback = new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xPos, double yPos) {
-				cursor.x = (int)xPos;
-				cursor.y = (int)yPos;
+				cursorPosition.x = (int)xPos;
+				cursorPosition.y = (int)yPos;
 			}
 		});
 		
@@ -123,14 +130,18 @@ public class Input implements Lifecycle {
 	 */
 	@Override
 	public void input() {
+		// Reset scroll
 		currentScroll.x = scroll.x;
 		currentScroll.y = scroll.y;
 		scroll.x = 0;
 		scroll.y = 0;
 		
+		// Reset cursor
 		cursorType = CURSOR_TYPE_DEFAULT;
+		cursorImage = null;
 		cursorBlocker = null;
 		
+		// Reset keys
 		if (!previousKeysDown.isEmpty()) {
 			keysDown.removeAll(previousKeysDown);
 			previousKeysDown.clear();
@@ -146,8 +157,20 @@ public class Input implements Lifecycle {
 	 */
 	@Override
 	public void update() {
-		long cursor = glfwCreateStandardCursor(cursorType);
-		glfwSetCursor(application.getWindow().id, cursor);
+		if (cursorImage != null) {
+			if (cursorImage != previousCursorImage) {
+				cursorHandle = glfwCreateCursor(cursorImage.toGLFWImage(), cursorImageOffset.x, cursorImageOffset.y);
+			}
+			previousCursorImage = cursorImage;
+		} else {
+			cursorHandle = glfwCreateStandardCursor(cursorType);
+			previousCursorImage = null;
+		}
+		
+		if (cursorHandle != previousCursorHandle) {
+			glfwSetCursor(application.getWindow().id, cursorHandle);
+			previousCursorHandle = cursorHandle;
+		}
 		
 		previousKeysDown.addAll(keysDown);
 		previousMouseButtonsDown.addAll(mouseButtonsDown);
@@ -158,14 +181,18 @@ public class Input implements Lifecycle {
 	 */
 	@Override
 	public void destroy() {
-		if (keyCallback != null)
+		if (keyCallback != null) {
 			keyCallback.free();
-		if (scrollCallback != null)
+		}
+		if (scrollCallback != null) {
 			scrollCallback.free();
-		if (cursorPosCallback != null)
+		}
+		if (cursorPosCallback != null) {
 			cursorPosCallback.free();
-		if (mouseButtonCallback != null)
+		}
+		if (mouseButtonCallback != null) {
 			mouseButtonCallback.free();
+		}
 	}
 	
 	/**
@@ -461,7 +488,7 @@ public class Input implements Lifecycle {
 	 * @return Position of the cursor
 	 */
 	public Vector2i getCursor(boolean ignoreBlock) {
-		return (!ignoreBlock && cursorBlocker != null) ? null : cursor;
+		return (!ignoreBlock && cursorBlocker != null) ? null : cursorPosition;
 	}
 	
 	/**
@@ -495,6 +522,7 @@ public class Input implements Lifecycle {
 	 */
 	public void setCursorType(CursorType cursorType) {
 		this.cursorType = cursorType.getValue();
+		cursorImage = null;
 	}
 	
 	/**
@@ -505,9 +533,24 @@ public class Input implements Lifecycle {
 	public void setCursorType(int cursorType) {
 		if (CursorType.isValid(cursorType)) {
 			this.cursorType = cursorType;
+			cursorImage = null;
 		} else {
 			System.err.println("Invalid cursor type: " + cursorType);
 		}
+	}
+	
+	public void setCursorImage(Image image) {
+		setCursorImage(image, 0, 0);
+	}
+	
+	public void setCursorImage(Image image, Vector2i offset) {
+		setCursorImage(image, offset.x, offset.y);
+	}
+	
+	public void setCursorImage(Image image, int offsetX, int offsetY) {
+		cursorImage = image;
+		cursorImageOffset.x = offsetX;
+		cursorImageOffset.y = offsetY;
 	}
 	
 	/**

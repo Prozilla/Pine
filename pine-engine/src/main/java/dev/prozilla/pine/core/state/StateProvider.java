@@ -20,7 +20,7 @@ public interface StateProvider<Context, State extends dev.prozilla.pine.core.sta
 	/**
 	 * Checks whether the state machine is in any of the given states.
 	 */
-	default boolean isAnyState(State[] states) {
+	default boolean isAnyState(State... states) {
 		for (State state : states) {
 			if (isState(state)) {
 				return true;
