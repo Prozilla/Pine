@@ -90,4 +90,12 @@ public class SpriteRenderer extends Component {
 			return (float)texture.getHeight() * scale;
 		}
 	}
+	
+	public float getX() {
+		return entity.transform.getGlobalX() + offset.x;
+	}
+	
+	public float getY() {
+		return entity.transform.getGlobalY() + offset.y;
+	}
 }

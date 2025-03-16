@@ -90,6 +90,13 @@ public class EntityChunk implements Printable {
 		return (C)components[index];
 	}
 	
+	/**
+	 * Destroys the entity.
+	 */
+	public void destroy() {
+		entity.destroy();
+	}
+	
 	public Entity getEntity() throws IllegalStateException {
 		return entity;
 	}

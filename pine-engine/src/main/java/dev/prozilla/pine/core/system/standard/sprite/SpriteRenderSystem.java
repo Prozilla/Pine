@@ -4,7 +4,6 @@ import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
-import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderSystemBase;
 
@@ -24,11 +23,10 @@ public class SpriteRenderSystem extends RenderSystemBase {
 		forEach(chunk -> {
 			Transform transform = chunk.getTransform();
 			SpriteRenderer spriteRenderer = chunk.getComponent(SpriteRenderer.class);
-			Entity entity = spriteRenderer.entity;
 			
 			// Calculate world position
-			float worldX = entity.transform.getGlobalX() + spriteRenderer.offset.x;
-			float worldY = entity.transform.getGlobalY() + spriteRenderer.offset.y;
+			float worldX = spriteRenderer.getX();
+			float worldY = spriteRenderer.getY();
 			
 			// Calculate screen position
 			Vector2f position = camera.applyTransform(worldX, worldY);
