@@ -1,6 +1,6 @@
 #version 330 core
 
-#define MAX_TEXTURES 32
+#define MAX_TEXTURES 128
 
 in vec4 fColor;
 in vec2 fTexCoords;

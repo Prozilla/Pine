@@ -63,7 +63,7 @@ public class Renderer implements Lifecycle {
 	// Constants
 	private final static int STRIDE_LENGTH = 10;
 	/** Matches the length of <code>uTextures</code> in the fragment shader. */
-	public final static int MAX_TEXTURES = 32;
+	public final static int MAX_TEXTURES = 128;
 	/** The amount of strides to fit into a single vertex buffer. */
 	public final static int VERTEX_BUFFER_SIZE = 1024;
 	
