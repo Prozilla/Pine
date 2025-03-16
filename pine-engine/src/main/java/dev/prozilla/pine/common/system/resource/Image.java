@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.system.resource;
 
 import dev.prozilla.pine.common.Lifecycle;
 import org.lwjgl.glfw.GLFWImage;
-import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 
@@ -29,6 +29,10 @@ public class Image implements Lifecycle {
 		return flipImageVertically(buffer, width, height, channels);
 	}
 	
+	public ByteBuffer getPremultipliedImage() {
+		return premultiplyAlpha(buffer, width, height, channels);
+	}
+	
 	public ByteBuffer getImage() {
 		return buffer;
 	}
@@ -51,19 +55,38 @@ public class Image implements Lifecycle {
 	}
 	
 	public GLFWImage toGLFWImage() {
-		GLFWImage glfwImage;
-		try (MemoryStack s = MemoryStack.stackPush()) {
-			glfwImage = GLFWImage.malloc(s)
-				.width(getWidth())
-				.height(getHeight())
-				.pixels(getFlippedImage());
-		}
+		GLFWImage glfwImage = GLFWImage.malloc();
+		glfwImage.width(getWidth())
+			.height(getHeight())
+		    .pixels(getFlippedImage());
+		
 		return glfwImage;
 	}
 	
+	public static ByteBuffer premultiplyAlpha(ByteBuffer image, int width, int height, int channels) {
+		if (channels < 4) {
+			return image;
+		}
+		
+		ByteBuffer premultiplied = MemoryUtil.memAlloc(image.capacity());
+		
+		for (int i = 0; i < width * height; i++) {
+			int index = i * 4;
+			float alpha = (image.get(index + 3) & 0xFF) / 255.0f;
+			
+			premultiplied.put(index, (byte) ((image.get(index) & 0xFF) * alpha));
+			premultiplied.put(index + 1, (byte) ((image.get(index + 1) & 0xFF) * alpha));
+			premultiplied.put(index + 2, (byte) ((image.get(index + 2) & 0xFF) * alpha));
+			premultiplied.put(index + 3, image.get(index + 3));
+		}
+		
+		return premultiplied;
+	}
+	
+	
 	public static ByteBuffer flipImageVertically(ByteBuffer image, int width, int height, int channels) {
 		int stride = width * channels;
-		ByteBuffer flipped = ByteBuffer.allocateDirect(image.capacity());
+		ByteBuffer flipped = MemoryUtil.memAlloc(image.capacity());
 		
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < stride; x++) {
