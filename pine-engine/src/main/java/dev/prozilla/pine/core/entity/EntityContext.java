@@ -2,6 +2,10 @@ package dev.prozilla.pine.core.entity;
 
 public interface EntityContext {
 	
+	Entity getFirstChild();
+	
+	Entity getLastChild();
+	
 	/**
 	 * Gets a child entity with a given tag.
 	 * @param tag Tag of the child entity.

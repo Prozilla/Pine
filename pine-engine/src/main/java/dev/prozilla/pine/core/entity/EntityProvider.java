@@ -14,12 +14,22 @@ public interface EntityProvider extends EntityContext {
 	}
 	
 	@Override
+	default Entity getFirstChild() {
+		return getTransform().getFirstChild();
+	}
+	
+	@Override
+	default Entity getLastChild() {
+		return getTransform().getLastChild();
+	}
+	
+	@Override
 	default Entity getChildWithTag(String tag) {
-		return getEntity().getChildWithTag(tag);
+		return getTransform().getChildWithTag(tag);
 	}
 	
 	@Override
 	default Entity getParentWithTag(String tag) {
-		return getEntity().getParentWithTag(tag);
+		return getTransform().getParentWithTag(tag);
 	}
 }

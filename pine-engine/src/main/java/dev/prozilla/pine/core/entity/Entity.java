@@ -188,6 +188,16 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	}
 	
 	@Override
+	public Entity getFirstChild() {
+		return transform.getFirstChild();
+	}
+	
+	@Override
+	public Entity getLastChild() {
+		return transform.getLastChild();
+	}
+	
+	@Override
 	public Entity getChildWithTag(String tag) {
 		return transform.getChildWithTag(tag);
 	}

@@ -46,6 +46,24 @@ public class Transform extends Component {
 	}
 	
 	@Override
+	public Entity getFirstChild() {
+		if (children.isEmpty()) {
+			return null;
+		}
+		
+		return children.getFirst().getEntity();
+	}
+	
+	@Override
+	public Entity getLastChild() {
+		if (children.isEmpty()) {
+			return null;
+		}
+		
+		return children.getLast().getEntity();
+	}
+	
+	@Override
 	public Entity getChildWithTag(String tag) {
 		Objects.requireNonNull(tag, "tag must not be null");
 		
