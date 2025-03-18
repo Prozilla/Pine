@@ -45,18 +45,24 @@ public class TileRenderer extends Component {
 	 * Moves this tile to an XY-coordinate.
 	 * @param x X value
 	 * @param y Y value
+	 * @return True if the coordinate of this tile was changed.
 	 */
-	public void moveTo(int x, int y) {
-		moveTo(new Vector2i(x, y));
+	public boolean moveTo(int x, int y) {
+		if (coordinate.x == x && coordinate.y == y) {
+			return false;
+		}
+		
+		return moveTo(new Vector2i(x, y));
 	}
 	
 	/**
 	 * Moves this tile to a coordinate.
 	 * @param coordinate Coordinate
+	 * @return True if the coordinate of this tile was changed.
 	 */
-	public void moveTo(Vector2i coordinate) {
+	public boolean moveTo(Vector2i coordinate) {
 		if (this.coordinate.equals(coordinate)) {
-			return;
+			return false;
 		}
 		
 		GridGroup group = getGroup();
@@ -66,6 +72,8 @@ public class TileRenderer extends Component {
 		} else {
 			this.coordinate = coordinate;
 		}
+		
+		return true;
 	}
 	
 	public boolean isHovering() {
@@ -78,6 +86,9 @@ public class TileRenderer extends Component {
 		return group.isHovering(this);
 	}
 	
+	/**
+	 * Removes this tile from its grid.
+	 */
 	public void remove() {
 		GridGroup group = getGroup();
 		
@@ -88,6 +99,9 @@ public class TileRenderer extends Component {
 		entity.destroy();
 	}
 	
+	/**
+	 * @return The grid this tile belongs to.
+	 */
 	public GridGroup getGroup() {
 		if (group != null) {
 			return group;
