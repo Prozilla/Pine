@@ -1,17 +1,17 @@
 package dev.prozilla.pine.common.property.animated;
 
-import dev.prozilla.pine.common.math.Easing;
+import dev.prozilla.pine.common.math.easing.EasingFunction;
 import dev.prozilla.pine.common.property.ColorProperty;
 import dev.prozilla.pine.common.system.resource.Color;
 
 public class AnimatedColorProperty extends AnimatedProperty<Color> implements ColorProperty {
 	
 	public AnimatedColorProperty(Color start, Color end, float duration) {
-		this(start, end, duration, AnimatedProperty.DEFAULT_EASING);
+		this(start, end, duration, AnimatedProperty.DEFAULT_EASING_FUNCTION);
 	}
 	
-	public AnimatedColorProperty(Color start, Color end, float duration, Easing easing) {
-		super(start, end, duration, easing);
+	public AnimatedColorProperty(Color start, Color end, float duration, EasingFunction easingFunction) {
+		super(start, end, duration, easingFunction);
 	}
 	
 	@Override
@@ -21,7 +21,7 @@ public class AnimatedColorProperty extends AnimatedProperty<Color> implements Co
 	
 	@Override
 	public void apply(Color outputColor) {
-		float factor = easing.get(time / duration);
+		float factor = easingFunction.get(time / duration);
 		outputColor.copyFrom(start).mix(end, factor);
 	}
 }

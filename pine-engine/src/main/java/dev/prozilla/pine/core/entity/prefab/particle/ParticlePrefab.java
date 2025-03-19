@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.particle;
 
-import dev.prozilla.pine.common.math.Easing;
+import dev.prozilla.pine.common.math.easing.EasingFunction;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.property.FixedProperty;
 import dev.prozilla.pine.common.property.VariableColorProperty;
@@ -66,41 +66,41 @@ public class ParticlePrefab extends SpritePrefab {
 	/**
 	 * Adds an animation for the alpha value of the particle's color, going from <code>1f</code> to <code>0f</code>.
 	 */
-	public void setColorAlphaAnimation(Color base, Easing easing) {
-		setColorAlphaAnimation(base, new FixedProperty<>(1f), new FixedProperty<>(0f), easing);
+	public void setColorAlphaAnimation(Color base, EasingFunction easingFunction) {
+		setColorAlphaAnimation(base, new FixedProperty<>(1f), new FixedProperty<>(0f), easingFunction);
 	}
 	
 	/**
 	 * Adds a linear animation for the alpha value of the particle's color.
 	 */
 	public void setColorAlphaAnimation(Color base, VariableProperty<Float> alphaStart, VariableProperty<Float> alphaEnd) {
-		setColorAlphaAnimation(base, alphaStart, alphaEnd, AnimatedProperty.DEFAULT_EASING);
+		setColorAlphaAnimation(base, alphaStart, alphaEnd, AnimatedProperty.DEFAULT_EASING_FUNCTION);
 	}
 	
 	/**
 	 * Adds an animation for the alpha value of the particle's color.
 	 */
-	public void setColorAlphaAnimation(Color base, VariableProperty<Float> alphaStart, VariableProperty<Float> alphaEnd, Easing easing) {
+	public void setColorAlphaAnimation(Color base, VariableProperty<Float> alphaStart, VariableProperty<Float> alphaEnd, EasingFunction easingFunction) {
 		VariableColorProperty start = new VariableColorProperty(base);
 		VariableColorProperty end = new VariableColorProperty(base);
 		start.setAlpha(alphaStart);
 		end.setAlpha(alphaEnd);
 		
-		setColorAnimation(start, end, easing);
+		setColorAnimation(start, end, easingFunction);
 	}
 	
 	/**
 	 * Adds a linear animation for the color of the particle.
 	 */
 	public void setColorAnimation(VariableProperty<Color> start, VariableProperty<Color> end) {
-		setColorAnimation(start, end, AnimatedProperty.DEFAULT_EASING);
+		setColorAnimation(start, end, AnimatedProperty.DEFAULT_EASING_FUNCTION);
 	}
 	
 	/**
 	 * Adds an animation for the color of the particle.
 	 */
-	public void setColorAnimation(VariableProperty<Color> start, VariableProperty<Color> end, Easing easing) {
-		colorAnimation = new VariableAnimatedColorProperty(start, end, new FixedProperty<>(1f), new FixedProperty<>(easing));
+	public void setColorAnimation(VariableProperty<Color> start, VariableProperty<Color> end, EasingFunction easingFunction) {
+		colorAnimation = new VariableAnimatedColorProperty(start, end, new FixedProperty<>(1f), new FixedProperty<>(easingFunction));
 		color = null;
 	}
 	
@@ -118,14 +118,14 @@ public class ParticlePrefab extends SpritePrefab {
 	 * Adds a linear animation for the scale of the particle.
 	 */
 	public void setScaleAnimation(VariableProperty<Float> start, VariableProperty<Float> end) {
-		setScaleAnimation(start, end, AnimatedProperty.DEFAULT_EASING);
+		setScaleAnimation(start, end, AnimatedProperty.DEFAULT_EASING_FUNCTION);
 	}
 	
 	/**
 	 * Adds an animation for the scale of the particle.
 	 */
-	public void setScaleAnimation(VariableProperty<Float> start, VariableProperty<Float> end, Easing easing) {
-		scaleAnimation = new VariableAnimatedFloatProperty(start, end, new FixedProperty<>(1f), new FixedProperty<>(easing));
+	public void setScaleAnimation(VariableProperty<Float> start, VariableProperty<Float> end, EasingFunction easingFunction) {
+		scaleAnimation = new VariableAnimatedFloatProperty(start, end, new FixedProperty<>(1f), new FixedProperty<>(easingFunction));
 		scale = null;
 	}
 	

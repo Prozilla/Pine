@@ -52,7 +52,15 @@ public final class MathUtils {
 		return a + normalized * (b - a);
 	}
 	
-	public static float easeOutQuad(float time) {
-		return Easing.EASE_OUT_QUAD.get(time);
+	/**
+	 * Calculates the value of a cubic Bézier function based on given control points.
+	 * @param p0 X coordinate of first control point
+	 * @param p1 Y coordinate of first control point
+	 * @param p2 X coordinate of second control point
+	 * @param p3 Y coordinate of second control point
+	 */
+	public static float cubicBezier(float t, float p0, float p1, float p2, float p3) {
+		float u = 1 - t;
+		return u * u * u * p0 + 3 * u * u * t * p1 + 3 * u * t * t * p2 + t * t * t * p3;
 	}
 }

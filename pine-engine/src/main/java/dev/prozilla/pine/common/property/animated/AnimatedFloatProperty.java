@@ -1,20 +1,20 @@
 package dev.prozilla.pine.common.property.animated;
 
-import dev.prozilla.pine.common.math.Easing;
+import dev.prozilla.pine.common.math.easing.EasingFunction;
 
 public class AnimatedFloatProperty extends AnimatedProperty<Float> {
 	
 	public AnimatedFloatProperty(Float start, Float end, float duration) {
-		this(start, end, duration, AnimatedProperty.DEFAULT_EASING);
+		this(start, end, duration, AnimatedProperty.DEFAULT_EASING_FUNCTION);
 	}
 	
-	public AnimatedFloatProperty(Float start, Float end, float duration, Easing easing) {
-		super(start, end, duration, easing);
+	public AnimatedFloatProperty(Float start, Float end, float duration, EasingFunction easingFunction) {
+		super(start, end, duration, easingFunction);
 	}
 	
 	@Override
 	public Float getValue() {
-		return easing.get(time / duration, start, end);
+		return easingFunction.get(time / duration, start, end);
 	}
 	
 }
