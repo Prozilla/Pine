@@ -1,4 +1,6 @@
-package dev.prozilla.pine.common.random.property;
+package dev.prozilla.pine.common.property.random;
+
+import dev.prozilla.pine.common.property.VariableProperty;
 
 public class RandomFloatProperty extends RandomProperty<Float> {
 	
@@ -8,6 +10,6 @@ public class RandomFloatProperty extends RandomProperty<Float> {
 	
 	@Override
 	public Float getValue() {
-		return random.nextFloat(min, max);
+		return VariableProperty.random.nextFloat(min, max);
 	}
 }

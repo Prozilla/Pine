@@ -53,6 +53,6 @@ public final class MathUtils {
 	}
 	
 	public static float easeOutQuad(float time) {
-		return 1f - (1f - time) * (1f - time);
+		return Easing.EASE_OUT_QUAD.get(time);
 	}
 }

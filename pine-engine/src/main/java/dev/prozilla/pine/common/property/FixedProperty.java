@@ -1,5 +1,8 @@
-package dev.prozilla.pine.common.random.property;
+package dev.prozilla.pine.common.property;
 
+/**
+ * Represents a property with a value that never changes.
+ */
 public class FixedProperty<T> extends VariableProperty<T> {
 	
 	protected final T value;

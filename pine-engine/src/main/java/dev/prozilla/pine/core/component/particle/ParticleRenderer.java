@@ -1,6 +1,8 @@
 package dev.prozilla.pine.core.component.particle;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.property.animated.AnimatedColorProperty;
+import dev.prozilla.pine.common.property.animated.AnimatedFloatProperty;
 import dev.prozilla.pine.core.component.Component;
 
 public class ParticleRenderer extends Component {
@@ -18,6 +20,9 @@ public class ParticleRenderer extends Component {
 	public boolean animateSprite;
 	/** Initial frame of the sprite of this particle. */
 	public int initialFrame;
+	
+	public AnimatedFloatProperty scaleAnimation;
+	public AnimatedColorProperty colorAnimation;
 	
 	public static final int DEFAULT_FRAME_COUNT = 1;
 	public static final boolean ANIMATE_SPRITE_DEFAULT = true;

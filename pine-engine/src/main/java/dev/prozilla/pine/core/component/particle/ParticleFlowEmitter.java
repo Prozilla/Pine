@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.component.particle;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
-import dev.prozilla.pine.common.random.property.FixedProperty;
-import dev.prozilla.pine.common.random.property.VariableProperty;
+import dev.prozilla.pine.common.property.FixedProperty;
+import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.core.entity.prefab.particle.ParticlePrefab;
 
 /**

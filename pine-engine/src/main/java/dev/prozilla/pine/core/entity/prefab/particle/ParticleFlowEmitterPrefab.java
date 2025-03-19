@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.particle;
 
-import dev.prozilla.pine.common.random.property.VariableProperty;
+import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.core.component.particle.ParticleFlowEmitter;

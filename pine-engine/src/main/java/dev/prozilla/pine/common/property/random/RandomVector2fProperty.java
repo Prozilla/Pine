@@ -1,8 +1,12 @@
-package dev.prozilla.pine.common.random.property;
+package dev.prozilla.pine.common.property.random;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
 
 public class RandomVector2fProperty extends RandomProperty<Vector2f> {
+	
+	public RandomVector2fProperty(float min, float max) {
+		this(min, max, min, max);
+	}
 	
 	public RandomVector2fProperty(float minX, float maxX, float minY, float maxY) {
 		this(new Vector2f(minX, minY), new Vector2f(maxX, maxY));

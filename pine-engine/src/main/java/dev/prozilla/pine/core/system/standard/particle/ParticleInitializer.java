@@ -22,5 +22,14 @@ public class ParticleInitializer extends InitSystem {
 		
 		spriteRenderer.offset.x = -textureWidth / 2f;
 		spriteRenderer.offset.y = -textureHeight / 2f;
+		
+		if (particleRenderer.scaleAnimation != null) {
+			particleRenderer.scaleAnimation.setDuration(particleRenderer.lifetime);
+			spriteRenderer.scale = particleRenderer.scaleAnimation.getRestartedValue();
+		}
+		if (particleRenderer.colorAnimation != null) {
+			particleRenderer.colorAnimation.setDuration(particleRenderer.lifetime);
+			spriteRenderer.color.copyFrom(particleRenderer.colorAnimation.getRestartedValue());
+		}
 	}
 }

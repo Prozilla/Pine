@@ -40,5 +40,15 @@ public class ParticleUpdater extends UpdateSystem {
 		if (particleRenderer.velocity != null) {
 			transform.translate(particleRenderer.velocity.x * deltaTime, particleRenderer.velocity.y * deltaTime);
 		}
+		
+		// Update scale based on animation
+		if (particleRenderer.scaleAnimation != null) {
+			spriteRenderer.scale = particleRenderer.scaleAnimation.getUpdatedValue(deltaTime);
+		}
+		
+		// Update color based on animation
+		if (particleRenderer.colorAnimation != null) {
+			spriteRenderer.color.copyFrom(particleRenderer.colorAnimation.getUpdatedValue(deltaTime));
+		}
 	}
 }
