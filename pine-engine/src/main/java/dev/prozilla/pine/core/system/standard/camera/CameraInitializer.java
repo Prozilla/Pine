@@ -30,9 +30,7 @@ public class CameraInitializer extends InitSystemBase {
 	}
 	
 	private void renderBackgroundColor(Color color) {
-		if (!Application.initializedOpenGL) {
-			throw new RuntimeException("Can't render background color before initialization");
-		}
+		Application.requireOpenGL();
 		
 		glClearColor(color.getRed(), color.getGreen(), color.getBlue(), 1.0f);
 	}

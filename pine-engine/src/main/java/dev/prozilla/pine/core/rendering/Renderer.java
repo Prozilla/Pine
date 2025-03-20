@@ -5,7 +5,6 @@ import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.common.system.resource.TextureBase;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.Application;
@@ -29,7 +28,7 @@ import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 import static org.lwjgl.opengl.GL31.GL_INVALID_INDEX;
 
 /**
- * Handles rendering process.
+ * Handles the rendering process.
  */
 public class Renderer implements Lifecycle {
 	
@@ -42,7 +41,7 @@ public class Renderer implements Lifecycle {
 	private FloatBuffer vertices;
 	private int numVertices;
 	private boolean drawing;
-	public static boolean usingTextureArray;
+	private TextureBase activeTexture;
 	
 	// Render stats
 	private int renderedVertices;
@@ -63,8 +62,6 @@ public class Renderer implements Lifecycle {
 	
 	// Constants
 	private final static int STRIDE_LENGTH = 11;
-	/** The limit of GPU texture slots. Generally between 16 and 32. */
-	public final static int MAX_TEXTURES = 16;
 	/** The amount of strides to fit into a single vertex buffer. */
 	private final static int VERTEX_BUFFER_SIZE = 32;
 	
@@ -217,6 +214,11 @@ public class Renderer implements Lifecycle {
 				specifyVertexAttributes();
 			}
 			program.use();
+			
+			// Bind the active texture
+			if (activeTexture != null) {
+				activeTexture.bind();
+			}
 			
 			// Upload the new vertex data
 			vbo.bind(GL_ARRAY_BUFFER);
@@ -383,9 +385,7 @@ public class Renderer implements Lifecycle {
 		float x2 = x + width * renderScale;
 		float y2 = y + height * renderScale;
 		
-		Texture.currentTextureId = null;
-		
-		drawTextureRegion(x, y, x2, y2, z, 0, 0, 0, 0, c);
+		drawTextureRegion(null, x, y, x2, y2, z, 0, 0, 0, 0, c);
 	}
 	
 	public void drawRotatedTexture(TextureBase texture, float x, float y, float z, float r) {
@@ -408,9 +408,7 @@ public class Renderer implements Lifecycle {
 		float s2 = 1f;
 		float t2 = 1f;
 		
-		texture.bind();
-		
-		drawRotatedTextureRegion(x, y, x2, y2, z, s1, t1, s2, t2, c, r);
+		drawRotatedTextureRegion(texture, x, y, x2, y2, z, s1, t1, s2, t2, c, r);
 	}
 	
 	/**
@@ -442,9 +440,7 @@ public class Renderer implements Lifecycle {
 		float s2 = 1f;
 		float t2 = 1f;
 		
-		texture.bind();
-		
-		drawTextureRegion(x, y, x2, y2, z, s1, t1, s2, t2, c);
+		drawTextureRegion(texture, x, y, x2, y2, z, s1, t1, s2, t2, c);
 	}
 	
 	public void drawRotatedTextureRegion(TextureBase texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, float r) {
@@ -473,20 +469,17 @@ public class Renderer implements Lifecycle {
 		float s2 = (regX + regWidth) / texture.getWidth();
 		float t2 = (regY + regHeight) / texture.getHeight();
 		
-		// Bind the texture
-		texture.bind();
-		
 		// Delegate to the rotation drawing method
-		drawRotatedTextureRegion(x1, y1, x2, y2, z, s1, t1, s2, t2, c, r);
+		drawRotatedTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, c, r);
 	}
 	
-	public void drawRotatedTextureRegion(float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, float r) {
-		drawRotatedTextureRegion(x1, y1, x2, y2, z, s1, t1, s2, t2, fallbackColor, r);
+	public void drawRotatedTextureRegion(TextureBase texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, float r) {
+		drawRotatedTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, fallbackColor, r);
 	}
 	
-	public void drawRotatedTextureRegion(float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, Color c, float r) {
+	public void drawRotatedTextureRegion(TextureBase texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, Color c, float r) {
 		if (r == 0) {
-			drawTextureRegion(x1, y1, x2, y2, z, s1, t1, s2, t2, c);
+			drawTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, c);
 			return;
 		}
 		
@@ -523,7 +516,7 @@ public class Renderer implements Lifecycle {
 		float newX4 = cosAngle * localX4 - sinAngle * localY4 + centerX;
 		float newY4 = sinAngle * localX4 + cosAngle * localY4 + centerY;
 		
-		drawTextureRegion(newX1, newY1, newX2, newY2, newX3, newY3, newX4, newY4, z, s2, t1, s1, t2, c);
+		drawTextureRegion(texture, newX1, newY1, newX2, newY2, newX3, newY3, newX4, newY4, z, s2, t1, s1, t2, c);
 	}
 	
 	/**
@@ -567,9 +560,7 @@ public class Renderer implements Lifecycle {
 		float s2 = (regX + regWidth) / texture.getWidth();
 		float t2 = (regY + regHeight) / texture.getHeight();
 		
-		texture.bind();
-		
-		drawTextureRegion(x, y, x2, y2, z, s1, t1, s2, t2, c);
+		drawTextureRegion(texture, x, y, x2, y2, z, s1, t1, s2, t2, c);
 	}
 	
 	/**
@@ -583,8 +574,8 @@ public class Renderer implements Lifecycle {
 	 * @param s2 Top right s coordinate
 	 * @param t2 Top right t coordinate
 	 */
-	public void drawTextureRegion(float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2) {
-		drawTextureRegion(x1, y1, x2, y2, z, s1, t1, s2, t2, fallbackColor);
+	public void drawTextureRegion(TextureBase texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2) {
+		drawTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, fallbackColor);
 	}
 	
 	/**
@@ -599,19 +590,25 @@ public class Renderer implements Lifecycle {
 	 * @param t2 Top right t coordinate
 	 * @param c  The color to use
 	 */
-	public void drawTextureRegion(float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, Color c) {
-		drawTextureRegion(x1, y1, x1, y2, x2, y2, x2, y1, z, s1, t1, s2, t2, c);
+	public void drawTextureRegion(TextureBase texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, Color c) {
+		drawTextureRegion(texture, x1, y1, x1, y2, x2, y2, x2, y1, z, s1, t1, s2, t2, c);
 	}
 	
 	/**
 	 * Draws a texture region on specified coordinates.
 	 */
-	public void drawTextureRegion(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float z,
+	public void drawTextureRegion(TextureBase texture, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float z,
 	                              float s1, float t1, float s2, float t2, Color c) {
 		totalVertices += 6;
 		
+		// Discard draw call if object is outside the viewport bounds
 		if (outOfBounds(x1, y1, x2, y2, x3, y3, x4, y4)) {
 			return;
+		}
+		
+		// Check if previous batch should be finished first
+		if (vertices.remaining() < STRIDE_LENGTH * 6 || (texture != null && activeTexture != null && !texture.hasEqualLocation(activeTexture))) {
+			flush();
 		}
 		
 		// Get color components from the Color object
@@ -620,10 +617,12 @@ public class Renderer implements Lifecycle {
 		float b = c.getBlue();
 		float a = c.getAlpha();
 		
-		// Texture ID (default to -1)
+		// Get texture ID and type
 		int texId = -1;
-		if (Texture.currentTextureId != null) {
-			texId = Texture.currentTextureId;
+		float texType = 0f;
+		if (texture != null) {
+			texId = texture.getId();
+			texType = texture.isInArray() ? 1f : 0f;
 		}
 		
 		// Handle depth render mode
@@ -635,8 +634,6 @@ public class Renderer implements Lifecycle {
 			a = 1f;
 			texId = -1;
 		}
-		
-		float texType = usingTextureArray ? 1 : 0;
 		
 		// Avoid subpixel issues by snapping to nearest pixel
 		x1 = Math.round(x1);
@@ -661,7 +658,7 @@ public class Renderer implements Lifecycle {
 			t2 = temp;
 		}
 		
-		// Push the vertices to the buffer (with the correct order for a quad)
+		// Push the vertices to the buffer
 		vertices.put(x1).put(y1).put(z).put(r).put(g).put(b).put(a).put(s1).put(t1).put(texId).put(texType);
 		vertices.put(x2).put(y2).put(z).put(r).put(g).put(b).put(a).put(s1).put(t2).put(texId).put(texType);
 		vertices.put(x3).put(y3).put(z).put(r).put(g).put(b).put(a).put(s2).put(t2).put(texId).put(texType);
@@ -670,10 +667,15 @@ public class Renderer implements Lifecycle {
 		vertices.put(x3).put(y3).put(z).put(r).put(g).put(b).put(a).put(s2).put(t2).put(texId).put(texType);
 		vertices.put(x4).put(y4).put(z).put(r).put(g).put(b).put(a).put(s2).put(t1).put(texId).put(texType);
 		
-		// Increment the number of vertices
 		numVertices += 6;
 		
-		flush();
+		// Change active texture and unbind previous texture
+		if (texture != null && (activeTexture == null || !activeTexture.hasEqualLocation(texture))) {
+			if (activeTexture != null) {
+				activeTexture.unbind();
+			}
+			activeTexture = texture;
+		}
 	}
 	
 	/**
@@ -789,7 +791,7 @@ public class Renderer implements Lifecycle {
 		// Set texture array uniform
 		int uniTexArray = program.getUniformLocation("uTextureArray");
 		if (uniTexArray == GL_INVALID_INDEX) {
-			throw new RuntimeException("Texture uniform not found. (uTextureArray)");
+			throw new RuntimeException("Texture array uniform not found. (uTextureArray)");
 		}
 		program.setUniform(uniTexArray, 0);
 		

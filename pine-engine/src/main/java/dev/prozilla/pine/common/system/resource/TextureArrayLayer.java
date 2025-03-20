@@ -1,10 +1,14 @@
 package dev.prozilla.pine.common.system.resource;
 
-import dev.prozilla.pine.core.rendering.Renderer;
-
+/**
+ * Represents a layer of a texture array.
+ * @see TextureArray
+ */
 public class TextureArrayLayer implements TextureBase {
 
+	/** The path of the image of this texture */
 	private final String path;
+	/** The index of the layer of this texture in its texture array */
 	private final int layer;
 	private final TextureArray textureArray;
 	
@@ -16,16 +20,23 @@ public class TextureArrayLayer implements TextureBase {
 	
 	@Override
 	public void bind() {
-		if (true || Texture.currentTextureId == null || Texture.currentTextureId != layer || !Renderer.usingTextureArray) {
-			textureArray.bind();
-			Texture.currentTextureId = layer;
-			Renderer.usingTextureArray = true;
-		}
+		textureArray.bind();
 	}
 	
 	@Override
 	public void unbind() {
 		textureArray.unbind();
+	}
+	
+	@Override
+	public boolean hasEqualLocation(TextureBase other) {
+		if (!other.isInArray()) {
+			return false;
+		}
+		
+		// Check if both textures are part of the same texture array
+		TextureArray otherTextureArray = other.getArray();
+		return otherTextureArray != null && textureArray.equals(otherTextureArray);
 	}
 	
 	@Override
@@ -51,6 +62,11 @@ public class TextureArrayLayer implements TextureBase {
 	@Override
 	public boolean isInArray() {
 		return true;
+	}
+	
+	@Override
+	public TextureArray getArray() {
+		return textureArray;
 	}
 	
 	@Override

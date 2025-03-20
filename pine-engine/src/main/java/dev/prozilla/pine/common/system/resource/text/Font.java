@@ -225,7 +225,7 @@ public class Font implements Lifecycle {
         buffer.flip();
 
         /* Create texture */
-        Texture fontTexture = Texture.createTexture(null, width, height, buffer);
+        Texture fontTexture = new Texture(null, width, height, buffer);
         MemoryUtil.memFree(buffer);
         return fontTexture;
     }
@@ -349,7 +349,6 @@ public class Font implements Lifecycle {
             drawY += textHeight - fontHeight;
         }
 
-        texture.bind();
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
             if (ch == '\n') {

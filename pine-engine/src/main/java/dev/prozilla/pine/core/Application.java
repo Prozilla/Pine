@@ -5,7 +5,6 @@ import dev.prozilla.pine.common.logging.AppLogger;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.system.resource.Image;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.Texture;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -419,7 +418,6 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 			modManager.destroy();
 			
 			// Reset resources
-			Texture.reset();
 			ResourcePool.clear();
 			
 			// Destroy window and release callbacks
@@ -694,5 +692,14 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	@Override
 	public Logger getLogger() {
 		return logger;
+	}
+	
+	/**
+	 * @throws IllegalStateException If OpenGL has not been initialized yet.
+	 */
+	public static void requireOpenGL() throws IllegalStateException {
+		if (!initializedOpenGL) {
+			throw new IllegalStateException("OpenGL has not been initialized yet");
+		}
 	}
 }

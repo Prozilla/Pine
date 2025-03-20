@@ -32,12 +32,7 @@ public class FrameBufferObject implements Lifecycle {
 		bind();
 		
 		// Create texture to use as color attachment
-		texture = new Texture();
-		texture.setWidth(width);
-		texture.setHeight(height);
-		
-		texture.bind();
-		texture.uploadData(width, height, null);
+		texture = new Texture(width, height);
 		texture.setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		texture.setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		

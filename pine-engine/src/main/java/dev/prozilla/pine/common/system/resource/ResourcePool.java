@@ -1,9 +1,9 @@
 package dev.prozilla.pine.common.system.resource;
 
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.PathUtils;
 import dev.prozilla.pine.common.system.resource.text.Font;
-import dev.prozilla.pine.core.Application;
 import org.lwjgl.system.MemoryStack;
 
 import java.awt.*;
@@ -23,8 +23,6 @@ import static org.lwjgl.stb.STBImage.*;
  * by avoiding loading resources multiple times.
  */
 public final class ResourcePool {
-	
-	public static boolean useTextureArray = false;
 	
 	private static final Map<String, TextureBase> textures = new HashMap<>();
 	private static final Map<String, Image> images = new HashMap<>();
@@ -92,20 +90,37 @@ public final class ResourcePool {
 	
 	/**
 	 * Loads a texture from the resource pool or file system.
+	 * If the texture has not been pooled yet, it will be loaded into a texture array.
 	 * @param path Path of the texture's image file
-	 * @return Texture
 	 * @throws RuntimeException If the image file fails to load.
-	 * @throws RuntimeException If OpenGL hasn't been initialized yet.
+	 * @throws IllegalStateException If OpenGL hasn't been initialized yet.
+	 */
+	public static TextureBase loadTextureInArray(String path) throws RuntimeException {
+		return loadTexture(path, TextureArrayPolicy.ALWAYS);
+	}
+	
+	/**
+	 * Loads a texture from the resource pool or file system.
+	 * @param path Path of the texture's image file
+	 * @throws RuntimeException If the image file fails to load.
+	 * @throws IllegalStateException If OpenGL hasn't been initialized yet.
 	 */
 	public static TextureBase loadTexture(String path) throws RuntimeException {
+		return loadTexture(path, TextureArrayPolicy.SOMETIMES);
+	}
+	
+	/**
+	 * Loads a texture from the resource pool or file system.
+	 * @param path Path of the texture's image file
+	 * @param textureArrayPolicy Policy that determines when to load the texture into a texture array.
+	 * @throws RuntimeException If the image file fails to load.
+	 * @throws IllegalStateException If OpenGL hasn't been initialized yet.
+	 */
+	public static TextureBase loadTexture(String path, TextureArrayPolicy textureArrayPolicy) throws IllegalStateException, RuntimeException {
 		path = PathUtils.removeLeadingSlash(path);
 		
 		if (textures.containsKey(path)) {
 			return textures.get(path);
-		}
-		
-		if (!Application.initializedOpenGL) {
-			throw new RuntimeException("Can't load textures before initialization");
 		}
 		
 		Logger.system.logf("Loading texture: %s", path);
@@ -113,31 +128,54 @@ public final class ResourcePool {
 		Image image = loadImage(path);
 		
 		TextureBase texture = null;
-		if (useTextureArray) {
+		
+		// Look for available texture array to load texture into
+		if (textureArrayPolicy.canUseArray()) {
 			for (TextureArray textureArray : textureArrays) {
 				if (textureArray.hasImage(image)) {
-					texture = textureArray.getTexture(image);
+					texture = textureArray.getLayer(image);
 					break;
 				} else if (textureArray.canAdd(image)) {
-					texture = textureArray.addTexture(image);
+					texture = textureArray.addLayer(image);
 					break;
 				}
 			}
-			if (texture == null) {
-				TextureArray textureArray = new TextureArray(image.getWidth(), image.getHeight());
-				texture = textureArray.addTexture(image);
-				textureArrays.add(textureArray);
-			}
-		} else {
-			texture = Texture.createTexture(image);
 		}
 		
+		// Create a new texture array and add texture
+		if (texture == null && textureArrayPolicy.canCreateArray()) {
+			TextureArray textureArray = createTextureArray(image.getWidth(), image.getHeight());
+			texture = textureArray.addLayer(image);
+		}
+		
+		// Fall back to standard texture
 		if (texture == null) {
-			throw new RuntimeException("failed to load texture");
+			texture = new Texture(image);
 		}
 		
 		textures.put(path, texture);
 		return texture;
+	}
+	
+	/**
+	 * Creates a texture array that can be used to load multiple textures with the same resolution into.
+	 * @param width The width of the textures
+	 * @param height The height of the textures
+	 */
+	public static TextureArray createTextureArray(int width, int height) {
+		return createTextureArray(width, height, TextureArray.DEFAULT_LAYER_COUNT);
+	}
+	
+	/**
+	 * Creates a texture array that can be used to load multiple textures with the same resolution into.
+	 * @param width The width of the textures
+	 * @param height The height of the textures
+	 * @param layers The amount of textures to fit into the texture array
+	 */
+	public static TextureArray createTextureArray(int width, int height, int layers) {
+		TextureArray textureArray = new TextureArray(width, height, layers);
+		textureArrays.add(textureArray);
+		return textureArray;
 	}
 	
 	/**
@@ -211,5 +249,54 @@ public final class ResourcePool {
 	 */
 	private static String normalizePath(String path) {
 		return PathUtils.removeLeadingSlash(path);
+	}
+	
+	/**
+	 * Logs amount of images in the resource pool per resolution.
+	 */
+	public static void printImageStats(Logger logger) {
+		logger.log("Total images: " + getImageCount());
+		
+		// Calculate amount of images per resolution
+		Map<Vector2i, Integer> resolutionToImageCount = new HashMap<>(getImageCount());
+		for (Image image : images.values()) {
+			Vector2i resolution = new Vector2i(image.getWidth(), image.getHeight());
+			resolutionToImageCount.put(resolution, resolutionToImageCount.getOrDefault(resolution, 0) + 1);
+		}
+		
+		// Format and log results
+		resolutionToImageCount.entrySet().stream()
+			.sorted((a, b) -> Integer.compare(b.getValue(), a.getValue()))
+			.forEach((entry) -> {
+				Vector2i resolution = entry.getKey();
+				int count = entry.getValue();
+				logger.logf("%sx%s images: %s", resolution.x, resolution.y, count);
+			});
+	}
+	
+	/**
+	 * Logs the current amounts of different types of resources in the resource pool.
+	 */
+	public static void printStats(Logger logger) {
+		logger.log("Images in resource pool: " + getImageCount());
+		logger.log("Textures in resource pool: " + getTextureCount());
+		logger.log("Texture arrays in resource pool: " + getTextureArrayCount());
+		logger.log("Fonts in resource pool: " + getFontCount());
+	}
+	
+	public static int getImageCount() {
+		return images.size();
+	}
+	
+	public static int getTextureCount() {
+		return textures.size();
+	}
+	
+	public static int getTextureArrayCount() {
+		return textureArrays.size();
+	}
+	
+	public static int getFontCount() {
+		return fonts.size();
 	}
 }
