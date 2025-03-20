@@ -50,6 +50,7 @@ public class Config {
 		addOption(RenderConfig.ENABLE_BLEND, rendering.enableBlend);
 		addOption(RenderConfig.ENABLE_DEPTH_TEST, rendering.enableDepthTest);
 		addOption(RenderConfig.RENDER_MODE, rendering.renderMode);
+		addOption(RenderConfig.SNAP_PIXELS, rendering.snapPixels);
 		
 		addOption(LogConfig.ENABLE_LOGS, logging.enableLogs);
 		addOption(LogConfig.PREFIX, logging.prefix);

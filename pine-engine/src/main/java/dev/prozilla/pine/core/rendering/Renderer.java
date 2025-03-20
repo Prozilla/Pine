@@ -10,6 +10,7 @@ import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
+import dev.prozilla.pine.core.state.config.RenderConfig;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
@@ -25,7 +26,6 @@ import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
 import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
-import static org.lwjgl.opengl.GL31.GL_INVALID_INDEX;
 
 /**
  * Handles the rendering process.
@@ -68,6 +68,7 @@ public class Renderer implements Lifecycle {
 	// Config options
 	private Color fallbackColor;
 	private RenderMode renderMode;
+	private boolean snapPixels;
 	
 	// Paths
 	private final static String VERTEX_SHADER_PATH = "/shaders/default.vert";
@@ -89,19 +90,22 @@ public class Renderer implements Lifecycle {
 		setupShaderProgram();
 		
 		// Read config options
-		Config config = application.getConfig();
-		config.rendering.enableBlend.read(() -> {
-			if (config.rendering.enableBlend.get()) {
+		RenderConfig config = application.getConfig().rendering;
+		config.enableBlend.read(() -> {
+			if (config.enableBlend.get()) {
 				glEnable(GL_BLEND);
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			}
 		});
-		config.rendering.enableDepthTest.read(() -> {
-			if (config.rendering.enableDepthTest.get()) {
+		config.enableDepthTest.read(() -> {
+			if (config.enableDepthTest.get()) {
 				// TO DO: improve depth handling to avoid sorting renderers and use only depth test instead
 				glEnable(GL_DEPTH_TEST);
 				glDepthFunc(GL_LEQUAL);
 			}
+		});
+		config.snapPixels.read(() -> {
+			snapPixels = config.snapPixels.get();
 		});
 		
 		createFont();
@@ -636,15 +640,17 @@ public class Renderer implements Lifecycle {
 		}
 		
 		// Avoid subpixel issues by snapping to nearest pixel
-		x1 = Math.round(x1);
-		x2 = Math.round(x2);
-		x3 = Math.round(x3);
-		x4 = Math.round(x4);
-		
-		y1 = Math.round(y1);
-		y2 = Math.round(y2);
-		y3 = Math.round(y3);
-		y4 = Math.round(y4);
+		if (snapPixels) {
+			x1 = Math.round(x1);
+			x2 = Math.round(x2);
+			x3 = Math.round(x3);
+			x4 = Math.round(x4);
+			
+			y1 = Math.round(y1);
+			y2 = Math.round(y2);
+			y3 = Math.round(y3);
+			y4 = Math.round(y4);
+		}
 		
 		// Transform texture coordinates
 		if (mirrorHorizontally) {
@@ -781,27 +787,10 @@ public class Renderer implements Lifecycle {
 		// Specify Vertex Pointers
 		specifyVertexAttributes();
 		
-		// Set texture uniform
-		int uniTex = program.getUniformLocation("uTexture");
-		if (uniTex == GL_INVALID_INDEX) {
-			throw new RuntimeException("Texture uniform not found. (uTexture)");
-		}
-		program.setUniform(uniTex, 0);
-		
-		// Set texture array uniform
-		int uniTexArray = program.getUniformLocation("uTextureArray");
-		if (uniTexArray == GL_INVALID_INDEX) {
-			throw new RuntimeException("Texture array uniform not found. (uTextureArray)");
-		}
-		program.setUniform(uniTexArray, 0);
-		
-		// Set view matrix to identity matrix
-		Matrix4f view = new Matrix4f();
-		int uniView = program.getUniformLocation("uView");
-		if (uniView == GL_INVALID_INDEX) {
-			throw new RuntimeException("View matrix uniform not found. (uView)");
-		}
-		program.setUniform(uniView, view);
+		// Set uniforms
+		program.setUniform("uTexture", 0);
+		program.setUniform("uTextureArray", 0);
+		program.setUniform("uView", new Matrix4f());
 		
 		resize();
 	}
@@ -833,13 +822,7 @@ public class Renderer implements Lifecycle {
 		
 		// Set projection matrix to an orthographic projection
 		Matrix4f projection = Matrix4f.orthographic(0f, width, 0f, height, -1f, 1f);
-		int uniProjection = program.getUniformLocation("uProjection");
-		if (uniProjection == GL_INVALID_INDEX) {
-			throw new RuntimeException("Projection matrix uniform not found. (uProjection)");
-		}
-		program.setUniform(uniProjection, projection);
-
-//        System.out.printf("View: %sx%s%n", width, height);
+		program.setUniform("uProjection", projection);
 		
 		viewWidth = width;
 		viewHeight = height;
@@ -849,45 +832,11 @@ public class Renderer implements Lifecycle {
 	 * Specifies the vertex pointers.
 	 */
 	private void specifyVertexAttributes() {
-		// Specify vertex position pointer
-		int posAttrib = program.getAttributeLocation("vPosition");
-		if (posAttrib == GL_INVALID_INDEX) {
-			throw new RuntimeException("Vertex position pointer not found. (vPosition)");
-		}
-		program.enableVertexAttribute(posAttrib);
-		program.pointVertexAttribute(posAttrib, 3, STRIDE_LENGTH * Float.BYTES, 0);
-		
-		// Specify color pointer
-		int colAttrib = program.getAttributeLocation("vColor");
-		if (colAttrib == GL_INVALID_INDEX) {
-			throw new RuntimeException("Color pointer not found. (vColor)");
-		}
-		program.enableVertexAttribute(colAttrib);
-		program.pointVertexAttribute(colAttrib, 4, STRIDE_LENGTH * Float.BYTES, 3 * Float.BYTES);
-		
-		// Specify texture pointer
-		int texAttrib = program.getAttributeLocation("vTexCoords");
-		if (texAttrib == GL_INVALID_INDEX) {
-			throw new RuntimeException("Texture pointer not found. (vTexCoords)");
-		}
-		program.enableVertexAttribute(texAttrib);
-		program.pointVertexAttribute(texAttrib, 2, STRIDE_LENGTH * Float.BYTES, 7 * Float.BYTES);
-		
-		// Specify texture ID pointer
-		int texIdAttrib = program.getAttributeLocation("vTexId");
-		if (texIdAttrib == GL_INVALID_INDEX) {
-			throw new RuntimeException("Texture ID pointer not found. (vTexId)");
-		}
-		program.enableVertexAttribute(texIdAttrib);
-		program.pointVertexAttribute(texIdAttrib, 1, STRIDE_LENGTH * Float.BYTES, 9 * Float.BYTES);
-		
-		// Specify texture type pointer
-		int texTypeAttrib = program.getAttributeLocation("vIsArrayTexture");
-		if (texTypeAttrib == GL_INVALID_INDEX) {
-			throw new RuntimeException("Texture type pointer not found. (vIsArrayTexture)");
-		}
-		program.enableVertexAttribute(texTypeAttrib);
-		program.pointVertexAttribute(texTypeAttrib, 1, STRIDE_LENGTH * Float.BYTES, 10 * Float.BYTES);
+		program.setVertexAttribute("vPosition", 3, STRIDE_LENGTH * Float.BYTES, 0);
+		program.setVertexAttribute("vColor", 4, STRIDE_LENGTH * Float.BYTES, 3 * Float.BYTES);
+		program.setVertexAttribute("vTexCoords", 2, STRIDE_LENGTH * Float.BYTES, 7 * Float.BYTES);
+		program.setVertexAttribute("vTexId", 1, STRIDE_LENGTH * Float.BYTES, 9 * Float.BYTES);
+		program.setVertexAttribute("vIsArrayTexture", 1, STRIDE_LENGTH * Float.BYTES, 10 * Float.BYTES);
 	}
 	
 	public int getWidth() {

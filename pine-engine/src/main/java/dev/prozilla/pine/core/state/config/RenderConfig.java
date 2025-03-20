@@ -15,6 +15,7 @@ public class RenderConfig {
 	public static final ConfigKey<Boolean> ENABLE_BLEND = new ConfigKey<>("enableBlend", Boolean.class);
 	public static final ConfigKey<Boolean> ENABLE_DEPTH_TEST = new ConfigKey<>("enableDepthTest", Boolean.class);
 	public static final ConfigKey<RenderMode> RENDER_MODE = new ConfigKey<>("renderMode", RenderMode.class);
+	public static final ConfigKey<Boolean> SNAP_PIXELS = new ConfigKey<>("snapPixels", Boolean.class);
 	
 	// Predefines options
 	/** Defaults to white. */
@@ -25,4 +26,6 @@ public class RenderConfig {
 	public final ConfigOption<Boolean> enableDepthTest = new ConfigOption<>(true, Objects::nonNull);
 	/** Defaults to <code>RenderMode.NORMAL</code>. */
 	public final ConfigOption<RenderMode> renderMode = new ConfigOption<>(RenderMode.NORMAL, Objects::nonNull);
+	/** Defaults to <code>false</code>. */
+	public final ConfigOption<Boolean> snapPixels = new ConfigOption<>(false, Objects::nonNull);
 }
