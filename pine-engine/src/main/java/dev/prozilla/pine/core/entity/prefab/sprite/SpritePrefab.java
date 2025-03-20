@@ -3,7 +3,7 @@ package dev.prozilla.pine.core.entity.prefab.sprite;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.common.system.resource.TextureBase;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.Entity;
@@ -18,7 +18,7 @@ import java.util.Objects;
 @Components({ SpriteRenderer.class, Transform.class })
 public class SpritePrefab extends Prefab {
 	
-	protected Texture texture;
+	protected TextureBase texture;
 	protected Color color;
 	protected float scale;
 	
@@ -30,7 +30,7 @@ public class SpritePrefab extends Prefab {
 		this(ResourcePool.loadTexture(texturePath));
 	}
 	
-	public SpritePrefab(Texture texture) {
+	public SpritePrefab(TextureBase texture) {
 		Objects.requireNonNull(texture, "Texture must not be null.");
 		
 		this.texture = texture;

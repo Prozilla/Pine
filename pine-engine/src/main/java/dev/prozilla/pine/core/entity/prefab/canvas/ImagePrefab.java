@@ -4,7 +4,7 @@ import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.common.system.resource.TextureBase;
 import dev.prozilla.pine.core.component.canvas.ImageRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 
@@ -13,7 +13,7 @@ import dev.prozilla.pine.core.entity.Entity;
  */
 public class ImagePrefab extends CanvasElementPrefab {
 	
-	protected Texture image;
+	protected TextureBase image;
 	protected Color color;
 	protected DualDimension size;
 	
@@ -27,7 +27,7 @@ public class ImagePrefab extends CanvasElementPrefab {
 		this(ResourcePool.loadTexture(imagePath));
 	}
 	
-	public ImagePrefab(Texture image) {
+	public ImagePrefab(TextureBase image) {
 		this.image = image;
 		
 		size = new DualDimension(image.getWidth(), image.getHeight());

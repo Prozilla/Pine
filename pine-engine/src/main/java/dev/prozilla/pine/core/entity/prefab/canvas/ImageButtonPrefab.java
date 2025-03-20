@@ -4,7 +4,7 @@ import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.common.system.resource.TextureBase;
 import dev.prozilla.pine.core.component.canvas.ButtonData;
 import dev.prozilla.pine.core.component.canvas.ImageButtonRenderer;
 import dev.prozilla.pine.core.entity.Entity;
@@ -25,7 +25,7 @@ public class ImageButtonPrefab extends ImagePrefab {
 		this(ResourcePool.loadTexture(imagePath));
 	}
 	
-	public ImageButtonPrefab(Texture image) {
+	public ImageButtonPrefab(TextureBase image) {
 		super(image);
 		setName("ImageButton");
 		

@@ -225,7 +225,7 @@ public class Font implements Lifecycle {
         buffer.flip();
 
         /* Create texture */
-        Texture fontTexture = Texture.createTexture(width, height, buffer);
+        Texture fontTexture = Texture.createTexture(null, width, height, buffer);
         MemoryUtil.memFree(buffer);
         return fontTexture;
     }

@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.common.system.resource.TextureBase;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.Objects;
@@ -14,7 +15,7 @@ import java.util.Objects;
  */
 public class ImageRenderer extends Component {
 	
-	public Texture image;
+	public TextureBase image;
 	public Color color;
 	
 	/** The size at which the image is rendered on the canvas. */
@@ -27,7 +28,7 @@ public class ImageRenderer extends Component {
 		this(ResourcePool.loadTexture(imagePath));
 	}
 	
-	public ImageRenderer(Texture image) {
+	public ImageRenderer(TextureBase image) {
 		Objects.requireNonNull(image, "image must not be null");
 		
 		this.image = image;

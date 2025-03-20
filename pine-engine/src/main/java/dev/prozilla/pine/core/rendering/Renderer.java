@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.common.system.resource.TextureBase;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.Tracker;
@@ -19,7 +20,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.stream.IntStream;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
@@ -42,6 +42,7 @@ public class Renderer implements Lifecycle {
 	private FloatBuffer vertices;
 	private int numVertices;
 	private boolean drawing;
+	public static boolean usingTextureArray;
 	
 	// Render stats
 	private int renderedVertices;
@@ -61,11 +62,11 @@ public class Renderer implements Lifecycle {
 	private boolean mirrorVertically;
 	
 	// Constants
-	private final static int STRIDE_LENGTH = 10;
-	/** Matches the length of <code>uTextures</code> in the fragment shader. */
-	public final static int MAX_TEXTURES = 128;
+	private final static int STRIDE_LENGTH = 11;
+	/** The limit of GPU texture slots. Generally between 16 and 32. */
+	public final static int MAX_TEXTURES = 16;
 	/** The amount of strides to fit into a single vertex buffer. */
-	public final static int VERTEX_BUFFER_SIZE = 1024;
+	private final static int VERTEX_BUFFER_SIZE = 32;
 	
 	// Config options
 	private Color fallbackColor;
@@ -387,11 +388,11 @@ public class Renderer implements Lifecycle {
 		drawTextureRegion(x, y, x2, y2, z, 0, 0, 0, 0, c);
 	}
 	
-	public void drawRotatedTexture(Texture texture, float x, float y, float z, float r) {
+	public void drawRotatedTexture(TextureBase texture, float x, float y, float z, float r) {
 		drawRotatedTexture(texture, x, y, z, fallbackColor, r);
 	}
 	
-	public void drawRotatedTexture(Texture texture, float x, float y, float z, Color c, float r) {
+	public void drawRotatedTexture(TextureBase texture, float x, float y, float z, Color c, float r) {
 		if (r == 0) {
 			drawTexture(texture, x, y, z, c);
 			return;
@@ -418,7 +419,7 @@ public class Renderer implements Lifecycle {
 	 * @param x       X position of the texture
 	 * @param y       Y position of the texture
 	 */
-	public void drawTexture(Texture texture, float x, float y, float z) {
+	public void drawTexture(TextureBase texture, float x, float y, float z) {
 		drawTexture(texture, x, y, z, fallbackColor);
 	}
 	
@@ -430,7 +431,7 @@ public class Renderer implements Lifecycle {
 	 * @param y       Y position of the texture
 	 * @param c       The color to use
 	 */
-	public void drawTexture(Texture texture, float x, float y, float z, Color c) {
+	public void drawTexture(TextureBase texture, float x, float y, float z, Color c) {
 		// Vertex positions
 		float x2 = x + texture.getWidth() * renderScale;
 		float y2 = y + texture.getHeight() * renderScale;
@@ -446,11 +447,11 @@ public class Renderer implements Lifecycle {
 		drawTextureRegion(x, y, x2, y2, z, s1, t1, s2, t2, c);
 	}
 	
-	public void drawRotatedTextureRegion(Texture texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, float r) {
+	public void drawRotatedTextureRegion(TextureBase texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, float r) {
 		drawRotatedTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, fallbackColor, r);
 	}
 	
-	public void drawRotatedTextureRegion(Texture texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c, float r) {
+	public void drawRotatedTextureRegion(TextureBase texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c, float r) {
 		if (r == 0) {
 			drawTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, c);
 			return;
@@ -535,7 +536,7 @@ public class Renderer implements Lifecycle {
 	 * @param regWidth  Width of the texture region
 	 * @param regHeight Height of the texture region
 	 */
-	public void drawTextureRegion(Texture texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight) {
+	public void drawTextureRegion(TextureBase texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight) {
 		drawTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, fallbackColor);
 	}
 	
@@ -550,7 +551,7 @@ public class Renderer implements Lifecycle {
 	 * @param regHeight Height of the texture region
 	 * @param c         The color to use
 	 */
-	public void drawTextureRegion(Texture texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c) {
+	public void drawTextureRegion(TextureBase texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c) {
 		// Vertex positions
 		float x2 = x + regWidth * renderScale;
 		float y2 = y + regHeight * renderScale;
@@ -613,11 +614,6 @@ public class Renderer implements Lifecycle {
 			return;
 		}
 		
-		// Ensure we have enough space in the buffer
-		if (vertices.remaining() < STRIDE_LENGTH * 6) {
-			flush();
-		}
-		
 		// Get color components from the Color object
 		float r = c.getRed();
 		float g = c.getGreen();
@@ -625,9 +621,9 @@ public class Renderer implements Lifecycle {
 		float a = c.getAlpha();
 		
 		// Texture ID (default to -1)
-		float textureId = -1f;
+		int texId = -1;
 		if (Texture.currentTextureId != null) {
-			textureId = Texture.currentTextureId;
+			texId = Texture.currentTextureId;
 		}
 		
 		// Handle depth render mode
@@ -637,13 +633,10 @@ public class Renderer implements Lifecycle {
 			g = depth;
 			b = depth;
 			a = 1f;
-			textureId = -1f;
+			texId = -1;
 		}
 		
-		// Ensure texture ID is within bounds
-		if (textureId >= MAX_TEXTURES) {
-			System.err.println("Exceeded maximum amount of textures: " + MAX_TEXTURES);
-		}
+		float texType = usingTextureArray ? 1 : 0;
 		
 		// Avoid subpixel issues by snapping to nearest pixel
 		x1 = Math.round(x1);
@@ -669,16 +662,18 @@ public class Renderer implements Lifecycle {
 		}
 		
 		// Push the vertices to the buffer (with the correct order for a quad)
-		vertices.put(x1).put(y1).put(z).put(r).put(g).put(b).put(a).put(s1).put(t1).put(textureId);
-		vertices.put(x2).put(y2).put(z).put(r).put(g).put(b).put(a).put(s1).put(t2).put(textureId);
-		vertices.put(x3).put(y3).put(z).put(r).put(g).put(b).put(a).put(s2).put(t2).put(textureId);
+		vertices.put(x1).put(y1).put(z).put(r).put(g).put(b).put(a).put(s1).put(t1).put(texId).put(texType);
+		vertices.put(x2).put(y2).put(z).put(r).put(g).put(b).put(a).put(s1).put(t2).put(texId).put(texType);
+		vertices.put(x3).put(y3).put(z).put(r).put(g).put(b).put(a).put(s2).put(t2).put(texId).put(texType);
 		
-		vertices.put(x1).put(y1).put(z).put(r).put(g).put(b).put(a).put(s1).put(t1).put(textureId);
-		vertices.put(x3).put(y3).put(z).put(r).put(g).put(b).put(a).put(s2).put(t2).put(textureId);
-		vertices.put(x4).put(y4).put(z).put(r).put(g).put(b).put(a).put(s2).put(t1).put(textureId);
+		vertices.put(x1).put(y1).put(z).put(r).put(g).put(b).put(a).put(s1).put(t1).put(texId).put(texType);
+		vertices.put(x3).put(y3).put(z).put(r).put(g).put(b).put(a).put(s2).put(t2).put(texId).put(texType);
+		vertices.put(x4).put(y4).put(z).put(r).put(g).put(b).put(a).put(s2).put(t1).put(texId).put(texType);
 		
 		// Increment the number of vertices
 		numVertices += 6;
+		
+		flush();
 	}
 	
 	/**
@@ -784,13 +779,19 @@ public class Renderer implements Lifecycle {
 		// Specify Vertex Pointers
 		specifyVertexAttributes();
 		
-		// Set textures uniform
-		int[] textures = IntStream.range(0, MAX_TEXTURES).toArray();
-		int uniTex = program.getUniformLocation("uTextures");
+		// Set texture uniform
+		int uniTex = program.getUniformLocation("uTexture");
 		if (uniTex == GL_INVALID_INDEX) {
-			throw new RuntimeException("Textures uniform not found. (uTextures)");
+			throw new RuntimeException("Texture uniform not found. (uTexture)");
 		}
-		program.setUniform(uniTex, textures);
+		program.setUniform(uniTex, 0);
+		
+		// Set texture array uniform
+		int uniTexArray = program.getUniformLocation("uTextureArray");
+		if (uniTexArray == GL_INVALID_INDEX) {
+			throw new RuntimeException("Texture uniform not found. (uTextureArray)");
+		}
+		program.setUniform(uniTexArray, 0);
 		
 		// Set view matrix to identity matrix
 		Matrix4f view = new Matrix4f();
@@ -877,6 +878,14 @@ public class Renderer implements Lifecycle {
 		}
 		program.enableVertexAttribute(texIdAttrib);
 		program.pointVertexAttribute(texIdAttrib, 1, STRIDE_LENGTH * Float.BYTES, 9 * Float.BYTES);
+		
+		// Specify texture type pointer
+		int texTypeAttrib = program.getAttributeLocation("vIsArrayTexture");
+		if (texTypeAttrib == GL_INVALID_INDEX) {
+			throw new RuntimeException("Texture type pointer not found. (vIsArrayTexture)");
+		}
+		program.enableVertexAttribute(texTypeAttrib);
+		program.pointVertexAttribute(texTypeAttrib, 1, STRIDE_LENGTH * Float.BYTES, 10 * Float.BYTES);
 	}
 	
 	public int getWidth() {

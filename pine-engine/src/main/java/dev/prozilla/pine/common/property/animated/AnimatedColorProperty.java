@@ -19,6 +19,11 @@ public class AnimatedColorProperty extends AnimatedProperty<Color> implements Co
 		return getColor();
 	}
 	
+	public void applyUpdatedValue(float deltaTime, Color outputColor) {
+		update(deltaTime);
+		apply(outputColor);
+	}
+	
 	@Override
 	public void apply(Color outputColor) {
 		float factor = easingFunction.get(time / duration);

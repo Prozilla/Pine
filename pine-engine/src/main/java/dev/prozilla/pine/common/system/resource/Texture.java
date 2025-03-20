@@ -11,12 +11,12 @@ import static org.lwjgl.opengl.GL13.*;
 /**
  * Represents an OpenGL texture.
  */
-public class Texture implements Lifecycle, Printable {
+public class Texture implements TextureBase, Lifecycle, Printable {
 
     /**
      * Stores the handle of the texture.
      */
-    public final int id;
+    private final int id;
 
     /**
      * Width of the texture.
@@ -27,28 +27,29 @@ public class Texture implements Lifecycle, Printable {
      */
     private int height;
     
+    private String path;
+    
     public static Integer currentTextureId;
     
     /** Creates a texture. */
     public Texture() {
         id = glGenTextures();
-        
-        if (id >= Renderer.MAX_TEXTURES) {
-            throw new RuntimeException("Exceeded maximum amount of textures: " + Renderer.MAX_TEXTURES);
-        }
     }
 
     /**
      * Binds the texture.
      */
+    @Override
     public void bind() {
-        if (currentTextureId == null || currentTextureId != id) {
-            glActiveTexture(GL_TEXTURE0 + id);
+        if (true || currentTextureId == null || currentTextureId != id || Renderer.usingTextureArray) {
+            glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, id);
             currentTextureId = id;
+            Renderer.usingTextureArray = false;
         }
     }
     
+    @Override
     public void unbind() {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
@@ -92,12 +93,18 @@ public class Texture implements Lifecycle, Printable {
     public void destroy() {
         glDeleteTextures(id);
     }
-
+    
+    @Override
+    public int getId() {
+        return id;
+    }
+    
     /**
      * Gets the texture width.
      *
      * @return Texture width
      */
+    @Override
     public int getWidth() {
         return width;
     }
@@ -116,6 +123,7 @@ public class Texture implements Lifecycle, Printable {
      * Gets the texture height.
      * @return Texture height
      */
+    @Override
     public int getHeight() {
         return height;
     }
@@ -131,6 +139,20 @@ public class Texture implements Lifecycle, Printable {
     }
     
     @Override
+    public String getPath() {
+        return path;
+    }
+    
+    public void setPath(String path) {
+        this.path = path;
+    }
+    
+    @Override
+    public boolean isInArray() {
+        return false;
+    }
+    
+    @Override
     public String toString() {
         return String.format("Texture #%s (%sx%s)", id, width, height);
     }
@@ -141,7 +163,7 @@ public class Texture implements Lifecycle, Printable {
      * @return Texture
      */
     public static Texture createTexture(Image image) {
-        return createTexture(image.getWidth(), image.getHeight(), image.getImage());
+        return createTexture(image.getPath(), image.getWidth(), image.getHeight(), image.getPixels());
     }
     
     /**
@@ -151,10 +173,11 @@ public class Texture implements Lifecycle, Printable {
      * @param data   Picture Data in RGBA format
      * @return Texture from the specified data
      */
-    public static Texture createTexture(int width, int height, ByteBuffer data) {
+    public static Texture createTexture(String path, int width, int height, ByteBuffer data) {
         Texture texture = new Texture();
         texture.setWidth(width);
         texture.setHeight(height);
+        texture.setPath(path);
         
         texture.bind();
 

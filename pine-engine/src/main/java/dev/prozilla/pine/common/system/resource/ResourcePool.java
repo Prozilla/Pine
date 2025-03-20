@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.lwjgl.stb.STBImage.*;
@@ -22,9 +24,13 @@ import static org.lwjgl.stb.STBImage.*;
  */
 public final class ResourcePool {
 	
-	private static final Map<String, Texture> textures = new HashMap<>();
-	private final static Map<String, Image> images = new HashMap<>();
-	private final static Map<String, Font> fonts = new HashMap<>();
+	public static boolean useTextureArray = false;
+	
+	private static final Map<String, TextureBase> textures = new HashMap<>();
+	private static final Map<String, Image> images = new HashMap<>();
+	private static final Map<String, Font> fonts = new HashMap<>();
+	
+	private static final List<TextureArray> textureArrays = new ArrayList<>();
 	
 	/**
 	 * Loads an image from the resource pool or file system.
@@ -69,7 +75,7 @@ public final class ResourcePool {
 			channels = comp.get();
 		}
 		
-		Image image = new Image(imageBuffer, width, height, channels);
+		Image image = new Image(path, imageBuffer, width, height, channels);
 		images.put(path, image);
 		return image;
 	}
@@ -91,7 +97,7 @@ public final class ResourcePool {
 	 * @throws RuntimeException If the image file fails to load.
 	 * @throws RuntimeException If OpenGL hasn't been initialized yet.
 	 */
-	public static Texture loadTexture(String path) throws RuntimeException {
+	public static TextureBase loadTexture(String path) throws RuntimeException {
 		path = PathUtils.removeLeadingSlash(path);
 		
 		if (textures.containsKey(path)) {
@@ -104,9 +110,31 @@ public final class ResourcePool {
 		
 		Logger.system.logf("Loading texture: %s", path);
 		
-		// Create texture from image
 		Image image = loadImage(path);
-		Texture texture = Texture.createTexture(image);
+		
+		TextureBase texture = null;
+		if (useTextureArray) {
+			for (TextureArray textureArray : textureArrays) {
+				if (textureArray.hasImage(image)) {
+					texture = textureArray.getTexture(image);
+					break;
+				} else if (textureArray.canAdd(image)) {
+					texture = textureArray.addTexture(image);
+					break;
+				}
+			}
+			if (texture == null) {
+				TextureArray textureArray = new TextureArray(image.getWidth(), image.getHeight());
+				texture = textureArray.addTexture(image);
+				textureArrays.add(textureArray);
+			}
+		} else {
+			texture = Texture.createTexture(image);
+		}
+		
+		if (texture == null) {
+			throw new RuntimeException("failed to load texture");
+		}
 		
 		textures.put(path, texture);
 		return texture;
@@ -116,10 +144,19 @@ public final class ResourcePool {
 	 * Clears the texture pool.
 	 */
 	private static void clearTextures() {
-		for (Texture texture : textures.values()) {
-			texture.destroy();
+		for (TextureBase texture : textures.values()) {
+			if (!texture.isInArray()) {
+				texture.destroy();
+			}
 		}
 		textures.clear();
+	}
+	
+	private static void clearTextureArrays() {
+		for (TextureArray textureArray : textureArrays) {
+			textureArray.destroy();
+		}
+		textureArrays.clear();
 	}
 	
 	public static Font loadFont(String path) {
@@ -162,6 +199,7 @@ public final class ResourcePool {
 	 */
 	public static void clear() {
 		clearImages();
+		clearTextureArrays();
 		clearTextures();
 		clearFonts();
 	}

@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system.standard.canvas.image;
 
 import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.common.system.resource.TextureBase;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.canvas.ImageRenderer;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
@@ -40,7 +40,7 @@ public class ImageRenderSystem extends RenderSystem {
 			x, y, width, height, z, color);
 	}
 	
-	public static void renderImage(Renderer renderer, Texture image, int regX, int regY, int regWidth, int regHeight, int x, int y, int width, int height, float z, Color color) {
+	public static void renderImage(Renderer renderer, TextureBase image, int regX, int regY, int regWidth, int regHeight, int x, int y, int width, int height, float z, Color color) {
 		int x2 = x + width;
 		int y2 = y + height;
 		

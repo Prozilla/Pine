@@ -48,7 +48,7 @@ public class ParticleUpdater extends UpdateSystem {
 		
 		// Update color based on animation
 		if (particleRenderer.colorAnimation != null) {
-			spriteRenderer.color.copyFrom(particleRenderer.colorAnimation.getUpdatedValue(deltaTime));
+			particleRenderer.colorAnimation.applyUpdatedValue(deltaTime, spriteRenderer.color);
 		}
 	}
 }

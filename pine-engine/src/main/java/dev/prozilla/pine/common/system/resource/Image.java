@@ -13,28 +13,35 @@ import static org.lwjgl.stb.STBImage.stbi_image_free;
  */
 public class Image implements Lifecycle {
 
-	private final ByteBuffer buffer;
+	public final int id;
+	private final ByteBuffer pixels;
 	private final int width;
 	private final int height;
 	private final int channels;
+	private final String path;
 	
-	public Image(ByteBuffer image, int width, int height, int channels) {
-		this.buffer = image;
+	private static int lastId = 0;
+	
+	public Image(String path, ByteBuffer pixels, int width, int height, int channels) {
+		this.path = path;
+		this.pixels = pixels;
 		this.width = width;
 		this.height = height;
 		this.channels = channels;
+		
+		id = lastId++;
 	}
 	
 	public ByteBuffer getFlippedImage() {
-		return flipImageVertically(buffer, width, height, channels);
+		return flipImageVertically(pixels, width, height, channels);
 	}
 	
 	public ByteBuffer getPremultipliedImage() {
-		return premultiplyAlpha(buffer, width, height, channels);
+		return premultiplyAlpha(pixels, width, height, channels);
 	}
 	
-	public ByteBuffer getImage() {
-		return buffer;
+	public ByteBuffer getPixels() {
+		return pixels;
 	}
 	
 	public int getWidth() {
@@ -49,9 +56,18 @@ public class Image implements Lifecycle {
 		return channels;
 	}
 	
+	public String getPath() {
+		return path;
+	}
+	
 	@Override
 	public void destroy() {
-		stbi_image_free(buffer);
+		stbi_image_free(pixels);
+	}
+	
+	@Override
+	public int hashCode() {
+		return id;
 	}
 	
 	public GLFWImage toGLFWImage() {

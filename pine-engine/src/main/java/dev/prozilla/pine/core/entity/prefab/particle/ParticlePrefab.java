@@ -10,7 +10,7 @@ import dev.prozilla.pine.common.property.animated.VariableAnimatedColorProperty;
 import dev.prozilla.pine.common.property.animated.VariableAnimatedFloatProperty;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.common.system.resource.TextureBase;
 import dev.prozilla.pine.core.component.particle.ParticleRenderer;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.Entity;
@@ -37,7 +37,7 @@ public class ParticlePrefab extends SpritePrefab {
 		this(ResourcePool.loadTexture(texturePath));
 	}
 	
-	public ParticlePrefab(Texture texture) {
+	public ParticlePrefab(TextureBase texture) {
 		this(texture, DEFAULT_LIFETIME);
 	}
 	
@@ -45,7 +45,7 @@ public class ParticlePrefab extends SpritePrefab {
 		this(ResourcePool.loadTexture(texturePath), lifetime);
 	}
 	
-	public ParticlePrefab(Texture texture, VariableProperty<Float> lifetime) {
+	public ParticlePrefab(TextureBase texture, VariableProperty<Float> lifetime) {
 		super(texture);
 		this.lifetime = lifetime;
 		frameCount = ParticleRenderer.DEFAULT_FRAME_COUNT;
