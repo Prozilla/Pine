@@ -1,6 +1,8 @@
-package dev.prozilla.pine.common.system.resource;
+package dev.prozilla.pine.common.system.resource.image;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.system.resource.Resource;
+import dev.prozilla.pine.common.system.resource.ResourcePool;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.system.MemoryUtil;
 
@@ -11,7 +13,7 @@ import static org.lwjgl.stb.STBImage.stbi_image_free;
 /**
  * Represents an STB image with a width and a height.
  */
-public class Image implements Lifecycle {
+public class Image implements Resource, Lifecycle {
 
 	public final int id;
 	private final ByteBuffer pixels;
@@ -62,6 +64,9 @@ public class Image implements Lifecycle {
 	
 	@Override
 	public void destroy() {
+		if (path != null) {
+			ResourcePool.removeImage(path);
+		}
 		stbi_image_free(pixels);
 	}
 	

@@ -2,8 +2,9 @@ package dev.prozilla.pine.common.system.resource.text;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.resource.Resource;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.Texture;
+import dev.prozilla.pine.common.system.resource.image.Texture;
 import dev.prozilla.pine.core.rendering.Renderer;
 import org.lwjgl.system.MemoryUtil;
 
@@ -22,7 +23,7 @@ import static java.awt.Font.*;
 /**
  * Contains a font texture for drawing text.
  */
-public class Font implements Lifecycle {
+public class Font implements Resource, Lifecycle {
 
     /**
      * Contains the glyphs for each char.
@@ -37,6 +38,8 @@ public class Font implements Lifecycle {
      * Height of the font.
      */
     private int fontHeight;
+    
+    private final int size;
     
     public String path;
     
@@ -126,6 +129,7 @@ public class Font implements Lifecycle {
     public Font(java.awt.Font font, boolean antiAlias) {
         glyphs = new HashMap<>();
         texture = createFontTexture(font, antiAlias);
+        size = font.getSize();
     }
 
     /**
@@ -385,12 +389,21 @@ public class Font implements Lifecycle {
     public Font setSize(int size) {
         return ResourcePool.loadFont(path, size);
     }
-
+    
+    @Override
+    public String getPath() {
+        return path;
+    }
+    
     /**
      * Deletes the font.
      */
     @Override
     public void destroy() {
+        String path = getPath();
+        if (path != null) {
+            ResourcePool.removeFont(path, size);
+        }
         texture.destroy();
     }
     

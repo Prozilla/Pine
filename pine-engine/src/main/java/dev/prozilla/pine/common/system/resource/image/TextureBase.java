@@ -1,9 +1,12 @@
-package dev.prozilla.pine.common.system.resource;
+package dev.prozilla.pine.common.system.resource.image;
+
+import dev.prozilla.pine.common.system.resource.Resource;
+import dev.prozilla.pine.common.system.resource.ResourcePool;
 
 /**
  * Base class for different types of textures.
  */
-public interface TextureBase {
+public interface TextureBase extends Resource {
 	
 	/**
 	 * Binds this texture.
@@ -37,9 +40,19 @@ public interface TextureBase {
 	/**
 	 * @return The path of the image file of this texture.
 	 */
+	@Override
 	String getPath();
 	
-	void destroy();
+	/**
+	 * Removes this texture from the resource pool and deletes it.
+	 */
+	@Override
+	default void destroy() {
+		String path = getPath();
+		if (path != null) {
+			ResourcePool.removeTexture(path);
+		}
+	}
 	
 	/**
 	 * @return True if this texture is part of a texture array.

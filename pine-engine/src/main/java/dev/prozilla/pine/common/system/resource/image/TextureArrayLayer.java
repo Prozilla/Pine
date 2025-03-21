@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.system.resource;
+package dev.prozilla.pine.common.system.resource.image;
 
 /**
  * Represents a layer of a texture array.
@@ -69,8 +69,12 @@ public class TextureArrayLayer implements TextureBase {
 		return textureArray;
 	}
 	
+	/**
+	 * Destroys the texture array.
+	 */
 	@Override
 	public void destroy() {
+		TextureBase.super.destroy();
 		textureArray.destroy();
 	}
 }

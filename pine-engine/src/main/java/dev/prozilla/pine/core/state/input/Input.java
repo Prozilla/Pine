@@ -4,7 +4,7 @@ import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.common.system.resource.Image;
+import dev.prozilla.pine.common.system.resource.image.Image;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;

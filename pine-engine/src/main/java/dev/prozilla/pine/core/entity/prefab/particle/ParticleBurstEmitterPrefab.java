@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.particle;
 
 import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.TextureBase;
+import dev.prozilla.pine.common.system.resource.image.TextureBase;
 import dev.prozilla.pine.core.component.particle.ParticleBurstEmitter;
 import dev.prozilla.pine.core.entity.Entity;
 

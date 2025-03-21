@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system.standard.canvas.image;
 
 import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.TextureBase;
+import dev.prozilla.pine.common.system.resource.image.TextureBase;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.canvas.ImageButtonRenderer;
 import dev.prozilla.pine.core.component.canvas.ImageRenderer;

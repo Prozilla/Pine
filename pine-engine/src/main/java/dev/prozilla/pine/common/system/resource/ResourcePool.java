@@ -3,6 +3,8 @@ package dev.prozilla.pine.common.system.resource;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.PathUtils;
+import dev.prozilla.pine.common.system.resource.image.Image;
+import dev.prozilla.pine.common.system.resource.image.*;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import org.lwjgl.system.MemoryStack;
 
@@ -11,10 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.lwjgl.stb.STBImage.*;
 
@@ -78,14 +78,15 @@ public final class ResourcePool {
 		return image;
 	}
 	
+	public static boolean removeImage(String path) {
+		return images.remove(normalizePath(path)) != null;
+	}
+	
 	/**
 	 * Clears the image pool.
 	 */
-	private static void clearImages() {
-		for (Image image : images.values()) {
-			image.destroy();
-		}
-		images.clear();
+	public static void clearImages() {
+		clearResource(images);
 	}
 	
 	/**
@@ -158,12 +159,45 @@ public final class ResourcePool {
 	}
 	
 	/**
+	 * Removes a texture and its corresponding image from the resource pool.
+	 * @param path Path of the texture.
+	 */
+	public static boolean removeTexture(String path) {
+		boolean removed = textures.remove(normalizePath(path)) != null;
+		
+		if (removed) {
+			removeImage(path);
+		}
+		
+		return removed;
+	}
+	
+	/**
 	 * Creates a texture array that can be used to load multiple textures with the same resolution into.
 	 * @param width The width of the textures
 	 * @param height The height of the textures
 	 */
 	public static TextureArray createTextureArray(int width, int height) {
 		return createTextureArray(width, height, TextureArray.DEFAULT_LAYER_COUNT);
+	}
+	
+	/**
+	 * Removes a texture array and all its textures from the resource pool.
+	 * @param textureArray Texture array to remove
+	 */
+	public static boolean removeTextureArray(TextureArray textureArray) {
+		if (!textureArrays.contains(textureArray)) {
+			return false;
+		}
+		
+		for (TextureArrayLayer layer : textureArray.getLayers()) {
+			String path = layer.getPath();
+			if (path != null) {
+				removeTexture(path);
+			}
+		}
+		
+		return textureArrays.remove(textureArray);
 	}
 	
 	/**
@@ -181,20 +215,19 @@ public final class ResourcePool {
 	/**
 	 * Clears the texture pool.
 	 */
-	private static void clearTextures() {
-		for (TextureBase texture : textures.values()) {
-			if (!texture.isInArray()) {
-				texture.destroy();
-			}
-		}
-		textures.clear();
+	public static void clearTextures() {
+		clearResource(textures);
 	}
 	
-	private static void clearTextureArrays() {
-		for (TextureArray textureArray : textureArrays) {
+	/**
+	 * Clears the pool of texture arrays.
+	 */
+	public static void clearTextureArrays() {
+		TextureArray[] textureArraysToDestroy = textureArrays.toArray(new TextureArray[0]);
+		textureArrays.clear();
+		for (TextureArray textureArray : textureArraysToDestroy) {
 			textureArray.destroy();
 		}
-		textureArrays.clear();
 	}
 	
 	public static Font loadFont(String path) {
@@ -225,11 +258,21 @@ public final class ResourcePool {
 		return font;
 	}
 	
-	private static void clearFonts() {
-		for (Font font : fonts.values()) {
-			font.destroy();
+	public static boolean removeFont(String path, int size) {
+		String key = Font.generateKey(path, size);
+		return fonts.remove(key) != null;
+	}
+	
+	public static void clearFonts() {
+		clearResource(fonts);
+	}
+	
+	private static <R extends Resource> void clearResource(Map<String, R> resources) {
+		Collection<R> resourcesToDestroy = resources.values();
+		resources.clear();
+		for (Resource resource : resourcesToDestroy) {
+			resource.destroy();
 		}
-		fonts.clear();
 	}
 	
 	/**

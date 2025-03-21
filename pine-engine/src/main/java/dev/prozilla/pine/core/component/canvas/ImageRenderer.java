@@ -4,8 +4,8 @@ import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.Texture;
-import dev.prozilla.pine.common.system.resource.TextureBase;
+import dev.prozilla.pine.common.system.resource.image.Texture;
+import dev.prozilla.pine.common.system.resource.image.TextureBase;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.Objects;

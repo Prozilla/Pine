@@ -10,7 +10,7 @@ import dev.prozilla.pine.common.property.animated.VariableAnimatedColorProperty;
 import dev.prozilla.pine.common.property.animated.VariableAnimatedFloatProperty;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.TextureBase;
+import dev.prozilla.pine.common.system.resource.image.TextureBase;
 import dev.prozilla.pine.core.component.particle.ParticleRenderer;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.Entity;

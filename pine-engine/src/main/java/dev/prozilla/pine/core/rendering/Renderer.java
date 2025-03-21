@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.TextureBase;
+import dev.prozilla.pine.common.system.resource.image.TextureBase;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.Tracker;

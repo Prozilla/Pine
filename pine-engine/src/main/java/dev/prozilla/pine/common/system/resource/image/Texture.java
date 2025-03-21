@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.system.resource;
+package dev.prozilla.pine.common.system.resource.image;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
@@ -108,6 +108,7 @@ public class Texture implements TextureBase, Lifecycle, Printable {
 	
 	@Override
 	public void destroy() {
+		TextureBase.super.destroy();
 		glDeleteTextures(id);
 	}
 	

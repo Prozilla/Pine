@@ -1,8 +1,10 @@
-package dev.prozilla.pine.common.system.resource;
+package dev.prozilla.pine.common.system.resource.image;
 
+import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.core.Application;
 
 import java.nio.ByteBuffer;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -143,10 +145,10 @@ public class TextureArray {
 		return height;
 	}
 	
-	public int getRemainingLayers() {
-		return layers - nextLayer;
+	public Collection<TextureArrayLayer> getLayers() {
+		return imageToLayer.values();
 	}
-	
+
 	public boolean equals(TextureArray other) {
 		return other.getId() == id;
 	}
@@ -156,7 +158,11 @@ public class TextureArray {
 		return id;
 	}
 	
+	/**
+	 * Removes this texture array from the resource pool and deletes it.
+	 */
 	public void destroy() {
+		ResourcePool.removeTextureArray(this);
 		glDeleteTextures(id);
 	}
 	

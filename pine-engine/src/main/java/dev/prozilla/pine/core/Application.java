@@ -3,8 +3,9 @@ package dev.prozilla.pine.core;
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.logging.AppLogger;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.system.resource.Image;
+import dev.prozilla.pine.common.opengl.GLUtils;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
+import dev.prozilla.pine.common.system.resource.image.Image;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -267,7 +268,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 			// Check for OpenGL errors
 			int error = glGetError();
 			if (error != GL_NO_ERROR) {
-				logger.error("OpenGL error: " + error);
+				logger.error(String.format("OpenGL error: %s - %s", error, GLUtils.getErrorString(error)));
 			}
 			
 			// Update the window and timer

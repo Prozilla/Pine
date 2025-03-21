@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Lifecycle;
-import dev.prozilla.pine.common.system.resource.Image;
+import dev.prozilla.pine.common.system.resource.image.Image;
 import dev.prozilla.pine.core.state.config.WindowConfig;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
