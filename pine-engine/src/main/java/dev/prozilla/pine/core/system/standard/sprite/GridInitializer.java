@@ -27,7 +27,7 @@ public class GridInitializer extends InitSystem {
 		
 		if(tiles != null && !tiles.isEmpty()) {
 			for (TileRenderer tile : tiles) {
-				gridGroup.coordinateToTile.put(tile.coordinate, tile);
+				gridGroup.coordinateToTile.put(tile.getCoordinate(), tile);
 			}
 		}
 	}

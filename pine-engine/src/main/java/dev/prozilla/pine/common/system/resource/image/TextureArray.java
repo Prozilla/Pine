@@ -149,6 +149,14 @@ public class TextureArray {
 		return imageToLayer.values();
 	}
 
+	public int getUsedLayerCount() {
+		return nextLayer;
+	}
+	
+	public int getLayerCount() {
+		return layers;
+	}
+	
 	public boolean equals(TextureArray other) {
 		return other.getId() == id;
 	}

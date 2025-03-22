@@ -19,7 +19,7 @@ import java.util.Objects;
 public class GridGroup extends Component {
 	
 	public int size;
-	public final Map<Vector2i, TileRenderer> coordinateToTile;
+	public final Map<Vector2i, TileProvider> coordinateToTile;
 	public TileRenderer hoveringTile;
 	
 	public GridGroup(int size) {
@@ -54,26 +54,26 @@ public class GridGroup extends Component {
 	 * @param tile Tile to add to this grid
 	 * @throws IllegalStateException If there is already a tile in this grid with the same coordinate
 	 */
-	public TileRenderer addTile(TileRenderer tile) throws NullPointerException, IllegalStateException {
+	public TileRenderer addTile(TileProvider tile) throws NullPointerException, IllegalStateException {
 		Objects.requireNonNull(tile, "tile must not be null");
 		
-		if (coordinateToTile.containsKey(tile.coordinate)) {
+		if (coordinateToTile.containsKey(tile.getCoordinate())) {
 			throw new IllegalStateException("multiple tiles cannot be placed on the same coordinate in one grid");
 		}
 		
-		tile.size = size;
-		coordinateToTile.put(tile.coordinate, tile);
-		TileMover.updateTilePosition(tile.getTransform(), tile);
+		tile.setSize(size);
+		coordinateToTile.put(tile.getCoordinate(), tile);
+		TileMover.updateTilePosition(tile.getTransform(), tile.getTile());
 		
 		if (!entity.transform.children.contains(tile.getEntity().transform)) {
 			entity.addChild(tile.getEntity());
 		}
 		
 		tile.getEntity().addListener(EntityEvent.DESTROY, () -> {
-			coordinateToTile.remove(tile.coordinate);
+			coordinateToTile.remove(tile.getCoordinate());
 		});
 		
-		return tile;
+		return tile.getTile();
 	}
 	
 	public boolean destroyTile(Vector2i coordinate) {
@@ -84,7 +84,7 @@ public class GridGroup extends Component {
 		return destroyTile(entity.getComponent(TileRenderer.class));
 	}
 	
-	public boolean destroyTile(TileRenderer tile) {
+	public boolean destroyTile(TileProvider tile) {
 		boolean removed = removeTile(tile);
 		tile.getEntity().destroy();
 		return removed;
@@ -98,8 +98,8 @@ public class GridGroup extends Component {
 		return removeTile(entity.getComponent(TileRenderer.class));
 	}
 	
-	public boolean removeTile(TileRenderer tile) {
-		if (tile == null || !coordinateToTile.containsKey(tile.coordinate)) {
+	public boolean removeTile(TileProvider tile) {
+		if (tile == null || !coordinateToTile.containsKey(tile.getCoordinate())) {
 			return false;
 		}
 		
@@ -107,7 +107,7 @@ public class GridGroup extends Component {
 			entity.removeChild(tile.getEntity());
 		}
 		
-		return (coordinateToTile.remove(tile.coordinate) != null);
+		return (coordinateToTile.remove(tile.getCoordinate()) != null);
 	}
 	
 	public boolean hasTile(int x, int y) {
@@ -123,13 +123,17 @@ public class GridGroup extends Component {
 	}
 	
 	public TileRenderer getTile(Vector2i coordinate) {
-		return coordinateToTile.get(coordinate);
+		TileProvider tileProvider = coordinateToTile.get(coordinate);
+		if (tileProvider == null) {
+			return null;
+		}
+		return tileProvider.getTile();
 	}
 	
 	public void moveTile(Vector2i oldCoordinate, Vector2i newCoordinate) {
 		TileRenderer tile = getTile(oldCoordinate);
 		if (removeTile(tile)) {
-			tile.coordinate = newCoordinate;
+			tile.setCoordinate(newCoordinate);
 			addTile(tile);
 		}
 	}

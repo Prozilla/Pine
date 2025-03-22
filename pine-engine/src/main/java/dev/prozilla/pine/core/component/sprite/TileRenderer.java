@@ -7,9 +7,9 @@ import dev.prozilla.pine.core.component.Component;
 /**
  * A component for rendering 2D square tiles in the world.
  */
-public class TileRenderer extends Component {
+public class TileRenderer extends Component implements TileProvider {
 	
-	public Vector2i coordinate;
+	private Vector2i coordinate;
 	/** Width and height of the tile, in pixels. */
 	public int size;
 	public GridGroup group;
@@ -24,29 +24,17 @@ public class TileRenderer extends Component {
 		return "TileRenderer";
 	}
 	
-	/**
-	 * Moves this tile by an x and y amount based on a coordinate
-	 * @param coordinate Coordinate
-	 */
+	@Override
 	public void moveBy(Vector2i coordinate) {
 		moveBy(coordinate.x, coordinate.y);
 	}
 	
-	/**
-	 * Moves this tile by an x and y amount.
-	 * @param x X value
-	 * @param y Y value
-	 */
+	@Override
 	public void moveBy(int x, int y) {
 		moveTo(coordinate.x + x, coordinate.y + y);
 	}
 	
-	/**
-	 * Moves this tile to an XY-coordinate.
-	 * @param x X value
-	 * @param y Y value
-	 * @return True if the coordinate of this tile was changed.
-	 */
+	@Override
 	public boolean moveTo(int x, int y) {
 		if (coordinate.x == x && coordinate.y == y) {
 			return false;
@@ -55,11 +43,7 @@ public class TileRenderer extends Component {
 		return moveTo(new Vector2i(x, y));
 	}
 	
-	/**
-	 * Moves this tile to a coordinate.
-	 * @param coordinate Coordinate
-	 * @return True if the coordinate of this tile was changed.
-	 */
+	@Override
 	public boolean moveTo(Vector2i coordinate) {
 		if (this.coordinate.equals(coordinate)) {
 			return false;
@@ -76,6 +60,22 @@ public class TileRenderer extends Component {
 		return true;
 	}
 	
+	@Override
+	public void setCoordinate(Vector2i coordinate) {
+		this.coordinate = coordinate;
+	}
+	
+	@Override
+	public Vector2i getCoordinate() {
+		return coordinate;
+	}
+	
+	@Override
+	public void setSize(int size) {
+		this.size = size;
+	}
+	
+	@Override
 	public boolean isHovering() {
 		GridGroup group = getGroup();
 		
@@ -86,9 +86,7 @@ public class TileRenderer extends Component {
 		return group.isHovering(this);
 	}
 	
-	/**
-	 * Removes this tile from its grid.
-	 */
+	@Override
 	public void remove() {
 		GridGroup group = getGroup();
 		
@@ -99,9 +97,7 @@ public class TileRenderer extends Component {
 		entity.destroy();
 	}
 	
-	/**
-	 * @return The grid this tile belongs to.
-	 */
+	@Override
 	public GridGroup getGroup() {
 		if (group != null) {
 			return group;
@@ -109,5 +105,10 @@ public class TileRenderer extends Component {
 		
 		group = getComponentInParent(GridGroup.class, false);
 		return group;
+	}
+	
+	@Override
+	public TileRenderer getTile() {
+		return this;
 	}
 }

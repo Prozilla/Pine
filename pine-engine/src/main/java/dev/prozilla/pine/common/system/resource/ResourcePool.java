@@ -3,8 +3,8 @@ package dev.prozilla.pine.common.system.resource;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.PathUtils;
-import dev.prozilla.pine.common.system.resource.image.Image;
 import dev.prozilla.pine.common.system.resource.image.*;
+import dev.prozilla.pine.common.system.resource.image.Image;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import org.lwjgl.system.MemoryStack;
 
@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 import static org.lwjgl.stb.STBImage.*;
 
@@ -292,6 +292,16 @@ public final class ResourcePool {
 	 */
 	private static String normalizePath(String path) {
 		return PathUtils.removeLeadingSlash(path);
+	}
+	
+	/**
+	 * Logs the dimensions and layer usage of every texture array in the resource pool.
+	 */
+	public static void printTextureArrayStats(Logger logger) {
+		for (TextureArray textureArray : textureArrays) {
+			logger.logf("%sx%s texture array: %s/%s layers used", textureArray.getWidth(), textureArray.getHeight(),
+				textureArray.getUsedLayerCount(), textureArray.getLayerCount());
+		}
 	}
 	
 	/**
