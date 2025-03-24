@@ -19,7 +19,7 @@ public class ParticleUpdater extends UpdateSystem {
 		SpriteRenderer spriteRenderer = chunk.getComponent(SpriteRenderer.class);
 		
 		if (particleRenderer.applyTimeScale) {
-			deltaTime *= application.getTimer().timeScale;
+			deltaTime = application.getTimer().getScaledDeltaTime();
 		}
 		
 		// Update lifetime

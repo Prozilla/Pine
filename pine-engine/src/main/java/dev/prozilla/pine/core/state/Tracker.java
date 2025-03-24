@@ -54,7 +54,7 @@ public class Tracker {
 	 * @return System time in seconds
 	 */
 	public double getTime() {
-		return application.getTimer().getTime();
+		return application.getTimer().getCurrentTime();
 	}
 	
 	/**

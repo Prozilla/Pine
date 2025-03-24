@@ -5,98 +5,85 @@ import dev.prozilla.pine.common.Lifecycle;
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
 /**
- * Keeps track of time and time-related values like FPS and UPS.
+ * Manages time tracking, including FPS (frames per second) and UPS (updates per second) calculations.
  */
 public class ApplicationTimer implements Lifecycle {
 	
-	/**
-	 * System time since last loop.
-	 */
-	private double lastLoopTime;
-	/**
-	 * Used for FPS and UPS calculation.
-	 */
-	private float timeCount;
-	/**
-	 * Frames per second.
-	 */
-	private int fps;
-	/**
-	 * Counter for the FPS calculation.
-	 */
-	private int fpsCount;
-	/**
-	 * Updates per second.
-	 */
-	private int ups;
-	/**
-	 * Counter for the UPS calculation.
-	 */
-	private int upsCount;
+	/** Timestamp of the previous loop, relative to the timestamp of the GLFW initialization. */
+	private double previousLoopTime;
+	private float currentLoopTime;
 	
+	/** Total time elapsed since GLFW was initialized in seconds, affected by <code>timeScale</code>.  */
+	private float scaledElapsedTime;
+	/** The scale at which time passes. */
 	public float timeScale;
 	
-	/**
-	 * Initializes the timer.
-	 */
+	/** Frames per second. */
+	private int fps;
+	/** Counter for the FPS calculation. */
+	private int fpsCount;
+	/** Updates per second. */
+	private int ups;
+	/** Counter for the UPS calculation. */
+	private int upsCount;
+	
+	/** Time elapsed since last loop in seconds. */
+	private float deltaTime;
+	/** Time elapsed since last loop in seconds, multiplied with <code>timeScale</code>. */
+	private float scaledDeltaTime;
+	
 	@Override
 	public void init() {
-		timeScale = 1;
-		lastLoopTime = getTime();
+		previousLoopTime = getCurrentTime();
+		currentLoopTime = 0f;
+		scaledElapsedTime = 0f;
+		timeScale = 1f;
+		
+		fps = 0;
+		fpsCount = 0;
+		ups = 0;
+		upsCount = 0;
 	}
 	
 	/**
-	 * Returns the time elapsed since <code>glfwInit()</code> in seconds.
-	 * @return System time in seconds
+	 * Updates the timer's delta values and elapsed time values.
 	 */
-	public double getTime() {
-		return glfwGetTime();
+	@Override
+	public void update() {
+		double time = getCurrentTime();
+		deltaTime = (float)(time - previousLoopTime);
+		
+		previousLoopTime = time;
+		currentLoopTime += deltaTime;
+		
+		scaledDeltaTime = deltaTime * timeScale;
+		scaledElapsedTime += scaledDeltaTime;
 	}
 	
-	/**
-	 * Returns the time that have passed since the last loop.
-	 * @return Delta time in seconds
-	 */
-	public float getDelta() {
-		double time = getTime();
-		float delta = (float) (time - lastLoopTime);
-		lastLoopTime = time;
-		timeCount += delta;
-		return delta;
-	}
-	
-	/**
-	 * Updates the FPS counter.
-	 */
-	public void updateFPS() {
+	public void incrementFPS() {
 		fpsCount++;
 	}
 	
-	/**
-	 * Updates the UPS counter.
-	 */
-	public void updateUPS() {
+	public void incrementUPS() {
 		upsCount++;
 	}
 	
 	/**
 	 * Updates FPS and UPS if a whole second has passed.
 	 */
-	@Override
-	public void update() {
-		if (timeCount > 1f) {
+	public void checkCounters() {
+		if (currentLoopTime > 1f) {
 			fps = fpsCount;
 			fpsCount = 0;
 			
 			ups = upsCount;
 			upsCount = 0;
 			
-			timeCount -= 1f;
+			currentLoopTime -= 1f;
 		}
 	}
 	
 	/**
-	 * Getter for the FPS.
 	 * @return Frames per second
 	 */
 	public int getFPS() {
@@ -104,7 +91,6 @@ public class ApplicationTimer implements Lifecycle {
 	}
 	
 	/**
-	 * Getter for the UPS.
 	 * @return Updates per second
 	 */
 	public int getUPS() {
@@ -112,11 +98,21 @@ public class ApplicationTimer implements Lifecycle {
 	}
 	
 	/**
-	 * Getter for the last loop time.
-	 * @return System time of the last loop
+	 * @return Time elapsed since GLFW was initialized in seconds.
 	 */
-	public double getLastLoopTime() {
-		return lastLoopTime;
+	public double getCurrentTime() {
+		return glfwGetTime();
 	}
 	
+	public float getScaledElapsedTime() {
+		return scaledElapsedTime;
+	}
+	
+	public float getDeltaTime() {
+		return deltaTime;
+	}
+	
+	public float getScaledDeltaTime() {
+		return scaledDeltaTime;
+	}
 }

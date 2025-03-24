@@ -221,7 +221,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	@Override
 	public void start() {
 		int fps = config.fps.get();
-		long targetTime = (fps == 0) ? 0 : 1000L / fps;
+		double targetTime = (fps == 0) ? 0.0 : 1.0 / fps;
 		
 		stateMachine.changeState(ApplicationState.RUNNING);
 		logger.logf("Starting application (fps: %s)", fps);
@@ -232,8 +232,9 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		
 		// Application loop
 		while (!window.shouldClose() && !shouldStop) {
-			long startTime = (long) (timer.getTime() * 1000);
-			float deltaTime = timer.getDelta();
+			double startTime = timer.getCurrentTime();
+			timer.update();
+			float deltaTime = timer.getDeltaTime();
 			
 			// Handle input and update application
 			try {
@@ -242,7 +243,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 			} catch (Exception e) {
 				logger.error("Failed to update application", e);
 			} finally {
-				timer.updateUPS();
+				timer.incrementUPS();
 			}
 			
 			// Abort application loop
@@ -262,7 +263,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 					renderer.end();
 				}
 			} finally {
-				timer.updateFPS();
+				timer.incrementFPS();
 			}
 			
 			// Check for OpenGL errors
@@ -273,17 +274,17 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 			
 			// Update the window and timer
 			window.update();
-			timer.update();
+			timer.checkCounters();
 			
-			long endTime = (long) (timer.getTime() * 1000);
+			double endTime = timer.getCurrentTime();
 			
 			// Sleep until target time is reached, to match target fps
 			if (fps != 0) {
 				try {
-					long timeout = startTime + targetTime - endTime;
+					double timeout = startTime + targetTime - endTime;
 					
 					if (timeout > 0) {
-						sleep(timeout);
+						sleep((long)(timeout * 1000));
 					}
 				} catch (InterruptedException e) {
 					throw new RuntimeException(e);
@@ -331,8 +332,8 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		if (currentScene != null && currentScene.initialized) {
 			currentScene.update(deltaTime);
 		}
-		timer.updateFPS();
-		timer.update();
+		timer.incrementFPS();
+		timer.checkCounters();
 	}
 	
 	/**
