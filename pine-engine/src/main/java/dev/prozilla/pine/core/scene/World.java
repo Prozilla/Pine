@@ -25,10 +25,7 @@ import dev.prozilla.pine.core.system.standard.canvas.tooltip.TooltipInputHandler
 import dev.prozilla.pine.core.system.standard.particle.ParticleFlowUpdater;
 import dev.prozilla.pine.core.system.standard.particle.ParticleInitializer;
 import dev.prozilla.pine.core.system.standard.particle.ParticleUpdater;
-import dev.prozilla.pine.core.system.standard.sprite.GridInitializer;
-import dev.prozilla.pine.core.system.standard.sprite.GridInputHandler;
-import dev.prozilla.pine.core.system.standard.sprite.SpriteRenderSystem;
-import dev.prozilla.pine.core.system.standard.sprite.TileMover;
+import dev.prozilla.pine.core.system.standard.sprite.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +102,7 @@ public class World implements Lifecycle {
 		
 		// Sprites
 		initialSystems.add(new GridInitializer());
+		initialSystems.add(new MultiTileInitializer());
 		initialSystems.add(new TileMover());
 		initialSystems.add(new SpriteRenderSystem());
 

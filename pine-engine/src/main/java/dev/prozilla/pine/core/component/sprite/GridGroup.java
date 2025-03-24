@@ -54,7 +54,7 @@ public class GridGroup extends Component {
 	 * @param tile Tile to add to this grid
 	 * @throws IllegalStateException If there is already a tile in this grid with the same coordinate
 	 */
-	public TileRenderer addTile(TileProvider tile) throws NullPointerException, IllegalStateException {
+	public TileRenderer addTile(TileRenderer tile) throws NullPointerException, IllegalStateException {
 		Objects.requireNonNull(tile, "tile must not be null");
 		
 		if (coordinateToTile.containsKey(tile.getCoordinate())) {
@@ -64,6 +64,13 @@ public class GridGroup extends Component {
 		tile.setSize(size);
 		coordinateToTile.put(tile.getCoordinate(), tile);
 		TileMover.updateTilePosition(tile.getTransform(), tile.getTile());
+		
+		MultiTileRenderer multiTile = tile.getComponent(MultiTileRenderer.class);
+		if (multiTile != null) {
+			for (PhantomTile phantomTile : multiTile.phantomTiles) {
+				coordinateToTile.put(phantomTile.getCoordinate(), tile);
+			}
+		}
 		
 		if (!entity.transform.children.contains(tile.getEntity().transform)) {
 			entity.addChild(tile.getEntity());
@@ -84,7 +91,7 @@ public class GridGroup extends Component {
 		return destroyTile(entity.getComponent(TileRenderer.class));
 	}
 	
-	public boolean destroyTile(TileProvider tile) {
+	public boolean destroyTile(TileRenderer tile) {
 		boolean removed = removeTile(tile);
 		tile.getEntity().destroy();
 		return removed;
@@ -98,7 +105,7 @@ public class GridGroup extends Component {
 		return removeTile(entity.getComponent(TileRenderer.class));
 	}
 	
-	public boolean removeTile(TileProvider tile) {
+	public boolean removeTile(TileRenderer tile) {
 		if (tile == null || !coordinateToTile.containsKey(tile.getCoordinate())) {
 			return false;
 		}
@@ -107,7 +114,18 @@ public class GridGroup extends Component {
 			entity.removeChild(tile.getEntity());
 		}
 		
-		return (coordinateToTile.remove(tile.getCoordinate()) != null);
+		boolean removed = (coordinateToTile.remove(tile.getCoordinate()) != null);
+		
+		if (removed) {
+			MultiTileRenderer multiTile = tile.getComponent(MultiTileRenderer.class);
+			if (multiTile != null) {
+				for (PhantomTile phantomTile : multiTile.phantomTiles) {
+					coordinateToTile.remove(phantomTile.getCoordinate());
+				}
+			}
+		}
+		
+		return removed;
 	}
 	
 	public boolean hasTile(int x, int y) {

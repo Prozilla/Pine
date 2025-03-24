@@ -15,6 +15,8 @@ public class PhantomTile implements TileProvider {
 	public PhantomTile(TileRenderer anchorTile, Vector2i offset) {
 		this.anchorTile = anchorTile;
 		this.offset = offset;
+		
+		coordinate = new Vector2i(offset.x, offset.y);
 	}
 	
 	@Override

@@ -22,16 +22,13 @@ public class MultiTileRenderer extends Component implements TileProvider {
 		phantomTiles = new ArrayList<>();
 	}
 	
-	public void init() {
-		GridGroup grid = anchorTile.getGroup();
+	public void init(TileRenderer anchorTile) {
+		this.anchorTile = anchorTile;
+		
 		for (int x = 0; x < dimensions.x; x++) {
 			for (int y = 0; y < dimensions.y; y++) {
 				PhantomTile phantomTile = new PhantomTile(anchorTile, new Vector2i(x, y));
 				phantomTiles.add(phantomTile);
-				
-				if (grid != null) {
-					grid.coordinateToTile.put(phantomTile.getCoordinate(), phantomTile);
-				}
 			}
 		}
 	}

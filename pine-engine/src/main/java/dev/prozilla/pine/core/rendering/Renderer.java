@@ -89,6 +89,9 @@ public class Renderer implements Lifecycle {
 	public void init() {
 		setupShaderProgram();
 		
+//		glEnable(GL_ALPHA_TEST);
+//		glAlphaFunc(GL_GREATER, 0.1f);
+		
 		// Read config options
 		RenderConfig config = application.getConfig().rendering;
 		config.enableBlend.read(() -> {
