@@ -10,6 +10,7 @@ public class PlayerTailData extends Component {
 	public TileRenderer currentTile;
 	public TileRenderer nextTile;
 	public boolean isDirty;
+	public boolean isCurved;
 	
 	public PlayerTailData(PlayerData playerData, TileRenderer tile) {
 		this.playerData = playerData;
@@ -18,6 +19,7 @@ public class PlayerTailData extends Component {
 		previousTile = null;
 		nextTile = null;
 		isDirty = true;
+		isCurved = false;
 	}
 	
 }

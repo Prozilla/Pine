@@ -1,8 +1,8 @@
 package dev.prozilla.pine.examples.snake.entity;
 
-import dev.prozilla.pine.common.random.property.RandomFloatProperty;
-import dev.prozilla.pine.common.random.property.RandomIntProperty;
-import dev.prozilla.pine.common.random.property.RandomVector2fProperty;
+import dev.prozilla.pine.common.property.random.RandomFloatProperty;
+import dev.prozilla.pine.common.property.random.RandomIntProperty;
+import dev.prozilla.pine.common.property.random.RandomVector2fProperty;
 import dev.prozilla.pine.core.component.particle.ParticleBurstEmitter;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.particle.ParticleBurstEmitterPrefab;

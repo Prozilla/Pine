@@ -34,8 +34,8 @@ public class PlayerMover extends UpdateSystem {
 		// Check if it's time to move
 		playerData.timeUntilNextMove -= deltaTime;
 		if (playerData.timeUntilNextMove <= 0) {
-			Vector2i currentCoordinate = headTile.coordinate;
-			Vector2i nextCoordinate = new Vector2i(headTile.coordinate.x, headTile.coordinate.y);
+			Vector2i currentCoordinate = headTile.getCoordinate();
+			Vector2i nextCoordinate = currentCoordinate.clone();
 			
 			switch (playerData.direction) {
 				case 0 -> nextCoordinate.y += 1;
@@ -75,7 +75,7 @@ public class PlayerMover extends UpdateSystem {
 			Vector2i newTailCoordinate = currentCoordinate;
 			if (shouldGrow && !playerData.tails.isEmpty()) {
 				TileRenderer lastTailTile = playerData.tails.getLast().currentTile;
-				newTailCoordinate = lastTailTile.coordinate.clone();
+				newTailCoordinate = lastTailTile.getCoordinate().clone();
 			}
 			
 			// Move each tail segment
@@ -84,7 +84,7 @@ public class PlayerMover extends UpdateSystem {
 				PlayerTailData tailData = playerData.tails.get(i);
 				TileRenderer tailTile = tailData.currentTile;
 				Vector2i newCoordinate = lastCoordinate.clone();
-				lastCoordinate = tailTile.coordinate;
+				lastCoordinate = tailTile.getCoordinate();
 				
 				// Moves the tile from lastCoordinate to newCoordinate
 				tailTile.moveTo(newCoordinate);
