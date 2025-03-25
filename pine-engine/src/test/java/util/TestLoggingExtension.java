@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TestExtension implements TestWatcher, BeforeTestExecutionCallback, BeforeAllCallback {
+public class TestLoggingExtension implements TestWatcher, BeforeTestExecutionCallback, BeforeAllCallback {
 	
 	private final Map<Class<?>, Integer> executedTests = new HashMap<>();
 	private final Map<Class<?>, Integer> totalTests = new HashMap<>();
@@ -61,7 +61,7 @@ public class TestExtension implements TestWatcher, BeforeTestExecutionCallback, 
 	/**
 	 * Checks if the current test is the last one in the class.
 	 */
-	private boolean isLastTest(ExtensionContext context) {
+	protected boolean isLastTest(ExtensionContext context) {
 		String testMethodKey = getTestMethodKey(context);
 		
 		if (lastMethodMap.containsKey(testMethodKey)) {

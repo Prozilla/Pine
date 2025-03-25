@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property;
 
 /**
- * Represents a property with a value that never changes.
+ * A property with a value that never changes.
  */
 public class FixedProperty<T> extends VariableProperty<T> {
 	

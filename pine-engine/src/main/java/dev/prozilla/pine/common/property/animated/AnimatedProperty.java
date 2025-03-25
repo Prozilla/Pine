@@ -60,6 +60,10 @@ public abstract class AnimatedProperty<T> extends VariableProperty<T> {
 		}
 	}
 	
+	public boolean hasCompleted() {
+		return time >= duration;
+	}
+	
 	public void setDuration(float duration) {
 		this.duration = duration;
 	}

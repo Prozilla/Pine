@@ -46,5 +46,4 @@ public class TestUtils {
 		String className = original.getClass().getSimpleName();
 		assertEquals(original, parsed, String.format("parsed result of string conversion of %s should equal original", className));
 	}
-	
 }

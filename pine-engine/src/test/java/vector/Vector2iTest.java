@@ -5,12 +5,12 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import util.TestExtension;
+import util.TestLoggingExtension;
 import util.TestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ExtendWith(TestExtension.class)
+@ExtendWith(TestLoggingExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class Vector2iTest {
 	
