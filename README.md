@@ -1,4 +1,16 @@
-# Pine
+<div align="center">
+ <br />
+ <p>
+  <a href="https://pine.prozilla.dev/"><img src="https://pine.prozilla.dev/logo-dark.svg" width="500" alt="Pine Engine" /></a>
+ </p>
+ <p>
+  <a href="https://github.com/Prozilla/Pine/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/Prozilla/Pine?style=flat-square&color=FF4D5B&label=License"></a>
+  <a href="https://github.com/Prozilla/Pine"><img alt="Stars" src="https://img.shields.io/github/stars/Prozilla/Pine?style=flat-square&color=FED24C&label=%E2%AD%90"></a>
+  <a href="https://github.com/Prozilla/Pine"><img alt="Forks" src="https://img.shields.io/github/forks/Prozilla/Pine?style=flat-square&color=4D9CFF&label=Forks&logo=github"></a>
+ </p>
+</div>
+
+## About
 
 Pine stands for **P**rozilla's game eng**ine**.
 Pine is a lightweight Java game engine that serves as a framework for [LWJGL](https://www.lwjgl.org/).
@@ -23,6 +35,7 @@ These are some example projects made using Pine. You can check out their source 
   
 ## Links
 
+- [Website](https://pine.prozilla.dev/)
 - [GitHub](https://github.com/Prozilla/Pine)
 - [Discord](https://discord.gg/JwbyQP4tdz)
 - [Ko-fi](https://ko-fi.com/prozilla)
