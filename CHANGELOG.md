@@ -17,7 +17,7 @@
 - Added MultiTileRenderer component to support sprites that take up multiple tiles in a grid
 - Added adaptive properties which can either have a fixed or dynamic value and provides a more efficient alternative for variable properties
 
-## Changes
+### Changes
 
 
 - Renamed Timer class to ApplicationTimer and refactored

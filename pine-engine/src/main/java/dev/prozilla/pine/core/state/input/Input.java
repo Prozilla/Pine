@@ -200,7 +200,7 @@ public class Input implements Lifecycle {
 	 * @param keys Keys
 	 * @return True if any key is pressed
 	 */
-	public boolean getAnyKey(Key[] keys) {
+	public boolean getAnyKey(Key... keys) {
 		if (keys == null) {
 			return false;
 		}
@@ -220,7 +220,7 @@ public class Input implements Lifecycle {
 	 * @param keys Keys
 	 * @return True if any key is pressed
 	 */
-	public boolean getAnyKey(int[] keys) {
+	public boolean getAnyKey(int... keys) {
 		boolean anyPressed = false;
 		for (int key : keys) {
 			if (getKey(key)) {
@@ -236,7 +236,7 @@ public class Input implements Lifecycle {
 	 * @param keys Keys
 	 * @return True if all keys are pressed
 	 */
-	public boolean getKeys(Key[] keys) {
+	public boolean getKeys(Key... keys) {
 		if (keys == null) {
 			return false;
 		}
@@ -257,7 +257,7 @@ public class Input implements Lifecycle {
 	 * @param keys Keys
 	 * @return True if all keys are pressed
 	 */
-	public boolean getKeys(int[] keys) {
+	public boolean getKeys(int... keys) {
 		boolean allPressed = true;
 		for (int key : keys) {
 			if (!getKey(key)) {

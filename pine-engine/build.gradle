@@ -1,8 +1,11 @@
 import java.time.Year
+import java.util.regex.Pattern
 
 plugins {
     id "java"
     id "maven-publish"
+    id "net.researchgate.release" version "3.0.2"
+    id "com.github.breadmoirai.github-release" version "2.2.12"
 }
 
 repositories {
@@ -22,11 +25,15 @@ jar {
     }
 }
 
+version = "1.1.0"
+
+// Extra properties
 ext {
     lwjglVersion = "3.3.4"
     groupId = "dev.prozilla"
     artifactId = "pine"
-    version = "1.0.2"
+    githubUsername = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+    githubToken = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
 }
 
 // Determine platform
@@ -49,7 +56,6 @@ switch (org.gradle.internal.os.OperatingSystem.current()) {
                 : "natives-windows-x86"
         break
 }
-
 
 dependencies {
     // LWJGL
@@ -82,13 +88,14 @@ tasks.register("runBuildTool", JavaExec) {
     args = []
 }
 
+// Publishing to GitHub Packages and creating release
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
             groupId = project.ext.groupId
             artifactId = project.ext.artifactId
-            version = project.ext.version
+            version = project.version
         }
     }
 
@@ -97,11 +104,56 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/prozilla/pine")
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
-                password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+                username = project.ext.githubUsername
+                password = project.ext.githubToken
             }
         }
     }
+}
+
+def getChangelogEntry() {
+    File changelogFile = file("../CHANGELOG.md")
+    if (!changelogFile.exists()) {
+        return "No changelog available."
+    }
+
+    String content = changelogFile.text
+    String currentVersion = project.version.toString()
+
+    Pattern pattern = Pattern.compile("## v${Pattern.quote(currentVersion)}(.*?)(?=\\n## v\\d+\\.\\d+\\.\\d+|\$)", Pattern.DOTALL)
+    def matcher = pattern.matcher(content)
+
+    if (matcher.find()) {
+        return matcher.group(0).trim()
+    } else {
+        return "No changelog found."
+    }
+}
+
+// https://github.com/researchgate/gradle-release
+release {
+    tagTemplate = 'v${version}'
+    versionPropertyFile = null
+    git {
+        requireBranch.set("main")
+        signTag.set(true)
+    }
+}
+
+// https://github.com/BreadMoirai/github-release-gradle-plugin
+githubRelease {
+    token = project.ext.githubToken ?: ""
+    owner = "Prozilla"
+    repo = "Pine"
+    tagName = "v${project.version}"
+    releaseName = "Release v${project.version}"
+    body = getChangelogEntry()
+    targetCommitish = "main"
+    dryRun = true
+}
+
+tasks.named("publish") {
+    dependsOn("release", "githubRelease")
 }
 
 // Javadoc generation
@@ -110,7 +162,7 @@ tasks.withType(Javadoc).configureEach {
     classpath += configurations.compileClasspath
     options.addStringOption("Xdoclint:none", "-quiet")
     options.encoding = "UTF-8"
-    options.windowTitle = "Pine ${project.ext.version}"
+    options.windowTitle = "Pine ${project.version}"
     options.docTitle = "Pine API Docs"
     options.header = "Pine API documentation."
     options.bottom = "Copyright © ${Year.now().value} Prozilla"
