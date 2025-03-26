@@ -6,12 +6,18 @@ dev.prozilla.pine.common.logging
 dev.prozilla.pine.common.logging.handler
 dev.prozilla.pine.common.math
 dev.prozilla.pine.common.math.dimension
+dev.prozilla.pine.common.math.easing
 dev.prozilla.pine.common.math.matrix
 dev.prozilla.pine.common.math.vector
+dev.prozilla.pine.common.opengl
+dev.prozilla.pine.common.property
+dev.prozilla.pine.common.property.adaptive
+dev.prozilla.pine.common.property.animated
+dev.prozilla.pine.common.property.random
 dev.prozilla.pine.common.random
-dev.prozilla.pine.common.random.property
 dev.prozilla.pine.common.system
 dev.prozilla.pine.common.system.resource
+dev.prozilla.pine.common.system.resource.image
 dev.prozilla.pine.common.system.resource.text
 dev.prozilla.pine.common.util
 dev.prozilla.pine.core
@@ -28,6 +34,7 @@ dev.prozilla.pine.core.entity.prefab.particle
 dev.prozilla.pine.core.entity.prefab.sprite
 dev.prozilla.pine.core.mod
 dev.prozilla.pine.core.rendering
+dev.prozilla.pine.core.scene
 dev.prozilla.pine.core.state
 dev.prozilla.pine.core.state.config
 dev.prozilla.pine.core.state.input
@@ -41,6 +48,7 @@ dev.prozilla.pine.core.system.standard.canvas.frame
 dev.prozilla.pine.core.system.standard.canvas.group
 dev.prozilla.pine.core.system.standard.canvas.image
 dev.prozilla.pine.core.system.standard.canvas.text
+dev.prozilla.pine.core.system.standard.canvas.tooltip
 dev.prozilla.pine.core.system.standard.particle
 dev.prozilla.pine.core.system.standard.sprite
 dev.prozilla.pine.core.system.update
