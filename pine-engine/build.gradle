@@ -4,7 +4,6 @@ import java.util.regex.Pattern
 plugins {
     id "java"
     id "maven-publish"
-    id "net.researchgate.release" version "3.0.2"
     id "com.github.breadmoirai.github-release" version "2.2.12"
 }
 
@@ -91,7 +90,7 @@ tasks.register("runBuildTool", JavaExec) {
 // Publishing to GitHub Packages and creating release
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        gpr(MavenPublication) {
             from components.java
             groupId = project.ext.groupId
             artifactId = project.ext.artifactId
@@ -124,19 +123,10 @@ def getChangelogEntry() {
     def matcher = pattern.matcher(content)
 
     if (matcher.find()) {
-        return matcher.group(0).trim()
+        String changelogEntry = matcher.group(0).trim()
+        return changelogEntry.replaceFirst("v${Pattern.quote(currentVersion)}", "Changelog for v${currentVersion}")
     } else {
         return "No changelog found."
-    }
-}
-
-// https://github.com/researchgate/gradle-release
-release {
-    tagTemplate = 'v${version}'
-    versionPropertyFile = null
-    git {
-        requireBranch.set("main")
-        signTag.set(true)
     }
 }
 
@@ -149,11 +139,11 @@ githubRelease {
     releaseName = "Release v${project.version}"
     body = getChangelogEntry()
     targetCommitish = "main"
-    dryRun = true
+    overwrite = true
 }
 
 tasks.named("publish") {
-    dependsOn("release", "githubRelease")
+    dependsOn("githubRelease")
 }
 
 // Javadoc generation
