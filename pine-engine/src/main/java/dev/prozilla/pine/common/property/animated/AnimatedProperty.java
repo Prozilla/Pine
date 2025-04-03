@@ -60,6 +60,10 @@ public abstract class AnimatedProperty<T> extends VariableProperty<T> {
 		}
 	}
 	
+	protected float getFactor() {
+		return easingFunction.get(time / duration);
+	}
+	
 	public boolean hasCompleted() {
 		return time >= duration;
 	}

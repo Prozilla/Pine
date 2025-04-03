@@ -26,7 +26,6 @@ public class AnimatedColorProperty extends AnimatedProperty<Color> implements Co
 	
 	@Override
 	public void apply(Color outputColor) {
-		float factor = easingFunction.get(time / duration);
-		outputColor.copyFrom(start).mix(end, factor);
+		outputColor.copyFrom(start).mix(end, getFactor());
 	}
 }

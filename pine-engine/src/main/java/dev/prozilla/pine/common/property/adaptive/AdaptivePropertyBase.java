@@ -22,7 +22,7 @@ import dev.prozilla.pine.common.property.animated.AnimatedProperty;
 public abstract class AdaptivePropertyBase<T> extends VariableProperty<T> {
 
 	protected final VariableProperty<T> variableProperty;
-	private final AnimatedProperty<T> animatedProperty;
+	protected final AnimatedProperty<T> animatedProperty;
 	
 	/**
 	 * Creates a new property with a dynamic value if {@code variableProperty} is not {@code null}, or a fixed value.
