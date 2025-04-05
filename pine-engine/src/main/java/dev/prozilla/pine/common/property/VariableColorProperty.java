@@ -46,10 +46,10 @@ public class VariableColorProperty extends VariableProperty<Color> implements Co
 	}
 	
 	@Override
-	public void apply(Color outputColor) {
-		outputColor.setRed(red.getValue());
-		outputColor.setGreen(green.getValue());
-		outputColor.setBlue(blue.getValue());
-		outputColor.setAlpha(alpha.getValue());
+	public void apply(Color target) {
+		target.setRed(red.getValue());
+		target.setGreen(green.getValue());
+		target.setBlue(blue.getValue());
+		target.setAlpha(alpha.getValue());
 	}
 }

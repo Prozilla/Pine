@@ -4,28 +4,19 @@ import dev.prozilla.pine.common.property.ColorProperty;
 import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.system.resource.Color;
 
-public class AdaptiveColorProperty extends AdaptivePropertyBase<Color> implements ColorProperty {
-	
-	protected final Color fixedValue;
+public class AdaptiveColorProperty extends AdaptiveProperty<Color> implements ColorProperty {
 	
 	public AdaptiveColorProperty(VariableProperty<Color> variableProperty) {
 		super(variableProperty);
-		fixedValue = null;
 	}
 	
 	public AdaptiveColorProperty(Color fixedValue) {
-		super(null);
-		this.fixedValue = fixedValue;
-	}
-	
-	@Override
-	public Color getValue() {
-		return ColorProperty.super.getColor();
+		super(fixedValue);
 	}
 	
 	// TO DO: Use AnimatedColorProperty instead and apply directly
 	@Override
-	public void apply(Color outputColor) {
-		outputColor.copyFrom(getValue());
+	public void apply(Color target) {
+		target.copyFrom(getValue());
 	}
 }

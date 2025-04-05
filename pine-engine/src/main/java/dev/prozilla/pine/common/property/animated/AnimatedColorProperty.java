@@ -25,7 +25,7 @@ public class AnimatedColorProperty extends AnimatedProperty<Color> implements Co
 	}
 	
 	@Override
-	public void apply(Color outputColor) {
-		outputColor.copyFrom(start).mix(end, getFactor());
+	public void apply(Color target) {
+		target.copyFrom(start).mix(end, getFactor());
 	}
 }

@@ -549,4 +549,49 @@ public class Dimension extends DimensionBase {
 			return String.format("clamp(%s, %s, %s)", dimensionMin, dimension, dimensionMax);
 		}
 	}
+	
+	public static class Mix extends DimensionComparator {
+		
+		protected float factor;
+		
+		public Mix(DimensionBase dimensionA, DimensionBase dimensionB) {
+			this(dimensionA, dimensionB, 0);
+		}
+		
+		/**
+		 * Creates a function that returns the mix of the values of two dimensions based on a factor.
+		 */
+		public Mix(DimensionBase dimensionA, DimensionBase dimensionB, float factor) {
+			super(dimensionA, dimensionB);
+			this.factor = factor;
+		}
+		
+		@Override
+		protected int compare(int valueA, int valueB) {
+			return Math.round(valueA * (1 - factor) + valueB * factor);
+		}
+		
+		@Override
+		public Mix clone() {
+			return new Mix(dimensionA, dimensionB, factor);
+		}
+		
+		public float getFactor() {
+			return factor;
+		}
+		
+		public void setFactor(float factor) {
+			if (this.factor == factor) {
+				return;
+			}
+			
+			this.factor = factor;
+			isDirty = true;
+		}
+		
+		@Override
+		public String toString() {
+			return String.format("mix(%s, %s, %s)", dimensionA, dimensionB, factor);
+		}
+	}
 }

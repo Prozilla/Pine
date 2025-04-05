@@ -13,6 +13,9 @@ import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.SystemBase;
 import dev.prozilla.pine.core.system.SystemBuilder;
 import dev.prozilla.pine.core.system.SystemManager;
+import dev.prozilla.pine.core.system.standard.animation.AnimationInitializer;
+import dev.prozilla.pine.core.system.standard.animation.AnimationUpdater;
+import dev.prozilla.pine.core.system.standard.animation.canvas.ImageAnimator;
 import dev.prozilla.pine.core.system.standard.camera.*;
 import dev.prozilla.pine.core.system.standard.canvas.*;
 import dev.prozilla.pine.core.system.standard.canvas.frame.FrameRenderSystem;
@@ -85,6 +88,12 @@ public class World implements Lifecycle {
 		if (systemManager.isInitialized()) {
 			throw new IllegalStateException("Initial systems must be specified before the initialization of the system manager.");
 		}
+		
+		// Animations
+		initialSystems.add(new AnimationInitializer());
+		initialSystems.add(new AnimationUpdater());
+		
+		initialSystems.add(new ImageAnimator());
 		
 		// Camera
 		initialSystems.add(new CameraInitializer());

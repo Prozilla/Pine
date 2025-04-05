@@ -13,6 +13,6 @@ public class AnimationInitializer extends InitSystem {
 	@Override
 	protected void process(EntityChunk chunk) {
 		AnimationData animationData = chunk.getComponent(AnimationData.class);
-//		animationData.
+		animationData.restartAnimation();
 	}
 }

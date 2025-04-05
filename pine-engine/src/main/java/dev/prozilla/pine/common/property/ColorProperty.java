@@ -18,8 +18,8 @@ public interface ColorProperty {
 	
 	/**
 	 * Applies the value of this property to a color without creating a new instance.
-	 * @param outputColor The color to override with the value of this property.
+	 * @param target The color to override with the value of this property.
 	 */
-	void apply(Color outputColor);
+	void apply(Color target);
 	
 }
