@@ -12,7 +12,10 @@ public class ImageAnimation extends AnimationData {
 	
 	public ImageAnimation() {
 		super( false);
-		setProperties(colorProperty);
 	}
-
+	
+	public void setColorProperty(AdaptiveColorProperty colorProperty) {
+		changeProperty(this.colorProperty, colorProperty);
+		this.colorProperty = colorProperty;
+	}
 }

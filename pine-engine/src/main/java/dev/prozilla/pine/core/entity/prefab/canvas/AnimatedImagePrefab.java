@@ -40,6 +40,6 @@ public class AnimatedImagePrefab extends ImagePrefab {
 		super.apply(entity);
 		
 		ImageAnimation imageAnimation = entity.addComponent(new ImageAnimation());
-		imageAnimation.colorProperty = colorProperty;
+		imageAnimation.setColorProperty(colorProperty);
 	}
 }
