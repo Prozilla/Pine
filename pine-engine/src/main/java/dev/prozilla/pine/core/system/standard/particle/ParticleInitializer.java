@@ -29,7 +29,7 @@ public class ParticleInitializer extends InitSystem {
 		}
 		if (particleRenderer.colorAnimation != null) {
 			particleRenderer.colorAnimation.setDuration(particleRenderer.lifetime);
-			spriteRenderer.color.copyFrom(particleRenderer.colorAnimation.getRestartedValue());
+			spriteRenderer.color.receive(particleRenderer.colorAnimation.getRestartedValue());
 		}
 	}
 }

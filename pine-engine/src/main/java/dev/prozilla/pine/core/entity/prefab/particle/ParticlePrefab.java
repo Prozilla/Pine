@@ -178,7 +178,7 @@ public class ParticlePrefab extends SpritePrefab {
 		
 		// Apply color
 		if (color != null) {
-			spriteRenderer.color.copyFrom(color.getValue());
+			spriteRenderer.color.receive(color.getValue());
 		} else if (colorAnimation != null) {
 			particleRenderer.colorAnimation = colorAnimation.getValue();
 		}

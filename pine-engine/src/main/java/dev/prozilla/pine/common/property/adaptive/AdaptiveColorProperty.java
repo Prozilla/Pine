@@ -16,7 +16,7 @@ public class AdaptiveColorProperty extends AdaptiveProperty<Color> implements Co
 	
 	// TO DO: Use AnimatedColorProperty instead and apply directly
 	@Override
-	public void apply(Color target) {
-		target.copyFrom(getValue());
+	public void transmit(Color target) {
+		getValue().transmit(target);
 	}
 }

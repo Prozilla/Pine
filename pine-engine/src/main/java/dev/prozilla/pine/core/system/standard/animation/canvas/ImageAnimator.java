@@ -17,7 +17,7 @@ public class ImageAnimator extends UpdateSystem {
 		ImageAnimation imageAnimation = chunk.getComponent(ImageAnimation.class);
 		
 		if (imageAnimation.colorProperty != null) {
-			imageAnimation.colorProperty.apply(imageRenderer.color);
+			imageAnimation.colorProperty.transmit(imageRenderer.color);
 		}
 	}
 }

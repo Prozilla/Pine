@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.system.resource;
 
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.Transceivable;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.math.vector.Vector4f;
@@ -9,7 +10,7 @@ import dev.prozilla.pine.common.math.vector.Vector4f;
 /**
  * Represents an RGBA color.
  */
-public final class Color implements Printable, Cloneable<Color> {
+public final class Color implements Printable, Cloneable<Color>, Transceivable<Color> {
 
     /** This value specifies the red component. */
     private float red;
@@ -80,13 +81,12 @@ public final class Color implements Printable, Cloneable<Color> {
         setAlpha(alpha);
     }
     
-    public Color copyFrom(Color color) {
-        copyRGB(color);
-        setAlpha(color.getAlpha());
-        return this;
+    @Override
+    public void transmit(Color target) {
+        target.set(getRed(), getGreen(), getBlue(), getAlpha());
     }
     
-    public Color copyRGB(Color color) {
+    public Color setRGB(Color color) {
         setRGB(color.getRed(), color.getGreen(), color.getBlue());
         return this;
     }
@@ -261,6 +261,11 @@ public final class Color implements Printable, Cloneable<Color> {
      */
     public Vector4f toVector4f() {
         return new Vector4f(red, green, blue, alpha);
+    }
+    
+    @Override
+    public Color self() {
+        return this;
     }
     
     @Override

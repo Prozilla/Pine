@@ -21,11 +21,12 @@ public class AnimatedColorProperty extends AnimatedProperty<Color> implements Co
 	
 	public void applyUpdatedValue(float deltaTime, Color outputColor) {
 		update(deltaTime);
-		apply(outputColor);
+		transmit(outputColor);
 	}
 	
 	@Override
-	public void apply(Color target) {
-		target.copyFrom(start).mix(end, getFactor());
+	public void transmit(Color target) {
+		target.receive(start);
+		target.mix(end, getFactor());
 	}
 }
