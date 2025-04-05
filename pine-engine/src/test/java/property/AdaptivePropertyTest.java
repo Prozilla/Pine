@@ -3,6 +3,7 @@ package property;
 import dev.prozilla.pine.common.math.easing.Easing;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveFloatProperty;
 import dev.prozilla.pine.common.property.animated.AnimatedFloatProperty;
+import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Tag;
@@ -50,7 +51,7 @@ public class AdaptivePropertyTest {
 	@Test
 	@Tag("performance")
 	void testAnimatedFloatPerformance() {
-		AdaptiveFloatProperty property = new AdaptiveFloatProperty(new AnimatedFloatProperty(0f, 10f, ANIMATION_DURATION, Easing.EASE_IN_OUT__QUAD));
+		AdaptiveFloatProperty property = new AdaptiveFloatProperty(new AnimatedFloatProperty(0f, 10f, new AnimationCurve(ANIMATION_DURATION, Easing.EASE_IN_OUT__QUAD)));
 		properties[2] = property;
 		
 		float value = simulateFloatPropertyUsage(property);

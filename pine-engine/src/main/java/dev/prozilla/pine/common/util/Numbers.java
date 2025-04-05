@@ -10,21 +10,23 @@ public final class Numbers {
 	/**
 	 * Checks that the given number is a positive number and throws an {@link InvalidNumberException} if it is not.
 	 * @param number The number to check
+	 * @param strict Whether to throw an exception if <code>number</code> is <code>0f</code>
 	 * @return <code>number</code> if it is positive.
 	 * @throws InvalidNumberException If <code>number</code> is not positive.
 	 */
-	public static float requirePositive(float number) throws InvalidNumberException {
-		return requirePositive(number, null);
+	public static float requirePositive(float number, boolean strict) throws InvalidNumberException {
+		return requirePositive(number, strict, null);
 	}
 	
 	/**
 	 * Checks that the given number is a positive number and throws a customized {@link InvalidNumberException} if it is not.
 	 * @param number The number to check
+	 * @param strict Whether to throw an exception if <code>number</code> is <code>0f</code>
 	 * @param message The message to be used in the event that an {@link InvalidNumberException} is thrown
 	 * @return <code>number</code> if it is positive.
 	 * @throws InvalidNumberException If <code>number</code> is not positive.
 	 */
-	public static float requirePositive(float number, String message) throws InvalidNumberException {
+	public static float requirePositive(float number, boolean strict, String message) throws InvalidNumberException {
 		if (number < 0) {
 			throw new InvalidNumberException(message != null ? message : "number must be positive");
 		} else {
@@ -35,21 +37,23 @@ public final class Numbers {
 	/**
 	 * Checks that the given number is a positive number and throws an {@link InvalidNumberException} if it is not.
 	 * @param number The number to check
+	 * @param strict Whether to throw an exception if <code>number</code> is <code>0</code>
 	 * @return <code>number</code> if it is positive.
 	 * @throws InvalidNumberException If <code>number</code> is not positive.
 	 */
-	public static int requirePositive(int number) throws InvalidNumberException {
-		return requirePositive(number, null);
+	public static int requirePositive(int number, boolean strict) throws InvalidNumberException {
+		return requirePositive(number, strict, null);
 	}
 	
 	/**
 	 * Checks that the given number is a positive number and throws a customized {@link InvalidNumberException} if it is not.
 	 * @param number The number to check
+	 * @param strict Whether to throw an exception if <code>number</code> is <code>0</code>
 	 * @param message The message to be used in the event that an {@link InvalidNumberException} is thrown
 	 * @return <code>number</code> if it is positive.
 	 * @throws InvalidNumberException If <code>number</code> is not positive.
 	 */
-	public static int requirePositive(int number, String message) throws InvalidNumberException {
+	public static int requirePositive(int number, boolean strict, String message) throws InvalidNumberException {
 		if (number < 0) {
 			throw new InvalidNumberException(message != null ? message : "number must be positive");
 		} else {

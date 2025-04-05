@@ -44,8 +44,8 @@ public class Texture implements TextureBase, Lifecycle, Printable {
 		
 		Application.requireOpenGL();
 		
-		Numbers.requirePositive(width, "texture width must be positive");
-		Numbers.requirePositive(height, "texture height must be positive");
+		Numbers.requirePositive(width, false, "texture width must be positive");
+		Numbers.requirePositive(height, false, "texture height must be positive");
 		
 		id = glGenTextures();
 		

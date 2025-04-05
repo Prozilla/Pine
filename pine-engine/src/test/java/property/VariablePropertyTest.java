@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.math.easing.Easing;
 import dev.prozilla.pine.common.property.FixedProperty;
 import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.property.animated.AnimatedFloatProperty;
+import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Tag;
@@ -52,7 +53,7 @@ public class VariablePropertyTest {
 	@Test
 	@Tag("performance")
 	void testAnimatedFloatPerformance() {
-		VariableProperty<Float> property = new AnimatedFloatProperty(0f, 10f, ANIMATION_DURATION, Easing.EASE_IN_OUT__QUAD);
+		VariableProperty<Float> property = new AnimatedFloatProperty(0f, 10f, new AnimationCurve(ANIMATION_DURATION, Easing.EASE_IN_OUT__QUAD));
 		properties[2] = property;
 		
 		float value = simulateFloatPropertyUsage(property);

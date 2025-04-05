@@ -2,6 +2,7 @@ package property;
 
 import dev.prozilla.pine.common.math.easing.Easing;
 import dev.prozilla.pine.common.property.animated.AnimatedFloatProperty;
+import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.AnimationDirection;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -16,8 +17,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AnimatedPropertyTest {
 	
 	@Test
+	void testAnimationDirections() {
+		assertEquals(0.25f, AnimationDirection.NORMAL.get(0.25f, 1f));
+		assertEquals(0.75f, AnimationDirection.REVERSE.get(0.25f, 1f));
+		assertEquals(0.75f, AnimationDirection.ALTERNATE.get(1.25f, 1f));
+	}
+	
+	@Test
 	void testNormalAnimatedFloatProperty() {
-		AnimatedFloatProperty animatedProperty = new AnimatedFloatProperty(10f, 20f, 1f, Easing.LINEAR, AnimationDirection.NORMAL);
+		AnimatedFloatProperty animatedProperty = new AnimatedFloatProperty(10f, 20f, new AnimationCurve(1f, Easing.LINEAR, AnimationDirection.NORMAL));
 		
 		animatedProperty.restart();
 		assertEquals(10f, animatedProperty.getValue(), "normal animation starts at start");
@@ -31,7 +39,7 @@ public class AnimatedPropertyTest {
 	
 	@Test
 	void testReverseAnimatedFloatProperty() {
-		AnimatedFloatProperty animatedProperty = new AnimatedFloatProperty(10f, 20f, 1f, Easing.LINEAR, AnimationDirection.REVERSE);
+		AnimatedFloatProperty animatedProperty = new AnimatedFloatProperty(10f, 20f, new AnimationCurve(1f, Easing.LINEAR, AnimationDirection.REVERSE));
 		
 		animatedProperty.restart();
 		assertEquals(20f, animatedProperty.getValue(), "reverse animation starts at end");
@@ -45,7 +53,7 @@ public class AnimatedPropertyTest {
 	
 	@Test
 	void testAlternatingAnimatedFloatProperty() {
-		AnimatedFloatProperty animatedProperty = new AnimatedFloatProperty(10f, 20f, 1f, Easing.LINEAR, AnimationDirection.ALTERNATE);
+		AnimatedFloatProperty animatedProperty = new AnimatedFloatProperty(10f, 20f, new AnimationCurve(1f, Easing.LINEAR, AnimationDirection.ALTERNATE));
 		
 		animatedProperty.restart();
 		assertEquals(10f, animatedProperty.getValue(), "alternating animation starts at start");

@@ -1,21 +1,13 @@
 package dev.prozilla.pine.common.property.animated;
 
-import dev.prozilla.pine.common.math.easing.EasingFunction;
+import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.property.ColorProperty;
 import dev.prozilla.pine.common.system.resource.Color;
 
 public class AnimatedColorProperty extends AnimatedProperty<Color> implements ColorProperty {
 	
-	public AnimatedColorProperty(Color start, Color end, float duration) {
-		this(start, end, duration, AnimatedProperty.DEFAULT_EASING_FUNCTION);
-	}
-	
-	public AnimatedColorProperty(Color start, Color end, float duration, EasingFunction easingFunction) {
-		this(start, end, duration, easingFunction, DEFAULT_DIRECTION);
-	}
-	
-	public AnimatedColorProperty(Color start, Color end, float duration, EasingFunction easingFunction, AnimationDirection direction) {
-		super(start, end, duration, easingFunction, direction);
+	public AnimatedColorProperty(Color start, Color end, AnimationCurve curve) {
+		super(start, end, curve);
 	}
 	
 	@Override
@@ -32,5 +24,31 @@ public class AnimatedColorProperty extends AnimatedProperty<Color> implements Co
 	public void transmit(Color target) {
 		target.receive(start);
 		target.mix(end, getFactor());
+	}
+	
+	/**
+	 * A color property with an animated alpha value.
+	 */
+	public static class AnimatedAlpha extends AnimatedProperty<Color> implements ColorProperty {
+		
+		protected final float alphaStart;
+		protected final float alphaEnd;
+		
+		public AnimatedAlpha(Color color, float alphaStart, float alphaEnd, AnimationCurve curve) {
+			super(color, null, curve);
+			this.alphaStart = alphaStart;
+			this.alphaEnd = alphaEnd;
+		}
+		
+		@Override
+		public Color getValue() {
+			return getColor();
+		}
+		
+		@Override
+		public void transmit(Color target) {
+			target.receive(start);
+			target.setAlpha(MathUtils.remap(getFactor(), 0f, 1f, alphaStart, alphaEnd));
+		}
 	}
 }
