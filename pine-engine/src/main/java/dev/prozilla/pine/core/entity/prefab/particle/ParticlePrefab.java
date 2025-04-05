@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.property.FixedProperty;
 import dev.prozilla.pine.common.property.VariableColorProperty;
 import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.property.animated.AnimatedProperty;
+import dev.prozilla.pine.common.property.animated.AnimationDirection;
 import dev.prozilla.pine.common.property.animated.VariableAnimatedColorProperty;
 import dev.prozilla.pine.common.property.animated.VariableAnimatedFloatProperty;
 import dev.prozilla.pine.common.system.resource.Color;
@@ -100,7 +101,7 @@ public class ParticlePrefab extends SpritePrefab {
 	 * Adds an animation for the color of the particle.
 	 */
 	public void setColorAnimation(VariableProperty<Color> start, VariableProperty<Color> end, EasingFunction easingFunction) {
-		colorAnimation = new VariableAnimatedColorProperty(start, end, new FixedProperty<>(1f), new FixedProperty<>(easingFunction));
+		colorAnimation = new VariableAnimatedColorProperty(start, end, new FixedProperty<>(1f), new FixedProperty<>(easingFunction), new FixedProperty<>(AnimationDirection.NORMAL));
 		color = null;
 	}
 	
@@ -125,7 +126,7 @@ public class ParticlePrefab extends SpritePrefab {
 	 * Adds an animation for the scale of the particle.
 	 */
 	public void setScaleAnimation(VariableProperty<Float> start, VariableProperty<Float> end, EasingFunction easingFunction) {
-		scaleAnimation = new VariableAnimatedFloatProperty(start, end, new FixedProperty<>(1f), new FixedProperty<>(easingFunction));
+		scaleAnimation = new VariableAnimatedFloatProperty(start, end, new FixedProperty<>(1f), new FixedProperty<>(easingFunction), new FixedProperty<>(AnimationDirection.NORMAL));
 		scale = null;
 	}
 	

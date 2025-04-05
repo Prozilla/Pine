@@ -6,12 +6,12 @@ import dev.prozilla.pine.common.system.resource.Color;
 
 public class VariableAnimatedColorProperty extends VariableAnimatedProperty<Color> {
 	
-	public VariableAnimatedColorProperty(VariableProperty<Color> start, VariableProperty<Color> end, VariableProperty<Float> duration, VariableProperty<EasingFunction> easingFunction) {
-		super(start, end, duration, easingFunction);
+	public VariableAnimatedColorProperty(VariableProperty<Color> startProperty, VariableProperty<Color> endProperty, VariableProperty<Float> durationProperty, VariableProperty<EasingFunction> easingFunctionProperty, VariableProperty<AnimationDirection> directionProperty) {
+		super(startProperty, endProperty, durationProperty, easingFunctionProperty, directionProperty);
 	}
 	
 	@Override
 	public AnimatedColorProperty getValue() {
-		return new AnimatedColorProperty(start.getValue(), end.getValue(), duration.getValue(), easingFunction.getValue());
+		return new AnimatedColorProperty(startProperty.getValue(), endProperty.getValue(), durationProperty.getValue(), easingFunctionProperty.getValue(), directionProperty.getValue());
 	}
 }

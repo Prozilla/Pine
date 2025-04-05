@@ -9,12 +9,15 @@ import dev.prozilla.pine.common.property.VariableProperty;
  */
 public abstract class AnimatedProperty<T> extends VariableProperty<T> {
 
-	protected T start, end;
-	protected EasingFunction easingFunction;
+	protected final T start, end;
+	protected final EasingFunction easingFunction;
+	protected final AnimationDirection direction;
+	
 	protected float duration;
 	protected float time;
 	
 	public static final EasingFunction DEFAULT_EASING_FUNCTION = Easing.LINEAR;
+	public static final AnimationDirection DEFAULT_DIRECTION = AnimationDirection.NORMAL;
 	
 	/**
 	 * Creates a property with a linear animation.
@@ -34,10 +37,22 @@ public abstract class AnimatedProperty<T> extends VariableProperty<T> {
 	 * @param easingFunction Easing function that determines how the animation progresses.
 	 */
 	public AnimatedProperty(T start, T end, float duration, EasingFunction easingFunction) {
+		this(start, end, duration, easingFunction, DEFAULT_DIRECTION);
+	}
+	
+	/**
+	 * Creates a property with an animation.
+	 * @param start Value at the start of the animation
+	 * @param end Value at the end of the animation
+	 * @param duration Duration of the animation, in seconds
+	 * @param easingFunction Easing function that determines how the animation progresses.
+	 */
+	public AnimatedProperty(T start, T end, float duration, EasingFunction easingFunction, AnimationDirection direction) {
 		this.start = start;
 		this.end = end;
 		this.duration = duration;
 		this.easingFunction = easingFunction;
+		this.direction = direction;
 		
 		if (duration == 0) {
 			throw new IllegalArgumentException("duration must not be 0");
@@ -73,15 +88,10 @@ public abstract class AnimatedProperty<T> extends VariableProperty<T> {
 	 */
 	public void update(float deltaTime) {
 		time += deltaTime;
-		
-		// Clamp time value to duration
-		if (time > duration) {
-			time = duration;
-		}
 	}
 	
 	protected float getFactor() {
-		return easingFunction.get(time / duration);
+		return easingFunction.get(direction.get(time, duration));
 	}
 	
 	public boolean hasFinished() {

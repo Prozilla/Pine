@@ -11,7 +11,11 @@ public class AnimatedColorProperty extends AnimatedProperty<Color> implements Co
 	}
 	
 	public AnimatedColorProperty(Color start, Color end, float duration, EasingFunction easingFunction) {
-		super(start, end, duration, easingFunction);
+		this(start, end, duration, easingFunction, DEFAULT_DIRECTION);
+	}
+	
+	public AnimatedColorProperty(Color start, Color end, float duration, EasingFunction easingFunction, AnimationDirection direction) {
+		super(start, end, duration, easingFunction, direction);
 	}
 	
 	@Override

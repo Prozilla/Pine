@@ -5,12 +5,12 @@ import dev.prozilla.pine.common.property.VariableProperty;
 
 public class VariableAnimatedFloatProperty extends VariableAnimatedProperty<Float> {
 	
-	public VariableAnimatedFloatProperty(VariableProperty<Float> start, VariableProperty<Float> end, VariableProperty<Float> duration, VariableProperty<EasingFunction> easingFunction) {
-		super(start, end, duration, easingFunction);
+	public VariableAnimatedFloatProperty(VariableProperty<Float> startProperty, VariableProperty<Float> endProperty, VariableProperty<Float> durationProperty, VariableProperty<EasingFunction> easingFunctionProperty, VariableProperty<AnimationDirection> directionProperty) {
+		super(startProperty, endProperty, durationProperty, easingFunctionProperty, directionProperty);
 	}
 	
 	@Override
 	public AnimatedFloatProperty getValue() {
-		return new AnimatedFloatProperty(start.getValue(), end.getValue(), duration.getValue(), easingFunction.getValue());
+		return new AnimatedFloatProperty(startProperty.getValue(), endProperty.getValue(), durationProperty.getValue(), easingFunctionProperty.getValue(), directionProperty.getValue());
 	}
 }

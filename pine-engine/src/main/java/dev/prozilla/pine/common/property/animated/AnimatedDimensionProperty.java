@@ -3,9 +3,8 @@ package dev.prozilla.pine.common.property.animated;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.easing.EasingFunction;
-import dev.prozilla.pine.common.property.DimensionProperty;
 
-public class AnimatedDimensionProperty extends AnimatedProperty<DimensionBase> implements DimensionProperty {
+public class AnimatedDimensionProperty extends AnimatedProperty<DimensionBase> {
 	
 	protected final Dimension.Mix mixedDimension;
 	
@@ -14,8 +13,12 @@ public class AnimatedDimensionProperty extends AnimatedProperty<DimensionBase> i
 	}
 	
 	public AnimatedDimensionProperty(DimensionBase start, DimensionBase end, float duration, EasingFunction easingFunction) {
-		super(start, end, duration, easingFunction);
-		this.mixedDimension = new Dimension.Mix(start, end);
+		this(start, end, duration, easingFunction, DEFAULT_DIRECTION);
+	}
+	
+	public AnimatedDimensionProperty(DimensionBase start, DimensionBase end, float duration, EasingFunction easingFunction, AnimationDirection direction) {
+		super(start, end, duration, easingFunction, direction);
+		mixedDimension = new Dimension.Mix(start, end);
 	}
 	
 	@Override

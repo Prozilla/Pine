@@ -5,15 +5,17 @@ import dev.prozilla.pine.common.property.VariableProperty;
 
 public abstract class VariableAnimatedProperty<T> extends VariableProperty<AnimatedProperty<T>> {
 	
-	protected final VariableProperty<T> start;
-	protected final VariableProperty<T> end;
-	protected final VariableProperty<Float> duration;
-	protected final VariableProperty<EasingFunction> easingFunction;
+	protected final VariableProperty<T> startProperty;
+	protected final VariableProperty<T> endProperty;
+	protected final VariableProperty<Float> durationProperty;
+	protected final VariableProperty<EasingFunction> easingFunctionProperty;
+	protected final VariableProperty<AnimationDirection> directionProperty;
 	
-	public VariableAnimatedProperty(VariableProperty<T> start, VariableProperty<T> end, VariableProperty<Float> duration, VariableProperty<EasingFunction> easingFunction) {
-		this.start = start;
-		this.end = end;
-		this.duration = duration;
-		this.easingFunction = easingFunction;
+	public VariableAnimatedProperty(VariableProperty<T> startProperty, VariableProperty<T> endProperty, VariableProperty<Float> durationProperty, VariableProperty<EasingFunction> easingFunctionProperty, VariableProperty<AnimationDirection> directionProperty) {
+		this.startProperty = startProperty;
+		this.endProperty = endProperty;
+		this.durationProperty = durationProperty;
+		this.easingFunctionProperty = easingFunctionProperty;
+		this.directionProperty = directionProperty;
 	}
 }

@@ -1,6 +1,5 @@
 package dev.prozilla.pine.core.entity.prefab.canvas;
 
-import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
@@ -15,7 +14,6 @@ public class ImagePrefab extends CanvasElementPrefab {
 	
 	protected TextureBase image;
 	protected Color color;
-	protected DualDimension size;
 	
 	protected boolean cropToRegion;
 	protected int regionX;
@@ -38,14 +36,6 @@ public class ImagePrefab extends CanvasElementPrefab {
 	
 	public void setColor(Color color) {
 		this.color = color;
-	}
-	
-	public void setSize(Dimension x, Dimension y) {
-		setSize(new DualDimension(x, y));
-	}
-	
-	public void setSize(DualDimension size) {
-		this.size = size;
 	}
 	
 	public void setRegion(int x, int y, int width, int height) {
