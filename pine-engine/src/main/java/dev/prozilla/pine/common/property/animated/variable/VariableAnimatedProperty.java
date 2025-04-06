@@ -1,6 +1,8 @@
-package dev.prozilla.pine.common.property.animated;
+package dev.prozilla.pine.common.property.animated.variable;
 
 import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.animated.AnimatedProperty;
+import dev.prozilla.pine.common.property.animated.AnimationCurve;
 
 public abstract class VariableAnimatedProperty<T> extends VariableProperty<AnimatedProperty<T>> {
 	

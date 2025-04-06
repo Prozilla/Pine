@@ -1,7 +1,9 @@
-package dev.prozilla.pine.common.property.animated;
+package dev.prozilla.pine.common.property.animated.variable;
 
 import dev.prozilla.pine.common.property.FixedProperty;
 import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.animated.AnimatedFloatProperty;
+import dev.prozilla.pine.common.property.animated.AnimationCurve;
 
 public class VariableAnimatedFloatProperty extends VariableAnimatedProperty<Float> {
 	

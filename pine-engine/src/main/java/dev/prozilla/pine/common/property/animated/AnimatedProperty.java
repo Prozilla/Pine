@@ -7,7 +7,8 @@ import dev.prozilla.pine.common.property.VariableProperty;
  */
 public abstract class AnimatedProperty<T> extends VariableProperty<T> {
 
-	protected final T start, end;
+	protected T start;
+	protected T end;
 	protected final AnimationCurve curve;
 
 	protected float time;
