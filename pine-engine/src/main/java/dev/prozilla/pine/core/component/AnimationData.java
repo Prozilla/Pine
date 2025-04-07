@@ -5,12 +5,15 @@ import dev.prozilla.pine.common.Animatable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AnimationData extends Component {
+/**
+ * Abstract class for components with animated properties.
+ */
+public abstract class AnimationData extends Component implements Animatable {
 	
 	public List<Animatable> properties;
 	public final boolean applyTimeScale;
 	
-	public AnimationData( boolean applyTimeScale) {
+	public AnimationData(boolean applyTimeScale) {
 		this.applyTimeScale = applyTimeScale;
 		
 		properties = new ArrayList<>();
@@ -25,12 +28,14 @@ public abstract class AnimationData extends Component {
 		}
 	}
 	
+	@Override
 	public void restartAnimation() {
 		for (Animatable property : properties) {
 			property.restartAnimation();
 		}
 	}
 	
+	@Override
 	public void updateAnimation(float deltaTime) {
 		for (Animatable property : properties) {
 			property.updateAnimation(deltaTime);

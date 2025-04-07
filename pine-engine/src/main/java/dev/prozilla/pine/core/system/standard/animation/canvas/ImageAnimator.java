@@ -1,26 +1,26 @@
 package dev.prozilla.pine.core.system.standard.animation.canvas;
 
-import dev.prozilla.pine.core.component.canvas.ImageAnimation;
 import dev.prozilla.pine.core.component.canvas.ImageRenderer;
+import dev.prozilla.pine.core.component.canvas.ImageStyler;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 
 public class ImageAnimator extends UpdateSystem {
 	
 	public ImageAnimator() {
-		super( ImageRenderer.class, ImageAnimation.class);
+		super( ImageRenderer.class, ImageStyler.class);
 	}
 	
 	@Override
 	protected void process(EntityChunk chunk, float deltaTime) {
 		ImageRenderer imageRenderer = chunk.getComponent(ImageRenderer.class);
-		ImageAnimation imageAnimation = chunk.getComponent(ImageAnimation.class);
+		ImageStyler imageStyler = chunk.getComponent(ImageStyler.class);
 		
-		if (imageAnimation.getColorProperty() != null) {
-			imageAnimation.getColorProperty().transmit(imageRenderer.color);
+		if (imageStyler.getColorProperty() != null) {
+			imageStyler.getColorProperty().transmit(imageRenderer.color);
 		}
-		if (imageAnimation.getSizeProperty() != null) {
-			imageRenderer.size = imageAnimation.getSizeProperty().getValue();
+		if (imageStyler.getSizeProperty() != null) {
+			imageRenderer.size = imageStyler.getSizeProperty().getValue();
 		}
 	}
 }

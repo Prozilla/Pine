@@ -14,8 +14,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public abstract class StyleProperty<T> extends VariableProperty<T> implements Animatable, Printable {
+/**
+ * A property used to style canvas elements based on a set of rules.
+ */
+public abstract class StyledProperty<T> extends VariableProperty<T> implements Animatable, Printable {
 	
+	protected final StyledPropertyName name;
 	protected final RectTransform context;
 	
 	protected final List<StyleRule<T>> rules;
@@ -25,16 +29,30 @@ public abstract class StyleProperty<T> extends VariableProperty<T> implements An
 	protected final List<StyleRule<AnimationCurve>> transitionRules;
 	private TransitionedProperty<T> transitionedProperty;
 	
-	private final List<StylePropertyEventListener<T>> listeners;
+	/**
+	 * Creates a styled property without any transitions.
+	 * @param context The canvas element this property belongs to
+	 * @param rules The rules that determine the value of this property
+	 * @param defaultValue The initial value of this property. Also used when no rule is applied.
+	 */
+	public StyledProperty(StyledPropertyName name, RectTransform context, List<StyleRule<T>> rules, AdaptiveProperty<T> defaultValue) {
+		this(name, context, rules, defaultValue, null);
+	}
 	
-	public StyleProperty(RectTransform context, List<StyleRule<T>> rules, AdaptiveProperty<T> defaultValue) {
+	/**
+	 * Creates a styled property with transitions.
+	 * @param context The canvas element this property belongs to
+	 * @param rules The rules that determine the value of this property
+	 * @param defaultValue The initial value of this property. Also used when no rule is applied.
+	 * @param transitionRules The rules that determine how the value of this property transitions when changed
+	 */
+	public StyledProperty(StyledPropertyName name, RectTransform context, List<StyleRule<T>> rules, AdaptiveProperty<T> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
+		this.name = name;
 		this.context = Objects.requireNonNull(context, "context must not be null");
 		this.rules = Objects.requireNonNullElse(rules, new ArrayList<>());
 		this.adaptiveProperty = Objects.requireNonNull(defaultValue, "defaultValue must not be null");
+		this.transitionRules = Objects.requireNonNullElse(transitionRules, new ArrayList<>());
 		fallbackProperty = this.adaptiveProperty;
-		
-		transitionRules = new ArrayList<>();
-		listeners = new ArrayList<>();
 		
 		// Re-apply style when selector changes
 		context.addListener(RectEvent.SELECTOR_CHANGE, () -> {
@@ -96,22 +114,7 @@ public abstract class StyleProperty<T> extends VariableProperty<T> implements An
 			return;
 		}
 		
-		fireChangeEvent(this.adaptiveProperty, adaptiveProperty);
 		this.adaptiveProperty = adaptiveProperty;
-	}
-	
-	protected void fireChangeEvent(AdaptiveProperty<T> oldProperty, AdaptiveProperty<T> newProperty) {
-		for (StylePropertyEventListener<T> listener : listeners) {
-			listener.onChange(oldProperty, newProperty);
-		}
-	}
-	
-	public void addListener(StylePropertyEventListener<T> listener) {
-		listeners.add(listener);
-	}
-	
-	public void removeListener(StylePropertyEventListener<T> listener) {
-		listeners.remove(listener);
 	}
 	
 	@Override
@@ -136,10 +139,12 @@ public abstract class StyleProperty<T> extends VariableProperty<T> implements An
 		for (StyleRule<T> rule : rules) {
 			stringJoiner.add(rule.getSelector().toString());
 			stringJoiner.add("{");
-			stringJoiner.add(rule.getValue().toString());
+			stringJoiner.add(name + ":");
+			stringJoiner.add(rule.getValue().toString() + ";");
 			stringJoiner.add("}");
 		}
 		
 		return stringJoiner.toString();
 	}
+	
 }

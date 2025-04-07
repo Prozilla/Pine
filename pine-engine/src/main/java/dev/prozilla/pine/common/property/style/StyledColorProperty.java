@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.property.ColorProperty;
-import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedColorProperty;
 import dev.prozilla.pine.common.system.resource.Color;
@@ -9,10 +9,14 @@ import dev.prozilla.pine.core.component.canvas.RectTransform;
 
 import java.util.List;
 
-public class StyleColorProperty extends StyleProperty<Color> implements ColorProperty {
+public final class StyledColorProperty extends StyledProperty<Color> implements ColorProperty {
 	
-	public StyleColorProperty(RectTransform context, List<StyleRule<Color>> styleRules, AdaptiveColorProperty adaptiveProperty) {
-		super(context, styleRules, adaptiveProperty);
+	public StyledColorProperty(StyledPropertyName name, RectTransform context, List<StyleRule<Color>> styleRules, AdaptiveProperty<Color> defaultValue) {
+		this(name, context, styleRules, defaultValue, null);
+	}
+	
+	public StyledColorProperty(StyledPropertyName name, RectTransform context, List<StyleRule<Color>> styleRules, AdaptiveProperty<Color> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
+		super(name, context, styleRules, defaultValue, transitionRules);
 	}
 	
 	@Override

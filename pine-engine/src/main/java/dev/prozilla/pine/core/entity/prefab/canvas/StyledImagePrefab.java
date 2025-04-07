@@ -4,35 +4,31 @@ import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveDualDimensionProperty;
-import dev.prozilla.pine.common.property.style.StyleColorProperty;
-import dev.prozilla.pine.common.property.style.StyleRule;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
+import dev.prozilla.pine.common.property.style.StyleSheet;
+import dev.prozilla.pine.common.property.style.StyledPropertyName;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.image.TextureBase;
-import dev.prozilla.pine.core.component.canvas.ImageAnimation;
+import dev.prozilla.pine.core.component.canvas.ImageStyler;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.Entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class AnimatedImagePrefab extends ImagePrefab {
+public class StyledImagePrefab extends ImagePrefab {
 	
-	protected final List<StyleRule<Color>> colorRules;
-	protected AdaptiveColorProperty defaultColor;
+	protected StyleSheet styleSheet;
 	protected AdaptiveDualDimensionProperty sizeProperty;
 	
-	public AnimatedImagePrefab(String imagePath) {
+	public StyledImagePrefab(String imagePath) {
 		this(ResourcePool.loadTexture(imagePath));
 	}
 	
-	public AnimatedImagePrefab(TextureBase image) {
+	public StyledImagePrefab(TextureBase image) {
 		super(image);
-		colorRules = new ArrayList<>();
 	}
 	
-	public void addColorRule(StyleRule<Color> colorRule) {
-		colorRules.add(colorRule);
+	public void setStyleSheet(StyleSheet styleSheet) {
+		this.styleSheet = styleSheet;
 	}
 	
 	@Override
@@ -41,11 +37,7 @@ public class AnimatedImagePrefab extends ImagePrefab {
 	}
 	
 	public void setColor(VariableProperty<Color> color) {
-		setColor(new AdaptiveColorProperty(color));
-	}
-	
-	public void setColor(AdaptiveColorProperty color) {
-		defaultColor = color;
+		setDefaultPropertyValue(StyledPropertyName.COLOR, color);
 		this.color = color.getValue().clone();
 	}
 	
@@ -64,14 +56,22 @@ public class AnimatedImagePrefab extends ImagePrefab {
 		sizeProperty = null;
 	}
 	
+	protected <T> void setDefaultPropertyValue(StyledPropertyName propertyName, VariableProperty<T> defaultValue) {
+		if (styleSheet == null) {
+			return;
+		}
+		
+		styleSheet.setDefaultValue(propertyName, defaultValue instanceof AdaptiveProperty<T> adaptiveProperty ? adaptiveProperty : new AdaptiveProperty<>(defaultValue));
+	}
+	
 	@Override
 	protected void apply(Entity entity) {
 		super.apply(entity);
 		
 		RectTransform rect = entity.getComponent(RectTransform.class);
 		
-		ImageAnimation imageAnimation = entity.addComponent(new ImageAnimation());
-		imageAnimation.setColorProperty(new StyleColorProperty(rect, colorRules, defaultColor));
-		imageAnimation.setSizeProperty(sizeProperty);
+		ImageStyler imageStyler = entity.addComponent(new ImageStyler(rect));
+		imageStyler.applyStyleSheet(styleSheet);
+		imageStyler.setSizeProperty(sizeProperty);
 	}
 }

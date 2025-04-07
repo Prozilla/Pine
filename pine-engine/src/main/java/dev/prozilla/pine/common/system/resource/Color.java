@@ -313,6 +313,10 @@ public final class Color implements Printable, Cloneable<Color>, Transceivable<C
         return new Color(0f, 0f, 1f);
     }
     
+    public static Color transparent() {
+        return new Color(1f, 1f, 1f, 0f);
+    }
+    
     /**
      * Decodes a <code>String</code> into a <code>Color</code>.
      * Supports octal and hexadecimal number representations of opaque colors.

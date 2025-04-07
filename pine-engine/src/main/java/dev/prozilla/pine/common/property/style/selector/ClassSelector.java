@@ -2,6 +2,9 @@ package dev.prozilla.pine.common.property.style.selector;
 
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 
+/**
+ * A selector that matches elements with a specific class.
+ */
 public class ClassSelector extends Selector {
 
 	private final String className;

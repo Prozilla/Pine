@@ -2,6 +2,9 @@ package dev.prozilla.pine.common.property.style.selector;
 
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 
+/**
+ * A selector that negates another selector.
+ */
 public class NotSelector extends Selector {
 	
 	private final Selector selector;

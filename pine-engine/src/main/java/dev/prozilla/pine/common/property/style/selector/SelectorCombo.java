@@ -2,6 +2,11 @@ package dev.prozilla.pine.common.property.style.selector;
 
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 
+/**
+ * A selector that combines multiple other selectors.
+ * 
+ * <p>This selector matches a canvas element if all selectors match the canvas element.</p>
+ */
 public class SelectorCombo extends Selector {
 	
 	private final Selector[] selectors;
