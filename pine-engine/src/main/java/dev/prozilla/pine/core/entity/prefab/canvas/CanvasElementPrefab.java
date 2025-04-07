@@ -3,7 +3,13 @@ package dev.prozilla.pine.core.entity.prefab.canvas;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveDualDimensionProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
+import dev.prozilla.pine.common.property.style.StyleSheet;
+import dev.prozilla.pine.common.property.style.StyledPropertyName;
 import dev.prozilla.pine.core.component.Transform;
+import dev.prozilla.pine.core.component.canvas.CanvasElementStyler;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Components;
@@ -22,6 +28,8 @@ public class CanvasElementPrefab extends Prefab {
 	protected boolean passThrough;
 	protected String tooltipText;
 	
+	protected StyleSheet styleSheet;
+	
 	public CanvasElementPrefab() {
 		position = new DualDimension();
 		size = new DualDimension();
@@ -29,6 +37,10 @@ public class CanvasElementPrefab extends Prefab {
 		passThrough = false;
 		
 		setName("CanvasElement");
+	}
+	
+	public void setStyleSheet(StyleSheet styleSheet) {
+		this.styleSheet = styleSheet;
 	}
 	
 	/**
@@ -56,7 +68,16 @@ public class CanvasElementPrefab extends Prefab {
 	 * Sets the size of this element on the canvas.
 	 */
 	public void setSize(DualDimension size) {
-		this.size = size;
+		if (styleSheet == null) {
+			this.size = size;
+		} else {
+			setSize(new AdaptiveDualDimensionProperty(size));
+		}
+	}
+	
+	public void setSize(VariableProperty<DualDimension> size) {
+		setDefaultPropertyValue(StyledPropertyName.SIZE, size);
+		this.size = size.getValue();
 	}
 	
 	/**
@@ -78,6 +99,14 @@ public class CanvasElementPrefab extends Prefab {
 		this.tooltipText = tooltipText;
 	}
 	
+	protected <T> void setDefaultPropertyValue(StyledPropertyName propertyName, VariableProperty<T> defaultValue) {
+		if (styleSheet == null) {
+			return;
+		}
+		
+		styleSheet.setDefaultValue(propertyName, defaultValue instanceof AdaptiveProperty<T> adaptiveProperty ? adaptiveProperty : new AdaptiveProperty<>(defaultValue));
+	}
+	
 	@Override
 	protected void apply(Entity entity) {
 		RectTransform rectTransform = entity.addComponent(new RectTransform());
@@ -91,6 +120,10 @@ public class CanvasElementPrefab extends Prefab {
 		}
 		if (tooltipText != null) {
 			rectTransform.tooltipText = tooltipText;
+		}
+		
+		if (styleSheet != null) {
+			entity.addComponent(new CanvasElementStyler(rectTransform, styleSheet));
 		}
 	}
 }

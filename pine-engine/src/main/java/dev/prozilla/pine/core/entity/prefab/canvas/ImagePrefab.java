@@ -1,6 +1,9 @@
 package dev.prozilla.pine.core.entity.prefab.canvas;
 
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
+import dev.prozilla.pine.common.property.style.StyledPropertyName;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.image.TextureBase;
@@ -35,7 +38,16 @@ public class ImagePrefab extends CanvasElementPrefab {
 	}
 	
 	public void setColor(Color color) {
-		this.color = color;
+		if (styleSheet == null) {
+			this.color = color;
+		} else {
+			setColor(new AdaptiveColorProperty(color));
+		}
+	}
+	
+	public void setColor(VariableProperty<Color> color) {
+		setDefaultPropertyValue(StyledPropertyName.COLOR, color);
+		this.color = color.getValue().clone();
 	}
 	
 	public void setRegion(int x, int y, int width, int height) {

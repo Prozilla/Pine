@@ -6,19 +6,19 @@ import dev.prozilla.pine.common.property.style.StyledDualDimensionProperty;
 import dev.prozilla.pine.core.component.AnimationData;
 
 /**
- * A component that styles an {@link ImageRenderer} component.
+ * A component that styles canvas elements.
  */
-public class ImageStyler extends AnimationData {
+public class CanvasElementStyler extends AnimationData {
 	
 	protected final RectTransform rect;
 	protected StyledColorProperty colorProperty;
 	protected StyledDualDimensionProperty sizeProperty;
 	
-	public ImageStyler(RectTransform rect) {
+	public CanvasElementStyler(RectTransform rect) {
 		this(rect, null);
 	}
 	
-	public ImageStyler(RectTransform rect, StyleSheet styleSheet) {
+	public CanvasElementStyler(RectTransform rect, StyleSheet styleSheet) {
 		super(false);
 		this.rect = rect;
 		
