@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.property.adaptive;
 
+import dev.prozilla.pine.common.Animatable;
 import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.property.animated.AnimatedProperty;
 
@@ -19,7 +20,7 @@ import dev.prozilla.pine.common.property.animated.AnimatedProperty;
  *     Certain implementations store fixed values as primitives to optimize performance and avoid unnecessary (un)boxing.
  * </p>
  */
-public abstract class AdaptivePropertyBase<T> extends VariableProperty<T> {
+public abstract class AdaptivePropertyBase<T> extends VariableProperty<T> implements Animatable {
 
 	protected final VariableProperty<T> variableProperty;
 	protected final AnimatedProperty<T> animatedProperty;
@@ -41,6 +42,7 @@ public abstract class AdaptivePropertyBase<T> extends VariableProperty<T> {
 	/**
 	 * Restarts the animation of this property, if it is animated.
 	 */
+	@Override
 	public void restartAnimation() {
 		if (animatedProperty != null) {
 			animatedProperty.restart();
@@ -50,6 +52,7 @@ public abstract class AdaptivePropertyBase<T> extends VariableProperty<T> {
 	/**
 	 * Updates the animation of this property, if it is animated.
 	 */
+	@Override
 	public void updateAnimation(float deltaTime) {
 		if (animatedProperty != null) {
 			animatedProperty.update(deltaTime);

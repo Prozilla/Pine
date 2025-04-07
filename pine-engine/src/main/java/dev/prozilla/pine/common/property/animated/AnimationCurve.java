@@ -12,8 +12,8 @@ import java.util.Objects;
 public class AnimationCurve {
 	
 	public float duration;
-	private final EasingFunction easingFunction;
-	private final AnimationDirection direction;
+	public final EasingFunction easingFunction;
+	public final AnimationDirection direction;
 	
 	public static final EasingFunction DEFAULT_EASING_FUNCTION = Easing.LINEAR;
 	public static final AnimationDirection DEFAULT_DIRECTION = AnimationDirection.NORMAL;
@@ -51,4 +51,7 @@ public class AnimationCurve {
 		return easingFunction.get(direction.get(time, duration));
 	}
 	
+	public boolean equals(AnimationCurve animationCurve) {
+		return animationCurve.duration == duration && animationCurve.easingFunction == easingFunction && animationCurve.direction == direction;
+	}
 }

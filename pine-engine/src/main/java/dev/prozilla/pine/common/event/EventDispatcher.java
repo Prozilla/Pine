@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EventDispatcher<Event extends Enum<Event>> {
+public class EventDispatcher<Event extends Enum<Event>> implements EventDispatcherContext<Event> {
 	
 	private final Map<Event, List<EventListener>> listeners;
 	
@@ -18,16 +18,18 @@ public class EventDispatcher<Event extends Enum<Event>> {
 		logger = null;
 	}
 	
-	public void addListener(Event eventName, EventListener listener) {
-		if (!listeners.containsKey(eventName)) {
-			listeners.put(eventName, new ArrayList<>());
+	@Override
+	public void addListener(Event eventType, EventListener listener) {
+		if (!listeners.containsKey(eventType)) {
+			listeners.put(eventType, new ArrayList<>());
 		}
 		
-		listeners.get(eventName).add(listener);
+		listeners.get(eventType).add(listener);
 	}
 	
-	public void removeListener(Event eventName, EventListener listener) {
-		List<EventListener> eventListeners = listeners.get(eventName);
+	@Override
+	public void removeListener(Event eventType, EventListener listener) {
+		List<EventListener> eventListeners = listeners.get(eventType);
 		
 		if (eventListeners == null) {
 			return;
@@ -36,8 +38,9 @@ public class EventDispatcher<Event extends Enum<Event>> {
 		eventListeners.remove(listener);
 	}
 	
-	public void invoke(Event eventName) {
-		List<EventListener> eventListeners = listeners.get(eventName);
+	@Override
+	public void invoke(Event eventType) {
+		List<EventListener> eventListeners = listeners.get(eventType);
 		
 		if (eventListeners == null) {
 			return;

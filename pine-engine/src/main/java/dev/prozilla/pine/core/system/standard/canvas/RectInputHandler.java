@@ -28,15 +28,21 @@ public class RectInputHandler extends InputSystemBase {
 			Entity entity = chunk.getEntity();
 			RectTransform rect = chunk.getComponent(RectTransform.class);
 			
-			rect.cursorHit = false;
+			boolean cursorHit = false;
 			
 			if (!rect.passThrough && !rect.isInTooltip() && !input.isCursorBlocked()) {
 				int canvasHeight = rect.getCanvas().getHeight();
 				if (cursor != null && RectTransform.isInsideRect(new Vector2i(cursor.x, canvasHeight - cursor.y), rect.currentPosition, rect.currentSize)) {
-					rect.cursorHit = true;
+					cursorHit = true;
 					input.blockCursor(entity);
 				}
 			}
+			
+			if (rect.cursorHit != cursorHit) {
+				rect.toggleModifier("hover", cursorHit);
+			}
+			
+			rect.cursorHit = cursorHit;
 			
 			if (rect.tooltipText != null && rect.cursorHit) {
 				rect.getCanvas().showTooltip(rect, rect.tooltipText);

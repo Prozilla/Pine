@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.component.canvas;
 
-import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveDualDimensionProperty;
+import dev.prozilla.pine.common.property.style.StyleColorProperty;
 import dev.prozilla.pine.core.component.AnimationData;
 
 /**
@@ -9,20 +9,21 @@ import dev.prozilla.pine.core.component.AnimationData;
  */
 public class ImageAnimation extends AnimationData {
 
-	protected AdaptiveColorProperty colorProperty;
+	protected StyleColorProperty colorProperty;
 	protected AdaptiveDualDimensionProperty sizeProperty;
 	
 	public ImageAnimation() {
 		super(false);
 	}
 	
-	public AdaptiveColorProperty getColorProperty() {
+	public StyleColorProperty getColorProperty() {
 		return colorProperty;
 	}
 	
-	public void setColorProperty(AdaptiveColorProperty colorProperty) {
+	public void setColorProperty(StyleColorProperty colorProperty) {
 		changeProperty(this.colorProperty, colorProperty);
 		this.colorProperty = colorProperty;
+		colorProperty.print();
 	}
 	
 	public AdaptiveDualDimensionProperty getSizeProperty() {

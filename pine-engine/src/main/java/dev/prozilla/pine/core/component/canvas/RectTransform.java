@@ -1,16 +1,22 @@
 package dev.prozilla.pine.core.component.canvas;
 
+import dev.prozilla.pine.common.event.EventDispatcher;
+import dev.prozilla.pine.common.event.EventDispatcherContext;
+import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Component;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A base component for positioning canvas elements.
  * Every canvas element is handled as a rectangle and is anchored to a position on the canvas,
  * bottom left corner by default.
  */
-public class RectTransform extends Component {
+public class RectTransform extends Component implements EventDispatcherContext<RectEvent> {
 	
 	// Current state
 	public Vector2i currentPosition;
@@ -29,7 +35,12 @@ public class RectTransform extends Component {
 	public boolean absolutePosition;
 	public String tooltipText;
 	
+	public final Set<String> classes;
+	public final Set<String> modifiers;
+	
 	public CanvasRenderer canvas;
+	
+	public final EventDispatcher<RectEvent> eventDispatcher;
 	
 	public static final GridAlignment DEFAULT_ANCHOR = GridAlignment.BOTTOM_LEFT;
 	
@@ -44,6 +55,9 @@ public class RectTransform extends Component {
 		absolutePosition = false;
 		readyToRender = false;
 		iterations = 0;
+		classes = new HashSet<>();
+		modifiers = new HashSet<>();
+		eventDispatcher = new EventDispatcher<>();
 	}
 	
 	@Override
@@ -164,5 +178,64 @@ public class RectTransform extends Component {
 	public void computeCurrentSize(DualDimension size) {
 		currentSize.x = size.computeX(this);
 		currentSize.y = size.computeY(this);
+	}
+	
+	@Override
+	public void addListener(RectEvent eventType, EventListener listener) {
+		eventDispatcher.addListener(eventType, listener);
+	}
+	
+	@Override
+	public void removeListener(RectEvent eventType, EventListener listener) {
+		eventDispatcher.removeListener(eventType, listener);
+	}
+	
+	@Override
+	public void invoke(RectEvent eventType) {
+		eventDispatcher.invoke(eventType);
+	}
+	
+	public void toggleClass(String className) {
+		toggleClass(className, classes.contains(className));
+	}
+	
+	public void toggleClass(String className, boolean active) {
+		if (active) {
+			addClass(className);
+		} else {
+			removeClass(className);
+		}
+	}
+	
+	public void addClass(String className) {
+		classes.add(className);
+		invoke(RectEvent.SELECTOR_CHANGE);
+	}
+	
+	public void removeClass(String className) {
+		classes.remove(className);
+		invoke(RectEvent.SELECTOR_CHANGE);
+	}
+	
+	public void toggleModifier(String modifier) {
+		toggleClass(modifier, modifiers.contains(modifier));
+	}
+	
+	public void toggleModifier(String modifier, boolean active) {
+		if (active) {
+			addModifier(modifier);
+		} else {
+			removeModifier(modifier);
+		}
+	}
+	
+	public void addModifier(String modifier) {
+		modifiers.add(modifier);
+		invoke(RectEvent.SELECTOR_CHANGE);
+	}
+	
+	public void removeModifier(String modifier) {
+		modifiers.remove(modifier);
+		invoke(RectEvent.SELECTOR_CHANGE);
 	}
 }

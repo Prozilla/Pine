@@ -66,4 +66,8 @@ public abstract class AnimatedProperty<T> extends VariableProperty<T> {
 	public void setDuration(float duration) {
 		curve.duration = duration;
 	}
+	
+	public AnimationCurve getCurve() {
+		return curve;
+	}
 }

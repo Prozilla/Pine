@@ -1,13 +1,13 @@
 package dev.prozilla.pine.core.component;
 
-import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
+import dev.prozilla.pine.common.Animatable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AnimationData extends Component {
 	
-	public List<AdaptivePropertyBase<?>> properties;
+	public List<Animatable> properties;
 	public final boolean applyTimeScale;
 	
 	public AnimationData( boolean applyTimeScale) {
@@ -16,7 +16,7 @@ public abstract class AnimationData extends Component {
 		properties = new ArrayList<>();
 	}
 	
-	protected void changeProperty(AdaptivePropertyBase<?> oldProperty, AdaptivePropertyBase<?> newProperty) {
+	protected void changeProperty(Animatable oldProperty, Animatable newProperty) {
 		if (oldProperty != null) {
 			properties.remove(oldProperty);
 		}
@@ -26,13 +26,13 @@ public abstract class AnimationData extends Component {
 	}
 	
 	public void restartAnimation() {
-		for (AdaptivePropertyBase<?> property : properties) {
+		for (Animatable property : properties) {
 			property.restartAnimation();
 		}
 	}
 	
 	public void updateAnimation(float deltaTime) {
-		for (AdaptivePropertyBase<?> property : properties) {
+		for (Animatable property : properties) {
 			property.updateAnimation(deltaTime);
 		}
 	}

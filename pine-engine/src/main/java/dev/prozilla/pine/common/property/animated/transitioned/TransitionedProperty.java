@@ -19,7 +19,7 @@ public abstract class TransitionedProperty<T> extends AnimatedProperty<T> {
 			return;
 		}
 		
-		start = computeStart();
+		start = hasFinished() ? end : computeStart();
 		end = targetValue;
 	}
 	
