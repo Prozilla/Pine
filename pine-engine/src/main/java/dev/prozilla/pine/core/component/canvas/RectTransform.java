@@ -208,13 +208,15 @@ public class RectTransform extends Component implements EventDispatcherContext<R
 	}
 	
 	public void addClass(String className) {
-		classes.add(className);
-		invoke(RectEvent.SELECTOR_CHANGE);
+		if (classes.add(className)) {
+			invoke(RectEvent.SELECTOR_CHANGE);
+		}
 	}
 	
 	public void removeClass(String className) {
-		classes.remove(className);
-		invoke(RectEvent.SELECTOR_CHANGE);
+		if (classes.remove(className)) {
+			invoke(RectEvent.SELECTOR_CHANGE);
+		}
 	}
 	
 	public void toggleModifier(String modifier) {
@@ -230,12 +232,14 @@ public class RectTransform extends Component implements EventDispatcherContext<R
 	}
 	
 	public void addModifier(String modifier) {
-		modifiers.add(modifier);
-		invoke(RectEvent.SELECTOR_CHANGE);
+		if (modifiers.add(modifier)) {
+			invoke(RectEvent.SELECTOR_CHANGE);
+		}
 	}
 	
 	public void removeModifier(String modifier) {
-		modifiers.remove(modifier);
-		invoke(RectEvent.SELECTOR_CHANGE);
+		if (modifiers.remove(modifier)) {
+			invoke(RectEvent.SELECTOR_CHANGE);
+		}
 	}
 }

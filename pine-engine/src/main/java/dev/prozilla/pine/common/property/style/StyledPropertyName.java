@@ -1,7 +1,8 @@
 package dev.prozilla.pine.common.property.style;
 
 public enum StyledPropertyName {
-	COLOR("color");
+	COLOR("color"),
+	SIZE("size");
 	
 	private final String string;
 	

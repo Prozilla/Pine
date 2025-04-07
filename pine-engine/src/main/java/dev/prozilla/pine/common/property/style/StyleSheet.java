@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.property.style;
 
+import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.style.selector.Selector;
@@ -9,6 +10,9 @@ import dev.prozilla.pine.core.component.canvas.RectTransform;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Manages style rules for different properties of canvas elements.
+ */
 public class StyleSheet {
 	
 	private final Map<StyledPropertyName, Style<?>> styles;
@@ -21,9 +25,8 @@ public class StyleSheet {
 		addRule(propertyName, new StyleRule<>(selector, value));
 	}
 	
-	@SuppressWarnings("unchecked")
 	protected <T> void addRule(StyledPropertyName propertyName, StyleRule<T> rule) {
-		Style<T> style = (Style<T>)getStyle(propertyName);
+		Style<T> style = getStyle(propertyName);
 		style.addRule(rule);
 	}
 	
@@ -36,24 +39,30 @@ public class StyleSheet {
 		style.addTransitionRule(transitionRule);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public <T> void setDefaultValue(StyledPropertyName propertyName, AdaptiveProperty<T> defaultValue) {
-		Style<T> style = (Style<T>)getStyle(propertyName);
+		Style<T> style = getStyle(propertyName);
 		style.setDefaultValue(defaultValue);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public StyledColorProperty createColorProperty(RectTransform context) {
-		Style<Color> style = (Style<Color>)getStyle(StyledPropertyName.COLOR);
-		
-		if (style == null) {
-			return null;
-		}
-		
-		return new StyledColorProperty(StyledPropertyName.COLOR, context, style.getRules(), style.getDefaultValue(), style.getTransitionRules());
+		return createProperty(StyledPropertyName.COLOR, context, (Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
 	}
 	
-	protected Style<?> getStyle(StyledPropertyName propertyName) {
+	public StyledDualDimensionProperty createSizeProperty(RectTransform context) {
+		return createProperty(StyledPropertyName.SIZE, context, (Style.StyledPropertyFactory<DualDimension, StyledDualDimensionProperty>)StyledDualDimensionProperty::new);
+	}
+	
+	public <T, P extends StyledProperty<T>> P createProperty(StyledPropertyName name, RectTransform context, Style.StyledPropertyFactory<T, P> factory) {
+		Style<T> style = getStyle(name);
+		return style != null ? style.toProperty(name, context, factory) : null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected <T> Style<T> getStyle(StyledPropertyName propertyName) {
+		return (Style<T>)getGenericStyle(propertyName);
+	}
+	
+	protected Style<?> getGenericStyle(StyledPropertyName propertyName) {
 		Style<?> style = styles.get(propertyName);
 		
 		if (style == null) {

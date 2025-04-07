@@ -21,6 +21,7 @@ public class ImageAnimator extends UpdateSystem {
 		}
 		if (imageStyler.getSizeProperty() != null) {
 			imageRenderer.size = imageStyler.getSizeProperty().getValue();
+//			imageRenderer.size.print(logger);
 		}
 	}
 }

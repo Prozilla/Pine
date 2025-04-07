@@ -20,7 +20,15 @@ public class TransitionedDimensionProperty extends TransitionedProperty<Dimensio
 	
 	@Override
 	public DimensionBase getValue() {
-		result.setFactor(getFactor());
+		float factor = getFactor();
+		
+		if (factor == 0) {
+			return start;
+		} else if (factor == 1) {
+			return end;
+		}
+		
+		result.setFactor(factor);
 		return result;
 	}
 }

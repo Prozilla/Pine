@@ -17,7 +17,6 @@ import dev.prozilla.pine.core.entity.Entity;
 public class StyledImagePrefab extends ImagePrefab {
 	
 	protected StyleSheet styleSheet;
-	protected AdaptiveDualDimensionProperty sizeProperty;
 	
 	public StyledImagePrefab(String imagePath) {
 		this(ResourcePool.loadTexture(imagePath));
@@ -41,19 +40,14 @@ public class StyledImagePrefab extends ImagePrefab {
 		this.color = color.getValue().clone();
 	}
 	
-	public void setSize(VariableProperty<DualDimension> size) {
+	@Override
+	public void setSize(DualDimension size) {
 		setSize(new AdaptiveDualDimensionProperty(size));
 	}
 	
-	public void setSize(AdaptiveDualDimensionProperty size) {
-		sizeProperty = size;
+	public void setSize(VariableProperty<DualDimension> size) {
+		setDefaultPropertyValue(StyledPropertyName.SIZE, size);
 		this.size = size.getValue();
-	}
-	
-	@Override
-	public void setSize(DualDimension size) {
-		super.setSize(size);
-		sizeProperty = null;
 	}
 	
 	protected <T> void setDefaultPropertyValue(StyledPropertyName propertyName, VariableProperty<T> defaultValue) {
@@ -69,9 +63,6 @@ public class StyledImagePrefab extends ImagePrefab {
 		super.apply(entity);
 		
 		RectTransform rect = entity.getComponent(RectTransform.class);
-		
-		ImageStyler imageStyler = entity.addComponent(new ImageStyler(rect));
-		imageStyler.applyStyleSheet(styleSheet);
-		imageStyler.setSizeProperty(sizeProperty);
+		entity.addComponent(new ImageStyler(rect, styleSheet));
 	}
 }

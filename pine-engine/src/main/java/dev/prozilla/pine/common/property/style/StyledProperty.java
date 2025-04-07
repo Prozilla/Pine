@@ -16,6 +16,8 @@ import java.util.StringJoiner;
 
 /**
  * A property used to style canvas elements based on a set of rules.
+ *
+ * <p>If a transition rule applies to this property, it will start a transition whenever its value changes.</p>
  */
 public abstract class StyledProperty<T> extends VariableProperty<T> implements Animatable, Printable {
 	
@@ -23,10 +25,12 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 	protected final RectTransform context;
 	
 	protected final List<StyleRule<T>> rules;
+	private StyleRule<T> currentRule;
 	private AdaptiveProperty<T> adaptiveProperty;
 	private final AdaptiveProperty<T> fallbackProperty;
 	
 	protected final List<StyleRule<AnimationCurve>> transitionRules;
+	private StyleRule<AnimationCurve> currentTransitionRule;
 	private TransitionedProperty<T> transitionedProperty;
 	
 	/**
@@ -68,7 +72,12 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 	
 	protected void applyRules() {
 		StyleRule<T> rule = getBestMatch(rules);
-		T value = rule != null ? rule.getValue() : fallbackProperty.getValue();
+		if (Objects.equals(rule, currentRule)) {
+			return;
+		}
+		currentRule = rule;
+		
+		T value = rule != null ? rule.value() : fallbackProperty.getValue();
 		
 		if (transitionedProperty != null) {
 			transitionedProperty.transitionTo(value);
@@ -84,14 +93,18 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 	
 	protected void applyTransitionRules() {
 		StyleRule<AnimationCurve> transitionRule = getBestMatch(transitionRules);
+		if (Objects.equals(transitionRule, currentTransitionRule)) {
+			return;
+		}
+		currentTransitionRule = transitionRule;
 		
 		if (transitionRule == null) {
 			transitionedProperty = null;
 			return;
 		}
 		
-		if (transitionedProperty == null || transitionedProperty.getCurve().equals(transitionRule.getValue())) {
-			transitionedProperty = createTransitionedProperty(adaptiveProperty.getValue(), transitionRule.getValue());
+		if (transitionedProperty == null || transitionedProperty.getCurve().equals(transitionRule.value())) {
+			transitionedProperty = createTransitionedProperty(adaptiveProperty.getValue(), transitionRule.value());
 			setAdaptiveProperty(new AdaptiveProperty<>(transitionedProperty));
 		}
 	}
@@ -137,10 +150,10 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 		StringJoiner stringJoiner = new StringJoiner(" ");
 		
 		for (StyleRule<T> rule : rules) {
-			stringJoiner.add(rule.getSelector().toString());
+			stringJoiner.add(rule.selector().toString());
 			stringJoiner.add("{");
 			stringJoiner.add(name + ":");
-			stringJoiner.add(rule.getValue().toString() + ";");
+			stringJoiner.add(rule.value().toString() + ";");
 			stringJoiner.add("}");
 		}
 		

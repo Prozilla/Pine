@@ -24,8 +24,16 @@ public class TransitionedDualDimensionProperty extends TransitionedProperty<Dual
 	
 	@Override
 	public DualDimension getValue() {
-		mixedDimensionX.setFactor(getFactor());
-		mixedDimensionY.setFactor(getFactor());
+		float factor = getFactor();
+		
+		if (factor == 0) {
+			return start;
+		} else if (factor == 1) {
+			return end;
+		}
+		
+		mixedDimensionX.setFactor(factor);
+		mixedDimensionY.setFactor(factor);
 		return result;
 	}
 }
