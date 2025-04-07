@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.property.style;
 
+import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
@@ -9,11 +10,13 @@ import dev.prozilla.pine.core.component.canvas.RectTransform;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * Manages style rules for different properties of canvas elements.
  */
-public class StyleSheet {
+public class StyleSheet implements Printable {
 	
 	private final Map<StyledPropertyName, Style<?>> styles;
 	
@@ -26,7 +29,7 @@ public class StyleSheet {
 	}
 	
 	protected <T> void addRule(StyledPropertyName propertyName, StyleRule<T> rule) {
-		Style<T> style = getStyle(propertyName);
+		Style<T> style = getStyle(propertyName, true);
 		style.addRule(rule);
 	}
 	
@@ -35,12 +38,14 @@ public class StyleSheet {
 	}
 	
 	protected void addTransition(StyledPropertyName propertyName, StyleRule<AnimationCurve> transitionRule) {
-		Style<?> style = getStyle(propertyName);
+		Style<?> style = getStyle(propertyName, true);
 		style.addTransitionRule(transitionRule);
 	}
 	
 	public <T> void setDefaultValue(StyledPropertyName propertyName, AdaptiveProperty<T> defaultValue) {
-		Style<T> style = getStyle(propertyName);
+		Objects.requireNonNull(defaultValue, "defaultValue must not be null");
+		
+		Style<T> style = getStyle(propertyName, true);
 		style.setDefaultValue(defaultValue);
 	}
 	
@@ -48,24 +53,28 @@ public class StyleSheet {
 		return createProperty(StyledPropertyName.COLOR, context, (Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
 	}
 	
+	public StyledColorProperty createBackgroundColorProperty(RectTransform context) {
+		return createProperty(StyledPropertyName.BACKGROUND_COLOR, context, (Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
+	}
+	
 	public StyledDualDimensionProperty createSizeProperty(RectTransform context) {
 		return createProperty(StyledPropertyName.SIZE, context, (Style.StyledPropertyFactory<DualDimension, StyledDualDimensionProperty>)StyledDualDimensionProperty::new);
 	}
 	
-	public <T, P extends StyledProperty<T>> P createProperty(StyledPropertyName name, RectTransform context, Style.StyledPropertyFactory<T, P> factory) {
-		Style<T> style = getStyle(name);
+	protected  <T, P extends StyledProperty<T>> P createProperty(StyledPropertyName name, RectTransform context, Style.StyledPropertyFactory<T, P> factory) {
+		Style<T> style = getStyle(name, false);
 		return style != null ? style.toProperty(name, context, factory) : null;
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <T> Style<T> getStyle(StyledPropertyName propertyName) {
-		return (Style<T>)getGenericStyle(propertyName);
+	protected <T> Style<T> getStyle(StyledPropertyName propertyName, boolean createIfMissing) {
+		return (Style<T>)getGenericStyle(propertyName, createIfMissing);
 	}
 	
-	protected Style<?> getGenericStyle(StyledPropertyName propertyName) {
+	protected Style<?> getGenericStyle(StyledPropertyName propertyName, boolean createIfMissing) {
 		Style<?> style = styles.get(propertyName);
 		
-		if (style == null) {
+		if (style == null && createIfMissing) {
 			style = new Style<>();
 			styles.put(propertyName, style);
 		}
@@ -73,4 +82,20 @@ public class StyleSheet {
 		return style;
 	}
 	
+	@Override
+	public String toString() {
+		StringJoiner stringJoiner = new StringJoiner(" ");
+		
+		for (Map.Entry<StyledPropertyName, Style<?>> styleEntry : styles.entrySet()) {
+			for (StyleRule<?> rule : styleEntry.getValue().getRules()) {
+				stringJoiner.add(rule.selector().toString());
+				stringJoiner.add("{");
+				stringJoiner.add(styleEntry.getKey().toString() + ":");
+				stringJoiner.add(rule.value().toString() + ";");
+				stringJoiner.add("}");
+			}
+		}
+		
+		return stringJoiner.toString();
+	}
 }

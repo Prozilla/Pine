@@ -22,6 +22,10 @@ public class Style<T> {
 		this.transitionRules = new ArrayList<>();
 	}
 	
+	public List<StyleRule<T>> getRules() {
+		return rules;
+	}
+	
 	public void addRule(StyleRule<T> rule) {
 		rules.add(rule);
 	}

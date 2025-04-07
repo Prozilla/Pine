@@ -15,7 +15,9 @@ import dev.prozilla.pine.core.system.SystemBuilder;
 import dev.prozilla.pine.core.system.SystemManager;
 import dev.prozilla.pine.core.system.standard.animation.AnimationInitializer;
 import dev.prozilla.pine.core.system.standard.animation.AnimationUpdater;
-import dev.prozilla.pine.core.system.standard.animation.canvas.ImageAnimator;
+import dev.prozilla.pine.core.system.standard.animation.canvas.CanvasElementStyler;
+import dev.prozilla.pine.core.system.standard.animation.canvas.ImageButtonStyler;
+import dev.prozilla.pine.core.system.standard.animation.canvas.ImageStyler;
 import dev.prozilla.pine.core.system.standard.camera.*;
 import dev.prozilla.pine.core.system.standard.canvas.*;
 import dev.prozilla.pine.core.system.standard.canvas.frame.FrameRenderSystem;
@@ -93,7 +95,9 @@ public class World implements Lifecycle {
 		initialSystems.add(new AnimationInitializer());
 		initialSystems.add(new AnimationUpdater());
 		
-		initialSystems.add(new ImageAnimator());
+		initialSystems.add(new CanvasElementStyler());
+		initialSystems.add(new ImageStyler());
+		initialSystems.add(new ImageButtonStyler());
 		
 		// Camera
 		initialSystems.add(new CameraInitializer());

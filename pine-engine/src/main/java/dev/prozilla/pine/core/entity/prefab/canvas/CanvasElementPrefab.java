@@ -9,7 +9,7 @@ import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.property.style.StyledPropertyName;
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.component.canvas.CanvasElementStyler;
+import dev.prozilla.pine.core.component.canvas.CanvasElementStyle;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Components;
@@ -123,7 +123,7 @@ public class CanvasElementPrefab extends Prefab {
 		}
 		
 		if (styleSheet != null) {
-			entity.addComponent(new CanvasElementStyler(rectTransform, styleSheet));
+			entity.addComponent(new CanvasElementStyle(rectTransform, styleSheet));
 		}
 	}
 }

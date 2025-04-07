@@ -8,17 +8,18 @@ import dev.prozilla.pine.core.component.AnimationData;
 /**
  * A component that styles canvas elements.
  */
-public class CanvasElementStyler extends AnimationData {
+public class CanvasElementStyle extends AnimationData {
 	
 	protected final RectTransform rect;
 	protected StyledColorProperty colorProperty;
+	protected StyledColorProperty backgroundColorProperty;
 	protected StyledDualDimensionProperty sizeProperty;
 	
-	public CanvasElementStyler(RectTransform rect) {
+	public CanvasElementStyle(RectTransform rect) {
 		this(rect, null);
 	}
 	
-	public CanvasElementStyler(RectTransform rect, StyleSheet styleSheet) {
+	public CanvasElementStyle(RectTransform rect, StyleSheet styleSheet) {
 		super(false);
 		this.rect = rect;
 		
@@ -29,6 +30,7 @@ public class CanvasElementStyler extends AnimationData {
 	
 	public void applyStyleSheet(StyleSheet styleSheet) {
 		setColorProperty(styleSheet.createColorProperty(rect));
+		setBackgroundColorProperty(styleSheet.createBackgroundColorProperty(rect));
 		setSizeProperty(styleSheet.createSizeProperty(rect));
 	}
 	
@@ -39,6 +41,15 @@ public class CanvasElementStyler extends AnimationData {
 	public void setColorProperty(StyledColorProperty colorProperty) {
 		changeProperty(this.colorProperty, colorProperty);
 		this.colorProperty = colorProperty;
+	}
+	
+	public StyledColorProperty getBackgroundColorProperty() {
+		return backgroundColorProperty;
+	}
+	
+	public void setBackgroundColorProperty(StyledColorProperty backgroundColorProperty) {
+		changeProperty(this.backgroundColorProperty, backgroundColorProperty);
+		this.backgroundColorProperty = backgroundColorProperty;
 	}
 	
 	public StyledDualDimensionProperty getSizeProperty() {

@@ -9,14 +9,11 @@ import dev.prozilla.pine.core.component.Component;
  */
 public class ImageButtonRenderer extends Component {
 	
-	public Color hoverColor;
-	public Color backgroundHoverColor;
 	public Color backgroundColor;
 	
 	public DualDimension padding;
 	
 	public static final Color DEFAULT_BACKGROUND_COLOR = Color.white();
-	public static final Color DEFAULT_BACKGROUND_HOVER_COLOR = Color.white().setAlpha(0.75f);
 	
 	public ImageButtonRenderer() {
 		this(DEFAULT_BACKGROUND_COLOR);
@@ -24,12 +21,6 @@ public class ImageButtonRenderer extends Component {
 	
 	public ImageButtonRenderer(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		
-		if (backgroundColor != null) {
-			backgroundHoverColor = backgroundColor.clone();
-			backgroundHoverColor.setAlpha(backgroundHoverColor.getAlpha() * DEFAULT_BACKGROUND_HOVER_COLOR.getAlpha());
-		}
-		
 		padding = new DualDimension();
 	}
 	

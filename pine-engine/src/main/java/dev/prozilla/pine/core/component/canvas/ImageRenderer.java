@@ -18,7 +18,6 @@ public class ImageRenderer extends Component {
 	public TextureBase image;
 	public Color color;
 	
-	/** The size at which the image is rendered on the canvas. */
 	public DualDimension size;
 	
 	public Vector2i regionOffset;

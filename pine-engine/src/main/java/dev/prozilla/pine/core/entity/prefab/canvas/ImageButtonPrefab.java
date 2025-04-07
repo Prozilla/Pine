@@ -2,6 +2,9 @@ package dev.prozilla.pine.core.entity.prefab.canvas;
 
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
+import dev.prozilla.pine.common.property.style.StyledPropertyName;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.image.TextureBase;
@@ -14,8 +17,6 @@ import dev.prozilla.pine.core.entity.Entity;
  */
 public class ImageButtonPrefab extends ImagePrefab {
 	
-	protected Color hoverColor;
-	protected Color backgroundHoverColor;
 	protected Color backgroundColor;
 	protected DualDimension padding;
 	
@@ -31,7 +32,6 @@ public class ImageButtonPrefab extends ImagePrefab {
 		
 		padding = new DualDimension();
 		backgroundColor = ImageButtonRenderer.DEFAULT_BACKGROUND_COLOR;
-		backgroundHoverColor = ImageButtonRenderer.DEFAULT_BACKGROUND_HOVER_COLOR;
 	}
 	
 	public void setPadding(Dimension x, Dimension y) {
@@ -46,30 +46,17 @@ public class ImageButtonPrefab extends ImagePrefab {
 		clickCallback = callback;
 	}
 	
-	public void setTextColors(Color normal, Color hover) {
-		setTextColor(normal);
-		setTextHoverColor(hover);
-	}
-	
-	public void setTextColor(Color color) {
-		setColor(color);
-	}
-	
-	public void setTextHoverColor(Color color) {
-		hoverColor = color;
-	}
-	
-	public void setBackgroundColors(Color normal, Color hover) {
-		setBackgroundColor(normal);
-		setBackgroundHoverColor(hover);
-	}
-	
 	public void setBackgroundColor(Color color) {
-		backgroundColor = color;
+		if (styleSheet == null || color == null) {
+			backgroundColor = color;
+		} else {
+			setBackgroundColor(new AdaptiveColorProperty(color));
+		}
 	}
 	
-	public void setBackgroundHoverColor(Color color) {
-		backgroundHoverColor = color;
+	public void setBackgroundColor(VariableProperty<Color> color) {
+		setDefaultPropertyValue(StyledPropertyName.BACKGROUND_COLOR, color);
+		backgroundColor = color.getValue().clone();
 	}
 	
 	@Override
@@ -80,11 +67,6 @@ public class ImageButtonPrefab extends ImagePrefab {
 		
 		imageButtonRenderer.padding = padding;
 		imageButtonRenderer.backgroundColor = backgroundColor;
-		imageButtonRenderer.backgroundHoverColor = backgroundHoverColor;
-		
-		if (hoverColor != null) {
-			imageButtonRenderer.hoverColor = hoverColor;
-		}
 		
 		ButtonData buttonData = entity.addComponent(new ButtonData());
 		

@@ -1,6 +1,5 @@
 package dev.prozilla.pine.core.system.standard.canvas.image;
 
-import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.canvas.ButtonData;
 import dev.prozilla.pine.core.component.canvas.ImageButtonRenderer;
@@ -33,17 +32,15 @@ public class ImageButtonRenderSystem extends RenderSystem {
 		
 		// Render background
 		if (rect.currentSize.x != 0 && rect.currentSize.y != 0 && imageButtonRenderer.backgroundColor != null) {
-			Color backgroundColor = (buttonData.isHovering && imageButtonRenderer.backgroundHoverColor != null) ? imageButtonRenderer.backgroundHoverColor : imageButtonRenderer.backgroundColor;
-			renderer.drawRect(rect.currentPosition.x, rect.currentPosition.y - paddingY * 2, transform.getDepth(), rect.currentSize.x, rect.currentSize.y, backgroundColor);
+			renderer.drawRect(rect.currentPosition.x, rect.currentPosition.y - paddingY * 2, transform.getDepth(), rect.currentSize.x, rect.currentSize.y, imageButtonRenderer.backgroundColor);
 		}
 		
 		// Render image
-		Color imageColor = (buttonData.isHovering && imageButtonRenderer.hoverColor != null) ? imageButtonRenderer.hoverColor : imageRenderer.color;
 		int imageX = rect.currentPosition.x + paddingX;
 		int imageY = rect.currentPosition.y - paddingY;
 		int imageWidth = rect.currentSize.x - paddingX * 2;
 		int imageHeight = rect.currentSize.y - paddingY * 2;
 		
-		ImageRenderSystem.renderImage(renderer, imageRenderer, imageX, imageY, imageWidth, imageHeight, transform.getDepth(), imageColor);
+		ImageRenderSystem.renderImage(renderer, imageRenderer, imageX, imageY, imageWidth, imageHeight, transform.getDepth(), imageRenderer.color);
 	}
 }
