@@ -25,4 +25,10 @@ public class StepEasing implements EasingFunction {
 			return (float)Math.ceil(t * steps) / steps;
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("steps(%s, %s)", steps, jumpAtStart ? "start" : "end");
+	}
+	
 }

@@ -2,6 +2,8 @@ package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveDualDimensionProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.style.selector.Selector;
@@ -50,20 +52,20 @@ public class StyleSheet implements Printable {
 	}
 	
 	public StyledColorProperty createColorProperty(RectTransform context) {
-		return createProperty(StyledPropertyName.COLOR, context, (Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
+		return createProperty(StyledPropertyName.COLOR, context, new AdaptiveColorProperty(Color.white()),(Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
 	}
 	
 	public StyledColorProperty createBackgroundColorProperty(RectTransform context) {
-		return createProperty(StyledPropertyName.BACKGROUND_COLOR, context, (Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
+		return createProperty(StyledPropertyName.BACKGROUND_COLOR, context, new AdaptiveColorProperty(Color.black()),  (Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
 	}
 	
 	public StyledDualDimensionProperty createSizeProperty(RectTransform context) {
-		return createProperty(StyledPropertyName.SIZE, context, (Style.StyledPropertyFactory<DualDimension, StyledDualDimensionProperty>)StyledDualDimensionProperty::new);
+		return createProperty(StyledPropertyName.SIZE, context, new AdaptiveDualDimensionProperty(new DualDimension()), (Style.StyledPropertyFactory<DualDimension, StyledDualDimensionProperty>)StyledDualDimensionProperty::new);
 	}
 	
-	protected  <T, P extends StyledProperty<T>> P createProperty(StyledPropertyName name, RectTransform context, Style.StyledPropertyFactory<T, P> factory) {
+	protected  <T, P extends StyledProperty<T>> P createProperty(StyledPropertyName name, RectTransform context, AdaptiveProperty<T> fallbackValue, Style.StyledPropertyFactory<T, P> factory) {
 		Style<T> style = getStyle(name, false);
-		return style != null ? style.toProperty(name, context, factory) : null;
+		return style != null ? style.toProperty(name, context, fallbackValue, factory) : null;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -84,18 +86,40 @@ public class StyleSheet implements Printable {
 	
 	@Override
 	public String toString() {
-		StringJoiner stringJoiner = new StringJoiner(" ");
+		Map<String, StringJoiner> selectorToProperties = new HashMap<>();
 		
 		for (Map.Entry<StyledPropertyName, Style<?>> styleEntry : styles.entrySet()) {
-			for (StyleRule<?> rule : styleEntry.getValue().getRules()) {
-				stringJoiner.add(rule.selector().toString());
-				stringJoiner.add("{");
-				stringJoiner.add(styleEntry.getKey().toString() + ":");
-				stringJoiner.add(rule.value().toString() + ";");
-				stringJoiner.add("}");
+			StyledPropertyName propertyName = styleEntry.getKey();
+			Style<?> style = styleEntry.getValue();
+			
+			for (StyleRule<?> rule : style.getRules()) {
+				String selector = rule.selector().toString();
+				String property = String.format("%s: %s;", propertyName.toString(), rule.value().toString());
+				
+				selectorToProperties
+					.computeIfAbsent(selector, k -> new StringJoiner(" "))
+					.add(property);
+			}
+			
+			for (StyleRule<AnimationCurve> transitionRule : style.getTransitionRules()) {
+				String selector = transitionRule.selector().toString();
+				String property = String.format("transition: %s %s;", propertyName.toString(), transitionRule.value().toString());
+				
+				selectorToProperties
+					.computeIfAbsent(selector, k -> new StringJoiner(" "))
+					.add(property);
 			}
 		}
 		
-		return stringJoiner.toString();
+		StringJoiner result = new StringJoiner(" ");
+		for (Map.Entry<String, StringJoiner> entry : selectorToProperties.entrySet()) {
+			result.add(entry.getKey());
+			result.add("{");
+			result.add(entry.getValue().toString());
+			result.add("}");
+		}
+		
+		return result.toString();
 	}
+	
 }

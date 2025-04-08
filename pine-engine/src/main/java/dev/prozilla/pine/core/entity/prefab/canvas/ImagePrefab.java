@@ -41,12 +41,12 @@ public class ImagePrefab extends CanvasElementPrefab {
 		if (styleSheet == null) {
 			this.color = color;
 		} else {
-			setColor(new AdaptiveColorProperty(color));
+			setColor(AdaptiveColorProperty.adapt(color));
 		}
 	}
 	
 	public void setColor(VariableProperty<Color> color) {
-		setDefaultPropertyValue(StyledPropertyName.COLOR, color);
+		setDefaultPropertyValue(StyledPropertyName.COLOR, AdaptiveColorProperty.adapt(color));
 		this.color = color.getValue().clone();
 	}
 	
@@ -65,7 +65,7 @@ public class ImagePrefab extends CanvasElementPrefab {
 		ImageRenderer imageRenderer = entity.addComponent(new ImageRenderer(image));
 		
 		// Set image dimensions
-		imageRenderer.size = size;
+		imageRenderer.size = size.clone();
 		
 		// Crop image
 		if (cropToRegion) {
@@ -76,7 +76,7 @@ public class ImagePrefab extends CanvasElementPrefab {
 		}
 		
 		if (color != null) {
-			imageRenderer.color = color;
+			imageRenderer.color = color.clone();
 		}
 	}
 }

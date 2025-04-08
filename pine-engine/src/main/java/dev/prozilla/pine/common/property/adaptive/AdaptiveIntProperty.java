@@ -34,4 +34,25 @@ public final class AdaptiveIntProperty extends AdaptivePropertyBase<Integer> {
 	public int getPrimitiveValue() {
 		return isDynamic() ? variableProperty.getValue() : fixedPrimitiveValue;
 	}
+	
+	/**
+	 * Converts an integer into an adaptive property.
+	 * @param value The value of the property
+	 */
+	public static AdaptiveIntProperty adapt(int value) {
+		return new AdaptiveIntProperty(value);
+	}
+	
+	public static AdaptiveIntProperty adapt(AdaptiveIntProperty property) {
+		return property;
+	}
+	
+	/**
+	 * Converts any integer property into an adaptive property.
+	 * @param property The property to adapt
+	 */
+	public static AdaptiveIntProperty adapt(VariableProperty<Integer> property) {
+		return new AdaptiveIntProperty(property);
+	}
+	
 }

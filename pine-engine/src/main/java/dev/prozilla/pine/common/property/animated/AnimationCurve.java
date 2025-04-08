@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.math.easing.EasingFunction;
 import dev.prozilla.pine.common.util.Numbers;
 
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * Determines how an animation progresses over time.
@@ -53,5 +54,22 @@ public class AnimationCurve {
 	
 	public boolean equals(AnimationCurve animationCurve) {
 		return animationCurve.duration == duration && animationCurve.easingFunction == easingFunction && animationCurve.direction == direction;
+	}
+	
+	@Override
+	public String toString() {
+		StringJoiner stringJoiner = new StringJoiner(" ");
+		
+		stringJoiner.add(duration + "s");
+		
+		if (easingFunction != DEFAULT_EASING_FUNCTION || direction != DEFAULT_DIRECTION) {
+			stringJoiner.add(easingFunction.toString());
+			
+			if (direction != DEFAULT_DIRECTION) {
+				stringJoiner.add(direction.toString());
+			}
+		}
+		
+		return stringJoiner.toString();
 	}
 }

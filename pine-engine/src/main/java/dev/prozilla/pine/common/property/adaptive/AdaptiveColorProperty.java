@@ -19,4 +19,25 @@ public final class AdaptiveColorProperty extends AdaptiveProperty<Color> impleme
 	public void transmit(Color target) {
 		getValue().transmit(target);
 	}
+	
+	/**
+	 * Converts a color into an adaptive property.
+	 * @param value The value of the property
+	 */
+	public static AdaptiveColorProperty adapt(Color value) {
+		return new AdaptiveColorProperty(value);
+	}
+	
+	public static AdaptiveColorProperty adapt(AdaptiveColorProperty property) {
+		return property;
+	}
+	
+	/**
+	 * Converts any color property into an adaptive property.
+	 * @param property The property to adapt
+	 */
+	public static AdaptiveColorProperty adapt(VariableProperty<Color> property) {
+		return new AdaptiveColorProperty(property);
+	}
+	
 }

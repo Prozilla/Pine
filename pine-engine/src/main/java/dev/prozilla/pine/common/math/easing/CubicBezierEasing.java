@@ -26,4 +26,10 @@ public class CubicBezierEasing implements EasingFunction {
 	public float get(float t) {
 		return MathUtils.cubicBezier(t, p0, p1, p2, p3);
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("cubic-bezier(%s, %s, %s, %s)", p0, p1, p2, p3);
+	}
+	
 }

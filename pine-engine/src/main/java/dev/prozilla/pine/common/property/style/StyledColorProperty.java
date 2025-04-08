@@ -1,6 +1,8 @@
 package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.property.ColorProperty;
+import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedColorProperty;
@@ -22,6 +24,16 @@ public final class StyledColorProperty extends StyledProperty<Color> implements 
 	@Override
 	public void transmit(Color target) {
 		target.receive(getValue());
+	}
+	
+	@Override
+	protected AdaptiveProperty<Color> createAdaptiveProperty(Color value) {
+		return AdaptiveColorProperty.adapt(value);
+	}
+	
+	@Override
+	protected AdaptiveProperty<Color> createAdaptiveProperty(VariableProperty<Color> property) {
+		return AdaptiveColorProperty.adapt(property);
 	}
 	
 	@Override

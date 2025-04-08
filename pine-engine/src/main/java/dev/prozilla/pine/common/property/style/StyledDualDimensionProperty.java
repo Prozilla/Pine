@@ -1,6 +1,8 @@
 package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveDualDimensionProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedDualDimensionProperty;
@@ -16,6 +18,16 @@ public final class StyledDualDimensionProperty extends StyledProperty<DualDimens
 	
 	public StyledDualDimensionProperty(StyledPropertyName name, RectTransform context, List<StyleRule<DualDimension>> styleRules, AdaptiveProperty<DualDimension> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
 		super(name, context, styleRules, defaultValue, transitionRules);
+	}
+	
+	@Override
+	protected AdaptiveProperty<DualDimension> createAdaptiveProperty(DualDimension value) {
+		return AdaptiveDualDimensionProperty.adapt(value);
+	}
+	
+	@Override
+	protected AdaptiveProperty<DualDimension> createAdaptiveProperty(VariableProperty<DualDimension> property) {
+		return AdaptiveDualDimensionProperty.adapt(property);
 	}
 	
 	@Override

@@ -71,12 +71,12 @@ public class CanvasElementPrefab extends Prefab {
 		if (styleSheet == null) {
 			this.size = size;
 		} else {
-			setSize(new AdaptiveDualDimensionProperty(size));
+			setSize(AdaptiveDualDimensionProperty.adapt(size));
 		}
 	}
 	
 	public void setSize(VariableProperty<DualDimension> size) {
-		setDefaultPropertyValue(StyledPropertyName.SIZE, size);
+		setDefaultPropertyValue(StyledPropertyName.SIZE, AdaptiveDualDimensionProperty.adapt(size));
 		this.size = size.getValue();
 	}
 	
@@ -99,12 +99,12 @@ public class CanvasElementPrefab extends Prefab {
 		this.tooltipText = tooltipText;
 	}
 	
-	protected <T> void setDefaultPropertyValue(StyledPropertyName propertyName, VariableProperty<T> defaultValue) {
+	protected <T> void setDefaultPropertyValue(StyledPropertyName propertyName, AdaptiveProperty<T> value) {
 		if (styleSheet == null) {
 			return;
 		}
 		
-		styleSheet.setDefaultValue(propertyName, defaultValue instanceof AdaptiveProperty<T> adaptiveProperty ? adaptiveProperty : new AdaptiveProperty<>(defaultValue));
+		styleSheet.setDefaultValue(propertyName, value);
 	}
 	
 	@Override

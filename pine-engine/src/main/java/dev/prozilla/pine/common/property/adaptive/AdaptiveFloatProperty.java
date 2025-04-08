@@ -34,4 +34,25 @@ public final class AdaptiveFloatProperty extends AdaptivePropertyBase<Float> {
 	public float getPrimitiveValue() {
 		return isDynamic() ? variableProperty.getValue() : fixedPrimitiveValue;
 	}
+	
+	/**
+	 * Converts a float into an adaptive property.
+	 * @param value The value of the property
+	 */
+	public static AdaptiveFloatProperty adapt(float value) {
+		return new AdaptiveFloatProperty(value);
+	}
+	
+	public static AdaptiveFloatProperty adapt(AdaptiveFloatProperty property) {
+		return property;
+	}
+	
+	/**
+	 * Converts any float property into an adaptive property.
+	 * @param property The property to adapt
+	 */
+	public static AdaptiveFloatProperty adapt(VariableProperty<Float> property) {
+		return new AdaptiveFloatProperty(property);
+	}
+	
 }

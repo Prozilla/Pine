@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.component.canvas;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.property.style.StyledColorProperty;
 import dev.prozilla.pine.common.property.style.StyledDualDimensionProperty;
+import dev.prozilla.pine.common.property.style.StyledProperty;
 import dev.prozilla.pine.core.component.AnimationData;
 
 /**
@@ -61,4 +62,10 @@ public class CanvasElementStyle extends AnimationData {
 		this.sizeProperty = sizeProperty;
 	}
 	
+	protected void changeProperty(StyledProperty<?> oldProperty, StyledProperty<?> newProperty) {
+		super.changeProperty(oldProperty, newProperty);
+		if (newProperty != null) {
+			newProperty.invalidate();
+		}
+	}
 }

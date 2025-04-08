@@ -59,14 +59,16 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 		fallbackProperty = this.adaptiveProperty;
 		
 		// Re-apply style when selector changes
-		context.addListener(RectEvent.SELECTOR_CHANGE, () -> {
-			applyTransitionRules();
-			applyRules();
-		});
+		context.addListener(RectEvent.SELECTOR_CHANGE, this::invalidate);
 	}
 	
 	public void addRule(StyleRule<T> rule) {
 		rules.add(rule);
+		applyRules();
+	}
+	
+	public void invalidate() {
+		applyTransitionRules();
 		applyRules();
 	}
 	
@@ -82,7 +84,7 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 		if (transitionedProperty != null) {
 			transitionedProperty.transitionTo(value);
 		} else {
-			setAdaptiveProperty(new AdaptiveProperty<>(value));
+			setAdaptiveProperty(createAdaptiveProperty(value));
 		}
 	}
 	
@@ -105,9 +107,13 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 		
 		if (transitionedProperty == null || transitionedProperty.getCurve().equals(transitionRule.value())) {
 			transitionedProperty = createTransitionedProperty(adaptiveProperty.getValue(), transitionRule.value());
-			setAdaptiveProperty(new AdaptiveProperty<>(transitionedProperty));
+			setAdaptiveProperty(createAdaptiveProperty(transitionedProperty));
 		}
 	}
+	
+	abstract protected AdaptiveProperty<T> createAdaptiveProperty(T value);
+	
+	abstract protected AdaptiveProperty<T> createAdaptiveProperty(VariableProperty<T> property);
 	
 	abstract protected TransitionedProperty<T> createTransitionedProperty(T initialValue, AnimationCurve curve);
 	

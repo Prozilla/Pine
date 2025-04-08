@@ -53,7 +53,7 @@ public class VariablePropertyTest {
 	@Test
 	@Tag("performance")
 	void testAnimatedFloatPerformance() {
-		VariableProperty<Float> property = new AnimatedFloatProperty(0f, 10f, new AnimationCurve(ANIMATION_DURATION, Easing.EASE_IN_OUT__QUAD));
+		VariableProperty<Float> property = new AnimatedFloatProperty(0f, 10f, new AnimationCurve(ANIMATION_DURATION, Easing.EASE_IN_OUT_QUAD));
 		properties[2] = property;
 		
 		float value = simulateFloatPropertyUsage(property);

@@ -50,12 +50,12 @@ public class ImageButtonPrefab extends ImagePrefab {
 		if (styleSheet == null || color == null) {
 			backgroundColor = color;
 		} else {
-			setBackgroundColor(new AdaptiveColorProperty(color));
+			setBackgroundColor(AdaptiveColorProperty.adapt(color));
 		}
 	}
 	
 	public void setBackgroundColor(VariableProperty<Color> color) {
-		setDefaultPropertyValue(StyledPropertyName.BACKGROUND_COLOR, color);
+		setDefaultPropertyValue(StyledPropertyName.BACKGROUND_COLOR, AdaptiveColorProperty.adapt(color));
 		backgroundColor = color.getValue().clone();
 	}
 	
@@ -65,8 +65,8 @@ public class ImageButtonPrefab extends ImagePrefab {
 		
 		ImageButtonRenderer imageButtonRenderer = entity.addComponent(new ImageButtonRenderer());
 		
-		imageButtonRenderer.padding = padding;
-		imageButtonRenderer.backgroundColor = backgroundColor;
+		imageButtonRenderer.padding = padding.clone();
+		imageButtonRenderer.backgroundColor = backgroundColor.clone();
 		
 		ButtonData buttonData = entity.addComponent(new ButtonData());
 		

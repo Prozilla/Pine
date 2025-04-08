@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.property.VariableProperty;
 /**
  * A generic optimized property that can either have a fixed or dynamic value.
  */
-public class AdaptiveProperty<T> extends AdaptivePropertyBase<T> {
+public abstract class AdaptiveProperty<T> extends AdaptivePropertyBase<T> {
 	
 	private final T fixedValue;
 	

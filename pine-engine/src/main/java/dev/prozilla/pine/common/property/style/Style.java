@@ -6,6 +6,7 @@ import dev.prozilla.pine.core.component.canvas.RectTransform;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a collection of rules for a single style property of a canvas element.
@@ -26,6 +27,10 @@ public class Style<T> {
 		return rules;
 	}
 	
+	public List<StyleRule<AnimationCurve>> getTransitionRules() {
+		return transitionRules;
+	}
+	
 	public void addRule(StyleRule<T> rule) {
 		rules.add(rule);
 	}
@@ -38,8 +43,8 @@ public class Style<T> {
 		this.defaultValue = defaultValue;
 	}
 	
-	public <P extends StyledProperty<T>> P toProperty(StyledPropertyName name, RectTransform context, StyledPropertyFactory<T, P> factory) {
-		return factory.create(name, context, rules, defaultValue, transitionRules);
+	public <P extends StyledProperty<T>> P toProperty(StyledPropertyName name, RectTransform context, AdaptiveProperty<T> fallbackValue, StyledPropertyFactory<T, P> factory) {
+		return factory.create(name, context, rules, Objects.requireNonNullElse(defaultValue,  fallbackValue), transitionRules);
 	}
 	
 	@FunctionalInterface
