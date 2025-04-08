@@ -33,11 +33,12 @@ public class CanvasGroupArranger extends UpdateSystem {
 		}
 		
 		// Calculate initial offset
-		int offsetX = containerRect.currentPosition.x + canvasGroup.padding.computeX(containerRect);
-		int offsetY = containerRect.currentPosition.y + canvasGroup.padding.computeY(containerRect);
+		int offsetX = containerRect.currentPosition.x + containerRect.getPaddingX();
+		int offsetY = containerRect.currentPosition.y + containerRect.getPaddingY();
+		
 		switch (canvasGroup.direction) {
-			case LEFT -> offsetX = containerRect.currentPosition.x + canvasGroup.innerSize.x + canvasGroup.childRects.get(0).currentSize.x;
-			case DOWN -> offsetY = containerRect.currentPosition.y + canvasGroup.innerSize.y + canvasGroup.childRects.get(0).currentSize.y;
+			case LEFT -> offsetX = containerRect.currentPosition.x + canvasGroup.innerSize.x + canvasGroup.childRects.getFirst().currentSize.x;
+			case DOWN -> offsetY = containerRect.currentPosition.y + canvasGroup.innerSize.y + canvasGroup.childRects.getFirst().currentSize.y;
 		}
 		
 		if (canvasGroup.distribution == CanvasGroup.Distribution.CENTER) {
@@ -59,10 +60,10 @@ public class CanvasGroupArranger extends UpdateSystem {
 			// Move offset for current child rect
 			switch (canvasGroup.direction) {
 				case LEFT -> offsetX -= (i == 0)
-					? childRect.currentSize.x * 2 - canvasGroup.padding.computeX(containerRect)
+					? childRect.currentSize.x * 2 - containerRect.getPaddingX()
 					: childRect.currentSize.x + canvasGroup.gap;
 				case DOWN -> offsetY -= (i == 0)
-					? childRect.currentSize.y * 2 - canvasGroup.padding.computeY(containerRect)
+					? childRect.currentSize.y * 2 - containerRect.getPaddingY()
 					: childRect.currentSize.y + canvasGroup.gap;
 			}
 			
@@ -86,7 +87,7 @@ public class CanvasGroupArranger extends UpdateSystem {
 			}
 			
 			// Set offset for current child rect
-			childRect.setAnchor(GridAlignment.BOTTOM_LEFT);
+			childRect.anchor = GridAlignment.BOTTOM_LEFT;
 			childRect.position.set(childOffsetX, childOffsetY);
 			childRect.iterations++;
 			

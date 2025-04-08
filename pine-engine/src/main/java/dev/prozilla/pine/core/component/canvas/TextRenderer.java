@@ -1,7 +1,6 @@
 package dev.prozilla.pine.core.component.canvas;
 
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.component.Component;
@@ -13,7 +12,6 @@ import dev.prozilla.pine.core.rendering.Renderer;
 public class TextRenderer extends Component {
 	
 	public String text;
-	public Color color;
 	public Font font;
 	
 	/** Result of size calculation */
@@ -24,17 +22,11 @@ public class TextRenderer extends Component {
 	}
 	
 	public TextRenderer(String text) {
-		this(text, Color.black());
-	}
-	
-	public TextRenderer(String text, Color color) {
 		if (text == null) {
 			this.text = "";
 		} else {
 			this.text = text;
 		}
-		
-		this.color = color;
 		
 		size = new Vector2i();
 	}

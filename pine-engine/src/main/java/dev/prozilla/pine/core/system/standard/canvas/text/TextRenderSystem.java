@@ -4,7 +4,6 @@ import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
-import dev.prozilla.pine.core.component.canvas.TextButtonRenderer;
 import dev.prozilla.pine.core.component.canvas.TextRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -17,7 +16,6 @@ public class TextRenderSystem extends RenderSystem {
 	
 	public TextRenderSystem() {
 		super(TextRenderer.class, RectTransform.class);
-		setExcludedComponentTypes(TextButtonRenderer.class);
 	}
 	
 	@Override
@@ -34,7 +32,7 @@ public class TextRenderSystem extends RenderSystem {
 	}
 	
 	public static void renderText(Renderer renderer, TextRenderer textRenderer, RectTransform rect, float z) {
-		renderText(renderer, textRenderer, rect.currentPosition.x, rect.currentPosition.y, z, textRenderer.color);
+		renderText(renderer, textRenderer, rect.currentPosition.x + rect.getPaddingX(), rect.currentPosition.y + rect.getPaddingY(), z, rect.color);
 	}
 	
 	public static void renderText(Renderer renderer, TextRenderer textRenderer, int x, int y, float z, Color color) {
@@ -48,7 +46,7 @@ public class TextRenderSystem extends RenderSystem {
 	 * @param y Y position
 	 */
 	public static void renderText(Renderer renderer, String text, Font font, int x, int y, int width, int height, float z, Color color) {
-		if (text.isBlank() || width == 0 || height == 0) {
+		if (text.isBlank() || width == 0 || height == 0 || color == null) {
 			return;
 		}
 		

@@ -1,13 +1,16 @@
 package dev.prozilla.pine.core.entity.prefab.canvas;
 
+import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveDualDimensionProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.property.style.StyledPropertyName;
+import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.canvas.CanvasElementStyle;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
@@ -23,6 +26,9 @@ public class CanvasElementPrefab extends Prefab {
 	
 	protected DualDimension position;
 	protected DualDimension size;
+	protected DualDimension padding;
+	protected Color color;
+	protected Color backgroundColor;
 	protected GridAlignment anchor;
 	protected boolean absolutePosition;
 	protected boolean passThrough;
@@ -80,6 +86,40 @@ public class CanvasElementPrefab extends Prefab {
 		this.size = size.getValue();
 	}
 	
+	public void setPadding(Dimension x, Dimension y) {
+		setPadding(new DualDimension(x, y));
+	}
+	
+	public void setPadding(DualDimension padding) {
+		this.padding = padding;
+	}
+	
+	public void setColor(Color color) {
+		if (styleSheet == null) {
+			this.color = color;
+		} else {
+			setColor(AdaptiveColorProperty.adapt(color));
+		}
+	}
+	
+	public void setColor(VariableProperty<Color> color) {
+		setDefaultPropertyValue(StyledPropertyName.COLOR, AdaptiveColorProperty.adapt(color));
+		this.color = color.getValue().clone();
+	}
+	
+	public void setBackgroundColor(Color color) {
+		if (styleSheet == null || color == null) {
+			backgroundColor = color;
+		} else {
+			setBackgroundColor(AdaptiveColorProperty.adapt(color));
+		}
+	}
+	
+	public void setBackgroundColor(VariableProperty<Color> color) {
+		setDefaultPropertyValue(StyledPropertyName.BACKGROUND_COLOR, AdaptiveColorProperty.adapt(color));
+		backgroundColor = color.getValue().clone();
+	}
+	
 	/**
 	 * Sets the anchor point on the canvas.
 	 */
@@ -110,13 +150,23 @@ public class CanvasElementPrefab extends Prefab {
 	@Override
 	protected void apply(Entity entity) {
 		RectTransform rectTransform = entity.addComponent(new RectTransform());
-		rectTransform.setPosition(position.clone());
-		rectTransform.setSize(size.clone());
+		rectTransform.position = position.clone();
+		rectTransform.size = size.clone();
 		rectTransform.absolutePosition = absolutePosition;
 		rectTransform.passThrough = passThrough;
 		
+		if (padding != null) {
+			rectTransform.padding = padding.clone();
+		}
+		if (color != null) {
+			rectTransform.color = color.clone();
+		}
+		if (backgroundColor != null) {
+			rectTransform.backgroundColor = backgroundColor.clone();
+		}
+		
 		if (anchor != null) {
-			rectTransform.setAnchor(anchor);
+			rectTransform.anchor = anchor;
 		}
 		if (tooltipText != null) {
 			rectTransform.tooltipText = tooltipText;

@@ -1,7 +1,6 @@
 package dev.prozilla.pine.core.system.standard.canvas.text;
 
 import dev.prozilla.pine.core.component.canvas.RectTransform;
-import dev.prozilla.pine.core.component.canvas.TextButtonRenderer;
 import dev.prozilla.pine.core.component.canvas.TextRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
@@ -10,7 +9,6 @@ public class TextResizer extends UpdateSystem {
 	
 	public TextResizer() {
 		super(TextRenderer.class, RectTransform.class);
-		setExcludedComponentTypes(TextButtonRenderer.class);
 	}
 	
 	@Override
@@ -18,7 +16,7 @@ public class TextResizer extends UpdateSystem {
 		TextRenderer textRenderer = chunk.getComponent(TextRenderer.class);
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
-		rect.currentSize.x = textRenderer.size.x;
-		rect.currentSize.y = textRenderer.size.y;
+		rect.currentSize.x = textRenderer.size.x + rect.getPaddingX() * 2;
+		rect.currentSize.y = textRenderer.size.y + rect.getPaddingY() * 2;
 	}
 }

@@ -1,8 +1,6 @@
 package dev.prozilla.pine.core.component.canvas;
 
-import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.image.Texture;
 import dev.prozilla.pine.common.system.resource.image.TextureBase;
@@ -16,9 +14,6 @@ import java.util.Objects;
 public class ImageRenderer extends Component {
 	
 	public TextureBase image;
-	public Color color;
-	
-	public DualDimension size;
 	
 	public Vector2i regionOffset;
 	public Vector2i regionSize;
@@ -32,7 +27,6 @@ public class ImageRenderer extends Component {
 		
 		this.image = image;
 		
-		size = new DualDimension();
 		regionOffset = new Vector2i(0, 0);
 		regionSize = new Vector2i(image.getWidth(), image.getHeight());
 	}
@@ -48,10 +42,6 @@ public class ImageRenderer extends Component {
 		regionOffset.y = 0;
 		regionSize.x = image.getWidth();
 		regionSize.y = image.getHeight();
-	}
-	
-	public void setSize(DualDimension size) {
-		this.size = size;
 	}
 	
 	public void setRegion(int regX, int regY, int regWidth, int regHeight) {

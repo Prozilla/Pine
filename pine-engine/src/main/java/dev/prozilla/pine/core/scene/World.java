@@ -16,15 +16,19 @@ import dev.prozilla.pine.core.system.SystemManager;
 import dev.prozilla.pine.core.system.standard.animation.AnimationInitializer;
 import dev.prozilla.pine.core.system.standard.animation.AnimationUpdater;
 import dev.prozilla.pine.core.system.standard.animation.canvas.CanvasElementStyler;
-import dev.prozilla.pine.core.system.standard.animation.canvas.ImageButtonStyler;
-import dev.prozilla.pine.core.system.standard.animation.canvas.ImageStyler;
 import dev.prozilla.pine.core.system.standard.camera.*;
 import dev.prozilla.pine.core.system.standard.canvas.*;
 import dev.prozilla.pine.core.system.standard.canvas.frame.FrameRenderSystem;
 import dev.prozilla.pine.core.system.standard.canvas.frame.FrameResizer;
-import dev.prozilla.pine.core.system.standard.canvas.group.*;
-import dev.prozilla.pine.core.system.standard.canvas.image.*;
-import dev.prozilla.pine.core.system.standard.canvas.text.*;
+import dev.prozilla.pine.core.system.standard.canvas.group.CanvasGroupArranger;
+import dev.prozilla.pine.core.system.standard.canvas.group.CanvasGroupInitializer;
+import dev.prozilla.pine.core.system.standard.canvas.group.CanvasGroupInputHandler;
+import dev.prozilla.pine.core.system.standard.canvas.group.CanvasGroupResizer;
+import dev.prozilla.pine.core.system.standard.canvas.image.ImageInitializer;
+import dev.prozilla.pine.core.system.standard.canvas.image.ImageRenderSystem;
+import dev.prozilla.pine.core.system.standard.canvas.text.TextInitializer;
+import dev.prozilla.pine.core.system.standard.canvas.text.TextRenderSystem;
+import dev.prozilla.pine.core.system.standard.canvas.text.TextResizer;
 import dev.prozilla.pine.core.system.standard.canvas.tooltip.TooltipInitializer;
 import dev.prozilla.pine.core.system.standard.canvas.tooltip.TooltipInputHandler;
 import dev.prozilla.pine.core.system.standard.particle.ParticleFlowUpdater;
@@ -96,8 +100,6 @@ public class World implements Lifecycle {
 		initialSystems.add(new AnimationUpdater());
 		
 		initialSystems.add(new CanvasElementStyler());
-		initialSystems.add(new ImageStyler());
-		initialSystems.add(new ImageButtonStyler());
 		
 		// Camera
 		initialSystems.add(new CameraInitializer());
@@ -134,21 +136,15 @@ public class World implements Lifecycle {
 		
 		initialSystems.add(new CanvasResizer());
 		initialSystems.add(new TextResizer());
-		initialSystems.add(new TextButtonResizer());
-		initialSystems.add(new ImageResizer());
-		initialSystems.add(new ImageButtonResizer());
 		initialSystems.add(new FrameResizer());
 		initialSystems.add(new CanvasGroupResizer());
 		initialSystems.add(new CanvasGroupArranger());
 		initialSystems.add(new RectUpdater());
 
 		initialSystems.add(new CanvasRenderSystem());
-		initialSystems.add(new CanvasGroupRenderer());
 		initialSystems.add(new RectRenderSystem());
 		initialSystems.add(new TextRenderSystem());
-		initialSystems.add(new TextButtonRenderSystem());
 		initialSystems.add(new ImageRenderSystem());
-		initialSystems.add(new ImageButtonRenderSystem());
 		initialSystems.add(new FrameRenderSystem());
 		
 		// Sprite input

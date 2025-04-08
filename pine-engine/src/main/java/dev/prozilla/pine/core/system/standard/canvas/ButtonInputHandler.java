@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.system.standard.canvas.text;
+package dev.prozilla.pine.core.system.standard.canvas;
 
 import dev.prozilla.pine.core.component.canvas.ButtonData;
 import dev.prozilla.pine.core.component.canvas.RectTransform;

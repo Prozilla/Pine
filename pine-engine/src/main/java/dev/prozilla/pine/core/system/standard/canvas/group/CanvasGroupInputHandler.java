@@ -19,9 +19,8 @@ public class CanvasGroupInputHandler extends InputSystem {
 	
 	@Override
 	public void process(EntityChunk chunk, Input input, float deltaTime) {
-		CanvasGroup canvasGroup = chunk.getComponent(CanvasGroup.class);
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		
-		rect.passThrough = (canvasGroup.backgroundColor == null);
+		rect.passThrough = (rect.backgroundColor == null);
 	}
 }

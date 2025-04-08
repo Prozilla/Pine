@@ -12,7 +12,6 @@ import dev.prozilla.pine.core.entity.Entity;
 public class TextPrefab extends CanvasElementPrefab {
 	
 	protected String text;
-	protected Color color;
 	protected Font font;
 	
 	public TextPrefab() {
@@ -20,21 +19,17 @@ public class TextPrefab extends CanvasElementPrefab {
 	}
 	
 	public TextPrefab(String text) {
-		this(text, null);
+		this(text, Color.white());
 	}
 	
 	public TextPrefab(String text, Color color) {
 		this.text = text;
-		this.color = color;
+		setColor(color);
 		setName("Text");
 	}
 	
 	public void setText(String text) {
 		this.text = text;
-	}
-	
-	public void setColor(Color color) {
-		this.color = color;
 	}
 	
 	public void setFont(String fontPath) {
@@ -51,9 +46,6 @@ public class TextPrefab extends CanvasElementPrefab {
 		
 		TextRenderer textRenderer = entity.addComponent(new TextRenderer(text));
 		
-		if (color != null) {
-			textRenderer.color = color;
-		}
 		if (font != null) {
 			textRenderer.setFont(font);
 		} else {

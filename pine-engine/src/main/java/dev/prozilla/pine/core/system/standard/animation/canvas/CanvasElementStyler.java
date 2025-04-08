@@ -16,6 +16,20 @@ public class CanvasElementStyler extends UpdateSystem {
 		RectTransform rect = chunk.getComponent(RectTransform.class);
 		CanvasElementStyle canvasElementStyle = chunk.getComponent(CanvasElementStyle.class);
 		
+		if (canvasElementStyle.getColorProperty() != null) {
+			if (rect.color == null) {
+				rect.color = canvasElementStyle.getColorProperty().getValue();
+			} else {
+				canvasElementStyle.getColorProperty().transmit(rect.color);
+			}
+		}
+		if (canvasElementStyle.getBackgroundColorProperty() != null) {
+			if (rect.backgroundColor == null) {
+				rect.backgroundColor = canvasElementStyle.getBackgroundColorProperty().getValue();
+			} else {
+				canvasElementStyle.getBackgroundColorProperty().transmit(rect.backgroundColor);
+			}
+		}
 		if (canvasElementStyle.getSizeProperty() != null) {
 			rect.size = canvasElementStyle.getSizeProperty().getValue();
 		}

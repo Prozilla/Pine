@@ -3,7 +3,6 @@ package dev.prozilla.pine.core.system.standard.canvas.image;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.image.TextureBase;
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.component.canvas.ImageButtonRenderer;
 import dev.prozilla.pine.core.component.canvas.ImageRenderer;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -14,7 +13,6 @@ public class ImageRenderSystem extends RenderSystem {
 	
 	public ImageRenderSystem() {
 		super(ImageRenderer.class, RectTransform.class);
-		setExcludedComponentTypes(ImageButtonRenderer.class);
 	}
 	
 	@Override
@@ -32,7 +30,7 @@ public class ImageRenderSystem extends RenderSystem {
 	
 	public static void renderImage(Renderer renderer, ImageRenderer imageRenderer, RectTransform rect, float z) {
 		renderImage(renderer, imageRenderer,
-		 rect.currentPosition.x, rect.currentPosition.y, imageRenderer.size.computeX(rect), imageRenderer.size.computeY(rect), z, imageRenderer.color);
+		 rect.currentPosition.x + rect.getPaddingX(), rect.currentPosition.y + rect.getPaddingY(), rect.size.computeX(rect), rect.size.computeY(rect), z, rect.color);
 	}
 	
 	public static void renderImage(Renderer renderer, ImageRenderer imageRenderer, int x, int y, int width, int height, float z, Color color) {

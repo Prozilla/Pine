@@ -31,6 +31,10 @@ public class RectUpdater extends UpdateSystem {
 	}
 	
 	public static void resizeRect(RectTransform rect) {
+		if (rect.size.isZero(rect)) {
+			return;
+		}
+		
 		int targetSizeX = rect.getSizeX();
 		int targetSizeY = rect.getSizeY();
 		

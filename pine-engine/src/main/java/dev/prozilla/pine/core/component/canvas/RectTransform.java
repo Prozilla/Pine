@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.HashSet;
@@ -27,13 +28,18 @@ public class RectTransform extends Component implements EventDispatcherContext<R
 	
 	// Attributes
 	public DualDimension position;
-	public DualDimension size;
 	public GridAlignment anchor;
 	/** If true, allows the cursor to pass through this element. */
 	public boolean passThrough;
 	/** If true, this rect won't be arranged by a canvas group */
 	public boolean absolutePosition;
 	public String tooltipText;
+	
+	// Style
+	public Color color;
+	public Color backgroundColor;
+	public DualDimension size;
+	public DualDimension padding;
 	
 	public final Set<String> classes;
 	public final Set<String> modifiers;
@@ -47,16 +53,20 @@ public class RectTransform extends Component implements EventDispatcherContext<R
 	public RectTransform() {
 		currentPosition = new Vector2i();
 		currentSize = new Vector2i();
-		position = new DualDimension();
-		size = new DualDimension();
-		anchor = DEFAULT_ANCHOR;
-		passThrough = false;
 		cursorHit = false;
-		absolutePosition = false;
 		readyToRender = false;
 		iterations = 0;
+		
+		position = new DualDimension();
+		anchor = DEFAULT_ANCHOR;
+		passThrough = false;
+		absolutePosition = false;
+		
+		size = new DualDimension();
+		
 		classes = new HashSet<>();
 		modifiers = new HashSet<>();
+		
 		eventDispatcher = new EventDispatcher<>();
 	}
 	
@@ -147,18 +157,6 @@ public class RectTransform extends Component implements EventDispatcherContext<R
 		return canvasRenderer;
 	}
 	
-	public void setPosition(DualDimension position) {
-		this.position = position;
-	}
-	
-	public void setSize(DualDimension size) {
-		this.size = size;
-	}
-	
-	public void setAnchor(GridAlignment anchor) {
-		this.anchor = anchor;
-	}
-	
 	public int getPositionX() {
 		return position.computeX(this);
 	}
@@ -168,16 +166,19 @@ public class RectTransform extends Component implements EventDispatcherContext<R
 	}
 	
 	public int getSizeX() {
-		return size.computeX(this);
+		return size.computeX(this) + getPaddingX() * 2;
 	}
 	
 	public int getSizeY() {
-		return size.computeY(this);
+		return size.computeY(this) + getPaddingY() * 2;
 	}
 	
-	public void computeCurrentSize(DualDimension size) {
-		currentSize.x = size.computeX(this);
-		currentSize.y = size.computeY(this);
+	public int getPaddingX() {
+		return padding != null ? padding.computeX(this) : 0;
+	}
+	
+	public int getPaddingY() {
+		return padding != null ? padding.computeY(this) : 0;
 	}
 	
 	@Override

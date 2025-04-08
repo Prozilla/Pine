@@ -1,10 +1,8 @@
 package dev.prozilla.pine.core.component.canvas;
 
-import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.ArrayList;
@@ -18,10 +16,8 @@ public class CanvasGroup extends Component implements CanvasContext {
 	public Direction direction;
 	public EdgeAlignment alignment;
 	public Distribution distribution;
-	public Color backgroundColor;
 	/** Distance between elements. */
 	public int gap;
-	public DualDimension padding;
 	public boolean arrangeChildren;
 	
 	public Vector2i innerSize;
@@ -62,7 +58,6 @@ public class CanvasGroup extends Component implements CanvasContext {
 		
 		childRects = new ArrayList<>();
 		gap = 0;
-		padding = new DualDimension();
 		innerSize = new Vector2i();
 		totalChildrenSize = new Vector2i();
 		arrangeChildren = true;
@@ -71,10 +66,6 @@ public class CanvasGroup extends Component implements CanvasContext {
 	@Override
 	public String getName() {
 		return "CanvasGroup";
-	}
-	
-	public void setPadding(DualDimension padding) {
-		this.padding = padding;
 	}
 	
 	/**
