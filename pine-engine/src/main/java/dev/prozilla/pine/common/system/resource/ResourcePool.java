@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.system.resource;
 
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.system.PathUtils;
 import dev.prozilla.pine.common.system.resource.image.*;
 import dev.prozilla.pine.common.system.resource.image.Image;
@@ -9,8 +10,10 @@ import dev.prozilla.pine.common.system.resource.text.Font;
 import org.lwjgl.system.MemoryStack;
 
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.*;
@@ -27,6 +30,7 @@ public final class ResourcePool {
 	private static final Map<String, TextureBase> textures = new HashMap<>();
 	private static final Map<String, Image> images = new HashMap<>();
 	private static final Map<String, Font> fonts = new HashMap<>();
+	private static final Map<String, StyleSheet> styleSheets = new HashMap<>();
 	
 	private static final List<TextureArray> textureArrays = new ArrayList<>();
 	
@@ -235,7 +239,7 @@ public final class ResourcePool {
 	}
 	
 	public static Font loadFont(String path, int size) {
-		path = "/" + normalizePath(path);
+		path = PathUtils.addLeadingSlash(path);
 		String key = Font.generateKey(path, size);
 		
 		if (fonts.containsKey(key)) {
@@ -267,6 +271,45 @@ public final class ResourcePool {
 		clearResource(fonts);
 	}
 	
+	public static StyleSheet loadStyleSheet(String path) {
+		path = PathUtils.addLeadingSlash(path);
+		
+		if (styleSheets.containsKey(path)) {
+			return styleSheets.get(path);
+		}
+		
+		Logger.system.logPath("Loading style sheet", ResourceUtils.getResourcePath(path));
+		
+		StyleSheet styleSheet;
+		try (InputStream inputStream = Objects.requireNonNull(ResourcePool.class.getResourceAsStream(path));
+		     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+			StringBuilder stringBuilder = new StringBuilder();
+			String line = bufferedReader.readLine();
+			
+			while (line != null) {
+				stringBuilder.append(line);
+				stringBuilder.append(System.lineSeparator());
+				line = bufferedReader.readLine();
+			}
+			
+			styleSheet = StyleSheet.parse(stringBuilder.toString());
+		} catch (IOException | NullPointerException e) {
+			Logger.system.error("Failed to load style sheet: " + path, e);
+			styleSheet = new StyleSheet();
+		}
+		
+		styleSheets.put(path, styleSheet);
+		return styleSheet;
+	}
+	
+	public static boolean removeStyleSheet(String path) {
+		return styleSheets.remove(PathUtils.addLeadingSlash(path)) != null;
+	}
+	
+	public static void clearStyleSheets() {
+		clearResource(styleSheets);
+	}
+	
 	private static <R extends Resource> void clearResource(Map<String, R> resources) {
 		Collection<R> resourcesToDestroy = resources.values();
 		resources.clear();
@@ -283,6 +326,7 @@ public final class ResourcePool {
 		clearTextureArrays();
 		clearTextures();
 		clearFonts();
+		clearStyleSheets();
 	}
 	
 	/**
@@ -335,6 +379,7 @@ public final class ResourcePool {
 		logger.log("Textures in resource pool: " + getTextureCount());
 		logger.log("Texture arrays in resource pool: " + getTextureArrayCount());
 		logger.log("Fonts in resource pool: " + getFontCount());
+		logger.log("Style sheets in resource pool: " + getStyleSheetCount());
 	}
 	
 	public static int getImageCount() {
@@ -352,4 +397,9 @@ public final class ResourcePool {
 	public static int getFontCount() {
 		return fonts.size();
 	}
+	
+	public static int getStyleSheetCount() {
+		return styleSheets.size();
+	}
+	
 }

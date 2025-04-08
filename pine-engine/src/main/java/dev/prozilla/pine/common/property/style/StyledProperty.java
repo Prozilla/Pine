@@ -21,7 +21,7 @@ import java.util.StringJoiner;
  */
 public abstract class StyledProperty<T> extends VariableProperty<T> implements Animatable, Printable {
 	
-	protected final StyledPropertyName name;
+	protected final StyledPropertyKey name;
 	protected final RectTransform context;
 	
 	protected final List<StyleRule<T>> rules;
@@ -39,7 +39,7 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 	 * @param rules The rules that determine the value of this property
 	 * @param defaultValue The initial value of this property. Also used when no rule is applied.
 	 */
-	public StyledProperty(StyledPropertyName name, RectTransform context, List<StyleRule<T>> rules, AdaptiveProperty<T> defaultValue) {
+	public StyledProperty(StyledPropertyKey name, RectTransform context, List<StyleRule<T>> rules, AdaptiveProperty<T> defaultValue) {
 		this(name, context, rules, defaultValue, null);
 	}
 	
@@ -50,7 +50,7 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 	 * @param defaultValue The initial value of this property. Also used when no rule is applied.
 	 * @param transitionRules The rules that determine how the value of this property transitions when changed
 	 */
-	public StyledProperty(StyledPropertyName name, RectTransform context, List<StyleRule<T>> rules, AdaptiveProperty<T> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
+	public StyledProperty(StyledPropertyKey name, RectTransform context, List<StyleRule<T>> rules, AdaptiveProperty<T> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
 		this.name = name;
 		this.context = Objects.requireNonNull(context, "context must not be null");
 		this.rules = Objects.requireNonNullElse(rules, new ArrayList<>());

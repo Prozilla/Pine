@@ -44,4 +44,25 @@ public class SelectorCombo extends Selector {
 		return stringBuilder.toString();
 	}
 	
+	@Override
+	public boolean equals(Selector other) {
+		if (!(other instanceof SelectorCombo otherSelectorCombo)) {
+			return false;
+		}
+		
+		Selector[] otherSelectors = otherSelectorCombo.selectors;
+		
+		if (selectors.length != otherSelectors.length) {
+			return false;
+		}
+		
+		for (int i = 0; i < selectors.length; i++) {
+			if (!selectors[i].equals(otherSelectors[i])) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 }

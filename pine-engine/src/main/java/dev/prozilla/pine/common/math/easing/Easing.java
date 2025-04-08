@@ -101,4 +101,17 @@ public enum Easing implements EasingFunction {
 	public String toString() {
 		return string;
 	}
+	
+	public static Easing parse(String input) {
+		for (Easing easing : Easing.values()) {
+			if (easing.string.equals(input)) {
+				return easing;
+			}
+		}
+		
+		// TO DO: Implement parsing of other easing functions
+		
+		return null;
+	}
+	
 }

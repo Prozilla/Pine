@@ -28,4 +28,13 @@ public class ClassSelector extends Selector {
 		return "." + className;
 	}
 	
+	@Override
+	public boolean equals(Selector other) {
+		if (!(other instanceof ClassSelector otherClassSelector)) {
+			return false;
+		}
+		
+		return className.equals(otherClassSelector.className);
+	}
+	
 }

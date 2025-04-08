@@ -30,4 +30,13 @@ public class ModifierSelector extends Selector {
 	
 	public final static ModifierSelector HOVER = new ModifierSelector("hover");
 	
+	@Override
+	public boolean equals(Selector other) {
+		if (!(other instanceof ModifierSelector otherModifierSelector)) {
+			return false;
+		}
+		
+		return modifier.equals(otherModifierSelector.modifier);
+	}
+	
 }

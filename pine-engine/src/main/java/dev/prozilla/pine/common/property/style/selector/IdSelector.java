@@ -27,4 +27,14 @@ public class IdSelector extends Selector {
 	public String toString() {
 		return "#" + id;
 	}
+	
+	@Override
+	public boolean equals(Selector other) {
+		if (!(other instanceof IdSelector otherIdSelector)) {
+			return false;
+		}
+		
+		return id.equals(otherIdSelector.id);
+	}
+	
 }

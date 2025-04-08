@@ -32,4 +32,15 @@ public enum AnimationDirection {
 	public String toString() {
 		return string;
 	}
+	
+	public static AnimationDirection parse(String input) {
+		for (AnimationDirection direction : AnimationDirection.values()) {
+			if (direction.string.equals(input)) {
+				return direction;
+			}
+		}
+		
+		return null;
+	}
+	
 }

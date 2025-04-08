@@ -8,6 +8,8 @@ import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.style.selector.Selector;
 import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.resource.Resource;
+import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.core.component.canvas.RectTransform;
 
 import java.util.HashMap;
@@ -18,33 +20,42 @@ import java.util.StringJoiner;
 /**
  * Manages style rules for different properties of canvas elements.
  */
-public class StyleSheet implements Printable {
+public class StyleSheet implements Printable, Resource {
 	
-	private final Map<StyledPropertyName, Style<?>> styles;
+	private final Map<StyledPropertyKey<?>, Style<?>> styles;
+	
+	public String path;
 	
 	public StyleSheet() {
 		this.styles = new HashMap<>();
 	}
 	
-	public <T> void addRule(Selector selector, StyledPropertyName propertyName, T value) {
+	public <T> void parseRule(Selector selector, StyledPropertyKey<T> propertyName, String input) {
+		T value = propertyName.parseValue(input);
+		if (value != null) {
+			addRule(selector, propertyName, value);
+		}
+	}
+	
+	public <T> void addRule(Selector selector, StyledPropertyKey<T> propertyName, T value) {
 		addRule(propertyName, new StyleRule<>(selector, value));
 	}
 	
-	protected <T> void addRule(StyledPropertyName propertyName, StyleRule<T> rule) {
+	protected <T> void addRule(StyledPropertyKey<T> propertyName, StyleRule<T> rule) {
 		Style<T> style = getStyle(propertyName, true);
 		style.addRule(rule);
 	}
 	
-	public void addTransition(Selector selector, StyledPropertyName propertyName, AnimationCurve value) {
+	public void addTransition(Selector selector, StyledPropertyKey<?> propertyName, AnimationCurve value) {
 		addTransition(propertyName, new StyleRule<>(selector, value));
 	}
 	
-	protected void addTransition(StyledPropertyName propertyName, StyleRule<AnimationCurve> transitionRule) {
+	protected void addTransition(StyledPropertyKey<?> propertyName, StyleRule<AnimationCurve> transitionRule) {
 		Style<?> style = getStyle(propertyName, true);
 		style.addTransitionRule(transitionRule);
 	}
 	
-	public <T> void setDefaultValue(StyledPropertyName propertyName, AdaptiveProperty<T> defaultValue) {
+	public <T> void setDefaultValue(StyledPropertyKey<T> propertyName, AdaptiveProperty<T> defaultValue) {
 		Objects.requireNonNull(defaultValue, "defaultValue must not be null");
 		
 		Style<T> style = getStyle(propertyName, true);
@@ -52,44 +63,44 @@ public class StyleSheet implements Printable {
 	}
 	
 	public StyledColorProperty createColorProperty(RectTransform context) {
-		return createStyledColorProperty(StyledPropertyName.COLOR, context, Color.white());
+		return createStyledColorProperty(StyledPropertyKey.COLOR, context, Color.white());
 	}
 	
 	public StyledColorProperty createBackgroundColorProperty(RectTransform context) {
-		return createStyledColorProperty(StyledPropertyName.BACKGROUND_COLOR, context, Color.black());
+		return createStyledColorProperty(StyledPropertyKey.BACKGROUND_COLOR, context, Color.black());
 	}
 	
 	public StyledDualDimensionProperty createSizeProperty(RectTransform context) {
-		return createStyledDualDimensionProperty(StyledPropertyName.SIZE, context, new DualDimension());
+		return createStyledDualDimensionProperty(StyledPropertyKey.SIZE, context, new DualDimension());
 	}
 	
 	public StyledDualDimensionProperty createPaddingProperty(RectTransform context) {
-		return createStyledDualDimensionProperty(StyledPropertyName.PADDING, context, new DualDimension());
+		return createStyledDualDimensionProperty(StyledPropertyKey.PADDING, context, new DualDimension());
 	}
 	
 	public StyledDualDimensionProperty createPositionProperty(RectTransform context) {
-		return createStyledDualDimensionProperty(StyledPropertyName.POSITION, context, new DualDimension());
+		return createStyledDualDimensionProperty(StyledPropertyKey.POSITION, context, new DualDimension());
 	}
 	
-	protected StyledColorProperty createStyledColorProperty(StyledPropertyName name, RectTransform context, Color fallbackValue) {
+	protected StyledColorProperty createStyledColorProperty(StyledPropertyKey<Color> name, RectTransform context, Color fallbackValue) {
 		return createStyledProperty(name, context, new AdaptiveColorProperty(fallbackValue),  (Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
 	}
 	
-	protected StyledDualDimensionProperty createStyledDualDimensionProperty(StyledPropertyName name, RectTransform context, DualDimension fallbackValue) {
+	protected StyledDualDimensionProperty createStyledDualDimensionProperty(StyledPropertyKey<DualDimension> name, RectTransform context, DualDimension fallbackValue) {
 		return createStyledProperty(name, context, new AdaptiveDualDimensionProperty(fallbackValue),  (Style.StyledPropertyFactory<DualDimension, StyledDualDimensionProperty>)StyledDualDimensionProperty::new);
 	}
 	
-	protected  <T, P extends StyledProperty<T>> P createStyledProperty(StyledPropertyName name, RectTransform context, AdaptiveProperty<T> fallbackValue, Style.StyledPropertyFactory<T, P> factory) {
+	protected  <T, P extends StyledProperty<T>> P createStyledProperty(StyledPropertyKey<T> name, RectTransform context, AdaptiveProperty<T> fallbackValue, Style.StyledPropertyFactory<T, P> factory) {
 		Style<T> style = getStyle(name, false);
 		return style != null ? style.toProperty(name, context, fallbackValue, factory) : null;
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <T> Style<T> getStyle(StyledPropertyName propertyName, boolean createIfMissing) {
+	protected <T> Style<T> getStyle(StyledPropertyKey<T> propertyName, boolean createIfMissing) {
 		return (Style<T>)getGenericStyle(propertyName, createIfMissing);
 	}
 	
-	protected Style<?> getGenericStyle(StyledPropertyName propertyName, boolean createIfMissing) {
+	protected Style<?> getGenericStyle(StyledPropertyKey<?> propertyName, boolean createIfMissing) {
 		Style<?> style = styles.get(propertyName);
 		
 		if (style == null && createIfMissing) {
@@ -101,11 +112,23 @@ public class StyleSheet implements Printable {
 	}
 	
 	@Override
+	public String getPath() {
+		return path;
+	}
+	
+	@Override
+	public void destroy() {
+		if (path != null) {
+			ResourcePool.removeStyleSheet(path);
+		}
+	}
+	
+	@Override
 	public String toString() {
 		Map<String, StringJoiner> selectorToProperties = new HashMap<>();
 		
-		for (Map.Entry<StyledPropertyName, Style<?>> styleEntry : styles.entrySet()) {
-			StyledPropertyName propertyName = styleEntry.getKey();
+		for (Map.Entry<StyledPropertyKey<?>, Style<?>> styleEntry : styles.entrySet()) {
+			StyledPropertyKey<?> propertyName = styleEntry.getKey();
 			Style<?> style = styleEntry.getValue();
 			
 			for (StyleRule<?> rule : style.getRules()) {
@@ -136,6 +159,91 @@ public class StyleSheet implements Printable {
 		}
 		
 		return result.toString();
+	}
+	
+	public static StyleSheet parse(String css) {
+		StyleSheet styleSheet = new StyleSheet();
+		int i = 0;
+		int len = css.length();
+		
+		while (i < len) {
+			while (i < len && Character.isWhitespace(css.charAt(i))) {
+				i++;
+			}
+			
+			if (i >= len) {
+				break;
+			}
+			
+			// Read selector
+			int start = i;
+			while (i < len && css.charAt(i) != '{') {
+				i++;
+			}
+			Selector selector = Selector.parse(css.substring(start, i).trim());
+			
+			if (i >= len || css.charAt(i) != '{') {
+				break;
+			}
+			i++;
+			
+			// Read properties
+			while (i < len && css.charAt(i) != '}') {
+				while (i < len && Character.isWhitespace(css.charAt(i))) {
+					i++;
+				}
+				
+				if (css.charAt(i) == '}') {
+					break;
+				}
+				
+				// Read property name
+				start = i;
+				while (i < len && css.charAt(i) != ':') {
+					i++;
+				}
+				if (i >= len) {
+					break;
+				}
+				String propertyName = css.substring(start, i).trim();
+				StyledPropertyKey<?> propertyKey = StyledPropertyKey.parse(propertyName);
+				i++;
+				
+				// Read value
+				start = i;
+				while (i < len && css.charAt(i) != ';' && css.charAt(i) != '}') {
+					i++;
+				}
+				String value = css.substring(start, i).trim();
+				
+				if (selector != null) {
+					if (propertyName.equals("transition")) {
+						// Parse transition property
+						String[] parts = value.split(" ", 2);
+						
+						propertyKey = StyledPropertyKey.parse(parts[0]);
+						AnimationCurve animationCurve = AnimationCurve.parse(parts[1]);
+						
+						if (propertyKey != null && animationCurve != null) {
+							styleSheet.addTransition(selector, propertyKey, animationCurve);
+						}
+					} else if (propertyKey != null) {
+						// Parse normal property
+						styleSheet.parseRule(selector, propertyKey, value);
+					}
+				}
+				
+				if (i < len && css.charAt(i) == ';') {
+					i++;
+				}
+			}
+			
+			if (i < len && css.charAt(i) == '}') {
+				i++;
+			}
+		}
+		
+		return styleSheet;
 	}
 	
 }

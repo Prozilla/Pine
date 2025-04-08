@@ -12,11 +12,11 @@ import java.util.List;
 
 public final class StyledDimensionProperty extends StyledProperty<DimensionBase> {
 	
-	public StyledDimensionProperty(StyledPropertyName name, RectTransform context, List<StyleRule<DimensionBase>> styleRules, AdaptiveProperty<DimensionBase> defaultValue) {
+	public StyledDimensionProperty(StyledPropertyKey name, RectTransform context, List<StyleRule<DimensionBase>> styleRules, AdaptiveProperty<DimensionBase> defaultValue) {
 		this(name, context, styleRules, defaultValue, null);
 	}
 	
-	public StyledDimensionProperty(StyledPropertyName name, RectTransform context, List<StyleRule<DimensionBase>> styleRules, AdaptiveProperty<DimensionBase> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
+	public StyledDimensionProperty(StyledPropertyKey name, RectTransform context, List<StyleRule<DimensionBase>> styleRules, AdaptiveProperty<DimensionBase> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
 		super(name, context, styleRules, defaultValue, transitionRules);
 	}
 	

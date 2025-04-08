@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.Transceivable;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.math.vector.Vector4f;
+import dev.prozilla.pine.common.string.StringUtils;
 
 /**
  * Represents an RGBA color.
@@ -328,4 +329,34 @@ public final class Color implements Printable, Cloneable<Color>, Transceivable<C
 	    int i = Integer.decode(nm);
         return new Color((i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
     }
+    
+    public static Color parse(String input) {
+        int start;
+        boolean includesAlpha = false;
+        
+        if (input.startsWith("rgba(")) {
+            start = 4;
+            includesAlpha = true;
+        } else if (input.startsWith("rgb(")) {
+            start = 3;
+        } else {
+            return null;
+        }
+        
+        int end = StringUtils.findClosingParenthesis(input, start - 1);
+        if (end == -1) {
+            return null;
+        }
+        
+        String inner = input.substring(start, end + 1);
+        
+        if (includesAlpha) {
+            Vector4f vector4f = Vector4f.parse(inner);
+            return new Color(vector4f.x, vector4f.y, vector4f.z, vector4f.w);
+        } else {
+            Vector3f vector3f = Vector3f.parse(inner);
+            return new Color(vector3f.x, vector3f.y, vector3f.z);
+        }
+    }
+    
 }

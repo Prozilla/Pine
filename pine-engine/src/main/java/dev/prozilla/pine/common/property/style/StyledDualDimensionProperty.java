@@ -12,11 +12,11 @@ import java.util.List;
 
 public final class StyledDualDimensionProperty extends StyledProperty<DualDimension> {
 	
-	public StyledDualDimensionProperty(StyledPropertyName name, RectTransform context, List<StyleRule<DualDimension>> styleRules, AdaptiveProperty<DualDimension> defaultValue) {
+	public StyledDualDimensionProperty(StyledPropertyKey name, RectTransform context, List<StyleRule<DualDimension>> styleRules, AdaptiveProperty<DualDimension> defaultValue) {
 		this(name, context, styleRules, defaultValue, null);
 	}
 	
-	public StyledDualDimensionProperty(StyledPropertyName name, RectTransform context, List<StyleRule<DualDimension>> styleRules, AdaptiveProperty<DualDimension> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
+	public StyledDualDimensionProperty(StyledPropertyKey name, RectTransform context, List<StyleRule<DualDimension>> styleRules, AdaptiveProperty<DualDimension> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
 		super(name, context, styleRules, defaultValue, transitionRules);
 	}
 	

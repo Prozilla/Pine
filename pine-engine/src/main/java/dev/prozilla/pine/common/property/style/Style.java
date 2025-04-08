@@ -43,14 +43,14 @@ public class Style<T> {
 		this.defaultValue = defaultValue;
 	}
 	
-	public <P extends StyledProperty<T>> P toProperty(StyledPropertyName name, RectTransform context, AdaptiveProperty<T> fallbackValue, StyledPropertyFactory<T, P> factory) {
+	public <P extends StyledProperty<T>> P toProperty(StyledPropertyKey name, RectTransform context, AdaptiveProperty<T> fallbackValue, StyledPropertyFactory<T, P> factory) {
 		return factory.create(name, context, rules, Objects.requireNonNullElse(defaultValue,  fallbackValue), transitionRules);
 	}
 	
 	@FunctionalInterface
 	public interface StyledPropertyFactory<T, P extends StyledProperty<T>> {
 		
-		P create(StyledPropertyName name, RectTransform context, List<StyleRule<T>> rules, AdaptiveProperty<T> defaultValue, List<StyleRule<AnimationCurve>> transitionRules);
+		P create(StyledPropertyKey name, RectTransform context, List<StyleRule<T>> rules, AdaptiveProperty<T> defaultValue, List<StyleRule<AnimationCurve>> transitionRules);
 		
 	}
 	

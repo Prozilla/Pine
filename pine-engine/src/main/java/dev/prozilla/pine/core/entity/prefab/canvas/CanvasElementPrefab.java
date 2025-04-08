@@ -9,7 +9,7 @@ import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveDualDimensionProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.style.StyleSheet;
-import dev.prozilla.pine.common.property.style.StyledPropertyName;
+import dev.prozilla.pine.common.property.style.StyledPropertyKey;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.canvas.CanvasElementStyle;
@@ -68,7 +68,7 @@ public class CanvasElementPrefab extends Prefab {
 	}
 	
 	public void setPosition(VariableProperty<DualDimension> position) {
-		setDefaultPropertyValue(StyledPropertyName.POSITION, AdaptiveDualDimensionProperty.adapt(position));
+		setDefaultPropertyValue(StyledPropertyKey.POSITION, AdaptiveDualDimensionProperty.adapt(position));
 		this.position = position.getValue();
 	}
 	
@@ -91,7 +91,7 @@ public class CanvasElementPrefab extends Prefab {
 	}
 	
 	public void setSize(VariableProperty<DualDimension> size) {
-		setDefaultPropertyValue(StyledPropertyName.SIZE, AdaptiveDualDimensionProperty.adapt(size));
+		setDefaultPropertyValue(StyledPropertyKey.SIZE, AdaptiveDualDimensionProperty.adapt(size));
 		this.size = size.getValue();
 	}
 	
@@ -108,7 +108,7 @@ public class CanvasElementPrefab extends Prefab {
 	}
 	
 	public void setPadding(VariableProperty<DualDimension> padding) {
-		setDefaultPropertyValue(StyledPropertyName.PADDING, AdaptiveDualDimensionProperty.adapt(padding));
+		setDefaultPropertyValue(StyledPropertyKey.PADDING, AdaptiveDualDimensionProperty.adapt(padding));
 		this.padding = padding.getValue();
 	}
 	
@@ -121,7 +121,7 @@ public class CanvasElementPrefab extends Prefab {
 	}
 	
 	public void setColor(VariableProperty<Color> color) {
-		setDefaultPropertyValue(StyledPropertyName.COLOR, AdaptiveColorProperty.adapt(color));
+		setDefaultPropertyValue(StyledPropertyKey.COLOR, AdaptiveColorProperty.adapt(color));
 		this.color = color.getValue().clone();
 	}
 	
@@ -134,7 +134,7 @@ public class CanvasElementPrefab extends Prefab {
 	}
 	
 	public void setBackgroundColor(VariableProperty<Color> color) {
-		setDefaultPropertyValue(StyledPropertyName.BACKGROUND_COLOR, AdaptiveColorProperty.adapt(color));
+		setDefaultPropertyValue(StyledPropertyKey.BACKGROUND_COLOR, AdaptiveColorProperty.adapt(color));
 		backgroundColor = color.getValue().clone();
 	}
 	
@@ -157,7 +157,7 @@ public class CanvasElementPrefab extends Prefab {
 		this.tooltipText = tooltipText;
 	}
 	
-	protected <T> void setDefaultPropertyValue(StyledPropertyName propertyName, AdaptiveProperty<T> value) {
+	protected <T> void setDefaultPropertyValue(StyledPropertyKey<T> propertyName, AdaptiveProperty<T> value) {
 		if (styleSheet == null) {
 			return;
 		}

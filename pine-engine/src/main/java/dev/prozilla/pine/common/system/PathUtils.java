@@ -7,6 +7,7 @@ import java.nio.file.Paths;
  * Utility class for handling path strings.
  */
 public final class PathUtils {
+	
 	/**
 	 * Removes a leading slash from a path if there is one.
 	 * @param path Path with or without leading slash
@@ -17,6 +18,19 @@ public final class PathUtils {
 			return path.substring(1);
 		} else {
 			return path;
+		}
+	}
+	
+	/**
+	 * Adds a leading slash to a path if there isn't one.
+	 * @param path Path with or without leading slash
+	 * @return Path with leading slash
+	 */
+	public static String addLeadingSlash(String path) {
+		if (path.startsWith("/")) {
+			return path;
+		} else {
+			return "/" + path;
 		}
 	}
 	

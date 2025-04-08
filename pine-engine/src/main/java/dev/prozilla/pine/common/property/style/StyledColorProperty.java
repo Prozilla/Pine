@@ -13,11 +13,11 @@ import java.util.List;
 
 public final class StyledColorProperty extends StyledProperty<Color> implements ColorProperty {
 	
-	public StyledColorProperty(StyledPropertyName name, RectTransform context, List<StyleRule<Color>> styleRules, AdaptiveProperty<Color> defaultValue) {
+	public StyledColorProperty(StyledPropertyKey name, RectTransform context, List<StyleRule<Color>> styleRules, AdaptiveProperty<Color> defaultValue) {
 		this(name, context, styleRules, defaultValue, null);
 	}
 	
-	public StyledColorProperty(StyledPropertyName name, RectTransform context, List<StyleRule<Color>> styleRules, AdaptiveProperty<Color> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
+	public StyledColorProperty(StyledPropertyKey name, RectTransform context, List<StyleRule<Color>> styleRules, AdaptiveProperty<Color> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
 		super(name, context, styleRules, defaultValue, transitionRules);
 	}
 	

@@ -28,4 +28,13 @@ public class TypeSelector extends Selector {
 		return type;
 	}
 	
+	@Override
+	public boolean equals(Selector other) {
+		if (!(other instanceof TypeSelector otherTypeSelector)) {
+			return false;
+		}
+		
+		return type.equals(otherTypeSelector.type);
+	}
+	
 }

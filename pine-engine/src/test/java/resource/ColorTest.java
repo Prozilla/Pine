@@ -37,4 +37,9 @@ public class ColorTest {
 		assertEquals(a, new Color(0.5f, 0.5f, 0.5f), "colors should mix correctly");
 	}
 	
+	@Test
+	void testParse() {
+		TestUtils.testParse("rgba(0.25, 0.75, 0.5, 1)", new Color(0.25f, 0.75f, 0.5f), Color::parse);
+	}
+	
 }

@@ -52,6 +52,11 @@ public class AnimationCurve {
 		return easingFunction.get(direction.get(time, duration));
 	}
 	
+	@Override
+	public boolean equals(Object other) {
+		return this == other || (other instanceof  AnimationCurve otherAnimationCurve && equals(otherAnimationCurve));
+	}
+	
 	public boolean equals(AnimationCurve animationCurve) {
 		return animationCurve.duration == duration && animationCurve.easingFunction == easingFunction && animationCurve.direction == direction;
 	}
@@ -72,4 +77,38 @@ public class AnimationCurve {
 		
 		return stringJoiner.toString();
 	}
+	
+	public static AnimationCurve parse(String input) {
+		String[] parts = input.split(" ");
+		
+		float duration;
+		try {
+			if (parts[0].endsWith("s")) {
+				duration = Float.parseFloat(parts[0].substring(0, parts[0].length() - 1));
+			} else {
+				return null;
+			}
+		} catch (NumberFormatException e) {
+			return null;
+		}
+		
+		if (parts.length == 1) {
+			return new AnimationCurve(duration);
+		}
+		
+		EasingFunction easingFunction = Easing.parse(parts[1]);
+		if (easingFunction == null) {
+			return null;
+		}
+		if (parts.length == 2) {
+			return new AnimationCurve(duration, easingFunction);
+		}
+		
+		AnimationDirection direction = AnimationDirection.parse(input);
+		if (direction == null) {
+			return null;
+		}
+		return new AnimationCurve(duration, easingFunction, direction);
+	}
+	
 }

@@ -28,4 +28,12 @@ public class NotSelector extends Selector {
 		return String.format(":not(%s)", selector);
 	}
 	
+	@Override
+	public boolean equals(Selector other) {
+		if (!(other instanceof NotSelector otherNotSelector)) {
+			return false;
+		}
+		
+		return selector.equals(otherNotSelector.selector);
+	}
 }
