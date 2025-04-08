@@ -2,22 +2,22 @@ package dev.prozilla.pine.common.property.style.selector;
 
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.string.StringUtils;
-import dev.prozilla.pine.core.component.canvas.RectTransform;
+import dev.prozilla.pine.core.component.ui.Node;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A selector for canvas elements based on <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors">CSS selectors</a>.
+ * A selector for nodes based on <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors">CSS selectors</a>.
  */
 public abstract class Selector implements Printable {
 	
 	/**
-	 * Checks whether this selector matches a given canvas element.
-	 * @param context The canvas element
-	 * @return True if this selector matches the canvas element.
+	 * Checks whether this selector matches a given node.
+	 * @param node The node
+	 * @return True if this selector matches the node.
 	 */
-	public abstract boolean matches(RectTransform context);
+	public abstract boolean matches(Node node);
 	
 	/**
 	 * Returns an integer representing the specificity of this selector.
@@ -37,7 +37,7 @@ public abstract class Selector implements Printable {
 	 */
 	public static final Selector UNIVERSAL = new Selector() {
 		@Override
-		public boolean matches(RectTransform context) {
+		public boolean matches(Node node) {
 			return true;
 		}
 		

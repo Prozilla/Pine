@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.math.dimension;
 
-import dev.prozilla.pine.core.component.canvas.RectTransform;
+import dev.prozilla.pine.core.component.ui.Node;
 
 /**
  * Represents four dimensions (X, Y, Z and W) for a UI element. Each dimension is defined using a {@link DimensionBase}.
@@ -93,33 +93,33 @@ public class QuadDimension extends DualDimension {
 	/**
 	 * Computes the Z-dimension for a given element.
 	 */
-	public int computeZ(RectTransform element) {
+	public int computeZ(Node element) {
 		return z.compute(element, true);
 	}
 	
 	/**
 	 * Computes the W-dimension for a given element.
 	 */
-	public int computeW(RectTransform element) {
+	public int computeW(Node element) {
 		return w.compute(element, false);
 	}
 	
 	/**
 	 * Computes the sum of the X- and Z-dimensions for a given element.
 	 */
-	public int computeXZ(RectTransform element) {
+	public int computeXZ(Node element) {
 		return computeX(element) + computeZ(element);
 	}
 	
 	/**
 	 * Computes the sum of the Y- and W-dimensions for a given element.
 	 */
-	public int computeYW(RectTransform element) {
+	public int computeYW(Node element) {
 		return computeY(element) + computeW(element);
 	}
 	
 	@Override
-	public boolean isZero(RectTransform element) {
+	public boolean isZero(Node element) {
 		return super.isZero(element) || computeZ(element) == 0 || computeW(element) == 0;
 	}
 	

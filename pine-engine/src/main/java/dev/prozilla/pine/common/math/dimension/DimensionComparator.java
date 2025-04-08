@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.math.dimension;
 
-import dev.prozilla.pine.core.component.canvas.RectTransform;
+import dev.prozilla.pine.core.component.ui.Node;
 
 /**
  * Abstract class for a function that compares two dimensions.
@@ -18,14 +18,14 @@ public abstract class DimensionComparator extends DimensionBase {
 	}
 	
 	@Override
-	public boolean isDirty(RectTransform context, boolean isHorizontal) {
-		return isDirty || dimensionA.isDirty(context, isHorizontal) || dimensionB.isDirty(context, isHorizontal);
+	public boolean isDirty(Node node, boolean isHorizontal) {
+		return isDirty || dimensionA.isDirty(node, isHorizontal) || dimensionB.isDirty(node, isHorizontal);
 	}
 	
 	@Override
-	protected final int recompute(RectTransform context, boolean isHorizontal) {
+	protected final int recompute(Node node, boolean isHorizontal) {
 		isDirty = false;
-		return compare(dimensionA.compute(context, isHorizontal), dimensionB.compute(context, isHorizontal));
+		return compare(dimensionA.compute(node, isHorizontal), dimensionB.compute(node, isHorizontal));
 	}
 	
 	public boolean has(DimensionBase dimension) {

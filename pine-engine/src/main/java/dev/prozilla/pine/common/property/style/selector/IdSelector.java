@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.property.style.selector;
 
-import dev.prozilla.pine.core.component.canvas.RectTransform;
+import dev.prozilla.pine.core.component.ui.Node;
 
 /**
  * A selector that matches elements with a specific tag.
@@ -14,8 +14,8 @@ public class IdSelector extends Selector {
 	}
 	
 	@Override
-	public boolean matches(RectTransform context) {
-		return context.getEntity().hasTag(id);
+	public boolean matches(Node node) {
+		return node.getEntity().hasTag(id);
 	}
 	
 	@Override

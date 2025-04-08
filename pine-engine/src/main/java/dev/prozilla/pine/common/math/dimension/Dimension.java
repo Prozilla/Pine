@@ -4,7 +4,7 @@ import dev.prozilla.pine.common.exception.InvalidArrayException;
 import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.util.Arrays;
 import dev.prozilla.pine.common.util.Strings;
-import dev.prozilla.pine.core.component.canvas.RectTransform;
+import dev.prozilla.pine.core.component.ui.Node;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class Dimension extends DimensionBase {
 	 * Computes the value of this dimension by multiplying the original value with a factor based on the unit.
 	 */
 	@Override
-	protected int recompute(RectTransform context, boolean isHorizontal) {
+	protected int recompute(Node node, boolean isHorizontal) {
 		isDirty = false;
 		
 		if (value == 0 || currentFactor == 0) {
@@ -59,16 +59,16 @@ public class Dimension extends DimensionBase {
 	}
 	
 	@Override
-	public boolean isDirty(RectTransform context, boolean isHorizontal) {
+	public boolean isDirty(Node node, boolean isHorizontal) {
 		if (isDirty) {
-			currentFactor = getFactor(context, isHorizontal);
+			currentFactor = getFactor(node, isHorizontal);
 			return true;
 		} else if (Unit.isFixed(unit)) {
 			return false;
 		}
 		
 		// Check if factor was changed
-		float newFactor = getFactor(context, isHorizontal);
+		float newFactor = getFactor(node, isHorizontal);
 		if (newFactor != currentFactor) {
 			currentFactor = newFactor;
 			return true;
@@ -104,13 +104,13 @@ public class Dimension extends DimensionBase {
 	/**
 	 * Returns the factor based on this dimension's unit and a given context element.
 	 */
-	protected float getFactor(RectTransform context, boolean isHorizontal) {
+	protected float getFactor(Node node, boolean isHorizontal) {
 		return switch (unit) {
 			case AUTO -> 0f;
 			case ELEMENT_SIZE -> 16f;
-			case VIEWPORT_WIDTH -> context.getCanvas().getWidth() / 100f;
-			case VIEWPORT_HEIGHT -> context.getCanvas().getHeight() / 100f;
-			case PERCENTAGE -> (isHorizontal ? context.getContext().getWidth() : context.getContext().getHeight()) / 100f;
+			case VIEWPORT_WIDTH -> node.getRoot().getWidth() / 100f;
+			case VIEWPORT_HEIGHT -> node.getRoot().getHeight() / 100f;
+			case PERCENTAGE -> (isHorizontal ? node.getContext().getWidth() : node.getContext().getHeight()) / 100f;
 			default -> 1f;
 		};
 	}
@@ -309,7 +309,7 @@ public class Dimension extends DimensionBase {
 	 * @param <D> The type of the chain dimension
 	 * @throws InvalidArrayException If less than two dimensions are passed
 	 */
-	public static <D extends DimensionBase> D chainDimensions(BiFunction<DimensionBase, DimensionBase, D> constructor, DimensionBase[] dimensions) throws InvalidArrayException {
+	private static <D extends DimensionBase> D chainDimensions(BiFunction<DimensionBase, DimensionBase, D> constructor, DimensionBase[] dimensions) throws InvalidArrayException {
 		Arrays.requireMinLength(dimensions, 2);
 		
 		// Start with the first two dimensions
@@ -512,20 +512,20 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		public boolean isDirty(RectTransform context, boolean isHorizontal) {
-			return dimension.isDirty(context, isHorizontal) || dimensionMin.isDirty(context, isHorizontal) || dimensionMax.isDirty(context, isHorizontal);
+		public boolean isDirty(Node node, boolean isHorizontal) {
+			return dimension.isDirty(node, isHorizontal) || dimensionMin.isDirty(node, isHorizontal) || dimensionMax.isDirty(node, isHorizontal);
 		}
 		
 		@Override
-		protected int recompute(RectTransform context, boolean isHorizontal) {
-			int value = dimension.compute(context, isHorizontal);
-			int min = dimensionMin.compute(context, isHorizontal);
+		protected int recompute(Node node, boolean isHorizontal) {
+			int value = dimension.compute(node, isHorizontal);
+			int min = dimensionMin.compute(node, isHorizontal);
 			
 			if (value <= min) {
 				return min;
 			}
 			
-			int max = dimensionMax.compute(context, isHorizontal);
+			int max = dimensionMax.compute(node, isHorizontal);
 			
 			return Math.min(value, max);
 		}

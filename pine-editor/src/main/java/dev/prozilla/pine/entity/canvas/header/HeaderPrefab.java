@@ -5,10 +5,10 @@ import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.prefab.canvas.ContainerPrefab;
-import dev.prozilla.pine.core.entity.prefab.canvas.TextPrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
 
-public class HeaderPrefab extends ContainerPrefab {
+public class HeaderPrefab extends LayoutPrefab {
 	
 	public HeaderPrefab() {
 		super();

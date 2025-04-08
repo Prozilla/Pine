@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.math.dimension;
 
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
-import dev.prozilla.pine.core.component.canvas.RectTransform;
+import dev.prozilla.pine.core.component.ui.Node;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -109,21 +109,21 @@ public class DualDimension implements Printable, Cloneable<DualDimension> {
 	/**
 	 * Computes the X-dimension for a given element.
 	 */
-	public int computeX(RectTransform element) {
+	public int computeX(Node element) {
 		return x.compute(element, true);
 	}
 	
 	/**
 	 * Computes the Y-dimension for a given element.
 	 */
-	public int computeY(RectTransform element) {
+	public int computeY(Node element) {
 		return y.compute(element, false);
 	}
 	
 	/**
 	 * Checks whether this pair of dimensions computes to <code>0</code> for a given element.
 	 */
-	public boolean isZero(RectTransform element) {
+	public boolean isZero(Node element) {
 		return computeX(element) == 0 || computeY(element) == 0;
 	}
 	

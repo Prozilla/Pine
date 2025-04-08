@@ -2,14 +2,14 @@ package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
-import dev.prozilla.pine.core.component.canvas.RectTransform;
+import dev.prozilla.pine.core.component.ui.Node;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents a collection of rules for a single style property of a canvas element.
+ * Represents a collection of rules for a single style property of a node.
  * @param <T> The type of the property
  */
 public class Style<T> {
@@ -43,14 +43,14 @@ public class Style<T> {
 		this.defaultValue = defaultValue;
 	}
 	
-	public <P extends StyledProperty<T>> P toProperty(StyledPropertyKey name, RectTransform context, AdaptiveProperty<T> fallbackValue, StyledPropertyFactory<T, P> factory) {
-		return factory.create(name, context, rules, Objects.requireNonNullElse(defaultValue,  fallbackValue), transitionRules);
+	public <P extends StyledProperty<T>> P toProperty(StyledPropertyKey<T> name, Node node, AdaptiveProperty<T> fallbackValue, StyledPropertyFactory<T, P> factory) {
+		return factory.create(name, node, rules, Objects.requireNonNullElse(defaultValue,  fallbackValue), transitionRules);
 	}
 	
 	@FunctionalInterface
 	public interface StyledPropertyFactory<T, P extends StyledProperty<T>> {
 		
-		P create(StyledPropertyKey name, RectTransform context, List<StyleRule<T>> rules, AdaptiveProperty<T> defaultValue, List<StyleRule<AnimationCurve>> transitionRules);
+		P create(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, AdaptiveProperty<T> defaultValue, List<StyleRule<AnimationCurve>> transitionRules);
 		
 	}
 	

@@ -10,7 +10,7 @@ import dev.prozilla.pine.common.property.style.selector.Selector;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.Resource;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.core.component.canvas.RectTransform;
+import dev.prozilla.pine.core.component.ui.Node;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
- * Manages style rules for different properties of canvas elements.
+ * Manages style rules for different properties of nodes.
  */
 public class StyleSheet implements Printable, Resource {
 	
@@ -62,37 +62,37 @@ public class StyleSheet implements Printable, Resource {
 		style.setDefaultValue(defaultValue);
 	}
 	
-	public StyledColorProperty createColorProperty(RectTransform context) {
-		return createStyledColorProperty(StyledPropertyKey.COLOR, context, Color.white());
+	public StyledColorProperty createColorProperty(Node node) {
+		return createStyledColorProperty(StyledPropertyKey.COLOR, node, Color.white());
 	}
 	
-	public StyledColorProperty createBackgroundColorProperty(RectTransform context) {
-		return createStyledColorProperty(StyledPropertyKey.BACKGROUND_COLOR, context, Color.black());
+	public StyledColorProperty createBackgroundColorProperty(Node node) {
+		return createStyledColorProperty(StyledPropertyKey.BACKGROUND_COLOR, node, Color.black());
 	}
 	
-	public StyledDualDimensionProperty createSizeProperty(RectTransform context) {
-		return createStyledDualDimensionProperty(StyledPropertyKey.SIZE, context, new DualDimension());
+	public StyledDualDimensionProperty createSizeProperty(Node node) {
+		return createStyledDualDimensionProperty(StyledPropertyKey.SIZE, node, new DualDimension());
 	}
 	
-	public StyledDualDimensionProperty createPaddingProperty(RectTransform context) {
-		return createStyledDualDimensionProperty(StyledPropertyKey.PADDING, context, new DualDimension());
+	public StyledDualDimensionProperty createPaddingProperty(Node node) {
+		return createStyledDualDimensionProperty(StyledPropertyKey.PADDING, node, new DualDimension());
 	}
 	
-	public StyledDualDimensionProperty createPositionProperty(RectTransform context) {
-		return createStyledDualDimensionProperty(StyledPropertyKey.POSITION, context, new DualDimension());
+	public StyledDualDimensionProperty createPositionProperty(Node node) {
+		return createStyledDualDimensionProperty(StyledPropertyKey.POSITION, node, new DualDimension());
 	}
 	
-	protected StyledColorProperty createStyledColorProperty(StyledPropertyKey<Color> name, RectTransform context, Color fallbackValue) {
-		return createStyledProperty(name, context, new AdaptiveColorProperty(fallbackValue),  (Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
+	protected StyledColorProperty createStyledColorProperty(StyledPropertyKey<Color> name, Node node, Color fallbackValue) {
+		return createStyledProperty(name, node, new AdaptiveColorProperty(fallbackValue),  (Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
 	}
 	
-	protected StyledDualDimensionProperty createStyledDualDimensionProperty(StyledPropertyKey<DualDimension> name, RectTransform context, DualDimension fallbackValue) {
-		return createStyledProperty(name, context, new AdaptiveDualDimensionProperty(fallbackValue),  (Style.StyledPropertyFactory<DualDimension, StyledDualDimensionProperty>)StyledDualDimensionProperty::new);
+	protected StyledDualDimensionProperty createStyledDualDimensionProperty(StyledPropertyKey<DualDimension> name, Node node, DualDimension fallbackValue) {
+		return createStyledProperty(name, node, new AdaptiveDualDimensionProperty(fallbackValue),  (Style.StyledPropertyFactory<DualDimension, StyledDualDimensionProperty>)StyledDualDimensionProperty::new);
 	}
 	
-	protected  <T, P extends StyledProperty<T>> P createStyledProperty(StyledPropertyKey<T> name, RectTransform context, AdaptiveProperty<T> fallbackValue, Style.StyledPropertyFactory<T, P> factory) {
+	protected  <T, P extends StyledProperty<T>> P createStyledProperty(StyledPropertyKey<T> name, Node node, AdaptiveProperty<T> fallbackValue, Style.StyledPropertyFactory<T, P> factory) {
 		Style<T> style = getStyle(name, false);
-		return style != null ? style.toProperty(name, context, fallbackValue, factory) : null;
+		return style != null ? style.toProperty(name, node, fallbackValue, factory) : null;
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.property.style.selector;
 
-import dev.prozilla.pine.core.component.canvas.RectTransform;
+import dev.prozilla.pine.core.component.ui.Node;
 
 /**
  * A selector that matches elements with a specific class.
@@ -14,8 +14,8 @@ public class ClassSelector extends Selector {
 	}
 	
 	@Override
-	public boolean matches(RectTransform context) {
-		return context.classes.contains(className);
+	public boolean matches(Node node) {
+		return node.classes.contains(className);
 	}
 	
 	@Override

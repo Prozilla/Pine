@@ -7,18 +7,18 @@ import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedColorProperty;
 import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.core.component.canvas.RectTransform;
+import dev.prozilla.pine.core.component.ui.Node;
 
 import java.util.List;
 
 public final class StyledColorProperty extends StyledProperty<Color> implements ColorProperty {
 	
-	public StyledColorProperty(StyledPropertyKey name, RectTransform context, List<StyleRule<Color>> styleRules, AdaptiveProperty<Color> defaultValue) {
-		this(name, context, styleRules, defaultValue, null);
+	public StyledColorProperty(StyledPropertyKey<Color> name, Node node, List<StyleRule<Color>> styleRules, AdaptiveProperty<Color> defaultValue) {
+		this(name, node, styleRules, defaultValue, null);
 	}
 	
-	public StyledColorProperty(StyledPropertyKey name, RectTransform context, List<StyleRule<Color>> styleRules, AdaptiveProperty<Color> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
-		super(name, context, styleRules, defaultValue, transitionRules);
+	public StyledColorProperty(StyledPropertyKey<Color> name, Node node, List<StyleRule<Color>> styleRules, AdaptiveProperty<Color> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
+		super(name, node, styleRules, defaultValue, transitionRules);
 	}
 	
 	@Override

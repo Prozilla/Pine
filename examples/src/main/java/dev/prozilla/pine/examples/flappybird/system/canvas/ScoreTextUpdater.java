@@ -1,6 +1,6 @@
 package dev.prozilla.pine.examples.flappybird.system.canvas;
 
-import dev.prozilla.pine.core.component.canvas.TextRenderer;
+import dev.prozilla.pine.core.component.ui.TextRenderer;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 import dev.prozilla.pine.examples.flappybird.EntityTag;
 import dev.prozilla.pine.examples.flappybird.GameScene;

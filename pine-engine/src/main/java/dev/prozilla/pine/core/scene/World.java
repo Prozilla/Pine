@@ -15,26 +15,25 @@ import dev.prozilla.pine.core.system.SystemBuilder;
 import dev.prozilla.pine.core.system.SystemManager;
 import dev.prozilla.pine.core.system.standard.animation.AnimationInitializer;
 import dev.prozilla.pine.core.system.standard.animation.AnimationUpdater;
-import dev.prozilla.pine.core.system.standard.animation.canvas.CanvasElementStyler;
 import dev.prozilla.pine.core.system.standard.camera.*;
-import dev.prozilla.pine.core.system.standard.canvas.*;
-import dev.prozilla.pine.core.system.standard.canvas.frame.FrameRenderSystem;
-import dev.prozilla.pine.core.system.standard.canvas.frame.FrameResizer;
-import dev.prozilla.pine.core.system.standard.canvas.group.CanvasGroupArranger;
-import dev.prozilla.pine.core.system.standard.canvas.group.CanvasGroupInitializer;
-import dev.prozilla.pine.core.system.standard.canvas.group.CanvasGroupInputHandler;
-import dev.prozilla.pine.core.system.standard.canvas.group.CanvasGroupResizer;
-import dev.prozilla.pine.core.system.standard.canvas.image.ImageInitializer;
-import dev.prozilla.pine.core.system.standard.canvas.image.ImageRenderSystem;
-import dev.prozilla.pine.core.system.standard.canvas.text.TextInitializer;
-import dev.prozilla.pine.core.system.standard.canvas.text.TextRenderSystem;
-import dev.prozilla.pine.core.system.standard.canvas.text.TextResizer;
-import dev.prozilla.pine.core.system.standard.canvas.tooltip.TooltipInitializer;
-import dev.prozilla.pine.core.system.standard.canvas.tooltip.TooltipInputHandler;
 import dev.prozilla.pine.core.system.standard.particle.ParticleFlowUpdater;
 import dev.prozilla.pine.core.system.standard.particle.ParticleInitializer;
 import dev.prozilla.pine.core.system.standard.particle.ParticleUpdater;
 import dev.prozilla.pine.core.system.standard.sprite.*;
+import dev.prozilla.pine.core.system.standard.ui.*;
+import dev.prozilla.pine.core.system.standard.ui.frame.FrameRenderer;
+import dev.prozilla.pine.core.system.standard.ui.frame.FrameResizer;
+import dev.prozilla.pine.core.system.standard.ui.image.ImageInitializer;
+import dev.prozilla.pine.core.system.standard.ui.image.ImageRenderer;
+import dev.prozilla.pine.core.system.standard.ui.layout.LayoutNodeArranger;
+import dev.prozilla.pine.core.system.standard.ui.layout.LayoutNodeInitializer;
+import dev.prozilla.pine.core.system.standard.ui.layout.LayoutNodeInputHandler;
+import dev.prozilla.pine.core.system.standard.ui.layout.LayoutNodeResizer;
+import dev.prozilla.pine.core.system.standard.ui.text.TextInitializer;
+import dev.prozilla.pine.core.system.standard.ui.text.TextRenderer;
+import dev.prozilla.pine.core.system.standard.ui.text.TextResizer;
+import dev.prozilla.pine.core.system.standard.ui.tooltip.TooltipInitializer;
+import dev.prozilla.pine.core.system.standard.ui.tooltip.TooltipInputHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +98,7 @@ public class World implements Lifecycle {
 		initialSystems.add(new AnimationInitializer());
 		initialSystems.add(new AnimationUpdater());
 		
-		initialSystems.add(new CanvasElementStyler());
+		initialSystems.add(new NodeStyler());
 		
 		// Camera
 		initialSystems.add(new CameraInitializer());
@@ -121,31 +120,31 @@ public class World implements Lifecycle {
 		initialSystems.add(new TileMover());
 		initialSystems.add(new SpriteRenderSystem());
 
-		// Canvas
+		// Nodes
 		initialSystems.add(new TooltipInitializer());
-		initialSystems.add(new RectInitializer());
-		initialSystems.add(new CanvasGroupInitializer());
+		initialSystems.add(new NodeInitializer());
+		initialSystems.add(new LayoutNodeInitializer());
 		initialSystems.add(new TextInitializer());
 		initialSystems.add(new ImageInitializer());
 		
-		initialSystems.add(new CanvasInputHandler());
-		initialSystems.add(new CanvasGroupInputHandler());
-		initialSystems.add(new RectInputHandler());
+		initialSystems.add(new NodeRootInputHandler());
+		initialSystems.add(new LayoutNodeInputHandler());
+		initialSystems.add(new NodeInputHandler());
 		initialSystems.add(new TooltipInputHandler());
 		initialSystems.add(new ButtonInputHandler());
 		
-		initialSystems.add(new CanvasResizer());
+		initialSystems.add(new NodeRootResizer());
 		initialSystems.add(new TextResizer());
 		initialSystems.add(new FrameResizer());
-		initialSystems.add(new CanvasGroupResizer());
-		initialSystems.add(new CanvasGroupArranger());
-		initialSystems.add(new RectUpdater());
+		initialSystems.add(new LayoutNodeResizer());
+		initialSystems.add(new LayoutNodeArranger());
+		initialSystems.add(new NodeUpdater());
 
-		initialSystems.add(new CanvasRenderSystem());
-		initialSystems.add(new RectRenderSystem());
-		initialSystems.add(new TextRenderSystem());
-		initialSystems.add(new ImageRenderSystem());
-		initialSystems.add(new FrameRenderSystem());
+		initialSystems.add(new NodeRootRenderer());
+		initialSystems.add(new NodeRenderer());
+		initialSystems.add(new TextRenderer());
+		initialSystems.add(new ImageRenderer());
+		initialSystems.add(new FrameRenderer());
 		
 		// Sprite input
 		initialSystems.add(new GridInputHandler());

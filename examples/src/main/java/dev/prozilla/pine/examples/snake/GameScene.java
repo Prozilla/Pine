@@ -7,7 +7,7 @@ import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.component.particle.ParticleBurstEmitter;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.prefab.canvas.CanvasPrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.CanvasPrefab;
 import dev.prozilla.pine.core.entity.prefab.sprite.GridPrefab;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.examples.snake.entity.*;

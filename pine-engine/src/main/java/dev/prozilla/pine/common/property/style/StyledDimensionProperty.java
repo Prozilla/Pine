@@ -6,18 +6,18 @@ import dev.prozilla.pine.common.property.adaptive.AdaptiveDimensionProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedDimensionProperty;
-import dev.prozilla.pine.core.component.canvas.RectTransform;
+import dev.prozilla.pine.core.component.ui.Node;
 
 import java.util.List;
 
 public final class StyledDimensionProperty extends StyledProperty<DimensionBase> {
 	
-	public StyledDimensionProperty(StyledPropertyKey name, RectTransform context, List<StyleRule<DimensionBase>> styleRules, AdaptiveProperty<DimensionBase> defaultValue) {
-		this(name, context, styleRules, defaultValue, null);
+	public StyledDimensionProperty(StyledPropertyKey<DimensionBase> name, Node node, List<StyleRule<DimensionBase>> styleRules, AdaptiveProperty<DimensionBase> defaultValue) {
+		this(name, node, styleRules, defaultValue, null);
 	}
 	
-	public StyledDimensionProperty(StyledPropertyKey name, RectTransform context, List<StyleRule<DimensionBase>> styleRules, AdaptiveProperty<DimensionBase> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
-		super(name, context, styleRules, defaultValue, transitionRules);
+	public StyledDimensionProperty(StyledPropertyKey<DimensionBase> name, Node node, List<StyleRule<DimensionBase>> styleRules, AdaptiveProperty<DimensionBase> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
+		super(name, node, styleRules, defaultValue, transitionRules);
 	}
 	
 	@Override

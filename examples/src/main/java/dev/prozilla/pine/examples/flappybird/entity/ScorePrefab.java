@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.prefab.canvas.TextPrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
 import dev.prozilla.pine.examples.flappybird.EntityTag;
 
 public class ScorePrefab extends TextPrefab {

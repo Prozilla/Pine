@@ -2,7 +2,7 @@ package dev.prozilla.pine;
 
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.scene.Scene;
-import dev.prozilla.pine.entity.canvas.EditorCanvasPrefab;
+import dev.prozilla.pine.entity.canvas.EditorNodeRootPrefab;
 import dev.prozilla.pine.system.canvas.PreviewFrameUpdater;
 
 public class EditorScene extends Scene {
@@ -20,6 +20,6 @@ public class EditorScene extends Scene {
 		
 		world.addSystem(new PreviewFrameUpdater());
 		
-		world.addEntity(new EditorCanvasPrefab(preview));
+		world.addEntity(new EditorNodeRootPrefab(preview));
 	}
 }

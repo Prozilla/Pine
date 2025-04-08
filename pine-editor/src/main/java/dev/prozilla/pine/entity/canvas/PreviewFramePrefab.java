@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.component.PreviewData;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.prefab.canvas.FramePrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.FramePrefab;
 import dev.prozilla.pine.entity.EntityTag;
 
 public class PreviewFramePrefab extends FramePrefab {

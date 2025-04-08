@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.property.style.selector;
 
-import dev.prozilla.pine.core.component.canvas.RectTransform;
+import dev.prozilla.pine.core.component.ui.Node;
 
 /**
  * A selector that negates another selector.
@@ -14,8 +14,8 @@ public class NotSelector extends Selector {
 	}
 	
 	@Override
-	public boolean matches(RectTransform context) {
-		return !selector.matches(context);
+	public boolean matches(Node node) {
+		return !selector.matches(node);
 	}
 	
 	@Override
