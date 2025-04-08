@@ -320,21 +320,32 @@ public final class Color implements Printable, Cloneable<Color>, Transceivable<C
     
     /**
      * Decodes a <code>String</code> into a <code>Color</code>.
-     * Supports octal and hexadecimal number representations of opaque colors.
-     * @param nm String that represents a color as a 24-bit integer
+     * Supports octal and hexadecimal number representations of opaque and transparent colors.
+     * @param input String that represents a color as a 24-bit or 32-bit integer
      * @throws NumberFormatException If the string cannot be decoded.
      * @return Color
      */
-    public static Color decode(String nm) throws NumberFormatException {
-	    int i = Integer.decode(nm);
-        return new Color((i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
+    public static Color decode(String input) throws NumberFormatException {
+	    int i = Integer.decode(input);
+        
+        if ((i >>> 24) != 0) {
+            return new Color((i >> 24) & 0xFF, (i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
+        } else {
+            return new Color((i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
+        }
     }
     
     public static Color parse(String input) {
         int start;
         boolean includesAlpha = false;
         
-        if (input.startsWith("rgba(")) {
+        if (input.startsWith("#")) {
+            try {
+                return Color.decode(input);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        } else if (input.startsWith("rgba(")) {
             start = 4;
             includesAlpha = true;
         } else if (input.startsWith("rgb(")) {

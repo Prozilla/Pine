@@ -17,6 +17,7 @@ public class FramePrefab extends CanvasElementPrefab {
 	public FramePrefab(FrameBufferObject fbo) {
 		super();
 		setName("Frame");
+		addClass("frame");
 		
 		this.fbo = fbo;
 	}

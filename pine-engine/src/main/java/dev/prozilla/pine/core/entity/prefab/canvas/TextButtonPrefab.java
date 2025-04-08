@@ -18,6 +18,7 @@ public class TextButtonPrefab extends TextPrefab {
 	public TextButtonPrefab(String text) {
 		super(text);
 		setName("TextButton");
+		addClass("button");
 		setBackgroundColor(Color.white());
 		setColor(Color.black());
 	}

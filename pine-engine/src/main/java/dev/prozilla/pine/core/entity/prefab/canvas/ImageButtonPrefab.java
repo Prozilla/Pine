@@ -19,6 +19,7 @@ public class ImageButtonPrefab extends ImagePrefab {
 	public ImageButtonPrefab(TextureBase image) {
 		super(image);
 		setName("ImageButton");
+		addClass("button");
 	}
 	
 	public void setClickCallback(ButtonData.ClickCallback callback) {

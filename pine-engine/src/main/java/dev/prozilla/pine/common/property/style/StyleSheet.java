@@ -162,54 +162,52 @@ public class StyleSheet implements Printable, Resource {
 	}
 	
 	public static StyleSheet parse(String css) {
+		// Remove comments
+		css = css.replaceAll("/\\*.*?\\*/", "");
+		
 		StyleSheet styleSheet = new StyleSheet();
 		int i = 0;
 		int len = css.length();
 		
 		while (i < len) {
-			while (i < len && Character.isWhitespace(css.charAt(i))) {
-				i++;
-			}
-			
+			i = skipWhitespace(css, i);
 			if (i >= len) {
 				break;
 			}
 			
-			// Read selector
+			// Read selector (continue until "{")
 			int start = i;
 			while (i < len && css.charAt(i) != '{') {
 				i++;
 			}
-			Selector selector = Selector.parse(css.substring(start, i).trim());
-			
-			if (i >= len || css.charAt(i) != '{') {
+			if (i >= len) {
 				break;
 			}
+			
+			Selector selector = Selector.parse(css.substring(start, i).trim());
 			i++;
 			
-			// Read properties
+			// Read properties (continue until "}")
 			while (i < len && css.charAt(i) != '}') {
-				while (i < len && Character.isWhitespace(css.charAt(i))) {
-					i++;
-				}
-				
-				if (css.charAt(i) == '}') {
+				i = skipWhitespace(css, i);
+				if (i >= len || css.charAt(i) == '}') {
 					break;
 				}
 				
-				// Read property name
+				// Read property name (continue until ":")
 				start = i;
 				while (i < len && css.charAt(i) != ':') {
 					i++;
 				}
-				if (i >= len) {
+				if (i >= len || css.charAt(i) == '}') {
 					break;
 				}
+				
 				String propertyName = css.substring(start, i).trim();
 				StyledPropertyKey<?> propertyKey = StyledPropertyKey.parse(propertyName);
 				i++;
 				
-				// Read value
+				// Read property value (continue until ";" or "}")
 				start = i;
 				while (i < len && css.charAt(i) != ';' && css.charAt(i) != '}') {
 					i++;
@@ -219,13 +217,17 @@ public class StyleSheet implements Printable, Resource {
 				if (selector != null) {
 					if (propertyName.equals("transition")) {
 						// Parse transition property
-						String[] parts = value.split(" ", 2);
-						
-						propertyKey = StyledPropertyKey.parse(parts[0]);
-						AnimationCurve animationCurve = AnimationCurve.parse(parts[1]);
-						
-						if (propertyKey != null && animationCurve != null) {
-							styleSheet.addTransition(selector, propertyKey, animationCurve);
+						for (String transitionValue : value.split(",")) {
+							String[] parts = transitionValue.trim().split(" ", 2);
+							
+							if (parts.length == 2) {
+								propertyKey = StyledPropertyKey.parse(parts[0]);
+								AnimationCurve animationCurve = AnimationCurve.parse(parts[1]);
+								
+								if (propertyKey != null && animationCurve != null) {
+									styleSheet.addTransition(selector, propertyKey, animationCurve);
+								}
+							}
 						}
 					} else if (propertyKey != null) {
 						// Parse normal property
@@ -233,17 +235,27 @@ public class StyleSheet implements Printable, Resource {
 					}
 				}
 				
+				// Skip "}"
 				if (i < len && css.charAt(i) == ';') {
 					i++;
 				}
 			}
 			
+			// Skip "}"
 			if (i < len && css.charAt(i) == '}') {
 				i++;
 			}
 		}
 		
 		return styleSheet;
+	}
+	
+	private static int skipWhitespace(String css, int i) {
+		int len = css.length();
+		while (i < len && Character.isWhitespace(css.charAt(i))) {
+			i++;
+		}
+		return i;
 	}
 	
 }

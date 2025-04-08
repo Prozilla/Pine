@@ -21,6 +21,7 @@ public class ContainerPrefab extends CanvasElementPrefab {
 		arrangeChildren = true;
 		
 		setName("Container");
+		addClass("container");
 	}
 	
 	public void setDirection(Direction direction) {

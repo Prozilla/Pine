@@ -18,6 +18,7 @@ public class TooltipPrefab extends ContainerPrefab {
 		setAbsolutePosition(true);
 		setPassThrough(true);
 		setName("Tooltip");
+		addClass("tooltip");
 		
 		offset = new DualDimension();
 	}

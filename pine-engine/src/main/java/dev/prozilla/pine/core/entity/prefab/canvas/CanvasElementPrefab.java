@@ -18,6 +18,10 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Components;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * Prefab for UI elements.
  */
@@ -33,6 +37,8 @@ public class CanvasElementPrefab extends Prefab {
 	protected boolean absolutePosition;
 	protected boolean passThrough;
 	protected String tooltipText;
+	
+	protected Set<String> classes;
 	
 	protected StyleSheet styleSheet;
 	
@@ -157,6 +163,22 @@ public class CanvasElementPrefab extends Prefab {
 		this.tooltipText = tooltipText;
 	}
 	
+	public void addClasses(String... classNames) {
+		if (classes == null) {
+			classes = new HashSet<>();
+		}
+		
+		classes.addAll(List.of(classNames));
+	}
+	
+	public void addClass(String className) {
+		if (classes == null) {
+			classes = new HashSet<>();
+		}
+		
+		classes.add(className);
+	}
+	
 	protected <T> void setDefaultPropertyValue(StyledPropertyKey<T> propertyName, AdaptiveProperty<T> value) {
 		if (styleSheet == null) {
 			return;
@@ -182,12 +204,15 @@ public class CanvasElementPrefab extends Prefab {
 		if (backgroundColor != null) {
 			rectTransform.backgroundColor = backgroundColor.clone();
 		}
-		
 		if (anchor != null) {
 			rectTransform.anchor = anchor;
 		}
 		if (tooltipText != null) {
 			rectTransform.tooltipText = tooltipText;
+		}
+		
+		if (classes != null) {
+			rectTransform.classes.addAll(classes);
 		}
 		
 		if (styleSheet != null) {

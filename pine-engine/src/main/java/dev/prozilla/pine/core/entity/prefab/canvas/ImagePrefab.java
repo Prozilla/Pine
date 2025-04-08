@@ -28,6 +28,7 @@ public class ImagePrefab extends CanvasElementPrefab {
 		cropToRegion = false;
 		
 		setName("Image");
+		addClass("image");
 	}
 	
 	public void setRegion(int x, int y, int width, int height) {
