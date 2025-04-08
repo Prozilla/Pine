@@ -33,5 +33,11 @@ public class CanvasElementStyler extends UpdateSystem {
 		if (canvasElementStyle.getSizeProperty() != null) {
 			rect.size = canvasElementStyle.getSizeProperty().getValue();
 		}
+		if (canvasElementStyle.getPaddingProperty() != null) {
+			rect.padding = canvasElementStyle.getPaddingProperty().getValue();
+		}
+		if (canvasElementStyle.getPositionProperty() != null) {
+			rect.position = canvasElementStyle.getPositionProperty().getValue();
+		}
 	}
 }

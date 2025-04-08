@@ -3,7 +3,9 @@ package dev.prozilla.pine.common.property.style;
 public enum StyledPropertyName {
 	COLOR("color"),
 	BACKGROUND_COLOR("background-color"),
-	SIZE("size");
+	SIZE("size"),
+	PADDING("padding"),
+	POSITION("position");
 	
 	private final String string;
 	

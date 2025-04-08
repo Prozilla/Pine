@@ -52,18 +52,34 @@ public class StyleSheet implements Printable {
 	}
 	
 	public StyledColorProperty createColorProperty(RectTransform context) {
-		return createProperty(StyledPropertyName.COLOR, context, new AdaptiveColorProperty(Color.white()),(Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
+		return createStyledColorProperty(StyledPropertyName.COLOR, context, Color.white());
 	}
 	
 	public StyledColorProperty createBackgroundColorProperty(RectTransform context) {
-		return createProperty(StyledPropertyName.BACKGROUND_COLOR, context, new AdaptiveColorProperty(Color.black()),  (Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
+		return createStyledColorProperty(StyledPropertyName.BACKGROUND_COLOR, context, Color.black());
 	}
 	
 	public StyledDualDimensionProperty createSizeProperty(RectTransform context) {
-		return createProperty(StyledPropertyName.SIZE, context, new AdaptiveDualDimensionProperty(new DualDimension()), (Style.StyledPropertyFactory<DualDimension, StyledDualDimensionProperty>)StyledDualDimensionProperty::new);
+		return createStyledDualDimensionProperty(StyledPropertyName.SIZE, context, new DualDimension());
 	}
 	
-	protected  <T, P extends StyledProperty<T>> P createProperty(StyledPropertyName name, RectTransform context, AdaptiveProperty<T> fallbackValue, Style.StyledPropertyFactory<T, P> factory) {
+	public StyledDualDimensionProperty createPaddingProperty(RectTransform context) {
+		return createStyledDualDimensionProperty(StyledPropertyName.PADDING, context, new DualDimension());
+	}
+	
+	public StyledDualDimensionProperty createPositionProperty(RectTransform context) {
+		return createStyledDualDimensionProperty(StyledPropertyName.POSITION, context, new DualDimension());
+	}
+	
+	protected StyledColorProperty createStyledColorProperty(StyledPropertyName name, RectTransform context, Color fallbackValue) {
+		return createStyledProperty(name, context, new AdaptiveColorProperty(fallbackValue),  (Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
+	}
+	
+	protected StyledDualDimensionProperty createStyledDualDimensionProperty(StyledPropertyName name, RectTransform context, DualDimension fallbackValue) {
+		return createStyledProperty(name, context, new AdaptiveDualDimensionProperty(fallbackValue),  (Style.StyledPropertyFactory<DualDimension, StyledDualDimensionProperty>)StyledDualDimensionProperty::new);
+	}
+	
+	protected  <T, P extends StyledProperty<T>> P createStyledProperty(StyledPropertyName name, RectTransform context, AdaptiveProperty<T> fallbackValue, Style.StyledPropertyFactory<T, P> factory) {
 		Style<T> style = getStyle(name, false);
 		return style != null ? style.toProperty(name, context, fallbackValue, factory) : null;
 	}

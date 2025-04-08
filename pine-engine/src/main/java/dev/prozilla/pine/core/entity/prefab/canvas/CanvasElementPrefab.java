@@ -60,7 +60,16 @@ public class CanvasElementPrefab extends Prefab {
 	 * Sets the position of this element on the canvas relative to its anchor point.
 	 */
 	public void setPosition(DualDimension position) {
-		this.position = position;
+		if (styleSheet == null) {
+			this.position = position;
+		} else {
+			setPosition(AdaptiveDualDimensionProperty.adapt(position));
+		}
+	}
+	
+	public void setPosition(VariableProperty<DualDimension> position) {
+		setDefaultPropertyValue(StyledPropertyName.POSITION, AdaptiveDualDimensionProperty.adapt(position));
+		this.position = position.getValue();
 	}
 	
 	/**
@@ -91,7 +100,16 @@ public class CanvasElementPrefab extends Prefab {
 	}
 	
 	public void setPadding(DualDimension padding) {
-		this.padding = padding;
+		if (styleSheet == null) {
+			this.padding = padding;
+		} else {
+			setPadding(AdaptiveDualDimensionProperty.adapt(padding));
+		}
+	}
+	
+	public void setPadding(VariableProperty<DualDimension> padding) {
+		setDefaultPropertyValue(StyledPropertyName.PADDING, AdaptiveDualDimensionProperty.adapt(padding));
+		this.padding = padding.getValue();
 	}
 	
 	public void setColor(Color color) {

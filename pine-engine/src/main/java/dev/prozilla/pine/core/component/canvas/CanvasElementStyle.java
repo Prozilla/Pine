@@ -15,6 +15,8 @@ public class CanvasElementStyle extends AnimationData {
 	protected StyledColorProperty colorProperty;
 	protected StyledColorProperty backgroundColorProperty;
 	protected StyledDualDimensionProperty sizeProperty;
+	protected StyledDualDimensionProperty paddingProperty;
+	protected StyledDualDimensionProperty positionProperty;
 	
 	public CanvasElementStyle(RectTransform rect) {
 		this(rect, null);
@@ -33,6 +35,8 @@ public class CanvasElementStyle extends AnimationData {
 		setColorProperty(styleSheet.createColorProperty(rect));
 		setBackgroundColorProperty(styleSheet.createBackgroundColorProperty(rect));
 		setSizeProperty(styleSheet.createSizeProperty(rect));
+		setPaddingProperty(styleSheet.createPaddingProperty(rect));
+		setPositionProperty(styleSheet.createPositionProperty(rect));
 	}
 	
 	public StyledColorProperty getColorProperty() {
@@ -60,6 +64,24 @@ public class CanvasElementStyle extends AnimationData {
 	public void setSizeProperty(StyledDualDimensionProperty sizeProperty) {
 		changeProperty(this.sizeProperty, sizeProperty);
 		this.sizeProperty = sizeProperty;
+	}
+	
+	public StyledDualDimensionProperty getPaddingProperty() {
+		return paddingProperty;
+	}
+	
+	public void setPaddingProperty(StyledDualDimensionProperty paddingProperty) {
+		changeProperty(this.paddingProperty, paddingProperty);
+		this.paddingProperty = paddingProperty;
+	}
+	
+	public StyledDualDimensionProperty getPositionProperty() {
+		return positionProperty;
+	}
+	
+	public void setPositionProperty(StyledDualDimensionProperty positionProperty) {
+		changeProperty(this.positionProperty, positionProperty);
+		this.positionProperty = positionProperty;
 	}
 	
 	protected void changeProperty(StyledProperty<?> oldProperty, StyledProperty<?> newProperty) {

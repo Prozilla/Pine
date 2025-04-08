@@ -27,7 +27,6 @@ public class RectTransform extends Component implements EventDispatcherContext<R
 	public int iterations;
 	
 	// Attributes
-	public DualDimension position;
 	public GridAlignment anchor;
 	/** If true, allows the cursor to pass through this element. */
 	public boolean passThrough;
@@ -40,6 +39,7 @@ public class RectTransform extends Component implements EventDispatcherContext<R
 	public Color backgroundColor;
 	public DualDimension size;
 	public DualDimension padding;
+	public DualDimension position;
 	
 	public final Set<String> classes;
 	public final Set<String> modifiers;
