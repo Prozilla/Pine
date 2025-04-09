@@ -85,3 +85,6 @@ out/
 
 # Windows
 **/desktop.ini
+
+# Groovy
+lib

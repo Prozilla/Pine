@@ -1,13 +1,8 @@
 plugins {
-    id "java"
+    id "dev.prozilla.pine.common"
 }
 
-group = "dev.prozilla"
 version = "1.0.0"
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     // Pine engine
