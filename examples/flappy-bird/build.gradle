@@ -1,0 +1,35 @@
+plugins {
+    id "java"
+    id "application"
+    id 'com.github.johnrengelman.shadow' version '8.1.0'
+}
+
+version "1.0.0.0"
+
+application {
+    mainClass = "dev.prozilla.pine.examples.flappybird.Main"
+}
+
+dependencies {
+    implementation project(":pine-engine")
+    implementation project(":pine-editor")
+}
+
+tasks.register("start", JavaExec) {
+    mainClass = "dev.prozilla.pine.examples.flappybird.Main"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+tasks.register("editor", JavaExec) {
+    mainClass = "dev.prozilla.pine.examples.flappybird.Editor"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+tasks.register("export") {
+    dependsOn("build")
+    doLast {
+        def buildToolTask = tasks.getByPath(":pine-engine:runBuildTool")
+        buildToolTask.args = [projectDir.absolutePath]
+        buildToolTask.exec()
+    }
+}

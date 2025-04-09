@@ -1,7 +1,6 @@
 package dev.prozilla.pine.examples.canvas;
 
 import dev.prozilla.pine.core.ApplicationBuilder;
-import dev.prozilla.pine.examples.flappybird.GameScene;
 
 public class Main {
 	

@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Create Snake Exe" type="GradleRunConfiguration" factoryName="Gradle" folderName="Examples">
+  <configuration default="false" name="Export Flappy Bird" type="GradleRunConfiguration" factoryName="Gradle" folderName="Flappy Bird">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -10,8 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="build" />
-          <option value="createSnakeExe" />
+          <option value=":examples:flappy-bird:export" />
         </list>
       </option>
       <option name="vmOptions" />

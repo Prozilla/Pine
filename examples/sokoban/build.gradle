@@ -1,0 +1,29 @@
+plugins {
+    id "java"
+    id "application"
+    id 'com.github.johnrengelman.shadow' version '8.1.0'
+}
+
+version "1.0.0.0"
+
+application {
+    mainClass = "dev.prozilla.pine.examples.sokoban.Main"
+}
+
+dependencies {
+    implementation project(":pine-engine")
+}
+
+tasks.register("start", JavaExec) {
+    mainClass = "dev.prozilla.pine.examples.sokoban.Main"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+tasks.register("export") {
+    dependsOn("build")
+    doLast {
+        def buildToolTask = tasks.getByPath(":pine-engine:runBuildTool")
+        buildToolTask.args = [projectDir.absolutePath]
+        buildToolTask.exec()
+    }
+}
