@@ -25,9 +25,9 @@ public class CrateUpdater extends UpdateSystem {
 		
 		// Update sprite based on whether create is on a goal tile
 		if (goalGrid.getTile(tileRenderer.getCoordinate()) != null) {
-			spriteRenderer.texture = ResourcePool.loadTexture("sokoban/PNG/Default size/Crates/crate_07.png");
+			spriteRenderer.texture = ResourcePool.loadTexture("sokoban/Crates/crate_07.png");
 		} else {
-			spriteRenderer.texture = ResourcePool.loadTexture("sokoban/PNG/Default size/Crates/crate_02.png");
+			spriteRenderer.texture = ResourcePool.loadTexture("sokoban/Crates/crate_02.png");
 		}
 	}
 }

@@ -6,7 +6,7 @@ import dev.prozilla.pine.examples.sokoban.EntityTag;
 public class GoalPrefab extends TilePrefab {
 	
 	public GoalPrefab() {
-		super("sokoban/PNG/Default size/Environment/environment_15.png");
+		super("sokoban/Environment/environment_15.png");
 		setTag(EntityTag.GOAL);
 	}
 	

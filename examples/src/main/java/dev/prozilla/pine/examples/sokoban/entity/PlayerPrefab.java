@@ -8,7 +8,7 @@ import dev.prozilla.pine.examples.sokoban.component.PlayerData;
 public class PlayerPrefab extends TilePrefab {
 	
 	public PlayerPrefab() {
-		super("sokoban/PNG/Default size/Player/player_23.png");
+		super("sokoban/Player/player_23.png");
 		setTag(EntityTag.PLAYER);
 	}
 	

@@ -6,7 +6,7 @@ import dev.prozilla.pine.examples.sokoban.EntityTag;
 public class CratePrefab extends TilePrefab {
 	
 	public CratePrefab() {
-		super("sokoban/PNG/Default size/Crates/crate_02.png");
+		super("sokoban/Crates/crate_02.png");
 		setTag(EntityTag.CRATE);
 	}
 	

@@ -1,5 +1,6 @@
 package dev.prozilla.pine.examples.sokoban;
 
+import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.entity.prefab.sprite.GridPrefab;
 import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
@@ -77,8 +78,9 @@ public class GameScene extends Scene {
 		// Move camera to center of map
 		int width = MAP[0].length();
 		int height = MAP.length;
+		cameraData.getTransform().setPosition((width * TILE_SIZE) / 2f, (height * TILE_SIZE) / 2f);
 		
 		cameraData.zoomIn(-0.1f);
-		cameraData.getTransform().setPosition((width * TILE_SIZE) / 2f, (height * TILE_SIZE) / 2f);
+		cameraData.setBackgroundColor(Color.decode("#596A6C"));
 	}
 }
