@@ -52,7 +52,7 @@ public final class PathUtils {
 	
 	public static String createLink(String path) {
 		java.nio.file.Path absolute = Paths.get(path).toAbsolutePath();
-		return "file:///" + absolute.toString().replace("\\", "/");
+		return "file:///" + absolute.toString().replace("\\", "/").replace(" ", "%20");
 	}
 	
 }

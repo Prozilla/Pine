@@ -30,6 +30,11 @@ tasks.register("runSnake", JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
+tasks.register("runSokoban", JavaExec) {
+    mainClass = "dev.prozilla.pine.examples.sokoban.Main"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
 tasks.register("runCanvasDemo", JavaExec) {
     mainClass = "dev.prozilla.pine.examples.canvas.Main"
     classpath = sourceSets.main.runtimeClasspath

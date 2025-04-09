@@ -4,6 +4,8 @@ import dev.prozilla.pine.common.system.PathUtils;
 
 import java.io.File;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 import static dev.prozilla.pine.common.system.PathUtils.normalizePath;
 
@@ -33,6 +35,6 @@ public class ResourceUtils {
 			throw new RuntimeException("Resource not found: " + path);
 		}
 		
-		return normalizePath(resource.getPath());
+		return normalizePath(URLDecoder.decode(resource.getPath(), StandardCharsets.UTF_8));
 	}
 }
