@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.math.easing;
 
 import dev.prozilla.pine.common.math.MathUtils;
+import dev.prozilla.pine.common.util.EnumUtils;
 
 /**
  * A set of predefined easing functions.
@@ -102,16 +103,9 @@ public enum Easing implements EasingFunction {
 		return string;
 	}
 	
+	// TO DO: Implement parsing of other easing functions
 	public static Easing parse(String input) {
-		for (Easing easing : Easing.values()) {
-			if (easing.string.equals(input)) {
-				return easing;
-			}
-		}
-		
-		// TO DO: Implement parsing of other easing functions
-		
-		return null;
+		return EnumUtils.findByName(Easing.values(), input);
 	}
 	
 }

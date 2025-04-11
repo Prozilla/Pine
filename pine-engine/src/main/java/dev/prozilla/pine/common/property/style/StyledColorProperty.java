@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.property.ColorProperty;
 import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedColorProperty;
 import dev.prozilla.pine.common.system.resource.Color;
@@ -13,11 +14,11 @@ import java.util.List;
 
 public final class StyledColorProperty extends StyledProperty<Color> implements ColorProperty {
 	
-	public StyledColorProperty(StyledPropertyKey<Color> name, Node node, List<StyleRule<Color>> styleRules, AdaptiveProperty<Color> defaultValue) {
+	public StyledColorProperty(StyledPropertyKey<Color> name, Node node, List<StyleRule<Color>> styleRules, AdaptivePropertyBase<Color> defaultValue) {
 		this(name, node, styleRules, defaultValue, null);
 	}
 	
-	public StyledColorProperty(StyledPropertyKey<Color> name, Node node, List<StyleRule<Color>> styleRules, AdaptiveProperty<Color> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
+	public StyledColorProperty(StyledPropertyKey<Color> name, Node node, List<StyleRule<Color>> styleRules, AdaptivePropertyBase<Color> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
 		super(name, node, styleRules, defaultValue, transitionRules);
 	}
 	

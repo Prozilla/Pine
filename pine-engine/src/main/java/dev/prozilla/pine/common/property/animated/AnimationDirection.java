@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.property.animated;
 
+import dev.prozilla.pine.common.util.EnumUtils;
+
 public enum AnimationDirection {
 	NORMAL("normal") {
 		@Override
@@ -34,13 +36,7 @@ public enum AnimationDirection {
 	}
 	
 	public static AnimationDirection parse(String input) {
-		for (AnimationDirection direction : AnimationDirection.values()) {
-			if (direction.string.equals(input)) {
-				return direction;
-			}
-		}
-		
-		return null;
+		return EnumUtils.findByName(AnimationDirection.values(), input);
 	}
 	
 }

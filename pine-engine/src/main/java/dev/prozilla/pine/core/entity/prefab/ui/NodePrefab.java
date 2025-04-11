@@ -11,6 +11,7 @@ import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.property.style.StyledPropertyKey;
 import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.NodeStyle;
@@ -49,6 +50,13 @@ public class NodePrefab extends Prefab {
 		passThrough = false;
 		
 		setName("CanvasElement");
+	}
+	
+	/**
+	 * Sets the style sheet that is applied to this node by loading it from a CSS file.
+	 */
+	public void setStyleSheet(String filePath) {
+		setStyleSheet(ResourcePool.loadStyleSheet("style/common.css"));
 	}
 	
 	/**

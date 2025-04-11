@@ -2,9 +2,8 @@ package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
-import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
-import dev.prozilla.pine.common.property.adaptive.AdaptiveDualDimensionProperty;
-import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
+import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.property.adaptive.*;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.style.selector.Selector;
 import dev.prozilla.pine.common.system.resource.Color;
@@ -67,7 +66,7 @@ public class StyleSheet implements Printable, Resource {
 	}
 	
 	public StyledColorProperty createBackgroundColorProperty(Node node) {
-		return createStyledColorProperty(StyledPropertyKey.BACKGROUND_COLOR, node, Color.black());
+		return createStyledColorProperty(StyledPropertyKey.BACKGROUND_COLOR, node, Color.transparent());
 	}
 	
 	public StyledDualDimensionProperty createSizeProperty(Node node) {
@@ -82,6 +81,14 @@ public class StyleSheet implements Printable, Resource {
 		return createStyledDualDimensionProperty(StyledPropertyKey.POSITION, node, new DualDimension());
 	}
 	
+	public StyledGridAlignmentProperty createAnchorProperty(Node node) {
+		return createStyledGridAlignmentProperty(StyledPropertyKey.ANCHOR, node, Node.DEFAULT_ANCHOR);
+	}
+	
+	public StyledIntProperty createGapProperty(Node node) {
+		return createStyledGridAlignmentProperty(StyledPropertyKey.GAP, node, 0);
+	}
+	
 	protected StyledColorProperty createStyledColorProperty(StyledPropertyKey<Color> name, Node node, Color fallbackValue) {
 		return createStyledProperty(name, node, new AdaptiveColorProperty(fallbackValue),  (Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
 	}
@@ -90,7 +97,15 @@ public class StyleSheet implements Printable, Resource {
 		return createStyledProperty(name, node, new AdaptiveDualDimensionProperty(fallbackValue),  (Style.StyledPropertyFactory<DualDimension, StyledDualDimensionProperty>)StyledDualDimensionProperty::new);
 	}
 	
-	protected  <T, P extends StyledProperty<T>> P createStyledProperty(StyledPropertyKey<T> name, Node node, AdaptiveProperty<T> fallbackValue, Style.StyledPropertyFactory<T, P> factory) {
+	protected StyledGridAlignmentProperty createStyledGridAlignmentProperty(StyledPropertyKey<GridAlignment> name, Node node, GridAlignment fallbackValue) {
+		return createStyledProperty(name, node, new AdaptiveGridAlignmentProperty(fallbackValue),  (Style.StyledPropertyFactory<GridAlignment, StyledGridAlignmentProperty>)StyledGridAlignmentProperty::new);
+	}
+	
+	protected StyledIntProperty createStyledGridAlignmentProperty(StyledPropertyKey<Integer> name, Node node, int fallbackValue) {
+		return createStyledProperty(name, node, new AdaptiveIntProperty(fallbackValue),  (Style.StyledPropertyFactory<Integer, StyledIntProperty>)StyledIntProperty::new);
+	}
+	
+	protected  <T, P extends StyledProperty<T>> P createStyledProperty(StyledPropertyKey<T> name, Node node, AdaptivePropertyBase<T> fallbackValue, Style.StyledPropertyFactory<T, P> factory) {
 		Style<T> style = getStyle(name, false);
 		return style != null ? style.toProperty(name, node, fallbackValue, factory) : null;
 	}

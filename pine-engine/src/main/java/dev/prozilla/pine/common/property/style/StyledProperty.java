@@ -3,7 +3,7 @@ package dev.prozilla.pine.common.property.style;
 import dev.prozilla.pine.common.Animatable;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.property.VariableProperty;
-import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedProperty;
 import dev.prozilla.pine.core.component.ui.Node;
@@ -26,8 +26,8 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 	
 	protected final List<StyleRule<T>> rules;
 	private StyleRule<T> currentRule;
-	private AdaptiveProperty<T> adaptiveProperty;
-	private final AdaptiveProperty<T> fallbackProperty;
+	private AdaptivePropertyBase<T> adaptiveProperty;
+	private final AdaptivePropertyBase<T> fallbackProperty;
 	
 	protected final List<StyleRule<AnimationCurve>> transitionRules;
 	private StyleRule<AnimationCurve> currentTransitionRule;
@@ -39,7 +39,7 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 	 * @param rules The rules that determine the value of this property
 	 * @param defaultValue The initial value of this property. Also used when no rule is applied.
 	 */
-	public StyledProperty(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, AdaptiveProperty<T> defaultValue) {
+	public StyledProperty(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, AdaptivePropertyBase<T> defaultValue) {
 		this(name, node, rules, defaultValue, null);
 	}
 	
@@ -50,7 +50,7 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 	 * @param defaultValue The initial value of this property. Also used when no rule is applied.
 	 * @param transitionRules The rules that determine how the value of this property transitions when changed
 	 */
-	public StyledProperty(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, AdaptiveProperty<T> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
+	public StyledProperty(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, AdaptivePropertyBase<T> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
 		this.name = name;
 		this.node = Objects.requireNonNull(node, "node must not be null");
 		this.rules = Objects.requireNonNullElse(rules, new ArrayList<>());
@@ -94,6 +94,10 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 	}
 	
 	protected void applyTransitionRules() {
+		if (!supportsTransitions()) {
+			return;
+		}
+		
 		StyleRule<AnimationCurve> transitionRule = getBestMatch(transitionRules);
 		if (Objects.equals(transitionRule, currentTransitionRule)) {
 			return;
@@ -111,11 +115,15 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 		}
 	}
 	
-	abstract protected AdaptiveProperty<T> createAdaptiveProperty(T value);
+	abstract protected AdaptivePropertyBase<T> createAdaptiveProperty(T value);
 	
-	abstract protected AdaptiveProperty<T> createAdaptiveProperty(VariableProperty<T> property);
+	abstract protected AdaptivePropertyBase<T> createAdaptiveProperty(VariableProperty<T> property);
 	
 	abstract protected TransitionedProperty<T> createTransitionedProperty(T initialValue, AnimationCurve curve);
+	
+	public boolean supportsTransitions() {
+		return true;
+	}
 	
 	protected <U> StyleRule<U> getBestMatch(List<StyleRule<U>> rules) {
 		StyleRule<U> bestMatch = null;
@@ -128,7 +136,7 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 		return bestMatch;
 	}
 	
-	protected void setAdaptiveProperty(AdaptiveProperty<T> adaptiveProperty) {
+	protected void setAdaptiveProperty(AdaptivePropertyBase<T> adaptiveProperty) {
 		if (this.adaptiveProperty == adaptiveProperty) {
 			return;
 		}

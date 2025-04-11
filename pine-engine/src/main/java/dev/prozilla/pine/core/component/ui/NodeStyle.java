@@ -3,41 +3,36 @@ package dev.prozilla.pine.core.component.ui;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.property.style.StyledColorProperty;
 import dev.prozilla.pine.common.property.style.StyledDualDimensionProperty;
-import dev.prozilla.pine.common.property.style.StyledProperty;
-import dev.prozilla.pine.core.component.AnimationData;
+import dev.prozilla.pine.common.property.style.StyledGridAlignmentProperty;
 
 /**
  * A component that applies styles to nodes.
  */
-public class NodeStyle extends AnimationData {
+public class NodeStyle extends NodeStyleBase {
 	
-	protected final Node node;
-	
-	protected StyledColorProperty colorProperty;
-	protected StyledColorProperty backgroundColorProperty;
-	protected StyledDualDimensionProperty sizeProperty;
-	protected StyledDualDimensionProperty paddingProperty;
-	protected StyledDualDimensionProperty positionProperty;
+	private StyledColorProperty colorProperty;
+	private StyledColorProperty backgroundColorProperty;
+	private StyledDualDimensionProperty sizeProperty;
+	private StyledDualDimensionProperty paddingProperty;
+	private StyledDualDimensionProperty positionProperty;
+	private StyledGridAlignmentProperty anchorProperty;
 	
 	public NodeStyle(Node node) {
 		this(node, null);
 	}
 	
 	public NodeStyle(Node node, StyleSheet styleSheet) {
-		super(false);
-		this.node = node;
-		
-		if (styleSheet != null) {
-			applyStyleSheet(styleSheet);
-		}
+		super(node, styleSheet);
 	}
 	
+	@Override
 	public void applyStyleSheet(StyleSheet styleSheet) {
 		setColorProperty(styleSheet.createColorProperty(node));
 		setBackgroundColorProperty(styleSheet.createBackgroundColorProperty(node));
 		setSizeProperty(styleSheet.createSizeProperty(node));
 		setPaddingProperty(styleSheet.createPaddingProperty(node));
 		setPositionProperty(styleSheet.createPositionProperty(node));
+		setAnchorProperty(styleSheet.createAnchorProperty(node));
 	}
 	
 	public StyledColorProperty getColorProperty() {
@@ -85,10 +80,12 @@ public class NodeStyle extends AnimationData {
 		this.positionProperty = positionProperty;
 	}
 	
-	protected void changeProperty(StyledProperty<?> oldProperty, StyledProperty<?> newProperty) {
-		super.changeProperty(oldProperty, newProperty);
-		if (newProperty != null) {
-			newProperty.invalidate();
-		}
+	public StyledGridAlignmentProperty getAnchorProperty() {
+		return anchorProperty;
+	}
+	
+	public void setAnchorProperty(StyledGridAlignmentProperty anchorProperty) {
+		changeProperty(this.anchorProperty, anchorProperty);
+		this.anchorProperty = anchorProperty;
 	}
 }

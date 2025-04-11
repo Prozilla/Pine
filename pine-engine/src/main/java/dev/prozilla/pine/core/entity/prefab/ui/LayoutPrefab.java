@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
+import dev.prozilla.pine.core.component.ui.LayoutNodeStyle;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Components;
@@ -65,6 +66,11 @@ public class LayoutPrefab extends NodePrefab {
 		}
 		if (distribution != null) {
 			layoutNode.distribution = distribution;
+		}
+		
+		if (styleSheet != null) {
+			Node node = entity.getComponent(Node.class);
+			entity.addComponent(new LayoutNodeStyle(node, styleSheet));
 		}
 	}
 }

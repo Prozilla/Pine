@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.core.component.ui.Node;
 
@@ -43,14 +44,14 @@ public class Style<T> {
 		this.defaultValue = defaultValue;
 	}
 	
-	public <P extends StyledProperty<T>> P toProperty(StyledPropertyKey<T> name, Node node, AdaptiveProperty<T> fallbackValue, StyledPropertyFactory<T, P> factory) {
+	public <P extends StyledProperty<T>> P toProperty(StyledPropertyKey<T> name, Node node, AdaptivePropertyBase<T> fallbackValue, StyledPropertyFactory<T, P> factory) {
 		return factory.create(name, node, rules, Objects.requireNonNullElse(defaultValue,  fallbackValue), transitionRules);
 	}
 	
 	@FunctionalInterface
 	public interface StyledPropertyFactory<T, P extends StyledProperty<T>> {
 		
-		P create(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, AdaptiveProperty<T> defaultValue, List<StyleRule<AnimationCurve>> transitionRules);
+		P create(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, AdaptivePropertyBase<T> defaultValue, List<StyleRule<AnimationCurve>> transitionRules);
 		
 	}
 	
