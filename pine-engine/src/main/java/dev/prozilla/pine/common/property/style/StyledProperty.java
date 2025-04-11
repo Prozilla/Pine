@@ -112,7 +112,9 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 		
 		if (transitionedProperty == null || !transitionedProperty.getCurve().equals(transitionRule.value())) {
 			transitionedProperty = createTransitionedProperty(adaptiveProperty.getValue(), transitionRule.value());
-			setAdaptiveProperty(createAdaptiveProperty(transitionedProperty));
+			if (transitionedProperty != null) {
+				setAdaptiveProperty(createAdaptiveProperty(transitionedProperty));
+			}
 		}
 	}
 	

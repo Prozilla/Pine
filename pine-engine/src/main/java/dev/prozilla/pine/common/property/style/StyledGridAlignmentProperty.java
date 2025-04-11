@@ -36,4 +36,9 @@ public final class StyledGridAlignmentProperty extends StyledProperty<GridAlignm
 		return null;
 	}
 	
+	@Override
+	public boolean supportsTransitions() {
+		return false;
+	}
+	
 }

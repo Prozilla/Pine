@@ -48,6 +48,8 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 	
 	public final EventDispatcher<NodeEvent> eventDispatcher;
 	
+	public static final Color DEFAULT_COLOR = Color.white();
+	public static final Color DEFAULT_BACKGROUND_COLOR = Color.transparent();
 	public static final GridAlignment DEFAULT_ANCHOR = GridAlignment.BOTTOM_LEFT;
 	
 	public Node() {

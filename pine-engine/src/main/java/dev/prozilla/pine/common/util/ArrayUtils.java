@@ -38,4 +38,21 @@ public final class ArrayUtils {
 		return false;
 	}
 	
+	/**
+	 * Finds the element in an array of which the result of {@link Object#toString()} is equal to a given string.
+	 * @param array The array to search in
+	 * @param string The string representation of the element to search for
+	 * @return The element of which the string representation matches <code>string</code>, or <code>null</code> if there isn't one.
+	 * @param <E> Type of the array elements
+	 */
+	public static <E> E findByString(E[] array, String string) {
+		for (E element : array) {
+			if (element.toString().equals(string)) {
+				return element;
+			}
+		}
+		
+		return null;
+	}
+	
 }

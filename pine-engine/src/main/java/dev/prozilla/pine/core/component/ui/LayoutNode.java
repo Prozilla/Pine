@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.component.ui;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.ArrayList;
@@ -28,15 +29,31 @@ public class LayoutNode extends Component implements NodeContext {
 	
 	public Node node;
 	
+	public static final int DEFAULT_GAP = 0;
 	public static final Direction DEFAULT_DIRECTION = Direction.UP;
 	public static final EdgeAlignment DEFAULT_ALIGNMENT = EdgeAlignment.START;
 	public static final Distribution DEFAULT_DISTRIBUTION = Distribution.START;
 	
 	public enum Distribution {
-		START,
-		CENTER,
-		END,
-		SPACE_BETWEEN
+		START("start"),
+		CENTER("center"),
+		END("end"),
+		SPACE_BETWEEN("space-between");
+		
+		private final String string;
+		
+		Distribution(String string) {
+			this.string = string;
+		}
+		
+		@Override
+		public String toString() {
+			return string;
+		}
+		
+		public static Distribution parse(String input) {
+			return ArrayUtils.findByString(Distribution.values(), input);
+		}
 	}
 	
 	public LayoutNode() {
@@ -57,7 +74,7 @@ public class LayoutNode extends Component implements NodeContext {
 		this.distribution = distribution;
 		
 		childNodes = new ArrayList<>();
-		gap = 0;
+		gap = DEFAULT_GAP;
 		innerSize = new Vector2i();
 		totalChildrenSize = new Vector2i();
 		arrangeChildren = true;

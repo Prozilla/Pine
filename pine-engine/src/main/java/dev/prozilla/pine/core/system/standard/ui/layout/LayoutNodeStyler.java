@@ -19,6 +19,15 @@ public class LayoutNodeStyler extends UpdateSystem {
 		if (layoutNodeStyle.getGapProperty() != null) {
 			layoutNode.gap = layoutNodeStyle.getGapProperty().getValue();
 		}
+		if (layoutNodeStyle.getDirectionProperty() != null) {
+			layoutNode.direction = layoutNodeStyle.getDirectionProperty().getValue();
+		}
+		if (layoutNodeStyle.getAlignmentProperty() != null) {
+			layoutNode.alignment = layoutNodeStyle.getAlignmentProperty().getValue();
+		}
+		if (layoutNodeStyle.getDistributionProperty() != null) {
+			layoutNode.distribution = layoutNodeStyle.getDistributionProperty().getValue();
+		}
 	}
 	
 }

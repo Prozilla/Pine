@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.math.vector;
 
+import dev.prozilla.pine.common.util.ArrayUtils;
+
 /**
  * Represents a 2-dimensional direction.
  */
@@ -116,4 +118,9 @@ public enum Direction {
 	public String toString() {
 		return string;
 	}
+	
+	public static Direction parse(String input) {
+		return ArrayUtils.findByString(Direction.values(), input);
+	}
+	
 }

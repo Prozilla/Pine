@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.math.vector;
 
-import dev.prozilla.pine.common.util.EnumUtils;
+import dev.prozilla.pine.common.util.ArrayUtils;
 
 /**
  * 2-dimensional anchor point relative to the bottom-left corner of a square with width and height <code>1f</code>.
@@ -55,7 +55,7 @@ public enum GridAlignment {
 	}
 	
 	public static GridAlignment parse(String input) {
-		return EnumUtils.findByName(GridAlignment.values(), input);
+		return ArrayUtils.findByString(GridAlignment.values(), input);
 	}
 	
 }

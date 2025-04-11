@@ -2,6 +2,8 @@ package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.vector.Direction;
+import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.property.adaptive.*;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
@@ -9,6 +11,7 @@ import dev.prozilla.pine.common.property.style.selector.Selector;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.Resource;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
+import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.Node;
 
 import java.util.HashMap;
@@ -62,11 +65,11 @@ public class StyleSheet implements Printable, Resource {
 	}
 	
 	public StyledColorProperty createColorProperty(Node node) {
-		return createStyledColorProperty(StyledPropertyKey.COLOR, node, Color.white());
+		return createStyledColorProperty(StyledPropertyKey.COLOR, node, Node.DEFAULT_COLOR.clone());
 	}
 	
 	public StyledColorProperty createBackgroundColorProperty(Node node) {
-		return createStyledColorProperty(StyledPropertyKey.BACKGROUND_COLOR, node, Color.transparent());
+		return createStyledColorProperty(StyledPropertyKey.BACKGROUND_COLOR, node, Node.DEFAULT_BACKGROUND_COLOR.clone());
 	}
 	
 	public StyledDualDimensionProperty createSizeProperty(Node node) {
@@ -86,7 +89,19 @@ public class StyleSheet implements Printable, Resource {
 	}
 	
 	public StyledIntProperty createGapProperty(Node node) {
-		return createStyledGridAlignmentProperty(StyledPropertyKey.GAP, node, 0);
+		return createStyledIntProperty(StyledPropertyKey.GAP, node, LayoutNode.DEFAULT_GAP);
+	}
+	
+	public StyledDirectionProperty createDirectionProperty(Node node) {
+		return createStyledDirectionProperty(StyledPropertyKey.DIRECTION, node, LayoutNode.DEFAULT_DIRECTION);
+	}
+	
+	public StyledEdgeAlignmentProperty createAlignmentProperty(Node node) {
+		return createStyledEdgeAlignmentProperty(StyledPropertyKey.ALIGNMENT, node, LayoutNode.DEFAULT_ALIGNMENT);
+	}
+	
+	public StyledDistributionProperty createDistributionProperty(Node node) {
+		return createStyledDistributionProperty(StyledPropertyKey.DISTRIBUTION, node, LayoutNode.DEFAULT_DISTRIBUTION);
 	}
 	
 	protected StyledColorProperty createStyledColorProperty(StyledPropertyKey<Color> name, Node node, Color fallbackValue) {
@@ -101,8 +116,20 @@ public class StyleSheet implements Printable, Resource {
 		return createStyledProperty(name, node, new AdaptiveGridAlignmentProperty(fallbackValue),  (Style.StyledPropertyFactory<GridAlignment, StyledGridAlignmentProperty>)StyledGridAlignmentProperty::new);
 	}
 	
-	protected StyledIntProperty createStyledGridAlignmentProperty(StyledPropertyKey<Integer> name, Node node, int fallbackValue) {
+	protected StyledIntProperty createStyledIntProperty(StyledPropertyKey<Integer> name, Node node, int fallbackValue) {
 		return createStyledProperty(name, node, new AdaptiveIntProperty(fallbackValue),  (Style.StyledPropertyFactory<Integer, StyledIntProperty>)StyledIntProperty::new);
+	}
+	
+	protected StyledDirectionProperty createStyledDirectionProperty(StyledPropertyKey<Direction> name, Node node, Direction fallbackValue) {
+		return createStyledProperty(name, node, new AdaptiveDirectionProperty(fallbackValue),  (Style.StyledPropertyFactory<Direction, StyledDirectionProperty>)StyledDirectionProperty::new);
+	}
+	
+	protected StyledEdgeAlignmentProperty createStyledEdgeAlignmentProperty(StyledPropertyKey<EdgeAlignment> name, Node node, EdgeAlignment fallbackValue) {
+		return createStyledProperty(name, node, new AdaptiveEdgeAlignmentProperty(fallbackValue),  (Style.StyledPropertyFactory<EdgeAlignment, StyledEdgeAlignmentProperty>)StyledEdgeAlignmentProperty::new);
+	}
+	
+	protected StyledDistributionProperty createStyledDistributionProperty(StyledPropertyKey<LayoutNode.Distribution> name, Node node, LayoutNode.Distribution fallbackValue) {
+		return createStyledProperty(name, node, new AdaptiveDistributionProperty(fallbackValue),  (Style.StyledPropertyFactory<LayoutNode.Distribution, StyledDistributionProperty>)StyledDistributionProperty::new);
 	}
 	
 	protected  <T, P extends StyledProperty<T>> P createStyledProperty(StyledPropertyKey<T> name, Node node, AdaptivePropertyBase<T> fallbackValue, Style.StyledPropertyFactory<T, P> factory) {
