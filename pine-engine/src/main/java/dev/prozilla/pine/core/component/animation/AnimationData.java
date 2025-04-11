@@ -1,14 +1,15 @@
-package dev.prozilla.pine.core.component;
+package dev.prozilla.pine.core.component.animation;
 
 import dev.prozilla.pine.common.Animatable;
+import dev.prozilla.pine.core.component.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abstract class for components with animated properties.
+ * A component that handles animated properties of other components.
  */
-public abstract class AnimationData extends Component implements Animatable {
+public class AnimationData extends Component implements Animatable {
 	
 	public List<Animatable> properties;
 	public final boolean applyTimeScale;
@@ -19,7 +20,7 @@ public abstract class AnimationData extends Component implements Animatable {
 		properties = new ArrayList<>();
 	}
 	
-	protected void changeProperty(Animatable oldProperty, Animatable newProperty) {
+	public void replaceProperty(Animatable oldProperty, Animatable newProperty) {
 		if (oldProperty != null) {
 			properties.remove(oldProperty);
 		}

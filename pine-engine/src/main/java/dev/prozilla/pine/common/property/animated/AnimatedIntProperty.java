@@ -4,7 +4,6 @@ import dev.prozilla.pine.common.math.MathUtils;
 
 public class AnimatedIntProperty extends AnimatedProperty<Integer> {
 	
-
 	public AnimatedIntProperty(Integer start, Integer end, AnimationCurve curve) {
 		super(start, end, curve);
 	}

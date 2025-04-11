@@ -1,10 +1,18 @@
 package dev.prozilla.pine.core.entity;
 
+import dev.prozilla.pine.core.component.Transform;
+
 public interface EntityContext {
 	
 	Entity getFirstChild();
 	
 	Entity getLastChild();
+	
+	default boolean isDescendantOf(Entity parent) {
+		return isDescendantOf(parent.transform);
+	}
+	
+	boolean isDescendantOf(Transform parent);
 	
 	/**
 	 * Gets a child entity with a given tag.

@@ -198,6 +198,11 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	}
 	
 	@Override
+	public boolean isDescendantOf(Transform parent) {
+		return transform.isDescendantOf(parent);
+	}
+	
+	@Override
 	public Entity getChildWithTag(String tag) {
 		return transform.getChildWithTag(tag);
 	}

@@ -64,6 +64,11 @@ public class Transform extends Component {
 	}
 	
 	@Override
+	public boolean isDescendantOf(Transform parent) {
+		return this.parent != null && (this.parent.equals(parent) || this.parent.isDescendantOf(parent));
+	}
+	
+	@Override
 	public Entity getChildWithTag(String tag) {
 		Objects.requireNonNull(tag, "tag must not be null");
 		

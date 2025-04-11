@@ -24,6 +24,11 @@ public interface EntityProvider extends EntityContext {
 	}
 	
 	@Override
+	default boolean isDescendantOf(Transform parent) {
+		return getTransform().isDescendantOf(parent);
+	}
+	
+	@Override
 	default Entity getChildWithTag(String tag) {
 		return getTransform().getChildWithTag(tag);
 	}

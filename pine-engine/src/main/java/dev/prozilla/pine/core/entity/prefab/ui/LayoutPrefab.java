@@ -3,9 +3,10 @@ package dev.prozilla.pine.core.entity.prefab.ui;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.core.component.Transform;
+import dev.prozilla.pine.core.component.animation.AnimationData;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
-import dev.prozilla.pine.core.component.ui.LayoutNodeStyle;
 import dev.prozilla.pine.core.component.ui.Node;
+import dev.prozilla.pine.core.component.ui.style.LayoutNodeStyle;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Components;
 
@@ -70,7 +71,8 @@ public class LayoutPrefab extends NodePrefab {
 		
 		if (styleSheet != null) {
 			Node node = entity.getComponent(Node.class);
-			entity.addComponent(new LayoutNodeStyle(node, styleSheet));
+			AnimationData animationData = entity.getComponent(AnimationData.class);
+			entity.addComponent(new LayoutNodeStyle(animationData, node, styleSheet));
 		}
 	}
 }

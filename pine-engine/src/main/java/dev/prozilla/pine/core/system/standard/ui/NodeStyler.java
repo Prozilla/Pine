@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system.standard.ui;
 
 import dev.prozilla.pine.core.component.ui.Node;
-import dev.prozilla.pine.core.component.ui.NodeStyle;
+import dev.prozilla.pine.core.component.ui.style.NodeStyle;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 

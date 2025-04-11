@@ -1,9 +1,11 @@
-package dev.prozilla.pine.core.component.ui;
+package dev.prozilla.pine.core.component.ui.style;
 
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.property.style.StyledColorProperty;
 import dev.prozilla.pine.common.property.style.StyledDualDimensionProperty;
 import dev.prozilla.pine.common.property.style.StyledGridAlignmentProperty;
+import dev.prozilla.pine.core.component.animation.AnimationData;
+import dev.prozilla.pine.core.component.ui.Node;
 
 /**
  * A component that applies styles to nodes.
@@ -17,12 +19,12 @@ public class NodeStyle extends NodeStyleBase {
 	private StyledDualDimensionProperty positionProperty;
 	private StyledGridAlignmentProperty anchorProperty;
 	
-	public NodeStyle(Node node) {
-		this(node, null);
+	public NodeStyle(AnimationData animationData, Node node) {
+		this(animationData, node, null);
 	}
 	
-	public NodeStyle(Node node, StyleSheet styleSheet) {
-		super(node, styleSheet);
+	public NodeStyle(AnimationData animationData, Node node, StyleSheet styleSheet) {
+		super(animationData, node, styleSheet);
 	}
 	
 	@Override

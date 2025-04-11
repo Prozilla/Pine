@@ -99,6 +99,7 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 		}
 		
 		StyleRule<AnimationCurve> transitionRule = getBestMatch(transitionRules);
+		
 		if (Objects.equals(transitionRule, currentTransitionRule)) {
 			return;
 		}
@@ -109,7 +110,7 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 			return;
 		}
 		
-		if (transitionedProperty == null || transitionedProperty.getCurve().equals(transitionRule.value())) {
+		if (transitionedProperty == null || !transitionedProperty.getCurve().equals(transitionRule.value())) {
 			transitionedProperty = createTransitionedProperty(adaptiveProperty.getValue(), transitionRule.value());
 			setAdaptiveProperty(createAdaptiveProperty(transitionedProperty));
 		}

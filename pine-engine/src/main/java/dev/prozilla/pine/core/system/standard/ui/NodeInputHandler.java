@@ -38,9 +38,14 @@ public class NodeInputHandler extends InputSystemBase {
 				}
 			}
 			
-			if (node.cursorHit != cursorHit) {
-				node.toggleModifier("hover", cursorHit);
+			boolean isChildHovered = false;
+			Entity cursorBlocker = input.getCursorBlocker();
+			if (cursorBlocker != null && cursorBlocker.isDescendantOf(entity)) {
+				isChildHovered = true;
 			}
+			
+			// Apply hover modifier when node or child node is hovered
+			node.toggleModifier("hover", cursorHit || isChildHovered);
 			
 			node.cursorHit = cursorHit;
 			

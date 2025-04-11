@@ -13,8 +13,9 @@ import dev.prozilla.pine.common.property.style.StyledPropertyKey;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.core.component.Transform;
+import dev.prozilla.pine.core.component.animation.AnimationData;
 import dev.prozilla.pine.core.component.ui.Node;
-import dev.prozilla.pine.core.component.ui.NodeStyle;
+import dev.prozilla.pine.core.component.ui.style.NodeStyle;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Components;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
@@ -269,7 +270,8 @@ public class NodePrefab extends Prefab {
 		}
 		
 		if (styleSheet != null) {
-			entity.addComponent(new NodeStyle(node, styleSheet));
+			AnimationData animationData = entity.addComponent(new AnimationData(false));
+			entity.addComponent(new NodeStyle(animationData, node, styleSheet));
 		}
 	}
 }
