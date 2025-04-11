@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.array;
+package dev.prozilla.pine.common.util;
 
 public final class ArrayUtils {
 	
@@ -37,4 +37,5 @@ public final class ArrayUtils {
 		
 		return false;
 	}
+	
 }

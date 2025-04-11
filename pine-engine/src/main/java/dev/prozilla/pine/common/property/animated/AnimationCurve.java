@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.property.animated;
 
 import dev.prozilla.pine.common.math.easing.Easing;
 import dev.prozilla.pine.common.math.easing.EasingFunction;
-import dev.prozilla.pine.common.util.Numbers;
+import dev.prozilla.pine.common.util.Checks;
 
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -40,7 +40,7 @@ public class AnimationCurve {
 	 * @param duration Duration of the animation
 	 */
 	public AnimationCurve(float duration, EasingFunction easingFunction, AnimationDirection direction) {
-		this.duration = Numbers.requirePositive(duration, true, "duration must be strictly positive");
+		this.duration = Checks.isPositive(duration, true, "duration must be strictly positive");
 		this.easingFunction = Objects.requireNonNull(easingFunction);
 		this.direction = Objects.requireNonNull(direction);
 	}

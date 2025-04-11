@@ -6,7 +6,7 @@ import dev.prozilla.pine.common.Transceivable;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.math.vector.Vector4f;
-import dev.prozilla.pine.common.string.StringUtils;
+import dev.prozilla.pine.common.util.StringUtils;
 
 /**
  * Represents an RGBA color.

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.math.dimension;
 
-import dev.prozilla.pine.common.array.ArrayUtils;
+import dev.prozilla.pine.common.util.ArrayUtils;
 
 /**
  * Units used in dimensions of UI elements.

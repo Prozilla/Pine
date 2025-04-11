@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.system.resource.image;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
-import dev.prozilla.pine.common.util.Numbers;
+import dev.prozilla.pine.common.util.Checks;
 import dev.prozilla.pine.core.Application;
 
 import java.nio.ByteBuffer;
@@ -44,8 +44,8 @@ public class Texture implements TextureBase, Lifecycle, Printable {
 		
 		Application.requireOpenGL();
 		
-		Numbers.requirePositive(width, false, "texture width must be positive");
-		Numbers.requirePositive(height, false, "texture height must be positive");
+		Checks.isPositive(width, false, "texture width must be positive");
+		Checks.isPositive(height, false, "texture height must be positive");
 		
 		id = glGenTextures();
 		

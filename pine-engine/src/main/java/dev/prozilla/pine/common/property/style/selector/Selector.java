@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property.style.selector;
 
 import dev.prozilla.pine.common.Printable;
-import dev.prozilla.pine.common.string.StringUtils;
+import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.core.component.ui.Node;
 
 import java.util.ArrayList;

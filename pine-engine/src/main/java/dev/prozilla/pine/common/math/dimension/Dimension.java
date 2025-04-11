@@ -2,8 +2,7 @@ package dev.prozilla.pine.common.math.dimension;
 
 import dev.prozilla.pine.common.exception.InvalidArrayException;
 import dev.prozilla.pine.common.exception.InvalidStringException;
-import dev.prozilla.pine.common.util.Arrays;
-import dev.prozilla.pine.common.util.Strings;
+import dev.prozilla.pine.common.util.Checks;
 import dev.prozilla.pine.core.component.ui.Node;
 
 import java.util.ArrayList;
@@ -159,7 +158,7 @@ public class Dimension extends DimensionBase {
 	 * @throws IllegalArgumentException When <code>input</code> is not a valid dimension string
 	 */
 	public static DimensionBase parse(String input) throws IllegalArgumentException, InvalidStringException {
-		Strings.requireNonBlank(input, "Input string must not be blank");
+		Checks.isNotBlank(input, "Input string must not be blank");
 		
 		input = input.trim().toLowerCase();
 		
@@ -310,7 +309,7 @@ public class Dimension extends DimensionBase {
 	 * @throws InvalidArrayException If less than two dimensions are passed
 	 */
 	private static <D extends DimensionBase> D chainDimensions(BiFunction<DimensionBase, DimensionBase, D> constructor, DimensionBase[] dimensions) throws InvalidArrayException {
-		Arrays.requireMinLength(dimensions, 2);
+		Checks.hasMinLength(dimensions, 2);
 		
 		// Start with the first two dimensions
 		D result = constructor.apply(dimensions[0], dimensions[1]);

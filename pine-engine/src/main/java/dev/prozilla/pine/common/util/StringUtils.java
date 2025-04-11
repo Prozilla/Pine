@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.string;
+package dev.prozilla.pine.common.util;
 
 public class StringUtils {
 	

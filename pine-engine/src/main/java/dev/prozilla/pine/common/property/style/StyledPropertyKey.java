@@ -11,6 +11,7 @@ public final class StyledPropertyKey<T> {
 	public static final StyledPropertyKey<DualDimension> SIZE = new StyledPropertyKey<>("size", DualDimension::parse);
 	public static final StyledPropertyKey<DualDimension> PADDING = new StyledPropertyKey<>("padding", DualDimension::parse);
 	public static final StyledPropertyKey<DualDimension> POSITION = new StyledPropertyKey<>("position", DualDimension::parse);
+//	public static final StyledPropertyKey<GridAlignment> ANCHOR = new StyledPropertyKey<>("anchor", DualDimension::parse);
 	
 	private final String string;
 	private final ParseFunction<T> valueParser;

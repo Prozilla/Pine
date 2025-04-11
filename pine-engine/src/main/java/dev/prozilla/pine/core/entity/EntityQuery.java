@@ -2,7 +2,7 @@ package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.util.Arrays;
+import dev.prozilla.pine.common.util.Checks;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.*;
@@ -44,10 +44,10 @@ public class EntityQuery implements Lifecycle {
 		
 		// Validate arguments
 		Objects.requireNonNull(includedComponentTypes, "includedComponentTypes must not be null");
-		Arrays.requireNonEmpty(includedComponentTypes, "length of includedComponentTypes must be greater than 0");
+		Checks.isNotEmpty(includedComponentTypes, "length of includedComponentTypes must be greater than 0");
 		
 		if (excludedComponentTypes != null) {
-			Arrays.requireDisjunct(excludedComponentTypes, includedComponentTypes, "excludedComponentTypes and includedComponentTypes must be disjunct");
+			Checks.areDisjunct(excludedComponentTypes, includedComponentTypes, "excludedComponentTypes and includedComponentTypes must be disjunct");
 		}
 		
 		entityChunks = new ArrayList<>();

@@ -4,8 +4,7 @@ import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.exception.InvalidArrayException;
 import dev.prozilla.pine.common.exception.InvalidStringException;
-import dev.prozilla.pine.common.util.Arrays;
-import dev.prozilla.pine.common.util.Strings;
+import dev.prozilla.pine.common.util.Checks;
 
 import java.lang.reflect.Array;
 import java.util.Objects;
@@ -105,8 +104,8 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 	
 	protected static <T> T[] parseToNumbers(String input, Function<String, T> parser, Class<T> type) throws InvalidStringException {
 		Objects.requireNonNull(input, "input must not be null");
-		Strings.requirePrefix(input, "(");
-		Strings.requireSuffix(input, ")");
+		Checks.hasPrefix(input, "(");
+		Checks.hasSuffix(input, ")");
 		
 		String[] strings = input.substring(1, input.length() - 1).split(",");
 		
@@ -120,7 +119,7 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 	}
 	
 	protected static Float[] parseToFloats(String input, int count) throws InvalidStringException, InvalidArrayException {
-		return Arrays.requireLength(parseToFloats(input), count);
+		return Checks.hasLength(parseToFloats(input), count);
 	}
 	
 	protected static Float[] parseToFloats(String input) throws InvalidStringException {
@@ -128,7 +127,7 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 	}
 	
 	protected static Integer[] parseToIntegers(String input, int count) throws InvalidStringException, InvalidArrayException {
-		return Arrays.requireLength(parseToIntegers(input), count);
+		return Checks.hasLength(parseToIntegers(input), count);
 	}
 	
 	protected static Integer[] parseToIntegers(String input) throws InvalidStringException {

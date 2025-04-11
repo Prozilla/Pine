@@ -2,7 +2,7 @@ package dev.prozilla.pine.core.system;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.util.Arrays;
+import dev.prozilla.pine.common.util.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.Entity;
@@ -80,7 +80,7 @@ public abstract class SystemBase implements Lifecycle {
 		}
 		
 		if (excludedComponentTypes != null && includedComponentTypes != null) {
-			Arrays.requireDisjunct(excludedComponentTypes, includedComponentTypes, "excludedComponentTypes and includedComponentTypes must be disjunct");
+			Checks.areDisjunct(excludedComponentTypes, includedComponentTypes, "excludedComponentTypes and includedComponentTypes must be disjunct");
 		}
 		
 		excludedComponentTypes = componentTypes;
