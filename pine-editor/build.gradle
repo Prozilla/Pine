@@ -1,10 +1,10 @@
 plugins {
-    id "dev.prozilla.pine.common"
+	id "dev.prozilla.pine.conventions"
 }
 
 version = "1.0.0"
 
 dependencies {
-    // Pine engine
-    implementation project(rootProject.name == "pine" ? ":pine-engine" : ":pine:pine-engine")
+	// Pine engine
+	implementation project(rootProject.name == "pine" ? ":pine-engine" : ":pine:pine-engine")
 }

@@ -1,7 +1,8 @@
+pluginManagement {
+	includeBuild("build-logic")
+}
+
 rootProject.name = "pine"
-include(":pine-engine")
-include(":pine-editor")
-include(":examples:canvas")
-include(":examples:flappy-bird")
-include(":examples:snake")
-include(":examples:sokoban")
+
+include(":pine-engine", ":pine-editor")
+include(":examples:canvas", ":examples:flappy-bird", ":examples:snake", ":examples:sokoban")

@@ -1,23 +1,23 @@
 plugins {
-    id "dev.prozilla.pine.common"
-    id "dev.prozilla.pine.example-project"
-    id "com.github.johnrengelman.shadow" version "8.1.0"
+	id "dev.prozilla.pine.conventions"
+	id "dev.prozilla.pine.examples.conventions"
+	id "com.github.johnrengelman.shadow" version "8.1.0"
 }
 
 application {
-    mainClass = "dev.prozilla.pine.examples.flappybird.Main"
+	mainClass = "dev.prozilla.pine.examples.flappybird.Main"
 }
 
 dependencies {
-    implementation project(":pine-editor")
+	implementation project(":pine-editor")
 }
 
 tasks.register("start", JavaExec) {
-    mainClass = "dev.prozilla.pine.examples.flappybird.Main"
-    classpath = sourceSets.main.runtimeClasspath
+	mainClass = "dev.prozilla.pine.examples.flappybird.Main"
+	classpath = sourceSets.main.runtimeClasspath
 }
 
 tasks.register("editor", JavaExec) {
-    mainClass = "dev.prozilla.pine.examples.flappybird.Editor"
-    classpath = sourceSets.main.runtimeClasspath
+	mainClass = "dev.prozilla.pine.examples.flappybird.Editor"
+	classpath = sourceSets.main.runtimeClasspath
 }

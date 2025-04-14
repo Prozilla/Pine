@@ -23,15 +23,6 @@ Pine uses an [ECS](https://en.wikipedia.org/wiki/Entity_component_system) patter
 As a framework, Pine makes working with the low-level LWJGL library a lot easier and more intuitive, without sacrificing control and flexibility.
 Because everything is split into layers of abstraction, you can choose how much of Pine's existing functionality you want to utilize
 and where you want insert your own code.
-
-## Examples
-
-These are some example projects made using Pine. You can check out their source code below by clicking on the link or try them out by running the commands below.
-
-- [Flappy Bird](./examples/src/main/java/dev/prozilla/pine/examples/flappybird)
-  > ```gradle runFlappyBird```
-- [Snake](./examples/src/main/java/dev/prozilla/pine/examples/flappybird)
-  >```gradle runSnake```
   
 ## Links
 

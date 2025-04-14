@@ -2,165 +2,165 @@ import java.time.Year
 import java.util.regex.Pattern
 
 plugins {
-    id "dev.prozilla.pine.common"
-    id "java"
-    id "maven-publish"
-    id "com.github.breadmoirai.github-release" version "2.2.12"
+	id "dev.prozilla.pine.conventions"
+	id "java"
+	id "maven-publish"
+	id "com.github.breadmoirai.github-release" version "2.2.12"
 }
 
 repositories {
-    mavenCentral()
-    maven {
-        url "https://repo.gradle.org/gradle/libs-releases"
-    }
+	mavenCentral()
+	maven {
+		url "https://repo.gradle.org/gradle/libs-releases"
+	}
 }
 
 jar {
-    archiveBaseName = "pine-engine"
-    from sourceSets.main.output
-    manifest {
-        attributes(
-            "Main-Class": "dev.prozilla.pine.tools.BuildTool"
-        )
-    }
+	archiveBaseName = "pine-engine"
+	from sourceSets.main.output
+	manifest {
+		attributes(
+				"Main-Class": "dev.prozilla.pine.tools.BuildTool"
+		)
+	}
 }
 
 version = "1.1.1"
 
 // Extra properties
 ext {
-    lwjglVersion = "3.3.4"
-    groupId = "dev.prozilla"
-    artifactId = "pine"
-    githubUsername = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
-    githubToken = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+	lwjglVersion = "3.3.4"
+	groupId = "dev.prozilla"
+	artifactId = "pine"
+	githubUsername = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+	githubToken = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
 }
 
 // Determine platform
 switch (org.gradle.internal.os.OperatingSystem.current()) {
-    case org.gradle.internal.os.OperatingSystem.LINUX:
-        project.ext.lwjglNatives = "natives-linux"
-        def osArch = System.getProperty("os.arch")
-        if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
-            project.ext.lwjglNatives += osArch.contains("64") || osArch.startsWith("armv8") ? "-arm64" : "-arm32"
-        } else if (osArch.startsWith("ppc")) {
-            project.ext.lwjglNatives += "-ppc64le"
-        } else if (osArch.startsWith("riscv")) {
-            project.ext.lwjglNatives += "-riscv64"
-        }
-        break
-    case org.gradle.internal.os.OperatingSystem.WINDOWS:
-        def osArch = System.getProperty("os.arch")
-        project.ext.lwjglNatives = osArch.contains("64")
-                ? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
-                : "natives-windows-x86"
-        break
+	case org.gradle.internal.os.OperatingSystem.LINUX:
+		project.ext.lwjglNatives = "natives-linux"
+		def osArch = System.getProperty("os.arch")
+		if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
+			project.ext.lwjglNatives += osArch.contains("64") || osArch.startsWith("armv8") ? "-arm64" : "-arm32"
+		} else if (osArch.startsWith("ppc")) {
+			project.ext.lwjglNatives += "-ppc64le"
+		} else if (osArch.startsWith("riscv")) {
+			project.ext.lwjglNatives += "-riscv64"
+		}
+		break
+	case org.gradle.internal.os.OperatingSystem.WINDOWS:
+		def osArch = System.getProperty("os.arch")
+		project.ext.lwjglNatives = osArch.contains("64")
+				? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
+				: "natives-windows-x86"
+		break
 }
 
 dependencies {
-    // LWJGL
-    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
-    implementation "org.lwjgl:lwjgl"
-    implementation "org.lwjgl:lwjgl-opengl"
-    implementation "org.lwjgl:lwjgl-glfw"
-    implementation "org.lwjgl:lwjgl-stb"
+	// LWJGL
+	implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+	implementation "org.lwjgl:lwjgl"
+	implementation "org.lwjgl:lwjgl-opengl"
+	implementation "org.lwjgl:lwjgl-glfw"
+	implementation "org.lwjgl:lwjgl-stb"
 
-    // LWJGL Natives
-    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+	// LWJGL Natives
+	runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
 
-    // Jackson Databind
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.18.1"
+	// Jackson Databind
+	implementation "com.fasterxml.jackson.core:jackson-databind:2.18.1"
 
-    // Gradle Tooling API
-    implementation "org.gradle:gradle-tooling-api:8.8"
-    runtimeOnly "org.slf4j:slf4j-simple:2.0.16"
-    
-    // JUnit Jupiter API
-    testImplementation "org.junit.jupiter:junit-jupiter:5.10.0"
+	// Gradle Tooling API
+	implementation "org.gradle:gradle-tooling-api:8.8"
+	runtimeOnly "org.slf4j:slf4j-simple:2.0.16"
+
+	// JUnit Jupiter API
+	testImplementation "org.junit.jupiter:junit-jupiter:5.10.0"
 }
 
 tasks.register("runBuildTool", JavaExec) {
-    mainClass = "dev.prozilla.pine.tools.BuildTool"
-    classpath = sourceSets.main.runtimeClasspath
-    args = []
+	mainClass = "dev.prozilla.pine.tools.BuildTool"
+	classpath = sourceSets.main.runtimeClasspath
+	args = []
 }
 
 // Publishing to GitHub Packages and creating release
 publishing {
-    publications {
-        gpr(MavenPublication) {
-            from components.java
-            groupId = project.ext.groupId
-            artifactId = project.ext.artifactId
-            version = project.version
-        }
-    }
+	publications {
+		gpr(MavenPublication) {
+			from components.java
+			groupId = project.ext.groupId
+			artifactId = project.ext.artifactId
+			version = project.version
+		}
+	}
 
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/prozilla/pine")
-            credentials {
-                username = project.ext.githubUsername
-                password = project.ext.githubToken
-            }
-        }
-    }
+	repositories {
+		maven {
+			name = "GitHubPackages"
+			url = uri("https://maven.pkg.github.com/prozilla/pine")
+			credentials {
+				username = project.ext.githubUsername
+				password = project.ext.githubToken
+			}
+		}
+	}
 }
 
 def getChangelogEntry() {
-    File changelogFile = file("../CHANGELOG.md")
-    if (!changelogFile.exists()) {
-        return "No changelog available."
-    }
+	File changelogFile = file("../CHANGELOG.md")
+	if (!changelogFile.exists()) {
+		return "No changelog available."
+	}
 
-    String content = changelogFile.text
-    String currentVersion = project.version.toString()
+	String content = changelogFile.text
+	String currentVersion = project.version.toString()
 
-    Pattern pattern = Pattern.compile("## v${Pattern.quote(currentVersion)}(.*?)(?=\\n## v\\d+\\.\\d+\\.\\d+|\$)", Pattern.DOTALL)
-    def matcher = pattern.matcher(content)
+	Pattern pattern = Pattern.compile("## v${Pattern.quote(currentVersion)}(.*?)(?=\\n## v\\d+\\.\\d+\\.\\d+|\$)", Pattern.DOTALL)
+	def matcher = pattern.matcher(content)
 
-    if (matcher.find()) {
-        String changelogEntry = matcher.group(0).trim()
-        return changelogEntry.replaceFirst("v${Pattern.quote(currentVersion)}", "Changelog for v${currentVersion}")
-    } else {
-        return "No changelog found."
-    }
+	if (matcher.find()) {
+		String changelogEntry = matcher.group(0).trim()
+		return changelogEntry.replaceFirst("v${Pattern.quote(currentVersion)}", "Changelog for v${currentVersion}")
+	} else {
+		return "No changelog found."
+	}
 }
 
 // https://github.com/BreadMoirai/github-release-gradle-plugin
 githubRelease {
-    token = project.ext.githubToken ?: ""
-    owner = "Prozilla"
-    repo = "Pine"
-    tagName = "v${project.version}"
-    releaseName = "Release v${project.version}"
-    body = getChangelogEntry()
-    targetCommitish = "main"
-    overwrite = true
+	token = project.ext.githubToken ?: ""
+	owner = "Prozilla"
+	repo = "Pine"
+	tagName = "v${project.version}"
+	releaseName = "Release v${project.version}"
+	body = getChangelogEntry()
+	targetCommitish = "main"
+	overwrite = true
 }
 
 tasks.named("publish") {
-    dependsOn("githubRelease")
+	dependsOn("githubRelease")
 }
 
 // Javadoc generation
 tasks.withType(Javadoc).configureEach {
-    source = sourceSets.main.allJava
-    classpath += configurations.compileClasspath
-    options.addStringOption("Xdoclint:none", "-quiet")
-    options.encoding = "UTF-8"
-    options.windowTitle = "Pine ${project.version}"
-    options.docTitle = "Pine API Docs"
-    options.header = "Pine API documentation."
-    options.bottom = "Copyright © ${Year.now().value} Prozilla"
-    options.links("https://javadoc.lwjgl.org/")
+	source = sourceSets.main.allJava
+	classpath += configurations.compileClasspath
+	options.addStringOption("Xdoclint:none", "-quiet")
+	options.encoding = "UTF-8"
+	options.windowTitle = "Pine ${project.version}"
+	options.docTitle = "Pine API Docs"
+	options.header = "Pine API documentation."
+	options.bottom = "Copyright © ${Year.now().value} Prozilla"
+	options.links("https://javadoc.lwjgl.org/")
 }
 
 // Unit testing
 test {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }
