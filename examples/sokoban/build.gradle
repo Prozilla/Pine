@@ -1,0 +1,14 @@
+plugins {
+	id "dev.prozilla.pine.conventions"
+	id "dev.prozilla.pine.examples.conventions"
+	id "com.github.johnrengelman.shadow" version "8.1.0"
+}
+
+application {
+	mainClass = "dev.prozilla.pine.examples.sokoban.Main"
+}
+
+tasks.register("start", JavaExec) {
+	mainClass = "dev.prozilla.pine.examples.sokoban.Main"
+	classpath = sourceSets.main.runtimeClasspath
+}

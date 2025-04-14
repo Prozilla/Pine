@@ -1,0 +1,17 @@
+plugins {
+	id "groovy-gradle-plugin"
+	id "java-gradle-plugin"
+}
+
+gradlePlugin {
+	plugins {
+		conventionsPlugin {
+			id = "dev.prozilla.pine.conventions"
+			implementationClass = "dev.prozilla.pine.ConventionsPlugin"
+		}
+		examplesConventionsPlugin {
+			id = "dev.prozilla.pine.examples.conventions"
+			implementationClass = "dev.prozilla.pine.ExamplesConventionsPlugin"
+		}
+	}
+}
