@@ -33,7 +33,12 @@ public class StyleSheet implements Printable, Resource {
 	}
 	
 	public <T> void parseRule(Selector selector, StyledPropertyKey<T> propertyName, String input) {
-		T value = propertyName.parseValue(input);
+		T value = null;
+		
+		try {
+			value = propertyName.parseValue(input);
+		} catch (Exception ignored) {}
+		
 		if (value != null) {
 			addRule(selector, propertyName, value);
 		}

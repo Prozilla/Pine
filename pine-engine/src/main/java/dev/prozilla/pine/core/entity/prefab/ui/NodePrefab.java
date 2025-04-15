@@ -57,7 +57,7 @@ public class NodePrefab extends Prefab {
 	 * Sets the style sheet that is applied to this node by loading it from a CSS file.
 	 */
 	public void setStyleSheet(String filePath) {
-		setStyleSheet(ResourcePool.loadStyleSheet("style/common.css"));
+		setStyleSheet(ResourcePool.loadStyleSheet(filePath));
 	}
 	
 	/**

@@ -164,6 +164,12 @@ public class Dimension extends DimensionBase {
 		
 		// Find index of first non-digit of string
 		int splitIndex = 0;
+		
+		// Skip sign
+		if (input.charAt(splitIndex) == '-') {
+			splitIndex++;
+		}
+		
 		while (splitIndex < input.length() && Character.isDigit(input.charAt(splitIndex))) {
 			splitIndex++;
 		}
