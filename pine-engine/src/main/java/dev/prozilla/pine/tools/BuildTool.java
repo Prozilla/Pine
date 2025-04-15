@@ -72,10 +72,10 @@ public class BuildTool {
 		prepareBuildDir(buildDir);
 		Path launch4jDir = Files.createDirectories(buildDir.resolve(LAUNCH4J_TEMP_PATH));
 		
-		buildShadowJar(config, projectDir);
+		buildShadowJar(projectDir);
 		Path jrePath = downloadAndExtractJRE(config, buildDir);
 		bundleResources(config, projectDir, buildDir);
-		bundleMods(config, buildDir);
+		bundleMods(buildDir);
 		
 		Path launch4jConfigPath = generateLaunch4jConfig(config, projectDir, buildDir, jrePath, launch4jDir);
 		runLaunch4j(launch4jConfigPath, launch4jDir);
@@ -86,34 +86,19 @@ public class BuildTool {
 	
 	private static void prepareBuildDir(Path buildDir) {
 		logger.log("Clearing build directory...");
-		for(File file: Objects.requireNonNull(buildDir.toFile().listFiles())) {
+		for (File file : Objects.requireNonNull(buildDir.toFile().listFiles())) {
 			if (!file.isDirectory() || !file.getName().equals("jre")) {
 				file.delete();
 			}
 		}
 	}
 	
-	private static void buildShadowJar(BuildConfig config, Path projectDir) {
+	private static void buildShadowJar(Path projectDir) {
 		logger.log("Building shadow jar...");
-		
-		Path gradleDir = projectDir;
-		
-		// Try to find gradle directory
-		for (int i = 0; i < 2; i++) {
-			if (!Files.exists(gradleDir.resolve("settings.gradle")) && !Files.exists(gradleDir.resolve("settings.gradle.kts"))) {
-				if (i < 1) {
-					gradleDir = gradleDir.getParent();
-				} else {
-					throw new IllegalArgumentException("Project does not have a valid gradle setup.");
-				}
-			} else {
-				break;
-			}
-		}
 		
 		GradleConnector connector = GradleConnector.newConnector()
 	        .useGradleUserHomeDir(new File(System.getProperty("user.home"), ".gradle"))
-	        .forProjectDirectory(gradleDir.toFile());
+	        .forProjectDirectory(projectDir.toFile());
 		
 		try (ProjectConnection connection = connector.connect()) {
 			// Run shadowJar task
@@ -166,9 +151,6 @@ public class BuildTool {
 		}
 		
 		Path icon = buildDir.resolve(config.getIconPath()).normalize();
-		if (!Files.exists(icon)) {
-			throw new IllegalStateException(String.format("Missing icon file: %s%n", icon));
-		}
 		
 		String fileName = config.getOutputFileName();
 		Path output = buildDir.resolve(fileName).toAbsolutePath();
@@ -190,7 +172,7 @@ public class BuildTool {
 					<requiresJdk>false</requiresJdk>
 					<requires64Bit>true</requires64Bit>
 				</jre>
-				<icon>%s</icon>
+				%s
 				<versionInfo>
 					<companyName>%s</companyName>
 					<productName>%s</productName>
@@ -211,7 +193,7 @@ public class BuildTool {
 		    output,
 			config.getJreVersion(),
 			buildDir.relativize(jrePath),
-		    icon,
+			Files.exists(icon) ? String.format("<icon>%s</icon>", icon) : "",
 			config.getDeveloper(),
 			config.getGameName(),
 			config.getGameName(),
@@ -243,7 +225,7 @@ public class BuildTool {
 		FileSystem.copyDirectory(resourcesDir.toFile(), targetDir.toFile());
 	}
 	
-	private static void bundleMods(BuildConfig config, Path buildDir) throws IOException {
+	private static void bundleMods(Path buildDir) throws IOException {
 		logger.log("Bundling mods...");
 		
 		Path targetDir = buildDir.resolve("mods/");
