@@ -6,7 +6,7 @@ import dev.prozilla.pine.core.component.ui.Node;
 
 public class LayoutNodeStyle extends NodeStyleBase {
 	
-	protected StyledIntProperty gapProperty;
+	protected StyledDimensionProperty gapProperty;
 	protected StyledDirectionProperty directionProperty;
 	protected StyledEdgeAlignmentProperty alignmentProperty;
 	protected StyledDistributionProperty distributionProperty;
@@ -27,11 +27,11 @@ public class LayoutNodeStyle extends NodeStyleBase {
 		setDistributionProperty(styleSheet.createDistributionProperty(node));
 	}
 	
-	public StyledIntProperty getGapProperty() {
+	public StyledDimensionProperty getGapProperty() {
 		return gapProperty;
 	}
 	
-	public void setGapProperty(StyledIntProperty gapProperty) {
+	public void setGapProperty(StyledDimensionProperty gapProperty) {
 		changeProperty(this.gapProperty, gapProperty);
 		this.gapProperty = gapProperty;
 	}

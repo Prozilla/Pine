@@ -1,6 +1,8 @@
 package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.ParseFunction;
+import dev.prozilla.pine.common.math.dimension.Dimension;
+import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
@@ -17,7 +19,7 @@ public final class StyledPropertyKey<T> {
 	public static final StyledPropertyKey<DualDimension> PADDING = new StyledPropertyKey<>("padding", DualDimension::parse);
 	public static final StyledPropertyKey<DualDimension> POSITION = new StyledPropertyKey<>("position", DualDimension::parse);
 	public static final StyledPropertyKey<GridAlignment> ANCHOR = new StyledPropertyKey<>("anchor", GridAlignment::parse);
-	public static final StyledPropertyKey<Integer> GAP = new StyledPropertyKey<>("gap", Integer::valueOf);
+	public static final StyledPropertyKey<DimensionBase> GAP = new StyledPropertyKey<>("gap", Dimension::parse);
 	public static final StyledPropertyKey<Direction> DIRECTION = new StyledPropertyKey<>("flex-direction", (String input) -> switch (input) {
 		case "row" -> Direction.RIGHT;
 		case "row-reverse" -> Direction.LEFT;

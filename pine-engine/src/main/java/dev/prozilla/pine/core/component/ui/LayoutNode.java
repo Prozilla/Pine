@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.component.ui;
 
+import dev.prozilla.pine.common.math.dimension.Dimension;
+import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.math.vector.Vector2i;
@@ -17,9 +19,11 @@ public class LayoutNode extends Component implements NodeContext {
 	public Direction direction;
 	public EdgeAlignment alignment;
 	public Distribution distribution;
-	/** Distance between elements. */
-	public int gap;
 	public boolean arrangeChildren;
+	
+	public int currentGap;
+	/** Distance between elements. */
+	public DimensionBase gap;
 	
 	public Vector2i innerSize;
 	public Vector2i totalChildrenSize;
@@ -29,7 +33,7 @@ public class LayoutNode extends Component implements NodeContext {
 	
 	public Node node;
 	
-	public static final int DEFAULT_GAP = 0;
+	public static final Dimension DEFAULT_GAP = new Dimension();
 	public static final Direction DEFAULT_DIRECTION = Direction.UP;
 	public static final EdgeAlignment DEFAULT_ALIGNMENT = EdgeAlignment.START;
 	public static final Distribution DEFAULT_DISTRIBUTION = Distribution.START;
@@ -74,7 +78,6 @@ public class LayoutNode extends Component implements NodeContext {
 		this.distribution = distribution;
 		
 		childNodes = new ArrayList<>();
-		gap = DEFAULT_GAP;
 		innerSize = new Vector2i();
 		totalChildrenSize = new Vector2i();
 		arrangeChildren = true;
@@ -104,6 +107,14 @@ public class LayoutNode extends Component implements NodeContext {
 		}
 		
 		return node;
+	}
+	
+	public int getGap() {
+		if (gap == null) {
+			return 0;
+		}
+		
+		return gap.compute(node, false);
 	}
 	
 	@Override

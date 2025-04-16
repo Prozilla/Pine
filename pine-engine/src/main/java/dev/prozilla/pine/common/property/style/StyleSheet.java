@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
@@ -93,8 +94,8 @@ public class StyleSheet implements Printable, Resource {
 		return createStyledGridAlignmentProperty(StyledPropertyKey.ANCHOR, node, Node.DEFAULT_ANCHOR);
 	}
 	
-	public StyledIntProperty createGapProperty(Node node) {
-		return createStyledIntProperty(StyledPropertyKey.GAP, node, LayoutNode.DEFAULT_GAP);
+	public StyledDimensionProperty createGapProperty(Node node) {
+		return createStyledDimensionProperty(StyledPropertyKey.GAP, node, LayoutNode.DEFAULT_GAP);
 	}
 	
 	public StyledDirectionProperty createDirectionProperty(Node node) {
@@ -111,6 +112,10 @@ public class StyleSheet implements Printable, Resource {
 	
 	protected StyledColorProperty createStyledColorProperty(StyledPropertyKey<Color> name, Node node, Color fallbackValue) {
 		return createStyledProperty(name, node, new AdaptiveColorProperty(fallbackValue),  (Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
+	}
+	
+	protected StyledDimensionProperty createStyledDimensionProperty(StyledPropertyKey<DimensionBase> name, Node node, DimensionBase fallbackValue) {
+		return createStyledProperty(name, node, new AdaptiveDimensionProperty(fallbackValue),  (Style.StyledPropertyFactory<DimensionBase, StyledDimensionProperty>)StyledDimensionProperty::new);
 	}
 	
 	protected StyledDualDimensionProperty createStyledDualDimensionProperty(StyledPropertyKey<DualDimension> name, Node node, DualDimension fallbackValue) {

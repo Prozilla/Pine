@@ -26,6 +26,7 @@ public class LayoutNodeResizer extends UpdateSystem {
 	public static void resizeCanvasGroup(LayoutNode layoutNode, Node parentNode) {
 		int newWidth = 0;
 		int newHeight = 0;
+		int currentGap = layoutNode.getGap();
 		
 		if (parentNode.size != null) {
 			newWidth = parentNode.size.computeX(parentNode);
@@ -37,23 +38,27 @@ public class LayoutNodeResizer extends UpdateSystem {
 			newHeight -= parentNode.getPaddingY() * 2;
 			
 			if (layoutNode.distribution == LayoutNode.Distribution.SPACE_BETWEEN && !layoutNode.childNodes.isEmpty()) {
-				layoutNode.gap = layoutNode.direction == Direction.UP || layoutNode.direction == Direction.DOWN ? newHeight : newWidth;
+				int newGap = layoutNode.direction == Direction.UP || layoutNode.direction == Direction.DOWN ? newHeight : newWidth;
 				
 				for (Node childNode : layoutNode.childNodes) {
 					switch (layoutNode.direction) {
 						case UP:
 						case DOWN:
-							layoutNode.gap -= childNode.currentSize.y;
+							newGap -= childNode.currentSize.y;
 							break;
 						case LEFT:
 						case RIGHT:
-							layoutNode.gap -= childNode.currentSize.x;
+							newGap -= childNode.currentSize.x;
 							break;
 					}
 				}
+				
+				if (newGap > currentGap) {
+					currentGap = newGap;
+				}
 			}
 		} else if (!layoutNode.childNodes.isEmpty()) {
-			int gap = layoutNode.gap;
+			int gap = currentGap;
 			
 			if (layoutNode.distribution == LayoutNode.Distribution.SPACE_BETWEEN) {
 				gap = 0;
@@ -96,10 +101,15 @@ public class LayoutNodeResizer extends UpdateSystem {
 			}
 			
 			if (layoutNode.distribution == LayoutNode.Distribution.SPACE_BETWEEN && parentNode.size != null) {
+				int newGap = currentGap;
 				if (layoutNode.direction == Direction.UP || layoutNode.direction == Direction.DOWN) {
-					layoutNode.gap = parentNode.size.computeY(parentNode) - parentNode.getPaddingY() * 2 - totalChildHeight;
+					newGap = parentNode.size.computeY(parentNode) - parentNode.getPaddingY() * 2 - totalChildHeight;
 				} else {
-					layoutNode.gap = parentNode.size.computeX(parentNode) - parentNode.getPaddingX() * 2 - totalChildWidth;
+					newGap = parentNode.size.computeX(parentNode) - parentNode.getPaddingX() * 2 - totalChildWidth;
+				}
+				
+				if (newGap > currentGap) {
+					currentGap = newGap;
 				}
 			}
 			
@@ -112,5 +122,7 @@ public class LayoutNodeResizer extends UpdateSystem {
 		
 		parentNode.currentSize.x = layoutNode.innerSize.x + parentNode.getPaddingX() * 2;
 		parentNode.currentSize.y = layoutNode.innerSize.y + parentNode.getPaddingY() * 2;
+		
+		layoutNode.currentGap = currentGap;
 	}
 }

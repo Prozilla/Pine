@@ -32,6 +32,8 @@ public class LayoutNodeArranger extends UpdateSystem {
 			return;
 		}
 		
+		int gap = layoutNode.getGap();
+		
 		// Calculate initial offset
 		int offsetX = containerRect.currentPosition.x + containerRect.getPaddingX();
 		int offsetY = containerRect.currentPosition.y + containerRect.getPaddingY();
@@ -43,8 +45,8 @@ public class LayoutNodeArranger extends UpdateSystem {
 		
 		if (layoutNode.distribution == LayoutNode.Distribution.CENTER) {
 			switch (layoutNode.direction) {
-				case LEFT, RIGHT -> offsetX += (layoutNode.innerSize.x - (layoutNode.totalChildrenSize.x + layoutNode.gap * (layoutNode.childNodes.size() - 1))) / 2;
-				case UP, DOWN -> offsetY += (layoutNode.innerSize.y - (layoutNode.totalChildrenSize.y + layoutNode.gap * (layoutNode.childNodes.size() - 1))) / 2;
+				case LEFT, RIGHT -> offsetX += (layoutNode.innerSize.x - (layoutNode.totalChildrenSize.x + gap * (layoutNode.childNodes.size() - 1))) / 2;
+				case UP, DOWN -> offsetY += (layoutNode.innerSize.y - (layoutNode.totalChildrenSize.y + gap * (layoutNode.childNodes.size() - 1))) / 2;
 			}
 		}
 		
@@ -61,10 +63,10 @@ public class LayoutNodeArranger extends UpdateSystem {
 			switch (layoutNode.direction) {
 				case LEFT -> offsetX -= (i == 0)
 					? childNode.currentSize.x * 2 - containerRect.getPaddingX()
-					: childNode.currentSize.x + layoutNode.gap;
+					: childNode.currentSize.x + gap;
 				case DOWN -> offsetY -= (i == 0)
 					? childNode.currentSize.y * 2 - containerRect.getPaddingY()
-					: childNode.currentSize.y + layoutNode.gap;
+					: childNode.currentSize.y + gap;
 			}
 			
 			// Adjust offset based on alignments
@@ -97,8 +99,8 @@ public class LayoutNodeArranger extends UpdateSystem {
 			
 			// Move offset for next child node
 			switch (layoutNode.direction) {
-				case RIGHT -> offsetX += childNode.currentSize.x + layoutNode.gap;
-				case UP -> offsetY += childNode.currentSize.y + layoutNode.gap;
+				case RIGHT -> offsetX += childNode.currentSize.x + gap;
+				case UP -> offsetY += childNode.currentSize.y + gap;
 			}
 		}
 	}
