@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
+import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.core.component.Transform;
@@ -19,11 +20,10 @@ public class LayoutPrefab extends NodePrefab {
 	protected Direction direction;
 	protected EdgeAlignment alignment;
 	protected LayoutNode.Distribution distribution;
-	protected int gap;
+	protected DimensionBase gap;
 	protected boolean arrangeChildren;
 	
 	public LayoutPrefab() {
-		gap = 0;
 		arrangeChildren = true;
 		
 		setName("Container");
@@ -38,7 +38,7 @@ public class LayoutPrefab extends NodePrefab {
 		this.alignment = alignment;
 	}
 	
-	public void setGap(int gap) {
+	public void setGap(DimensionBase gap) {
 		this.gap = gap;
 	}
 	
