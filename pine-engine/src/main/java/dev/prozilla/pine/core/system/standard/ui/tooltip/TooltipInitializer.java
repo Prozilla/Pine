@@ -18,7 +18,7 @@ public class TooltipInitializer extends InitSystem {
 		TooltipNode tooltipNode = chunk.getComponent(TooltipNode.class);
 		Node node = chunk.getComponent(Node.class);
 		
-		node.position = new DualDimension(
+		node.margin = new DualDimension(
 			Dimension.add(tooltipNode.cursorX, tooltipNode.baseX, tooltipNode.offset.x),
 			Dimension.add(tooltipNode.cursorY, tooltipNode.baseY, tooltipNode.offset.y)
 		);

@@ -25,8 +25,8 @@ public class LayoutNodeArranger extends UpdateSystem {
 		arrangeLayoutNode(layoutNode, node);
 	}
 	
-	public static void arrangeLayoutNode(LayoutNode layoutNode, Node containerRect) {
-		NodeUpdater.updateNode(containerRect);
+	public static void arrangeLayoutNode(LayoutNode layoutNode, Node parentNode) {
+		NodeUpdater.updateNode(parentNode);
 		
 		if (layoutNode.childNodes.isEmpty() || !layoutNode.arrangeChildren) {
 			return;
@@ -35,12 +35,12 @@ public class LayoutNodeArranger extends UpdateSystem {
 		int gap = layoutNode.getGap();
 		
 		// Calculate initial offset
-		int offsetX = containerRect.currentPosition.x + containerRect.getPaddingX();
-		int offsetY = containerRect.currentPosition.y + containerRect.getPaddingY();
+		int offsetX = parentNode.currentPosition.x + parentNode.getPaddingX();
+		int offsetY = parentNode.currentPosition.y + parentNode.getPaddingY();
 		
 		switch (layoutNode.direction) {
-			case LEFT -> offsetX = containerRect.currentPosition.x + layoutNode.innerSize.x + layoutNode.childNodes.getFirst().currentSize.x;
-			case DOWN -> offsetY = containerRect.currentPosition.y + layoutNode.innerSize.y + layoutNode.childNodes.getFirst().currentSize.y;
+			case LEFT -> offsetX = parentNode.currentPosition.x + layoutNode.innerSize.x + layoutNode.childNodes.getFirst().currentOuterSize.x;
+			case DOWN -> offsetY = parentNode.currentPosition.y + layoutNode.innerSize.y + layoutNode.childNodes.getFirst().currentOuterSize.y;
 		}
 		
 		if (layoutNode.distribution == LayoutNode.Distribution.CENTER) {
@@ -62,11 +62,11 @@ public class LayoutNodeArranger extends UpdateSystem {
 			// Move offset for current child node
 			switch (layoutNode.direction) {
 				case LEFT -> offsetX -= (i == 0)
-					? childNode.currentSize.x * 2 - containerRect.getPaddingX()
-					: childNode.currentSize.x + gap;
+					? childNode.currentOuterSize.x * 2 - parentNode.getPaddingX()
+					: childNode.currentOuterSize.x + gap;
 				case DOWN -> offsetY -= (i == 0)
-					? childNode.currentSize.y * 2 - containerRect.getPaddingY()
-					: childNode.currentSize.y + gap;
+					? childNode.currentOuterSize.y * 2 - parentNode.getPaddingY()
+					: childNode.currentOuterSize.y + gap;
 			}
 			
 			// Adjust offset based on alignments
@@ -75,22 +75,23 @@ public class LayoutNodeArranger extends UpdateSystem {
 			if (layoutNode.direction == Direction.UP || layoutNode.direction == Direction.DOWN) {
 				// Vertical alignment
 				if (layoutNode.alignment == EdgeAlignment.END) {
-					childOffsetX = offsetX + (layoutNode.innerSize.x - childNode.currentSize.x);
+					childOffsetX = offsetX + (layoutNode.innerSize.x - childNode.currentOuterSize.x);
 				} else if (layoutNode.alignment == EdgeAlignment.CENTER) {
-					childOffsetX = offsetX + (layoutNode.innerSize.x - childNode.currentSize.x) / 2;
+					childOffsetX = offsetX + (layoutNode.innerSize.x - childNode.currentOuterSize.x) / 2;
 				}
 			} else if (layoutNode.direction == Direction.LEFT || layoutNode.direction == Direction.RIGHT) {
 				// Horizontal alignment
 				if (layoutNode.alignment == EdgeAlignment.END) {
-					childOffsetY = offsetY + (layoutNode.innerSize.y - childNode.currentSize.y);
+					childOffsetY = offsetY + (layoutNode.innerSize.y - childNode.currentOuterSize.y);
 				} else if (layoutNode.alignment == EdgeAlignment.CENTER) {
-					childOffsetY = offsetY + (layoutNode.innerSize.y - childNode.currentSize.y) / 2;
+					childOffsetY = offsetY + (layoutNode.innerSize.y - childNode.currentOuterSize.y) / 2;
 				}
 			}
 			
 			// Set offset for current child node
 			childNode.anchor = GridAlignment.BOTTOM_LEFT;
-			childNode.position.set(childOffsetX, childOffsetY);
+			childNode.offset.x = childOffsetX;
+			childNode.offset.y = childOffsetY;
 			childNode.iterations++;
 			
 			if (childNode.iterations > 4) {
@@ -99,8 +100,8 @@ public class LayoutNodeArranger extends UpdateSystem {
 			
 			// Move offset for next child node
 			switch (layoutNode.direction) {
-				case RIGHT -> offsetX += childNode.currentSize.x + gap;
-				case UP -> offsetY += childNode.currentSize.y + gap;
+				case RIGHT -> offsetX += childNode.currentOuterSize.x + gap;
+				case UP -> offsetY += childNode.currentOuterSize.y + gap;
 			}
 		}
 	}

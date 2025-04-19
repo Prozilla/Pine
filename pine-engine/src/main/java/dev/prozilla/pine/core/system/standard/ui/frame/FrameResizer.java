@@ -16,7 +16,7 @@ public class FrameResizer extends UpdateSystem {
 		Node node = chunk.getComponent(Node.class);
 		FrameNode frame = chunk.getComponent(FrameNode.class);
 		
-		node.currentSize.x = frame.getWidth();
-		node.currentSize.y = frame.getHeight();
+		node.currentInnerSize.x = frame.getWidth();
+		node.currentInnerSize.y = frame.getHeight();
 	}
 }

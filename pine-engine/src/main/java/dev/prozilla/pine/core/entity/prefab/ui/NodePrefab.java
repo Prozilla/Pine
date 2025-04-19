@@ -33,6 +33,7 @@ public class NodePrefab extends Prefab {
 	protected DualDimension position;
 	protected DualDimension size;
 	protected DualDimension padding;
+	protected DualDimension margin;
 	protected Color color;
 	protected Color backgroundColor;
 	protected GridAlignment anchor;
@@ -65,32 +66,6 @@ public class NodePrefab extends Prefab {
 	 */
 	public void setStyleSheet(StyleSheet styleSheet) {
 		this.styleSheet = styleSheet;
-	}
-	
-	/**
-	 * Sets the position of this node relative to its anchor point.
-	 */
-	public void setPosition(DimensionBase x, DimensionBase y) {
-		setPosition(new DualDimension(x, y));
-	}
-	
-	/**
-	 * Sets the position of this node relative to its anchor point.
-	 */
-	public void setPosition(DualDimension position) {
-		if (styleSheet == null) {
-			this.position = position;
-		} else {
-			setPosition(AdaptiveDualDimensionProperty.adapt(position));
-		}
-	}
-	
-	/**
-	 * Sets the position of this node relative to its anchor point.
-	 */
-	public void setPosition(VariableProperty<DualDimension> position) {
-		setDefaultPropertyValue(StyledPropertyKey.POSITION, AdaptiveDualDimensionProperty.adapt(position));
-		this.position = position.getValue();
 	}
 	
 	/**
@@ -143,6 +118,23 @@ public class NodePrefab extends Prefab {
 	public void setPadding(VariableProperty<DualDimension> padding) {
 		setDefaultPropertyValue(StyledPropertyKey.PADDING, AdaptiveDualDimensionProperty.adapt(padding));
 		this.padding = padding.getValue();
+	}
+	
+	public void setMargin(Dimension x, Dimension y) {
+		setMargin(new DualDimension(x, y));
+	}
+	
+	public void setMargin(DualDimension margin) {
+		if (styleSheet == null) {
+			this.margin = margin;
+		} else {
+			setPadding(AdaptiveDualDimensionProperty.adapt(margin));
+		}
+	}
+	
+	public void setMargin(VariableProperty<DualDimension> margin) {
+		setDefaultPropertyValue(StyledPropertyKey.MARGIN, AdaptiveDualDimensionProperty.adapt(margin));
+		this.margin = margin.getValue();
 	}
 	
 	/**
@@ -244,13 +236,15 @@ public class NodePrefab extends Prefab {
 	@Override
 	protected void apply(Entity entity) {
 		Node node = entity.addComponent(new Node());
-		node.position = position.clone();
 		node.size = size.clone();
 		node.absolutePosition = absolutePosition;
 		node.passThrough = passThrough;
 		
 		if (padding != null) {
 			node.padding = padding.clone();
+		}
+		if (margin != null) {
+			node.margin = margin.clone();
 		}
 		if (color != null) {
 			node.color = color.clone();

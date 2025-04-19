@@ -17,7 +17,7 @@ public final class StyledPropertyKey<T> {
 	public static final StyledPropertyKey<Color> BACKGROUND_COLOR = new StyledPropertyKey<>("background-color", Color::parse);
 	public static final StyledPropertyKey<DualDimension> SIZE = new StyledPropertyKey<>("size", DualDimension::parse);
 	public static final StyledPropertyKey<DualDimension> PADDING = new StyledPropertyKey<>("padding", DualDimension::parse);
-	public static final StyledPropertyKey<DualDimension> POSITION = new StyledPropertyKey<>("position", DualDimension::parse);
+	public static final StyledPropertyKey<DualDimension> MARGIN = new StyledPropertyKey<>("margin", DualDimension::parse);
 	public static final StyledPropertyKey<GridAlignment> ANCHOR = new StyledPropertyKey<>("anchor", GridAlignment::parse);
 	public static final StyledPropertyKey<DimensionBase> GAP = new StyledPropertyKey<>("gap", Dimension::parse);
 	public static final StyledPropertyKey<Direction> DIRECTION = new StyledPropertyKey<>("flex-direction", (String input) -> switch (input) {
@@ -46,7 +46,7 @@ public final class StyledPropertyKey<T> {
 		BACKGROUND_COLOR,
 		SIZE,
 		PADDING,
-		POSITION,
+		MARGIN,
 		ANCHOR,
 		GAP,
 		DIRECTION,

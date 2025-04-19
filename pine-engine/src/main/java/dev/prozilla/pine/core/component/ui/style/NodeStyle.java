@@ -16,7 +16,7 @@ public class NodeStyle extends NodeStyleBase {
 	private StyledColorProperty backgroundColorProperty;
 	private StyledDualDimensionProperty sizeProperty;
 	private StyledDualDimensionProperty paddingProperty;
-	private StyledDualDimensionProperty positionProperty;
+	private StyledDualDimensionProperty marginProperty;
 	private StyledGridAlignmentProperty anchorProperty;
 	
 	public NodeStyle(AnimationData animationData, Node node) {
@@ -33,7 +33,7 @@ public class NodeStyle extends NodeStyleBase {
 		setBackgroundColorProperty(styleSheet.createBackgroundColorProperty(node));
 		setSizeProperty(styleSheet.createSizeProperty(node));
 		setPaddingProperty(styleSheet.createPaddingProperty(node));
-		setPositionProperty(styleSheet.createPositionProperty(node));
+		setMarginProperty(styleSheet.createMarginProperty(node));
 		setAnchorProperty(styleSheet.createAnchorProperty(node));
 	}
 	
@@ -73,13 +73,13 @@ public class NodeStyle extends NodeStyleBase {
 		this.paddingProperty = paddingProperty;
 	}
 	
-	public StyledDualDimensionProperty getPositionProperty() {
-		return positionProperty;
+	public StyledDualDimensionProperty getMarginProperty() {
+		return marginProperty;
 	}
 	
-	public void setPositionProperty(StyledDualDimensionProperty positionProperty) {
-		changeProperty(this.positionProperty, positionProperty);
-		this.positionProperty = positionProperty;
+	public void setMarginProperty(StyledDualDimensionProperty marginProperty) {
+		changeProperty(this.marginProperty, marginProperty);
+		this.marginProperty = marginProperty;
 	}
 	
 	public StyledGridAlignmentProperty getAnchorProperty() {

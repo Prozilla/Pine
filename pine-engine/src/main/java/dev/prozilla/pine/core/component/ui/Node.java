@@ -21,7 +21,9 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 	
 	// Current state
 	public Vector2i currentPosition;
-	public Vector2i currentSize;
+	public Vector2i currentInnerSize;
+	public Vector2i currentOuterSize;
+	public Vector2i offset;
 	public boolean cursorHit;
 	public boolean readyToRender;
 	public int iterations;
@@ -39,7 +41,7 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 	public Color backgroundColor;
 	public DualDimension size;
 	public DualDimension padding;
-	public DualDimension position;
+	public DualDimension margin;
 	
 	public final Set<String> classes;
 	public final Set<String> modifiers;
@@ -54,12 +56,13 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 	
 	public Node() {
 		currentPosition = new Vector2i();
-		currentSize = new Vector2i();
+		currentInnerSize = new Vector2i();
+		currentOuterSize = new Vector2i();
+		offset = new Vector2i();
 		cursorHit = false;
 		readyToRender = false;
 		iterations = 0;
 		
-		position = new DualDimension();
 		anchor = DEFAULT_ANCHOR;
 		passThrough = false;
 		absolutePosition = false;
@@ -92,7 +95,7 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 	 * @return True if the point is inside the rectangle
 	 */
 	public boolean isInside(int x, int y) {
-		return isInsideRect(x, y, currentPosition, currentSize);
+		return isInsideRect(x, y, currentPosition, currentInnerSize);
 	}
 	
 	/**
@@ -158,19 +161,19 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 		return nodeRoot;
 	}
 	
-	public int getPositionX() {
-		return position.computeX(this);
+	public int getOuterSizeX() {
+		return getInnerSizeX() + getMarginX() * 2;
 	}
 	
-	public int getPositionY() {
-		return position.computeY(this);
+	public int getOuterSizeY() {
+		return getInnerSizeY() + getMarginY() * 2;
 	}
 	
-	public int getSizeX() {
+	public int getInnerSizeX() {
 		return size.computeX(this) + getPaddingX() * 2;
 	}
 	
-	public int getSizeY() {
+	public int getInnerSizeY() {
 		return size.computeY(this) + getPaddingY() * 2;
 	}
 	
@@ -180,6 +183,22 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 	
 	public int getPaddingY() {
 		return padding != null ? padding.computeY(this) : 0;
+	}
+	
+	public int getX() {
+		return getMarginX() + offset.x;
+	}
+	
+	public int getY() {
+		return getMarginY() + offset.y;
+	}
+	
+	public int getMarginX() {
+		return margin != null ? margin.computeX(this) : 0;
+	}
+	
+	public int getMarginY() {
+		return margin != null ? margin.computeY(this) : 0;
 	}
 	
 	@Override

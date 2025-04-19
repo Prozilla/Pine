@@ -86,8 +86,8 @@ public class StyleSheet implements Printable, Resource {
 		return createStyledDualDimensionProperty(StyledPropertyKey.PADDING, node, new DualDimension());
 	}
 	
-	public StyledDualDimensionProperty createPositionProperty(Node node) {
-		return createStyledDualDimensionProperty(StyledPropertyKey.POSITION, node, new DualDimension());
+	public StyledDualDimensionProperty createMarginProperty(Node node) {
+		return createStyledDualDimensionProperty(StyledPropertyKey.MARGIN, node, new DualDimension());
 	}
 	
 	public StyledGridAlignmentProperty createAnchorProperty(Node node) {

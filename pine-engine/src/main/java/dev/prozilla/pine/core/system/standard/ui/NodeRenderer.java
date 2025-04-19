@@ -24,8 +24,8 @@ public class NodeRenderer extends RenderSystem {
 			return;
 		}
 		
-		if (node.currentSize.x != 0 && node.currentSize.y != 0 && node.backgroundColor != null) {
-			renderer.drawRect(node.currentPosition.x, node.currentPosition.y, transform.getDepth(), node.currentSize.x, node.currentSize.y, node.backgroundColor);
+		if (node.currentInnerSize.x != 0 && node.currentInnerSize.y != 0 && node.backgroundColor != null) {
+			renderer.drawRect(node.currentPosition.x, node.currentPosition.y, transform.getDepth(), node.currentInnerSize.x, node.currentInnerSize.y, node.backgroundColor);
 		}
 	}
 }

@@ -36,8 +36,11 @@ public class NodeStyler extends UpdateSystem {
 		if (nodeStyle.getPaddingProperty() != null) {
 			node.padding = nodeStyle.getPaddingProperty().getValue();
 		}
-		if (nodeStyle.getPositionProperty() != null && !node.isInLayout()) {
-			node.position = nodeStyle.getPositionProperty().getValue();
+		if (nodeStyle.getMarginProperty() != null) {
+			node.margin = nodeStyle.getMarginProperty().getValue();
+		}
+		if (nodeStyle.getMarginProperty() != null && !node.isInLayout()) {
+			node.margin = nodeStyle.getMarginProperty().getValue();
 		}
 		if (nodeStyle.getAnchorProperty() != null && !node.isInLayout()) {
 			node.anchor = nodeStyle.getAnchorProperty().getValue();

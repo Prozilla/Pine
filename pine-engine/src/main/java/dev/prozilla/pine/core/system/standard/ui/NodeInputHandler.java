@@ -32,7 +32,7 @@ public class NodeInputHandler extends InputSystemBase {
 			
 			if (!node.passThrough && !node.isInTooltip() && !input.isCursorBlocked()) {
 				int canvasHeight = node.getRoot().getHeight();
-				if (cursor != null && Node.isInsideRect(new Vector2i(cursor.x, canvasHeight - cursor.y), node.currentPosition, node.currentSize)) {
+				if (cursor != null && Node.isInsideRect(new Vector2i(cursor.x, canvasHeight - cursor.y), node.currentPosition, node.currentInnerSize)) {
 					cursorHit = true;
 					input.blockCursor(entity);
 				}

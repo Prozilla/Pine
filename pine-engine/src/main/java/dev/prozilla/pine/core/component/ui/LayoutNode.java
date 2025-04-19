@@ -119,12 +119,12 @@ public class LayoutNode extends Component implements NodeContext {
 	
 	@Override
 	public int getX() {
-		return getNode().getPositionX();
+		return getNode().getX();
 	}
 	
 	@Override
 	public int getY() {
-		return getNode().getPositionY();
+		return getNode().getY();
 	}
 	
 	@Override

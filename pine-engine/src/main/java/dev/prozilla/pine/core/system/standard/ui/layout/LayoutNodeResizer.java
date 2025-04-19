@@ -44,11 +44,11 @@ public class LayoutNodeResizer extends UpdateSystem {
 					switch (layoutNode.direction) {
 						case UP:
 						case DOWN:
-							newGap -= childNode.currentSize.y;
+							newGap -= childNode.currentOuterSize.y;
 							break;
 						case LEFT:
 						case RIGHT:
-							newGap -= childNode.currentSize.x;
+							newGap -= childNode.currentOuterSize.x;
 							break;
 					}
 				}
@@ -72,23 +72,23 @@ public class LayoutNodeResizer extends UpdateSystem {
 					continue;
 				}
 				
-				totalChildWidth += childNode.currentSize.x;
-				totalChildHeight += childNode.currentSize.y;
+				totalChildWidth += childNode.currentOuterSize.x;
+				totalChildHeight += childNode.currentOuterSize.y;
 				
 				switch (layoutNode.direction) {
 					case UP:
 					case DOWN:
 						if (childNode.size.x.getUnit() != Unit.PERCENTAGE) {
-							newWidth = Math.max(newWidth, childNode.currentSize.x);
+							newWidth = Math.max(newWidth, childNode.currentOuterSize.x);
 						}
-						newHeight += childNode.currentSize.y + gap;
+						newHeight += childNode.currentOuterSize.y + gap;
 						break;
 					case LEFT:
 					case RIGHT:
 						if (childNode.size.y.getUnit() != Unit.PERCENTAGE) {
-							newWidth += childNode.currentSize.x + gap;
+							newWidth += childNode.currentOuterSize.x + gap;
 						}
-						newHeight = Math.max(newHeight, childNode.currentSize.y);
+						newHeight = Math.max(newHeight, childNode.currentOuterSize.y);
 						break;
 				}
 			}
@@ -101,7 +101,7 @@ public class LayoutNodeResizer extends UpdateSystem {
 			}
 			
 			if (layoutNode.distribution == LayoutNode.Distribution.SPACE_BETWEEN && parentNode.size != null) {
-				int newGap = currentGap;
+				int newGap;
 				if (layoutNode.direction == Direction.UP || layoutNode.direction == Direction.DOWN) {
 					newGap = parentNode.size.computeY(parentNode) - parentNode.getPaddingY() * 2 - totalChildHeight;
 				} else {
@@ -120,8 +120,11 @@ public class LayoutNodeResizer extends UpdateSystem {
 		layoutNode.innerSize.x = newWidth;
 		layoutNode.innerSize.y = newHeight;
 		
-		parentNode.currentSize.x = layoutNode.innerSize.x + parentNode.getPaddingX() * 2;
-		parentNode.currentSize.y = layoutNode.innerSize.y + parentNode.getPaddingY() * 2;
+		parentNode.currentInnerSize.x = layoutNode.innerSize.x + parentNode.getPaddingX() * 2;
+		parentNode.currentInnerSize.y = layoutNode.innerSize.y + parentNode.getPaddingY() * 2;
+		
+		parentNode.currentOuterSize.x = parentNode.currentInnerSize.x + parentNode.getMarginX() * 2;
+		parentNode.currentOuterSize.y = parentNode.currentInnerSize.y + parentNode.getMarginY() * 2;
 		
 		layoutNode.currentGap = currentGap;
 	}

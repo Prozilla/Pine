@@ -16,7 +16,7 @@ public class ImageInitializer extends InitSystem {
 		ImageNode imageNode = chunk.getComponent(ImageNode.class);
 		Node node = chunk.getComponent(Node.class);
 		
-		node.currentSize.x = imageNode.regionSize.x;
-		node.currentSize.y = imageNode.regionSize.y;
+		node.currentInnerSize.x = imageNode.regionSize.x;
+		node.currentInnerSize.y = imageNode.regionSize.y;
 	}
 }
