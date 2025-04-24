@@ -5,10 +5,13 @@ import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
-import dev.prozilla.pine.core.system.update.UpdateSystem;
+import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 import dev.prozilla.pine.examples.sokoban.EntityTag;
+import dev.prozilla.pine.examples.sokoban.GameManager;
 
-public class CrateUpdater extends UpdateSystem {
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class CrateUpdater extends UpdateSystemBase {
 	
 	private final GridGroup goalGrid;
 	
@@ -19,15 +22,23 @@ public class CrateUpdater extends UpdateSystem {
 	}
 	
 	@Override
-	protected void process(EntityChunk chunk, float deltaTime) {
-		TileRenderer tileRenderer = chunk.getComponent(TileRenderer.class);
-		SpriteRenderer spriteRenderer = chunk.getComponent(SpriteRenderer.class);
+	public void update(float deltaTime) {
+		AtomicInteger completedCrates = new AtomicInteger();
 		
-		// Update sprite based on whether create is on a goal tile
-		if (goalGrid.getTile(tileRenderer.getCoordinate()) != null) {
-			spriteRenderer.texture = ResourcePool.loadTexture("sokoban/Crates/crate_07.png");
-		} else {
-			spriteRenderer.texture = ResourcePool.loadTexture("sokoban/Crates/crate_02.png");
-		}
+		forEach((EntityChunk chunk) -> {
+			TileRenderer tileRenderer = chunk.getComponent(TileRenderer.class);
+			SpriteRenderer spriteRenderer = chunk.getComponent(SpriteRenderer.class);
+			
+			// Update sprite based on whether create is on a goal tile
+			if (goalGrid.getTile(tileRenderer.getCoordinate()) != null) {
+				spriteRenderer.texture = ResourcePool.loadTexture("images/crates/crate_07.png");
+				completedCrates.addAndGet(1);
+			} else {
+				spriteRenderer.texture = ResourcePool.loadTexture("images/crates/crate_02.png");
+			}
+		});
+		
+		GameManager.instance.completedCrates = completedCrates.get();
 	}
+
 }

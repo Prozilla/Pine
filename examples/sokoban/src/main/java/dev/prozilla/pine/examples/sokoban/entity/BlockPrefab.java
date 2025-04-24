@@ -6,7 +6,7 @@ import dev.prozilla.pine.examples.sokoban.EntityTag;
 public class BlockPrefab extends TilePrefab {
 	
 	public BlockPrefab() {
-		super("sokoban/Blocks/block_01.png");
+		super("images/blocks/block_01.png");
 		setTag(EntityTag.BLOCK);
 	}
 	

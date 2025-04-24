@@ -540,7 +540,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		return currentScene;
 	}
 	
-	protected void setApplicationManager(ApplicationManager applicationManager) {
+	public void setApplicationManager(ApplicationManager applicationManager) {
 		this.applicationManager = applicationManager;
 	}
 	

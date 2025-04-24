@@ -21,24 +21,24 @@ public class PlayerData extends Component {
 	
 	public static final Map<Direction, String[]> directionToSprites = Map.of(
 		Direction.DOWN, new String[]{
-			"sokoban/Player/player_23.png",
-			"sokoban/Player/player_01.png",
-			"sokoban/Player/player_24.png"
+			"images/player/player_23.png",
+			"images/player/player_01.png",
+			"images/player/player_24.png"
 		},
 		Direction.UP, new String[]{
-			"sokoban/Player/player_02.png",
-			"sokoban/Player/player_04.png",
-			"sokoban/Player/player_03.png"
+			"images/player/player_02.png",
+			"images/player/player_04.png",
+			"images/player/player_03.png"
 		},
 		Direction.LEFT, new String[]{
-			"sokoban/Player/player_14.png",
-			"sokoban/Player/player_15.png",
-			"sokoban/Player/player_16.png"
+			"images/player/player_14.png",
+			"images/player/player_15.png",
+			"images/player/player_16.png"
 		},
 		Direction.RIGHT, new String[]{
-			"sokoban/Player/player_11.png",
-			"sokoban/Player/player_13.png",
-			"sokoban/Player/player_12.png"
+			"images/player/player_11.png",
+			"images/player/player_13.png",
+			"images/player/player_12.png"
 		}
 	);
 	

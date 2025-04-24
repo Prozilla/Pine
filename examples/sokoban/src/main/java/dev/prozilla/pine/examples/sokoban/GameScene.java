@@ -6,6 +6,8 @@ import dev.prozilla.pine.core.entity.prefab.sprite.GridPrefab;
 import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.examples.sokoban.entity.*;
+import dev.prozilla.pine.examples.sokoban.entity.ui.UIPrefab;
+import dev.prozilla.pine.examples.sokoban.system.CrateCounterUpdater;
 import dev.prozilla.pine.examples.sokoban.system.CrateUpdater;
 import dev.prozilla.pine.examples.sokoban.system.PlayerInputHandler;
 import dev.prozilla.pine.examples.sokoban.system.PlayerMover;
@@ -42,6 +44,7 @@ public class GameScene extends Scene {
 		GridGroup foregroundGrid = world.addEntity(gridPrefab).getComponent(GridGroup.class);
 		
 		world.addSystem(new CrateUpdater(goalGrid));
+		world.addSystem(new CrateCounterUpdater());
 		
 		// Create tile entities
 		BlockPrefab blockPrefab = new BlockPrefab();
@@ -49,6 +52,8 @@ public class GameScene extends Scene {
 		GoalPrefab goalPrefab = new GoalPrefab();
 		PlayerPrefab playerPrefab = new PlayerPrefab();
 		CratePrefab cratePrefab = new CratePrefab();
+		
+		GameManager.instance.totalCrates = 0;
 		
 		for (int i = 0; i < MAP.length; i++) {
 			String row = MAP[i];
@@ -62,7 +67,10 @@ public class GameScene extends Scene {
 					TilePrefab tilePrefab = switch (tileName) {
 						case 'O' -> blockPrefab;
 						case 's' -> playerPrefab;
-						case 'x' -> cratePrefab;
+						case 'x' -> {
+							GameManager.instance.totalCrates++;
+							yield cratePrefab;
+						}
 						default -> null;
 					};
 					
@@ -74,6 +82,9 @@ public class GameScene extends Scene {
 				backgroundGrid.addTile(groundPrefab, j, i);
 			}
 		}
+		
+		// Add user interface
+		world.addEntity(new UIPrefab());
 		
 		// Move camera to center of map
 		int width = MAP[0].length();

@@ -1,0 +1,17 @@
+.hud {
+	size: 100vw 100vh;
+}
+
+.goal-counter {
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
+	anchor: top-left;
+	margin: 16px;
+	padding: 16px 8px;
+	background-color: #000;
+}
+
+.goal-counter-image {
+	size: 32px;
+}

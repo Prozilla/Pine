@@ -17,6 +17,9 @@ public class Main {
 		Application application = applicationBuilder.build();
 		application.getConfig().rendering.snapPixels.set(true);
 		
+		GameManager.instance = new GameManager(application);
+		application.setApplicationManager(GameManager.instance);
+		
 		application.run();
 	}
 }
