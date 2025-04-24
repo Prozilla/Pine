@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Start Canvas Demo" type="GradleRunConfiguration" factoryName="Gradle" folderName="Canvas Demo">
+  <configuration default="false" name="Start UI Demo" type="GradleRunConfiguration" factoryName="Gradle" folderName="UI Demo">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -10,7 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value=":examples:canvas:start" />
+          <option value=":examples:ui:start" />
         </list>
       </option>
       <option name="vmOptions" />

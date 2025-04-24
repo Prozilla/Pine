@@ -97,7 +97,7 @@ public class NodePrefab extends Prefab {
 	/**
 	 * Sets the padding around the content of this node.
 	 */
-	public void setPadding(Dimension x, Dimension y) {
+	public void setPadding(DimensionBase x, DimensionBase y) {
 		setPadding(new DualDimension(x, y));
 	}
 	
@@ -120,7 +120,7 @@ public class NodePrefab extends Prefab {
 		this.padding = padding.getValue();
 	}
 	
-	public void setMargin(Dimension x, Dimension y) {
+	public void setMargin(DimensionBase x, DimensionBase y) {
 		setMargin(new DualDimension(x, y));
 	}
 	

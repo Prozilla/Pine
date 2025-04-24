@@ -3,9 +3,9 @@ package dev.prozilla.pine.examples.flappybird;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.scene.Scene;
-import dev.prozilla.pine.core.component.ui.TextRenderer;
+import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.prefab.ui.CanvasPrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
@@ -85,9 +85,9 @@ public class GameScene extends Scene {
 		obstacles = world.addEntity(new Entity(world));
 		
 		// Create user interface
-		Entity canvas = world.addEntity(new CanvasPrefab());
-		canvas.addChild(scorePrefab);
-		gameOverText = canvas.addChild(gameOverPrefab);
+		Entity nodeRoot = world.addEntity(new NodeRootPrefab());
+		nodeRoot.addChild(scorePrefab);
+		gameOverText = nodeRoot.addChild(gameOverPrefab);
 		
 		// Set default values
 		timeUntilNextObstacle = 0;
@@ -110,7 +110,7 @@ public class GameScene extends Scene {
 	public void update(float deltaTime) throws IllegalStateException {
 		if (gameOver && !gameOverText.isActive()) {
 			gameOverText.setActive(true);
-			gameOverText.getChildWithTag(EntityTag.FINAL_SCORE_TAG).getComponent(TextRenderer.class).setText(String.format("Your Score: %s", playerScore));
+			gameOverText.getChildWithTag(EntityTag.FINAL_SCORE_TAG).getComponent(TextNode.class).setText(String.format("Your Score: %s", playerScore));
 		}
 
 		super.update(deltaTime);

@@ -10,7 +10,7 @@ public class BackgroundPrefab extends SpritePrefab {
 	protected int index;
 	
 	public BackgroundPrefab() {
-		super( "flappybird/background.png");
+		super("flappybird/background.png");
 		setName("Background");
 		
 		index = 0;

@@ -5,10 +5,10 @@ plugins {
 }
 
 application {
-	mainClass = "dev.prozilla.pine.examples.canvas.Main"
+	mainClass = "dev.prozilla.pine.examples.ui.Main"
 }
 
 tasks.register("start", JavaExec) {
-	mainClass = "dev.prozilla.pine.examples.canvas.Main"
+	mainClass = "dev.prozilla.pine.examples.ui.Main"
 	classpath = sourceSets.main.runtimeClasspath
 }

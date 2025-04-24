@@ -1,9 +1,10 @@
 package dev.prozilla.pine.examples.flappybird.system.canvas;
 
-import dev.prozilla.pine.core.component.ui.TextRenderer;
+import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 import dev.prozilla.pine.examples.flappybird.EntityTag;
 import dev.prozilla.pine.examples.flappybird.GameScene;
+import org.w3c.dom.Text;
 
 /**
  * Updates the score text based on the player's score.
@@ -11,7 +12,7 @@ import dev.prozilla.pine.examples.flappybird.GameScene;
 public class ScoreTextUpdater extends UpdateSystemBase {
 	
 	public ScoreTextUpdater() {
-		super(TextRenderer.class);
+		super(TextNode.class);
 		setRequiredTag(EntityTag.SCORE_TAG);
 	}
 	
@@ -20,7 +21,7 @@ public class ScoreTextUpdater extends UpdateSystemBase {
 		GameScene gameScene = (GameScene)scene;
 		
 		forEach(chunk -> {
-			TextRenderer textRenderer = chunk.getComponent(TextRenderer.class);
+			TextNode textRenderer = chunk.getComponent(TextNode.class);
 			
 			// Update text field based on score value
 			textRenderer.setText(String.valueOf(gameScene.playerScore));

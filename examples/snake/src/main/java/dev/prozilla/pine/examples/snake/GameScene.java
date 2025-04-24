@@ -3,11 +3,11 @@ package dev.prozilla.pine.examples.snake;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.text.Font;
+import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.component.particle.ParticleBurstEmitter;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.prefab.ui.CanvasPrefab;
 import dev.prozilla.pine.core.entity.prefab.sprite.GridPrefab;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.examples.snake.entity.*;
@@ -93,8 +93,8 @@ public class GameScene extends Scene {
 		applePrefab.setParticleEmitter(appleParticleEmitter);
 		
 		// Add user interface
-		Entity canvas = world.addEntity(new CanvasPrefab());
-		gameOverText = canvas.addChild(new GameOverPrefab(font));
+		Entity nodeRoot = world.addEntity(new NodeRootPrefab());
+		gameOverText = nodeRoot.addChild(new GameOverPrefab(font));
 		
 		// Reset state
 		timeUntilNextSpawn = MIN_TIME_BETWEEN_SPAWNS;

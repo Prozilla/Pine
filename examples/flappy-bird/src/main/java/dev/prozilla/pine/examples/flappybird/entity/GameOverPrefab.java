@@ -7,22 +7,21 @@ import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.prefab.ui.ContainerPrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
 import dev.prozilla.pine.examples.flappybird.EntityTag;
 
-public class GameOverPrefab extends ContainerPrefab {
+public class GameOverPrefab extends LayoutPrefab {
 	
 	protected Font font;
 	
 	public GameOverPrefab(Font font) {
-		super();
 		setName("GameOver");
 		setAnchor(GridAlignment.TOP);
 		setDirection(Direction.DOWN);
 		setAlignment(EdgeAlignment.CENTER);
-		setPosition(new Dimension(), Dimension.parse("33vh"));
-		setGap(16);
+		setMargin(new Dimension(), Dimension.parse("33vh"));
+		setGap(new Dimension(16));
 	
 		this.font = font;
 	}

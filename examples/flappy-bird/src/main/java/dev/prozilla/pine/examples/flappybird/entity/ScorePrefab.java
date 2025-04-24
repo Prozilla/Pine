@@ -17,7 +17,7 @@ public class ScorePrefab extends TextPrefab {
 		// Set position and appearance
 		setAnchor(GridAlignment.TOP_RIGHT);
 		setColor(Color.white());
-		setPosition(new DualDimension(16));
+		setMargin(new DualDimension(16));
 		setFont(font);
 	}
 	
