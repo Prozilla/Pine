@@ -26,6 +26,7 @@ import dev.prozilla.pine.core.system.standard.ui.frame.FrameResizer;
 import dev.prozilla.pine.core.system.standard.ui.image.ImageInitializer;
 import dev.prozilla.pine.core.system.standard.ui.image.ImageRenderer;
 import dev.prozilla.pine.core.system.standard.ui.layout.*;
+import dev.prozilla.pine.core.system.standard.ui.text.DynamicTextUpdater;
 import dev.prozilla.pine.core.system.standard.ui.text.TextInitializer;
 import dev.prozilla.pine.core.system.standard.ui.text.TextRenderer;
 import dev.prozilla.pine.core.system.standard.ui.text.TextResizer;
@@ -131,6 +132,7 @@ public class World implements Lifecycle {
 		initialSystems.add(new TooltipInputHandler());
 		initialSystems.add(new ButtonInputHandler());
 		
+		initialSystems.add(new DynamicTextUpdater());
 		initialSystems.add(new NodeRootResizer());
 		initialSystems.add(new TextResizer());
 		initialSystems.add(new FrameResizer());

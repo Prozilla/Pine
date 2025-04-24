@@ -7,7 +7,6 @@ import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.examples.sokoban.entity.*;
 import dev.prozilla.pine.examples.sokoban.entity.ui.UIPrefab;
-import dev.prozilla.pine.examples.sokoban.system.CrateCounterUpdater;
 import dev.prozilla.pine.examples.sokoban.system.CrateUpdater;
 import dev.prozilla.pine.examples.sokoban.system.PlayerInputHandler;
 import dev.prozilla.pine.examples.sokoban.system.PlayerMover;
@@ -44,7 +43,6 @@ public class GameScene extends Scene {
 		GridGroup foregroundGrid = world.addEntity(gridPrefab).getComponent(GridGroup.class);
 		
 		world.addSystem(new CrateUpdater(goalGrid));
-		world.addSystem(new CrateCounterUpdater());
 		
 		// Create tile entities
 		BlockPrefab blockPrefab = new BlockPrefab();
