@@ -22,10 +22,10 @@ public class TooltipInputHandler extends InputSystemBase {
 			Node node = chunk.getComponent(Node.class);
 			TooltipNode tooltipNode = chunk.getComponent(TooltipNode.class);
 			
-			tooltipNode.cursorX.setValue(Math.round(cursorPosition.x * (1f - (node.anchor.x * 2))));
-			tooltipNode.cursorY.setValue(Math.round(cursorPosition.y * ((node.anchor.y * 2) - 1f)));
-			tooltipNode.baseX.setValue(Math.round(windowWidth * (node.anchor.x)));
-			tooltipNode.baseY.setValue(Math.round(windowHeight * (1f - node.anchor.y)));
+			tooltipNode.cursorX.setValue(cursorPosition.x * (1f - (node.anchor.x * 2)));
+			tooltipNode.cursorY.setValue(cursorPosition.y * ((node.anchor.y * 2) - 1f));
+			tooltipNode.baseX.setValue(windowWidth * (node.anchor.x));
+			tooltipNode.baseY.setValue(windowHeight * (1f - node.anchor.y));
 		});
 	}
 }

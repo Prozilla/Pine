@@ -2,12 +2,12 @@ package dev.prozilla.pine.core.component.ui;
 
 public interface NodeContext {
 	
-	int getX();
+	float getX();
 	
-	int getY();
+	float getY();
 	
-	int getWidth();
+	float getWidth();
 	
-	int getHeight();
+	float getHeight();
 	
 }

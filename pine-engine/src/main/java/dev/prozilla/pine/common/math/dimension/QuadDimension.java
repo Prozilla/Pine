@@ -93,28 +93,28 @@ public class QuadDimension extends DualDimension {
 	/**
 	 * Computes the Z-dimension for a given element.
 	 */
-	public int computeZ(Node element) {
+	public float computeZ(Node element) {
 		return z.compute(element, true);
 	}
 	
 	/**
 	 * Computes the W-dimension for a given element.
 	 */
-	public int computeW(Node element) {
+	public float computeW(Node element) {
 		return w.compute(element, false);
 	}
 	
 	/**
 	 * Computes the sum of the X- and Z-dimensions for a given element.
 	 */
-	public int computeXZ(Node element) {
+	public float computeXZ(Node element) {
 		return computeX(element) + computeZ(element);
 	}
 	
 	/**
 	 * Computes the sum of the Y- and W-dimensions for a given element.
 	 */
-	public int computeYW(Node element) {
+	public float computeYW(Node element) {
 		return computeY(element) + computeW(element);
 	}
 	

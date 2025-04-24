@@ -9,7 +9,7 @@ import dev.prozilla.pine.core.component.ui.Node;
  */
 public abstract class DimensionBase implements Printable, Cloneable<DimensionBase> {
 	
-	protected int computedValue;
+	protected float computedValue;
 	
 	public static final boolean DEFAULT_DIRTY = true;
 	
@@ -18,7 +18,7 @@ public abstract class DimensionBase implements Printable, Cloneable<DimensionBas
 	 * @param node UI element, serving as the context of this dimension.
 	 * @return The computed value of this dimension in pixels.
 	 */
-	public final int compute(Node node, boolean isHorizontal) {
+	public final float compute(Node node, boolean isHorizontal) {
 		if (!isDirty(node, isHorizontal)) {
 			return computedValue;
 		}
@@ -32,7 +32,7 @@ public abstract class DimensionBase implements Printable, Cloneable<DimensionBas
 	 * @param node UI element, serving as the context of this dimension.
 	 * @return The computed value of this dimension in pixels.
 	 */
-	abstract protected int recompute(Node node, boolean isHorizontal);
+	abstract protected float recompute(Node node, boolean isHorizontal);
 	
 	/**
 	 * Checks whether this dimension has been modified since the last calculation.

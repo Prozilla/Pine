@@ -1,7 +1,6 @@
 package dev.prozilla.pine.common.math.dimension;
 
 import dev.prozilla.pine.common.exception.InvalidArrayException;
-import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.util.Checks;
 import dev.prozilla.pine.core.component.ui.Node;
 
@@ -16,24 +15,24 @@ import java.util.function.BiFunction;
  */
 public class Dimension extends DimensionBase {
 
-	protected int value;
+	protected float value;
 	protected Unit unit;
 	
 	protected boolean isDirty;
 	protected float currentFactor;
 	
-	public static final int DEFAULT_VALUE = 0;
+	public static final float DEFAULT_VALUE = 0;
 	public static final Unit DEFAULT_UNIT = Unit.PIXELS;
 	
 	public Dimension() {
 		this(DEFAULT_VALUE);
 	}
 	
-	public Dimension(int value) {
+	public Dimension(float value) {
 		this(value, DEFAULT_UNIT);
 	}
 	
-	public Dimension(int value, Unit unit) {
+	public Dimension(float value, Unit unit) {
 		this.value = value;
 		this.unit = unit;
 		isDirty = DEFAULT_DIRTY;
@@ -43,7 +42,7 @@ public class Dimension extends DimensionBase {
 	 * Computes the value of this dimension by multiplying the original value with a factor based on the unit.
 	 */
 	@Override
-	protected int recompute(Node node, boolean isHorizontal) {
+	protected float recompute(Node node, boolean isHorizontal) {
 		isDirty = false;
 		
 		if (value == 0 || currentFactor == 0) {
@@ -54,7 +53,7 @@ public class Dimension extends DimensionBase {
 			return value;
 		}
 		
-		return Math.round(value * currentFactor);
+		return value * currentFactor;
 	}
 	
 	@Override
@@ -114,12 +113,12 @@ public class Dimension extends DimensionBase {
 		};
 	}
 	
-	public void set(int value, Unit unit) {
+	public void set(float value, Unit unit) {
 		setValue(value);
 		setUnit(unit);
 	}
 	
-	public void setValue(int value) {
+	public void setValue(float value) {
 		if (value == this.value) {
 			return;
 		}
@@ -157,7 +156,7 @@ public class Dimension extends DimensionBase {
 	 * @return New dimension with based on input string
 	 * @throws IllegalArgumentException When <code>input</code> is not a valid dimension string
 	 */
-	public static DimensionBase parse(String input) throws IllegalArgumentException, InvalidStringException {
+	public static DimensionBase parse(String input) throws IllegalArgumentException {
 		Checks.isNotBlank(input, "Input string must not be blank");
 		
 		input = input.trim().toLowerCase();
@@ -170,14 +169,29 @@ public class Dimension extends DimensionBase {
 			splitIndex++;
 		}
 		
-		while (splitIndex < input.length() && Character.isDigit(input.charAt(splitIndex))) {
+		int inputLength = input.length();
+		Character currentChar = null;
+		Character nextChar = null;
+		splitIndex--;
+		
+		do {
 			splitIndex++;
-		}
+			
+			if (splitIndex < inputLength) {
+				currentChar = input.charAt(splitIndex);
+				if (splitIndex + 1 < inputLength) {
+					nextChar = input.charAt(splitIndex + 1);
+				}
+			}
+		} while (splitIndex < inputLength && (
+			Character.isDigit(currentChar)
+			|| currentChar == '.' && nextChar != null && Character.isDigit(nextChar))
+		);
 		
 		// If input string starts with non-digit, parse it as a dimension function
 		if (splitIndex == 0) {
 			List<String> args = new ArrayList<>(List.of(input.split("\\s*[(,)]\\s*")));
-			String functionName = args.remove(0);
+			String functionName = args.removeFirst();
 			
 			// Parse each argument
 			List<DimensionBase> dimensions = new ArrayList<>();
@@ -218,7 +232,7 @@ public class Dimension extends DimensionBase {
 				throw new IllegalArgumentException("Input string contains invalid unit");
 			}
 			
-			int value = Integer.parseInt(valueString);
+			float value = Float.parseFloat(valueString);
 			Unit unit = unitString.isBlank() ? Unit.PIXELS : Unit.parse(unitString);
 			
 			return new Dimension(value, unit);
@@ -338,7 +352,7 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		protected int compare(int valueA, int valueB) {
+		protected float compare(float valueA, float valueB) {
 			return Math.max(valueA, valueB);
 		}
 		
@@ -363,7 +377,7 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		protected int compare(int valueA, int valueB) {
+		protected float compare(float valueA, float valueB) {
 			return Math.min(valueA, valueB);
 		}
 		
@@ -392,7 +406,7 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		protected int compare(int valueA, int valueB) {
+		protected float compare(float valueA, float valueB) {
 			return predicate ? valueA : valueB;
 		}
 		
@@ -404,7 +418,7 @@ public class Dimension extends DimensionBase {
 		@Override
 		public boolean equals(DimensionBase dimensionBase) {
 			return super.equals(dimensionBase)
-	                && dimensionBase instanceof If pred && pred.getPredicate() == this.predicate;
+	                && dimensionBase instanceof If predicate && predicate.getPredicate() == this.predicate;
 		}
 		
 		public boolean getPredicate() {
@@ -436,7 +450,7 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		protected int compare(int valueA, int valueB) {
+		protected float compare(float valueA, float valueB) {
 			return valueA + valueB;
 		}
 		
@@ -461,7 +475,7 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		protected int compare(int valueA, int valueB) {
+		protected float compare(float valueA, float valueB) {
 			return valueA - valueB;
 		}
 		
@@ -486,7 +500,7 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		protected int compare(int valueA, int valueB) {
+		protected float compare(float valueA, float valueB) {
 			return valueA * valueB;
 		}
 		
@@ -522,15 +536,15 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		protected int recompute(Node node, boolean isHorizontal) {
-			int value = dimension.compute(node, isHorizontal);
-			int min = dimensionMin.compute(node, isHorizontal);
+		protected float recompute(Node node, boolean isHorizontal) {
+			float value = dimension.compute(node, isHorizontal);
+			float min = dimensionMin.compute(node, isHorizontal);
 			
 			if (value <= min) {
 				return min;
 			}
 			
-			int max = dimensionMax.compute(node, isHorizontal);
+			float max = dimensionMax.compute(node, isHorizontal);
 			
 			return Math.min(value, max);
 		}
@@ -572,8 +586,8 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		protected int compare(int valueA, int valueB) {
-			return Math.round(valueA * (1 - factor) + valueB * factor);
+		protected float compare(float valueA, float valueB) {
+			return valueA * (1 - factor) + valueB * factor;
 		}
 		
 		@Override

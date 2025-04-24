@@ -32,8 +32,8 @@ public class NodeUpdater extends UpdateSystem {
 	
 	public static void resizeNode(Node node) {
 		if (!node.size.isZero(node)) {
-			int innerSizeX = node.getInnerSizeX();
-			int innerSizeY = node.getInnerSizeY();
+			float innerSizeX = node.getInnerSizeX();
+			float innerSizeY = node.getInnerSizeY();
 			
 			if (innerSizeX != 0) {
 				node.currentInnerSize.x = innerSizeX;
@@ -61,25 +61,25 @@ public class NodeUpdater extends UpdateSystem {
 		}
 		
 		// Calculate remaining width and height
-		int contextX = 0;
-		int contextY = 0;
+		float contextX = 0;
+		float contextY = 0;
 		
 		if (node.absolutePosition) {
 			contextX = context.getX();
 			contextY = context.getY();
 		}
 		
-		int contextWidth = context.getWidth();
-		int contextHeight = context.getHeight();
+		float contextWidth = context.getWidth();
+		float contextHeight = context.getHeight();
 		
-		int remainingWidth = contextWidth - node.currentInnerSize.x;
-		int remainingHeight = contextHeight - node.currentInnerSize.y;
+		float remainingWidth = contextWidth - node.currentInnerSize.x;
+		float remainingHeight = contextHeight - node.currentInnerSize.y;
 
 		// Calculate offset based on anchor and position
 		float offsetX = (1 - 2 * node.anchor.x) * (node.getX());
 		float offsetY = (1 - 2 * node.anchor.y) * (node.getY());
 		
-		node.currentPosition.x = contextX + Math.round(node.anchor.x * remainingWidth + offsetX);
-		node.currentPosition.y = contextY + Math.round(node.anchor.y * remainingHeight + offsetY);
+		node.currentPosition.x = contextX + node.anchor.x * remainingWidth + offsetX;
+		node.currentPosition.y = contextY + node.anchor.y * remainingHeight + offsetY;
 	}
 }

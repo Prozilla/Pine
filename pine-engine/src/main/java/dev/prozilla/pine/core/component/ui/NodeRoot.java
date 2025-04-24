@@ -51,22 +51,22 @@ public class NodeRoot extends Component implements NodeContext {
 	}
 	
 	@Override
-	public int getX() {
+	public float getX() {
 		return 0;
 	}
 	
 	@Override
-	public int getY() {
+	public float getY() {
 		return 0;
 	}
 	
 	@Override
-	public int getWidth() {
+	public float getWidth() {
 		return size.x;
 	}
 	
 	@Override
-	public int getHeight() {
+	public float getHeight() {
 		return size.y;
 	}
 	

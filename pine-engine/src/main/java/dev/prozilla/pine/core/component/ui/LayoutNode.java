@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.core.component.Component;
@@ -21,11 +22,11 @@ public class LayoutNode extends Component implements NodeContext {
 	public Distribution distribution;
 	public boolean arrangeChildren;
 	
-	public int currentGap;
+	public float currentGap;
 	/** Distance between elements. */
 	public DimensionBase gap;
 	
-	public Vector2i innerSize;
+	public Vector2f innerSize;
 	public Vector2i totalChildrenSize;
 	
 	/** Array of node components in children of the attached entity */
@@ -78,7 +79,7 @@ public class LayoutNode extends Component implements NodeContext {
 		this.distribution = distribution;
 		
 		childNodes = new ArrayList<>();
-		innerSize = new Vector2i();
+		innerSize = new Vector2f();
 		totalChildrenSize = new Vector2i();
 		arrangeChildren = true;
 	}
@@ -109,7 +110,7 @@ public class LayoutNode extends Component implements NodeContext {
 		return node;
 	}
 	
-	public int getGap() {
+	public float getGap() {
 		if (gap == null) {
 			return 0;
 		}
@@ -118,22 +119,22 @@ public class LayoutNode extends Component implements NodeContext {
 	}
 	
 	@Override
-	public int getX() {
+	public float getX() {
 		return getNode().getX();
 	}
 	
 	@Override
-	public int getY() {
+	public float getY() {
 		return getNode().getY();
 	}
 	
 	@Override
-	public int getWidth() {
+	public float getWidth() {
 		return innerSize.x;
 	}
 	
 	@Override
-	public int getHeight() {
+	public float getHeight() {
 		return innerSize.y;
 	}
 }

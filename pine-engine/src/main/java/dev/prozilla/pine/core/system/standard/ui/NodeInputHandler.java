@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.system.standard.ui;
 
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.TooltipNode;
@@ -31,8 +32,8 @@ public class NodeInputHandler extends InputSystemBase {
 			boolean cursorHit = false;
 			
 			if (!node.passThrough && !node.isInTooltip() && !input.isCursorBlocked()) {
-				int canvasHeight = node.getRoot().getHeight();
-				if (cursor != null && Node.isInsideRect(new Vector2i(cursor.x, canvasHeight - cursor.y), node.currentPosition, node.currentInnerSize)) {
+				float canvasHeight = node.getRoot().getHeight();
+				if (cursor != null && Node.isInsideRect(new Vector2f(cursor.x, canvasHeight - cursor.y), node.currentPosition, node.currentInnerSize)) {
 					cursorHit = true;
 					input.blockCursor(entity);
 				}

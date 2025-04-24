@@ -32,11 +32,11 @@ public class LayoutNodeArranger extends UpdateSystem {
 			return;
 		}
 		
-		int gap = layoutNode.getGap();
+		float gap = layoutNode.getGap();
 		
 		// Calculate initial offset
-		int offsetX = parentNode.currentPosition.x + parentNode.getPaddingX();
-		int offsetY = parentNode.currentPosition.y + parentNode.getPaddingY();
+		float offsetX = parentNode.currentPosition.x + parentNode.getPaddingX();
+		float offsetY = parentNode.currentPosition.y + parentNode.getPaddingY();
 		
 		switch (layoutNode.direction) {
 			case LEFT -> offsetX = parentNode.currentPosition.x + layoutNode.innerSize.x + layoutNode.childNodes.getFirst().currentOuterSize.x;
@@ -70,8 +70,8 @@ public class LayoutNodeArranger extends UpdateSystem {
 			}
 			
 			// Adjust offset based on alignments
-			int childOffsetX = offsetX;
-			int childOffsetY = offsetY;
+			float childOffsetX = offsetX;
+			float childOffsetY = offsetY;
 			if (layoutNode.direction == Direction.UP || layoutNode.direction == Direction.DOWN) {
 				// Vertical alignment
 				if (layoutNode.alignment == EdgeAlignment.END) {

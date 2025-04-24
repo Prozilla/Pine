@@ -35,7 +35,7 @@ public class TextRenderer extends RenderSystem {
 		renderText(renderer, textNode, node.currentPosition.x + node.getPaddingX(), node.currentPosition.y + node.getPaddingY(), z, node.color);
 	}
 	
-	public static void renderText(Renderer renderer, TextNode textNode, int x, int y, float z, Color color) {
+	public static void renderText(Renderer renderer, TextNode textNode, float x, float y, float z, Color color) {
 		renderText(renderer, textNode.text, textNode.font, x, y,
 			textNode.size.x, textNode.size.y, z, color);
 	}
@@ -45,7 +45,7 @@ public class TextRenderer extends RenderSystem {
 	 * @param x X position
 	 * @param y Y position
 	 */
-	public static void renderText(Renderer renderer, String text, Font font, int x, int y, int width, int height, float z, Color color) {
+	public static void renderText(Renderer renderer, String text, Font font, float x, float y, float width, float height, float z, Color color) {
 		if (text.isBlank() || width == 0 || height == 0 || color == null) {
 			return;
 		}

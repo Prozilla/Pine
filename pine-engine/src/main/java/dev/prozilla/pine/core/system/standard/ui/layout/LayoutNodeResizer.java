@@ -24,9 +24,9 @@ public class LayoutNodeResizer extends UpdateSystem {
 	}
 	
 	public static void resizeCanvasGroup(LayoutNode layoutNode, Node parentNode) {
-		int newWidth = 0;
-		int newHeight = 0;
-		int currentGap = layoutNode.getGap();
+		float newWidth = 0;
+		float newHeight = 0;
+		float currentGap = layoutNode.getGap();
 		
 		if (parentNode.size != null) {
 			newWidth = parentNode.size.computeX(parentNode);
@@ -38,7 +38,7 @@ public class LayoutNodeResizer extends UpdateSystem {
 			newHeight -= parentNode.getPaddingY() * 2;
 			
 			if (layoutNode.distribution == LayoutNode.Distribution.SPACE_BETWEEN && !layoutNode.childNodes.isEmpty()) {
-				int newGap = layoutNode.direction == Direction.UP || layoutNode.direction == Direction.DOWN ? newHeight : newWidth;
+				float newGap = layoutNode.direction == Direction.UP || layoutNode.direction == Direction.DOWN ? newHeight : newWidth;
 				
 				for (Node childNode : layoutNode.childNodes) {
 					switch (layoutNode.direction) {
@@ -58,7 +58,7 @@ public class LayoutNodeResizer extends UpdateSystem {
 				}
 			}
 		} else if (!layoutNode.childNodes.isEmpty()) {
-			int gap = currentGap;
+			float gap = currentGap;
 			
 			if (layoutNode.distribution == LayoutNode.Distribution.SPACE_BETWEEN) {
 				gap = 0;
@@ -101,7 +101,7 @@ public class LayoutNodeResizer extends UpdateSystem {
 			}
 			
 			if (layoutNode.distribution == LayoutNode.Distribution.SPACE_BETWEEN && parentNode.size != null) {
-				int newGap;
+				float newGap;
 				if (layoutNode.direction == Direction.UP || layoutNode.direction == Direction.DOWN) {
 					newGap = parentNode.size.computeY(parentNode) - parentNode.getPaddingY() * 2 - totalChildHeight;
 				} else {

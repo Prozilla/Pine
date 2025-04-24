@@ -33,21 +33,21 @@ public class ImageRenderer extends RenderSystem {
 		 node.currentPosition.x + node.getPaddingX(), node.currentPosition.y + node.getPaddingY(), node.size.computeX(node), node.size.computeY(node), z, node.color);
 	}
 	
-	public static void renderImage(Renderer renderer, ImageNode imageNode, int x, int y, int width, int height, float z, Color color) {
+	public static void renderImage(Renderer renderer, ImageNode imageNode, float x, float y, float width, float height, float z, Color color) {
 		renderImage(renderer, imageNode.image,
 			imageNode.regionOffset.x, imageNode.regionOffset.y,
 			imageNode.regionSize.x, imageNode.regionSize.y,
 			x, y, width, height, z, color);
 	}
 	
-	public static void renderImage(Renderer renderer, TextureBase texture, int regX, int regY, int regWidth, int regHeight, int x, int y, int width, int height, float z, Color color) {
-		int x2 = x + width;
-		int y2 = y + height;
+	public static void renderImage(Renderer renderer, TextureBase texture, float regX, float regY, float regWidth, float regHeight, float x, float y, float width, float height, float z, Color color) {
+		float x2 = x + width;
+		float y2 = y + height;
 		
-		float s1 = (float)regX / texture.getWidth();
-		float t1 = (float)regY / texture.getHeight();
-		float s2 = (float)(regX + regWidth) / texture.getWidth();
-		float t2 = (float)(regY + regHeight) / texture.getHeight();
+		float s1 = regX / texture.getWidth();
+		float t1 = regY / texture.getHeight();
+		float s2 = (regX + regWidth) / texture.getWidth();
+		float t2 = (regY + regHeight) / texture.getHeight();
 		
 		if (color == null) {
 			renderer.drawTextureRegion(texture, x, y, x2, y2, z, s1, t1, s2, t2);

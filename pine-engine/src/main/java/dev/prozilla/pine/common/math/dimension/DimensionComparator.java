@@ -23,7 +23,7 @@ public abstract class DimensionComparator extends DimensionBase {
 	}
 	
 	@Override
-	protected final int recompute(Node node, boolean isHorizontal) {
+	protected final float recompute(Node node, boolean isHorizontal) {
 		isDirty = false;
 		return compare(dimensionA.compute(node, isHorizontal), dimensionB.compute(node, isHorizontal));
 	}
@@ -42,5 +42,5 @@ public abstract class DimensionComparator extends DimensionBase {
 	 * Compares the values of both dimensions stored in this comparator.
 	 * @return The result of this comparator function.
 	 */
-	abstract protected int compare(int valueA, int valueB);
+	abstract protected float compare(float valueA, float valueB);
 }

@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.event.EventDispatcherContext;
 import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.core.component.Component;
@@ -20,10 +21,10 @@ import java.util.Set;
 public class Node extends Component implements EventDispatcherContext<NodeEvent> {
 	
 	// Current state
-	public Vector2i currentPosition;
-	public Vector2i currentInnerSize;
-	public Vector2i currentOuterSize;
-	public Vector2i offset;
+	public Vector2f currentPosition;
+	public Vector2f currentInnerSize;
+	public Vector2f currentOuterSize;
+	public Vector2f offset;
 	public boolean cursorHit;
 	public boolean readyToRender;
 	public int iterations;
@@ -55,10 +56,10 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 	public static final GridAlignment DEFAULT_ANCHOR = GridAlignment.BOTTOM_LEFT;
 	
 	public Node() {
-		currentPosition = new Vector2i();
-		currentInnerSize = new Vector2i();
-		currentOuterSize = new Vector2i();
-		offset = new Vector2i();
+		currentPosition = new Vector2f();
+		currentInnerSize = new Vector2f();
+		currentOuterSize = new Vector2f();
+		offset = new Vector2f();
 		cursorHit = false;
 		readyToRender = false;
 		iterations = 0;
@@ -104,7 +105,7 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 	 * @param rectSize Size of the rectangle
 	 * @return True if the point is inside the rectangle
 	 */
-	public static boolean isInsideRect(Vector2i point, Vector2i rectPosition, Vector2i rectSize) {
+	public static boolean isInsideRect(Vector2f point, Vector2f rectPosition, Vector2f rectSize) {
 		return isInsideRect(point.x, point.y, rectPosition, rectSize);
 	}
 	
@@ -114,7 +115,7 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 	 * @param rectSize Size of the rectangle
 	 * @return True if the point is inside the rectangle
 	 */
-	public static boolean isInsideRect(int x, int y, Vector2i rectPosition, Vector2i rectSize) {
+	public static boolean isInsideRect(float x, float y, Vector2f rectPosition, Vector2f rectSize) {
 		return x >= rectPosition.x && x < rectPosition.x + rectSize.x
 			&& y >= rectPosition.y && y < rectPosition.y + rectSize.y;
 	}
@@ -161,43 +162,43 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 		return nodeRoot;
 	}
 	
-	public int getOuterSizeX() {
+	public float getOuterSizeX() {
 		return getInnerSizeX() + getMarginX() * 2;
 	}
 	
-	public int getOuterSizeY() {
+	public float getOuterSizeY() {
 		return getInnerSizeY() + getMarginY() * 2;
 	}
 	
-	public int getInnerSizeX() {
+	public float getInnerSizeX() {
 		return size.computeX(this) + getPaddingX() * 2;
 	}
 	
-	public int getInnerSizeY() {
+	public float getInnerSizeY() {
 		return size.computeY(this) + getPaddingY() * 2;
 	}
 	
-	public int getPaddingX() {
+	public float getPaddingX() {
 		return padding != null ? padding.computeX(this) : 0;
 	}
 	
-	public int getPaddingY() {
+	public float getPaddingY() {
 		return padding != null ? padding.computeY(this) : 0;
 	}
 	
-	public int getX() {
+	public float getX() {
 		return getMarginX() + offset.x;
 	}
 	
-	public int getY() {
+	public float getY() {
 		return getMarginY() + offset.y;
 	}
 	
-	public int getMarginX() {
+	public float getMarginX() {
 		return margin != null ? margin.computeX(this) : 0;
 	}
 	
-	public int getMarginY() {
+	public float getMarginY() {
 		return margin != null ? margin.computeY(this) : 0;
 	}
 	

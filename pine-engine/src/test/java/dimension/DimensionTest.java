@@ -27,6 +27,8 @@ public class DimensionTest {
 	void testParse() {
 		TestUtils.testParse("50vw", new Dimension(50, Unit.VIEWPORT_WIDTH), Dimension::parse);
 		TestUtils.testParse("clamp(10vh, 5px, 10px)", Dimension.clamp(new Dimension(10, Unit.VIEWPORT_HEIGHT), new Dimension(5), new Dimension(10)), Dimension::parse);
+		TestUtils.testParse(".75px", new Dimension(0.75f), Dimension::parse);
+		TestUtils.testParse("0.75px", new Dimension(0.75f), Dimension::parse);
 	}
 	
 	@Test

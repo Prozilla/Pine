@@ -109,14 +109,14 @@ public class DualDimension implements Printable, Cloneable<DualDimension> {
 	/**
 	 * Computes the X-dimension for a given element.
 	 */
-	public int computeX(Node element) {
+	public float computeX(Node element) {
 		return x.compute(element, true);
 	}
 	
 	/**
 	 * Computes the Y-dimension for a given element.
 	 */
-	public int computeY(Node element) {
+	public float computeY(Node element) {
 		return y.compute(element, false);
 	}
 	
