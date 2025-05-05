@@ -39,10 +39,10 @@ public class NodeStyler extends UpdateSystem {
 		if (nodeStyle.getMarginProperty() != null) {
 			node.margin = nodeStyle.getMarginProperty().getValue();
 		}
-		if (nodeStyle.getMarginProperty() != null && !node.isInLayout()) {
+		if (nodeStyle.getMarginProperty() != null) {
 			node.margin = nodeStyle.getMarginProperty().getValue();
 		}
-		if (nodeStyle.getAnchorProperty() != null && !node.isInLayout()) {
+		if (nodeStyle.getAnchorProperty() != null && (!node.isInLayout() || node.absolutePosition)) {
 			node.anchor = nodeStyle.getAnchorProperty().getValue();
 		}
 	}

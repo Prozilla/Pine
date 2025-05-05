@@ -26,6 +26,20 @@ public class GameScene extends Scene {
 		"  OOOOOOOOOOOO"
 	};
 	
+//	private static final String[] MAP = {
+//		"OOOOOO  OOO ",
+//		"O..  O OOsOO",
+//		"O..  OOO   O",
+//		"O..     xx O",
+//		"O..  O O x O",
+//		"O..OOO O x O",
+//		"OOOO x Ox  O",
+//		"   O  xO x O",
+//		"   O x  x  O",
+//		"   O  OO   O",
+//		"   OOOOOOOOO"
+//	};
+//
 	private static final int TILE_SIZE = 64;
 	
 	@Override

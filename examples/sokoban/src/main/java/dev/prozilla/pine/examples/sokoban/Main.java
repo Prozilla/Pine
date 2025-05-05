@@ -11,7 +11,7 @@ public class Main {
 		applicationBuilder.setTitle("Sokoban");
 		applicationBuilder.setWindowSize(900, 600);
 		applicationBuilder.setInitialScene(new GameScene());
-		applicationBuilder.setIcons("sokoban/Crates/crate_03.png");
+		applicationBuilder.setIcons("images/crates/crate_03.png");
 		applicationBuilder.setTargetFps(120);
 		
 		Application application = applicationBuilder.build();

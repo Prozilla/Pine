@@ -19,7 +19,13 @@ public class PlayerInputHandler extends InputSystem {
 		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		TileRenderer tileRenderer = chunk.getComponent(TileRenderer.class);
 		
-		if (input.getAnyKey(Key.DOWN_ARROW, Key.S)) {
+		if (input.getKey(Key.L_CONTROL) && input.getKeyDown(Key.Z)) {
+			if (input.getKey(Key.L_SHIFT)) {
+				playerData.history.redo();
+			} else {
+				playerData.history.undo();
+			}
+		} else if (input.getAnyKey(Key.DOWN_ARROW, Key.S)) {
 			playerData.moveInDirection(Direction.DOWN, tileRenderer);
 		} else if (input.getAnyKey(Key.UP_ARROW, Key.W)) {
 			playerData.moveInDirection(Direction.UP, tileRenderer);

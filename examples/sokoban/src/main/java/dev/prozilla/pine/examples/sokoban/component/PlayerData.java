@@ -7,6 +7,7 @@ import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.examples.sokoban.EntityTag;
+import dev.prozilla.pine.examples.sokoban.util.history.History;
 
 import java.util.Map;
 
@@ -18,6 +19,8 @@ public class PlayerData extends Component {
 	
 	public SpriteRenderer pushingCrateSprite;
 	public TileRenderer pushingCrateTile;
+	
+	public final History history;
 	
 	public static final Map<Direction, String[]> directionToSprites = Map.of(
 		Direction.DOWN, new String[]{
@@ -47,6 +50,7 @@ public class PlayerData extends Component {
 	public PlayerData() {
 		timeUntilMoveCompletes = 0;
 		canMove = false;
+		history = new History();
 	}
 	
 	public void moveInDirection(Direction direction, TileRenderer tileRenderer) {

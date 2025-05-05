@@ -6,6 +6,8 @@ import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 import dev.prozilla.pine.examples.sokoban.component.PlayerData;
+import dev.prozilla.pine.examples.sokoban.util.Command;
+import dev.prozilla.pine.examples.sokoban.util.TileMoveAction;
 
 public class PlayerMover extends UpdateSystem {
 	
@@ -48,12 +50,17 @@ public class PlayerMover extends UpdateSystem {
 				spriteRenderer.offset.x = 0;
 				spriteRenderer.offset.y = 0;
 				
+				TileMoveAction playerMoveAction = new TileMoveAction(tileRenderer, playerData.direction.x, playerData.direction.y);
+				TileMoveAction crateMoveAction = null;
+				
 				if (playerData.pushingCrateTile != null) {
+					crateMoveAction = new TileMoveAction(playerData.pushingCrateTile, playerData.direction.x, playerData.direction.y);
 					playerData.pushingCrateTile.moveBy(playerData.direction.x, playerData.direction.y);
 				}
 				
 				tileRenderer.moveBy(playerData.direction.x, playerData.direction.y);
 				playerData.direction = null;
+				playerData.history.push(new Command(playerMoveAction, crateMoveAction));
 			}
 			
 			// Animate movement of crate
