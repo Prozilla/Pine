@@ -3,11 +3,14 @@ package dev.prozilla.pine.core.component.ui;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventDispatcherContext;
 import dev.prozilla.pine.common.event.EventListener;
+import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.resource.image.TextureBase;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.HashSet;
@@ -43,6 +46,12 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 	public DualDimension size;
 	public DualDimension padding;
 	public DualDimension margin;
+	
+	// Border style
+	public Dimension border;
+	public TextureBase borderImage;
+	public Vector4f borderImageSlice;
+	public boolean borderImageSliceFill;
 	
 	public final Set<String> classes;
 	public final Set<String> modifiers;
@@ -200,6 +209,10 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 	
 	public float getMarginY() {
 		return margin != null ? margin.computeY(this) : 0;
+	}
+	
+	public float getBorderWidth() {
+		return border != null ? border.compute(this, true) : 0;
 	}
 	
 	@Override

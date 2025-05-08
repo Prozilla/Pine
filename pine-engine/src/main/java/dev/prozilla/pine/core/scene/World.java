@@ -145,6 +145,7 @@ public class World implements Lifecycle {
 		initialSystems.add(new TextRenderer());
 		initialSystems.add(new ImageRenderer());
 		initialSystems.add(new FrameRenderer());
+		initialSystems.add(new BorderImageRenderer());
 		
 		// Sprite input
 		initialSystems.add(new GridInputHandler());

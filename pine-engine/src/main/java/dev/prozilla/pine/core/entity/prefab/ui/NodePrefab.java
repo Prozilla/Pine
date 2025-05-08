@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveDualDimensionProperty;
@@ -12,6 +13,7 @@ import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.property.style.StyledPropertyKey;
 import dev.prozilla.pine.common.system.resource.Color;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
+import dev.prozilla.pine.common.system.resource.image.TextureBase;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.animation.AnimationData;
 import dev.prozilla.pine.core.component.ui.Node;
@@ -22,6 +24,7 @@ import dev.prozilla.pine.core.entity.prefab.Prefab;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -34,6 +37,10 @@ public class NodePrefab extends Prefab {
 	protected DualDimension size;
 	protected DualDimension padding;
 	protected DualDimension margin;
+	protected Dimension border;
+	protected TextureBase borderImage;
+	protected Vector4f borderImageSlice;
+	protected boolean borderImageSliceFill;
 	protected Color color;
 	protected Color backgroundColor;
 	protected GridAlignment anchor;
@@ -203,6 +210,16 @@ public class NodePrefab extends Prefab {
 		this.tooltipText = tooltipText;
 	}
 	
+	public void setBorder(Dimension border) {
+		this.border = border;
+	}
+	
+	public void setBorderImage(TextureBase borderImage, Vector4f slice, boolean fill) {
+		this.borderImage = Objects.requireNonNull(borderImage);
+		borderImageSlice = Objects.requireNonNull(slice);
+		borderImageSliceFill = fill;
+	}
+	
 	/**
 	 * Adds multiple classes to this node.
 	 */
@@ -257,6 +274,14 @@ public class NodePrefab extends Prefab {
 		}
 		if (tooltipText != null) {
 			node.tooltipText = tooltipText;
+		}
+		if (border != null) {
+			node.border = border.clone();
+		}
+		if (borderImage != null) {
+			node.borderImage = borderImage;
+			node.borderImageSlice = borderImageSlice.clone();
+			node.borderImageSliceFill = borderImageSliceFill;
 		}
 		
 		if (classes != null) {
