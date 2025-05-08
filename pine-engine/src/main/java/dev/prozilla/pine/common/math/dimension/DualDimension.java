@@ -4,7 +4,6 @@ import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.core.component.ui.Node;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -29,7 +28,7 @@ public class DualDimension implements Printable, Cloneable<DualDimension> {
 	 * Creates a pair of dimensions with two equal values based on a string.
 	 */
 	public DualDimension(String xy) {
-		this(Dimension.parse(xy));
+		this(new DimensionParser().read(xy));
 	}
 	
 	/**
@@ -50,7 +49,7 @@ public class DualDimension implements Printable, Cloneable<DualDimension> {
 	 * Creates a pair of dimensions based on two strings.
 	 */
 	public DualDimension(String x, String y) {
-		this(Dimension.parse(x), Dimension.parse(y));
+		this(new DimensionParser().read(x), new DimensionParser().read(y));
 	}
 	
 	/**
@@ -75,7 +74,8 @@ public class DualDimension implements Printable, Cloneable<DualDimension> {
 	}
 	
 	public void set(String xy) {
-		set(Dimension.parse(xy));
+		DimensionParser parser = new DimensionParser();
+		set(parser.read(xy));
 	}
 	
 	public void set(int xy) {
@@ -87,7 +87,8 @@ public class DualDimension implements Printable, Cloneable<DualDimension> {
 	}
 	
 	public void set(String x, String y) {
-		set(Dimension.parse(x), Dimension.parse(y));
+		DimensionParser parser = new DimensionParser();
+		set(parser.read(x), parser.read(y));
 	}
 	
 	public void set(int x, int y) {
@@ -142,25 +143,12 @@ public class DualDimension implements Printable, Cloneable<DualDimension> {
 		return other.x.equals(this.x) && other.y.equals(this.y);
 	}
 	
+	/**
+	 * @deprecated Replaced by {@link DualDimensionParser} as of 1.2.0
+	 */
+	@Deprecated
 	public static DualDimension parse(String input) {
-		String[] sections = input.trim().split("\\s+");
-		ArrayList<DimensionBase> dimensions = new ArrayList<>();
-		
-		for (String section : sections) {
-			DimensionBase dimension = Dimension.parse(section);
-			
-			if (dimension == null) {
-				return null;
-			}
-			
-			dimensions.add(dimension);
-		}
-		
-		return switch (dimensions.size()) {
-			case 1 -> new DualDimension(dimensions.get(0));
-			case 2 -> new DualDimension(dimensions.get(0), dimensions.get(1));
-			default -> null;
-		};
+		return new DualDimensionParser().read(input);
 	}
 	
 	/**

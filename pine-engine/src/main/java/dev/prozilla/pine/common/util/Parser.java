@@ -1,4 +1,6 @@
-package dev.prozilla.pine.common;
+package dev.prozilla.pine.common.util;
+
+import dev.prozilla.pine.common.Printable;
 
 import java.util.Objects;
 
@@ -10,6 +12,18 @@ public abstract class Parser<T> implements Printable {
 	
 	private T result;
 	private String errorMessage;
+	
+	/**
+	 * Parses an input string and throws an exception if the parsing fails.
+	 * @param input The input string to parse
+	 * @return The parsed value or {@code null}, if the parsing failed.
+	 */
+	public T read(String input) {
+		if (!parse(input)) {
+			throw new RuntimeException(getError());
+		}
+		return getResult();
+	}
 	
 	/**
 	 * Returns the result or {@code null}, if the parsing failed.
@@ -38,6 +52,10 @@ public abstract class Parser<T> implements Printable {
 		this.result = Objects.requireNonNull(result, "result must not be null");
 		errorMessage = null;
 		return true;
+	}
+	
+	protected boolean fail() {
+		return fail("Failed to parse input");
 	}
 	
 	protected boolean fail(String errorMessage) {

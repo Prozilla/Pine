@@ -1,6 +1,7 @@
 package dev.prozilla.pine.examples.flappybird.entity;
 
 import dev.prozilla.pine.common.math.dimension.Dimension;
+import dev.prozilla.pine.common.math.dimension.DimensionParser;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
@@ -20,7 +21,7 @@ public class GameOverPrefab extends LayoutPrefab {
 		setAnchor(GridAlignment.TOP);
 		setDirection(Direction.DOWN);
 		setAlignment(EdgeAlignment.CENTER);
-		setMargin(new Dimension(), Dimension.parse("33vh"));
+		setMargin(new Dimension(), new DimensionParser().read("33vh"));
 		setGap(new Dimension(16));
 	
 		this.font = font;

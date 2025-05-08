@@ -1,8 +1,8 @@
 package dev.prozilla.pine.common.property.style;
 
-import dev.prozilla.pine.common.Parser;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.style.selector.Selector;
+import dev.prozilla.pine.common.util.Parser;
 
 public class CSSParser extends Parser<StyleSheet> {
 	

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.math.dimension;
 
-import dev.prozilla.pine.common.Parser;
+import dev.prozilla.pine.common.util.Parser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,16 +49,16 @@ public class DimensionParser extends Parser<DimensionBase> {
 			
 			// Parse each argument
 			List<DimensionBase> dimensions = new ArrayList<>();
+			DimensionParser dimensionParser = new DimensionParser();
 			for (String arg : args) {
 				if (arg.isBlank()) {
 					continue;
 				}
 				
-				DimensionBase dimension = Dimension.parse(arg);
-				if (dimension != null) {
-					dimensions.add(dimension);
-				} else {
+				if (!dimensionParser.parse(arg)) {
 					return fail("input contains invalid nested dimensions");
+				} else {
+					dimensions.add(dimensionParser.getResult());
 				}
 			}
 			int argCount = dimensions.size();

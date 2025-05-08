@@ -218,11 +218,7 @@ public class StyleSheet implements Printable, Resource {
 	 */
 	@Deprecated
 	public static StyleSheet parse(String css) {
-		CSSParser cssParser = new CSSParser();
-		if (!cssParser.parse(css)) {
-			throw new RuntimeException(cssParser.getError());
-		}
-		return cssParser.getResult();
+		return new CSSParser().read(css);
 	}
 	
 }

@@ -153,13 +153,11 @@ public class Dimension extends DimensionBase {
 	 * @param input Input string
 	 * @return New dimension with based on input string
 	 * @throws IllegalArgumentException When <code>input</code> is not a valid dimension string
+	 * @deprecated Replaced by {@link DimensionParser} as of 1.2.0
 	 */
+	@Deprecated
 	public static DimensionBase parse(String input) throws IllegalArgumentException {
-		DimensionParser parser = new DimensionParser();
-		if (!parser.parse(input)) {
-			throw new IllegalArgumentException(parser.getError());
-		}
-		return parser.getResult();
+		return new DimensionParser().read(input);
 	}
 	
 	/**
