@@ -1,4 +1,4 @@
-package util;
+package dev.prozilla.pine.test;
 
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.ParseFunction;

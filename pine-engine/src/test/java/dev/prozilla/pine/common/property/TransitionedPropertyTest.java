@@ -1,12 +1,12 @@
-package property;
+package dev.prozilla.pine.common.property;
 
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedIntProperty;
+import dev.prozilla.pine.test.TestLoggingExtension;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import util.TestLoggingExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

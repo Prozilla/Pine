@@ -1,13 +1,11 @@
-package dimension;
+package dev.prozilla.pine.common.math.dimension;
 
-import dev.prozilla.pine.common.math.dimension.Dimension;
-import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.test.TestLoggingExtension;
+import dev.prozilla.pine.test.TestUtils;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import util.TestLoggingExtension;
-import util.TestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

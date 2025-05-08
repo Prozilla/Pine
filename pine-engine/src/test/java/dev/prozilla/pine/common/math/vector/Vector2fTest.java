@@ -1,12 +1,11 @@
-package vector;
+package dev.prozilla.pine.common.math.vector;
 
-import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.test.TestLoggingExtension;
+import dev.prozilla.pine.test.TestUtils;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import util.TestLoggingExtension;
-import util.TestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

@@ -1,12 +1,10 @@
-package vector;
+package dev.prozilla.pine.common.math.vector;
 
-import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.test.TestLoggingExtension;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import util.TestLoggingExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

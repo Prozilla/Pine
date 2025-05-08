@@ -1,11 +1,10 @@
-package ansi;
+package dev.prozilla.pine.common.system;
 
-import dev.prozilla.pine.common.system.Ansi;
+import dev.prozilla.pine.test.TestLoggingExtension;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import util.TestLoggingExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

@@ -1,17 +1,15 @@
-package property;
+package dev.prozilla.pine.common.property;
 
 import dev.prozilla.pine.common.math.easing.Easing;
-import dev.prozilla.pine.common.property.FixedProperty;
-import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.property.animated.AnimatedFloatProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
+import dev.prozilla.pine.test.TestPerformanceExtension;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import util.TestPerformanceExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
