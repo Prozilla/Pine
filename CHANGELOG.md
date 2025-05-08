@@ -2,6 +2,39 @@
 
 ## v1.2.0
 
+### New Features
+
+- Added animated properties to create animations with
+- Added animation curves that determine how animations progress
+- Added transitioned properties that start an animation each time their value is changed
+- Added styled properties, stylesheets and CSS parsing to support basic CSS
+- Added supplied properties to allow component fields to be dynamically set based on a lambda function
+
+### Changes
+
+- Refactored transmittable objects
+- Refactored all UI-related features and changed naming conventions (canvas elements -> nodes), to be closer to HTML and CSS
+- Added static methods to each adaptive property class to convert any value or property to an adaptive property
+- Replaced static parse methods with stateful parsers to allow for better error handling
+- Added support for negative dimensions and floating point precision
+- Added border images for UI nodes
+- Replaced require methods with Checks class, which checks certain conditions at runtime and throws exceptions if they are not met
+- Added isDescendantOf(parent) method that checks whether entities are descendants of a given parent
+
+## Fixes
+
+- Resource pool can now load files with spaces in their paths
+
+### Examples
+
+- Added new Sokoban example game
+- Split examples into separate projects
+
+### Build tool
+
+- Made icon optional
+- Fixed shadow jar creation process
+
 ## v1.1.0
 
 ### New Features
