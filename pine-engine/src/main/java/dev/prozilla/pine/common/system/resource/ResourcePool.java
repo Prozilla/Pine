@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.system.resource;
 
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.property.style.CSSParser;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.system.PathUtils;
 import dev.prozilla.pine.common.system.resource.image.*;
@@ -292,7 +293,14 @@ public final class ResourcePool {
 				line = bufferedReader.readLine();
 			}
 			
-			styleSheet = StyleSheet.parse(stringBuilder.toString());
+			CSSParser parser = new CSSParser();
+			if (!parser.parse(stringBuilder.toString())) {
+				styleSheet = new StyleSheet();
+				Logger.system.error("Failed to parse style sheet: " + path +
+					System.lineSeparator() + parser.getError());
+			} else {
+				styleSheet = parser.getResult();
+			}
 		} catch (IOException | NullPointerException e) {
 			Logger.system.error("Failed to load style sheet: " + path, e);
 			styleSheet = new StyleSheet();

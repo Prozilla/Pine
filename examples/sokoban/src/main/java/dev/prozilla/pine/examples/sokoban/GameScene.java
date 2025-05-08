@@ -13,18 +13,18 @@ import dev.prozilla.pine.examples.sokoban.system.PlayerMover;
 
 public class GameScene extends Scene {
 	
-	private static final String[] MAP = {
-		"OOOOOOOOOOOO  ",
-		"O..  O     OOO",
-		"O..  O x  x  O",
-		"O..  OxOOOO  O",
-		"O..    s OO  O",
-		"O..  O O  x OO",
-		"OOOOOO OOx x O",
-		"  O x  x x x O",
-		"  O    O     O",
-		"  OOOOOOOOOOOO"
-	};
+//	private static final String[] MAP = {
+//		"OOOOOOOOOOOO  ",
+//		"O..  O     OOO",
+//		"O..  O x  x  O",
+//		"O..  OxOOOO  O",
+//		"O..    s OO  O",
+//		"O..  O O  x OO",
+//		"OOOOOO OOx x O",
+//		"  O x  x x x O",
+//		"  O    O     O",
+//		"  OOOOOOOOOOOO"
+//	};
 	
 //	private static final String[] MAP = {
 //		"OOOOOO  OOO ",
@@ -39,7 +39,22 @@ public class GameScene extends Scene {
 //		"   O  OO   O",
 //		"   OOOOOOOOO"
 //	};
-//
+
+	private static final String[] MAP = {
+		"###########",
+		"#---------#",
+		"#-$-$@$-$-#",
+		"#--$-$-$--#",
+		"#-$-$-$-$-#",
+		"#--$-$-$--#",
+		"#####$##$##",
+		"-#.....#-#",
+		"-#....*#-#",
+		"-#...*---#",
+		"-#....-###",
+		"-########"
+	};
+	
 	private static final int TILE_SIZE = 64;
 	
 	@Override
@@ -77,9 +92,9 @@ public class GameScene extends Scene {
 					goalGrid.addTile(goalPrefab, j, i);
 				} else {
 					TilePrefab tilePrefab = switch (tileName) {
-						case 'O' -> blockPrefab;
-						case 's' -> playerPrefab;
-						case 'x' -> {
+						case '#', '*' -> blockPrefab;
+						case '@' -> playerPrefab;
+						case '$' -> {
 							GameManager.instance.totalCrates++;
 							yield cratePrefab;
 						}

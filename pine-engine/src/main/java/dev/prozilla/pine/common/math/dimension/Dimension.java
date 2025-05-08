@@ -4,8 +4,6 @@ import dev.prozilla.pine.common.exception.InvalidArrayException;
 import dev.prozilla.pine.common.util.Checks;
 import dev.prozilla.pine.core.component.ui.Node;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.BiFunction;
 
 /**
@@ -157,86 +155,11 @@ public class Dimension extends DimensionBase {
 	 * @throws IllegalArgumentException When <code>input</code> is not a valid dimension string
 	 */
 	public static DimensionBase parse(String input) throws IllegalArgumentException {
-		Checks.isNotBlank(input, "Input string must not be blank");
-		
-		input = input.trim().toLowerCase();
-		
-		// Find index of first non-digit of string
-		int splitIndex = 0;
-		
-		// Skip sign
-		if (input.charAt(splitIndex) == '-') {
-			splitIndex++;
+		DimensionParser parser = new DimensionParser();
+		if (!parser.parse(input)) {
+			throw new IllegalArgumentException(parser.getError());
 		}
-		
-		int inputLength = input.length();
-		Character currentChar = null;
-		Character nextChar = null;
-		splitIndex--;
-		
-		do {
-			splitIndex++;
-			
-			if (splitIndex < inputLength) {
-				currentChar = input.charAt(splitIndex);
-				if (splitIndex + 1 < inputLength) {
-					nextChar = input.charAt(splitIndex + 1);
-				}
-			}
-		} while (splitIndex < inputLength && (
-			Character.isDigit(currentChar)
-			|| currentChar == '.' && nextChar != null && Character.isDigit(nextChar))
-		);
-		
-		// If input string starts with non-digit, parse it as a dimension function
-		if (splitIndex == 0) {
-			List<String> args = new ArrayList<>(List.of(input.split("\\s*[(,)]\\s*")));
-			String functionName = args.removeFirst();
-			
-			// Parse each argument
-			List<DimensionBase> dimensions = new ArrayList<>();
-			for (String arg : args) {
-				if (arg.isBlank()) {
-					continue;
-				}
-				
-				DimensionBase dimension = Dimension.parse(arg);
-				if (dimension != null) {
-					dimensions.add(dimension);
-				} else {
-					throw new IllegalArgumentException("Input string contains invalid nested dimensions");
-				}
-			}
-			int argCount = dimensions.size();
-			
-			if (argCount == 0) {
-				throw new IllegalArgumentException("Input string contains dimension function without arguments");
-			}
-			
-			DimensionBase[] dimensionsArray = dimensions.toArray(new DimensionBase[0]);
-			
-			return switch (functionName) {
-				case "max" -> Dimension.max(dimensionsArray);
-				case "min" -> Dimension.min(dimensionsArray);
-				case "clamp" -> (argCount == 3) ? Dimension.clamp(dimensions.get(0), dimensions.get(1), dimensions.get(2)) : null;
-				case "add" -> Dimension.add(dimensionsArray);
-				case "multiply" -> Dimension.multiply(dimensionsArray);
-				default -> throw new IllegalArgumentException("Input string contains invalid function name");
-			};
-		} else {
-			// Split input into value (digits) and unit (non-digits)
-			String valueString = input.substring(0, splitIndex);
-			String unitString = input.substring(splitIndex);
-			
-			if (!unitString.isBlank() && !Unit.isValid(unitString)) {
-				throw new IllegalArgumentException("Input string contains invalid unit");
-			}
-			
-			float value = Float.parseFloat(valueString);
-			Unit unit = unitString.isBlank() ? Unit.PIXELS : Unit.parse(unitString);
-			
-			return new Dimension(value, unit);
-		}
+		return parser.getResult();
 	}
 	
 	/**
