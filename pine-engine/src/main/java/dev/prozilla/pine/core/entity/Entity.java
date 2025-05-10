@@ -209,7 +209,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	
 	@Override
 	public Entity getParentWithTag(String tag) {
-		return transform.getChildWithTag(tag);
+		return transform.getParentWithTag(tag);
 	}
 	
 	/**
