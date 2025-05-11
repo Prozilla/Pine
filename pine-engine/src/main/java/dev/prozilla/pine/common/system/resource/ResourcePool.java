@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.property.style.CSSParser;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.system.PathUtils;
+import dev.prozilla.pine.common.system.resource.audio.AudioSource;
 import dev.prozilla.pine.common.system.resource.image.*;
 import dev.prozilla.pine.common.system.resource.image.Image;
 import dev.prozilla.pine.common.system.resource.text.Font;
@@ -17,10 +18,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 import java.util.*;
 import java.util.List;
 
 import static org.lwjgl.stb.STBImage.*;
+import static org.lwjgl.stb.STBVorbis.stb_vorbis_decode_filename;
+import static org.lwjgl.system.MemoryStack.stackPush;
 
 /**
  * Represents a pool that manages resources efficiently,
@@ -32,6 +36,7 @@ public final class ResourcePool {
 	private static final Map<String, Image> images = new HashMap<>();
 	private static final Map<String, Font> fonts = new HashMap<>();
 	private static final Map<String, StyleSheet> styleSheets = new HashMap<>();
+	private static final Map<String, AudioSource> audioSources = new HashMap<>();
 	
 	private static final List<TextureArray> textureArrays = new ArrayList<>();
 	
@@ -318,6 +323,50 @@ public final class ResourcePool {
 		clearResource(styleSheets);
 	}
 	
+	public static AudioSource loadAudioSource(String path) {
+		path = normalizePath(path);
+		
+		if (audioSources.containsKey(path)) {
+			return audioSources.get(path);
+		}
+		
+		ShortBuffer audioBuffer;
+		int channels, sampleRate;
+		
+		try (MemoryStack stack = stackPush()) {
+			//Allocate space to store return information from the function
+			IntBuffer channelsBuffer   = stack.mallocInt(1);
+			IntBuffer sampleRateBuffer = stack.mallocInt(1);
+			
+			String filePath = ResourceUtils.getResourcePath(path);
+			
+			audioBuffer = stb_vorbis_decode_filename(filePath, channelsBuffer, sampleRateBuffer);
+			
+			if (audioBuffer == null) {
+				throw new RuntimeException("Failed to load audio file");
+			}
+			
+			// Retrieve the extra information that was stored in the buffers by the function
+			channels = channelsBuffer.get(0);
+			sampleRate = sampleRateBuffer.get(0);
+		}
+		
+		AudioSource audioSource = new AudioSource(path, audioBuffer, channels, sampleRate);
+		audioSources.put(path, audioSource);
+		return audioSource;
+	}
+	
+	public static boolean removeAudioSource(String path) {
+		return audioSources.remove(normalizePath(path)) != null;
+	}
+	
+	/**
+	 * Clears the sound pool.
+	 */
+	public static void clearAudioSources() {
+		clearResource(audioSources);
+	}
+	
 	private static <R extends Resource> void clearResource(Map<String, R> resources) {
 		Collection<R> resourcesToDestroy = resources.values();
 		resources.clear();
@@ -335,6 +384,7 @@ public final class ResourcePool {
 		clearTextures();
 		clearFonts();
 		clearStyleSheets();
+		clearAudioSources();
 	}
 	
 	/**
@@ -383,11 +433,13 @@ public final class ResourcePool {
 	 * Logs the current amounts of different types of resources in the resource pool.
 	 */
 	public static void printStats(Logger logger) {
-		logger.log("Images in resource pool: " + getImageCount());
-		logger.log("Textures in resource pool: " + getTextureCount());
-		logger.log("Texture arrays in resource pool: " + getTextureArrayCount());
-		logger.log("Fonts in resource pool: " + getFontCount());
-		logger.log("Style sheets in resource pool: " + getStyleSheetCount());
+		logger.log("Resource pool summary:");
+		logger.log("Images: " + getImageCount());
+		logger.log("Textures: " + getTextureCount());
+		logger.log("Texture arrays: " + getTextureArrayCount());
+		logger.log("Fonts: " + getFontCount());
+		logger.log("Style sheets: " + getStyleSheetCount());
+		logger.log("Audio sources: " + getAudioSourceCount());
 	}
 	
 	public static int getImageCount() {
@@ -408,6 +460,10 @@ public final class ResourcePool {
 	
 	public static int getStyleSheetCount() {
 		return styleSheets.size();
+	}
+	
+	public static int getAudioSourceCount() {
+		return audioSources.size();
 	}
 	
 }

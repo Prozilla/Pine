@@ -7,6 +7,7 @@ import dev.prozilla.pine.common.opengl.GLUtils;
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.image.Image;
 import dev.prozilla.pine.common.system.resource.text.Font;
+import dev.prozilla.pine.core.audio.AudioDevice;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.scene.Scene;
@@ -46,6 +47,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	protected final AppLogger logger;
 	protected final ApplicationTimer timer;
 	protected final Renderer renderer;
+	protected final AudioDevice audioDevice;
 	protected final Window window;
 	protected Input input;
 	protected final Tracker tracker;
@@ -110,6 +112,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		timer = new ApplicationTimer();
 		tracker = new Tracker(this);
 		renderer = new Renderer(this);
+		audioDevice = new AudioDevice();
 		window = new Window(this);
 		input = new Input(this);
 		modManager = new ModManager(this);
@@ -182,6 +185,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		// Initialize application
 		timer.init();
 		renderer.init();
+		audioDevice.init();
 		input.init(window.id);
 		if (applicationManager != null) {
 			applicationManager.onInit(window.id);
@@ -209,6 +213,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		
 		timer.init();
 		renderer.initPreview(width, height);
+		audioDevice.init();
 		currentScene.init(renderer.getFbo().getId());
 		
 		stateMachine.changeState(ApplicationState.LOADING);
@@ -414,6 +419,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		stateMachine.changeState(ApplicationState.STOPPED);
 		
 		renderer.destroy();
+		audioDevice.destroy();
 		
 		if (isStandalone()) {
 			input.destroy();
