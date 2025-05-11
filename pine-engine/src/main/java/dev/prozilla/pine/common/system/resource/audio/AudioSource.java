@@ -8,7 +8,7 @@ import java.nio.ShortBuffer;
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.system.libc.LibCStdlib.free;
 
-public class AudioSource implements Lifecycle, Resource {
+public class AudioSource implements Lifecycle, Resource, AudioSourceContext {
 	
 	private final ShortBuffer rawAudioBuffer;
 	private final int channels;
@@ -77,7 +77,12 @@ public class AudioSource implements Lifecycle, Resource {
 		return path;
 	}
 	
+	@Override
 	public void play() {
+		if (isPlaying) {
+			return;
+		}
+		
 		if (!initialized) {
 			init();
 		}
@@ -86,6 +91,7 @@ public class AudioSource implements Lifecycle, Resource {
 		isPlaying = true;
 	}
 	
+	@Override
 	public void pause() {
 		if (!isPlaying) {
 			return;
@@ -95,18 +101,22 @@ public class AudioSource implements Lifecycle, Resource {
 		isPlaying = false;
 	}
 	
+	@Override
 	public boolean isPlaying() {
 		return isPlaying;
 	}
 	
+	@Override
 	public void setVolume(float volume) {
 		setAttribute(AL_GAIN, volume);
 	}
 	
+	@Override
 	public void setPitch(float pitch) {
 		setAttribute(AL_PITCH, pitch);
 	}
 	
+	@Override
 	public void setLoop(boolean loop) {
 		setAttribute(AL_LOOPING, loop);
 	}

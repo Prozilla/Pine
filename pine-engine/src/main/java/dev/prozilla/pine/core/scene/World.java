@@ -15,6 +15,7 @@ import dev.prozilla.pine.core.system.SystemBuilder;
 import dev.prozilla.pine.core.system.SystemManager;
 import dev.prozilla.pine.core.system.standard.animation.AnimationInitializer;
 import dev.prozilla.pine.core.system.standard.animation.AnimationUpdater;
+import dev.prozilla.pine.core.system.standard.audio.AudioPlayerInitializer;
 import dev.prozilla.pine.core.system.standard.camera.*;
 import dev.prozilla.pine.core.system.standard.particle.ParticleFlowUpdater;
 import dev.prozilla.pine.core.system.standard.particle.ParticleInitializer;
@@ -146,6 +147,9 @@ public class World implements Lifecycle {
 		initialSystems.add(new ImageRenderer());
 		initialSystems.add(new FrameRenderer());
 		initialSystems.add(new BorderImageRenderer());
+		
+		// Audio
+		initialSystems.add(new AudioPlayerInitializer());
 		
 		// Sprite input
 		initialSystems.add(new GridInputHandler());
