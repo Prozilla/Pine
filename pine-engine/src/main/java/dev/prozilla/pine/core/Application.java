@@ -112,7 +112,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		timer = new ApplicationTimer();
 		tracker = new Tracker(this);
 		renderer = new Renderer(this);
-		audioDevice = new AudioDevice();
+		audioDevice = new AudioDevice(this);
 		window = new Window(this);
 		input = new Input(this);
 		modManager = new ModManager(this);
