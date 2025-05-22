@@ -16,6 +16,8 @@ public class GameManager extends ApplicationManager {
 	public int completedCrates;
 	public int totalCrates;
 	
+	private static final boolean ENABLE_MUSIC = false;
+	
 	public GameManager(Application application) {
 		super(application);
 		
@@ -28,11 +30,13 @@ public class GameManager extends ApplicationManager {
 		font = ResourcePool.loadFont("fonts/poppins/Poppins-Regular.ttf");
 		
 		// Play background music
-		AudioSource music = ResourcePool.loadAudioSource("audio/pixel-playground.ogg");
-		music.init();
-		music.setVolume(0.21f);
-		music.setLoop(true);
-		music.play();
+		if (ENABLE_MUSIC) {
+			AudioSource music = ResourcePool.loadAudioSource("audio/pixel-playground.ogg");
+			music.init();
+			music.setVolume(0.21f);
+			music.setLoop(true);
+			music.play();
+		}
 	}
 	
 	@Override

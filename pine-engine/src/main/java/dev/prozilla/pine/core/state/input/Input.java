@@ -8,10 +8,8 @@ import dev.prozilla.pine.common.system.resource.image.Image;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
-import org.lwjgl.glfw.GLFWScrollCallback;
+import org.lwjgl.glfw.*;
+import org.lwjgl.system.MemoryUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +48,8 @@ public class Input implements Lifecycle {
 	private GLFWCursorPosCallback cursorPosCallback;
 	private GLFWMouseButtonCallback mouseButtonCallback;
 	
+	private final GLFWGamepadState gamepadState;
+	
 	private final Application application;
 	private final Logger logger;
 	
@@ -77,6 +77,8 @@ public class Input implements Lifecycle {
 		cursorPosition = new Vector2i();
 		cursorType = CURSOR_TYPE_DEFAULT;
 		cursorImageOffset = new Vector2i();
+		
+		gamepadState = new GLFWGamepadState(MemoryUtil.memAlloc(40));
 	}
 	
 	/**
@@ -192,6 +194,9 @@ public class Input implements Lifecycle {
 		}
 		if (mouseButtonCallback != null) {
 			mouseButtonCallback.free();
+		}
+		if (gamepadState != null) {
+			gamepadState.close();
 		}
 	}
 	
@@ -370,6 +375,48 @@ public class Input implements Lifecycle {
 		}
 		
 		return down;
+	}
+	
+	/**
+	 * Gets the current value of a gamepad axis.
+	 * @return Value of the axis
+	 */
+	public float getGamepadAxis(Gamepad gamepad, GamepadAxis axis) {
+		return getGamepadAxis(gamepad.getValue(), axis.getValue());
+	}
+	
+	/**
+	 * Gets the current value of a gamepad axis.
+	 * @param gamepadId GLFW integer value for a gamepad ID
+	 * @param axis GLFW integer value for a gamepad axis
+	 * @return Value of the axis
+	 */
+	public float getGamepadAxis(int gamepadId, int axis) {
+		if (glfwGetGamepadState(gamepadId, gamepadState)) {
+			return gamepadState.axes(axis);
+		}
+		return 0;
+	}
+	
+	/**
+	 * Checks whether a gamepad button is being pressed.
+	 * @return True if the button is being pressed
+	 */
+	public boolean getGamepadButton(Gamepad gamepad, GamepadButton button) {
+		return getGamepadButton(gamepad.getValue(), button.getValue());
+	}
+	
+	/**
+	 * Checks whether a gamepad button is being pressed.
+	 * @param gamepadId GLFW integer value for a gamepad ID
+	 * @param button GLFW integer value for a gamepad button
+	 * @return True if the button is being pressed
+	 */
+	public boolean getGamepadButton(int gamepadId, int button) {
+		if (glfwGetGamepadState(gamepadId, gamepadState)) {
+			return gamepadState.buttons(button) == GLFW_PRESS;
+		}
+		return false;
 	}
 	
 	/**

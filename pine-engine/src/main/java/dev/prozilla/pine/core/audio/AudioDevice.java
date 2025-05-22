@@ -25,18 +25,16 @@ public final class AudioDevice implements Lifecycle {
 		isInitialized = false;
 	}
 	
-		@Override
+	@Override
 	public void init() {
 		//Initialization
 		String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
 		device = alcOpenDevice(defaultDeviceName);
-
 		if (device == MemoryUtil.NULL) {
-			handleError("Failed to initialize audio device");
+			handleError("Failed to open audio device");
 			return;
 		}
 
-//		logger.log("device: " + device);
 		ALCCapabilities deviceCapabilities = ALC.createCapabilities(device);
 
 		int[] attributes = {0};
@@ -66,9 +64,13 @@ public final class AudioDevice implements Lifecycle {
 	
 	@Override
 	public void destroy() {
-		if (isInitialized) {
+		if (context != 0L) {
 			alcDestroyContext(context);
+			context = 0L;
+		}
+		if (device != 0L) {
 			alcCloseDevice(device);
+			device = 0L;
 		}
 	}
 	
@@ -82,14 +84,7 @@ public final class AudioDevice implements Lifecycle {
 	
 	private void handleError(String message, int error) {
 		logger.error(String.format("%s: %s - %s", message, error, ALUtils.getErrorString(error)));
-		if (context != 0L) {
-			alcDestroyContext(context);
-			context = 0L;
-		}
-		if (device != 0L) {
-			alcCloseDevice(device);
-			device = 0L;
-		}
+		destroy();
 	}
 	
 }
