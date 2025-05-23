@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.state.input;
 
+import dev.prozilla.pine.common.util.ArrayUtils;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -12,6 +14,10 @@ public enum GamepadButton {
 	B(GLFW_GAMEPAD_BUTTON_B),
 	X(GLFW_GAMEPAD_BUTTON_X),
 	Y(GLFW_GAMEPAD_BUTTON_Y),
+	CROSS(GLFW_GAMEPAD_BUTTON_A),
+	CIRCLE(GLFW_GAMEPAD_BUTTON_B),
+	SQUARE(GLFW_GAMEPAD_BUTTON_X),
+	TRIANGLE(GLFW_GAMEPAD_BUTTON_Y),
 	LEFT_BUMPER(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER),
 	RIGHT_BUMPER(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER),
 	BACK(GLFW_GAMEPAD_BUTTON_BACK),
@@ -40,13 +46,6 @@ public enum GamepadButton {
 	 * @return True if the value is a valid value
 	 */
 	public static boolean isValid(int value) {
-		boolean valid = false;
-		for (GamepadButton key : values()) {
-			if (key.value == value) {
-				valid = true;
-				break;
-			}
-		}
-		return valid;
+		return ArrayUtils.contains(values(), value);
 	}
 }

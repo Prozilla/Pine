@@ -3,10 +3,7 @@ package dev.prozilla.pine.examples.sokoban.system;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
-import dev.prozilla.pine.core.state.input.Gamepad;
-import dev.prozilla.pine.core.state.input.GamepadAxis;
-import dev.prozilla.pine.core.state.input.Input;
-import dev.prozilla.pine.core.state.input.Key;
+import dev.prozilla.pine.core.state.input.*;
 import dev.prozilla.pine.core.system.input.InputSystem;
 import dev.prozilla.pine.examples.sokoban.component.PlayerData;
 
@@ -21,7 +18,7 @@ public class PlayerInputHandler extends InputSystem {
 		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		TileRenderer tileRenderer = chunk.getComponent(TileRenderer.class);
 		
-		if ((input.getKey(Key.L_CONTROL) && input.getKeyDown(Key.Z))) {
+		if ((input.getKey(Key.L_CONTROL) && input.getKeyDown(Key.Z)) || input.getMouseButtonDown(MouseButton.EXTRA_0)) {
 			if (input.getKey(Key.L_SHIFT)) {
 				playerData.history.redo();
 			} else {

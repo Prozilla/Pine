@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.state.input;
 
+import dev.prozilla.pine.common.util.ArrayUtils;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -31,13 +33,6 @@ public enum GamepadAxis {
 	 * @return True if the value is a valid value
 	 */
 	public static boolean isValid(int value) {
-		boolean valid = false;
-		for (GamepadAxis key : values()) {
-			if (key.value == value) {
-				valid = true;
-				break;
-			}
-		}
-		return valid;
+		return ArrayUtils.contains(values(), value);
 	}
 }

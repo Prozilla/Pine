@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.state.input;
 
+import dev.prozilla.pine.common.util.ArrayUtils;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -17,7 +19,13 @@ public enum Gamepad {
 	ID_6(GLFW_JOYSTICK_7),
 	ID_7(GLFW_JOYSTICK_8),
 	ID_8(GLFW_JOYSTICK_9),
-	ID_9(GLFW_JOYSTICK_10);
+	ID_9(GLFW_JOYSTICK_10),
+	ID_10(GLFW_JOYSTICK_11),
+	ID_11(GLFW_JOYSTICK_12),
+	ID_12(GLFW_JOYSTICK_13),
+	ID_13(GLFW_JOYSTICK_14),
+	ID_14(GLFW_JOYSTICK_15),
+	ID_15(GLFW_JOYSTICK_16);
 	
 	private final int value;
 	
@@ -35,13 +43,6 @@ public enum Gamepad {
 	 * @return True if the value is a valid value
 	 */
 	public static boolean isValid(int value) {
-		boolean valid = false;
-		for (Gamepad key : values()) {
-			if (key.value == value) {
-				valid = true;
-				break;
-			}
-		}
-		return valid;
+		return ArrayUtils.contains(values(), value);
 	}
 }
