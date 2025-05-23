@@ -1,0 +1,20 @@
+plugins {
+	id "dev.prozilla.pine.conventions"
+	id "dev.prozilla.pine.examples.conventions"
+	id "com.github.johnrengelman.shadow" version "8.1.0"
+}
+
+application {
+	mainClass = "dev.prozilla.pine.examples.chat.Server"
+}
+
+tasks.register("startServer", JavaExec) {
+	mainClass = "dev.prozilla.pine.examples.chat.Server"
+	classpath = sourceSets.main.runtimeClasspath
+}
+
+tasks.register("startClient", JavaExec) {
+	mainClass = "dev.prozilla.pine.examples.chat.Client"
+	classpath = sourceSets.main.runtimeClasspath
+	standardInput = System.in
+}

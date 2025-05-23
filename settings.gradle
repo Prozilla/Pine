@@ -5,4 +5,4 @@ pluginManagement {
 rootProject.name = "pine"
 
 include(":pine-engine", ":pine-editor")
-include(":examples:ui", ":examples:flappy-bird", ":examples:snake", ":examples:sokoban")
+include(":examples:ui", ":examples:flappy-bird", ":examples:snake", ":examples:sokoban", ":examples:chat")
