@@ -322,4 +322,33 @@ public final class Checks {
 		}
 	}
 	
+	/**
+	 * Checks that the given number is in the given range and throws an {@link InvalidNumberException} if it is not.
+	 * @param number The number to check
+	 * @param min Lower bound (inclusive)
+	 * @param max Upper bound (inclusive)
+	 * @return <code>number</code> if it is in the range.
+	 * @throws InvalidNumberException If <code>number</code> is not in the range.
+	 */
+	public static int isInRange(int number, int min, int max) throws InvalidNumberException {
+		return isInRange(number, min, max, null);
+	}
+	
+	/**
+	 * Checks that the given number is in the given range and throws a customized {@link InvalidNumberException} if it is not.
+	 * @param number The number to check
+	 * @param min Lower bound (inclusive)
+	 * @param max Upper bound (inclusive)
+	 * @param message The message to be used in the event that an {@link InvalidNumberException} is thrown
+	 * @return <code>number</code> if it is in the range.
+	 * @throws InvalidNumberException If <code>number</code> is not in the range.
+	 */
+	public static int isInRange(int number, int min, int max, String message) throws InvalidNumberException {
+		if (number < min || number > max) {
+			throw new InvalidNumberException(message != null ? message : String.format("number must be between %s and %s", min, max));
+		} else {
+			return number;
+		}
+	}
+	
 }

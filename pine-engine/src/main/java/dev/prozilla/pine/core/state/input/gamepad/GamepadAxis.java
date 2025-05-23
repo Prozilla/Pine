@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.state.input;
+package dev.prozilla.pine.core.state.input.gamepad;
 
 import dev.prozilla.pine.common.util.ArrayUtils;
 

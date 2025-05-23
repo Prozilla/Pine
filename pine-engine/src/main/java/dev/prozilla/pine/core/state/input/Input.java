@@ -5,11 +5,16 @@ import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.resource.image.Image;
+import dev.prozilla.pine.common.util.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
-import org.lwjgl.glfw.*;
-import org.lwjgl.system.MemoryUtil;
+import dev.prozilla.pine.core.state.input.gamepad.Gamepad;
+import dev.prozilla.pine.core.state.input.gamepad.GamepadInput;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +53,9 @@ public class Input implements Lifecycle {
 	private GLFWCursorPosCallback cursorPosCallback;
 	private GLFWMouseButtonCallback mouseButtonCallback;
 	
-	private final GLFWGamepadState gamepadState;
+	private final Gamepad[] gamepads;
+	/** Used when no gamepad is connected. */
+	private final GamepadInput fallbackGamepad;
 	
 	private final Application application;
 	private final Logger logger;
@@ -56,6 +63,7 @@ public class Input implements Lifecycle {
 	private static final int CURSOR_TYPE_DEFAULT = CursorType.DEFAULT.getValue();
 	private static final boolean IGNORE_CURSOR_BLOCK_DEFAULT = false;
 	private static final boolean STOP_PROPAGATION_DEFAULT = false;
+	private static final int DEFAULT_GAMEPAD_ID = 0;
 	
 	/**
 	 * Creates an input system.
@@ -78,7 +86,23 @@ public class Input implements Lifecycle {
 		cursorType = CURSOR_TYPE_DEFAULT;
 		cursorImageOffset = new Vector2i();
 		
-		gamepadState = new GLFWGamepadState(MemoryUtil.memAlloc(40));
+		gamepads = new Gamepad[GLFW_JOYSTICK_LAST + 1];
+		fallbackGamepad = new GamepadInput() {
+			@Override
+			public float getAxis(int axis) {
+				return 0;
+			}
+			
+			@Override
+			public boolean getButton(int button) {
+				return false;
+			}
+			
+			@Override
+			public boolean getButtonDown(int button) {
+				return false;
+			}
+		};
 	}
 	
 	/**
@@ -125,6 +149,21 @@ public class Input implements Lifecycle {
 				}
 			}
 		});
+		
+		glfwSetJoystickCallback((gamepadId, event) -> {
+			if (event == GLFW_CONNECTED) {
+				gamepads[gamepadId] = new Gamepad(gamepadId);
+			} else if (event == GLFW_DISCONNECTED) {
+				gamepads[gamepadId].destroy();
+				gamepads[gamepadId] = null;
+			}
+		});
+		
+		for (int i = 0; i < gamepads.length; i++) {
+			if (glfwJoystickPresent(i)) {
+				gamepads[i] = new Gamepad(i);
+			}
+		}
 	}
 	
 	/**
@@ -151,6 +190,12 @@ public class Input implements Lifecycle {
 		if (!previousMouseButtonsDown.isEmpty()) {
 			mouseButtonsDown.removeAll(previousMouseButtonsDown);
 			previousMouseButtonsDown.clear();
+		}
+		
+		for (Gamepad gamepad : gamepads) {
+			if (gamepad != null) {
+				gamepad.input();
+			}
 		}
 	}
 	
@@ -195,8 +240,10 @@ public class Input implements Lifecycle {
 		if (mouseButtonCallback != null) {
 			mouseButtonCallback.free();
 		}
-		if (gamepadState != null) {
-			gamepadState.close();
+		for (Gamepad gamepad : gamepads) {
+			if (gamepad != null) {
+				gamepad.destroy();
+			}
 		}
 	}
 	
@@ -378,45 +425,38 @@ public class Input implements Lifecycle {
 	}
 	
 	/**
-	 * Gets the current value of a gamepad axis.
-	 * @return Value of the axis
+	 * Returns the first gamepad if it is connected,
+	 * otherwise returns a fallback gamepad which returns {@code 0f} for all axes and {@code false} for all buttons.
+	 * @return The first gamepad or a fallback gamepad
 	 */
-	public float getGamepadAxis(Gamepad gamepad, GamepadAxis axis) {
-		return getGamepadAxis(gamepad.getValue(), axis.getValue());
+	public GamepadInput getGamepad() {
+		return isGamepadConnected(DEFAULT_GAMEPAD_ID) ? getGamepad(DEFAULT_GAMEPAD_ID) : fallbackGamepad;
 	}
 	
 	/**
-	 * Gets the current value of a gamepad axis.
-	 * @param gamepadId GLFW integer value for a gamepad ID
-	 * @param axis GLFW integer value for a gamepad axis
-	 * @return Value of the axis
+	 * Returns the gamepad that matches the given ID.
+	 * @return The gamepad with the given ID.
 	 */
-	public float getGamepadAxis(int gamepadId, int axis) {
-		if (glfwGetGamepadState(gamepadId, gamepadState)) {
-			return gamepadState.axes(axis);
+	public GamepadInput getGamepad(int id) {
+		checkGamepadId(id);
+		GamepadInput gamepad = gamepads[id];
+		if (gamepad == null) {
+			throw new IllegalArgumentException(String.format("Gamepad %s is not connected", id));
 		}
-		return 0;
+		return gamepad;
 	}
 	
 	/**
-	 * Checks whether a gamepad button is being pressed.
-	 * @return True if the button is being pressed
+	 * Checks if the gamepad that matches the given ID is connected.
+	 * @return {@code true} if the gamepad with the given ID is connected.
 	 */
-	public boolean getGamepadButton(Gamepad gamepad, GamepadButton button) {
-		return getGamepadButton(gamepad.getValue(), button.getValue());
+	public boolean isGamepadConnected(int id) {
+		checkGamepadId(id);
+		return gamepads[id] != null;
 	}
 	
-	/**
-	 * Checks whether a gamepad button is being pressed.
-	 * @param gamepadId GLFW integer value for a gamepad ID
-	 * @param button GLFW integer value for a gamepad button
-	 * @return True if the button is being pressed
-	 */
-	public boolean getGamepadButton(int gamepadId, int button) {
-		if (glfwGetGamepadState(gamepadId, gamepadState)) {
-			return gamepadState.buttons(button) == GLFW_PRESS;
-		}
-		return false;
+	private void checkGamepadId(int id) {
+		Checks.isInRange(id, 0, gamepads.length - 1, "Invalid gamepad ID: " + id);
 	}
 	
 	/**

@@ -2,11 +2,12 @@ package dev.prozilla.pine.examples.flappybird;
 
 import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.common.system.resource.text.Font;
-import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
+import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.input.Key;
+import dev.prozilla.pine.core.state.input.gamepad.GamepadButton;
 import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
 import dev.prozilla.pine.examples.flappybird.entity.*;
@@ -100,7 +101,7 @@ public class GameScene extends Scene {
 		super.input(deltaTime);
 		
 		if (gameOver) {
-			if (application.getInput().getKeyDown(Key.R)) {
+			if (getInput().getKeyDown(Key.R) || getInput().getGamepad().getButtonDown(GamepadButton.Y)) {
 				application.reloadScene();
 			}
 		}

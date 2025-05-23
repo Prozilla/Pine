@@ -3,7 +3,12 @@ package dev.prozilla.pine.examples.sokoban.system;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
-import dev.prozilla.pine.core.state.input.*;
+import dev.prozilla.pine.core.state.input.Input;
+import dev.prozilla.pine.core.state.input.Key;
+import dev.prozilla.pine.core.state.input.MouseButton;
+import dev.prozilla.pine.core.state.input.gamepad.GamepadAxis;
+import dev.prozilla.pine.core.state.input.gamepad.GamepadButton;
+import dev.prozilla.pine.core.state.input.gamepad.GamepadInput;
 import dev.prozilla.pine.core.system.input.InputSystem;
 import dev.prozilla.pine.examples.sokoban.component.PlayerData;
 
@@ -18,19 +23,21 @@ public class PlayerInputHandler extends InputSystem {
 		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		TileRenderer tileRenderer = chunk.getComponent(TileRenderer.class);
 		
-		if ((input.getKey(Key.L_CONTROL) && input.getKeyDown(Key.Z)) || input.getMouseButtonDown(MouseButton.EXTRA_0)) {
+		GamepadInput gamepad = input.getGamepad();
+		
+		if ((input.getKey(Key.L_CONTROL) && input.getKeyDown(Key.Z)) || input.getMouseButtonDown(MouseButton.EXTRA_0) || gamepad.getButtonDown(GamepadButton.B)) {
 			if (input.getKey(Key.L_SHIFT)) {
 				playerData.history.redo();
 			} else {
 				playerData.history.undo();
 			}
-		} else if (input.getAnyKey(Key.DOWN_ARROW, Key.S) || input.getGamepadAxis(Gamepad.ID_0, GamepadAxis.LEFT_Y) > PlayerData.JOYSTICK_THRESHOLD) {
+		} else if (input.getAnyKey(Key.DOWN_ARROW, Key.S) || gamepad.getAxis(GamepadAxis.LEFT_Y) > PlayerData.JOYSTICK_THRESHOLD) {
 			playerData.moveInDirection(Direction.DOWN, tileRenderer);
-		} else if (input.getAnyKey(Key.UP_ARROW, Key.W) || input.getGamepadAxis(Gamepad.ID_0, GamepadAxis.LEFT_Y) < -PlayerData.JOYSTICK_THRESHOLD) {
+		} else if (input.getAnyKey(Key.UP_ARROW, Key.W) || gamepad.getAxis(GamepadAxis.LEFT_Y) < -PlayerData.JOYSTICK_THRESHOLD) {
 			playerData.moveInDirection(Direction.UP, tileRenderer);
-		} else if (input.getAnyKey(Key.LEFT_ARROW, Key.A) || input.getGamepadAxis(Gamepad.ID_0, GamepadAxis.LEFT_X) < -PlayerData.JOYSTICK_THRESHOLD) {
+		} else if (input.getAnyKey(Key.LEFT_ARROW, Key.A) || gamepad.getAxis(GamepadAxis.LEFT_X) < -PlayerData.JOYSTICK_THRESHOLD) {
 			playerData.moveInDirection(Direction.LEFT, tileRenderer);
-		} else if (input.getAnyKey(Key.RIGHT_ARROW, Key.D) || input.getGamepadAxis(Gamepad.ID_0, GamepadAxis.LEFT_X) > PlayerData.JOYSTICK_THRESHOLD) {
+		} else if (input.getAnyKey(Key.RIGHT_ARROW, Key.D) || gamepad.getAxis(GamepadAxis.LEFT_X) > PlayerData.JOYSTICK_THRESHOLD) {
 			playerData.moveInDirection(Direction.RIGHT, tileRenderer);
 		}
 	}
