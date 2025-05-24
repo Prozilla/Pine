@@ -1,14 +1,14 @@
 package dev.prozilla.pine.examples.snake;
 
+import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.text.Font;
-import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
-import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.component.particle.ParticleBurstEmitter;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.sprite.GridPrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
+import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.examples.snake.entity.*;
 import dev.prozilla.pine.examples.snake.system.PlayerInput;
@@ -58,7 +58,7 @@ public class GameScene extends Scene {
 	protected void load() {
 		super.load();
 		
-		font = ResourcePool.loadFont("snake/monomaniac.ttf", 64);
+		font = AssetPools.fonts.load("snake/monomaniac.ttf", 64);
 		
 		// Create prefabs
 		PlayerHeadPrefab playerHeadPrefab = new PlayerHeadPrefab(this);

@@ -1,16 +1,15 @@
 package dev.prozilla.pine.core.component.ui;
 
+import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.event.EventDispatcher;
-import dev.prozilla.pine.common.event.EventDispatcherContext;
-import dev.prozilla.pine.common.event.EventListener;
+import dev.prozilla.pine.common.event.EventDispatcherProvider;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector4f;
-import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.image.TextureBase;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.HashSet;
@@ -21,7 +20,7 @@ import java.util.Set;
  *
  * <p>Nodes are similar to HTML elements and the <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Box_model">CSS box model</a>.</p>
  */
-public class Node extends Component implements EventDispatcherContext<NodeEvent> {
+public class Node extends Component implements EventDispatcherProvider<NodeEvent, Node> {
 	
 	// Current state
 	public Vector2f currentPosition;
@@ -58,7 +57,7 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 	
 	public NodeRoot root;
 	
-	public final EventDispatcher<NodeEvent> eventDispatcher;
+	public final EventDispatcher<NodeEvent, Node> eventDispatcher;
 	
 	public static final Color DEFAULT_COLOR = Color.white();
 	public static final Color DEFAULT_BACKGROUND_COLOR = Color.transparent();
@@ -216,18 +215,8 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 	}
 	
 	@Override
-	public void addListener(NodeEvent eventType, EventListener listener) {
-		eventDispatcher.addListener(eventType, listener);
-	}
-	
-	@Override
-	public void removeListener(NodeEvent eventType, EventListener listener) {
-		eventDispatcher.removeListener(eventType, listener);
-	}
-	
-	@Override
-	public void invoke(NodeEvent eventType) {
-		eventDispatcher.invoke(eventType);
+	public EventDispatcher<NodeEvent, Node> getEventDispatcher() {
+		return eventDispatcher;
 	}
 	
 	public void toggleClass(String className) {
@@ -244,13 +233,13 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 	
 	public void addClass(String className) {
 		if (classes.add(className)) {
-			invoke(NodeEvent.SELECTOR_CHANGE);
+			invoke(NodeEvent.SELECTOR_CHANGE, this);
 		}
 	}
 	
 	public void removeClass(String className) {
 		if (classes.remove(className)) {
-			invoke(NodeEvent.SELECTOR_CHANGE);
+			invoke(NodeEvent.SELECTOR_CHANGE, this);
 		}
 	}
 	
@@ -268,13 +257,13 @@ public class Node extends Component implements EventDispatcherContext<NodeEvent>
 	
 	public void addModifier(String modifier) {
 		if (modifiers.add(modifier)) {
-			invoke(NodeEvent.SELECTOR_CHANGE);
+			invoke(NodeEvent.SELECTOR_CHANGE, this);
 		}
 	}
 	
 	public void removeModifier(String modifier) {
 		if (modifiers.remove(modifier)) {
-			invoke(NodeEvent.SELECTOR_CHANGE);
+			invoke(NodeEvent.SELECTOR_CHANGE, this);
 		}
 	}
 }

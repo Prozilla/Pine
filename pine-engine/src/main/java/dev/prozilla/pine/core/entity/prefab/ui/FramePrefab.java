@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
-import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.FrameNode;
 import dev.prozilla.pine.core.component.ui.Node;

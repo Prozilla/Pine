@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Represents a unique entity in the world with a list of components.
  */
-public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, Printable, EntityContext, ComponentsContext, ApplicationProvider, SceneProvider {
+public class Entity extends EventDispatcher<EntityEventType, Entity> implements Lifecycle, Printable, EntityContext, ComponentsContext, ApplicationProvider, SceneProvider {
 	
 	public final int id;
 	private final String name;
@@ -102,7 +102,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 				world.removeEntity(this);
 			}
 			
-			invoke(EntityEvent.DESTROY);
+			invoke(EntityEventType.DESTROY, this);
 			super.destroy();
 		}
 	}
@@ -137,7 +137,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 			world.addEntity(child);
 		}
 		
-		invoke(EntityEvent.CHILDREN_UPDATE);
+		invoke(EntityEventType.CHILDREN_UPDATE, this);
 		
 		return child;
 	}
@@ -168,7 +168,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 		
 		child.transform.parent = null;
 		
-		invoke(EntityEvent.CHILDREN_UPDATE);
+		invoke(EntityEventType.CHILDREN_UPDATE, this);
 	}
 	
 	/**
@@ -250,7 +250,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	 */
 	public <C extends Component> C addComponent(C component) {
 		world.addComponent(this, component);
-		invoke(EntityEvent.COMPONENTS_UPDATE);
+		invoke(EntityEventType.COMPONENTS_UPDATE, this);
 		return component;
 	}
 	
@@ -264,7 +264,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 		}
 
 		world.removeComponent(this, component);
-		invoke(EntityEvent.COMPONENTS_UPDATE);
+		invoke(EntityEventType.COMPONENTS_UPDATE, this);
 	}
 	
 	@Override

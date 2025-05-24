@@ -1,6 +1,6 @@
 package dev.prozilla.pine.examples.sokoban.system;
 
-import dev.prozilla.pine.common.system.resource.ResourcePool;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
@@ -31,10 +31,10 @@ public class CrateUpdater extends UpdateSystemBase {
 			
 			// Update sprite based on whether create is on a goal tile
 			if (goalGrid.getTile(tileRenderer.getCoordinate()) != null) {
-				spriteRenderer.texture = ResourcePool.loadTexture("images/crates/crate_07.png");
+				spriteRenderer.texture = AssetPools.textures.load("images/crates/crate_07.png");
 				completedCrates.addAndGet(1);
 			} else {
-				spriteRenderer.texture = ResourcePool.loadTexture("images/crates/crate_02.png");
+				spriteRenderer.texture = AssetPools.textures.load("images/crates/crate_02.png");
 			}
 		});
 		

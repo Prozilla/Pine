@@ -1,12 +1,12 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.asset.image.Image;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.logging.AppLogger;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.opengl.GLUtils;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.image.Image;
-import dev.prozilla.pine.common.system.resource.text.Font;
 import dev.prozilla.pine.core.audio.AudioDevice;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -426,7 +426,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 			modManager.destroy();
 			
 			// Reset resources
-			ResourcePool.clear();
+			AssetPools.clear();
 			
 			// Destroy window and release callbacks
 			window.destroy();
@@ -619,7 +619,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		try {
 			Image[] images = new Image[icons.length];
 			for (int i = 0; i < icons.length; i++) {
-				images[i] = ResourcePool.loadImage(icons[i]);
+				images[i] = AssetPools.images.load(icons[i]);
 			}
 			window.setIcons(images);
 		} catch (Exception e) {
@@ -642,7 +642,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		if (!config.defaultFontPath.exists()) {
 			return null;
 		}
-		return ResourcePool.loadFont(config.defaultFontPath.get());
+		return AssetPools.fonts.load(config.defaultFontPath.get());
 	}
 	
 	/**

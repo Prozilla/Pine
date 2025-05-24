@@ -1,8 +1,8 @@
 package dev.prozilla.pine.common.event;
 
 @FunctionalInterface
-public interface EventListener {
+public interface EventListener<E> {
 	
-	void execute();
+	void handle(E event);
 	
 }

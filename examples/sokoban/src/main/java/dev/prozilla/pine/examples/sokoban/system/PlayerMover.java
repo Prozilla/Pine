@@ -1,6 +1,6 @@
 package dev.prozilla.pine.examples.sokoban.system;
 
-import dev.prozilla.pine.common.system.resource.ResourcePool;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -35,7 +35,7 @@ public class PlayerMover extends UpdateSystem {
 				sprite = sprites[0];
 			}
 			
-			spriteRenderer.texture = ResourcePool.loadTexture(sprite);
+			spriteRenderer.texture = AssetPools.textures.load(sprite);
 		}
 		
 		// Move player

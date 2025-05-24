@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.particle;
 
+import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.easing.EasingFunction;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.property.FixedProperty;
@@ -8,9 +10,7 @@ import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.variable.VariableAnimatedColorProperty;
 import dev.prozilla.pine.common.property.animated.variable.VariableAnimatedFloatProperty;
-import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.image.TextureBase;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.particle.ParticleRenderer;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.Entity;
@@ -34,7 +34,7 @@ public class ParticlePrefab extends SpritePrefab {
 	public static final VariableProperty<Float> DEFAULT_LIFETIME = new FixedProperty<>(5f);
 	
 	public ParticlePrefab(String texturePath) {
-		this(ResourcePool.loadTexture(texturePath));
+		this(AssetPools.textures.load(texturePath));
 	}
 	
 	public ParticlePrefab(TextureBase texture) {
@@ -42,7 +42,7 @@ public class ParticlePrefab extends SpritePrefab {
 	}
 	
 	public ParticlePrefab(String texturePath, VariableProperty<Float> lifetime) {
-		this(ResourcePool.loadTexture(texturePath), lifetime);
+		this(AssetPools.textures.load(texturePath), lifetime);
 	}
 	
 	public ParticlePrefab(TextureBase texture, VariableProperty<Float> lifetime) {

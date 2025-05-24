@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.system.resource.image;
+package dev.prozilla.pine.common.asset.image;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;

@@ -4,7 +4,7 @@ import dev.prozilla.pine.common.property.FixedProperty;
 import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.property.animated.AnimatedColorProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
-import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.Color;
 
 public class VariableAnimatedColorProperty extends VariableAnimatedProperty<Color> {
 	

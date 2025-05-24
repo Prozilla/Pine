@@ -2,7 +2,7 @@ package dev.prozilla.pine.core.component.camera;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
 
 public class CameraData extends Component {

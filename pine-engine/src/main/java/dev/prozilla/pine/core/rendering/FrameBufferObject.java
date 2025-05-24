@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.Lifecycle;
-import dev.prozilla.pine.common.system.resource.image.Texture;
+import dev.prozilla.pine.common.asset.image.Texture;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.*;

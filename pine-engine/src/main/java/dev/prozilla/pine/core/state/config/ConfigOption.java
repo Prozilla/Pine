@@ -10,7 +10,7 @@ import java.util.function.Predicate;
  * @param <T> Type of the value of the option
  * @see Config
  */
-public class ConfigOption<T> extends EventDispatcher<ConfigOptionEvent> {
+public class ConfigOption<T> extends EventDispatcher<ConfigOptionEvent, T> {
 	
 	private T value;
 	private final T initialValue;
@@ -61,7 +61,7 @@ public class ConfigOption<T> extends EventDispatcher<ConfigOptionEvent> {
 		
 		this.value = value;
 		
-		invoke(ConfigOptionEvent.CHANGE);
+		invoke(ConfigOptionEvent.CHANGE, value);
 	}
 	
 	/**
@@ -99,23 +99,23 @@ public class ConfigOption<T> extends EventDispatcher<ConfigOptionEvent> {
 	 */
 	public void reset() {
 		set(initialValue);
-		invoke(ConfigOptionEvent.RESET);
+		invoke(ConfigOptionEvent.RESET, initialValue);
 	}
 	
 	/**
 	 * Invokes an event listener once and then every time this option changes.
 	 * @param listener Listener to invoke
 	 */
-	public void read(EventListener listener) {
+	public void read(EventListener<T> listener) {
 		onChange(listener);
-		listener.execute();
+		listener.handle(value);
 	}
 	
-	public void onChange(EventListener listener) {
+	public void onChange(EventListener<T> listener) {
 		addListener(ConfigOptionEvent.CHANGE, listener);
 	}
 	
-	public void onReset(EventListener listener) {
+	public void onReset(EventListener<T> listener) {
 		addListener(ConfigOptionEvent.RESET, listener);
 	}
 }

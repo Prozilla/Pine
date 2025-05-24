@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.property.animated.transitioned;
 
 import dev.prozilla.pine.common.property.ColorProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
-import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.Color;
 
 public class TransitionedColorProperty extends TransitionedProperty<Color> implements ColorProperty {
 	

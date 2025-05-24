@@ -1,6 +1,8 @@
 package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.asset.Asset;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.Direction;
@@ -9,9 +11,7 @@ import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.property.adaptive.*;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.style.selector.Selector;
-import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.Resource;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.Node;
 
@@ -23,7 +23,7 @@ import java.util.StringJoiner;
 /**
  * Manages style rules for different properties of nodes.
  */
-public class StyleSheet implements Printable, Resource {
+public class StyleSheet implements Printable, Asset {
 	
 	private final Map<StyledPropertyKey<?>, Style<?>> styles;
 	
@@ -170,9 +170,7 @@ public class StyleSheet implements Printable, Resource {
 	
 	@Override
 	public void destroy() {
-		if (path != null) {
-			ResourcePool.removeStyleSheet(path);
-		}
+		AssetPools.styleSheets.remove(this);
 	}
 	
 	@Override

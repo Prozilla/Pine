@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.component.sprite;
 
+import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.math.vector.Vector2f;
-import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.image.TextureBase;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
 
 /**

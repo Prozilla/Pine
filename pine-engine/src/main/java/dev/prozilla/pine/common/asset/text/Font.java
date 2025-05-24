@@ -1,10 +1,10 @@
-package dev.prozilla.pine.common.system.resource.text;
+package dev.prozilla.pine.common.asset.text;
 
 import dev.prozilla.pine.common.Lifecycle;
-import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.Resource;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.image.Texture;
+import dev.prozilla.pine.common.asset.Asset;
+import dev.prozilla.pine.common.asset.image.Texture;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.Renderer;
 import org.lwjgl.system.MemoryUtil;
 
@@ -23,7 +23,7 @@ import static java.awt.Font.*;
 /**
  * Contains a font texture for drawing text.
  */
-public class Font implements Resource, Lifecycle {
+public class Font implements Asset, Lifecycle {
 
     /**
      * Contains the glyphs for each char.
@@ -334,7 +334,11 @@ public class Font implements Resource, Lifecycle {
         height += lineHeight;
         return height;
     }
-
+    
+    public int getSize() {
+        return size;
+    }
+    
     /**
      * Draw text at the specified position and color.
      *
@@ -387,7 +391,7 @@ public class Font implements Resource, Lifecycle {
      * Creates a new font from the same font file, but with a different size.
      */
     public Font setSize(int size) {
-        return ResourcePool.loadFont(path, size);
+        return AssetPools.fonts.load(path, size);
     }
     
     @Override
@@ -402,7 +406,7 @@ public class Font implements Resource, Lifecycle {
     public void destroy() {
         String path = getPath();
         if (path != null) {
-            ResourcePool.removeFont(path, size);
+            AssetPools.fonts.remove(this);
         }
         texture.destroy();
     }

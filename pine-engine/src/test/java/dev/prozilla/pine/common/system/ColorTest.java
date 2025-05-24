@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.system.resource;
+package dev.prozilla.pine.common.system;
 
 import dev.prozilla.pine.test.TestLoggingExtension;
 import dev.prozilla.pine.test.TestUtils;

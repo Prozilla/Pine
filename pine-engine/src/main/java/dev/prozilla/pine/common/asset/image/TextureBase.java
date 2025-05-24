@@ -1,12 +1,12 @@
-package dev.prozilla.pine.common.system.resource.image;
+package dev.prozilla.pine.common.asset.image;
 
-import dev.prozilla.pine.common.system.resource.Resource;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
+import dev.prozilla.pine.common.asset.Asset;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 
 /**
  * Base class for different types of textures.
  */
-public interface TextureBase extends Resource {
+public interface TextureBase extends Asset {
 	
 	/**
 	 * Binds this texture.
@@ -48,10 +48,7 @@ public interface TextureBase extends Resource {
 	 */
 	@Override
 	default void destroy() {
-		String path = getPath();
-		if (path != null) {
-			ResourcePool.removeTexture(path);
-		}
+		AssetPools.textures.remove(this);
 	}
 	
 	/**

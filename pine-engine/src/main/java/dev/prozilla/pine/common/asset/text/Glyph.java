@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.system.resource.text;
+package dev.prozilla.pine.common.asset.text;
 
 /**
  * Represents a font glyph.

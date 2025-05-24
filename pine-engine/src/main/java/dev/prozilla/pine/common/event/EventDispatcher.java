@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EventDispatcher<Event extends Enum<Event>> implements EventDispatcherContext<Event> {
+public class EventDispatcher<EventType extends Enum<EventType>, E> implements EventDispatcherContext<EventType, E> {
 	
-	private final Map<Event, List<EventListener>> listeners;
+	private final Map<EventType, List<EventListener<E>>> listeners;
 	
 	protected Logger logger;
 	
@@ -19,7 +19,7 @@ public class EventDispatcher<Event extends Enum<Event>> implements EventDispatch
 	}
 	
 	@Override
-	public void addListener(Event eventType, EventListener listener) {
+	public void addListener(EventType eventType, EventListener<E> listener) {
 		if (!listeners.containsKey(eventType)) {
 			listeners.put(eventType, new ArrayList<>());
 		}
@@ -28,8 +28,8 @@ public class EventDispatcher<Event extends Enum<Event>> implements EventDispatch
 	}
 	
 	@Override
-	public void removeListener(Event eventType, EventListener listener) {
-		List<EventListener> eventListeners = listeners.get(eventType);
+	public void removeListener(EventType eventType, EventListener<E> listener) {
+		List<EventListener<E>> eventListeners = listeners.get(eventType);
 		
 		if (eventListeners == null) {
 			return;
@@ -39,16 +39,16 @@ public class EventDispatcher<Event extends Enum<Event>> implements EventDispatch
 	}
 	
 	@Override
-	public void invoke(Event eventType) {
-		List<EventListener> eventListeners = listeners.get(eventType);
+	public void invoke(EventType eventType, E event) {
+		List<EventListener<E>> eventListeners = listeners.get(eventType);
 		
 		if (eventListeners == null) {
 			return;
 		}
 		
-		for (EventListener listener : eventListeners) {
+		for (EventListener<E> listener : eventListeners) {
 			try {
-				listener.execute();
+				listener.handle(event);
 			} catch (Exception e) {
 				if (logger != null) {
 					logger.error("Event listener failed", e);

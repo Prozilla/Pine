@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.system.standard.ui;
 
+import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.math.vector.Vector4f;
-import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.image.TextureBase;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.BorderImage;
 import dev.prozilla.pine.core.component.ui.Node;

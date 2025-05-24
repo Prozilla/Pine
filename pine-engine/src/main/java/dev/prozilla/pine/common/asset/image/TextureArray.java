@@ -1,6 +1,6 @@
-package dev.prozilla.pine.common.system.resource.image;
+package dev.prozilla.pine.common.asset.image;
 
-import dev.prozilla.pine.common.system.resource.ResourcePool;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.core.Application;
 
 import java.nio.ByteBuffer;
@@ -80,7 +80,7 @@ public class TextureArray {
 	}
 	
 	public TextureArrayLayer addLayer(String imagePath) {
-		return addLayer(ResourcePool.loadImage(imagePath));
+		return addLayer(AssetPools.images.load(imagePath));
 	}
 	
 	/**
@@ -170,7 +170,7 @@ public class TextureArray {
 	 * Removes this texture array from the resource pool and deletes it.
 	 */
 	public void destroy() {
-		ResourcePool.removeTextureArray(this);
+		AssetPools.textures.removeTextureArray(this);
 		glDeleteTextures(id);
 	}
 	

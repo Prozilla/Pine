@@ -59,7 +59,7 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 		fallbackProperty = this.adaptiveProperty;
 		
 		// Re-apply style when selector changes
-		node.addListener(NodeEvent.SELECTOR_CHANGE, this::invalidate);
+		node.addListener(NodeEvent.SELECTOR_CHANGE, (changedNode) -> this.invalidate());
 	}
 	
 	public void addRule(StyleRule<T> rule) {

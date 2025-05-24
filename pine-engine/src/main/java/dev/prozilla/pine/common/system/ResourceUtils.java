@@ -1,6 +1,4 @@
-package dev.prozilla.pine.common.system.resource;
-
-import dev.prozilla.pine.common.system.PathUtils;
+package dev.prozilla.pine.common.system;
 
 import java.io.File;
 import java.net.URL;

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.state.config;
 
-import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.RenderMode;
 
 import java.util.Objects;

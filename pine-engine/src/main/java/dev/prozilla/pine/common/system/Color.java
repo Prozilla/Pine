@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.system.resource;
+package dev.prozilla.pine.common.system;
 
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;

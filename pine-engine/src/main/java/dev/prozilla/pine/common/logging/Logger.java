@@ -146,7 +146,9 @@ public class Logger implements LogHandler, Lifecycle {
 	 */
 	public void error(String message, Throwable throwable) {
 		error(message);
-		trace(throwable);
+		if (throwable != null) {
+			trace(throwable);
+		}
 	}
 	
 	/**

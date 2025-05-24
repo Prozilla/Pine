@@ -1,7 +1,7 @@
 package dev.prozilla.pine.examples.flappybird;
 
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.text.Font;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
@@ -53,7 +53,7 @@ public class GameScene extends Scene {
 		super.load();
 		
 		// Load resources
-		font = ResourcePool.loadFont("flappybird/flappy-bird.ttf", 32);
+		font = AssetPools.fonts.load("flappybird/flappy-bird.ttf", 32);
 		
 		// Create prefabs for entities
 		BackgroundPrefab backgroundPrefab = new BackgroundPrefab();

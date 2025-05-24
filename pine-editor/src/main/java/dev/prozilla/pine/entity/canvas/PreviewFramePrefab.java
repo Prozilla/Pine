@@ -1,7 +1,7 @@
 package dev.prozilla.pine.entity.canvas;
 
 import dev.prozilla.pine.common.math.vector.GridAlignment;
-import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.component.PreviewData;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.entity.Entity;

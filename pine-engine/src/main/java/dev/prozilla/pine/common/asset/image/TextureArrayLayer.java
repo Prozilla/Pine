@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.system.resource.image;
+package dev.prozilla.pine.common.asset.image;
 
 /**
  * Represents a layer of a texture array.

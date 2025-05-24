@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.entity.prefab.sprite;
 
+import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.image.TextureBase;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
@@ -29,7 +29,7 @@ public class TilePrefab extends SpritePrefab {
 	}
 	
 	public TilePrefab(String texturePath, Vector2i coordinate) {
-		this(ResourcePool.loadTexture(texturePath), coordinate);
+		this(AssetPools.textures.load(texturePath), coordinate);
 	}
 	
 	public TilePrefab(TextureBase texture, Vector2i coordinate) {

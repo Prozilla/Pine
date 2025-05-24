@@ -1,12 +1,12 @@
 package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.image.TextureBase;
-import dev.prozilla.pine.common.system.resource.text.Font;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
@@ -94,21 +94,21 @@ public class Renderer implements Lifecycle {
 		
 		// Read config options
 		RenderConfig config = application.getConfig().rendering;
-		config.enableBlend.read(() -> {
-			if (config.enableBlend.get()) {
+		config.enableBlend.read((enableBlend) -> {
+			if (enableBlend) {
 				glEnable(GL_BLEND);
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			}
 		});
-		config.enableDepthTest.read(() -> {
-			if (config.enableDepthTest.get()) {
+		config.enableDepthTest.read((enableDepthTest) -> {
+			if (enableDepthTest) {
 				// TO DO: improve depth handling to avoid sorting renderers and use only depth test instead
 				glEnable(GL_DEPTH_TEST);
 				glDepthFunc(GL_LEQUAL);
 			}
 		});
-		config.snapPixels.read(() -> {
-			snapPixels = config.snapPixels.get();
+		config.snapPixels.read((snapPixels) -> {
+			this.snapPixels = snapPixels;
 		});
 		
 		createFont();
@@ -149,11 +149,11 @@ public class Renderer implements Lifecycle {
 		Config config = application.getConfig();
 		
 		// Listen to config option changes
-		config.rendering.fallbackRenderColor.read(() -> {
-			fallbackColor = config.rendering.fallbackRenderColor.get();
+		config.rendering.fallbackRenderColor.read((fallbackRenderColor) -> {
+			fallbackColor = fallbackRenderColor;
 		});
-		config.rendering.renderMode.read(() -> {
-			renderMode = config.rendering.renderMode.get();
+		config.rendering.renderMode.read((renderMode) -> {
+			this.renderMode = renderMode;
 			updateRenderMode();
 		});
 	}

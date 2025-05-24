@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
+import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
@@ -11,9 +13,7 @@ import dev.prozilla.pine.common.property.adaptive.AdaptiveDualDimensionProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.property.style.StyledPropertyKey;
-import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.image.TextureBase;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.animation.AnimationData;
 import dev.prozilla.pine.core.component.ui.Node;
@@ -65,7 +65,7 @@ public class NodePrefab extends Prefab {
 	 * Sets the style sheet that is applied to this node by loading it from a CSS file.
 	 */
 	public void setStyleSheet(String filePath) {
-		setStyleSheet(ResourcePool.loadStyleSheet(filePath));
+		setStyleSheet(AssetPools.styleSheets.load(filePath));
 	}
 	
 	/**

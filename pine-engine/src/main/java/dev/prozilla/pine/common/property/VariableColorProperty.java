@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.property;
 
-import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.Color;
 
 public class VariableColorProperty extends VariableProperty<Color> implements ColorProperty {
 	

@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system.standard.ui.text;
 
-import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.text.Font;
+import dev.prozilla.pine.common.asset.text.Font;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.TextNode;

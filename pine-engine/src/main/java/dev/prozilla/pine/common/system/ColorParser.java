@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.system.resource;
+package dev.prozilla.pine.common.system;
 
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.math.vector.Vector4f;

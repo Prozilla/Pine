@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Lifecycle;
-import dev.prozilla.pine.common.system.resource.image.Image;
+import dev.prozilla.pine.common.asset.image.Image;
 import dev.prozilla.pine.core.state.config.WindowConfig;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -46,16 +46,16 @@ public class Window implements Lifecycle {
 		
 		// Read config options
 		WindowConfig config = application.getConfig().window;
-		config.showDecorations.read(() -> {
-			if (config.showDecorations.get()) {
+		config.showDecorations.read((showDecorations) -> {
+			if (showDecorations) {
 				glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
 			} else {
 				glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 			}
 		});
-		config.title.read(() -> {
+		config.title.read((title) -> {
 			if (isInitialized) {
-				glfwSetWindowTitle(id, config.title.get());
+				glfwSetWindowTitle(id, title);
 			}
 		});
 		

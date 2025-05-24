@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.ImageNode;
 import dev.prozilla.pine.core.component.ui.Node;
@@ -23,7 +23,7 @@ public class ImagePrefab extends NodePrefab {
 	protected int regionHeight;
 	
 	public ImagePrefab(String imagePath) {
-		this(ResourcePool.loadTexture(imagePath));
+		this(AssetPools.textures.load(imagePath));
 	}
 	
 	public ImagePrefab(TextureBase image) {

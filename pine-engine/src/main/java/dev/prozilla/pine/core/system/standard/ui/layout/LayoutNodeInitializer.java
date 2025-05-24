@@ -2,7 +2,7 @@ package dev.prozilla.pine.core.system.standard.ui.layout;
 
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.entity.EntityChunk;
-import dev.prozilla.pine.core.entity.EntityEvent;
+import dev.prozilla.pine.core.entity.EntityEventType;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
 /**
@@ -20,6 +20,6 @@ public class LayoutNodeInitializer extends InitSystem {
 		layoutNode.getChildComponents();
 		
 		// Fetch child nodes whenever children are added/removed
-		chunk.getEntity().addListener(EntityEvent.CHILDREN_UPDATE, layoutNode::getChildComponents);
+		chunk.getEntity().addListener(EntityEventType.CHILDREN_UPDATE, (entity) -> layoutNode.getChildComponents());
 	}
 }

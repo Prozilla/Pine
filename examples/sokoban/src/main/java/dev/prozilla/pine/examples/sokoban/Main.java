@@ -13,6 +13,7 @@ public class Main {
 		applicationBuilder.setInitialScene(new GameScene());
 		applicationBuilder.setIcons("images/crates/crate_03.png");
 		applicationBuilder.setTargetFps(120);
+//		applicationBuilder.setFullscreen(true);
 		
 		Application application = applicationBuilder.build();
 		application.getConfig().rendering.snapPixels.set(true);

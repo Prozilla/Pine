@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.system.resource;
+package dev.prozilla.pine.common.asset.pool;
 
 public enum TextureArrayPolicy {
 	/** Always load texture in a texture array. */

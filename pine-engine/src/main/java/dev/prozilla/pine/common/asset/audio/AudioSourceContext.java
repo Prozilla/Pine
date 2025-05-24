@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.system.resource.audio;
+package dev.prozilla.pine.common.asset.audio;
 
 public interface AudioSourceContext {
 	
