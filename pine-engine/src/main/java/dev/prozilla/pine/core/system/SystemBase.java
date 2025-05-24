@@ -2,7 +2,7 @@ package dev.prozilla.pine.core.system;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.util.Checks;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.Entity;

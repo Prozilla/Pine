@@ -4,10 +4,9 @@ import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.exception.InvalidArrayException;
 import dev.prozilla.pine.common.exception.InvalidStringException;
-import dev.prozilla.pine.common.util.Checks;
+import dev.prozilla.pine.common.util.checks.Checks;
 
 import java.lang.reflect.Array;
-import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -103,9 +102,7 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 	abstract public String toString();
 	
 	protected static <T> T[] parseToNumbers(String input, Function<String, T> parser, Class<T> type) throws InvalidStringException {
-		Objects.requireNonNull(input, "input must not be null");
-		Checks.hasPrefix(input, "(");
-		Checks.hasSuffix(input, ")");
+		Checks.string(input, "input").startsWith("(").endsWith(")");
 		
 		String[] strings = input.substring(1, input.length() - 1).split(",");
 		

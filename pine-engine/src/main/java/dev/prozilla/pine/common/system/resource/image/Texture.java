@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.system.resource.image;
 
 import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
-import dev.prozilla.pine.common.util.Checks;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 
 import java.nio.ByteBuffer;

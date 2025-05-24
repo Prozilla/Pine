@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.math.dimension;
 
 import dev.prozilla.pine.common.exception.InvalidArrayException;
-import dev.prozilla.pine.common.util.Checks;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.Node;
 
 import java.util.function.BiFunction;

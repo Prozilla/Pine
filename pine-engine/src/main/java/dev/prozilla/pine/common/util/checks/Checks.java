@@ -1,10 +1,12 @@
-package dev.prozilla.pine.common.util;
+package dev.prozilla.pine.common.util.checks;
 
 import dev.prozilla.pine.common.exception.InvalidArrayException;
 import dev.prozilla.pine.common.exception.InvalidNumberException;
 import dev.prozilla.pine.common.exception.InvalidStringException;
+import dev.prozilla.pine.common.util.ArrayUtils;
 import org.gradle.internal.impldep.javax.annotation.Nonnull;
 
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -349,6 +351,26 @@ public final class Checks {
 		} else {
 			return number;
 		}
+	}
+	
+	public static <E> ArrayChecks<E> array(E[] value, String name) {
+		return new ArrayChecks<>(value, name);
+	}
+	
+	public static <E> CollectionChecks<E> collection(Collection<E> value, String name) {
+		return new CollectionChecks<>(value, name);
+	}
+	
+	public static IntChecks integer(int value, String name) {
+		return new IntChecks(value, name);
+	}
+	
+	public static ObjectChecks object(Object value, String name) {
+		return new ObjectChecks(value, name);
+	}
+	
+	public static StringChecks string(String value, String name) {
+		return new StringChecks(value, name);
 	}
 	
 }
