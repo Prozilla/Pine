@@ -28,6 +28,16 @@ public abstract class Component implements Lifecycle, Printable, EntityProvider,
 	}
 	
 	/**
+	 * Removes this component from its entity.
+	 */
+	@Override
+	public void destroy() {
+		if (entity != null) {
+			entity.removeComponent(this);
+		}
+	}
+	
+	/**
 	 * Enables or disables this component.
 	 * @param active True enables this component, false disables it.
 	 */

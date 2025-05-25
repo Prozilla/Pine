@@ -120,8 +120,8 @@ public abstract class SystemBase implements Lifecycle {
 	public void register(Entity entity) {
 		if (query.register(entity)) {
 			if (runOnce && !processedEntityIds.contains(entity.id)) {
-				if (this instanceof InitSystemBase && world.initialized) {
-					init();
+				if (this instanceof InitSystemBase initSystemBase && world.initialized) {
+					initSystemBase.init();
 				}
 			}
 		}

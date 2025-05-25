@@ -10,7 +10,6 @@ import dev.prozilla.pine.core.rendering.Renderer;
  *         Before lifetime:
  *         <ol>
  *             <li><code>init()</code></li>
- *             <li><code>start()</code></li>
  *         </ol>
  *     </li>
  *     <li>
@@ -44,13 +43,6 @@ public interface Lifecycle {
 	 */
 	default void init(long window) {
 		throw new UnsupportedOperationException("Init method with parameters not supported");
-	}
-	
-	/**
-	 * Prepares the object at the start of the game loop.
-	 */
-	default void start() {
-		throw new UnsupportedOperationException("Start method not supported");
 	}
 	
 	/**
