@@ -1,33 +1,36 @@
 package dev.prozilla.pine.core.state.input;
 
+import dev.prozilla.pine.common.util.ArrayUtils;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
- * Mappings for GLFW integer values for keyboard keys.
+ * Mappings for GLFW integer values for keyboard keys based on the US keyboard layout.
  * See: <a href="https://www.glfw.org/docs/3.3/group__keys.html">GLFW: Keyboard key tokens</a>
  */
 public enum Key {
 	
+	// General
 	SPACE(GLFW_KEY_SPACE),
 	ESCAPE(GLFW_KEY_ESCAPE),
 	ENTER(GLFW_KEY_ENTER),
 	TAB(GLFW_KEY_TAB),
+	CAPS_LOCK(GLFW_KEY_CAPS_LOCK),
+	SCROLL_LOCK(GLFW_KEY_SCROLL_LOCK),
+	NUM_LOCK(GLFW_KEY_NUM_LOCK),
+	BACKSPACE(GLFW_KEY_BACKSPACE),
 	
 	// Modifiers
 	L_SHIFT(GLFW_KEY_LEFT_SHIFT),
 	L_CONTROL(GLFW_KEY_LEFT_CONTROL),
 	L_ALT(GLFW_KEY_LEFT_ALT),
+	L_SUPER(GLFW_KEY_LEFT_SUPER),
 	R_SHIFT(GLFW_KEY_RIGHT_SHIFT),
 	R_CONTROL(GLFW_KEY_RIGHT_CONTROL),
 	R_ALT(GLFW_KEY_RIGHT_ALT),
+	R_SUPER(GLFW_KEY_RIGHT_SUPER),
 	
-	// Arrows
-	LEFT_ARROW(GLFW_KEY_LEFT),
-	RIGHT_ARROW(GLFW_KEY_RIGHT),
-	UP_ARROW(GLFW_KEY_UP),
-	DOWN_ARROW(GLFW_KEY_DOWN),
-	
-	// Letters
+	// Letter keys
 	A(GLFW_KEY_A),
 	B(GLFW_KEY_B),
 	C(GLFW_KEY_C),
@@ -55,7 +58,7 @@ public enum Key {
 	Y(GLFW_KEY_Y),
 	Z(GLFW_KEY_Z),
 	
-	// Numbers
+	// Number keys
 	NUM_0(GLFW_KEY_0),
 	NUM_1(GLFW_KEY_1),
 	NUM_2(GLFW_KEY_2),
@@ -66,6 +69,25 @@ public enum Key {
 	NUM_7(GLFW_KEY_7),
 	NUM_8(GLFW_KEY_8),
 	NUM_9(GLFW_KEY_9),
+	
+	// Numpad
+	NUMPAD_0(GLFW_KEY_KP_0),
+	NUMPAD_1(GLFW_KEY_KP_1),
+	NUMPAD_2(GLFW_KEY_KP_2),
+	NUMPAD_3(GLFW_KEY_KP_3),
+	NUMPAD_4(GLFW_KEY_KP_4),
+	NUMPAD_5(GLFW_KEY_KP_5),
+	NUMPAD_6(GLFW_KEY_KP_6),
+	NUMPAD_7(GLFW_KEY_KP_7),
+	NUMPAD_8(GLFW_KEY_KP_8),
+	NUMPAD_9(GLFW_KEY_KP_9),
+	NUMPAD_DECIMAL(GLFW_KEY_KP_DECIMAL),
+	NUMPAD_DIVIDE(GLFW_KEY_KP_DIVIDE),
+	NUMPAD_MULTIPLY(GLFW_KEY_KP_MULTIPLY),
+	NUMPAD_SUBTRACT(GLFW_KEY_KP_SUBTRACT),
+	NUMPAD_ADD(GLFW_KEY_KP_ADD),
+	NUMPAD_ENTER(GLFW_KEY_KP_ENTER),
+	NUMPAD_EQUAL(GLFW_KEY_KP_EQUAL),
 	
 	// Function keys
 	F1(GLFW_KEY_F1),
@@ -79,7 +101,51 @@ public enum Key {
 	F9(GLFW_KEY_F9),
 	F10(GLFW_KEY_F10),
 	F11(GLFW_KEY_F11),
-	F12(GLFW_KEY_F12);
+	F12(GLFW_KEY_F12),
+	F13(GLFW_KEY_F13),
+	F14(GLFW_KEY_F14),
+	F15(GLFW_KEY_F15),
+	F16(GLFW_KEY_F16),
+	F17(GLFW_KEY_F17),
+	F18(GLFW_KEY_F18),
+	F19(GLFW_KEY_F19),
+	F20(GLFW_KEY_F20),
+	F21(GLFW_KEY_F21),
+	F22(GLFW_KEY_F22),
+	F23(GLFW_KEY_F23),
+	F24(GLFW_KEY_F24),
+	F25(GLFW_KEY_F25),
+	
+	// Cursor control keys
+	DELETE(GLFW_KEY_DELETE),
+	INSERT(GLFW_KEY_INSERT),
+	PAGE_UP(GLFW_KEY_PAGE_UP),
+	PAGE_DOWN(GLFW_KEY_PAGE_DOWN),
+	HOME(GLFW_KEY_HOME),
+	END(GLFW_KEY_END),
+	
+	// Arrow keys
+	LEFT_ARROW(GLFW_KEY_LEFT),
+	RIGHT_ARROW(GLFW_KEY_RIGHT),
+	UP_ARROW(GLFW_KEY_UP),
+	DOWN_ARROW(GLFW_KEY_DOWN),
+	
+	// Other
+	MENU(GLFW_KEY_MENU),
+	PAUSE(GLFW_KEY_PAUSE),
+	PRINT_SCREEN(GLFW_KEY_PRINT_SCREEN),
+	APOSTROPHE(GLFW_KEY_APOSTROPHE),
+	COMMA(GLFW_KEY_COMMA),
+	MINUS(GLFW_KEY_MINUS),
+	PERIOD(GLFW_KEY_PERIOD),
+	SLASH(GLFW_KEY_SLASH),
+	SEMICOLON(GLFW_KEY_SEMICOLON),
+	EQUAL(GLFW_KEY_EQUAL),
+	L_BRACKET(GLFW_KEY_LEFT_BRACKET),
+	R_BRACKET(GLFW_KEY_RIGHT_BRACKET),
+	GRAVE_ACCENT(GLFW_KEY_GRAVE_ACCENT),
+	WORLD_1(GLFW_KEY_WORLD_1),
+	WORLD_2(GLFW_KEY_WORLD_2);
 	
 	private final int value;
 	
@@ -97,13 +163,6 @@ public enum Key {
 	 * @return True if the value is a valid value
 	 */
 	public static boolean isValid(int value) {
-		boolean valid = false;
-		for (Key key : values()) {
-			if (key.value == value) {
-				valid = true;
-				break;
-			}
-		}
-		return valid;
+		return ArrayUtils.contains(values(), value);
 	}
 }

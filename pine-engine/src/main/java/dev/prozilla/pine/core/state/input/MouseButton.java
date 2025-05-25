@@ -1,11 +1,23 @@
 package dev.prozilla.pine.core.state.input;
 
+import dev.prozilla.pine.common.util.ArrayUtils;
+
 import static org.lwjgl.glfw.GLFW.*;
 
+/**
+ * Mappings for GLFW integer values for mouse buttons.
+ * See: <a href="https://www.glfw.org/docs/3.3/group__buttons.html">GLFW: Mouse buttons</a>
+ */
 public enum MouseButton {
 	
 	LEFT(GLFW_MOUSE_BUTTON_1),
-	RIGHT(GLFW_MOUSE_BUTTON_2);
+	RIGHT(GLFW_MOUSE_BUTTON_2),
+	MIDDLE(GLFW_MOUSE_BUTTON_3),
+	EXTRA_0(GLFW_MOUSE_BUTTON_4),
+	EXTRA_1(GLFW_MOUSE_BUTTON_5),
+	EXTRA_2(GLFW_MOUSE_BUTTON_6),
+	EXTRA_3(GLFW_MOUSE_BUTTON_7),
+	EXTRA_4(GLFW_MOUSE_BUTTON_8);
 	
 	private final int value;
 	
@@ -23,13 +35,6 @@ public enum MouseButton {
 	 * @return True if the value is a valid value
 	 */
 	public static boolean isValid(int value) {
-		boolean valid = false;
-		for (MouseButton mouseButton : values()) {
-			if (mouseButton.value == value) {
-				valid = true;
-				break;
-			}
-		}
-		return valid;
+		return ArrayUtils.contains(values(), value);
 	}
 }
