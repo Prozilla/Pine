@@ -1,4 +1,4 @@
-package dev.prozilla.pine.examples.chat;
+package dev.prozilla.pine.examples.chat.server;
 
 import dev.prozilla.pine.common.Lifecycle;
 

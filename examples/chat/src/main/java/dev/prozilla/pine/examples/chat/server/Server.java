@@ -1,20 +1,20 @@
-package dev.prozilla.pine.examples.chat;
+package dev.prozilla.pine.examples.chat.server;
 
-import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.system.Ansi;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Server implements Lifecycle {
+public class Server implements Runnable {
 	
 	private final ServerSocket serverSocket;
 	private final List<ClientHandler> clientHandlers;
 	
-	private static final int PORT = 1234;
+	public static final int DEFAULT_PORT = 1234;
 	
 	public Server(ServerSocket serverSocket) {
 		this.serverSocket = serverSocket;
@@ -22,7 +22,7 @@ public class Server implements Lifecycle {
 	}
 	
 	@Override
-	public void init() {
+	public void run() {
 		System.out.println("Server has started");
 		try {
 			while (!serverSocket.isClosed()) {
@@ -38,7 +38,6 @@ public class Server implements Lifecycle {
 		}
 	}
 	
-	@Override
 	public void destroy() {
 		try {
 			if (serverSocket != null) {
@@ -77,10 +76,17 @@ public class Server implements Lifecycle {
 		}
 	}
 	
-	public static void main(String[] args) throws IOException {
-		ServerSocket serverSocket = new ServerSocket(PORT);
-		Server server = new Server(serverSocket);
-		server.init();
+	public int getPort() {
+		return serverSocket.getLocalPort();
+	}
+	
+	public InetAddress getAddress() {
+		return serverSocket.getInetAddress();
+	}
+	
+	public static Server create(int port) throws IOException {
+		ServerSocket serverSocket = new ServerSocket(port);
+		return new Server(serverSocket);
 	}
 	
 }

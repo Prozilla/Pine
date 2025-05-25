@@ -9,12 +9,12 @@ application {
 }
 
 tasks.register("startServer", JavaExec) {
-	mainClass = "dev.prozilla.pine.examples.chat.Server"
+	mainClass = "dev.prozilla.pine.examples.chat.server.ServerApp"
 	classpath = sourceSets.main.runtimeClasspath
 }
 
 tasks.register("startClient", JavaExec) {
-	mainClass = "dev.prozilla.pine.examples.chat.Client"
+	mainClass = "dev.prozilla.pine.examples.chat.client.Client"
 	classpath = sourceSets.main.runtimeClasspath
 	standardInput = System.in
 }
