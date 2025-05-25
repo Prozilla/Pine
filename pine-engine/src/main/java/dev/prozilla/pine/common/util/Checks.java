@@ -12,6 +12,15 @@ import java.util.Objects;
  */
 public final class Checks {
 	
+	// Objects
+	
+	public static <O> O isNotNull(O object, String name) throws IllegalArgumentException {
+		if (object == null) {
+			throw new IllegalArgumentException(name + " must not be null");
+		}
+		return object;
+	}
+	
 	// Arrays
 	
 	/**

@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.scene;
 
 import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.util.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.ComponentManager;
@@ -62,8 +63,8 @@ public class World implements Lifecycle {
 	private final List<SystemBase> initialSystems;
 	
 	public World(Application application, Scene scene) {
-		this.application = application;
-		this.scene = scene;
+		this.application = Checks.isNotNull(application, "application");
+		this.scene = Checks.isNotNull(scene, "scene");
 		
 		entityManager = new EntityManager(this);
 		componentManager = new ComponentManager(this);
@@ -155,6 +156,8 @@ public class World implements Lifecycle {
 	 * Adds a system to the list of initial systems that will be added when this world is initialized.
 	 */
 	private void useSystem(SystemBase system) {
+		Checks.isNotNull(system, "system");
+		
 		if (systemManager.isInitialized()) {
 			throw new IllegalStateException("Initial systems must be specified before the initialization of the system manager.");
 		}
@@ -189,7 +192,6 @@ public class World implements Lifecycle {
 	 */
 	@Override
 	public void update(float deltaTime) {
-//		System.out.println("Updating world");
 		systemManager.update(deltaTime);
 	}
 	
@@ -198,7 +200,6 @@ public class World implements Lifecycle {
 	 */
 	@Override
 	public void render(Renderer renderer) {
-//		System.out.println("Rendering world");
 		systemManager.render(renderer);
 	}
 	
@@ -217,6 +218,7 @@ public class World implements Lifecycle {
 	 * @return The instantiated entity
 	 */
 	public Entity addEntity(Prefab prefab) {
+		Checks.isNotNull(prefab, "prefab");
 		return addEntity(prefab.instantiate(this));
 	}
 	
@@ -228,6 +230,7 @@ public class World implements Lifecycle {
 	 * @return The instantiated entity
 	 */
 	public Entity addEntity(Prefab prefab, float x, float y) {
+		Checks.isNotNull(prefab, "prefab");
 		return addEntity(prefab.instantiate(this, x, y));
 	}
 	
@@ -238,6 +241,7 @@ public class World implements Lifecycle {
 	 */
 	// TO DO: Refactor component loading so components are always added after entity without explicit checks
 	public Entity addEntity(Entity entity) {
+		Checks.isNotNull(entity, "entity");
 		if (entityManager.contains(entity)) {
 			systemManager.register(entity); // Check if entity was changed since it was added (e.g. tag changed after components added)
 			if (initialized) {
@@ -254,6 +258,7 @@ public class World implements Lifecycle {
 	}
 	
 	public void removeEntity(Entity entity) {
+		Checks.isNotNull(entity, "entity");
 		entityManager.removeEntity(entity);
 		if (initialized) {
 			calculateDepth();
@@ -263,6 +268,7 @@ public class World implements Lifecycle {
 	}
 	
 	public void activateEntity(Entity entity) {
+		Checks.isNotNull(entity, "entity");
 		systemManager.activateEntity(entity);
 	}
 	
@@ -273,6 +279,9 @@ public class World implements Lifecycle {
 	 * @return The added component
 	 */
 	public Component addComponent(Entity entity, Component component) {
+		Checks.isNotNull(entity, "entity");
+		Checks.isNotNull(component, "component");
+		
 		if (!entityManager.contains(entity)) {
 			entityManager.addEntity(entity);
 		}
@@ -287,6 +296,9 @@ public class World implements Lifecycle {
 	 * @param component The component to remove from the entity
 	 */
 	public void removeComponent(Entity entity, Component component) {
+		Checks.isNotNull(entity, "entity");
+		Checks.isNotNull(component, "component");
+		
 		componentManager.removeComponent(entity, component);
 		systemManager.register(entity);
 	}
@@ -298,6 +310,8 @@ public class World implements Lifecycle {
 	 * @param <S> Type of the system builder
 	 */
 	public <S extends SystemBuilder<? extends SystemBase, S>> SystemBase addSystem(S systemBuilder) {
+		Checks.isNotNull(systemBuilder, "systemBuilder");
+		
 		return addSystem(systemBuilder.build());
 	}
 	
@@ -307,6 +321,8 @@ public class World implements Lifecycle {
 	 * @return The added system
 	 */
 	public SystemBase addSystem(SystemBase system) {
+		Checks.isNotNull(system, "system");
+		
 		if (!systemManager.isInitialized()) {
 			useSystem(system);
 		} else {

@@ -73,7 +73,7 @@ public abstract class Component implements Lifecycle, Printable, EntityProvider,
 	}
 	
 	public boolean equals(Component component) {
-		return component.id == id;
+		return component != null && component.id == id;
 	}
 	
 	@Override

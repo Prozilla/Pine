@@ -11,6 +11,8 @@ import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.camera.CameraPrefab;
 import dev.prozilla.pine.core.rendering.Renderer;
 
+import java.util.Objects;
+
 /**
  * Responsible for loading objects into the world.
  */
@@ -54,7 +56,7 @@ public class Scene implements Lifecycle, Printable, SceneContext, ApplicationPro
 	}
 	
 	public void setApplication(Application application) {
-		this.application = application;
+		this.application = Objects.requireNonNull(application, "application must not be null");
 		logger = application.getLogger();
 	}
 	
@@ -193,7 +195,7 @@ public class Scene implements Lifecycle, Printable, SceneContext, ApplicationPro
 	 * @return True if both scenes have the same ID.
 	 */
 	public boolean equals(Scene scene) {
-		return scene.id == id;
+		return scene != null && scene.id == id;
 	}
 	
 	/**

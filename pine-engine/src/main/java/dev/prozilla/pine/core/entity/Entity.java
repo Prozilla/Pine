@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.util.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.component.Component;
@@ -62,7 +63,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	 * Creates an entity at the position (x, y)
 	 */
 	public Entity(World world, String name, float x, float y) {
-		this.world = world;
+		this.world = Checks.isNotNull(world, "world");
 		this.name = name;
 
 		application = world.application;
@@ -113,6 +114,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	 * @return Child entity
 	 */
 	public Entity addChild(Prefab prefab) throws IllegalStateException, IllegalArgumentException {
+		Checks.isNotNull(prefab, "prefab");
 		return addChild(prefab.instantiate(world));
 	}
 	
@@ -122,9 +124,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	 * @return Child entity
 	 */
 	public Entity addChild(Entity child) throws IllegalStateException, IllegalArgumentException {
-		if (child == null) {
-			throw new IllegalArgumentException("Child can't be null");
-		}
+		Checks.isNotNull(child, "child");
 		
 		if (transform.children.contains(child.transform)) {
 			throw new IllegalStateException("Entity is already a child");
@@ -157,9 +157,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	 * @param child Child object
 	 */
 	public void removeChild(Entity child) throws IllegalStateException, IllegalArgumentException {
-		if (child == null) {
-			throw new IllegalArgumentException("Child can't be null");
-		}
+		Checks.isNotNull(child, "child");
 		
 		boolean removed = transform.children.remove(child.transform);
 		if (!removed) {
@@ -217,6 +215,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	 * @param parent Parent entity
 	 */
 	public void setParent(Entity parent) {
+		Checks.isNotNull(parent, "parent");
 		transform.setParent(parent.transform);
 	}
 	
@@ -249,6 +248,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	 * @param component Component
 	 */
 	public <C extends Component> C addComponent(C component) {
+		Checks.isNotNull(component, "component");
 		world.addComponent(this, component);
 		invoke(EntityEvent.COMPONENTS_UPDATE);
 		return component;
@@ -259,6 +259,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	 * @param component Component
 	 */
 	public void removeComponent(Component component) {
+		Checks.isNotNull(component, "component");
 		if (!components.contains(component)) {
 			return;
 		}
@@ -355,7 +356,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	 */
 	public boolean hasTag(String tag) {
 		if (this.tag == null) {
-			return false;
+			return tag == null;
 		}
 		
 		return this.tag.equals(tag);
@@ -389,7 +390,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	 * @return True if the entities are equal
 	 */
 	public boolean equals(Entity entity) {
-		return entity == this || id == entity.id;
+		return entity == this || (entity != null && id == entity.id);
 	}
 	
 	/**

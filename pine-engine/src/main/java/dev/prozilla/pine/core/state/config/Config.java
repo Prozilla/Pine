@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.state.config;
 
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.util.Checks;
 import dev.prozilla.pine.core.Application;
 
 import java.util.Collection;
@@ -37,6 +38,7 @@ public class Config {
 	private final Logger logger;
 	
 	public Config(Application application) {
+		Checks.isNotNull(application, "application");
 		logger = application.getLogger();
 		
 		options = new HashMap<>();
