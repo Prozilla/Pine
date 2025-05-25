@@ -218,7 +218,6 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	 * Starts the application loop.
 	 * Destroys the application after the application loop has been stopped.
 	 */
-	@Override
 	public void start() {
 		int fps = config.fps.get();
 		double targetTime = (fps == 0) ? 0.0 : 1.0 / fps;

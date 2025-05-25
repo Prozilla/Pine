@@ -1,9 +1,9 @@
 package dev.prozilla.pine.core.system;
 
 import dev.prozilla.pine.core.ECSManager;
-import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.system.init.InitSystemBase;
 import dev.prozilla.pine.core.system.input.InputSystemBase;
 import dev.prozilla.pine.core.system.render.RenderSystemBase;
@@ -136,8 +136,6 @@ public class SystemManager extends ECSManager {
 		if (added) {
 			system.initSystem(world);
 			getTracker().addSystem();
-		} else {
-			system.destroy();
 		}
 		
 		return added;
