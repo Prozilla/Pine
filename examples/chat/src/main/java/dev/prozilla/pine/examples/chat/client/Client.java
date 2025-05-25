@@ -13,8 +13,11 @@ public class Client implements Destructable {
 	private BufferedWriter bufferedWriter;
 	private String username;
 	
-	private static final String HOST = "localhost";
-	private static final int PORT = 1234;
+	private Thread inputThread;
+	private Thread outputThread;
+	
+	public static final String DEFAULT_HOST = "localhost";
+	public static final int DEFAULT_PORT = 1234;
 	
 	public Client(Socket socket, String username) {
 		try {
@@ -27,25 +30,30 @@ public class Client implements Destructable {
 		}
 	}
 	
-	public void sendInput(Scanner scanner) {
-		try {
-			bufferedWriter.write(username);
-			bufferedWriter.newLine();
-			bufferedWriter.flush();
-			
-			while (socket.isConnected()) {
-				String messageToSend = scanner.nextLine();
-				bufferedWriter.write(messageToSend);
+	public void sendInput() {
+		inputThread = new Thread(() -> {
+			try {
+				bufferedWriter.write(username);
 				bufferedWriter.newLine();
 				bufferedWriter.flush();
+				
+				Scanner scanner = new Scanner(System.in);
+				
+				while (socket.isConnected()) {
+					String messageToSend = scanner.nextLine();
+					bufferedWriter.write(messageToSend);
+					bufferedWriter.newLine();
+					bufferedWriter.flush();
+				}
+			} catch (IOException e) {
+				destroy();
 			}
-		} catch (IOException e) {
-			destroy();
-		}
+		});
+		inputThread.start();
 	}
 	
 	public void readOutput() {
-		new Thread(() -> {
+		outputThread = new Thread(() -> {
 			while (socket.isConnected()) {
 				try {
 					String receivedMessage = bufferedReader.readLine();
@@ -54,12 +62,19 @@ public class Client implements Destructable {
 					destroy();
 				}
 			}
-		}).start();
+		});
+		outputThread.start();
 	}
 	
 	@Override
 	public void destroy() {
 		try {
+			if (inputThread != null) {
+				inputThread.interrupt();
+			}
+			if (outputThread != null) {
+				outputThread.interrupt();
+			}
 			if (bufferedReader != null) {
 				bufferedReader.close();
 			}
@@ -69,22 +84,17 @@ public class Client implements Destructable {
 			if (socket != null) {
 				socket.close();
 			}
-		} catch (IOException e) {
+		} catch (IOException | SecurityException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static void main(String[] args) throws IOException {
-		// Read username
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("Your username: ");
-		String username = scanner.nextLine();
-		
-		// Connect client
-		Socket socket = new Socket(HOST, PORT);
+	public static Client create(String host, int port, String username) throws IOException {
+		Socket socket = new Socket(host, port);
 		Client client = new Client(socket, username);
 		client.readOutput();
-		client.sendInput(scanner);
+		client.sendInput();
+		return client;
 	}
 	
 }

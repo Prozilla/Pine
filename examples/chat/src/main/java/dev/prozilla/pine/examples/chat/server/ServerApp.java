@@ -9,15 +9,17 @@ import java.io.IOException;
 public class ServerApp extends Application {
 	
 	private Server server;
+	private Thread serverThread;
 	
 	public ServerApp() {
-		super("Chat Server", 300, 150, new StartupScene());
+		super("Chat Server", 250, 125, new StartupScene());
 	}
 	
 	public void startServer(int port) {
 		try {
 			server = Server.create(port);
-			new Thread(server).start();
+			serverThread = new Thread(server);
+			serverThread.start();
 			
 			loadScene(addScene(new ServerScene(server)));
 		} catch (IOException e) {
@@ -25,13 +27,17 @@ public class ServerApp extends Application {
 		}
 	}
 	
-	public Server getServer() {
-		return server;
-	}
-	
 	@Override
 	public void destroy() {
 		super.destroy();
+		
+		if (serverThread != null) {
+			try {
+				serverThread.interrupt();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
+		}
 		if (server != null) {
 			server.destroy();
 		}
