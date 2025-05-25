@@ -38,4 +38,4 @@ Feel free to star the GitHub repository if you like this project and want to see
 
 ## License
 
-Pine is licensed under the [GNU GPLv3 license](./LICENSE).
+Pine is licensed under the [GNU LGPLv3 license](./LICENSE).
