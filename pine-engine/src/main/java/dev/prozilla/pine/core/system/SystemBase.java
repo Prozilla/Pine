@@ -48,7 +48,7 @@ public abstract class SystemBase {
 	}
 	
 	public SystemBase(Class<? extends Component>[] componentTypes, boolean runOnce) {
-		Objects.requireNonNull(componentTypes, "Array of componentTypes must not be null.");
+		Checks.isNotNull(componentTypes, "componentTypes");
 		
 		includedComponentTypes = componentTypes;
 		this.runOnce = runOnce;

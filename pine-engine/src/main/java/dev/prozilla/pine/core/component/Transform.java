@@ -1,11 +1,11 @@
 package dev.prozilla.pine.core.component;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.util.Checks;
 import dev.prozilla.pine.core.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Transform extends Component {
 	
@@ -65,12 +65,13 @@ public class Transform extends Component {
 	
 	@Override
 	public boolean isDescendantOf(Transform parent) {
+		Checks.isNotNull(parent, "parent");
 		return this.parent != null && (this.parent.equals(parent) || this.parent.isDescendantOf(parent));
 	}
 	
 	@Override
 	public Entity getChildWithTag(String tag) {
-		Objects.requireNonNull(tag, "tag must not be null");
+		Checks.isNotNull(tag, "tag");
 		
 		for (Transform child : children) {
 			if (child.entity.hasTag(tag)) {
@@ -83,7 +84,7 @@ public class Transform extends Component {
 	
 	@Override
 	public Entity getParentWithTag(String tag) {
-		Objects.requireNonNull(tag, "tag must not be null");
+		Checks.isNotNull(tag, "tag");
 		
 		if (parent != null && parent.getEntity().hasTag(tag)) {
 			return parent.entity;
@@ -149,8 +150,10 @@ public class Transform extends Component {
 	public void setParent(Transform parent) {
 		this.parent = parent;
 		
-		// Temporarily borrow depth index from parent until depth is recalculated
-		depthIndex = parent.depthIndex;
+		if (parent != null) {
+			// Temporarily borrow depth index from parent until depth is recalculated
+			depthIndex = parent.depthIndex;
+		}
 	}
 	
 	public int getChildCount() {
@@ -158,6 +161,7 @@ public class Transform extends Component {
 	}
 	
 	public void translate(Vector2f delta) {
+		Checks.isNotNull(delta, "delta");
 		translate(delta.x, delta.y);
 	}
 	

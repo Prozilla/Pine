@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.2.1
+
+### Fixes
+
+- Fixed entity.getParentWithTag(tag) returning children instead of parents
+
 ## v1.2.0
 
 ### New Features
@@ -21,7 +27,7 @@
 - Replaced require methods with Checks class, which checks certain conditions at runtime and throws exceptions if they are not met
 - Added isDescendantOf(parent) method that checks whether entities are descendants of a given parent
 
-## Fixes
+### Fixes
 
 - Resource pool can now load files with spaces in their paths
 

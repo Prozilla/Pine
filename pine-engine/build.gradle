@@ -20,7 +20,7 @@ jar {
 	from sourceSets.main.output
 	manifest {
 		attributes(
-				"Main-Class": "dev.prozilla.pine.tools.BuildTool"
+			"Main-Class": "dev.prozilla.pine.tools.BuildTool"
 		)
 	}
 }

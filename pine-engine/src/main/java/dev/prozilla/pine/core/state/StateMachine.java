@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.state;
 
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.util.Checks;
 
 /**
  * Utility class for managing a <a href="https://en.wikipedia.org/wiki/Finite-state_machine">finite-state machine (FSM)</a>.
@@ -16,7 +17,7 @@ public class StateMachine<Context, State extends dev.prozilla.pine.core.state.St
 	 * @param context The context of the state
 	 */
 	public StateMachine(State initialState, Context context) {
-		this.currentState = initialState;
+		this.currentState = Checks.isNotNull(initialState, "initialState");
 		this.context = context;
 		
 		try {
@@ -44,6 +45,7 @@ public class StateMachine<Context, State extends dev.prozilla.pine.core.state.St
 	 * @param newState The new state to enter
 	 */
 	public void changeState(State newState) {
+		Checks.isNotNull(newState, "newState");
 		if (currentState == newState) {
 			return;
 		}
