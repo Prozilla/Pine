@@ -30,6 +30,10 @@ public class ClientHandler implements Runnable, Destructable {
 		while (socket.isConnected()) {
 			try {
 				String message = bufferedReader.readLine();
+				if (message == null) {
+					destroy();
+					break;
+				}
 				server.broadcastChatMessage(this, message);
 			} catch (IOException e) {
 				destroy();

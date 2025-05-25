@@ -9,6 +9,7 @@ import java.io.IOException;
 public class ClientApp extends Application {
 	
 	private Client client;
+	private Thread clientThread;
 	
 	public ClientApp() {
 		super("Chat", 400, 200, new ConnectScene());
@@ -17,6 +18,8 @@ public class ClientApp extends Application {
 	public void startClient(String host, int port, String username) {
 		try {
 			client = Client.create(host, port, username);
+			clientThread = new Thread(client);
+			clientThread.start();
 			
 			loadScene(addScene(new ChatScene(client)));
 		} catch (IOException e) {
@@ -27,6 +30,13 @@ public class ClientApp extends Application {
 	@Override
 	public void destroy() {
 		super.destroy();
+		if (clientThread != null) {
+			try {
+				clientThread.interrupt();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
+		}
 		if (client != null) {
 			client.destroy();
 		}
