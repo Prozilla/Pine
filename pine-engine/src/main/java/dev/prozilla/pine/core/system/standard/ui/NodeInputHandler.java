@@ -6,6 +6,7 @@ import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.TooltipNode;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.state.input.Input;
+import dev.prozilla.pine.core.state.input.MouseButton;
 import dev.prozilla.pine.core.system.input.InputSystemBase;
 
 import java.util.Comparator;
@@ -46,12 +47,18 @@ public class NodeInputHandler extends InputSystemBase {
 			}
 			
 			// Apply hover modifier when node or child node is hovered
-			node.toggleModifier("hover", cursorHit || isChildHovered);
+			node.toggleModifier(Node.HOVER_MODIFIER, cursorHit || isChildHovered);
 			
 			node.cursorHit = cursorHit;
 			
-			if (node.tooltipText != null && node.cursorHit) {
-				node.getRoot().showTooltip(node, node.tooltipText);
+			if (node.cursorHit) {
+				if (node.tooltipText != null) {
+					node.getRoot().showTooltip(node, node.tooltipText);
+				}
+				
+				if (input.getMouseButtonDown(MouseButton.LEFT)) {
+					node.click();
+				}
 			}
 		});
 	}

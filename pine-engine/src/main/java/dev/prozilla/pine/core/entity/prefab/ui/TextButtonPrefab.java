@@ -26,6 +26,7 @@ public class TextButtonPrefab extends TextPrefab {
 		addClass("button");
 		setBackgroundColor(Color.white());
 		setColor(Color.black());
+		setTabIndex(0);
 	}
 	
 	public void setClickCallback(ButtonNode.ClickCallback callback) {

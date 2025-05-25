@@ -38,6 +38,8 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	/** If true, this node won't be arranged by a layout node. */
 	public boolean absolutePosition;
 	public String tooltipText;
+	public int tabIndex;
+	public boolean autoFocus;
 	
 	// Style
 	public Color color;
@@ -63,6 +65,10 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public static final Color DEFAULT_BACKGROUND_COLOR = Color.transparent();
 	public static final GridAlignment DEFAULT_ANCHOR = GridAlignment.BOTTOM_LEFT;
 	
+	// Modifiers
+	public static final String HOVER_MODIFIER = "hover";
+	public static final String FOCUS_MODIFIER = "focus";
+	
 	public Node() {
 		currentPosition = new Vector2f();
 		currentInnerSize = new Vector2f();
@@ -75,6 +81,8 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		anchor = DEFAULT_ANCHOR;
 		passThrough = false;
 		absolutePosition = false;
+		tabIndex = -1;
+		autoFocus = false;
 		
 		size = new DualDimension();
 		
@@ -265,5 +273,18 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		if (modifiers.remove(modifier)) {
 			invoke(NodeEvent.SELECTOR_CHANGE, this);
 		}
+	}
+	
+	public void click() {
+		focus();
+	}
+	
+	public void focus() {
+		getRoot().focusNode(this);
+	}
+	
+	public boolean isFocused() {
+		Node focusedNode = getRoot().getFocusedNode();
+		return focusedNode != null && focusedNode.equals(this);
 	}
 }

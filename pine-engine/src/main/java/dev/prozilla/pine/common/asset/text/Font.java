@@ -42,7 +42,8 @@ public class Font implements Asset {
     
     public String path;
     
-    public final static Color COLOR_DEFAULT = Color.white();
+    public final static int DEFAULT_SIZE = 16;
+    public final static Color DEFAULT_COLOR = Color.white();
 
     /**
      * Creates a default anti-aliased font with monospaced glyphs and default
@@ -383,7 +384,7 @@ public class Font implements Asset {
      * @param y        Y coordinate of the text position
      */
     public void drawText(Renderer renderer, CharSequence text, float x, float y, float z) {
-        drawText(renderer, text, x, y, z, COLOR_DEFAULT);
+        drawText(renderer, text, x, y, z, DEFAULT_COLOR);
     }
     
     /**

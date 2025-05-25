@@ -2,6 +2,11 @@ package dev.prozilla.pine.core.entity;
 
 public enum EntityEventType {
 	CHILDREN_UPDATE,
+	CHILD_ADD,
+	CHILD_REMOVE,
+	DESCENDANT_UPDATE,
+	DESCENDANT_ADD,
+	DESCENDANT_REMOVE,
 	COMPONENTS_UPDATE,
 	DESTROY,
 }

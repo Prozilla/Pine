@@ -47,6 +47,8 @@ public class NodePrefab extends Prefab {
 	protected boolean absolutePosition;
 	protected boolean passThrough;
 	protected String tooltipText;
+	public int tabIndex;
+	public boolean autoFocus;
 	
 	protected Set<String> classes;
 	
@@ -57,6 +59,8 @@ public class NodePrefab extends Prefab {
 		size = new DualDimension();
 		absolutePosition = false;
 		passThrough = false;
+		tabIndex = -1;
+		autoFocus = false;
 		
 		setName("CanvasElement");
 	}
@@ -242,6 +246,17 @@ public class NodePrefab extends Prefab {
 		classes.add(className);
 	}
 	
+	public void setTabIndex(int tabIndex) {
+		this.tabIndex = tabIndex;
+	}
+	
+	public void setAutoFocus(boolean autoFocus) {
+		this.autoFocus = autoFocus;
+		if (tabIndex < 0) {
+			tabIndex = 0;
+		}
+	}
+	
 	protected <T> void setDefaultPropertyValue(StyledPropertyKey<T> propertyName, AdaptiveProperty<T> value) {
 		if (styleSheet == null) {
 			return;
@@ -256,6 +271,8 @@ public class NodePrefab extends Prefab {
 		node.size = size.clone();
 		node.absolutePosition = absolutePosition;
 		node.passThrough = passThrough;
+		node.tabIndex = tabIndex;
+		node.autoFocus = autoFocus;
 		
 		if (padding != null) {
 			node.padding = padding.clone();

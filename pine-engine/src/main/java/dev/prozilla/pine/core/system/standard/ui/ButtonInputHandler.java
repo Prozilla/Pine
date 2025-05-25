@@ -5,6 +5,7 @@ import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.state.input.CursorType;
 import dev.prozilla.pine.core.state.input.Input;
+import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.MouseButton;
 import dev.prozilla.pine.core.system.input.InputSystem;
 
@@ -22,11 +23,15 @@ public class ButtonInputHandler extends InputSystem {
 		buttonNode.isHovering = node.cursorHit;
 
 		if (node.cursorHit) {
-			getInput().setCursorType(CursorType.HAND);
+			input.setCursorType(CursorType.HAND);
 
 			if (buttonNode.clickCallback != null && input.getMouseButtonDown(MouseButton.LEFT)) {
 				buttonNode.click();
 			}
+		}
+		
+		if (buttonNode.clickCallback != null && input.getKeyDown(Key.ENTER) && node.isFocused()) {
+			buttonNode.click();
 		}
 	}
 }

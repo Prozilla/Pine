@@ -25,6 +25,7 @@ public class ImageButtonPrefab extends ImagePrefab {
 		super(image);
 		setName("ImageButton");
 		addClass("button");
+		setTabIndex(0);
 	}
 	
 	public void setClickCallback(ButtonNode.ClickCallback callback) {

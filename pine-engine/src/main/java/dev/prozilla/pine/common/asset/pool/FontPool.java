@@ -11,10 +11,8 @@ public final class FontPool extends AssetPool<Font> {
 	
 	private int size;
 	
-	private static final int DEFAULT_SIZE = 16;
-	
 	public FontPool() {
-		size = DEFAULT_SIZE;
+		size = Font.DEFAULT_SIZE;
 	}
 	
 	public Font load(String path, int size) {
@@ -41,14 +39,14 @@ public final class FontPool extends AssetPool<Font> {
 	public boolean remove(Font asset) {
 		size = asset.getSize();
 		boolean removed = remove(asset.getPath());
-		size = DEFAULT_SIZE;
+		size = Font.DEFAULT_SIZE;
 		return removed;
 	}
 	
 	@Override
 	protected void prepareNext() {
 		super.prepareNext();
-		size = DEFAULT_SIZE;
+		size = Font.DEFAULT_SIZE;
 	}
 	
 	@Override

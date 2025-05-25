@@ -6,6 +6,8 @@ import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.rendering.Renderer;
 
+import java.util.function.Function;
+
 /**
  * A component for rendering text in the UI.
  */
@@ -50,6 +52,23 @@ public class TextNode extends Component {
 	public void setFont(Font font) {
 		this.font = font;
 		calculateSize();
+	}
+	
+	public int getFontSize() {
+		if (font != null) {
+			return font.getSize();
+		}
+		
+		return Font.DEFAULT_SIZE;
+	}
+	
+	public boolean changeText(Function<StringBuilder, String> textModifier) {
+		String newText = textModifier.apply(new StringBuilder(text));
+		if (newText == null || text.equals(newText)) {
+			return false;
+		}
+		setText(newText);
+		return true;
 	}
 	
 	public void setText(String text) {

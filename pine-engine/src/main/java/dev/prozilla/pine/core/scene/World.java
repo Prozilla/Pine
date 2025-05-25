@@ -28,10 +28,7 @@ import dev.prozilla.pine.core.system.standard.ui.frame.FrameResizer;
 import dev.prozilla.pine.core.system.standard.ui.image.ImageInitializer;
 import dev.prozilla.pine.core.system.standard.ui.image.ImageRenderer;
 import dev.prozilla.pine.core.system.standard.ui.layout.*;
-import dev.prozilla.pine.core.system.standard.ui.text.DynamicTextUpdater;
-import dev.prozilla.pine.core.system.standard.ui.text.TextInitializer;
-import dev.prozilla.pine.core.system.standard.ui.text.TextRenderer;
-import dev.prozilla.pine.core.system.standard.ui.text.TextResizer;
+import dev.prozilla.pine.core.system.standard.ui.text.*;
 import dev.prozilla.pine.core.system.standard.ui.tooltip.TooltipInitializer;
 import dev.prozilla.pine.core.system.standard.ui.tooltip.TooltipInputHandler;
 
@@ -122,17 +119,20 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		initialSystems.add(new SpriteRenderSystem());
 
 		// Nodes
+		initialSystems.add(new NodeRootInitializer());
 		initialSystems.add(new TooltipInitializer());
 		initialSystems.add(new NodeInitializer());
 		initialSystems.add(new LayoutNodeInitializer());
 		initialSystems.add(new TextInitializer());
 		initialSystems.add(new ImageInitializer());
+		initialSystems.add(new TextInputInitializer());
 		
 		initialSystems.add(new NodeRootInputHandler());
 		initialSystems.add(new LayoutNodeInputHandler());
 		initialSystems.add(new NodeInputHandler());
 		initialSystems.add(new TooltipInputHandler());
 		initialSystems.add(new ButtonInputHandler());
+		initialSystems.add(new TextInputInputHandler());
 		
 		initialSystems.add(new DynamicTextUpdater());
 		initialSystems.add(new NodeRootResizer());
@@ -148,6 +148,7 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		initialSystems.add(new ImageRenderer());
 		initialSystems.add(new FrameRenderer());
 		initialSystems.add(new BorderImageRenderer());
+		initialSystems.add(new TextInputRenderer());
 		
 		// Audio
 		initialSystems.add(new AudioPlayerInitializer());

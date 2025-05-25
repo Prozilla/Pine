@@ -13,10 +13,7 @@ import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.state.input.gamepad.Gamepad;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadInput;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
-import org.lwjgl.glfw.GLFWScrollCallback;
+import org.lwjgl.glfw.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +25,15 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class Input implements Initializable, Destructable {
 	
+	// Keyboard
 	/** Array of keys that are currently pressed. */
 	private final List<Integer> keysPressed;
 	/** Array of keys that are down in the current frame. */
 	private final List<Integer> keysDown;
 	private final List<Integer> previousKeysDown;
+	private final List<TextListener> textListeners;
 	
+	// Mouse
 	private final List<Integer> mouseButtonsPressed;
 	private final List<Integer> mouseButtonsDown;
 	private final List<Integer> previousMouseButtonsDown;
@@ -50,14 +50,17 @@ public class Input implements Initializable, Destructable {
 	private long cursorHandle;
 	private long previousCursorHandle;
 	
-	private GLFWKeyCallback keyCallback;
-	private GLFWScrollCallback scrollCallback;
-	private GLFWCursorPosCallback cursorPosCallback;
-	private GLFWMouseButtonCallback mouseButtonCallback;
-	
+	// Gamepad
 	private final Gamepad[] gamepads;
 	/** Used when no gamepad is connected. */
 	private final GamepadInput fallbackGamepad;
+	
+	// Callbacks
+	private GLFWKeyCallback keyCallback;
+	private GLFWCharCallback charCallback;
+	private GLFWScrollCallback scrollCallback;
+	private GLFWCursorPosCallback cursorPosCallback;
+	private GLFWMouseButtonCallback mouseButtonCallback;
 	
 	private final Application application;
 	private final Window window;
@@ -67,6 +70,13 @@ public class Input implements Initializable, Destructable {
 	private static final boolean IGNORE_CURSOR_BLOCK_DEFAULT = false;
 	private static final boolean STOP_PROPAGATION_DEFAULT = false;
 	private static final int DEFAULT_GAMEPAD_ID = 0;
+	
+	@FunctionalInterface
+	public interface TextListener {
+		
+		void handle(char character);
+		
+	}
 	
 	/**
 	 * Creates an input system.
@@ -79,6 +89,7 @@ public class Input implements Initializable, Destructable {
 		keysPressed = new ArrayList<>();
 		keysDown = new ArrayList<>();
 		previousKeysDown = new ArrayList<>();
+		textListeners = new ArrayList<>();
 		
 		mouseButtonsPressed = new ArrayList<>();
 		mouseButtonsDown = new ArrayList<>();
@@ -122,6 +133,16 @@ public class Input implements Initializable, Destructable {
 					keysDown.add(key);
 				} else if (action == GLFW_RELEASE) {
 					keysPressed.remove((Integer)key);
+				}
+			}
+		});
+		
+		glfwSetCharCallback(window.id, charCallback = new GLFWCharCallback() {
+			@Override
+			public void invoke(long window, int codepoint) {
+				char character = (char)codepoint;
+				for (TextListener listener : textListeners) {
+					listener.handle(character);
 				}
 			}
 		});
@@ -233,6 +254,9 @@ public class Input implements Initializable, Destructable {
 		if (keyCallback != null) {
 			keyCallback.free();
 		}
+		if (charCallback != null) {
+			charCallback.free();
+		}
 		if (scrollCallback != null) {
 			scrollCallback.free();
 		}
@@ -247,6 +271,7 @@ public class Input implements Initializable, Destructable {
 				gamepad.destroy();
 			}
 		}
+		textListeners.clear();
 	}
 	
 	/**
@@ -424,6 +449,14 @@ public class Input implements Initializable, Destructable {
 		}
 		
 		return down;
+	}
+	
+	public void addTextListener(TextListener listener) {
+		textListeners.add(listener);
+	}
+	
+	public void removeTextListener(TextListener listener) {
+		textListeners.remove(listener);
 	}
 	
 	/**

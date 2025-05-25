@@ -136,6 +136,7 @@ public class Entity extends EventDispatcher<EntityEventType, Entity> implements 
 			world.addEntity(child);
 		}
 		
+		invoke(EntityEventType.CHILD_ADD, child);
 		invoke(EntityEventType.CHILDREN_UPDATE, this);
 		
 		return child;
@@ -165,6 +166,7 @@ public class Entity extends EventDispatcher<EntityEventType, Entity> implements 
 		
 		child.transform.parent = null;
 		
+		invoke(EntityEventType.CHILD_REMOVE, child);
 		invoke(EntityEventType.CHILDREN_UPDATE, this);
 	}
 	
@@ -334,6 +336,26 @@ public class Entity extends EventDispatcher<EntityEventType, Entity> implements 
 		}
 		
 		return matches;
+	}
+	
+	@Override
+	public void invoke(EntityEventType entityEventType, Entity event) {
+		super.invoke(entityEventType, event);
+		
+		switch (entityEventType) {
+			case CHILD_ADD -> super.invoke(EntityEventType.DESCENDANT_ADD, event);
+			case CHILD_REMOVE -> super.invoke(EntityEventType.DESCENDANT_REMOVE, event);
+			case CHILDREN_UPDATE -> super.invoke(EntityEventType.DESCENDANT_UPDATE, event);
+		}
+		
+		if (transform.parent != null) {
+			Entity parent = transform.parent.getEntity();
+			switch (entityEventType) {
+				case DESCENDANT_ADD -> parent.invoke(EntityEventType.DESCENDANT_ADD, event);
+				case DESCENDANT_REMOVE -> parent.invoke(EntityEventType.DESCENDANT_REMOVE, event);
+				case DESCENDANT_UPDATE -> parent.invoke(EntityEventType.DESCENDANT_UPDATE, event);
+			}
+		}
 	}
 	
 	public String getName() {

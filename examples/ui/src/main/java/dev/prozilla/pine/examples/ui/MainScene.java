@@ -33,19 +33,30 @@ public class MainScene extends Scene {
 		TextPrefab titleTextPrefab = new TextPrefab(application.getConfig().window.title.get());
 		titleTextPrefab.setColor(Color.black());
 		
-		TextButtonPrefab textButtonPrefab = new TextButtonPrefab("This is a button");
-		textButtonPrefab.setPadding(new DualDimension(16, 8));
-		textButtonPrefab.setClickCallback((entity) -> logger.log("Button clicked"));
+		TextButtonPrefab textButton1Prefab = new TextButtonPrefab("This is a button");
+		textButton1Prefab.setPadding(new DualDimension(16, 8));
+		textButton1Prefab.setClickCallback((entity) -> logger.log("Button 1 clicked"));
+		
+		TextButtonPrefab textButton2Prefab = new TextButtonPrefab("This is also a button");
+		textButton2Prefab.setPadding(new DualDimension(16, 8));
+		textButton2Prefab.setClickCallback((entity) -> logger.log("Button 2 clicked"));
+		
+		TextButtonPrefab textButton3Prefab = new TextButtonPrefab("This is another a button");
+		textButton3Prefab.setPadding(new DualDimension(16, 8));
+		textButton3Prefab.setClickCallback((entity) -> logger.log("Button 3 clicked"));
+		
 		
 		TextPrefab textPrefab = new TextPrefab("This is a text element");
 		textPrefab.setColor(Color.black());
 		
 		// Instantiate prefabs
 		Entity nodeRoot = nodeRootPrefab.instantiate(world);
-		Entity menu = nodeRoot.addChild(menuPrefab.instantiate(world));
-		menu.addChild(titleTextPrefab.instantiate(world));
-		menu.addChild(textPrefab.instantiate(world));
-		menu.addChild(textButtonPrefab.instantiate(world));
+		Entity menu = nodeRoot.addChild(menuPrefab);
+		menu.addChild(titleTextPrefab);
+		menu.addChild(textPrefab);
+		menu.addChild(textButton1Prefab);
+		menu.addChild(textButton2Prefab);
+		menu.addChild(textButton3Prefab);
 		
 		world.addEntity(nodeRoot);
 	}
