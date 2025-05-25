@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.state.config;
 
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.util.Checks;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 
 import java.util.Collection;

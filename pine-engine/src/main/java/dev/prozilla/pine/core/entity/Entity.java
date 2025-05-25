@@ -3,7 +3,7 @@ package dev.prozilla.pine.core.entity;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.util.Checks;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.component.Component;

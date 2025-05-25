@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.state;
 
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.util.Checks;
+import dev.prozilla.pine.common.util.checks.Checks;
 
 /**
  * Utility class for managing a <a href="https://en.wikipedia.org/wiki/Finite-state_machine">finite-state machine (FSM)</a>.
