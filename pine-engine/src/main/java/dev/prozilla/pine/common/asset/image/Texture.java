@@ -1,6 +1,5 @@
 package dev.prozilla.pine.common.asset.image;
 
-import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
@@ -12,7 +11,7 @@ import static org.lwjgl.opengl.GL13.*;
 /**
  * Represents an OpenGL texture.
  */
-public class Texture implements TextureBase, Lifecycle, Printable {
+public class Texture implements TextureBase, Printable {
 	
 	/** The handle of this texture */
 	private final int id;

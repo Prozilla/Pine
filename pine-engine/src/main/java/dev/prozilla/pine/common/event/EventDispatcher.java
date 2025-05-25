@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.event;
 
+import dev.prozilla.pine.common.lifecycle.Destructable;
 import dev.prozilla.pine.common.logging.Logger;
 
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EventDispatcher<EventType extends Enum<EventType>, E> implements EventDispatcherContext<EventType, E> {
+public class EventDispatcher<EventType extends Enum<EventType>, E> implements EventDispatcherContext<EventType, E>, Destructable {
 	
 	private final Map<EventType, List<EventListener<E>>> listeners;
 	
@@ -63,7 +64,9 @@ public class EventDispatcher<EventType extends Enum<EventType>, E> implements Ev
 		this.logger = logger;
 	}
 	
+	@Override
 	public void destroy() {
 		listeners.clear();
 	}
+	
 }

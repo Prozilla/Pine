@@ -1,6 +1,5 @@
 package dev.prozilla.pine.core.system;
 
-import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
@@ -21,7 +20,7 @@ import java.util.function.Consumer;
 /**
  * Base class for system responsible for handling logic and behaviour for entities that match a query based on their components.
  */
-public abstract class SystemBase implements Lifecycle {
+public abstract class SystemBase {
 	
 	private final Class<? extends Component>[] includedComponentTypes;
 	private Class<? extends Component>[] excludedComponentTypes;
@@ -120,8 +119,8 @@ public abstract class SystemBase implements Lifecycle {
 	public void register(Entity entity) {
 		if (query.register(entity)) {
 			if (runOnce && !processedEntityIds.contains(entity.id)) {
-				if (this instanceof InitSystemBase && world.initialized) {
-					init();
+				if (this instanceof InitSystemBase initSystemBase && world.initialized) {
+					initSystemBase.init();
 				}
 			}
 		}

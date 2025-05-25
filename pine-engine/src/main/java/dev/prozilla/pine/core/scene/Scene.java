@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.scene;
 
-import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.lifecycle.*;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationProvider;
@@ -14,7 +14,7 @@ import dev.prozilla.pine.core.rendering.Renderer;
 /**
  * Responsible for loading objects into the world.
  */
-public class Scene implements Lifecycle, Printable, SceneContext, ApplicationProvider {
+public class Scene implements Initializable, InputHandler, Updatable, Renderable, Destructable, Printable, SceneContext, ApplicationProvider {
 	
 	// Scene properties
 	public String name;
@@ -107,7 +107,7 @@ public class Scene implements Lifecycle, Printable, SceneContext, ApplicationPro
 	 * Initializes the scene and its children.
 	 */
 	@Override
-	public void init(long window) throws IllegalStateException {
+	public void init() throws IllegalStateException {
 		if (initialized) {
 			throw new IllegalStateException("Scene has already been initialized");
 		}
@@ -115,7 +115,7 @@ public class Scene implements Lifecycle, Printable, SceneContext, ApplicationPro
 		load();
 		logger.log("Loaded scene");
 		
-		world.init(window);
+		world.init();
 		initialized = true;
 	}
 	

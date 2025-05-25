@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.rendering;
 
-import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.lifecycle.Destructable;
 import dev.prozilla.pine.common.logging.Logger;
 
 import java.io.BufferedReader;
@@ -13,7 +13,7 @@ import static org.lwjgl.opengl.GL20.*;
 /**
  * Represents an OpenGL shader.
  */
-public class Shader implements Lifecycle {
+public class Shader implements Destructable {
 
     /**
      * Stores the handle of the shader.

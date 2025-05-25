@@ -1,12 +1,12 @@
 package dev.prozilla.pine.examples.chat.client;
 
-import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.lifecycle.Destructable;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Client implements Lifecycle {
+public class Client implements Destructable {
 
 	private Socket socket;
 	private BufferedReader bufferedReader;

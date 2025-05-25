@@ -1,7 +1,8 @@
 package dev.prozilla.pine.core;
 
-import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.asset.image.Image;
+import dev.prozilla.pine.common.lifecycle.Destructable;
+import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.core.state.config.WindowConfig;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -14,7 +15,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 /**
  * Represents a GLFW window object.
  */
-public class Window implements Lifecycle {
+public class Window implements Initializable, Destructable {
 	
 	/** Handle of the window */
 	public long id;
@@ -100,7 +101,6 @@ public class Window implements Lifecycle {
 	/**
 	 * Swaps the buffers and polls the events each frame.
 	 */
-	@Override
 	public void update() {
 		if (!isInitialized) {
 			return;

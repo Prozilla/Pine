@@ -1,12 +1,14 @@
 package dev.prozilla.pine.core.state.input;
 
-import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.asset.image.Image;
+import dev.prozilla.pine.common.lifecycle.Destructable;
+import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.Window;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.state.input.gamepad.Gamepad;
@@ -24,7 +26,7 @@ import static org.lwjgl.glfw.GLFW.*;
 /**
  * Handles the GLFW input system.
  */
-public class Input implements Lifecycle {
+public class Input implements Initializable, Destructable {
 	
 	/** Array of keys that are currently pressed. */
 	private final List<Integer> keysPressed;
@@ -58,6 +60,7 @@ public class Input implements Lifecycle {
 	private final GamepadInput fallbackGamepad;
 	
 	private final Application application;
+	private final Window window;
 	private final Logger logger;
 	
 	private static final int CURSOR_TYPE_DEFAULT = CursorType.DEFAULT.getValue();
@@ -70,6 +73,7 @@ public class Input implements Lifecycle {
 	 */
 	public Input(Application application) {
 		this.application = application;
+		window = application.getWindow();
 		logger = application.getLogger();
 		
 		keysPressed = new ArrayList<>();
@@ -109,8 +113,8 @@ public class Input implements Lifecycle {
 	 * Initializes the input system.
 	 */
 	@Override
-	public void init(long window) {
-		glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
+	public void init() {
+		glfwSetKeyCallback(window.id, keyCallback = new GLFWKeyCallback() {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				if (action == GLFW_PRESS) {
@@ -122,7 +126,7 @@ public class Input implements Lifecycle {
 			}
 		});
 		
-		glfwSetScrollCallback(window, scrollCallback = new GLFWScrollCallback() {
+		glfwSetScrollCallback(window.id, scrollCallback = new GLFWScrollCallback() {
 			@Override
 			public void invoke(long window, double xOffset, double yOffset) {
 				scroll.x = (float)xOffset;
@@ -130,7 +134,7 @@ public class Input implements Lifecycle {
 			}
 		});
 		
-		glfwSetCursorPosCallback(window, cursorPosCallback = new GLFWCursorPosCallback() {
+		glfwSetCursorPosCallback(window.id, cursorPosCallback = new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xPos, double yPos) {
 				cursorPosition.x = (int)xPos;
@@ -138,7 +142,7 @@ public class Input implements Lifecycle {
 			}
 		});
 		
-		glfwSetMouseButtonCallback(window, mouseButtonCallback = new GLFWMouseButtonCallback() {
+		glfwSetMouseButtonCallback(window.id, mouseButtonCallback = new GLFWMouseButtonCallback() {
 			@Override
 			public void invoke(long window, int button, int action, int mods) {
 				if (action == GLFW_PRESS) {
@@ -169,7 +173,6 @@ public class Input implements Lifecycle {
 	/**
 	 * Prepare handling of input before input systems.
 	 */
-	@Override
 	public void input() {
 		// Reset scroll
 		currentScroll.x = scroll.x;
@@ -202,7 +205,6 @@ public class Input implements Lifecycle {
 	/**
 	 * Finalize input handling after input systems.
 	 */
-	@Override
 	public void update() {
 		if (cursorImage != null) {
 			if (cursorImage != previousCursorImage) {

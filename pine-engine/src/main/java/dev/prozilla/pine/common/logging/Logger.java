@@ -1,6 +1,5 @@
 package dev.prozilla.pine.common.logging;
 
-import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.logging.handler.LogHandler;
 import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
 import dev.prozilla.pine.common.system.Ansi;
@@ -10,7 +9,7 @@ import dev.prozilla.pine.common.system.PathUtils;
  * Represents the main access points for logging.
  * Manages different log levels, each with their own log handler, and formats logs.
  */
-public class Logger implements LogHandler, Lifecycle {
+public class Logger implements LogHandler {
 	
 	// Formatting options
 	protected boolean enabled;

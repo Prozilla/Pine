@@ -1,6 +1,5 @@
 package dev.prozilla.pine.core.entity;
 
-import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.logging.Logger;
@@ -20,7 +19,7 @@ import java.util.List;
 /**
  * Represents a unique entity in the world with a list of components.
  */
-public class Entity extends EventDispatcher<EntityEventType, Entity> implements Lifecycle, Printable, EntityContext, ComponentsContext, ApplicationProvider, SceneProvider {
+public class Entity extends EventDispatcher<EntityEventType, Entity> implements Printable, EntityContext, ComponentsContext, ApplicationProvider, SceneProvider {
 	
 	public final int id;
 	private final String name;

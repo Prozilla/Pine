@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.state.input.gamepad;
 
-import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.lifecycle.Destructable;
 import org.lwjgl.glfw.GLFWGamepadState;
 import org.lwjgl.system.MemoryUtil;
 
@@ -13,7 +13,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetGamepadState;
 /**
  * Handles input for gamepad devices by reading from {@link GLFWGamepadState}.
  */
-public class Gamepad implements GamepadInput, Lifecycle {
+public class Gamepad implements GamepadInput, Destructable {
 	
 	private final GLFWGamepadState state;
 	private final int id;
@@ -30,7 +30,6 @@ public class Gamepad implements GamepadInput, Lifecycle {
 		previousButtonsPressed = new ArrayList<>();
 	}
 	
-	@Override
 	public void input() {
 		previousButtonsPressed.clear();
 		previousButtonsPressed.addAll(buttonsPressed);

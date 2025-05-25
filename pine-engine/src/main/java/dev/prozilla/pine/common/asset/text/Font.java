@@ -1,6 +1,5 @@
 package dev.prozilla.pine.common.asset.text;
 
-import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.asset.image.Texture;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
@@ -23,7 +22,7 @@ import static java.awt.Font.*;
 /**
  * Contains a font texture for drawing text.
  */
-public class Font implements Asset, Lifecycle {
+public class Font implements Asset {
 
     /**
      * Contains the glyphs for each char.

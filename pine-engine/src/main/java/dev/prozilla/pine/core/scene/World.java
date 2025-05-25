@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.scene;
 
-import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.lifecycle.*;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.ComponentManager;
@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * An isolated collection of entities, components and systems that live inside a scene.
  */
-public class World implements Lifecycle {
+public class World implements Initializable, InputHandler, Updatable, Renderable, Destructable {
 	
 	// ECS managers
 	public EntityManager entityManager;
@@ -170,13 +170,13 @@ public class World implements Lifecycle {
 	 * Executes all initialization systems in this world.
 	 */
 	@Override
-	public void init(long window) throws IllegalStateException {
+	public void init() throws IllegalStateException {
 		if (initialized) {
 			throw new IllegalStateException("World has already been initialized.");
 		}
 		
 		calculateDepth();
-		systemManager.init(window);
+		systemManager.init();
 		initialized = true;
 	}
 	

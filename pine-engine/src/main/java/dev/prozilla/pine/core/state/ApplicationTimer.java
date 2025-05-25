@@ -1,13 +1,13 @@
 package dev.prozilla.pine.core.state;
 
-import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.lifecycle.Initializable;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
 /**
  * Manages time tracking, including FPS (frames per second) and UPS (updates per second) calculations.
  */
-public class ApplicationTimer implements Lifecycle {
+public class ApplicationTimer implements Initializable {
 	
 	/** Timestamp of the previous loop, relative to the timestamp of the GLFW initialization. */
 	private double previousLoopTime;
@@ -48,7 +48,6 @@ public class ApplicationTimer implements Lifecycle {
 	/**
 	 * Updates the timer's delta values and elapsed time values.
 	 */
-	@Override
 	public void update() {
 		double time = getCurrentTime();
 		deltaTime = (float)(time - previousLoopTime);

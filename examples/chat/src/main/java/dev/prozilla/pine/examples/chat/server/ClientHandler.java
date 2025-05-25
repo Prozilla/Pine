@@ -1,11 +1,11 @@
 package dev.prozilla.pine.examples.chat.server;
 
-import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.lifecycle.Destructable;
 
 import java.io.*;
 import java.net.Socket;
 
-public class ClientHandler implements Runnable, Lifecycle {
+public class ClientHandler implements Runnable, Destructable {
 	
 	private Server server;
 	private Socket socket;

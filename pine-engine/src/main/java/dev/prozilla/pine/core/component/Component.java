@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.component;
 
-import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.lifecycle.Destructable;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.entity.Entity;
@@ -12,7 +12,7 @@ import dev.prozilla.pine.core.scene.SceneProvider;
 /**
  * Contains a partition of the data of an entity.
  */
-public abstract class Component implements Lifecycle, Printable, EntityProvider, ComponentsProvider, ApplicationProvider, SceneProvider {
+public abstract class Component implements Printable, Destructable, EntityProvider, ComponentsProvider, ApplicationProvider, SceneProvider {
 	
 	// Identifier
 	public final int id;
@@ -25,6 +25,16 @@ public abstract class Component implements Lifecycle, Printable, EntityProvider,
 	public Component() {
 		id = ComponentManager.generateComponentId();
 		isActive = true;
+	}
+	
+	/**
+	 * Removes this component from its entity.
+	 */
+	@Override
+	public void destroy() {
+		if (entity != null) {
+			entity.removeComponent(this);
+		}
 	}
 	
 	/**

@@ -1,13 +1,13 @@
 package dev.prozilla.pine.core.rendering;
 
-import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.lifecycle.Destructable;
 
 import static org.lwjgl.opengl.GL30.*;
 
 /**
  * Represents a Vertex Array Object (VAO).
  */
-public class VertexArrayObject implements Lifecycle {
+public class VertexArrayObject implements Destructable {
 
     /**
      * Stores the handle of the VAO.

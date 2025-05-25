@@ -1,6 +1,5 @@
 package dev.prozilla.pine.common.asset.image;
 
-import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import org.lwjgl.glfw.GLFWImage;
@@ -13,7 +12,7 @@ import static org.lwjgl.stb.STBImage.stbi_image_free;
 /**
  * Represents an STB image with a width and a height.
  */
-public class Image implements Asset, Lifecycle {
+public class Image implements Asset {
 
 	public final int id;
 	private final ByteBuffer pixels;

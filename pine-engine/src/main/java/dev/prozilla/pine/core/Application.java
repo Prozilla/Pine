@@ -1,9 +1,9 @@
 package dev.prozilla.pine.core;
 
-import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.asset.image.Image;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.text.Font;
+import dev.prozilla.pine.common.lifecycle.*;
 import dev.prozilla.pine.common.logging.AppLogger;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.opengl.GLUtils;
@@ -30,7 +30,7 @@ import static org.lwjgl.opengl.GL43.GL_DEBUG_OUTPUT;
 /**
  * 2D application using the LWJGL library.
  */
-public class Application implements Lifecycle, ApplicationContext, StateProvider<Application, ApplicationState> {
+public class Application implements Initializable, InputHandler, Updatable, Renderable, Destructable, ApplicationContext, StateProvider<Application, ApplicationState> {
 	
 	// State
 	/** True if OpenGL has been initialized */
@@ -153,6 +153,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	/**
 	 * Initializes the application.
 	 */
+	@Override
 	public void init() throws RuntimeException {
 		if (!stateMachine.isState(ApplicationState.INITIALIZING)) {
 			throw new IllegalStateException("Application has already been initialized");
@@ -186,11 +187,11 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		timer.init();
 		renderer.init();
 		audioDevice.init();
-		input.init(window.id);
+		input.init();
 		if (applicationManager != null) {
 			applicationManager.onInit(window.id);
 		}
-		currentScene.init(window.id);
+		currentScene.init();
 		loadIcons();
 		modManager.init();
 		
@@ -214,7 +215,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		timer.init();
 		renderer.initPreview(width, height);
 		audioDevice.init();
-		currentScene.init(renderer.getFbo().getId());
+		currentScene.init();
 		
 		stateMachine.changeState(ApplicationState.LOADING);
 	}
@@ -223,7 +224,6 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	 * Starts the application loop.
 	 * Destroys the application after the application loop has been stopped.
 	 */
-	@Override
 	public void start() {
 		int fps = config.fps.get();
 		double targetTime = (fps == 0) ? 0.0 : 1.0 / fps;
@@ -518,7 +518,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		stateMachine.changeState(ApplicationState.LOADING);
 		
 		if (!currentScene.initialized) {
-			currentScene.init(window.id);
+			currentScene.init();
 		}
 		
 		// Make sure game is resumed when new scene is loaded

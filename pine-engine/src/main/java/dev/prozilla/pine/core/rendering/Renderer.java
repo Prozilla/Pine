@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.rendering;
 
-import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.asset.text.Font;
+import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
@@ -30,7 +30,7 @@ import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 /**
  * Handles the rendering process.
  */
-public class Renderer implements Lifecycle {
+public class Renderer implements Initializable {
 	
 	private VertexArrayObject vao;
 	private VertexBufferObject vbo;
