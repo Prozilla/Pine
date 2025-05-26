@@ -2,9 +2,29 @@
 
 ## v1.2.1
 
+### Changes
+
+- Added destroy() method for components, which can be overridden to destroy objects used by the component. The default behaviour for this method is to remove the component from its entity.
+- Removed unused lifecycle method start()
+- Added the following missing bindings for keyboard keys:
+  - CAPS_LOCK
+  - SCROLL_LOCK
+  - NUM_LOCK
+  - BACKSPACE
+  - L_SUPER and R_SUPER
+  - F(13-25)
+  - Numpad keys
+  - Cursor control keys (DELETE, INSERT, PAGE_UP, etc.)
+  - Misc keys (MENU, PAUSE, PRINT, etc.)
+- Added the following missing bindings for mouse buttons:
+  - MIDDLE
+  - EXTRA_(0-4)
+
 ### Fixes
 
 - Fixed entity.getParentWithTag(tag) returning children instead of parents
+- Removed usage of unsupported lifecycle methods in systems
+- Improved null-checks and general argument validation
 
 ## v1.2.0
 
