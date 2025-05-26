@@ -32,12 +32,16 @@ public class TextRenderer extends RenderSystem {
 	}
 	
 	public static void renderText(Renderer renderer, TextNode textNode, Node node, float z) {
-		renderText(renderer, textNode, node.currentPosition.x + node.getPaddingX(), node.currentPosition.y + node.getPaddingY(), z, node.color);
+		float x = node.currentPosition.x + node.getPaddingX();
+		float y = node.currentPosition.y + node.getPaddingY();
+		float width = node.currentInnerSize.x;
+		float height = node.currentInnerSize.y;
+		
+		renderText(renderer, textNode, x, y, z, width, height, node.color);
 	}
 	
-	public static void renderText(Renderer renderer, TextNode textNode, float x, float y, float z, Color color) {
-		renderText(renderer, textNode.text, textNode.font, x, y,
-			textNode.size.x, textNode.size.y, z, color);
+	public static void renderText(Renderer renderer, TextNode textNode, float x, float y, float z, float width, float height, Color color) {
+		renderText(renderer, textNode.text, textNode.font, x, y, z, width, height, color);
 	}
 	
 	/**
@@ -45,15 +49,21 @@ public class TextRenderer extends RenderSystem {
 	 * @param x X position
 	 * @param y Y position
 	 */
-	public static void renderText(Renderer renderer, String text, Font font, float x, float y, float width, float height, float z, Color color) {
+	public static void renderText(Renderer renderer, String text, Font font, float x, float y,  float z, float width, float height, Color color) {
 		if (text.isBlank() || width == 0 || height == 0 || color == null) {
 			return;
 		}
+		
+		renderer.flush();
+		renderer.setRegion(x, y, width, height);
 		
 		if (font == null) {
 			renderer.drawText(text, x, y, z, color);
 		} else {
 			renderer.drawText(font, text, x, y, z, color);
 		}
+		
+		renderer.flush();
+		renderer.resetRegion();
 	}
 }

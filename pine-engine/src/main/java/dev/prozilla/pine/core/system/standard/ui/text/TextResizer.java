@@ -18,7 +18,9 @@ public class TextResizer extends UpdateSystem {
 		TextNode textNode = chunk.getComponent(TextNode.class);
 		Node node = chunk.getComponent(Node.class);
 		
-		node.currentInnerSize.x = textNode.size.x + node.getPaddingX() * 2;
-		node.currentInnerSize.y = textNode.size.y + node.getPaddingY() * 2;
+		if (node.size.isZero(node)) {
+			node.currentInnerSize.x = textNode.size.x + node.getPaddingX() * 2;
+			node.currentInnerSize.y = textNode.size.y + node.getPaddingY() * 2;
+		}
 	}
 }

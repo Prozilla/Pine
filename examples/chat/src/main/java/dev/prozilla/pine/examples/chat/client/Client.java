@@ -29,13 +29,7 @@ public class Client implements Destructable, Runnable {
 	
 	@Override
 	public void run() {
-		try {
-			bufferedWriter.write(username);
-			bufferedWriter.newLine();
-			bufferedWriter.flush();
-		} catch (IOException e) {
-			destroy();
-		}
+		sendMessage(username);
 		
 		while (socket.isConnected()) {
 			try {
@@ -45,6 +39,16 @@ public class Client implements Destructable, Runnable {
 				destroy();
 				break;
 			}
+		}
+	}
+	
+	public void sendMessage(String message) {
+		try {
+			bufferedWriter.write(message);
+			bufferedWriter.newLine();
+			bufferedWriter.flush();
+		} catch (IOException e) {
+			destroy();
 		}
 	}
 	

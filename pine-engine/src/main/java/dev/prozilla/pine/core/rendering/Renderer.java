@@ -89,6 +89,7 @@ public class Renderer implements Initializable {
 	public void init() {
 		setupShaderProgram();
 		
+		// Optimization: discard triangles with opacity < 0.1
 //		glEnable(GL_ALPHA_TEST);
 //		glAlphaFunc(GL_GREATER, 0.1f);
 		
@@ -241,9 +242,12 @@ public class Renderer implements Initializable {
 		}
 	}
 	
+	// Transformation state
+	
 	public void resetTransform() {
 		resetScale();
 		resetMirror();
+		resetRegion();
 	}
 	
 	public void setScale(float scale) {
@@ -266,6 +270,27 @@ public class Renderer implements Initializable {
 		mirrorHorizontally = false;
 		mirrorVertically = false;
 	}
+	
+	/**
+	 * Limits the rendering to the given region.
+	 */
+	public void setRegion(float x, float y, float width, float height) {
+		setRegion(Math.round(x), Math.round(y), Math.round(width), Math.round(height));
+	}
+	
+	/**
+	 * Limits the rendering to the given region.
+	 */
+	public void setRegion(int x, int y, int width, int height) {
+		glEnable(GL_SCISSOR_TEST);
+		glScissor(x, y, width, height);
+	}
+	
+	public void resetRegion() {
+		glDisable(GL_SCISSOR_TEST);
+	}
+	
+	// Calculations
 	
 	/**
 	 * Calculates total width of a debug text.
@@ -339,6 +364,8 @@ public class Renderer implements Initializable {
 	public int getTextHeight(Font font, CharSequence text) {
 		return font.getHeight(text);
 	}
+	
+	// Drawing
 	
 	public void drawText(CharSequence text, float x, float y, float z) {
 		drawText(defaultFont, text, x, y, z);

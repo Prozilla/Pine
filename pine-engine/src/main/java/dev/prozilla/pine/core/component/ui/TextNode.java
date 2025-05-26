@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.component.ui;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.rendering.Renderer;
 
@@ -72,6 +73,8 @@ public class TextNode extends Component {
 	}
 	
 	public void setText(String text) {
+		Checks.isNotNull(text, "text");
+		
 		if (this.text.equals(text)) {
 			return;
 		}
