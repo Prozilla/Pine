@@ -92,12 +92,12 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></code></dd>
+<dd><code><a href="../../common/lifecycle/Initializable.html" title="interface in dev.prozilla.pine.common.lifecycle">Initializable</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Renderer</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="../../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></span></div>
+implements <a href="../../common/lifecycle/Initializable.html" title="interface in dev.prozilla.pine.common.lifecycle">Initializable</a></span></div>
 <div class="block">Handles the rendering process.</div>
 </section>
 <section class="summary">
@@ -149,10 +149,10 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <div class="block">Draw debug text at the specified position.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawDebugText(java.lang.CharSequence,float,float,dev.prozilla.pine.common.system.resource.Color)" class="member-name-link">drawDebugText</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawDebugText(java.lang.CharSequence,float,float,dev.prozilla.pine.common.system.Color)" class="member-name-link">drawDebugText</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text,
  float&nbsp;x,
  float&nbsp;y,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</code></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Draw debug text at the specified position and color.</div>
 </div>
@@ -166,32 +166,32 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <div class="block">Draws a white rectangle at the given position.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawRect(float,float,float,float,float,dev.prozilla.pine.common.system.resource.Color)" class="member-name-link">drawRect</a><wbr>(float&nbsp;x,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawRect(float,float,float,float,float,dev.prozilla.pine.common.system.Color)" class="member-name-link">drawRect</a><wbr>(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;width,
  float&nbsp;height,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</code></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Draws a colored rectangle at the given position.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawRotatedTexture(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float)" class="member-name-link">drawRotatedTexture</a><wbr>(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawRotatedTexture(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float)" class="member-name-link">drawRotatedTexture</a><wbr>(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;r)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawRotatedTexture(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,dev.prozilla.pine.common.system.resource.Color,float)" class="member-name-link">drawRotatedTexture</a><wbr>(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawRotatedTexture(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,dev.prozilla.pine.common.system.Color,float)" class="member-name-link">drawRotatedTexture</a><wbr>(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c,
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c,
  float&nbsp;r)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawRotatedTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,float)" class="member-name-link">drawRotatedTextureRegion</a><wbr>(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawRotatedTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,float)" class="member-name-link">drawRotatedTextureRegion</a><wbr>(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
@@ -202,7 +202,7 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
  float&nbsp;r)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawRotatedTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,float,float,float)" class="member-name-link">drawRotatedTextureRegion</a><wbr>(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawRotatedTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,float,float,float)" class="member-name-link">drawRotatedTextureRegion</a><wbr>(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x1,
  float&nbsp;y1,
  float&nbsp;x2,
@@ -215,7 +215,7 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
  float&nbsp;r)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawRotatedTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.resource.Color,float)" class="member-name-link">drawRotatedTextureRegion</a><wbr>(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawRotatedTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.Color,float)" class="member-name-link">drawRotatedTextureRegion</a><wbr>(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x1,
  float&nbsp;y1,
  float&nbsp;x2,
@@ -225,11 +225,11 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
  float&nbsp;t1,
  float&nbsp;s2,
  float&nbsp;t2,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c,
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c,
  float&nbsp;r)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawRotatedTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.resource.Color,float)" class="member-name-link">drawRotatedTextureRegion</a><wbr>(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawRotatedTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.Color,float)" class="member-name-link">drawRotatedTextureRegion</a><wbr>(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
@@ -237,11 +237,11 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
  float&nbsp;regY,
  float&nbsp;regWidth,
  float&nbsp;regHeight,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c,
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c,
  float&nbsp;r)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawText(dev.prozilla.pine.common.system.resource.text.Font,java.lang.CharSequence,float,float,float)" class="member-name-link">drawText</a><wbr>(<a href="../../common/system/resource/text/Font.html" title="class in dev.prozilla.pine.common.system.resource.text">Font</a>&nbsp;font,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawText(dev.prozilla.pine.common.asset.text.Font,java.lang.CharSequence,float,float,float)" class="member-name-link">drawText</a><wbr>(<a href="../../common/asset/text/Font.html" title="class in dev.prozilla.pine.common.asset.text">Font</a>&nbsp;font,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text,
  float&nbsp;x,
  float&nbsp;y,
@@ -250,12 +250,12 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <div class="block">Draw text at the specified position.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawText(dev.prozilla.pine.common.system.resource.text.Font,java.lang.CharSequence,float,float,float,dev.prozilla.pine.common.system.resource.Color)" class="member-name-link">drawText</a><wbr>(<a href="../../common/system/resource/text/Font.html" title="class in dev.prozilla.pine.common.system.resource.text">Font</a>&nbsp;font,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawText(dev.prozilla.pine.common.asset.text.Font,java.lang.CharSequence,float,float,float,dev.prozilla.pine.common.system.Color)" class="member-name-link">drawText</a><wbr>(<a href="../../common/asset/text/Font.html" title="class in dev.prozilla.pine.common.asset.text">Font</a>&nbsp;font,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</code></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Draw text at the specified position and color.</div>
 </div>
@@ -266,14 +266,14 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
  float&nbsp;z)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawText(java.lang.CharSequence,float,float,float,dev.prozilla.pine.common.system.resource.Color)" class="member-name-link">drawText</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawText(java.lang.CharSequence,float,float,float,dev.prozilla.pine.common.system.Color)" class="member-name-link">drawText</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</code></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawTexture(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float)" class="member-name-link">drawTexture</a><wbr>(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawTexture(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float)" class="member-name-link">drawTexture</a><wbr>(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z)</code></div>
@@ -281,17 +281,17 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <div class="block">Draws a texture on specified coordinates.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawTexture(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,dev.prozilla.pine.common.system.resource.Color)" class="member-name-link">drawTexture</a><wbr>(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawTexture(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,dev.prozilla.pine.common.system.Color)" class="member-name-link">drawTexture</a><wbr>(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</code></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Draws a texture on specified coordinates and with
  specified color.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float)" class="member-name-link">drawTextureRegion</a><wbr>(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float)" class="member-name-link">drawTextureRegion</a><wbr>(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
@@ -303,7 +303,7 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <div class="block">Draws a texture region on specified coordinates.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,float,float)" class="member-name-link">drawTextureRegion</a><wbr>(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,float,float)" class="member-name-link">drawTextureRegion</a><wbr>(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x1,
  float&nbsp;y1,
  float&nbsp;x2,
@@ -317,7 +317,7 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <div class="block">Draws a texture region on specified coordinates.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.resource.Color)" class="member-name-link">drawTextureRegion</a><wbr>(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.Color)" class="member-name-link">drawTextureRegion</a><wbr>(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x1,
  float&nbsp;y1,
  float&nbsp;x2,
@@ -331,12 +331,12 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
  float&nbsp;t1,
  float&nbsp;s2,
  float&nbsp;t2,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</code></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Draws a texture region on specified coordinates.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.resource.Color)" class="member-name-link">drawTextureRegion</a><wbr>(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.Color)" class="member-name-link">drawTextureRegion</a><wbr>(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x1,
  float&nbsp;y1,
  float&nbsp;x2,
@@ -346,12 +346,12 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
  float&nbsp;t1,
  float&nbsp;s2,
  float&nbsp;t2,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</code></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Draws a texture region on specified coordinates.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.resource.Color)" class="member-name-link">drawTextureRegion</a><wbr>(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.Color)" class="member-name-link">drawTextureRegion</a><wbr>(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
@@ -359,7 +359,7 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
  float&nbsp;regY,
  float&nbsp;regWidth,
  float&nbsp;regHeight,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</code></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Draws a texture region on specified coordinates.</div>
 </div>
@@ -390,7 +390,7 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getHeight()" class="member-name-link">getHeight</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTextHeight(dev.prozilla.pine.common.system.resource.text.Font,java.lang.CharSequence)" class="member-name-link">getTextHeight</a><wbr>(<a href="../../common/system/resource/text/Font.html" title="class in dev.prozilla.pine.common.system.resource.text">Font</a>&nbsp;font,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTextHeight(dev.prozilla.pine.common.asset.text.Font,java.lang.CharSequence)" class="member-name-link">getTextHeight</a><wbr>(<a href="../../common/asset/text/Font.html" title="class in dev.prozilla.pine.common.asset.text">Font</a>&nbsp;font,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Calculates total height of a text.</div>
@@ -399,14 +399,14 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTextHeight(java.lang.CharSequence)" class="member-name-link">getTextHeight</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../common/math/vector/Vector2i.html" title="class in dev.prozilla.pine.common.math.vector">Vector2i</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTextSize(dev.prozilla.pine.common.system.resource.text.Font,java.lang.CharSequence)" class="member-name-link">getTextSize</a><wbr>(<a href="../../common/system/resource/text/Font.html" title="class in dev.prozilla.pine.common.system.resource.text">Font</a>&nbsp;font,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTextSize(dev.prozilla.pine.common.asset.text.Font,java.lang.CharSequence)" class="member-name-link">getTextSize</a><wbr>(<a href="../../common/asset/text/Font.html" title="class in dev.prozilla.pine.common.asset.text">Font</a>&nbsp;font,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../common/math/vector/Vector2i.html" title="class in dev.prozilla.pine.common.math.vector">Vector2i</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTextSize(java.lang.CharSequence)" class="member-name-link">getTextSize</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTextWidth(dev.prozilla.pine.common.system.resource.text.Font,java.lang.CharSequence)" class="member-name-link">getTextWidth</a><wbr>(<a href="../../common/system/resource/text/Font.html" title="class in dev.prozilla.pine.common.system.resource.text">Font</a>&nbsp;font,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTextWidth(dev.prozilla.pine.common.asset.text.Font,java.lang.CharSequence)" class="member-name-link">getTextWidth</a><wbr>(<a href="../../common/asset/text/Font.html" title="class in dev.prozilla.pine.common.asset.text">Font</a>&nbsp;font,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Calculates total width of a text.</div>
@@ -420,7 +420,7 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#init()" class="member-name-link">init</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Initializes the object before the game loop starts.</div>
+<div class="block">Initializes this object to prepare its usage.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#initPreview(int,int)" class="member-name-link">initPreview</a><wbr>(int&nbsp;width,
@@ -459,34 +459,50 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetMirror()" class="member-name-link">resetMirror</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetScale()" class="member-name-link">resetScale</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetRegion()" class="member-name-link">resetRegion</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetTransform()" class="member-name-link">resetTransform</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetScale()" class="member-name-link">resetScale</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize()" class="member-name-link">resize</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetTransform()" class="member-name-link">resetTransform</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize()" class="member-name-link">resize</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Updates the projection matrix according to the window's dimensions.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMirrorHorizontally(boolean)" class="member-name-link">setMirrorHorizontally</a><wbr>(boolean&nbsp;mirrorHorizontally)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMirrorVertically(boolean)" class="member-name-link">setMirrorVertically</a><wbr>(boolean&nbsp;mirrorVertically)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMirrorHorizontally(boolean)" class="member-name-link">setMirrorHorizontally</a><wbr>(boolean&nbsp;mirrorHorizontally)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setScale(float)" class="member-name-link">setScale</a><wbr>(float&nbsp;scale)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMirrorVertically(boolean)" class="member-name-link">setMirrorVertically</a><wbr>(boolean&nbsp;mirrorVertically)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRegion(float,float,float,float)" class="member-name-link">setRegion</a><wbr>(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;width,
+ float&nbsp;height)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Limits the rendering to the given region.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRegion(int,int,int,int)" class="member-name-link">setRegion</a><wbr>(int&nbsp;x,
+ int&nbsp;y,
+ int&nbsp;width,
+ int&nbsp;height)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Limits the rendering to the given region.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setScale(float)" class="member-name-link">setScale</a><wbr>(float&nbsp;scale)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-dev.prozilla.pine.common.Lifecycle">Methods inherited from interface&nbsp;dev.prozilla.pine.common.<a href="../../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></h3>
-<code><a href="../../common/Lifecycle.html#init(long)">init</a>, <a href="../../common/Lifecycle.html#input()">input</a>, <a href="../../common/Lifecycle.html#input(float)">input</a>, <a href="../../common/Lifecycle.html#render()">render</a>, <a href="../../common/Lifecycle.html#render(dev.prozilla.pine.core.rendering.Renderer)">render</a>, <a href="../../common/Lifecycle.html#start()">start</a>, <a href="../../common/Lifecycle.html#update()">update</a>, <a href="../../common/Lifecycle.html#update(float)">update</a></code></div>
 </section>
 </li>
 </ul>
@@ -516,11 +532,11 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <section class="detail" id="init()">
 <h3>init</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">init</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../common/Lifecycle.html#init()">Lifecycle</a></code></span></div>
-<div class="block">Initializes the object before the game loop starts.</div>
+<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../common/lifecycle/Initializable.html#init()">Initializable</a></code></span></div>
+<div class="block">Initializes this object to prepare its usage.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../common/Lifecycle.html#init()">init</a></code>&nbsp;in interface&nbsp;<code><a href="../../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></code></dd>
+<dd><code><a href="../../common/lifecycle/Initializable.html#init()">init</a></code>&nbsp;in interface&nbsp;<code><a href="../../common/lifecycle/Initializable.html" title="interface in dev.prozilla.pine.common.lifecycle">Initializable</a></code></dd>
 </dl>
 </section>
 </li>
@@ -606,6 +622,32 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
+<section class="detail" id="setRegion(float,float,float,float)">
+<h3>setRegion</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRegion</span><wbr><span class="parameters">(float&nbsp;x,
+ float&nbsp;y,
+ float&nbsp;width,
+ float&nbsp;height)</span></div>
+<div class="block">Limits the rendering to the given region.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setRegion(int,int,int,int)">
+<h3>setRegion</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRegion</span><wbr><span class="parameters">(int&nbsp;x,
+ int&nbsp;y,
+ int&nbsp;width,
+ int&nbsp;height)</span></div>
+<div class="block">Limits the rendering to the given region.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="resetRegion()">
+<h3>resetRegion</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resetRegion</span>()</div>
+</section>
+</li>
+<li>
 <section class="detail" id="getDebugTextWidth(java.lang.CharSequence)">
 <h3>getDebugTextWidth</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getDebugTextWidth</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text)</span></div>
@@ -647,12 +689,12 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="drawDebugText(java.lang.CharSequence,float,float,dev.prozilla.pine.common.system.resource.Color)">
+<section class="detail" id="drawDebugText(java.lang.CharSequence,float,float,dev.prozilla.pine.common.system.Color)">
 <h3>drawDebugText</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawDebugText</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text,
  float&nbsp;x,
  float&nbsp;y,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</span></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</span></div>
 <div class="block">Draw debug text at the specified position and color.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -670,9 +712,9 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="getTextSize(dev.prozilla.pine.common.system.resource.text.Font,java.lang.CharSequence)">
+<section class="detail" id="getTextSize(dev.prozilla.pine.common.asset.text.Font,java.lang.CharSequence)">
 <h3>getTextSize</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../common/math/vector/Vector2i.html" title="class in dev.prozilla.pine.common.math.vector">Vector2i</a></span>&nbsp;<span class="element-name">getTextSize</span><wbr><span class="parameters">(<a href="../../common/system/resource/text/Font.html" title="class in dev.prozilla.pine.common.system.resource.text">Font</a>&nbsp;font,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../common/math/vector/Vector2i.html" title="class in dev.prozilla.pine.common.math.vector">Vector2i</a></span>&nbsp;<span class="element-name">getTextSize</span><wbr><span class="parameters">(<a href="../../common/asset/text/Font.html" title="class in dev.prozilla.pine.common.asset.text">Font</a>&nbsp;font,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text)</span></div>
 </section>
 </li>
@@ -683,9 +725,9 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="getTextWidth(dev.prozilla.pine.common.system.resource.text.Font,java.lang.CharSequence)">
+<section class="detail" id="getTextWidth(dev.prozilla.pine.common.asset.text.Font,java.lang.CharSequence)">
 <h3>getTextWidth</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getTextWidth</span><wbr><span class="parameters">(<a href="../../common/system/resource/text/Font.html" title="class in dev.prozilla.pine.common.system.resource.text">Font</a>&nbsp;font,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getTextWidth</span><wbr><span class="parameters">(<a href="../../common/asset/text/Font.html" title="class in dev.prozilla.pine.common.asset.text">Font</a>&nbsp;font,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text)</span></div>
 <div class="block">Calculates total width of a text.</div>
 <dl class="notes">
@@ -703,9 +745,9 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="getTextHeight(dev.prozilla.pine.common.system.resource.text.Font,java.lang.CharSequence)">
+<section class="detail" id="getTextHeight(dev.prozilla.pine.common.asset.text.Font,java.lang.CharSequence)">
 <h3>getTextHeight</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getTextHeight</span><wbr><span class="parameters">(<a href="../../common/system/resource/text/Font.html" title="class in dev.prozilla.pine.common.system.resource.text">Font</a>&nbsp;font,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getTextHeight</span><wbr><span class="parameters">(<a href="../../common/asset/text/Font.html" title="class in dev.prozilla.pine.common.asset.text">Font</a>&nbsp;font,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text)</span></div>
 <div class="block">Calculates total height of a text.</div>
 <dl class="notes">
@@ -726,9 +768,9 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="drawText(dev.prozilla.pine.common.system.resource.text.Font,java.lang.CharSequence,float,float,float)">
+<section class="detail" id="drawText(dev.prozilla.pine.common.asset.text.Font,java.lang.CharSequence,float,float,float)">
 <h3>drawText</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawText</span><wbr><span class="parameters">(<a href="../../common/system/resource/text/Font.html" title="class in dev.prozilla.pine.common.system.resource.text">Font</a>&nbsp;font,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawText</span><wbr><span class="parameters">(<a href="../../common/asset/text/Font.html" title="class in dev.prozilla.pine.common.asset.text">Font</a>&nbsp;font,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text,
  float&nbsp;x,
  float&nbsp;y,
@@ -743,24 +785,24 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="drawText(java.lang.CharSequence,float,float,float,dev.prozilla.pine.common.system.resource.Color)">
+<section class="detail" id="drawText(java.lang.CharSequence,float,float,float,dev.prozilla.pine.common.system.Color)">
 <h3>drawText</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawText</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</span></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="drawText(dev.prozilla.pine.common.system.resource.text.Font,java.lang.CharSequence,float,float,float,dev.prozilla.pine.common.system.resource.Color)">
+<section class="detail" id="drawText(dev.prozilla.pine.common.asset.text.Font,java.lang.CharSequence,float,float,float,dev.prozilla.pine.common.system.Color)">
 <h3>drawText</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawText</span><wbr><span class="parameters">(<a href="../../common/system/resource/text/Font.html" title="class in dev.prozilla.pine.common.system.resource.text">Font</a>&nbsp;font,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawText</span><wbr><span class="parameters">(<a href="../../common/asset/text/Font.html" title="class in dev.prozilla.pine.common.asset.text">Font</a>&nbsp;font,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;text,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</span></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</span></div>
 <div class="block">Draw text at the specified position and color.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -790,14 +832,14 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="drawRect(float,float,float,float,float,dev.prozilla.pine.common.system.resource.Color)">
+<section class="detail" id="drawRect(float,float,float,float,float,dev.prozilla.pine.common.system.Color)">
 <h3>drawRect</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawRect</span><wbr><span class="parameters">(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;width,
  float&nbsp;height,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</span></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</span></div>
 <div class="block">Draws a colored rectangle at the given position.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -810,9 +852,9 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="drawRotatedTexture(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float)">
+<section class="detail" id="drawRotatedTexture(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float)">
 <h3>drawRotatedTexture</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawRotatedTexture</span><wbr><span class="parameters">(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawRotatedTexture</span><wbr><span class="parameters">(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
@@ -820,20 +862,20 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="drawRotatedTexture(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,dev.prozilla.pine.common.system.resource.Color,float)">
+<section class="detail" id="drawRotatedTexture(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,dev.prozilla.pine.common.system.Color,float)">
 <h3>drawRotatedTexture</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawRotatedTexture</span><wbr><span class="parameters">(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawRotatedTexture</span><wbr><span class="parameters">(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c,
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c,
  float&nbsp;r)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="drawTexture(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float)">
+<section class="detail" id="drawTexture(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float)">
 <h3>drawTexture</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawTexture</span><wbr><span class="parameters">(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawTexture</span><wbr><span class="parameters">(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z)</span></div>
@@ -847,13 +889,13 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="drawTexture(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,dev.prozilla.pine.common.system.resource.Color)">
+<section class="detail" id="drawTexture(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,dev.prozilla.pine.common.system.Color)">
 <h3>drawTexture</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawTexture</span><wbr><span class="parameters">(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawTexture</span><wbr><span class="parameters">(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</span></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</span></div>
 <div class="block">Draws a texture on specified coordinates and with
  specified color.</div>
 <dl class="notes">
@@ -866,9 +908,9 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="drawRotatedTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,float)">
+<section class="detail" id="drawRotatedTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,float)">
 <h3>drawRotatedTextureRegion</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawRotatedTextureRegion</span><wbr><span class="parameters">(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawRotatedTextureRegion</span><wbr><span class="parameters">(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
@@ -880,9 +922,9 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="drawRotatedTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.resource.Color,float)">
+<section class="detail" id="drawRotatedTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.Color,float)">
 <h3>drawRotatedTextureRegion</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawRotatedTextureRegion</span><wbr><span class="parameters">(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawRotatedTextureRegion</span><wbr><span class="parameters">(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
@@ -890,14 +932,14 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
  float&nbsp;regY,
  float&nbsp;regWidth,
  float&nbsp;regHeight,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c,
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c,
  float&nbsp;r)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="drawRotatedTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,float,float,float)">
+<section class="detail" id="drawRotatedTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,float,float,float)">
 <h3>drawRotatedTextureRegion</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawRotatedTextureRegion</span><wbr><span class="parameters">(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawRotatedTextureRegion</span><wbr><span class="parameters">(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x1,
  float&nbsp;y1,
  float&nbsp;x2,
@@ -911,9 +953,9 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="drawRotatedTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.resource.Color,float)">
+<section class="detail" id="drawRotatedTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.Color,float)">
 <h3>drawRotatedTextureRegion</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawRotatedTextureRegion</span><wbr><span class="parameters">(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawRotatedTextureRegion</span><wbr><span class="parameters">(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x1,
  float&nbsp;y1,
  float&nbsp;x2,
@@ -923,14 +965,14 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
  float&nbsp;t1,
  float&nbsp;s2,
  float&nbsp;t2,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c,
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c,
  float&nbsp;r)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="drawTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float)">
+<section class="detail" id="drawTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float)">
 <h3>drawTextureRegion</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawTextureRegion</span><wbr><span class="parameters">(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawTextureRegion</span><wbr><span class="parameters">(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
@@ -952,9 +994,9 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="drawTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.resource.Color)">
+<section class="detail" id="drawTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.Color)">
 <h3>drawTextureRegion</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawTextureRegion</span><wbr><span class="parameters">(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawTextureRegion</span><wbr><span class="parameters">(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
@@ -962,7 +1004,7 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
  float&nbsp;regY,
  float&nbsp;regWidth,
  float&nbsp;regHeight,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</span></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</span></div>
 <div class="block">Draws a texture region on specified coordinates.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -978,9 +1020,9 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="drawTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,float,float)">
+<section class="detail" id="drawTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,float,float)">
 <h3>drawTextureRegion</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawTextureRegion</span><wbr><span class="parameters">(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawTextureRegion</span><wbr><span class="parameters">(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x1,
  float&nbsp;y1,
  float&nbsp;x2,
@@ -1005,9 +1047,9 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="drawTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.resource.Color)">
+<section class="detail" id="drawTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.Color)">
 <h3>drawTextureRegion</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawTextureRegion</span><wbr><span class="parameters">(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawTextureRegion</span><wbr><span class="parameters">(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x1,
  float&nbsp;y1,
  float&nbsp;x2,
@@ -1017,7 +1059,7 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
  float&nbsp;t1,
  float&nbsp;s2,
  float&nbsp;t2,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</span></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</span></div>
 <div class="block">Draws a texture region on specified coordinates.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -1034,9 +1076,9 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </section>
 </li>
 <li>
-<section class="detail" id="drawTextureRegion(dev.prozilla.pine.common.system.resource.image.TextureBase,float,float,float,float,float,float,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.resource.Color)">
+<section class="detail" id="drawTextureRegion(dev.prozilla.pine.common.asset.image.TextureBase,float,float,float,float,float,float,float,float,float,float,float,float,float,dev.prozilla.pine.common.system.Color)">
 <h3>drawTextureRegion</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawTextureRegion</span><wbr><span class="parameters">(<a href="../../common/system/resource/image/TextureBase.html" title="interface in dev.prozilla.pine.common.system.resource.image">TextureBase</a>&nbsp;texture,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawTextureRegion</span><wbr><span class="parameters">(<a href="../../common/asset/image/TextureBase.html" title="interface in dev.prozilla.pine.common.asset.image">TextureBase</a>&nbsp;texture,
  float&nbsp;x1,
  float&nbsp;y1,
  float&nbsp;x2,
@@ -1050,7 +1092,7 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
  float&nbsp;t1,
  float&nbsp;s2,
  float&nbsp;t2,
- <a href="../../common/system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;c)</span></div>
+ <a href="../../common/system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;c)</span></div>
 <div class="block">Draws a texture region on specified coordinates.</div>
 </section>
 </li>
@@ -1098,10 +1140,6 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <h3>destroy</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">destroy</span>()</div>
 <div class="block">Disposes renderer and cleans up its used data.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="../../common/Lifecycle.html#destroy()">destroy</a></code>&nbsp;in interface&nbsp;<code><a href="../../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></code></dd>
-</dl>
 </section>
 </li>
 <li>

@@ -87,19 +87,19 @@ loadScripts(document, 'script');</script>
 <h1 title="Class Entity" class="title">Class Entity</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance"><a href="../../common/event/EventDispatcher.html" title="class in dev.prozilla.pine.common.event">dev.prozilla.pine.common.event.EventDispatcher</a>&lt;<a href="EntityEvent.html" title="enum class in dev.prozilla.pine.core.entity">EntityEvent</a>&gt;
+<div class="inheritance"><a href="../../common/event/EventDispatcher.html" title="class in dev.prozilla.pine.common.event">dev.prozilla.pine.common.event.EventDispatcher</a>&lt;<a href="EntityEventType.html" title="enum class in dev.prozilla.pine.core.entity">EntityEventType</a>,<wbr><a href="Entity.html" title="class in dev.prozilla.pine.core.entity">Entity</a>&gt;
 <div class="inheritance">dev.prozilla.pine.core.entity.Entity</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../../common/event/EventDispatcherContext.html" title="interface in dev.prozilla.pine.common.event">EventDispatcherContext</a>&lt;<a href="EntityEvent.html" title="enum class in dev.prozilla.pine.core.entity">EntityEvent</a>&gt;</code>, <code><a href="../../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></code>, <code><a href="../../common/Printable.html" title="interface in dev.prozilla.pine.common">Printable</a></code>, <code><a href="../ApplicationContext.html" title="interface in dev.prozilla.pine.core">ApplicationContext</a></code>, <code><a href="../ApplicationProvider.html" title="interface in dev.prozilla.pine.core">ApplicationProvider</a></code>, <code><a href="../component/ComponentsContext.html" title="interface in dev.prozilla.pine.core.component">ComponentsContext</a></code>, <code><a href="EntityContext.html" title="interface in dev.prozilla.pine.core.entity">EntityContext</a></code>, <code><a href="../scene/SceneContext.html" title="interface in dev.prozilla.pine.core.scene">SceneContext</a></code>, <code><a href="../scene/SceneProvider.html" title="interface in dev.prozilla.pine.core.scene">SceneProvider</a></code></dd>
+<dd><code><a href="../../common/event/EventDispatcherContext.html" title="interface in dev.prozilla.pine.common.event">EventDispatcherContext</a>&lt;<a href="EntityEventType.html" title="enum class in dev.prozilla.pine.core.entity">EntityEventType</a>,<wbr><a href="Entity.html" title="class in dev.prozilla.pine.core.entity">Entity</a>&gt;</code>, <code><a href="../../common/lifecycle/Destructable.html" title="interface in dev.prozilla.pine.common.lifecycle">Destructable</a></code>, <code><a href="../../common/Printable.html" title="interface in dev.prozilla.pine.common">Printable</a></code>, <code><a href="../ApplicationContext.html" title="interface in dev.prozilla.pine.core">ApplicationContext</a></code>, <code><a href="../ApplicationProvider.html" title="interface in dev.prozilla.pine.core">ApplicationProvider</a></code>, <code><a href="../component/ComponentsContext.html" title="interface in dev.prozilla.pine.core.component">ComponentsContext</a></code>, <code><a href="EntityContext.html" title="interface in dev.prozilla.pine.core.entity">EntityContext</a></code>, <code><a href="../scene/SceneContext.html" title="interface in dev.prozilla.pine.core.scene">SceneContext</a></code>, <code><a href="../scene/SceneProvider.html" title="interface in dev.prozilla.pine.core.scene">SceneProvider</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Entity</span>
-<span class="extends-implements">extends <a href="../../common/event/EventDispatcher.html" title="class in dev.prozilla.pine.common.event">EventDispatcher</a>&lt;<a href="EntityEvent.html" title="enum class in dev.prozilla.pine.core.entity">EntityEvent</a>&gt;
-implements <a href="../../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a>, <a href="../../common/Printable.html" title="interface in dev.prozilla.pine.common">Printable</a>, <a href="EntityContext.html" title="interface in dev.prozilla.pine.core.entity">EntityContext</a>, <a href="../component/ComponentsContext.html" title="interface in dev.prozilla.pine.core.component">ComponentsContext</a>, <a href="../ApplicationProvider.html" title="interface in dev.prozilla.pine.core">ApplicationProvider</a>, <a href="../scene/SceneProvider.html" title="interface in dev.prozilla.pine.core.scene">SceneProvider</a></span></div>
+<span class="extends-implements">extends <a href="../../common/event/EventDispatcher.html" title="class in dev.prozilla.pine.common.event">EventDispatcher</a>&lt;<a href="EntityEventType.html" title="enum class in dev.prozilla.pine.core.entity">EntityEventType</a>,<wbr><a href="Entity.html" title="class in dev.prozilla.pine.core.entity">Entity</a>&gt;
+implements <a href="../../common/Printable.html" title="interface in dev.prozilla.pine.common">Printable</a>, <a href="EntityContext.html" title="interface in dev.prozilla.pine.core.entity">EntityContext</a>, <a href="../component/ComponentsContext.html" title="interface in dev.prozilla.pine.core.component">ComponentsContext</a>, <a href="../ApplicationProvider.html" title="interface in dev.prozilla.pine.core">ApplicationProvider</a>, <a href="../scene/SceneProvider.html" title="interface in dev.prozilla.pine.core.scene">SceneProvider</a></span></div>
 <div class="block">Represents a unique entity in the world with a list of components.</div>
 </section>
 <section class="summary">
@@ -283,53 +283,59 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks whether this entity has a given tag.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isActive()" class="member-name-link">isActive</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#invoke(dev.prozilla.pine.core.entity.EntityEventType,dev.prozilla.pine.core.entity.Entity)" class="member-name-link">invoke</a><wbr>(<a href="EntityEventType.html" title="enum class in dev.prozilla.pine.core.entity">EntityEventType</a>&nbsp;entityEventType,
+ <a href="Entity.html" title="class in dev.prozilla.pine.core.entity">Entity</a>&nbsp;event)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Invokes the event of a given type.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isDescendantOf(dev.prozilla.pine.core.component.Transform)" class="member-name-link">isDescendantOf</a><wbr>(<a href="../component/Transform.html" title="class in dev.prozilla.pine.core.component">Transform</a>&nbsp;parent)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isActive()" class="member-name-link">isActive</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isRegistered()" class="member-name-link">isRegistered</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isDescendantOf(dev.prozilla.pine.core.component.Transform)" class="member-name-link">isDescendantOf</a><wbr>(<a href="../component/Transform.html" title="class in dev.prozilla.pine.core.component">Transform</a>&nbsp;parent)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isRegistered()" class="member-name-link">isRegistered</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks whether this entity is registered in the entity manager.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#printHierarchy()" class="member-name-link">printHierarchy</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#printHierarchy()" class="member-name-link">printHierarchy</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Formats and prints the names of this entity's parents.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeAllChildren()" class="member-name-link">removeAllChildren</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeChild(dev.prozilla.pine.core.entity.Entity)" class="member-name-link">removeChild</a><wbr>(<a href="Entity.html" title="class in dev.prozilla.pine.core.entity">Entity</a>&nbsp;child)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeAllChildren()" class="member-name-link">removeAllChildren</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeChild(dev.prozilla.pine.core.entity.Entity)" class="member-name-link">removeChild</a><wbr>(<a href="Entity.html" title="class in dev.prozilla.pine.core.entity">Entity</a>&nbsp;child)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Detaches a child from this entity without removing it from the world.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeChildren(dev.prozilla.pine.core.entity.Entity...)" class="member-name-link">removeChildren</a><wbr>(<a href="Entity.html" title="class in dev.prozilla.pine.core.entity">Entity</a>...&nbsp;children)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeChildren(dev.prozilla.pine.core.entity.Entity...)" class="member-name-link">removeChildren</a><wbr>(<a href="Entity.html" title="class in dev.prozilla.pine.core.entity">Entity</a>...&nbsp;children)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Detaches children from this entity without removing them from the world.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeComponent(dev.prozilla.pine.core.component.Component)" class="member-name-link">removeComponent</a><wbr>(<a href="../component/Component.html" title="class in dev.prozilla.pine.core.component">Component</a>&nbsp;component)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeComponent(dev.prozilla.pine.core.component.Component)" class="member-name-link">removeComponent</a><wbr>(<a href="../component/Component.html" title="class in dev.prozilla.pine.core.component">Component</a>&nbsp;component)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Removes a component from this entity.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setActive(boolean)" class="member-name-link">setActive</a><wbr>(boolean&nbsp;active)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setActive(boolean)" class="member-name-link">setActive</a><wbr>(boolean&nbsp;active)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Toggles the active state of this entity.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setParent(dev.prozilla.pine.core.entity.Entity)" class="member-name-link">setParent</a><wbr>(<a href="Entity.html" title="class in dev.prozilla.pine.core.entity">Entity</a>&nbsp;parent)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setParent(dev.prozilla.pine.core.entity.Entity)" class="member-name-link">setParent</a><wbr>(<a href="Entity.html" title="class in dev.prozilla.pine.core.entity">Entity</a>&nbsp;parent)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Setter for the parent entity.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a string representation of this object.</div>
 </div>
 </div>
@@ -337,7 +343,7 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-dev.prozilla.pine.common.event.EventDispatcher">Methods inherited from class&nbsp;dev.prozilla.pine.common.event.<a href="../../common/event/EventDispatcher.html" title="class in dev.prozilla.pine.common.event">EventDispatcher</a></h3>
-<code><a href="../../common/event/EventDispatcher.html#addListener(Event,dev.prozilla.pine.common.event.EventListener)">addListener</a>, <a href="../../common/event/EventDispatcher.html#invoke(Event)">invoke</a>, <a href="../../common/event/EventDispatcher.html#removeListener(Event,dev.prozilla.pine.common.event.EventListener)">removeListener</a>, <a href="../../common/event/EventDispatcher.html#setLogger(dev.prozilla.pine.common.logging.Logger)">setLogger</a></code></div>
+<code><a href="../../common/event/EventDispatcher.html#addListener(EventType,dev.prozilla.pine.common.event.EventListener)">addListener</a>, <a href="../../common/event/EventDispatcher.html#removeListener(EventType,dev.prozilla.pine.common.event.EventListener)">removeListener</a>, <a href="../../common/event/EventDispatcher.html#setLogger(dev.prozilla.pine.common.logging.Logger)">setLogger</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -347,9 +353,6 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-dev.prozilla.pine.core.entity.EntityContext">Methods inherited from interface&nbsp;dev.prozilla.pine.core.entity.<a href="EntityContext.html" title="interface in dev.prozilla.pine.core.entity">EntityContext</a></h3>
 <code><a href="EntityContext.html#isDescendantOf(dev.prozilla.pine.core.entity.Entity)">isDescendantOf</a></code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-dev.prozilla.pine.common.Lifecycle">Methods inherited from interface&nbsp;dev.prozilla.pine.common.<a href="../../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></h3>
-<code><a href="../../common/Lifecycle.html#init()">init</a>, <a href="../../common/Lifecycle.html#init(long)">init</a>, <a href="../../common/Lifecycle.html#input()">input</a>, <a href="../../common/Lifecycle.html#input(float)">input</a>, <a href="../../common/Lifecycle.html#render()">render</a>, <a href="../../common/Lifecycle.html#render(dev.prozilla.pine.core.rendering.Renderer)">render</a>, <a href="../../common/Lifecycle.html#start()">start</a>, <a href="../../common/Lifecycle.html#update()">update</a>, <a href="../../common/Lifecycle.html#update(float)">update</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-dev.prozilla.pine.common.Printable">Methods inherited from interface&nbsp;dev.prozilla.pine.common.<a href="../../common/Printable.html" title="interface in dev.prozilla.pine.common">Printable</a></h3>
 <code><a href="../../common/Printable.html#print()">print</a>, <a href="../../common/Printable.html#print(dev.prozilla.pine.common.logging.Logger)">print</a></code></div>
@@ -485,9 +488,9 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <div class="block">Destroys this entity at the end of the game loop.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../common/Lifecycle.html#destroy()">destroy</a></code>&nbsp;in interface&nbsp;<code><a href="../../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></code></dd>
+<dd><code><a href="../../common/lifecycle/Destructable.html#destroy()">destroy</a></code>&nbsp;in interface&nbsp;<code><a href="../../common/lifecycle/Destructable.html" title="interface in dev.prozilla.pine.common.lifecycle">Destructable</a></code></dd>
 <dt>Overrides:</dt>
-<dd><code><a href="../../common/event/EventDispatcher.html#destroy()">destroy</a></code>&nbsp;in class&nbsp;<code><a href="../../common/event/EventDispatcher.html" title="class in dev.prozilla.pine.common.event">EventDispatcher</a>&lt;<a href="EntityEvent.html" title="enum class in dev.prozilla.pine.core.entity">EntityEvent</a>&gt;</code></dd>
+<dd><code><a href="../../common/event/EventDispatcher.html#destroy()">destroy</a></code>&nbsp;in class&nbsp;<code><a href="../../common/event/EventDispatcher.html" title="class in dev.prozilla.pine.common.event">EventDispatcher</a>&lt;<a href="EntityEventType.html" title="enum class in dev.prozilla.pine.core.entity">EntityEventType</a>,<wbr><a href="Entity.html" title="class in dev.prozilla.pine.core.entity">Entity</a>&gt;</code></dd>
 </dl>
 </section>
 </li>
@@ -765,6 +768,23 @@ implements <a href="../../common/Lifecycle.html" title="interface in dev.prozill
 <dd><code>componentClass</code> - Class of the components.</dd>
 <dt>Returns:</dt>
 <dd>An ArrayList of instance of <code>componentClass</code> that are attached to this entity.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="invoke(dev.prozilla.pine.core.entity.EntityEventType,dev.prozilla.pine.core.entity.Entity)">
+<h3>invoke</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">invoke</span><wbr><span class="parameters">(<a href="EntityEventType.html" title="enum class in dev.prozilla.pine.core.entity">EntityEventType</a>&nbsp;entityEventType,
+ <a href="Entity.html" title="class in dev.prozilla.pine.core.entity">Entity</a>&nbsp;event)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../common/event/EventDispatcherContext.html#invoke(EventType,E)">EventDispatcherContext</a></code></span></div>
+<div class="block">Invokes the event of a given type.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../../common/event/EventDispatcherContext.html#invoke(EventType,E)">invoke</a></code>&nbsp;in interface&nbsp;<code><a href="../../common/event/EventDispatcherContext.html" title="interface in dev.prozilla.pine.common.event">EventDispatcherContext</a>&lt;<a href="EntityEventType.html" title="enum class in dev.prozilla.pine.core.entity">EntityEventType</a>,<wbr><a href="Entity.html" title="class in dev.prozilla.pine.core.entity">Entity</a>&gt;</code></dd>
+<dt>Overrides:</dt>
+<dd><code><a href="../../common/event/EventDispatcher.html#invoke(EventType,E)">invoke</a></code>&nbsp;in class&nbsp;<code><a href="../../common/event/EventDispatcher.html" title="class in dev.prozilla.pine.common.event">EventDispatcher</a>&lt;<a href="EntityEventType.html" title="enum class in dev.prozilla.pine.core.entity">EntityEventType</a>,<wbr><a href="Entity.html" title="class in dev.prozilla.pine.core.entity">Entity</a>&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>entityEventType</code> - The type of event to invoke</dd>
 </dl>
 </section>
 </li>

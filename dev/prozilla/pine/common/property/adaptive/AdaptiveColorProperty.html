@@ -87,9 +87,9 @@ loadScripts(document, 'script');</script>
 <h1 title="Class AdaptiveColorProperty" class="title">Class AdaptiveColorProperty</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance"><a href="../VariableProperty.html" title="class in dev.prozilla.pine.common.property">dev.prozilla.pine.common.property.VariableProperty</a>&lt;<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&gt;
-<div class="inheritance"><a href="AdaptivePropertyBase.html" title="class in dev.prozilla.pine.common.property.adaptive">dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase</a>&lt;<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&gt;
-<div class="inheritance"><a href="AdaptiveProperty.html" title="class in dev.prozilla.pine.common.property.adaptive">dev.prozilla.pine.common.property.adaptive.AdaptiveProperty</a>&lt;<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&gt;
+<div class="inheritance"><a href="../VariableProperty.html" title="class in dev.prozilla.pine.common.property">dev.prozilla.pine.common.property.VariableProperty</a>&lt;<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&gt;
+<div class="inheritance"><a href="AdaptivePropertyBase.html" title="class in dev.prozilla.pine.common.property.adaptive">dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase</a>&lt;<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&gt;
+<div class="inheritance"><a href="AdaptiveProperty.html" title="class in dev.prozilla.pine.common.property.adaptive">dev.prozilla.pine.common.property.adaptive.AdaptiveProperty</a>&lt;<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&gt;
 <div class="inheritance">dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty</div>
 </div>
 </div>
@@ -98,11 +98,11 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../../Animatable.html" title="interface in dev.prozilla.pine.common">Animatable</a></code>, <code><a href="../ColorProperty.html" title="interface in dev.prozilla.pine.common.property">ColorProperty</a></code>, <code><a href="../../Transmittable.html" title="interface in dev.prozilla.pine.common">Transmittable</a>&lt;<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&gt;</code></dd>
+<dd><code><a href="../../Animatable.html" title="interface in dev.prozilla.pine.common">Animatable</a></code>, <code><a href="../ColorProperty.html" title="interface in dev.prozilla.pine.common.property">ColorProperty</a></code>, <code><a href="../../Transmittable.html" title="interface in dev.prozilla.pine.common">Transmittable</a>&lt;<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&gt;</code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">AdaptiveColorProperty</span>
-<span class="extends-implements">extends <a href="AdaptiveProperty.html" title="class in dev.prozilla.pine.common.property.adaptive">AdaptiveProperty</a>&lt;<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&gt;
+<span class="extends-implements">extends <a href="AdaptiveProperty.html" title="class in dev.prozilla.pine.common.property.adaptive">AdaptiveProperty</a>&lt;<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&gt;
 implements <a href="../ColorProperty.html" title="interface in dev.prozilla.pine.common.property">ColorProperty</a></span></div>
 </section>
 <section class="summary">
@@ -127,9 +127,9 @@ implements <a href="../ColorProperty.html" title="interface in dev.prozilla.pine
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(dev.prozilla.pine.common.property.VariableProperty)" class="member-name-link">AdaptiveColorProperty</a><wbr>(<a href="../VariableProperty.html" title="class in dev.prozilla.pine.common.property">VariableProperty</a>&lt;<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&gt;&nbsp;variableProperty)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(dev.prozilla.pine.common.property.VariableProperty)" class="member-name-link">AdaptiveColorProperty</a><wbr>(<a href="../VariableProperty.html" title="class in dev.prozilla.pine.common.property">VariableProperty</a>&lt;<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&gt;&nbsp;variableProperty)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(dev.prozilla.pine.common.system.resource.Color)" class="member-name-link">AdaptiveColorProperty</a><wbr>(<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;fixedValue)</code></div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(dev.prozilla.pine.common.system.Color)" class="member-name-link">AdaptiveColorProperty</a><wbr>(<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;fixedValue)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
@@ -149,17 +149,17 @@ implements <a href="../ColorProperty.html" title="interface in dev.prozilla.pine
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#adapt(dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty)" class="member-name-link">adapt</a><wbr>(<a href="AdaptiveColorProperty.html" title="class in dev.prozilla.pine.common.property.adaptive">AdaptiveColorProperty</a>&nbsp;property)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="AdaptiveColorProperty.html" title="class in dev.prozilla.pine.common.property.adaptive">AdaptiveColorProperty</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#adapt(dev.prozilla.pine.common.property.VariableProperty)" class="member-name-link">adapt</a><wbr>(<a href="../VariableProperty.html" title="class in dev.prozilla.pine.common.property">VariableProperty</a>&lt;<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&gt;&nbsp;property)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#adapt(dev.prozilla.pine.common.property.VariableProperty)" class="member-name-link">adapt</a><wbr>(<a href="../VariableProperty.html" title="class in dev.prozilla.pine.common.property">VariableProperty</a>&lt;<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&gt;&nbsp;property)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Converts any color property into an adaptive property.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="AdaptiveColorProperty.html" title="class in dev.prozilla.pine.common.property.adaptive">AdaptiveColorProperty</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#adapt(dev.prozilla.pine.common.system.resource.Color)" class="member-name-link">adapt</a><wbr>(<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;value)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#adapt(dev.prozilla.pine.common.system.Color)" class="member-name-link">adapt</a><wbr>(<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Converts a color into an adaptive property.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#transmit(dev.prozilla.pine.common.system.resource.Color)" class="member-name-link">transmit</a><wbr>(<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;target)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#transmit(dev.prozilla.pine.common.system.Color)" class="member-name-link">transmit</a><wbr>(<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;target)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Transmits this object's data to a given target object.</div>
 </div>
@@ -192,13 +192,13 @@ implements <a href="../ColorProperty.html" title="interface in dev.prozilla.pine
 <li>
 <section class="detail" id="&lt;init&gt;(dev.prozilla.pine.common.property.VariableProperty)">
 <h3>AdaptiveColorProperty</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AdaptiveColorProperty</span><wbr><span class="parameters">(<a href="../VariableProperty.html" title="class in dev.prozilla.pine.common.property">VariableProperty</a>&lt;<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&gt;&nbsp;variableProperty)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AdaptiveColorProperty</span><wbr><span class="parameters">(<a href="../VariableProperty.html" title="class in dev.prozilla.pine.common.property">VariableProperty</a>&lt;<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&gt;&nbsp;variableProperty)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(dev.prozilla.pine.common.system.resource.Color)">
+<section class="detail" id="&lt;init&gt;(dev.prozilla.pine.common.system.Color)">
 <h3>AdaptiveColorProperty</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AdaptiveColorProperty</span><wbr><span class="parameters">(<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;fixedValue)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AdaptiveColorProperty</span><wbr><span class="parameters">(<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;fixedValue)</span></div>
 </section>
 </li>
 </ul>
@@ -210,23 +210,23 @@ implements <a href="../ColorProperty.html" title="interface in dev.prozilla.pine
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="transmit(dev.prozilla.pine.common.system.resource.Color)">
+<section class="detail" id="transmit(dev.prozilla.pine.common.system.Color)">
 <h3>transmit</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">transmit</span><wbr><span class="parameters">(<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;target)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">transmit</span><wbr><span class="parameters">(<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;target)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../Transmittable.html#transmit(T)">Transmittable</a></code></span></div>
 <div class="block">Transmits this object's data to a given target object.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../Transmittable.html#transmit(T)">transmit</a></code>&nbsp;in interface&nbsp;<code><a href="../../Transmittable.html" title="interface in dev.prozilla.pine.common">Transmittable</a>&lt;<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&gt;</code></dd>
+<dd><code><a href="../../Transmittable.html#transmit(T)">transmit</a></code>&nbsp;in interface&nbsp;<code><a href="../../Transmittable.html" title="interface in dev.prozilla.pine.common">Transmittable</a>&lt;<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>target</code> - the target object to which data will be transmitted</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="adapt(dev.prozilla.pine.common.system.resource.Color)">
+<section class="detail" id="adapt(dev.prozilla.pine.common.system.Color)">
 <h3>adapt</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="AdaptiveColorProperty.html" title="class in dev.prozilla.pine.common.property.adaptive">AdaptiveColorProperty</a></span>&nbsp;<span class="element-name">adapt</span><wbr><span class="parameters">(<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&nbsp;value)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="AdaptiveColorProperty.html" title="class in dev.prozilla.pine.common.property.adaptive">AdaptiveColorProperty</a></span>&nbsp;<span class="element-name">adapt</span><wbr><span class="parameters">(<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&nbsp;value)</span></div>
 <div class="block">Converts a color into an adaptive property.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -243,7 +243,7 @@ implements <a href="../ColorProperty.html" title="interface in dev.prozilla.pine
 <li>
 <section class="detail" id="adapt(dev.prozilla.pine.common.property.VariableProperty)">
 <h3>adapt</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="AdaptiveColorProperty.html" title="class in dev.prozilla.pine.common.property.adaptive">AdaptiveColorProperty</a></span>&nbsp;<span class="element-name">adapt</span><wbr><span class="parameters">(<a href="../VariableProperty.html" title="class in dev.prozilla.pine.common.property">VariableProperty</a>&lt;<a href="../../system/resource/Color.html" title="class in dev.prozilla.pine.common.system.resource">Color</a>&gt;&nbsp;property)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="AdaptiveColorProperty.html" title="class in dev.prozilla.pine.common.property.adaptive">AdaptiveColorProperty</a></span>&nbsp;<span class="element-name">adapt</span><wbr><span class="parameters">(<a href="../VariableProperty.html" title="class in dev.prozilla.pine.common.property">VariableProperty</a>&lt;<a href="../../system/Color.html" title="class in dev.prozilla.pine.common.system">Color</a>&gt;&nbsp;property)</span></div>
 <div class="block">Converts any color property into an adaptive property.</div>
 <dl class="notes">
 <dt>Parameters:</dt>

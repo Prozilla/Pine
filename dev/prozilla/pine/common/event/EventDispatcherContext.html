@@ -84,15 +84,19 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">dev.prozilla.pine.common.event</a></div>
-<h1 title="Interface EventDispatcherContext" class="title">Interface EventDispatcherContext&lt;Event extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;Event&gt;&gt;</h1>
+<h1 title="Interface EventDispatcherContext" class="title">Interface EventDispatcherContext&lt;EventType extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;EventType&gt;,<wbr>E&gt;</h1>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>All Known Subinterfaces:</dt>
+<dd><code><a href="EventDispatcherProvider.html" title="interface in dev.prozilla.pine.common.event">EventDispatcherProvider</a>&lt;EventType,<wbr>E&gt;</code></dd>
+</dl>
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
 <dd><code><a href="../../core/state/config/ConfigOption.html" title="class in dev.prozilla.pine.core.state.config">ConfigOption</a></code>, <code><a href="../../core/entity/Entity.html" title="class in dev.prozilla.pine.core.entity">Entity</a></code>, <code><a href="EventDispatcher.html" title="class in dev.prozilla.pine.common.event">EventDispatcher</a></code>, <code><a href="../../core/component/ui/Node.html" title="class in dev.prozilla.pine.core.component.ui">Node</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">EventDispatcherContext&lt;Event extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;Event&gt;&gt;</span></div>
+<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">EventDispatcherContext&lt;EventType extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;EventType&gt;,<wbr>E&gt;</span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -108,19 +112,20 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#addListener(Event,dev.prozilla.pine.common.event.EventListener)" class="member-name-link">addListener</a><wbr>(<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">Event</a>&nbsp;eventType,
- <a href="EventListener.html" title="interface in dev.prozilla.pine.common.event">EventListener</a>&nbsp;listener)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#addListener(EventType,dev.prozilla.pine.common.event.EventListener)" class="member-name-link">addListener</a><wbr>(<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">EventType</a>&nbsp;eventType,
+ <a href="EventListener.html" title="interface in dev.prozilla.pine.common.event">EventListener</a>&lt;<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">E</a>&gt;&nbsp;listener)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Adds a listener that listens to a given type of event.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#invoke(Event)" class="member-name-link">invoke</a><wbr>(<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">Event</a>&nbsp;eventType)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#invoke(EventType,E)" class="member-name-link">invoke</a><wbr>(<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">EventType</a>&nbsp;eventType,
+ <a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">E</a>&nbsp;event)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Invokes the event of a given type.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#removeListener(Event,dev.prozilla.pine.common.event.EventListener)" class="member-name-link">removeListener</a><wbr>(<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">Event</a>&nbsp;eventType,
- <a href="EventListener.html" title="interface in dev.prozilla.pine.common.event">EventListener</a>&nbsp;listener)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#removeListener(EventType,dev.prozilla.pine.common.event.EventListener)" class="member-name-link">removeListener</a><wbr>(<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">EventType</a>&nbsp;eventType,
+ <a href="EventListener.html" title="interface in dev.prozilla.pine.common.event">EventListener</a>&lt;<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">E</a>&gt;&nbsp;listener)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Removes a listener that listened to a given type of event.</div>
 </div>
@@ -139,10 +144,10 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="addListener(Event,dev.prozilla.pine.common.event.EventListener)">
+<section class="detail" id="addListener(EventType,dev.prozilla.pine.common.event.EventListener)">
 <h3 id="addListener(java.lang.Enum,dev.prozilla.pine.common.event.EventListener)">addListener</h3>
-<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">addListener</span><wbr><span class="parameters">(<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">Event</a>&nbsp;eventType,
- <a href="EventListener.html" title="interface in dev.prozilla.pine.common.event">EventListener</a>&nbsp;listener)</span></div>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">addListener</span><wbr><span class="parameters">(<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">EventType</a>&nbsp;eventType,
+ <a href="EventListener.html" title="interface in dev.prozilla.pine.common.event">EventListener</a>&lt;<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">E</a>&gt;&nbsp;listener)</span></div>
 <div class="block">Adds a listener that listens to a given type of event.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -152,10 +157,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="removeListener(Event,dev.prozilla.pine.common.event.EventListener)">
+<section class="detail" id="removeListener(EventType,dev.prozilla.pine.common.event.EventListener)">
 <h3 id="removeListener(java.lang.Enum,dev.prozilla.pine.common.event.EventListener)">removeListener</h3>
-<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">removeListener</span><wbr><span class="parameters">(<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">Event</a>&nbsp;eventType,
- <a href="EventListener.html" title="interface in dev.prozilla.pine.common.event">EventListener</a>&nbsp;listener)</span></div>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">removeListener</span><wbr><span class="parameters">(<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">EventType</a>&nbsp;eventType,
+ <a href="EventListener.html" title="interface in dev.prozilla.pine.common.event">EventListener</a>&lt;<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">E</a>&gt;&nbsp;listener)</span></div>
 <div class="block">Removes a listener that listened to a given type of event.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -165,9 +170,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="invoke(Event)">
-<h3 id="invoke(java.lang.Enum)">invoke</h3>
-<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">invoke</span><wbr><span class="parameters">(<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">Event</a>&nbsp;eventType)</span></div>
+<section class="detail" id="invoke(EventType,E)">
+<h3 id="invoke(java.lang.Enum,java.lang.Object)">invoke</h3>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">invoke</span><wbr><span class="parameters">(<a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">EventType</a>&nbsp;eventType,
+ <a href="EventDispatcherContext.html" title="type parameter in EventDispatcherContext">E</a>&nbsp;event)</span></div>
 <div class="block">Invokes the event of a given type.</div>
 <dl class="notes">
 <dt>Parameters:</dt>

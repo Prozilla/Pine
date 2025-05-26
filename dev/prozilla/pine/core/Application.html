@@ -92,12 +92,12 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></code>, <code><a href="ApplicationContext.html" title="interface in dev.prozilla.pine.core">ApplicationContext</a></code>, <code><a href="state/StateProvider.html" title="interface in dev.prozilla.pine.core.state">StateProvider</a>&lt;<a href="Application.html" title="class in dev.prozilla.pine.core">Application</a>,<wbr><a href="state/ApplicationState.html" title="enum class in dev.prozilla.pine.core.state">ApplicationState</a>&gt;</code></dd>
+<dd><code><a href="../common/lifecycle/Destructable.html" title="interface in dev.prozilla.pine.common.lifecycle">Destructable</a></code>, <code><a href="../common/lifecycle/Initializable.html" title="interface in dev.prozilla.pine.common.lifecycle">Initializable</a></code>, <code><a href="../common/lifecycle/InputHandler.html" title="interface in dev.prozilla.pine.common.lifecycle">InputHandler</a></code>, <code><a href="../common/lifecycle/Renderable.html" title="interface in dev.prozilla.pine.common.lifecycle">Renderable</a></code>, <code><a href="../common/lifecycle/Updatable.html" title="interface in dev.prozilla.pine.common.lifecycle">Updatable</a></code>, <code><a href="ApplicationContext.html" title="interface in dev.prozilla.pine.core">ApplicationContext</a></code>, <code><a href="state/StateProvider.html" title="interface in dev.prozilla.pine.core.state">StateProvider</a>&lt;<a href="Application.html" title="class in dev.prozilla.pine.core">Application</a>,<wbr><a href="state/ApplicationState.html" title="enum class in dev.prozilla.pine.core.state">ApplicationState</a>&gt;</code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Application</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a>, <a href="ApplicationContext.html" title="interface in dev.prozilla.pine.core">ApplicationContext</a>, <a href="state/StateProvider.html" title="interface in dev.prozilla.pine.core.state">StateProvider</a>&lt;<a href="Application.html" title="class in dev.prozilla.pine.core">Application</a>,<wbr><a href="state/ApplicationState.html" title="enum class in dev.prozilla.pine.core.state">ApplicationState</a>&gt;</span></div>
+implements <a href="../common/lifecycle/Initializable.html" title="interface in dev.prozilla.pine.common.lifecycle">Initializable</a>, <a href="../common/lifecycle/InputHandler.html" title="interface in dev.prozilla.pine.common.lifecycle">InputHandler</a>, <a href="../common/lifecycle/Updatable.html" title="interface in dev.prozilla.pine.common.lifecycle">Updatable</a>, <a href="../common/lifecycle/Renderable.html" title="interface in dev.prozilla.pine.common.lifecycle">Renderable</a>, <a href="../common/lifecycle/Destructable.html" title="interface in dev.prozilla.pine.common.lifecycle">Destructable</a>, <a href="ApplicationContext.html" title="interface in dev.prozilla.pine.core">ApplicationContext</a>, <a href="state/StateProvider.html" title="interface in dev.prozilla.pine.core.state">StateProvider</a>&lt;<a href="Application.html" title="class in dev.prozilla.pine.core">Application</a>,<wbr><a href="state/ApplicationState.html" title="enum class in dev.prozilla.pine.core.state">ApplicationState</a>&gt;</span></div>
 <div class="block">2D application using the LWJGL library.</div>
 </section>
 <section class="summary">
@@ -114,53 +114,56 @@ implements <a href="../common/Lifecycle.html" title="interface in dev.prozilla.p
 <div class="col-first even-row-color"><code>protected <a href="ApplicationManager.html" title="class in dev.prozilla.pine.core">ApplicationManager</a></code></div>
 <div class="col-second even-row-color"><code><a href="#applicationManager" class="member-name-link">applicationManager</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected final <a href="state/config/Config.html" title="class in dev.prozilla.pine.core.state.config">Config</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#config" class="member-name-link">config</a></code></div>
+<div class="col-first odd-row-color"><code>protected final <a href="audio/AudioDevice.html" title="class in dev.prozilla.pine.core.audio">AudioDevice</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#audioDevice" class="member-name-link">audioDevice</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected <a href="scene/Scene.html" title="class in dev.prozilla.pine.core.scene">Scene</a></code></div>
-<div class="col-second even-row-color"><code><a href="#currentScene" class="member-name-link">currentScene</a></code></div>
+<div class="col-first even-row-color"><code>protected final <a href="state/config/Config.html" title="class in dev.prozilla.pine.core.state.config">Config</a></code></div>
+<div class="col-second even-row-color"><code><a href="#config" class="member-name-link">config</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#DEFAULT_TARGET_FPS" class="member-name-link">DEFAULT_TARGET_FPS</a></code></div>
+<div class="col-first odd-row-color"><code>protected <a href="scene/Scene.html" title="class in dev.prozilla.pine.core.scene">Scene</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#currentScene" class="member-name-link">currentScene</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#DEFAULT_TITLE" class="member-name-link">DEFAULT_TITLE</a></code></div>
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#DEFAULT_TARGET_FPS" class="member-name-link">DEFAULT_TARGET_FPS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static boolean</code></div>
-<div class="col-second odd-row-color"><code><a href="#initializedOpenGL" class="member-name-link">initializedOpenGL</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#DEFAULT_TITLE" class="member-name-link">DEFAULT_TITLE</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static boolean</code></div>
+<div class="col-second even-row-color"><code><a href="#initializedOpenGL" class="member-name-link">initializedOpenGL</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">True if OpenGL has been initialized</div>
 </div>
-<div class="col-first even-row-color"><code>protected <a href="state/input/Input.html" title="class in dev.prozilla.pine.core.state.input">Input</a></code></div>
-<div class="col-second even-row-color"><code><a href="#input" class="member-name-link">input</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected boolean</code></div>
-<div class="col-second odd-row-color"><code><a href="#isPreview" class="member-name-link">isPreview</a></code></div>
+<div class="col-first odd-row-color"><code>protected <a href="state/input/Input.html" title="class in dev.prozilla.pine.core.state.input">Input</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#input" class="member-name-link">input</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected final <a href="../common/logging/AppLogger.html" title="class in dev.prozilla.pine.common.logging">AppLogger</a></code></div>
-<div class="col-second even-row-color"><code><a href="#logger" class="member-name-link">logger</a></code></div>
+<div class="col-first even-row-color"><code>protected boolean</code></div>
+<div class="col-second even-row-color"><code><a href="#isPreview" class="member-name-link">isPreview</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected final <a href="mod/ModManager.html" title="class in dev.prozilla.pine.core.mod">ModManager</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#modManager" class="member-name-link">modManager</a></code></div>
+<div class="col-first odd-row-color"><code>protected final <a href="../common/logging/AppLogger.html" title="class in dev.prozilla.pine.common.logging">AppLogger</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#logger" class="member-name-link">logger</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected final <a href="rendering/Renderer.html" title="class in dev.prozilla.pine.core.rendering">Renderer</a></code></div>
-<div class="col-second even-row-color"><code><a href="#renderer" class="member-name-link">renderer</a></code></div>
+<div class="col-first even-row-color"><code>protected final <a href="mod/ModManager.html" title="class in dev.prozilla.pine.core.mod">ModManager</a></code></div>
+<div class="col-second even-row-color"><code><a href="#modManager" class="member-name-link">modManager</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected boolean</code></div>
-<div class="col-second odd-row-color"><code><a href="#shouldStop" class="member-name-link">shouldStop</a></code></div>
+<div class="col-first odd-row-color"><code>protected final <a href="rendering/Renderer.html" title="class in dev.prozilla.pine.core.rendering">Renderer</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#renderer" class="member-name-link">renderer</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected final <a href="state/StateMachine.html" title="class in dev.prozilla.pine.core.state">StateMachine</a><wbr>&lt;<a href="Application.html" title="class in dev.prozilla.pine.core">Application</a>,<wbr><a href="state/ApplicationState.html" title="enum class in dev.prozilla.pine.core.state">ApplicationState</a>&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#stateMachine" class="member-name-link">stateMachine</a></code></div>
+<div class="col-first even-row-color"><code>protected boolean</code></div>
+<div class="col-second even-row-color"><code><a href="#shouldStop" class="member-name-link">shouldStop</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected final <a href="state/ApplicationTimer.html" title="class in dev.prozilla.pine.core.state">ApplicationTimer</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#timer" class="member-name-link">timer</a></code></div>
+<div class="col-first odd-row-color"><code>protected final <a href="state/StateMachine.html" title="class in dev.prozilla.pine.core.state">StateMachine</a><wbr>&lt;<a href="Application.html" title="class in dev.prozilla.pine.core">Application</a>,<wbr><a href="state/ApplicationState.html" title="enum class in dev.prozilla.pine.core.state">ApplicationState</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#stateMachine" class="member-name-link">stateMachine</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected final <a href="state/Tracker.html" title="class in dev.prozilla.pine.core.state">Tracker</a></code></div>
-<div class="col-second even-row-color"><code><a href="#tracker" class="member-name-link">tracker</a></code></div>
+<div class="col-first even-row-color"><code>protected final <a href="state/ApplicationTimer.html" title="class in dev.prozilla.pine.core.state">ApplicationTimer</a></code></div>
+<div class="col-second even-row-color"><code><a href="#timer" class="member-name-link">timer</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected final <a href="Window.html" title="class in dev.prozilla.pine.core">Window</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#window" class="member-name-link">window</a></code></div>
+<div class="col-first odd-row-color"><code>protected final <a href="state/Tracker.html" title="class in dev.prozilla.pine.core.state">Tracker</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#tracker" class="member-name-link">tracker</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected final <a href="Window.html" title="class in dev.prozilla.pine.core">Window</a></code></div>
+<div class="col-second even-row-color"><code><a href="#window" class="member-name-link">window</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -228,7 +231,7 @@ implements <a href="../common/Lifecycle.html" title="interface in dev.prozilla.p
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="scene/Scene.html" title="class in dev.prozilla.pine.core.scene">Scene</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurrentScene()" class="member-name-link">getCurrentScene</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../common/system/resource/text/Font.html" title="class in dev.prozilla.pine.common.system.resource.text">Font</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../common/asset/text/Font.html" title="class in dev.prozilla.pine.common.asset.text">Font</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDefaultFont()" class="member-name-link">getDefaultFont</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="state/input/Input.html" title="class in dev.prozilla.pine.core.state.input">Input</a></code></div>
@@ -410,9 +413,6 @@ implements <a href="../common/Lifecycle.html" title="interface in dev.prozilla.p
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-dev.prozilla.pine.common.Lifecycle">Methods inherited from interface&nbsp;dev.prozilla.pine.common.<a href="../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></h3>
-<code><a href="../common/Lifecycle.html#init(long)">init</a>, <a href="../common/Lifecycle.html#input()">input</a>, <a href="../common/Lifecycle.html#render()">render</a>, <a href="../common/Lifecycle.html#update()">update</a></code></div>
 </section>
 </li>
 </ul>
@@ -471,6 +471,12 @@ implements <a href="../common/Lifecycle.html" title="interface in dev.prozilla.p
 <section class="detail" id="renderer">
 <h3>renderer</h3>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="rendering/Renderer.html" title="class in dev.prozilla.pine.core.rendering">Renderer</a></span>&nbsp;<span class="element-name">renderer</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="audioDevice">
+<h3>audioDevice</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="audio/AudioDevice.html" title="class in dev.prozilla.pine.core.audio">AudioDevice</a></span>&nbsp;<span class="element-name">audioDevice</span></div>
 </section>
 </li>
 <li>
@@ -632,7 +638,7 @@ implements <a href="../common/Lifecycle.html" title="interface in dev.prozilla.p
 <div class="block">Initializes the application.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../common/Lifecycle.html#init()">init</a></code>&nbsp;in interface&nbsp;<code><a href="../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></code></dd>
+<dd><code><a href="../common/lifecycle/Initializable.html#init()">init</a></code>&nbsp;in interface&nbsp;<code><a href="../common/lifecycle/Initializable.html" title="interface in dev.prozilla.pine.common.lifecycle">Initializable</a></code></dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/RuntimeException.html" title="class or interface in java.lang" class="external-link">RuntimeException</a></code></dd>
 </dl>
@@ -652,10 +658,6 @@ implements <a href="../common/Lifecycle.html" title="interface in dev.prozilla.p
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">start</span>()</div>
 <div class="block">Starts the application loop.
  Destroys the application after the application loop has been stopped.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="../common/Lifecycle.html#start()">start</a></code>&nbsp;in interface&nbsp;<code><a href="../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></code></dd>
-</dl>
 </section>
 </li>
 <li>
@@ -665,7 +667,7 @@ implements <a href="../common/Lifecycle.html" title="interface in dev.prozilla.p
 <div class="block">Handles input for the application.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../common/Lifecycle.html#input(float)">input</a></code>&nbsp;in interface&nbsp;<code><a href="../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></code></dd>
+<dd><code><a href="../common/lifecycle/InputHandler.html#input(float)">input</a></code>&nbsp;in interface&nbsp;<code><a href="../common/lifecycle/InputHandler.html" title="interface in dev.prozilla.pine.common.lifecycle">InputHandler</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>deltaTime</code> - Delta time in seconds</dd>
 </dl>
@@ -678,7 +680,7 @@ implements <a href="../common/Lifecycle.html" title="interface in dev.prozilla.p
 <div class="block">Updates the application.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../common/Lifecycle.html#update(float)">update</a></code>&nbsp;in interface&nbsp;<code><a href="../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></code></dd>
+<dd><code><a href="../common/lifecycle/Updatable.html#update(float)">update</a></code>&nbsp;in interface&nbsp;<code><a href="../common/lifecycle/Updatable.html" title="interface in dev.prozilla.pine.common.lifecycle">Updatable</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>deltaTime</code> - Delta time in seconds</dd>
 </dl>
@@ -697,9 +699,7 @@ implements <a href="../common/Lifecycle.html" title="interface in dev.prozilla.p
 <div class="block">Renders the application.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../common/Lifecycle.html#render(dev.prozilla.pine.core.rendering.Renderer)">render</a></code>&nbsp;in interface&nbsp;<code><a href="../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></code></dd>
-<dt>Parameters:</dt>
-<dd><code>renderer</code> - Reference to the renderer</dd>
+<dd><code><a href="../common/lifecycle/Renderable.html#render(dev.prozilla.pine.core.rendering.Renderer)">render</a></code>&nbsp;in interface&nbsp;<code><a href="../common/lifecycle/Renderable.html" title="interface in dev.prozilla.pine.common.lifecycle">Renderable</a></code></dd>
 </dl>
 </section>
 </li>
@@ -745,7 +745,7 @@ implements <a href="../common/Lifecycle.html" title="interface in dev.prozilla.p
  This should not be called before the application loop ends.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../common/Lifecycle.html#destroy()">destroy</a></code>&nbsp;in interface&nbsp;<code><a href="../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></code></dd>
+<dd><code><a href="../common/lifecycle/Destructable.html#destroy()">destroy</a></code>&nbsp;in interface&nbsp;<code><a href="../common/lifecycle/Destructable.html" title="interface in dev.prozilla.pine.common.lifecycle">Destructable</a></code></dd>
 </dl>
 </section>
 </li>
@@ -916,7 +916,7 @@ implements <a href="../common/Lifecycle.html" title="interface in dev.prozilla.p
 <li>
 <section class="detail" id="getDefaultFont()">
 <h3>getDefaultFont</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../common/system/resource/text/Font.html" title="class in dev.prozilla.pine.common.system.resource.text">Font</a></span>&nbsp;<span class="element-name">getDefaultFont</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../common/asset/text/Font.html" title="class in dev.prozilla.pine.common.asset.text">Font</a></span>&nbsp;<span class="element-name">getDefaultFont</span>()</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>The default font of this application.</dd>

@@ -94,11 +94,12 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></code></dd>
+<dd><code><a href="../../common/lifecycle/Destructable.html" title="interface in dev.prozilla.pine.common.lifecycle">Destructable</a></code>, <code><a href="../../common/lifecycle/Initializable.html" title="interface in dev.prozilla.pine.common.lifecycle">Initializable</a></code>, <code><a href="../../common/lifecycle/InputHandler.html" title="interface in dev.prozilla.pine.common.lifecycle">InputHandler</a></code>, <code><a href="../../common/lifecycle/Renderable.html" title="interface in dev.prozilla.pine.common.lifecycle">Renderable</a></code>, <code><a href="../../common/lifecycle/Updatable.html" title="interface in dev.prozilla.pine.common.lifecycle">Updatable</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">SystemManager</span>
-<span class="extends-implements">extends <a href="../ECSManager.html" title="class in dev.prozilla.pine.core">ECSManager</a></span></div>
+<span class="extends-implements">extends <a href="../ECSManager.html" title="class in dev.prozilla.pine.core">ECSManager</a>
+implements <a href="../../common/lifecycle/Initializable.html" title="interface in dev.prozilla.pine.common.lifecycle">Initializable</a>, <a href="../../common/lifecycle/InputHandler.html" title="interface in dev.prozilla.pine.common.lifecycle">InputHandler</a>, <a href="../../common/lifecycle/Updatable.html" title="interface in dev.prozilla.pine.common.lifecycle">Updatable</a>, <a href="../../common/lifecycle/Renderable.html" title="interface in dev.prozilla.pine.common.lifecycle">Renderable</a></span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -147,7 +148,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Destroys all systems.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#init(long)" class="member-name-link">init</a><wbr>(long&nbsp;window)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#init()" class="member-name-link">init</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Runs all systems that handle initialization.</div>
 </div>
@@ -196,9 +197,6 @@ loadScripts(document, 'script');</script>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-dev.prozilla.pine.common.Lifecycle">Methods inherited from interface&nbsp;dev.prozilla.pine.common.<a href="../../common/Lifecycle.html" title="interface in dev.prozilla.pine.common">Lifecycle</a></h3>
-<code><a href="../../common/Lifecycle.html#init()">init</a>, <a href="../../common/Lifecycle.html#input()">input</a>, <a href="../../common/Lifecycle.html#render()">render</a>, <a href="../../common/Lifecycle.html#start()">start</a>, <a href="../../common/Lifecycle.html#update()">update</a></code></div>
 </section>
 </li>
 </ul>
@@ -231,13 +229,13 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="init(long)">
+<section class="detail" id="init()">
 <h3>init</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">init</span><wbr><span class="parameters">(long&nbsp;window)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">init</span>()</div>
 <div class="block">Runs all systems that handle initialization.</div>
 <dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>window</code> - Window</dd>
+<dt>Specified by:</dt>
+<dd><code><a href="../../common/lifecycle/Initializable.html#init()">init</a></code>&nbsp;in interface&nbsp;<code><a href="../../common/lifecycle/Initializable.html" title="interface in dev.prozilla.pine.common.lifecycle">Initializable</a></code></dd>
 </dl>
 </section>
 </li>
@@ -247,6 +245,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">input</span><wbr><span class="parameters">(float&nbsp;deltaTime)</span></div>
 <div class="block">Runs all systems that handle input.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../../common/lifecycle/InputHandler.html#input(float)">input</a></code>&nbsp;in interface&nbsp;<code><a href="../../common/lifecycle/InputHandler.html" title="interface in dev.prozilla.pine.common.lifecycle">InputHandler</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>deltaTime</code> - Delta time in seconds</dd>
 </dl>
@@ -258,6 +258,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">update</span><wbr><span class="parameters">(float&nbsp;deltaTime)</span></div>
 <div class="block">Runs all systems that update component data.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../../common/lifecycle/Updatable.html#update(float)">update</a></code>&nbsp;in interface&nbsp;<code><a href="../../common/lifecycle/Updatable.html" title="interface in dev.prozilla.pine.common.lifecycle">Updatable</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>deltaTime</code> - Delta time in seconds</dd>
 </dl>
@@ -269,8 +271,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">render</span><wbr><span class="parameters">(<a href="../rendering/Renderer.html" title="class in dev.prozilla.pine.core.rendering">Renderer</a>&nbsp;renderer)</span></div>
 <div class="block">Runs all systems that render components.</div>
 <dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>renderer</code> - Reference to the renderer</dd>
+<dt>Specified by:</dt>
+<dd><code><a href="../../common/lifecycle/Renderable.html#render(dev.prozilla.pine.core.rendering.Renderer)">render</a></code>&nbsp;in interface&nbsp;<code><a href="../../common/lifecycle/Renderable.html" title="interface in dev.prozilla.pine.common.lifecycle">Renderable</a></code></dd>
 </dl>
 </section>
 </li>
@@ -279,6 +281,10 @@ loadScripts(document, 'script');</script>
 <h3>destroy</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">destroy</span>()</div>
 <div class="block">Destroys all systems.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../../common/lifecycle/Destructable.html#destroy()">destroy</a></code>&nbsp;in interface&nbsp;<code><a href="../../common/lifecycle/Destructable.html" title="interface in dev.prozilla.pine.common.lifecycle">Destructable</a></code></dd>
+</dl>
 </section>
 </li>
 <li>
