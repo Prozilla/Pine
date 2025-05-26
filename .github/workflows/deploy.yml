@@ -6,6 +6,7 @@ permissions:
 on:
   registry_package:
     types: [published, updated]
+  workflow_dispatch:
 
 jobs:
   publish:
