@@ -27,7 +27,9 @@ import dev.prozilla.pine.core.rendering.Renderer;
  *         </ol>
  *     </li>
  * </ul>
+ * @deprecated Removed as of 2.0.0
  */
+@Deprecated
 public interface Lifecycle {
 	
 	/**
