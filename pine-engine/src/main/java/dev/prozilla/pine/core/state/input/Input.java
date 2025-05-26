@@ -133,6 +133,8 @@ public class Input implements Initializable, Destructable {
 					keysDown.add(key);
 				} else if (action == GLFW_RELEASE) {
 					keysPressed.remove((Integer)key);
+				} else if (action == GLFW_REPEAT) {
+					keysDown.add(key);
 				}
 			}
 		});
@@ -274,6 +276,8 @@ public class Input implements Initializable, Destructable {
 		textListeners.clear();
 	}
 	
+	// Keyboard
+	
 	/**
 	 * Checks whether any key in an array is pressed.
 	 * @param keys Keys
@@ -401,8 +405,9 @@ public class Input implements Initializable, Destructable {
 	
 	/**
 	 * Checks whether a key is down.
-	 * Returns true only in the first frame that the key is pressed.
-	 * @return True if the key is down in the current frame
+	 * Returns {@code true} in the first frame that the key is pressed
+	 * and in every frame the key is being repeated.
+	 * @return {@code true} if the key is down.
 	 */
 	public boolean getKeyDown(Key key) {
 		return getKeyDown(key, STOP_PROPAGATION_DEFAULT);
@@ -410,9 +415,10 @@ public class Input implements Initializable, Destructable {
 	
 	/**
 	 * Checks whether a key is down.
-	 * Returns true only in the first frame that the key is pressed.
+	 * Returns {@code true} in the first frame that the key is pressed
+	 * and in every frame the key is being repeated.
 	 * @param stopPropagation Whether to stop this key from affecting other listeners
-	 * @return True if the key is down in the current frame
+	 * @return {@code true} if the key is down.
 	 */
 	public boolean getKeyDown(Key key, boolean stopPropagation) {
 		if (key == null) {
@@ -424,9 +430,10 @@ public class Input implements Initializable, Destructable {
 	
 	/**
 	 * Checks whether a key is down.
-	 * Returns true only in the first frame that the key is pressed.
+	 * Returns {@code true} in the first frame that the key is pressed
+	 * and in every frame the key is being repeated.
 	 * @param key GLFW integer value for a key
-	 * @return True if the key is down in the current frame
+	 * @return {@code true} if the key is down.
 	 */
 	public boolean getKeyDown(int key) {
 		return getKeyDown(key, STOP_PROPAGATION_DEFAULT);
@@ -434,10 +441,11 @@ public class Input implements Initializable, Destructable {
 	
 	/**
 	 * Checks whether a key is down.
-	 * Returns true only in the first frame that the key is pressed.
+	 * Returns {@code true} in the first frame that the key is pressed
+	 * and in every frame the key is being repeated.
 	 * @param key GLFW integer value for a key
 	 * @param stopPropagation Whether to stop this key from affecting other listeners
-	 * @return True if the key is down in the current frame
+	 * @return {@code true} if the key is down.
 	 */
 	public boolean getKeyDown(int key, boolean stopPropagation) {
 		boolean down = keysDown.contains(key);
@@ -458,6 +466,8 @@ public class Input implements Initializable, Destructable {
 	public void removeTextListener(TextListener listener) {
 		textListeners.remove(listener);
 	}
+	
+	// Gamepad
 	
 	/**
 	 * Returns the first gamepad if it is connected,
@@ -493,6 +503,8 @@ public class Input implements Initializable, Destructable {
 	private void checkGamepadId(int id) {
 		Checks.isInRange(id, 0, gamepads.length - 1, "Invalid gamepad ID: " + id);
 	}
+	
+	// Mouse
 	
 	/**
 	 * Checks whether a mouse button is pressed.
