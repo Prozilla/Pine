@@ -5,8 +5,12 @@ import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.system.PathUtils;
+import dev.prozilla.pine.common.util.checks.Checks;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Base class for pools of assets.
@@ -29,13 +33,13 @@ public abstract class AssetPool<T extends Asset> {
 	 * @return The asset, or {@code null} if it failed to load.
 	 */
 	public T load(String path) {
-		Objects.requireNonNull(path, "path must not be null");
+		Checks.isNotNull(path, "path");
 		path = normalize(path);
 		String key = createKey(path);
 		
 		if (pool.containsKey(key)) {
 			prepareNext();
-			return pool.get(path);
+			return pool.get(key);
 		}
 		
 		eventDispatcher.invoke(AssetPoolEventType.LOADING, new AssetPoolEvent(path));

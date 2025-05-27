@@ -1,12 +1,10 @@
 package dev.prozilla.pine.examples.chat.scene.client;
 
-import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
-import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.examples.chat.entity.ChatPrefab;
 import dev.prozilla.pine.examples.chat.net.user.Client;
+import dev.prozilla.pine.examples.chat.scene.SceneBase;
 
-public class ClientScene extends Scene {
+public class ClientScene extends SceneBase {
 	
 	private final Client client;
 	
@@ -18,7 +16,6 @@ public class ClientScene extends Scene {
 	protected void load() {
 		super.load();
 		
-		Entity nodeRoot = world.addEntity(new NodeRootPrefab());
-		nodeRoot.addChild(new ChatPrefab(client));
+		nodeRoot.addChild(new ChatPrefab(client, font));
 	}
 }

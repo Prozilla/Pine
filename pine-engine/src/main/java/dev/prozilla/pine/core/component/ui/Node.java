@@ -44,6 +44,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	// Style
 	public Color color;
 	public Color backgroundColor;
+	public Color borderColor;
 	public DualDimension size;
 	public DualDimension padding;
 	public DualDimension margin;

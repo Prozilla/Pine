@@ -46,7 +46,7 @@ public class BorderImageRenderer extends RenderSystem {
 		float top = slice.z;
 		float bottom = slice.w;
 		
-		Color color = node.color;
+		Color color = node.borderColor != null ? node.borderColor : node.color;
 		
 		// Texture slice regions
 		float textureLeft = textureWidth * left;

@@ -1,5 +1,6 @@
 package dev.prozilla.pine.examples.chat.entity;
 
+import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.Direction;
@@ -9,7 +10,6 @@ import dev.prozilla.pine.common.system.Ansi;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.TextButtonPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextInputPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
 import dev.prozilla.pine.examples.chat.net.user.User;
@@ -17,9 +17,11 @@ import dev.prozilla.pine.examples.chat.net.user.User;
 public class ChatPrefab extends LayoutPrefab {
 	
 	private final User user;
+	private final Font font;
 	
-	public ChatPrefab(User user) {
+	public ChatPrefab(User user, Font font) {
 		this.user = user;
+		this.font = font;
 		
 		setGap(new Dimension(8));
 		setDirection(Direction.DOWN);
@@ -42,10 +44,12 @@ public class ChatPrefab extends LayoutPrefab {
 		Entity inputBox = entity.addChild(inputBoxPrefab);
 		
 		TextInputPrefab messageInputPrefab = new TextInputPrefab();
+		messageInputPrefab.setFont(font);
 		messageInputPrefab.setSize(new DualDimension(128, 24));
 		TextNode messageNode = inputBox.addChild(messageInputPrefab).getComponent(TextNode.class);
 		
-		TextButtonPrefab sendButtonPrefab = new TextButtonPrefab("Send");
+		ButtonPrefab sendButtonPrefab = new ButtonPrefab("Send");
+		sendButtonPrefab.setFont(font);
 		sendButtonPrefab.setClickCallback((button) -> {
 			if (!messageNode.text.isBlank()) {
 				user.sendMessage(messageNode.text);
@@ -55,6 +59,7 @@ public class ChatPrefab extends LayoutPrefab {
 		inputBox.addChild(sendButtonPrefab);
 		
 		TextPrefab messagePrefab = new TextPrefab();
+		messagePrefab.setFont(font);
 		user.addMessageListener((message) -> {
 			messagePrefab.setText(Ansi.strip(message));
 			messageList.addChild(messagePrefab);

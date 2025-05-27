@@ -1,5 +1,6 @@
 package dev.prozilla.pine.examples.chat;
 
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.examples.chat.net.server.Server;
 import dev.prozilla.pine.examples.chat.net.user.Client;
@@ -23,6 +24,11 @@ public class Chat extends Application {
 	
 	public final int connectScene;
 	public final int serverStartupScene;
+	
+	public static final String FONT = "fonts/aoboshi-one/AoboshiOne-Regular.ttf";
+	public static final Color BACKGROUND_COLOR_A = Color.decode("#1c232b");
+	public static final Color BACKGROUND_COLOR_B = Color.decode("#0b0e11");
+	public static final Color FOREGROUND_COLOR_A = Color.white();
 	
 	public Chat() {
 		super("Chat", 480, 270, new MenuScene());

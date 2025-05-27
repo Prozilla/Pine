@@ -43,6 +43,7 @@ public class NodePrefab extends Prefab {
 	protected boolean borderImageSliceFill;
 	protected Color color;
 	protected Color backgroundColor;
+	protected Color borderColor;
 	protected GridAlignment anchor;
 	protected boolean absolutePosition;
 	protected boolean passThrough;
@@ -186,6 +187,10 @@ public class NodePrefab extends Prefab {
 		backgroundColor = color.getValue();
 	}
 	
+	public void setBorderColor(Color color) {
+		borderColor = color;
+	}
+	
 	/**
 	 * Sets the anchor point of this node.
 	 */
@@ -299,6 +304,9 @@ public class NodePrefab extends Prefab {
 			node.borderImage = borderImage;
 			node.borderImageSlice = borderImageSlice.clone();
 			node.borderImageSliceFill = borderImageSliceFill;
+		}
+		if (borderColor != null) {
+			node.borderColor = borderColor;
 		}
 		
 		if (classes != null) {
