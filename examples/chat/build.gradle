@@ -8,13 +8,7 @@ application {
 	mainClass = "dev.prozilla.pine.examples.chat.Server"
 }
 
-tasks.register("startServer", JavaExec) {
-	mainClass = "dev.prozilla.pine.examples.chat.server.ServerApp"
+tasks.register("start", JavaExec) {
+	mainClass = "dev.prozilla.pine.examples.chat.Chat"
 	classpath = sourceSets.main.runtimeClasspath
-}
-
-tasks.register("startClient", JavaExec) {
-	mainClass = "dev.prozilla.pine.examples.chat.client.ClientApp"
-	classpath = sourceSets.main.runtimeClasspath
-	standardInput = System.in
 }

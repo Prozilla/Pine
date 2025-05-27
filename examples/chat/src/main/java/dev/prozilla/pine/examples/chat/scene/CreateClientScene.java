@@ -1,35 +1,21 @@
-package dev.prozilla.pine.examples.chat.client.scene;
+package dev.prozilla.pine.examples.chat.scene;
 
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
-import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.ui.TextInputNode;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextButtonPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextInputPrefab;
-import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.examples.chat.client.Client;
-import dev.prozilla.pine.examples.chat.client.ClientApp;
 
-public class ConnectScene extends Scene {
-	
-	private ClientApp clientApp;
-	
-	@Override
-	public void setApplication(Application application) {
-		super.setApplication(application);
-		clientApp = (ClientApp)application;
-	}
+public class CreateClientScene extends SceneBase {
 	
 	@Override
 	protected void load() {
 		super.load();
-		
-		Entity nodeRoot = world.addEntity(new NodeRootPrefab());
 		
 		LayoutPrefab layoutPrefab = new LayoutPrefab();
 		layoutPrefab.setAnchor(GridAlignment.CENTER);
@@ -49,7 +35,7 @@ public class ConnectScene extends Scene {
 		
 		TextButtonPrefab buttonPrefab = new TextButtonPrefab("Connect");
 		buttonPrefab.setClickCallback((button) -> {
-			clientApp.startClient(hostNode.text, Integer.parseInt(portNode.text), usernameNode.text);
+			chatApp.startClient(hostNode.text, Integer.parseInt(portNode.text), usernameNode.text);
 		});
 		layoutNode.addChild(buttonPrefab);
 	}

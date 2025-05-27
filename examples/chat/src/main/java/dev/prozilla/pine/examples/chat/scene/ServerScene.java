@@ -1,4 +1,4 @@
-package dev.prozilla.pine.examples.chat.server.scene;
+package dev.prozilla.pine.examples.chat.scene;
 
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.core.entity.Entity;

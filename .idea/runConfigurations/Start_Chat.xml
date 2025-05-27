@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Start Client" type="GradleRunConfiguration" factoryName="Gradle" folderName="Chat" singleton="false">
+  <configuration default="false" name="Start Chat" type="GradleRunConfiguration" factoryName="Gradle" folderName="Chat" singleton="false">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -10,7 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value=":examples:chat:startClient" />
+          <option value=":examples:chat:start" />
         </list>
       </option>
       <option name="vmOptions" />
