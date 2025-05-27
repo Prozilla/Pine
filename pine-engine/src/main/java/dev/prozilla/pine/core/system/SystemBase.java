@@ -222,7 +222,14 @@ public abstract class SystemBase {
 	 * Sorts the entity chunks in this system based on a comparator.
 	 */
 	protected void sort(Comparator<EntityChunk> comparator) {
+		boolean isAlreadyIterating = query.isIterating;
+		if (!isAlreadyIterating) {
+			query.startIteration();
+		}
 		query.entityChunks.sort(comparator);
+		if (!isAlreadyIterating) {
+			query.endIteration();
+		}
 	}
 	
 	/**

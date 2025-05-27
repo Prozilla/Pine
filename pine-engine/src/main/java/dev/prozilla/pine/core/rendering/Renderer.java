@@ -94,7 +94,7 @@ public class Renderer implements Initializable {
 //		glAlphaFunc(GL_GREATER, 0.1f);
 		
 		// Read config options
-		RenderConfig config = application.getConfig().rendering;
+		RenderConfig config = getConfig();
 		config.enableBlend.read((enableBlend) -> {
 			if (enableBlend) {
 				glEnable(GL_BLEND);
@@ -884,4 +884,9 @@ public class Renderer implements Initializable {
 	public FrameBufferObject getFbo() {
 		return fbo;
 	}
+	
+	public RenderConfig getConfig() {
+		return application.getConfig().rendering;
+	}
+	
 }

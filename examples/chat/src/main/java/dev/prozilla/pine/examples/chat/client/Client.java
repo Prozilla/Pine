@@ -1,5 +1,7 @@
 package dev.prozilla.pine.examples.chat.client;
 
+import dev.prozilla.pine.common.event.EventDispatcher;
+import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.common.lifecycle.Destructable;
 
 import java.io.*;
@@ -12,12 +14,19 @@ public class Client implements Destructable, Runnable {
 	private volatile BufferedReader bufferedReader;
 	private final String username;
 	
+	private final EventDispatcher<ClientEvent, String> eventDispatcher;
+	
+	public enum ClientEvent {
+		MESSAGE_RECEIVE
+	}
+	
 	public static final String DEFAULT_HOST = "localhost";
 	public static final int DEFAULT_PORT = 1234;
 	
 	public Client(Socket socket, String username) {
 		this.socket = socket;
 		this.username = username;
+		eventDispatcher = new EventDispatcher<>();
 		
 		try {
 			bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -33,8 +42,7 @@ public class Client implements Destructable, Runnable {
 		
 		while (socket.isConnected()) {
 			try {
-				String receivedMessage = bufferedReader.readLine();
-				System.out.println(receivedMessage);
+				receiveMessage(bufferedReader.readLine());
 			} catch (IOException e) {
 				destroy();
 				break;
@@ -50,6 +58,14 @@ public class Client implements Destructable, Runnable {
 		} catch (IOException e) {
 			destroy();
 		}
+	}
+	
+	public void receiveMessage(String message) {
+		eventDispatcher.invoke(ClientEvent.MESSAGE_RECEIVE, message);
+	}
+	
+	public void addMessageListener(EventListener<String> listener) {
+		eventDispatcher.addListener(ClientEvent.MESSAGE_RECEIVE, listener);
 	}
 	
 	@Override

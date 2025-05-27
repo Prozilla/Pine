@@ -53,6 +53,7 @@ public class Config {
 		addOption(RenderConfig.ENABLE_DEPTH_TEST, rendering.enableDepthTest);
 		addOption(RenderConfig.RENDER_MODE, rendering.renderMode);
 		addOption(RenderConfig.SNAP_PIXELS, rendering.snapPixels);
+		addOption(RenderConfig.SNAP_TEXT, rendering.snapText);
 		
 		addOption(LogConfig.ENABLE_LOGS, logging.enableLogs);
 		addOption(LogConfig.PREFIX, logging.prefix);

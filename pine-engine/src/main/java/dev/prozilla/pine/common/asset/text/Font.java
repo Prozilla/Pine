@@ -287,20 +287,22 @@ public class Font implements Asset {
         int width = 0;
         int lineWidth = 0;
         for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i);
-            if (c == '\n') {
+            char character = text.charAt(i);
+            if (character == '\n') {
                 /* Line end, set width to maximum from line width and stored
                  * width */
                 width = Math.max(width, lineWidth);
                 lineWidth = 0;
                 continue;
             }
-            if (c == '\r') {
+            if (character == '\r') {
                 /* Carriage return, just skip it */
                 continue;
             }
-            Glyph g = glyphs.get(c);
-            lineWidth += g.width;
+            Glyph glyph = glyphs.get(character);
+            if (glyph != null) {
+                lineWidth += glyph.width;
+            }
         }
         width = Math.max(width, lineWidth);
         return width;
@@ -317,19 +319,21 @@ public class Font implements Asset {
         int height = 0;
         int lineHeight = 0;
         for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i);
-            if (c == '\n') {
+            char character = text.charAt(i);
+            if (character == '\n') {
                 /* Line end, add line height to stored height */
                 height += lineHeight;
                 lineHeight = 0;
                 continue;
             }
-            if (c == '\r') {
+            if (character == '\r') {
                 /* Carriage return, just skip it */
                 continue;
             }
-            Glyph g = glyphs.get(c);
-            lineHeight = Math.max(lineHeight, g.height);
+            Glyph glyph = glyphs.get(character);
+            if (glyph != null) {
+                lineHeight = Math.max(lineHeight, glyph.height);
+            }
         }
         height += lineHeight;
         return height;
@@ -358,20 +362,22 @@ public class Font implements Asset {
         }
 
         for (int i = 0; i < text.length(); i++) {
-            char ch = text.charAt(i);
-            if (ch == '\n') {
+            char character = text.charAt(i);
+            if (character == '\n') {
                 /* Line feed, set x and y to draw at the next line */
                 drawY -= fontHeight;
                 drawX = x;
                 continue;
             }
-            if (ch == '\r') {
+            if (character == '\r') {
                 /* Carriage return, just skip it */
                 continue;
             }
-            Glyph g = glyphs.get(ch);
-            renderer.drawTextureRegion(texture, drawX, drawY, z, g.x, g.y, g.width, g.height, c);
-            drawX += g.width;
+            Glyph glyph = glyphs.get(character);
+            if (glyph != null) {
+                renderer.drawTextureRegion(texture, drawX, drawY, z, glyph.x, glyph.y, glyph.width, glyph.height, c);
+                drawX += glyph.width;
+            }
         }
     }
 
