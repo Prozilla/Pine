@@ -1,4 +1,4 @@
-package dev.prozilla.pine.examples.chat.scene;
+package dev.prozilla.pine.examples.chat.scene.server;
 
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.vector.Direction;
@@ -9,7 +9,8 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextButtonPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextInputPrefab;
-import dev.prozilla.pine.examples.chat.server.Server;
+import dev.prozilla.pine.examples.chat.net.server.Server;
+import dev.prozilla.pine.examples.chat.scene.SceneBase;
 
 public class CreateServerScene extends SceneBase {
 	

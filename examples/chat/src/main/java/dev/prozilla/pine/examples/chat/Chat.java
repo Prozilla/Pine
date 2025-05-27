@@ -1,13 +1,13 @@
 package dev.prozilla.pine.examples.chat;
 
 import dev.prozilla.pine.core.Application;
-import dev.prozilla.pine.examples.chat.client.Client;
-import dev.prozilla.pine.examples.chat.scene.ClientScene;
-import dev.prozilla.pine.examples.chat.scene.CreateClientScene;
+import dev.prozilla.pine.examples.chat.net.server.Server;
+import dev.prozilla.pine.examples.chat.net.user.Client;
 import dev.prozilla.pine.examples.chat.scene.MenuScene;
-import dev.prozilla.pine.examples.chat.server.Server;
-import dev.prozilla.pine.examples.chat.scene.ServerScene;
-import dev.prozilla.pine.examples.chat.scene.CreateServerScene;
+import dev.prozilla.pine.examples.chat.scene.client.ClientScene;
+import dev.prozilla.pine.examples.chat.scene.client.CreateClientScene;
+import dev.prozilla.pine.examples.chat.scene.server.CreateServerScene;
+import dev.prozilla.pine.examples.chat.scene.server.ServerScene;
 
 import java.io.IOException;
 
@@ -25,7 +25,7 @@ public class Chat extends Application {
 	public final int serverStartupScene;
 	
 	public Chat() {
-		super("Chat", 900, 600, new MenuScene());
+		super("Chat", 480, 270, new MenuScene());
 		
 		connectScene = addScene(new CreateClientScene());
 		serverStartupScene = addScene(new CreateServerScene());
@@ -39,7 +39,8 @@ public class Chat extends Application {
 			
 			loadScene(addScene(new ClientScene(client)));
 		} catch (IOException e) {
-			logger.error("Failed to start server", e);
+			logger.error("Failed to start client", e);
+			destroy();
 		}
 	}
 	
@@ -52,6 +53,7 @@ public class Chat extends Application {
 			loadScene(addScene(new ServerScene(server)));
 		} catch (IOException e) {
 			logger.error("Failed to start server", e);
+			destroy();
 		}
 	}
 	

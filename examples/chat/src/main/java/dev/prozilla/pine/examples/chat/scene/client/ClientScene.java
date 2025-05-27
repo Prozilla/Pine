@@ -1,10 +1,10 @@
-package dev.prozilla.pine.examples.chat.scene;
+package dev.prozilla.pine.examples.chat.scene.client;
 
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
 import dev.prozilla.pine.core.scene.Scene;
-import dev.prozilla.pine.examples.chat.client.Client;
 import dev.prozilla.pine.examples.chat.entity.ChatPrefab;
+import dev.prozilla.pine.examples.chat.net.user.Client;
 
 public class ClientScene extends Scene {
 	

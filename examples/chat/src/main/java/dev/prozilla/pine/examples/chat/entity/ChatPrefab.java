@@ -12,14 +12,14 @@ import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextButtonPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextInputPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
-import dev.prozilla.pine.examples.chat.client.Client;
+import dev.prozilla.pine.examples.chat.net.user.User;
 
 public class ChatPrefab extends LayoutPrefab {
 	
-	private final Client client;
+	private final User user;
 	
-	public ChatPrefab(Client client) {
-		this.client = client;
+	public ChatPrefab(User user) {
+		this.user = user;
 		
 		setGap(new Dimension(8));
 		setDirection(Direction.DOWN);
@@ -47,13 +47,15 @@ public class ChatPrefab extends LayoutPrefab {
 		
 		TextButtonPrefab sendButtonPrefab = new TextButtonPrefab("Send");
 		sendButtonPrefab.setClickCallback((button) -> {
-			client.sendMessage(messageNode.text);
-			messageNode.setText("");
+			if (!messageNode.text.isBlank()) {
+				user.sendMessage(messageNode.text);
+				messageNode.setText("");
+			}
 		});
 		inputBox.addChild(sendButtonPrefab);
 		
 		TextPrefab messagePrefab = new TextPrefab();
-		client.addMessageListener((message) -> {
+		user.addMessageListener((message) -> {
 			messagePrefab.setText(Ansi.strip(message));
 			messageList.addChild(messagePrefab);
 		});

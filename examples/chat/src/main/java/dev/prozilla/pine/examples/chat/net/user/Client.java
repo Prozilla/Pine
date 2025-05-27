@@ -1,24 +1,14 @@
-package dev.prozilla.pine.examples.chat.client;
-
-import dev.prozilla.pine.common.event.EventDispatcher;
-import dev.prozilla.pine.common.event.EventListener;
-import dev.prozilla.pine.common.lifecycle.Destructable;
+package dev.prozilla.pine.examples.chat.net.user;
 
 import java.io.*;
 import java.net.Socket;
 
-public class Client implements Destructable, Runnable {
+public class Client extends User implements Runnable {
 
 	private final Socket socket;
 	private volatile BufferedWriter bufferedWriter;
 	private volatile BufferedReader bufferedReader;
 	private final String username;
-	
-	private final EventDispatcher<ClientEvent, String> eventDispatcher;
-	
-	public enum ClientEvent {
-		MESSAGE_RECEIVE
-	}
 	
 	public static final String DEFAULT_HOST = "localhost";
 	public static final int DEFAULT_PORT = 1234;
@@ -26,7 +16,6 @@ public class Client implements Destructable, Runnable {
 	public Client(Socket socket, String username) {
 		this.socket = socket;
 		this.username = username;
-		eventDispatcher = new EventDispatcher<>();
 		
 		try {
 			bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -42,7 +31,12 @@ public class Client implements Destructable, Runnable {
 		
 		while (socket.isConnected()) {
 			try {
-				receiveMessage(bufferedReader.readLine());
+				String receivedMessage = bufferedReader.readLine();
+				if (receivedMessage == null) {
+					destroy();
+					break;
+				}
+				receiveMessage(receivedMessage);
 			} catch (IOException e) {
 				destroy();
 				break;
@@ -50,6 +44,7 @@ public class Client implements Destructable, Runnable {
 		}
 	}
 	
+	@Override
 	public void sendMessage(String message) {
 		try {
 			bufferedWriter.write(message);
@@ -60,12 +55,9 @@ public class Client implements Destructable, Runnable {
 		}
 	}
 	
-	public void receiveMessage(String message) {
-		eventDispatcher.invoke(ClientEvent.MESSAGE_RECEIVE, message);
-	}
-	
-	public void addMessageListener(EventListener<String> listener) {
-		eventDispatcher.addListener(ClientEvent.MESSAGE_RECEIVE, listener);
+	@Override
+	public String getUsername() {
+		return username;
 	}
 	
 	@Override
@@ -82,6 +74,8 @@ public class Client implements Destructable, Runnable {
 			}
 		} catch (IOException | SecurityException e) {
 			e.printStackTrace();
+		} finally {
+			super.destroy();
 		}
 	}
 	

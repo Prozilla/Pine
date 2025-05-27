@@ -1,11 +1,12 @@
-package dev.prozilla.pine.examples.chat.server;
+package dev.prozilla.pine.examples.chat.net.server;
 
 import dev.prozilla.pine.common.lifecycle.Destructable;
+import dev.prozilla.pine.examples.chat.net.user.UserData;
 
 import java.io.*;
 import java.net.Socket;
 
-public class ClientHandler implements Runnable, Destructable {
+public class ClientHandler implements Runnable, UserData, Destructable {
 	
 	private Server server;
 	private Socket socket;
@@ -21,7 +22,7 @@ public class ClientHandler implements Runnable, Destructable {
 			bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			username = bufferedReader.readLine();
 		} catch (Exception e) {
-			destroy();
+			disconnect();
 		}
 	}
 	
@@ -31,12 +32,12 @@ public class ClientHandler implements Runnable, Destructable {
 			try {
 				String message = bufferedReader.readLine();
 				if (message == null) {
-					destroy();
+					disconnect();
 					break;
 				}
 				server.broadcastChatMessage(this, message);
 			} catch (IOException e) {
-				destroy();
+				disconnect();
 				break;
 			}
 		}
@@ -48,19 +49,24 @@ public class ClientHandler implements Runnable, Destructable {
 			bufferedWriter.newLine();
 			bufferedWriter.flush();
 		} catch (IOException e) {
-			destroy();
+			disconnect();
 		}
+	}
+	
+	public void disconnect() {
+		System.out.println("Disconnecting: " + username);
+		server.disconnect(this);
+		destroy();
 	}
 	
 	@Override
 	public void destroy() {
-		server.disconnect(this);
 		try {
-			if (bufferedReader != null) {
-				bufferedReader.close();
-			}
 			if (bufferedWriter != null) {
 				bufferedWriter.close();
+			}
+			if (bufferedReader != null) {
+				bufferedReader.close();
 			}
 			if (socket != null) {
 				socket.close();
@@ -70,6 +76,7 @@ public class ClientHandler implements Runnable, Destructable {
 		}
 	}
 	
+	@Override
 	public String getUsername() {
 		return username;
 	}

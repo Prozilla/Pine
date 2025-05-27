@@ -1,7 +1,9 @@
-package dev.prozilla.pine.examples.chat.server;
+package dev.prozilla.pine.examples.chat.net.server;
 
 import dev.prozilla.pine.common.lifecycle.Destructable;
 import dev.prozilla.pine.common.system.Ansi;
+import dev.prozilla.pine.examples.chat.net.user.Host;
+import dev.prozilla.pine.examples.chat.net.user.UserData;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -19,6 +21,7 @@ public class Server implements Runnable, Destructable {
 	private final List<ClientHandler> clientHandlers;
 	private final Set<ClientHandler> clientHandlersToAdd;
 	private final Set<ClientHandler> clientHandlersToRemove;
+	private final Host host;
 	
 	private final AtomicBoolean usingClientHandlers;
 	
@@ -30,11 +33,11 @@ public class Server implements Runnable, Destructable {
 		clientHandlersToAdd = new HashSet<>();
 		clientHandlersToRemove = new HashSet<>();
 		usingClientHandlers = new AtomicBoolean(false);
+		host = new Host(this);
 	}
 	
 	@Override
 	public void run() {
-		System.out.println("Server has started");
 		try {
 			while (!serverSocket.isClosed()) {
 				Socket socket = serverSocket.accept();
@@ -46,17 +49,6 @@ public class Server implements Runnable, Destructable {
 			}
 		} catch (IOException e) {
 			destroy();
-		}
-	}
-	
-	@Override
-	public void destroy() {
-		try {
-			if (serverSocket != null) {
-				serverSocket.close();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 	
@@ -78,7 +70,11 @@ public class Server implements Runnable, Destructable {
 		broadcastMessage(Ansi.yellow(String.format("[SERVER] %s", message)));
 	}
 	
-	public void broadcastChatMessage(ClientHandler sender, String message) {
+	public void broadcastHostMessage(Host host, String message) {
+		broadcastMessage(String.format("[%s]: %s", host.getUsername(), Ansi.cyan(message)));
+	}
+	
+	public void broadcastChatMessage(UserData sender, String message) {
 		broadcastMessage(String.format("[%s]: %s", sender.getUsername(), Ansi.cyan(message)));
 	}
 	
@@ -87,7 +83,7 @@ public class Server implements Runnable, Destructable {
 			updateClientHandlers();
 			usingClientHandlers.set(true);
 		}
-		System.out.println(message);
+		host.receiveMessage(message);
 		for (ClientHandler clientHandler : clientHandlers) {
 			clientHandler.receiveMessage(message);
 		}
@@ -123,6 +119,25 @@ public class Server implements Runnable, Destructable {
 	
 	public InetAddress getAddress() {
 		return serverSocket.getInetAddress();
+	}
+	
+	public Host getHost() {
+		return host;
+	}
+	
+	@Override
+	public void destroy() {
+		try {
+			if (serverSocket != null) {
+				serverSocket.close();
+				usingClientHandlers.set(true);
+				for (ClientHandler clientHandler : clientHandlers) {
+					clientHandler.destroy();
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static Server create(int port) throws IOException {

@@ -160,7 +160,7 @@ public abstract class SystemBase {
 		} catch (Exception e) {
 			logger.error("Failed to iterate over entities in system: " + getClass().getSimpleName(), e);
 		} finally {
-			if (scene.isActive()) {
+			if (scene.isActive() && query.isIterating) {
 				query.endIteration();
 			}
 		}
@@ -188,7 +188,7 @@ public abstract class SystemBase {
 		} catch (Exception e) {
 			logger.error("Failed to iterate over entities in system: " + getClass().getSimpleName(), e);
 		} finally {
-			if (scene.isActive()) {
+			if (scene.isActive() && query.isIterating) {
 				query.endIteration();
 			}
 		}

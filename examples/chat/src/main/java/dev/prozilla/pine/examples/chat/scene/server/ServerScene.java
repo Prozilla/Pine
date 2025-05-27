@@ -1,4 +1,4 @@
-package dev.prozilla.pine.examples.chat.scene;
+package dev.prozilla.pine.examples.chat.scene.server;
 
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.core.entity.Entity;
@@ -6,7 +6,8 @@ import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
 import dev.prozilla.pine.core.scene.Scene;
-import dev.prozilla.pine.examples.chat.server.Server;
+import dev.prozilla.pine.examples.chat.entity.ChatPrefab;
+import dev.prozilla.pine.examples.chat.net.server.Server;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -27,10 +28,12 @@ public class ServerScene extends Scene {
 		
 		LayoutPrefab layoutPrefab = new LayoutPrefab();
 		layoutPrefab.setAnchor(GridAlignment.CENTER);
-		Entity layoutNode = nodeRoot.addChild(layoutPrefab);
+		Entity layout = nodeRoot.addChild(layoutPrefab);
+		
+		layout.addChild(new ChatPrefab(server.getHost()));
 		
 		TextPrefab portPrefab = new TextPrefab("Port: " + server.getPort());
-		layoutNode.addChild(portPrefab);
+		layout.addChild(portPrefab);
 		
 		String address = "Unknown";
 		try {
@@ -40,6 +43,6 @@ public class ServerScene extends Scene {
 		}
 		
 		TextPrefab addressPrefab = new TextPrefab("IP address: " + address);
-		layoutNode.addChild(addressPrefab);
+		layout.addChild(addressPrefab);
 	}
 }
