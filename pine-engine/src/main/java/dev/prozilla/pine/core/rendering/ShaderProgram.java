@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.rendering;
 
-import dev.prozilla.pine.common.lifecycle.Destructable;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.math.matrix.Matrix2f;
 import dev.prozilla.pine.common.math.matrix.Matrix3f;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
@@ -18,7 +18,7 @@ import static org.lwjgl.opengl.GL31.GL_INVALID_INDEX;
 /**
  * Represents an OpenGL shader program.
  */
-public class ShaderProgram implements Destructable {
+public class ShaderProgram implements Destructible {
 	
 	/**
 	 * Stores the handle of the program.

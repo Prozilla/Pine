@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * An isolated collection of entities, components and systems that live inside a scene.
  */
-public class World implements Initializable, InputHandler, Updatable, Renderable, Destructable {
+public class World implements Initializable, InputHandler, Updatable, Renderable, Destructible {
 	
 	// ECS managers
 	public EntityManager entityManager;
@@ -213,7 +213,7 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		entityManager.destroy();
 		componentManager.destroy();
 		systemManager.destroy();
-		queryPool.clear();
+		queryPool.destroy();
 		application.getTracker().reset();
 	}
 	

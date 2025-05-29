@@ -1,7 +1,9 @@
 package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.text.Font;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
@@ -30,7 +32,7 @@ import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 /**
  * Handles the rendering process.
  */
-public class Renderer implements Initializable {
+public class Renderer implements Initializable, Destructible {
 	
 	private VertexArrayObject vao;
 	private VertexBufferObject vbo;
@@ -242,7 +244,7 @@ public class Renderer implements Initializable {
 		}
 	}
 	
-	// Transformation state
+	//region --- Transformation state ---
 	
 	public void resetTransform() {
 		resetScale();
@@ -290,7 +292,9 @@ public class Renderer implements Initializable {
 		glDisable(GL_SCISSOR_TEST);
 	}
 	
-	// Calculations
+	//endregion Transformation state
+	
+	//region --- Calculations ---
 	
 	/**
 	 * Calculates total width of a debug text.
@@ -365,7 +369,9 @@ public class Renderer implements Initializable {
 		return font.getHeight(text);
 	}
 	
-	// Drawing
+	//endregion Calculations
+	
+	//region --- Drawing ---
 	
 	public void drawText(CharSequence text, float x, float y, float z) {
 		drawText(defaultFont, text, x, y, z);
@@ -705,14 +711,19 @@ public class Renderer implements Initializable {
 		
 		numVertices += 6;
 		
-		// Change active texture and unbind previous texture
-		if (texture != null && (activeTexture == null || !activeTexture.hasEqualLocation(texture))) {
+		replaceActiveTexture(texture);
+	}
+	
+	private void replaceActiveTexture(TextureBase newTexture) {
+		if (newTexture != null && (activeTexture == null || !activeTexture.hasEqualLocation(newTexture))) {
 			if (activeTexture != null) {
 				activeTexture.unbind();
 			}
-			activeTexture = texture;
+			activeTexture = newTexture;
 		}
 	}
+	
+	//endregion Drawing
 	
 	/**
 	 * Checks if a quad is outside the screen bounds.
@@ -746,6 +757,7 @@ public class Renderer implements Initializable {
 	/**
 	 * Disposes renderer and cleans up its used data.
 	 */
+	@Override
 	public void destroy() {
 		MemoryUtil.memFree(vertices);
 		
@@ -797,8 +809,8 @@ public class Renderer implements Initializable {
 		
 		// Load shaders
 		Shader vertexShader, fragmentShader;
-		vertexShader = Shader.loadShader(GL_VERTEX_SHADER, VERTEX_SHADER_PATH);
-		fragmentShader = Shader.loadShader(GL_FRAGMENT_SHADER, FRAGMENT_SHADER_PATH);
+		vertexShader = AssetPools.shaders.load(GL_VERTEX_SHADER, VERTEX_SHADER_PATH);
+		fragmentShader = AssetPools.shaders.load(GL_FRAGMENT_SHADER, FRAGMENT_SHADER_PATH);
 		
 		// Create shader program
 		program = new ShaderProgram();

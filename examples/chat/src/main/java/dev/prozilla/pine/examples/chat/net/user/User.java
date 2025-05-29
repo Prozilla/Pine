@@ -2,9 +2,9 @@ package dev.prozilla.pine.examples.chat.net.user;
 
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventListener;
-import dev.prozilla.pine.common.lifecycle.Destructable;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 
-public abstract class User implements Destructable, UserData {
+public abstract class User implements Destructible, UserData {
 	
 	private final EventDispatcher<MessageEvent, String> eventDispatcher;
 	

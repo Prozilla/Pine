@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.state.input;
 
 import dev.prozilla.pine.common.asset.image.Image;
-import dev.prozilla.pine.common.lifecycle.Destructable;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.vector.Vector2f;
@@ -23,7 +23,7 @@ import static org.lwjgl.glfw.GLFW.*;
 /**
  * Handles the GLFW input system.
  */
-public class Input implements Initializable, Destructable {
+public class Input implements Initializable, Destructible {
 	
 	// Keyboard
 	/** Array of keys that are currently pressed. */
@@ -66,6 +66,7 @@ public class Input implements Initializable, Destructable {
 	private final Window window;
 	private final Logger logger;
 	
+	// Constants
 	private static final int CURSOR_TYPE_DEFAULT = CursorType.DEFAULT.getValue();
 	private static final boolean IGNORE_CURSOR_BLOCK_DEFAULT = false;
 	private static final boolean STOP_PROPAGATION_DEFAULT = false;
@@ -125,7 +126,7 @@ public class Input implements Initializable, Destructable {
 	 */
 	@Override
 	public void init() {
-		glfwSetKeyCallback(window.id, keyCallback = new GLFWKeyCallback() {
+		glfwSetKeyCallback(window.getId(), keyCallback = new GLFWKeyCallback() {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				if (action == GLFW_PRESS) {
@@ -139,7 +140,7 @@ public class Input implements Initializable, Destructable {
 			}
 		});
 		
-		glfwSetCharCallback(window.id, charCallback = new GLFWCharCallback() {
+		glfwSetCharCallback(window.getId(), charCallback = new GLFWCharCallback() {
 			@Override
 			public void invoke(long window, int codepoint) {
 				char character = (char)codepoint;
@@ -149,7 +150,7 @@ public class Input implements Initializable, Destructable {
 			}
 		});
 		
-		glfwSetScrollCallback(window.id, scrollCallback = new GLFWScrollCallback() {
+		glfwSetScrollCallback(window.getId(), scrollCallback = new GLFWScrollCallback() {
 			@Override
 			public void invoke(long window, double xOffset, double yOffset) {
 				scroll.x = (float)xOffset;
@@ -157,7 +158,7 @@ public class Input implements Initializable, Destructable {
 			}
 		});
 		
-		glfwSetCursorPosCallback(window.id, cursorPosCallback = new GLFWCursorPosCallback() {
+		glfwSetCursorPosCallback(window.getId(), cursorPosCallback = new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xPos, double yPos) {
 				cursorPosition.x = (int)xPos;
@@ -165,7 +166,7 @@ public class Input implements Initializable, Destructable {
 			}
 		});
 		
-		glfwSetMouseButtonCallback(window.id, mouseButtonCallback = new GLFWMouseButtonCallback() {
+		glfwSetMouseButtonCallback(window.getId(), mouseButtonCallback = new GLFWMouseButtonCallback() {
 			@Override
 			public void invoke(long window, int button, int action, int mods) {
 				if (action == GLFW_PRESS) {
@@ -240,7 +241,7 @@ public class Input implements Initializable, Destructable {
 		}
 		
 		if (cursorHandle != previousCursorHandle) {
-			glfwSetCursor(application.getWindow().id, cursorHandle);
+			glfwSetCursor(application.getWindow().getId(), cursorHandle);
 			previousCursorHandle = cursorHandle;
 		}
 		
@@ -276,7 +277,7 @@ public class Input implements Initializable, Destructable {
 		textListeners.clear();
 	}
 	
-	// Keyboard
+	//region --- Keyboard ---
 	
 	/**
 	 * Checks whether any key in an array is pressed.
@@ -467,7 +468,9 @@ public class Input implements Initializable, Destructable {
 		textListeners.remove(listener);
 	}
 	
-	// Gamepad
+	//endregion Keyboard
+	
+	//region --- Gamepad ---
 	
 	/**
 	 * Returns the first gamepad if it is connected,
@@ -504,7 +507,9 @@ public class Input implements Initializable, Destructable {
 		Checks.isInRange(id, 0, gamepads.length - 1, "Invalid gamepad ID: " + id);
 	}
 	
-	// Mouse
+	//endregion Gamepad
+	
+	//region --- Mouse ---
 	
 	/**
 	 * Checks whether a mouse button is pressed.
@@ -729,4 +734,7 @@ public class Input implements Initializable, Destructable {
 		
 		cursorBlocker.print(logger);
 	}
+	
+	//endregion Mouse
+	
 }

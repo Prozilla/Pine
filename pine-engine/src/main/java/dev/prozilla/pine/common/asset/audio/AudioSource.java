@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.asset.audio;
 
 import dev.prozilla.pine.common.asset.Asset;
-import dev.prozilla.pine.common.lifecycle.Destructable;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 
 import java.nio.ShortBuffer;
@@ -9,7 +9,7 @@ import java.nio.ShortBuffer;
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.system.libc.LibCStdlib.free;
 
-public class AudioSource implements Initializable, Destructable, Asset, AudioSourceContext {
+public class AudioSource implements Initializable, Destructible, Asset, AudioSourceContext {
 	
 	private final ShortBuffer rawAudioBuffer;
 	private final int channels;

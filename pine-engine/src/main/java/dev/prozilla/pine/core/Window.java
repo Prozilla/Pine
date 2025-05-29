@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.asset.image.Image;
-import dev.prozilla.pine.common.lifecycle.Destructable;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.core.state.config.WindowConfig;
 import org.lwjgl.glfw.GLFWImage;
@@ -15,10 +15,10 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 /**
  * Represents a GLFW window object.
  */
-public class Window implements Initializable, Destructable {
+public class Window implements Initializable, Destructible {
 	
 	/** Handle of the window */
-	public long id;
+	private long id;
 	
 	public int width;
 	public int height;
@@ -161,6 +161,10 @@ public class Window implements Initializable, Destructable {
 	
 	public int getHeight() {
 		return height;
+	}
+	
+	public long getId() {
+		return id;
 	}
 	
 	/**

@@ -30,7 +30,7 @@ import static org.lwjgl.opengl.GL43.GL_DEBUG_OUTPUT;
 /**
  * 2D application using the LWJGL library.
  */
-public class Application implements Initializable, InputHandler, Updatable, Renderable, Destructable, ApplicationContext, StateProvider<Application, ApplicationState> {
+public class Application implements Initializable, InputHandler, Updatable, Renderable, Destructible, ApplicationContext, StateProvider<Application, ApplicationState> {
 	
 	// State
 	/** True if OpenGL has been initialized */
@@ -189,7 +189,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		audioDevice.init();
 		input.init();
 		if (applicationManager != null) {
-			applicationManager.onInit(window.id);
+			applicationManager.onInit(window.getId());
 		}
 		currentScene.init();
 		loadIcons();

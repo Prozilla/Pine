@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.audio;
 
-import dev.prozilla.pine.common.lifecycle.Destructable;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.openal.ALUtils;
@@ -13,7 +13,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import static org.lwjgl.openal.ALC10.*;
 
-public final class AudioDevice implements Initializable, Destructable {
+public final class AudioDevice implements Initializable, Destructible {
 	
 	private final Logger logger;
 	

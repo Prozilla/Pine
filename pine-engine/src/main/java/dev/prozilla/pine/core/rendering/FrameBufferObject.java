@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.asset.image.Texture;
-import dev.prozilla.pine.common.lifecycle.Destructable;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL30.*;
 /**
  * Represents an OpenGL frame buffer.
  */
-public class FrameBufferObject implements Initializable, Destructable {
+public class FrameBufferObject implements Initializable, Destructible {
 	
 	private final int id;
 	private Texture texture;

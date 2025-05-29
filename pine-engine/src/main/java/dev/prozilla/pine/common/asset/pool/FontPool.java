@@ -21,6 +21,11 @@ public final class FontPool extends AssetPool<Font> {
 	}
 	
 	@Override
+	public Font load(String path) {
+		return super.load(path);
+	}
+	
+	@Override
 	protected Font createAsset(String path) {
 		Font font;
 		try (InputStream stream = AssetPools.class.getResourceAsStream(path)) {

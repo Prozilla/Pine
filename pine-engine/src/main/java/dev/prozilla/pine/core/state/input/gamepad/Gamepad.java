@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.state.input.gamepad;
 
-import dev.prozilla.pine.common.lifecycle.Destructable;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import org.lwjgl.glfw.GLFWGamepadState;
 import org.lwjgl.system.MemoryUtil;
 
@@ -13,7 +13,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetGamepadState;
 /**
  * Handles input for gamepad devices by reading from {@link GLFWGamepadState}.
  */
-public class Gamepad implements GamepadInput, Destructable {
+public class Gamepad implements GamepadInput, Destructible {
 	
 	private final GLFWGamepadState state;
 	private final int id;

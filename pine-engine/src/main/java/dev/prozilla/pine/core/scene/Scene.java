@@ -16,7 +16,7 @@ import java.util.Objects;
 /**
  * Responsible for loading objects into the world.
  */
-public class Scene implements Initializable, InputHandler, Updatable, Renderable, Destructable, Printable, SceneContext, ApplicationProvider {
+public class Scene implements Initializable, InputHandler, Updatable, Renderable, Destructible, Printable, SceneContext, ApplicationProvider {
 	
 	// Scene properties
 	public String name;

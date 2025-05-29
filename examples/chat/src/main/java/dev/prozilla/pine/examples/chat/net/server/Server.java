@@ -1,6 +1,6 @@
 package dev.prozilla.pine.examples.chat.net.server;
 
-import dev.prozilla.pine.common.lifecycle.Destructable;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.system.Ansi;
 import dev.prozilla.pine.examples.chat.net.user.Host;
 import dev.prozilla.pine.examples.chat.net.user.UserData;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Server implements Runnable, Destructable {
+public class Server implements Runnable, Destructible {
 	
 	private final ServerSocket serverSocket;
 	private final List<ClientHandler> clientHandlers;

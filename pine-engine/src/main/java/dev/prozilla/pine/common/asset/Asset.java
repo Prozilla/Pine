@@ -1,11 +1,11 @@
 package dev.prozilla.pine.common.asset;
 
-import dev.prozilla.pine.common.lifecycle.Destructable;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 
 /**
  * Represents a type of asset, like images, audio or text.
  */
-public interface Asset extends Destructable {
+public interface Asset extends Destructible {
 	
 	/**
 	 * Returns the path to the file this asset was loaded from.

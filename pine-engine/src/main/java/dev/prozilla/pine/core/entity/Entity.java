@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.event.EventDispatcher;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
@@ -78,12 +79,6 @@ public class Entity extends EventDispatcher<EntityEventType, Entity> implements 
 		isActive = true;
 	}
 	
-	public void destroyChildren() {
-		for (Transform child : transform.children.toArray(new Transform[]{})) {
-			child.getEntity().destroy();
-		}
-	}
-	
 	/**
 	 * Destroys this entity at the end of the game loop.
 	 */
@@ -91,6 +86,7 @@ public class Entity extends EventDispatcher<EntityEventType, Entity> implements 
 	public void destroy() {
 		if (application.isRunning() && !application.isLoading()) {
 			destroyChildren();
+			destroyComponents();
 			
 			// Remove child from parent
 			if (transform.parent != null) {
@@ -105,6 +101,14 @@ public class Entity extends EventDispatcher<EntityEventType, Entity> implements 
 			invoke(EntityEventType.DESTROY, this);
 			super.destroy();
 		}
+	}
+	
+	public void destroyChildren() {
+		Destructible.destroyAll(transform.children);
+	}
+	
+	public void destroyComponents() {
+		Destructible.destroyAll(components);
 	}
 	
 	/**
@@ -216,8 +220,7 @@ public class Entity extends EventDispatcher<EntityEventType, Entity> implements 
 	 * @param parent Parent entity
 	 */
 	public void setParent(Entity parent) {
-		Checks.isNotNull(parent, "parent");
-		transform.setParent(parent.transform);
+		transform.setParent(parent != null ? parent.transform : null);
 	}
 	
 	/**

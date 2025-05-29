@@ -14,16 +14,18 @@ public final class AssetPools {
 	public static final FontPool fonts = new FontPool();
 	public static final StyleSheetPool styleSheets = new StyleSheetPool();
 	public static final AudioSourcePool audioSources = new AudioSourcePool();
+	public static final ShaderPool shaders = new ShaderPool();
 	
 	/**
 	 * Clears all asset pools.
 	 */
 	public static void clear() {
-		images.clear();
-		textures.clear();
-		fonts.clear();
-		styleSheets.clear();
-		audioSources.clear();
+		images.destroy();
+		textures.destroy();
+		fonts.destroy();
+		styleSheets.destroy();
+		audioSources.destroy();
+		shaders.destroy();
 	}
 	
 	/**
@@ -44,6 +46,7 @@ public final class AssetPools {
 		logger.log("Fonts: " + fonts.count());
 		logger.log("Style sheets: " + styleSheets.count());
 		logger.log("Audio sources: " + audioSources.count());
+		logger.log("Shaders: " + shaders.count());
 	}
 	
 }

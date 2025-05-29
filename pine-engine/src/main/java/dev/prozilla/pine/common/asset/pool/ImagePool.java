@@ -16,6 +16,11 @@ import static org.lwjgl.stb.STBImage.*;
 public final class ImagePool extends AssetPool<Image> {
 	
 	@Override
+	public Image load(String path) {
+		return super.load(path);
+	}
+	
+	@Override
 	protected Image createAsset(String path) {
 		ByteBuffer imageBuffer;
 		int width, height;

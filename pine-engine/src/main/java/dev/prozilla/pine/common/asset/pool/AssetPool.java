@@ -3,11 +3,11 @@ package dev.prozilla.pine.common.asset.pool;
 import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventListener;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.system.PathUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,7 @@ import java.util.Map;
  * Pools manage asset loading efficiently by avoiding loading assets multiple times.
  * @param <T> The type of assets in this pool
  */
-public abstract class AssetPool<T extends Asset> {
+public abstract class AssetPool<T extends Asset> implements Destructible {
 	
 	private final Map<String, T> pool;
 	protected final EventDispatcher<AssetPoolEventType, AssetPoolEvent> eventDispatcher;
@@ -29,10 +29,12 @@ public abstract class AssetPool<T extends Asset> {
 	
 	/**
 	 * Loads an asset from a path or retrieves it from the pool if it has already been loaded once.
+	 *
+	 * <p>This method is protected because some subclasses may require additional parameters to load an asset.</p>
 	 * @param path The path of the asset
 	 * @return The asset, or {@code null} if it failed to load.
 	 */
-	public T load(String path) {
+	protected T load(String path) {
 		Checks.isNotNull(path, "path");
 		path = normalize(path);
 		String key = createKey(path);
@@ -122,10 +124,9 @@ public abstract class AssetPool<T extends Asset> {
 	/**
 	 * Destroys all assets in this pool and removes them.
 	 */
-	public void clear() {
-		Collection<T> assets = new ArrayList<>(pool.values());
-		pool.clear();
-		assets.forEach(Asset::destroy);
+	@Override
+	public void destroy() {
+		Destructible.destroyAll(pool.values());
 	}
 	
 	/**

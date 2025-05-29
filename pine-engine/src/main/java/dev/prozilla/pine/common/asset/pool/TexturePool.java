@@ -20,6 +20,11 @@ public final class TexturePool extends AssetPool<TextureBase> {
 		textureArrays = new ArrayList<>();
 	}
 	
+	@Override
+	public TextureBase load(String path) {
+		return super.load(path);
+	}
+	
 	public TextureBase loadInTextureArray(String path) {
 		textureArrayPolicy = TextureArrayPolicy.ALWAYS;
 		return load(path);

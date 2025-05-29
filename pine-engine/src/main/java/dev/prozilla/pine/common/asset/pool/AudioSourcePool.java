@@ -13,6 +13,11 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 public final class AudioSourcePool extends AssetPool<AudioSource> {
 	
 	@Override
+	public AudioSource load(String path) {
+		return super.load(path);
+	}
+	
+	@Override
 	protected AudioSource createAsset(String path) {
 		ShortBuffer audioBuffer;
 		int channels, sampleRate;
