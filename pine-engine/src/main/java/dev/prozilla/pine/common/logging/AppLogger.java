@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.asset.pool.AssetPoolEvent;
 import dev.prozilla.pine.common.asset.pool.AssetPoolEventType;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.event.EventListener;
-import dev.prozilla.pine.common.system.PathUtils;
+import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.config.LogConfig;
 
@@ -82,7 +82,7 @@ public class AppLogger extends Logger {
 				}
 				error(message, event.getException());
 			} else {
-				logPath("Loading " + assetName,  PathUtils.removeLeadingSlash(event.getPath()));
+				logPath("Loading " + assetName, ResourceUtils.getResourcePath(event.getPath()));
 			}
 		};
 	}

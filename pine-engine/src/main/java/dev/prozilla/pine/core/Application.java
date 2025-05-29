@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core;
 
+import dev.prozilla.pine.Pine;
 import dev.prozilla.pine.common.asset.image.Image;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.text.Font;
@@ -14,12 +15,12 @@ import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.*;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.input.Input;
-import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.lang.Thread.sleep;
 import static org.lwjgl.glfw.GLFW.glfwInit;
@@ -37,6 +38,8 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	public static boolean initializedOpenGL = false;
 	protected boolean shouldStop;
 	protected boolean isPreview;
+	private static boolean isDevMode = false;
+	private static boolean cachedDevMode = false;
 	
 	// Scene
 	protected Scene currentScene;
@@ -448,11 +451,15 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	}
 	
 	/**
-	 * Logs versions of libraries to the console
+	 * Prints system information and library versions.
 	 */
-	public static void printVersions() {
-		Logger.system.log("Java " + System.getProperty("java.version"));
-		Logger.system.log("LWJGL " + Version.getVersion());
+	public void printInfo() {
+		Logger logger = Objects.requireNonNullElse(this.logger, Logger.system);
+		Pine.print(logger);
+		if (audioDevice != null && audioDevice.isAvailable()) {
+			logger.text( "OpenAL version: " + audioDevice.getALVersion());
+		}
+		logger.text("Dev mode: " + isDevMode());
 	}
 	
 	/**
@@ -702,7 +709,13 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		return logger;
 	}
 	
+	@Override
+	public AudioDevice getAudioDevice() {
+		return audioDevice;
+	}
+	
 	/**
+	 * Throws an exception if OpenGL has not been initialized yet.
 	 * @throws IllegalStateException If OpenGL has not been initialized yet.
 	 */
 	public static void requireOpenGL() throws IllegalStateException {
@@ -710,4 +723,32 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			throw new IllegalStateException("OpenGL has not been initialized yet");
 		}
 	}
+	
+	/**
+	 * Checks if the application is running in developer mode.
+	 *
+	 * <p>This method is optimized and will only read the system property once.</p>
+	 * @see Application#readDevMode()
+	 */
+	public static boolean isDevMode() {
+		if (!cachedDevMode) {
+			readDevMode();
+		}
+		return isDevMode;
+	}
+	
+	/**
+	 * Checks if the application is currently running in developer mode.
+	 * @return {@code true} if system property {@code dev-mode} is currently set to {@code true}.
+	 */
+	public static boolean readDevMode() {
+		try {
+			isDevMode = System.getProperty("dev-mode").equalsIgnoreCase("true");
+		} catch (RuntimeException ignored) {
+			isDevMode = false;
+		}
+		cachedDevMode = true;
+		return isDevMode;
+	}
+	
 }

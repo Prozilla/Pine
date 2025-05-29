@@ -30,7 +30,7 @@ public class GameManager extends ApplicationManager {
 		font = AssetPools.fonts.load("fonts/poppins/Poppins-Regular.ttf");
 		
 		// Play background music
-		if (ENABLE_MUSIC) {
+		if (ENABLE_MUSIC || !Application.isDevMode()) {
 			AudioSource music = AssetPools.audioSources.load("audio/pixel-playground.ogg");
 			music.init();
 			music.setVolume(0.21f);

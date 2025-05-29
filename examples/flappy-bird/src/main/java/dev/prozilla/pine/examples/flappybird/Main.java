@@ -1,5 +1,6 @@
 package dev.prozilla.pine.examples.flappybird;
 
+import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationBuilder;
 import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 
@@ -17,7 +18,10 @@ public class Main {
 		flappyBird.setInitialScene(new GameScene());
 		flappyBird.setIcons("flappybird/icon.png");
 		flappyBird.setTargetFps(120);
-//		flappyBird.setFullscreen(true);
+		
+		if (!Application.isDevMode()) {
+			flappyBird.setFullscreen(true);
+		}
 		
 		return flappyBird;
 	}

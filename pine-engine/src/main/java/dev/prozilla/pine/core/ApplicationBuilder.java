@@ -9,7 +9,7 @@ import dev.prozilla.pine.core.state.config.WindowConfig;
  * Utility class for building applications.
  * @see Application
  */
-public final class ApplicationBuilder {
+public class ApplicationBuilder {
 	
 	// App constructor parameters
 	private String title;

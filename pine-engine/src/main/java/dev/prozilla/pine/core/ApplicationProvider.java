@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.core.audio.AudioDevice;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.ApplicationTimer;
@@ -54,4 +55,10 @@ public interface ApplicationProvider extends ApplicationContext {
 	default Logger getLogger() {
 		return getApplication().getLogger();
 	}
+	
+	@Override
+	default AudioDevice getAudioDevice() {
+		return getApplication().getAudioDevice();
+	}
+	
 }

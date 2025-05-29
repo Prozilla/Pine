@@ -11,9 +11,14 @@ import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.system.MemoryUtil;
 
+import static org.lwjgl.openal.AL10.AL_VERSION;
+import static org.lwjgl.openal.AL10.alGetString;
 import static org.lwjgl.openal.ALC10.*;
 
-public final class AudioDevice implements Initializable, Destructible {
+/**
+ * Represents an OpenAL audio device.
+ */
+public class AudioDevice implements Initializable, Destructible {
 	
 	private final Logger logger;
 	
@@ -75,6 +80,9 @@ public final class AudioDevice implements Initializable, Destructible {
 		}
 	}
 	
+	/**
+	 * Checks if the device is ready to be used.
+	 */
 	public boolean isAvailable() {
 		return isInitialized;
 	}
@@ -86,6 +94,17 @@ public final class AudioDevice implements Initializable, Destructible {
 	private void handleError(String message, int error) {
 		logger.error(String.format("%s: %s - %s", message, error, ALUtils.getErrorString(error)));
 		destroy();
+	}
+	
+	/**
+	 * Returns the version of OpenAL.
+	 * @return The OpenAL version
+	 */
+	public String getALVersion() {
+		if (device == 0L) {
+			return null;
+		}
+		return alGetString(AL_VERSION);
 	}
 	
 }
