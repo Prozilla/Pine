@@ -1,19 +1,20 @@
 package dev.prozilla.pine.examples.chat.net.user;
 
-import dev.prozilla.pine.common.event.EventDispatcher;
+import dev.prozilla.pine.common.event.Event;
 import dev.prozilla.pine.common.event.EventListener;
+import dev.prozilla.pine.common.event.SimpleEventDispatcher;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 
 public abstract class User implements Destructible, UserData {
 	
-	private final EventDispatcher<MessageEvent, String> eventDispatcher;
+	private final SimpleEventDispatcher<MessageEventType, String> eventDispatcher;
 	
-	public enum MessageEvent {
+	public enum MessageEventType {
 		MESSAGE_RECEIVE
 	}
 	
 	public User() {
-		eventDispatcher = new EventDispatcher<>();
+		eventDispatcher = new SimpleEventDispatcher();
 	}
 	
 	public abstract void sendMessage(String message);
@@ -21,11 +22,11 @@ public abstract class User implements Destructible, UserData {
 	public void receiveMessage(String message) {
 		if (message == null)
 			return;
-		eventDispatcher.invoke(MessageEvent.MESSAGE_RECEIVE, message);
+		eventDispatcher.invoke(MessageEventType.MESSAGE_RECEIVE, message);
 	}
 	
-	public void addMessageListener(EventListener<String> listener) {
-		eventDispatcher.addListener(MessageEvent.MESSAGE_RECEIVE, listener);
+	public void addMessageListener(EventListener<Event<MessageEventType, String>> listener) {
+		eventDispatcher.addListener(MessageEventType.MESSAGE_RECEIVE, listener);
 	}
 	
 	@Override

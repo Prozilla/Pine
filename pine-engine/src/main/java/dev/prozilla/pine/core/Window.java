@@ -27,9 +27,11 @@ public class Window implements Initializable, Destructible {
 	private boolean isInitialized;
 	
 	private final Application application;
+	private final WindowConfig config;
 	
 	public Window(Application application) {
 		this.application = application;
+		config = application.getConfig().window;
 		
 		isInitialized = false;
 	}
@@ -46,7 +48,6 @@ public class Window implements Initializable, Destructible {
 		long monitor = NULL;
 		
 		// Read config options
-		WindowConfig config = application.getConfig().window;
 		config.showDecorations.read((showDecorations) -> {
 			if (showDecorations) {
 				glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
@@ -172,7 +173,7 @@ public class Window implements Initializable, Destructible {
 	 * @param title Title
 	 */
 	public void setTitle(String title) {
-		application.getConfig().window.title.set(title);
+		config.title.set(title);
 	}
 	
 	/**
@@ -181,9 +182,7 @@ public class Window implements Initializable, Destructible {
 	 * @param images Array of icon images
 	 */
 	public void setIcons(Image[] images) {
-		if (!isInitialized) {
-			throw new IllegalStateException("Window has not been initialized yet.");
-		}
+		checkStatus();
 		
 		try (GLFWImage.Buffer icons = GLFWImage.malloc(images.length)) {
 			for (int i = 0; i < images.length; i++) {
@@ -198,4 +197,24 @@ public class Window implements Initializable, Destructible {
 			glfwSetWindowIcon(id, icons);
 		}
 	}
+	
+	/**
+	 * Sets the opacity of the entire window
+	 * @param opacity The opacity, in the range of {@code 0f} and {@code 1f}
+	 */
+	public void setOpacity(float opacity) {
+		checkStatus();
+		glfwSetWindowOpacity(id, opacity);
+	}
+	
+	/**
+	 * Checks if the window has been initialized.
+	 * @throws IllegalStateException If the window has not been initialized yet.
+	 */
+	protected void checkStatus() throws IllegalStateException {
+		if (!isInitialized) {
+			throw new IllegalStateException("window has not been initialized yet");
+		}
+	}
+	
 }

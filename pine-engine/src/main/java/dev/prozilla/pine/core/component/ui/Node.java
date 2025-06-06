@@ -20,7 +20,7 @@ import java.util.Set;
  *
  * <p>Nodes are similar to HTML elements and the <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Box_model">CSS box model</a>.</p>
  */
-public class Node extends Component implements EventDispatcherProvider<NodeEvent, Node> {
+public class Node extends Component implements EventDispatcherProvider<NodeEventType, Node, NodeEvent> {
 	
 	// Current state
 	public Vector2f currentPosition;
@@ -60,7 +60,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	public NodeRoot root;
 	
-	public final EventDispatcher<NodeEvent, Node> eventDispatcher;
+	private final NodeEventDispatcher eventDispatcher;
 	
 	public static final Color DEFAULT_COLOR = Color.white();
 	public static final Color DEFAULT_BACKGROUND_COLOR = Color.transparent();
@@ -90,7 +90,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		classes = new HashSet<>();
 		modifiers = new HashSet<>();
 		
-		eventDispatcher = new EventDispatcher<>();
+		eventDispatcher = new NodeEventDispatcher();
 	}
 	
 	@Override
@@ -224,7 +224,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	}
 	
 	@Override
-	public EventDispatcher<NodeEvent, Node> getEventDispatcher() {
+	public EventDispatcher<NodeEventType, Node, NodeEvent> getEventDispatcher() {
 		return eventDispatcher;
 	}
 	
@@ -242,13 +242,13 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	public void addClass(String className) {
 		if (classes.add(className)) {
-			invoke(NodeEvent.SELECTOR_CHANGE, this);
+			invoke(NodeEventType.SELECTOR_CHANGE, this);
 		}
 	}
 	
 	public void removeClass(String className) {
 		if (classes.remove(className)) {
-			invoke(NodeEvent.SELECTOR_CHANGE, this);
+			invoke(NodeEventType.SELECTOR_CHANGE, this);
 		}
 	}
 	
@@ -266,13 +266,13 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	public void addModifier(String modifier) {
 		if (modifiers.add(modifier)) {
-			invoke(NodeEvent.SELECTOR_CHANGE, this);
+			invoke(NodeEventType.SELECTOR_CHANGE, this);
 		}
 	}
 	
 	public void removeModifier(String modifier) {
 		if (modifiers.remove(modifier)) {
-			invoke(NodeEvent.SELECTOR_CHANGE, this);
+			invoke(NodeEventType.SELECTOR_CHANGE, this);
 		}
 	}
 	

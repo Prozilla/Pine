@@ -8,7 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EventDispatcher<EventType extends Enum<EventType>, E> implements EventDispatcherContext<EventType, E>, Destructible {
+/**
+ * Represents an object that can dispatch events.
+ * @param <E> The type of event this object can dispatch
+ */
+public abstract class EventDispatcher<EventType extends Enum<EventType>, Target, E extends Event<EventType, ? super Target>> implements EventDispatcherContext<EventType, Target, E>, Destructible {
 	
 	private final Map<EventType, List<EventListener<E>>> listeners;
 	
@@ -40,8 +44,14 @@ public class EventDispatcher<EventType extends Enum<EventType>, E> implements Ev
 	}
 	
 	@Override
-	public void invoke(EventType eventType, E event) {
-		List<EventListener<E>> eventListeners = listeners.get(eventType);
+	public void invoke(EventType eventType, Target target) {
+		invoke(createEvent(eventType, target));
+	}
+	
+	protected abstract E createEvent(EventType eventType, Target target);
+	
+	protected void invoke(E event) {
+		List<EventListener<E>> eventListeners = listeners.get(event.getType());
 		
 		if (eventListeners == null) {
 			return;
@@ -57,7 +67,26 @@ public class EventDispatcher<EventType extends Enum<EventType>, E> implements Ev
 					e.printStackTrace();
 				}
 			}
+			
+			if (event.isImmediatePropagationStopped()) {
+				break;
+			}
 		}
+		
+		if (!event.isPropagationStopped()) {
+			propagate(event);
+		}
+	}
+	
+	/**
+	 * Propagates the event to other objects in relation to the target object.
+	 * This method is called after the event has been invoked, unless the propagation was stopped.
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 * @param event The event to propagate
+	 */
+	protected void propagate(E event) {
+	
 	}
 	
 	public void setLogger(Logger logger) {

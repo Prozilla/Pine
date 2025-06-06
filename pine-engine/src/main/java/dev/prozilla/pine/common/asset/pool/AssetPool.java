@@ -1,7 +1,6 @@
 package dev.prozilla.pine.common.asset.pool;
 
 import dev.prozilla.pine.common.asset.Asset;
-import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
@@ -20,11 +19,11 @@ import java.util.Map;
 public abstract class AssetPool<T extends Asset> implements Destructible {
 	
 	private final Map<String, T> pool;
-	protected final EventDispatcher<AssetPoolEventType, AssetPoolEvent> eventDispatcher;
+	protected final AssetPoolEventDispatcher<T> eventDispatcher;
 	
 	public AssetPool() {
 		pool = new HashMap<>();
-		eventDispatcher = new EventDispatcher<>();
+		eventDispatcher = new AssetPoolEventDispatcher<>();
 	}
 	
 	/**
@@ -44,7 +43,7 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 			return pool.get(key);
 		}
 		
-		eventDispatcher.invoke(AssetPoolEventType.LOADING, new AssetPoolEvent(path));
+		eventDispatcher.invoke(AssetPoolEventType.LOADING, this, path);
 		
 		// Create asset
 		T asset = null;
@@ -57,7 +56,7 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 			return null;
 		}
 		
-		eventDispatcher.invoke(AssetPoolEventType.LOADED, new AssetPoolEvent(path));
+		eventDispatcher.invoke(AssetPoolEventType.LOADED, this, path);
 		pool.put(key, asset);
 		prepareNext();
 		return asset;
@@ -83,7 +82,7 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 	 * @return {@code null}
 	 */
 	protected T fail(String path, String reason, Exception exception) {
-		eventDispatcher.invoke(AssetPoolEventType.FAILED, new AssetPoolEvent(path, reason, exception));
+		eventDispatcher.invoke(AssetPoolEventType.FAILED, this, path, reason, exception);
 		return null;
 	}
 	
@@ -116,7 +115,7 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 		String key = createKey(normalize(path));
 		boolean removed = pool.remove(key) != null;
 		if (removed) {
-			eventDispatcher.invoke(AssetPoolEventType.REMOVED, new AssetPoolEvent(path));
+			eventDispatcher.invoke(AssetPoolEventType.REMOVED, this, path);
 		}
 		return removed;
 	}
@@ -158,11 +157,11 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 		logger.log(getClass().getSimpleName() + ": " + count());
 	}
 	
-	public final void addListener(AssetPoolEventType assetPoolEventType, EventListener<AssetPoolEvent> listener) {
+	public final void addListener(AssetPoolEventType assetPoolEventType, EventListener<AssetPoolEvent<T>> listener) {
 		eventDispatcher.addListener(assetPoolEventType, listener);
 	}
 	
-	public final void removeListener(AssetPoolEventType assetPoolEventType, EventListener<AssetPoolEvent> listener) {
+	public final void removeListener(AssetPoolEventType assetPoolEventType, EventListener<AssetPoolEvent<T>> listener) {
 		eventDispatcher.removeListener(assetPoolEventType, listener);
 	}
 	

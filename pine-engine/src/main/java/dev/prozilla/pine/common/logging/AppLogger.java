@@ -1,10 +1,16 @@
 package dev.prozilla.pine.common.logging;
 
+import dev.prozilla.pine.common.asset.Asset;
+import dev.prozilla.pine.common.asset.audio.AudioSource;
+import dev.prozilla.pine.common.asset.image.Image;
+import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.asset.pool.AssetPool;
 import dev.prozilla.pine.common.asset.pool.AssetPoolEvent;
 import dev.prozilla.pine.common.asset.pool.AssetPoolEventType;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.event.EventListener;
+import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.config.LogConfig;
@@ -17,11 +23,11 @@ public class AppLogger extends Logger {
 	
 	private final Application application;
 	
-	protected final EventListener<AssetPoolEvent> onImageLoad;
-	protected final EventListener<AssetPoolEvent> onTextureLoad;
-	protected final EventListener<AssetPoolEvent> onFontLoad;
-	protected final EventListener<AssetPoolEvent> onStyleSheetLoad;
-	protected final EventListener<AssetPoolEvent> onAudioSourceLoad;
+	protected final EventListener<AssetPoolEvent<Image>> onImageLoad;
+	protected final EventListener<AssetPoolEvent<TextureBase>> onTextureLoad;
+	protected final EventListener<AssetPoolEvent<Font>> onFontLoad;
+	protected final EventListener<AssetPoolEvent<StyleSheet>> onStyleSheetLoad;
+	protected final EventListener<AssetPoolEvent<AudioSource>> onAudioSourceLoad;
 	
 	public AppLogger(Application application) {
 		this.application = application;
@@ -62,17 +68,17 @@ public class AppLogger extends Logger {
 		});
 	}
 	
-	private void addAssetPoolListener(AssetPool<?> assetPool, EventListener<AssetPoolEvent> listener) {
+	private <T extends Asset> void addAssetPoolListener(AssetPool<T> assetPool, EventListener<AssetPoolEvent<T>> listener) {
 		assetPool.addListener(AssetPoolEventType.LOADING, listener);
 		assetPool.addListener(AssetPoolEventType.FAILED, listener);
 	}
 	
-	private void removeAssetPoolListener(AssetPool<?> assetPool, EventListener<AssetPoolEvent> listener) {
+	private <T extends Asset> void removeAssetPoolListener(AssetPool<T> assetPool, EventListener<AssetPoolEvent<T>> listener) {
 		assetPool.removeListener(AssetPoolEventType.LOADING, listener);
 		assetPool.removeListener(AssetPoolEventType.FAILED, listener);
 	}
 	
-	private EventListener<AssetPoolEvent> createAssetPoolListener(String assetName) {
+	private <T extends Asset> EventListener<AssetPoolEvent<T>> createAssetPoolListener(String assetName) {
 		return (event) -> {
 			if (event.hasFailed()) {
 				String message = String.format("Failed to load %s: %s", assetName, event.getPath());

@@ -8,6 +8,7 @@ import dev.prozilla.pine.common.lifecycle.*;
 import dev.prozilla.pine.common.logging.AppLogger;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.opengl.GLUtils;
+import dev.prozilla.pine.common.property.SystemProperty;
 import dev.prozilla.pine.core.audio.AudioDevice;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -38,7 +39,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	public static boolean initializedOpenGL = false;
 	protected boolean shouldStop;
 	protected boolean isPreview;
-	private static boolean isDevMode = false;
+	private static SystemProperty devModeProperty = new SystemProperty("dev-mode");
 	private static boolean cachedDevMode = false;
 	
 	// Scene
@@ -731,10 +732,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * @see Application#readDevMode()
 	 */
 	public static boolean isDevMode() {
-		if (!cachedDevMode) {
-			readDevMode();
-		}
-		return isDevMode;
+		return devModeProperty.getValue().equalsIgnoreCase("true");
 	}
 	
 	/**
@@ -742,13 +740,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * @return {@code true} if system property {@code dev-mode} is currently set to {@code true}.
 	 */
 	public static boolean readDevMode() {
-		try {
-			isDevMode = System.getProperty("dev-mode").equalsIgnoreCase("true");
-		} catch (RuntimeException ignored) {
-			isDevMode = false;
-		}
-		cachedDevMode = true;
-		return isDevMode;
+		return devModeProperty.fetch().equalsIgnoreCase("true");
 	}
 	
 }

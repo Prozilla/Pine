@@ -60,8 +60,8 @@ public class ChatPrefab extends LayoutPrefab {
 		
 		TextPrefab messagePrefab = new TextPrefab();
 		messagePrefab.setFont(font);
-		user.addMessageListener((message) -> {
-			messagePrefab.setText(Ansi.strip(message));
+		user.addMessageListener((event) -> {
+			messagePrefab.setText(Ansi.strip(event.getTarget()));
 			messageList.addChild(messagePrefab);
 		});
 	}

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.event;
 
-public interface EventDispatcherContext<EventType extends Enum<EventType>, E> {
+public interface EventDispatcherContext<EventType extends Enum<EventType>, Target, E extends Event<EventType, ? super Target>> {
 	
 	/**
 	 * Adds a listener that listens to a given type of event.
@@ -19,7 +19,8 @@ public interface EventDispatcherContext<EventType extends Enum<EventType>, E> {
 	/**
 	 * Invokes the event of a given type.
 	 * @param eventType The type of event to invoke
+	 * @param target The target of the event
 	 */
-	void invoke(EventType eventType, E event);
+	void invoke(EventType eventType, Target target);
 	
 }

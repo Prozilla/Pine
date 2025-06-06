@@ -1,8 +1,8 @@
 package dev.prozilla.pine.common.event;
 
-public interface EventDispatcherProvider<EventType extends Enum<EventType>, E> extends EventDispatcherContext<EventType, E> {
+public interface EventDispatcherProvider<EventType extends Enum<EventType>, Target, E extends Event<EventType, Target>> extends EventDispatcherContext<EventType, Target, E> {
 	
-	EventDispatcher<EventType, E> getEventDispatcher();
+	EventDispatcher<EventType, Target, E> getEventDispatcher();
 	
 	default void addListener(EventType eventType, EventListener<E> listener) {
 		getEventDispatcher().addListener(eventType, listener);
@@ -12,8 +12,8 @@ public interface EventDispatcherProvider<EventType extends Enum<EventType>, E> e
 		getEventDispatcher().addListener(eventType, listener);
 	}
 	
-	default void invoke(EventType eventType, E event) {
-		getEventDispatcher().invoke(eventType, event);
+	default void invoke(EventType eventType, Target target) {
+		getEventDispatcher().invoke(eventType, target);
 	}
 	
 }

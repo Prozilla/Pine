@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.state.config;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventListener;
 
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -10,7 +11,7 @@ import java.util.function.Predicate;
  * @param <T> Type of the value of the option
  * @see Config
  */
-public class ConfigOption<T> extends EventDispatcher<ConfigOptionEvent, T> {
+public class ConfigOption<T> extends EventDispatcher<ConfigOptionEventType, ConfigOption<T>, ConfigOptionEvent<T>> {
 	
 	private T value;
 	private final T initialValue;
@@ -61,7 +62,7 @@ public class ConfigOption<T> extends EventDispatcher<ConfigOptionEvent, T> {
 		
 		this.value = value;
 		
-		invoke(ConfigOptionEvent.CHANGE, value);
+		invoke(ConfigOptionEventType.CHANGE, this);
 	}
 	
 	/**
@@ -99,23 +100,30 @@ public class ConfigOption<T> extends EventDispatcher<ConfigOptionEvent, T> {
 	 */
 	public void reset() {
 		set(initialValue);
-		invoke(ConfigOptionEvent.RESET, initialValue);
+		invoke(ConfigOptionEventType.RESET, this);
 	}
 	
 	/**
 	 * Invokes an event listener once and then every time this option changes.
-	 * @param listener Listener to invoke
+	 * @param reader Listener to invoke
 	 */
-	public void read(EventListener<T> listener) {
-		onChange(listener);
-		listener.handle(value);
+	public void read(Consumer<T> reader) {
+		onChange((event) -> {
+			reader.accept(event.getValue());
+		});
+		reader.accept(value);
 	}
 	
-	public void onChange(EventListener<T> listener) {
-		addListener(ConfigOptionEvent.CHANGE, listener);
+	@Override
+	protected ConfigOptionEvent<T> createEvent(ConfigOptionEventType type, ConfigOption<T> target) {
+		return new ConfigOptionEvent<>(type, target ,value);
 	}
 	
-	public void onReset(EventListener<T> listener) {
-		addListener(ConfigOptionEvent.RESET, listener);
+	public void onChange(EventListener<ConfigOptionEvent<T>> listener) {
+		addListener(ConfigOptionEventType.CHANGE, listener);
+	}
+	
+	public void onReset(EventListener<ConfigOptionEvent<T>> listener) {
+		addListener(ConfigOptionEventType.RESET, listener);
 	}
 }

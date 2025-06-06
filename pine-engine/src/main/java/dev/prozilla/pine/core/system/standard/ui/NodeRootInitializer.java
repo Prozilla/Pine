@@ -19,8 +19,8 @@ public class NodeRootInitializer extends InitSystem {
 		Entity entity = chunk.getEntity();
 		NodeRoot nodeRoot = chunk.getComponent(NodeRoot.class);
 		
-		entity.addListener(EntityEventType.DESCENDANT_ADD, (child) -> onChildAdd(nodeRoot, child));
-		entity.addListener(EntityEventType.DESCENDANT_REMOVE, (child) -> onChildRemove(nodeRoot, child));
+		entity.addListener(EntityEventType.DESCENDANT_ADD, (event) -> onChildAdd(nodeRoot, event.getTarget()));
+		entity.addListener(EntityEventType.DESCENDANT_REMOVE, (event) -> onChildRemove(nodeRoot, event.getTarget()));
 		
 		initializeChildren(nodeRoot, entity);
 	}
