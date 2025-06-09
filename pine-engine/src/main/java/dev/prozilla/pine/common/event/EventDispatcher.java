@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.event;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.util.checks.Checks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,9 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 	
 	@Override
 	public void addListener(EventType eventType, EventListener<E> listener) {
+		Checks.isNotNull(eventType, "eventType");
+		Checks.isNotNull(listener, "listener");
+		
 		if (!listeners.containsKey(eventType)) {
 			listeners.put(eventType, new ArrayList<>());
 		}
@@ -34,6 +38,9 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 	
 	@Override
 	public void removeListener(EventType eventType, EventListener<E> listener) {
+		Checks.isNotNull(eventType, "eventType");
+		Checks.isNotNull(listener, "listener");
+		
 		List<EventListener<E>> eventListeners = listeners.get(eventType);
 		
 		if (eventListeners == null) {

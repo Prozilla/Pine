@@ -45,7 +45,7 @@ public enum ApplicationState implements State<Application> {
 	};
 	
 	private static void logStatus(Application application, String message) {
-		if (!application.getConfig().logging.enableApplicationStateLogs.get()) {
+		if (!application.getConfig().logging.enableApplicationStateLogs.getValue()) {
 			return;
 		}
 		

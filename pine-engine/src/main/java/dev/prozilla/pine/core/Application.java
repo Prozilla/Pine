@@ -108,10 +108,10 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		config = new Config(this);
 		stateMachine = new StateMachine<>(ApplicationState.INITIALIZING, this);
 		
-		config.fps.set(targetFps);
-		config.window.title.set(title);
-		config.window.width.set(width);
-		config.window.height.set(height);
+		config.fps.setValue(targetFps);
+		config.window.title.setValue(title);
+		config.window.width.setValue(width);
+		config.window.height.setValue(height);
 		
 		timer = new ApplicationTimer();
 		tracker = new Tracker(this);
@@ -164,7 +164,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		}
 		
 		logger.init();
-		if (config.logging.enableApplicationStateLogs.get()) {
+		if (config.logging.enableApplicationStateLogs.getValue()) {
 			logger.log("Initializing application");
 		}
 		
@@ -208,7 +208,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		}
 		
 		logger.init();
-		if (config.logging.enableApplicationStateLogs.get()) {
+		if (config.logging.enableApplicationStateLogs.getValue()) {
 			logger.log("Initializing preview");
 		}
 		
@@ -229,7 +229,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * Destroys the application after the application loop has been stopped.
 	 */
 	public void start() {
-		int fps = config.fps.get();
+		int fps = config.fps.getValue();
 		double targetTime = (fps == 0) ? 0.0 : 1.0 / fps;
 		
 		stateMachine.changeState(ApplicationState.RUNNING);
@@ -602,7 +602,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * @param icons Paths of icons
 	 */
 	public void setIcons(String... icons) {
-		config.window.icon.set(icons);
+		config.window.icon.setValue(icons);
 		
 		// Reload icons if they were changed after initialization
 		if (initializedOpenGL) {
@@ -618,7 +618,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			return;
 		}
 		
-		String[] icons = config.window.icon.get();
+		String[] icons = config.window.icon.getValue();
 		
 		if (icons.length == 0 || isPreview()) {
 			return;
@@ -640,7 +640,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * @param fontPath Path to the font file
 	 */
 	public void setDefaultFont(String fontPath) {
-		config.defaultFontPath.set(fontPath);
+		config.defaultFontPath.setValue(fontPath);
 	}
 	
 	/**
@@ -650,7 +650,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		if (!config.defaultFontPath.exists()) {
 			return null;
 		}
-		return AssetPools.fonts.load(config.defaultFontPath.get());
+		return AssetPools.fonts.load(config.defaultFontPath.getValue());
 	}
 	
 	/**

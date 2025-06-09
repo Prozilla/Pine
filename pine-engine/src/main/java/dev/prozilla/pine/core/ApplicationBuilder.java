@@ -35,11 +35,11 @@ public class ApplicationBuilder {
 		targetFps = Application.DEFAULT_TARGET_FPS;
 		
 		LogConfig defaultLogConfig = new LogConfig();
-		enableLogs = defaultLogConfig.enableLogs.get();
+		enableLogs = defaultLogConfig.enableLogs.getValue();
 		
 		WindowConfig defaultWindowConfig = new WindowConfig();
-		showWindowDecorations = defaultWindowConfig.showDecorations.get();
-		fullscreen = defaultWindowConfig.fullscreen.get();
+		showWindowDecorations = defaultWindowConfig.showDecorations.getValue();
+		fullscreen = defaultWindowConfig.fullscreen.getValue();
 	}
 	
 	/**
@@ -152,9 +152,9 @@ public class ApplicationBuilder {
 		
 		// Configuration
 		Config config = application.getConfig();
-		config.window.fullscreen.set(fullscreen);
-		config.window.showDecorations.set(showWindowDecorations);
-		config.logging.enableLogs.set(enableLogs);
+		config.window.fullscreen.setValue(fullscreen);
+		config.window.showDecorations.setValue(showWindowDecorations);
+		config.logging.enableLogs.setValue(enableLogs);
 		
 		return application;
 	}

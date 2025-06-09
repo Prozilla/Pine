@@ -14,7 +14,7 @@ public class Main {
 		applicationBuilder.setTargetFps(120);
 		
 		Application application = applicationBuilder.build();
-		application.getConfig().rendering.snapPixels.set(true);
+		application.getConfig().rendering.snapPixels.setValue(true);
 		
 		application.run();
 	}

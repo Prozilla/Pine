@@ -337,7 +337,7 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 	}
 	
 	public void calculateDepth() {
-		if (initialized && !application.getConfig().enableDepthRecalculation.get()) {
+		if (initialized && !application.getConfig().enableDepthRecalculation.getValue()) {
 			return;
 		}
 		

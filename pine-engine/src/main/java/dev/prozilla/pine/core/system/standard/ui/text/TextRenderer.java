@@ -55,7 +55,7 @@ public class TextRenderer extends RenderSystem {
 		}
 		
 		renderer.flush();
-		if (renderer.getConfig().snapText.get()) {
+		if (renderer.getConfig().snapText.getValue()) {
 			int roundedX = Math.round(x);
 			int roundedY = Math.round(y);
 			int roundedWidth = Math.round(width);

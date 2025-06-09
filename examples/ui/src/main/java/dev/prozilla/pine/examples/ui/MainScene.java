@@ -30,7 +30,7 @@ public class MainScene extends Scene {
 		menuPrefab.setBackgroundColor(Color.white().setAlpha(0.65f));
 		menuPrefab.setPadding(new DualDimension(16));
 		
-		TextPrefab titleTextPrefab = new TextPrefab(application.getConfig().window.title.get());
+		TextPrefab titleTextPrefab = new TextPrefab(application.getConfig().window.title.getValue());
 		titleTextPrefab.setColor(Color.black());
 		
 		TextButtonPrefab textButton1Prefab = new TextButtonPrefab("This is a button");

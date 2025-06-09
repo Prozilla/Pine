@@ -107,7 +107,7 @@ public class Config {
 		@SuppressWarnings("unchecked")
 		ConfigOption<T> option = (ConfigOption<T>)options.get(key);
 		
-		return option.get();
+		return option.getValue();
 	}
 	
 	/**
@@ -125,7 +125,7 @@ public class Config {
 			throw new IllegalArgumentException(String.format("Invalid value for option with key '%s': %s", key, value));
 		}
 		
-		option.set(value);
+		option.setValue(value);
 	}
 	
 	/**
@@ -177,7 +177,7 @@ public class Config {
 	public <T> void copyFrom(Config otherConfig, ConfigKey<T> key) {
 		@SuppressWarnings("unchecked")
 		ConfigOption<T> option = (ConfigOption<T>)options.get(key);
-		option.set(otherConfig.getOption(key));
+		option.setValue(otherConfig.getOption(key));
 	}
 	
 	/**

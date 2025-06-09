@@ -1,9 +1,7 @@
 package dev.prozilla.pine.core.state.config;
 
-import dev.prozilla.pine.common.event.EventDispatcher;
-import dev.prozilla.pine.common.event.EventListener;
+import dev.prozilla.pine.common.property.ObservableProperty;
 
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -11,9 +9,8 @@ import java.util.function.Predicate;
  * @param <T> Type of the value of the option
  * @see Config
  */
-public class ConfigOption<T> extends EventDispatcher<ConfigOptionEventType, ConfigOption<T>, ConfigOptionEvent<T>> {
+public class ConfigOption<T> extends ObservableProperty<T> {
 	
-	private T value;
 	private final T initialValue;
 	private final Predicate<T> validator;
 	
@@ -31,7 +28,7 @@ public class ConfigOption<T> extends EventDispatcher<ConfigOptionEventType, Conf
 	 * @throws IllegalArgumentException If <code>validator</code> does not evaluate to <code>true</code> for the initial value.
 	 */
 	public ConfigOption(T value, Predicate<T> validator) throws IllegalArgumentException {
-		this.value = value;
+		super(value);
 		this.initialValue = value;
 		this.validator = validator;
 		
@@ -41,42 +38,23 @@ public class ConfigOption<T> extends EventDispatcher<ConfigOptionEventType, Conf
 	}
 	
 	/**
-	 * Returns the value of this option.
-	 */
-	public T get() {
-		return value;
-	}
-	
-	/**
 	 * Sets the value of this option.
 	 * @param value New value for this option
 	 */
-	public void set(T value) {
+	@Override
+	public void setValue(T value) {
 		if (!isValidValue(value)) {
 			throw new IllegalArgumentException("invalid value for option");
 		}
 		
-		if (this.value != null && this.value.equals(value)) {
-			return;
-		}
-		
-		this.value = value;
-		
-		invoke(ConfigOptionEventType.CHANGE, this);
-	}
-	
-	/**
-	 * @return <code>true</code> if the value is not null.
-	 */
-	public boolean exists() {
-		return value != null;
+		super.setValue(value);
 	}
 	
 	/**
 	 * Copies the value of this option to another option.
 	 */
 	public void copyTo(ConfigOption<T> otherOption) {
-		otherOption.set(value);
+		otherOption.setValue(getValue());
 	}
 	
 	/**
@@ -99,31 +77,7 @@ public class ConfigOption<T> extends EventDispatcher<ConfigOptionEventType, Conf
 	 * Resets this option to its initial value.
 	 */
 	public void reset() {
-		set(initialValue);
-		invoke(ConfigOptionEventType.RESET, this);
+		setValue(initialValue);
 	}
 	
-	/**
-	 * Invokes an event listener once and then every time this option changes.
-	 * @param reader Listener to invoke
-	 */
-	public void read(Consumer<T> reader) {
-		onChange((event) -> {
-			reader.accept(event.getValue());
-		});
-		reader.accept(value);
-	}
-	
-	@Override
-	protected ConfigOptionEvent<T> createEvent(ConfigOptionEventType type, ConfigOption<T> target) {
-		return new ConfigOptionEvent<>(type, target ,value);
-	}
-	
-	public void onChange(EventListener<ConfigOptionEvent<T>> listener) {
-		addListener(ConfigOptionEventType.CHANGE, listener);
-	}
-	
-	public void onReset(EventListener<ConfigOptionEvent<T>> listener) {
-		addListener(ConfigOptionEventType.RESET, listener);
-	}
 }

@@ -62,7 +62,7 @@ public class Window implements Initializable, Destructible {
 		});
 		
 		// Prepare fullscreen window
-		if (config.fullscreen.get()) {
+		if (config.fullscreen.getValue()) {
 			monitor = glfwGetPrimaryMonitor();
 			GLFWVidMode videoMode = glfwGetVideoMode(monitor);
 			if (videoMode != null) {
@@ -70,12 +70,12 @@ public class Window implements Initializable, Destructible {
 				height = videoMode.height();
 			}
 		} else {
-			width = config.width.get();
-			height = config.height.get();
+			width = config.width.getValue();
+			height = config.height.getValue();
 		}
 		
 		// Create window
-		String title = config.title.get();
+		String title = config.title.getValue();
 		id = glfwCreateWindow(width, height, title, monitor, NULL);
 		if (id == NULL) {
 			glfwTerminate();
@@ -84,7 +84,7 @@ public class Window implements Initializable, Destructible {
 		glfwMakeContextCurrent(id);
 		
 		// Enable VSync
-		if (config.enableVSync.get()) {
+		if (config.enableVSync.getValue()) {
 			glfwSwapInterval(1);
 		}
 		
@@ -173,7 +173,7 @@ public class Window implements Initializable, Destructible {
 	 * @param title Title
 	 */
 	public void setTitle(String title) {
-		config.title.set(title);
+		config.title.setValue(title);
 	}
 	
 	/**
