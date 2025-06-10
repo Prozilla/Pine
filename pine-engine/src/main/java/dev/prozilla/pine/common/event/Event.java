@@ -16,6 +16,11 @@ public class Event<EventType extends Enum<EventType>, Target> {
 	protected boolean immediatePropagationStopped;
 	protected boolean propagationStopped;
 	
+	/**
+	 * Creates an event of a given type with a given target.
+	 * @param type The type of event
+	 * @param target The target of the event
+	 */
 	public Event(EventType type, Target target) {
 		this.type = type;
 		this.target = target;

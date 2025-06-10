@@ -1,24 +1,31 @@
-package dev.prozilla.pine.common.property;
+package dev.prozilla.pine.common.property.observable;
 
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.property.MutableProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * A property that triggers observers whenever its value changes.
  */
 public class ObservableProperty<T> extends MutableProperty<T> {
 	
-	private final List<Consumer<T>> observers;
+	private final List<Observer<T>> observers;
 	protected Logger logger;
 	
+	/**
+	 * Creates an observable property without an initial value.
+	 */
 	public ObservableProperty() {
 		this(null);
 	}
 	
+	/**
+	 * Creates an observable property with an initial value.
+	 * @param initialValue The initial value
+	 */
 	public ObservableProperty(T initialValue) {
 		super(initialValue);
 		observers = new ArrayList<>();
@@ -30,30 +37,33 @@ public class ObservableProperty<T> extends MutableProperty<T> {
 	 * <p>This is the equivalent of calling {@link #getValue()}, then doing something with that value, and then adding an observer which does the same thing each time the value changes.</p>
 	 * @param reader The observer
 	 */
-	public void read(Consumer<T> reader) {
+	public void read(Observer<T> reader) {
 		addObserver(reader);
-		reader.accept(getValue());
+		reader.observe(getValue());
 	}
 	
-	public void addObserver(Consumer<T> observer) {
+	public void addObserver(Observer<T> observer) {
 		Checks.isNotNull(observer, "observer");
 		observers.add(observer);
 	}
 	
-	public void removeObserver(Consumer<T> observer) {
+	public void removeObserver(Observer<T> observer) {
 		Checks.isNotNull(observer, "observer");
 		observers.remove(observer);
 	}
 	
+	/**
+	 * Sets the logger of this property, which is used to log errors thrown by observers.
+	 */
 	public void setLogger(Logger logger) {
 		this.logger = logger;
 	}
 	
 	@Override
 	protected void onValueChange(T oldValue, T newValue) {
-		for (Consumer<T> observer : observers) {
+		for (Observer<T> observer : observers) {
 			try {
-				observer.accept(newValue);
+				observer.observe(newValue);
 			} catch (Exception e) {
 				if (logger != null) {
 					logger.error("Observer failed", e);

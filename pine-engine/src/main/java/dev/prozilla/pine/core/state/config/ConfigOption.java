@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.state.config;
 
-import dev.prozilla.pine.common.property.ObservableProperty;
+import dev.prozilla.pine.common.property.observable.ObservableProperty;
 
 import java.util.function.Predicate;
 

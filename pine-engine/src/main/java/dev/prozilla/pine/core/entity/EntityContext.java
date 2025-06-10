@@ -1,7 +1,9 @@
 package dev.prozilla.pine.core.entity;
 
+import dev.prozilla.pine.common.ContextOf;
 import dev.prozilla.pine.core.component.Transform;
 
+@ContextOf(Entity.class)
 public interface EntityContext {
 	
 	Entity getFirstChild();

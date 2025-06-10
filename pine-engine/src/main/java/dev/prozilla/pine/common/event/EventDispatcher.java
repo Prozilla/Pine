@@ -55,8 +55,18 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 		invoke(createEvent(eventType, target));
 	}
 	
+	/**
+	 * Creates an event of a given type with a given target.
+	 * @param eventType The type of event to create
+	 * @param target The target of the event
+	 * @return The new event
+	 */
 	protected abstract E createEvent(EventType eventType, Target target);
 	
+	/**
+	 * Invokes an event.
+	 * @param event The event to invoke
+	 */
 	protected void invoke(E event) {
 		List<EventListener<E>> eventListeners = listeners.get(event.getType());
 		
@@ -96,10 +106,16 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 	
 	}
 	
+	/**
+	 * Sets the logger of this event dispatcher, which is used to log errors thrown by listeners.
+	 */
 	public void setLogger(Logger logger) {
 		this.logger = logger;
 	}
 	
+	/**
+	 * Removes all listeners.
+	 */
 	@Override
 	public void destroy() {
 		listeners.clear();

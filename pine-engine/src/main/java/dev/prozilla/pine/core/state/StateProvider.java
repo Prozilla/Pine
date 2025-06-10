@@ -1,8 +1,11 @@
 package dev.prozilla.pine.core.state;
 
+import dev.prozilla.pine.common.ProviderOf;
+
 /**
  * Provides information about the state in a certain context.
  */
+@ProviderOf(State.class)
 public interface StateProvider<Context, State extends dev.prozilla.pine.core.state.State<Context>> {
 	
 	/**

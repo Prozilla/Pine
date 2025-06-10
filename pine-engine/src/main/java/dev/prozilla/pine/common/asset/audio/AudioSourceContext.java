@@ -1,5 +1,8 @@
 package dev.prozilla.pine.common.asset.audio;
 
+import dev.prozilla.pine.common.ContextOf;
+
+@ContextOf(AudioSource.class)
 public interface AudioSourceContext {
 	
 	default void togglePause() {

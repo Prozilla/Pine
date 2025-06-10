@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core;
 
+import dev.prozilla.pine.common.ProviderOf;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.audio.AudioDevice;
 import dev.prozilla.pine.core.mod.ModManager;
@@ -12,6 +13,7 @@ import dev.prozilla.pine.core.state.input.Input;
 /**
  * Provides access to the application and all its helper classes.
  */
+@ProviderOf(Application.class)
 public interface ApplicationProvider extends ApplicationContext {
 	
 	Application getApplication();

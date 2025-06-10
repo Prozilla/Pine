@@ -39,8 +39,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	public static boolean initializedOpenGL = false;
 	protected boolean shouldStop;
 	protected boolean isPreview;
-	private static SystemProperty devModeProperty = new SystemProperty("dev-mode");
-	private static boolean cachedDevMode = false;
+	private static final SystemProperty devModeProperty = new SystemProperty("dev-mode");
 	
 	// Scene
 	protected Scene currentScene;
@@ -66,7 +65,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	public static final int DEFAULT_TARGET_FPS = 60;
 	
 	/**
-	 * Creates an application titled "Application".
+	 * Creates an application titled {@value DEFAULT_TITLE}.
 	 * @param width Width of the window
 	 * @param height height of the window
 	 */
