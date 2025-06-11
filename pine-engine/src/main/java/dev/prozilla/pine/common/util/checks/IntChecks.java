@@ -10,11 +10,24 @@ import java.util.Objects;
 public final class IntChecks {
 	
 	private final int value;
-	private final String name;
+	private String name;
+	
+	public IntChecks(int value) {
+		this(value, null);
+	}
 	
 	public IntChecks(int value, String name) {
 		this.value = value;
 		this.name = Objects.requireNonNullElse(name, "integer");
+	}
+	
+	public IntChecks named(String name) {
+		this.name = Objects.requireNonNullElse(name, "integer");
+		return this;
+	}
+	
+	public int get() {
+		return value;
 	}
 	
 	/**

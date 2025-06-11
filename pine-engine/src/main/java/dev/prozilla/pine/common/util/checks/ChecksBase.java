@@ -12,11 +12,20 @@ import java.util.function.Consumer;
 public abstract class ChecksBase<T, C extends ChecksBase<T, C>> {
 	
 	protected final T value;
-	protected final String name;
+	protected String name;
 	
 	public ChecksBase(T value, String name) {
 		this.value = value;
 		this.name = Objects.requireNonNullElse(name, getDefaultName());
+	}
+	
+	public final C named(String name) {
+		this.name = Objects.requireNonNullElse(name, getDefaultName());
+		return self();
+	}
+	
+	public final T get() {
+		return value;
 	}
 	
 	/**

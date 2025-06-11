@@ -10,6 +10,8 @@ public interface IterableChecks<C> {
 	 */
 	C hasLength(Consumer<IntChecks> lengthChecks);
 	
+	IntChecks hasLength();
+	
 	/**
 	 * Checks that the iterable is not empty.
 	 */

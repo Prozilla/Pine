@@ -1,20 +1,32 @@
 package dev.prozilla.pine.common.util.checks;
 
+import dev.prozilla.pine.common.exception.InvalidObjectException;
+
 import java.util.function.Consumer;
 
 /**
  * Utility class for performing checks on strings.
  */
-public final class StringChecks extends ChecksBase<String, StringChecks> {
+public final class StringChecks extends ChecksBase<String, StringChecks> implements IterableChecks<StringChecks> {
+	
+	public StringChecks(String value) {
+		this(value, null);
+	}
 	
 	public StringChecks(String value, String name) {
 		super(value, name);
 	}
 	
-	public StringChecks hasLength(Consumer<IntChecks> lengthChecks) {
-		isNotNull();
-		lengthChecks.accept(new IntChecks(value.length(), "Length of " + name));
+	@Override
+	public StringChecks hasLength(Consumer<IntChecks> lengthChecks) throws InvalidObjectException {
+		lengthChecks.accept(hasLength());
 		return this;
+	}
+	
+	@Override
+	public IntChecks hasLength() {
+		isNotNull();
+		return new IntChecks(value.length(), "length of " + name);
 	}
 	
 	public StringChecks isNotBlank() {
@@ -23,6 +35,7 @@ public final class StringChecks extends ChecksBase<String, StringChecks> {
 		return this;
 	}
 	
+	@Override
 	public StringChecks isNotEmpty() {
 		isNotNull();
 		Checks.isNotEmpty(value, name + " must not be empty");

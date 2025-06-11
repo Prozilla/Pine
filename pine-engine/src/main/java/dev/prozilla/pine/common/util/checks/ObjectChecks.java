@@ -5,6 +5,10 @@ package dev.prozilla.pine.common.util.checks;
  */
 public final class ObjectChecks extends ChecksBase<Object, ObjectChecks> {
 	
+	public ObjectChecks(String value) {
+		this(value, null);
+	}
+	
 	public ObjectChecks(Object value, String name) {
 		super(value, name);
 	}
@@ -18,4 +22,5 @@ public final class ObjectChecks extends ChecksBase<Object, ObjectChecks> {
 	protected String getDefaultName() {
 		return "object";
 	}
+	
 }

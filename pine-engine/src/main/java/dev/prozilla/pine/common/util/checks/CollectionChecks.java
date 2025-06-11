@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.util.checks;
 
 import dev.prozilla.pine.common.exception.InvalidCollectionException;
+import dev.prozilla.pine.common.exception.InvalidObjectException;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -10,15 +11,24 @@ import java.util.function.Consumer;
  */
 public final class CollectionChecks<E> extends ChecksBase<Collection<E>, CollectionChecks<E>> implements IterableChecks<CollectionChecks<E>> {
 	
+	public CollectionChecks(Collection<E> value) {
+		this(value, null);
+	}
+	
 	public CollectionChecks(Collection<E> value, String name) {
 		super(value, name);
 	}
 	
 	@Override
-	public CollectionChecks<E> hasLength(Consumer<IntChecks> lengthChecks) {
-		isNotNull();
-		lengthChecks.accept(new IntChecks(value.size(), "Length of " + name));
+	public CollectionChecks<E> hasLength(Consumer<IntChecks> lengthChecks) throws InvalidObjectException {
+		lengthChecks.accept(hasLength());
 		return this;
+	}
+	
+	@Override
+	public IntChecks hasLength() throws InvalidObjectException {
+		isNotNull();
+		return new IntChecks(value.size(), "length of " + name);
 	}
 	
 	@Override

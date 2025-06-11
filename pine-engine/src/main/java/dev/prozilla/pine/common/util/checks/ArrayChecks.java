@@ -10,15 +10,24 @@ import java.util.function.Consumer;
  */
 public final class ArrayChecks<E> extends ChecksBase<E[], ArrayChecks<E>> implements IterableChecks<ArrayChecks<E>> {
 	
+	public ArrayChecks(E[] value) {
+		this(value, null);
+	}
+
 	public ArrayChecks(E[] value, String name) {
 		super(value, name);
 	}
 	
 	@Override
 	public ArrayChecks<E> hasLength(Consumer<IntChecks> lengthChecks) throws InvalidObjectException {
-		isNotNull();
-		lengthChecks.accept(new IntChecks(value.length, "Length of " + name));
+		lengthChecks.accept(hasLength());
 		return this;
+	}
+	
+	@Override
+	public IntChecks hasLength() throws InvalidObjectException {
+		isNotNull();
+		return new IntChecks(value.length, "length of " + name);
 	}
 	
 	@Override
