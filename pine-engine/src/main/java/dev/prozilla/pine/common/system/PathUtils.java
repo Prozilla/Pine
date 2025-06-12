@@ -9,6 +9,8 @@ import java.nio.file.Paths;
  */
 public final class PathUtils {
 	
+	private PathUtils() {}
+	
 	/**
 	 * Removes a leading slash from a path if there is one.
 	 * @param path Path with or without leading slash

@@ -10,7 +10,9 @@ import static dev.prozilla.pine.common.system.PathUtils.normalizePath;
 /**
  * Utility class for handling resources.
  */
-public class ResourceUtils {
+public final class ResourceUtils {
+	
+	private ResourceUtils() {}
 	
 	/**
 	 * Finds the resource and returns its normalized path.

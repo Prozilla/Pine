@@ -2,6 +2,8 @@ package dev.prozilla.pine.common.util;
 
 public final class ArrayUtils {
 	
+	private ArrayUtils() {}
+	
 	/**
 	 * Checks if two arrays have any overlapping elements.
 	 * @param arrayA First array

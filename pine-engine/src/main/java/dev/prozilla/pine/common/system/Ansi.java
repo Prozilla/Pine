@@ -35,6 +35,8 @@ public final class Ansi {
 	public static final String ITALIC = "\u001b[3m";
 	public static final String UNDERLINED = "\u001b[4m";
 	
+	private Ansi() {}
+	
 	public static String reset(String text) {
 		return RESET + text;
 	}

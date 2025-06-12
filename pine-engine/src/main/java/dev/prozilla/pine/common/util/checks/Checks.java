@@ -14,6 +14,8 @@ import java.util.Objects;
  */
 public final class Checks {
 	
+	private Checks() {}
+	
 	// Objects
 	
 	public static <O> O isNotNull(O object, String name) throws IllegalArgumentException {

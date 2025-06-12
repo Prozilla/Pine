@@ -9,6 +9,8 @@ import static org.lwjgl.openal.AL10.*;
  */
 public final class ALUtils {
 	
+	private ALUtils() {}
+	
 	/**
 	 * Translates an OpenAL error code to a string describing the error.
 	 * Source: <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">OpenAL Programmer's Guide</a>.

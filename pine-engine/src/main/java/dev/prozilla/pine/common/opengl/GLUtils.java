@@ -11,6 +11,8 @@ import static org.lwjgl.opengl.GL30.GL_INVALID_FRAMEBUFFER_OPERATION;
  */
 public final class GLUtils {
 	
+	private GLUtils() {}
+	
 	/**
 	 * Translates an OpenGL error code to a string describing the error.
 	 * Source: <a href="https://github.com/LWJGL/lwjgl3/commit/ae20e0c9c4d8fda9b09160500955e0976d1cc208#diff-ab7fadcd0e9d099b2dc851ea69e7e2c6dacb2ff53a6c57d91269d19e97e1cc35L45">GLUtil.java</a>.

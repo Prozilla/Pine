@@ -22,6 +22,8 @@ public final class Pine {
 	/** Current patch version of Pine. */
 	public static final int VERSION_PATCH = 0;
 	
+	private Pine() {}
+	
 	/**
 	 * Returns the version of Pine.
 	 * @return The Pine version

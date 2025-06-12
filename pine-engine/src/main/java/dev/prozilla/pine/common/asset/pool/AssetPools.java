@@ -8,6 +8,8 @@ import dev.prozilla.pine.common.logging.Logger;
  */
 public final class AssetPools {
 	
+	private AssetPools() {}
+	
 	// Pools
 	public static final ImagePool images = new ImagePool();
 	public static final TexturePool textures = new TexturePool(images);
