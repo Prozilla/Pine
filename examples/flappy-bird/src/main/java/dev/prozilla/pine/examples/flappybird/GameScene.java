@@ -6,6 +6,7 @@ import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
 import dev.prozilla.pine.core.scene.Scene;
+import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadButton;
 import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
@@ -21,15 +22,13 @@ import dev.prozilla.pine.examples.flappybird.system.player.PlayerInitializer;
 import dev.prozilla.pine.examples.flappybird.system.player.PlayerInputHandler;
 import dev.prozilla.pine.examples.flappybird.system.player.PlayerMover;
 
-import java.util.Random;
-
 public class GameScene extends Scene {
 	
 	// Game state
 	public boolean gameOver;
 	public int playerScore;
 	
-	private float timeUntilNextObstacle;
+	private Timer.Interval obstacleSpawnInterval;
 	
 	// Prefabs
 	private PipesPrefab pipesPrefab;
@@ -42,11 +41,9 @@ public class GameScene extends Scene {
 	// Common resources
 	public Font font;
 	
-	private static final Random random = new Random();
-	
 	// Constants
 	public static final float MIN_OBSTACLE_TIME = 0.75f;
-	public static final float MAX_OBSTACLE_TIME = 3.5f;
+	public static final float MAX_OBSTACLE_TIME = 2.5f;
 	
 	@Override
 	protected void load() {
@@ -91,9 +88,11 @@ public class GameScene extends Scene {
 		gameOverText = nodeRoot.addChild(gameOverPrefab);
 		
 		// Set default values
-		timeUntilNextObstacle = 0;
 		gameOver = false;
 		playerScore = 0;
+		
+		// Start spawning obstacles
+		obstacleSpawnInterval = getTimer().startRandomInterval(this::spawnObstacle, MIN_OBSTACLE_TIME, MAX_OBSTACLE_TIME, true);
 	}
 	
 	@Override
@@ -113,19 +112,16 @@ public class GameScene extends Scene {
 			gameOverText.setActive(true);
 			gameOverText.getChildWithTag(EntityTag.FINAL_SCORE_TAG).getComponent(TextNode.class).setText(String.format("Your Score: %s", playerScore));
 		}
-
+		
 		super.update(deltaTime);
 		
-		if (!gameOver) {
-			if (timeUntilNextObstacle <= 0) {
-				// Spawn obstacle
-				obstacles.addChild(pipesPrefab.instantiate(world));
-				timeUntilNextObstacle += random.nextFloat(MIN_OBSTACLE_TIME, MAX_OBSTACLE_TIME);
-			} else {
-				// Decrease time until next obstacle
-				timeUntilNextObstacle -= deltaTime;
-			}
+		if (gameOver) {
+			obstacleSpawnInterval.destroy();
 		}
+	}
+	
+	public void spawnObstacle() {
+		obstacles.addChild(pipesPrefab.instantiate(world));
 	}
 	
 	public void endGame() {

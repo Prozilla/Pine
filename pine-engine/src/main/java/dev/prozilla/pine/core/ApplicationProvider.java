@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.audio.AudioDevice;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.state.ApplicationTimer;
+import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.input.Input;
@@ -34,7 +34,7 @@ public interface ApplicationProvider extends ApplicationContext {
 	}
 	
 	@Override
-	default ApplicationTimer getTimer() {
+	default Timer getTimer() {
 		return getApplication().getTimer();
 	}
 	

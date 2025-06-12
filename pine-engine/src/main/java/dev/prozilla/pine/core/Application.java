@@ -48,7 +48,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	// Helpers
 	protected final Config config;
 	protected final AppLogger logger;
-	protected final ApplicationTimer timer;
+	protected final Timer timer;
 	protected final Renderer renderer;
 	protected final AudioDevice audioDevice;
 	protected final Window window;
@@ -112,7 +112,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		config.window.width.setValue(width);
 		config.window.height.setValue(height);
 		
-		timer = new ApplicationTimer();
+		timer = new Timer();
 		tracker = new Tracker(this);
 		renderer = new Renderer(this);
 		audioDevice = new AudioDevice(this);
@@ -241,7 +241,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		// Application loop
 		while (!window.shouldClose() && !shouldStop) {
 			double startTime = timer.getCurrentTime();
-			timer.update();
+			timer.nextFrame();
 			float deltaTime = timer.getDeltaTime();
 			
 			// Handle input and update application
@@ -330,6 +330,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		if (applicationManager != null) {
 			applicationManager.onUpdate(deltaTime);
 		}
+		timer.updateTimedActions();
 		if (currentScene != null && currentScene.initialized) {
 			currentScene.update(deltaTime);
 		}
@@ -685,7 +686,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	}
 	
 	@Override
-	public ApplicationTimer getTimer() {
+	public Timer getTimer() {
 		return timer;
 	}
 	
