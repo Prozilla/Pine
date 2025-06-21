@@ -3,8 +3,7 @@ package dev.prozilla.pine.examples.flappybird.system.canvas;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 import dev.prozilla.pine.examples.flappybird.EntityTag;
-import dev.prozilla.pine.examples.flappybird.GameScene;
-import org.w3c.dom.Text;
+import dev.prozilla.pine.examples.flappybird.scene.GameScene;
 
 /**
  * Updates the score text based on the player's score.

@@ -4,7 +4,7 @@ import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
-import dev.prozilla.pine.examples.flappybird.Main;
+import dev.prozilla.pine.examples.flappybird.FlappyBird;
 import dev.prozilla.pine.examples.flappybird.component.PipeData;
 
 /**
@@ -31,6 +31,6 @@ public class PipeInitializer extends InitSystem {
 		}
 		
 		// Set initial position
-		transform.position.x = Main.WIDTH / 2f;
+		transform.position.x = FlappyBird.WIDTH / 2f;
 	}
 }

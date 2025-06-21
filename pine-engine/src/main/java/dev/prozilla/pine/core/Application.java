@@ -489,6 +489,9 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * @param scene Reference to the scene
 	 */
 	public void loadScene(Scene scene) {
+		if (!scenes.containsKey(scene.getId())) {
+			addScene(scene);
+		}
 		loadScene(scene.getId());
 	}
 	

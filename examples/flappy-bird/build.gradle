@@ -8,7 +8,7 @@ plugins {
 }
 
 application {
-	mainClass = "dev.prozilla.pine.examples.flappybird.Main"
+	mainClass = "dev.prozilla.pine.examples.flappybird.FlappyBird"
 }
 
 dependencies {
@@ -16,7 +16,7 @@ dependencies {
 }
 
 tasks.register("start", JavaExec) {
-	mainClass = "dev.prozilla.pine.examples.flappybird.Main"
+	mainClass = "dev.prozilla.pine.examples.flappybird.FlappyBird"
 	classpath = sourceSets.main.runtimeClasspath
 	systemProperty "dev-mode", "true"
 }

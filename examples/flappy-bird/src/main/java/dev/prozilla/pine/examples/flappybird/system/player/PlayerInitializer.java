@@ -1,11 +1,11 @@
 package dev.prozilla.pine.examples.flappybird.system.player;
 
-import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.Transform;
+import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
-import dev.prozilla.pine.examples.flappybird.GameScene;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
+import dev.prozilla.pine.examples.flappybird.scene.GameScene;
 
 /**
  * Initializes the player by setting its position and sprite properties.

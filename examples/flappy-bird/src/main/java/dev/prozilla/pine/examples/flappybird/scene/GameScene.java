@@ -1,18 +1,17 @@
-package dev.prozilla.pine.examples.flappybird;
+package dev.prozilla.pine.examples.flappybird.scene;
 
-import dev.prozilla.pine.common.asset.pool.AssetPools;
-import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
-import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadButton;
-import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
+import dev.prozilla.pine.examples.flappybird.EntityTag;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
-import dev.prozilla.pine.examples.flappybird.entity.*;
-import dev.prozilla.pine.examples.flappybird.system.background.BackgroundInitializer;
+import dev.prozilla.pine.examples.flappybird.entity.GameOverPrefab;
+import dev.prozilla.pine.examples.flappybird.entity.PipesPrefab;
+import dev.prozilla.pine.examples.flappybird.entity.PlayerPrefab;
+import dev.prozilla.pine.examples.flappybird.entity.ScorePrefab;
 import dev.prozilla.pine.examples.flappybird.system.background.BackgroundMover;
 import dev.prozilla.pine.examples.flappybird.system.canvas.ScoreTextUpdater;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipeInitializer;
@@ -22,7 +21,7 @@ import dev.prozilla.pine.examples.flappybird.system.player.PlayerInitializer;
 import dev.prozilla.pine.examples.flappybird.system.player.PlayerInputHandler;
 import dev.prozilla.pine.examples.flappybird.system.player.PlayerMover;
 
-public class GameScene extends Scene {
+public class GameScene extends SceneBase {
 	
 	// Game state
 	public boolean gameOver;
@@ -38,9 +37,6 @@ public class GameScene extends Scene {
 	public Entity player;
 	public Entity gameOverText;
 	
-	// Common resources
-	public Font font;
-	
 	// Constants
 	public static final float MIN_OBSTACLE_TIME = 0.75f;
 	public static final float MAX_OBSTACLE_TIME = 2.5f;
@@ -49,11 +45,7 @@ public class GameScene extends Scene {
 	protected void load() {
 		super.load();
 		
-		// Load resources
-		font = AssetPools.fonts.load("flappybird/flappy-bird.ttf", 32);
-		
 		// Create prefabs for entities
-		BackgroundPrefab backgroundPrefab = new BackgroundPrefab();
 		PlayerPrefab playerPrefab = new PlayerPrefab();
 		ScorePrefab scorePrefab = new ScorePrefab(font);
 		GameOverPrefab gameOverPrefab = new GameOverPrefab(font);
@@ -63,18 +55,11 @@ public class GameScene extends Scene {
 		world.addSystem(new PlayerInitializer());
 		world.addSystem(new PlayerInputHandler());
 		world.addSystem(new PlayerMover());
-		world.addSystem(new BackgroundInitializer());
 		world.addSystem(new BackgroundMover());
 		world.addSystem(new PipeInitializer());
 		world.addSystem(new PipesInitializer());
 		world.addSystem(new PipesMover());
 		world.addSystem(new ScoreTextUpdater());
-		
-		// Fill screen with background sprites
-		int backgroundCount = Math.round((float)Main.WIDTH / BackgroundData.WIDTH + 0.5f) + 1;
-		for (int i = 0; i < backgroundCount; i++) {
-			world.addEntity(backgroundPrefab.instantiate(world, i));
-		}
 		
 		// Create player object
 		player = world.addEntity(playerPrefab);
@@ -99,10 +84,8 @@ public class GameScene extends Scene {
 	public void input(float deltaTime) throws IllegalStateException {
 		super.input(deltaTime);
 		
-		if (gameOver) {
-			if (getInput().getKeyDown(Key.R) || getInput().getGamepad().getButtonDown(GamepadButton.Y)) {
-				application.reloadScene();
-			}
+		if (gameOver && (getInput().getKeyDown(Key.R) || getInput().getGamepad().getButtonDown(GamepadButton.Y))) {
+			application.reloadScene();
 		}
 	}
 	

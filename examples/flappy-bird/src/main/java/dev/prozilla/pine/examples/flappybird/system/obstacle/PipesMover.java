@@ -2,10 +2,10 @@ package dev.prozilla.pine.examples.flappybird.system.obstacle;
 
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
-import dev.prozilla.pine.examples.flappybird.GameScene;
 import dev.prozilla.pine.examples.flappybird.component.PipeData;
 import dev.prozilla.pine.examples.flappybird.component.PipesData;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
+import dev.prozilla.pine.examples.flappybird.scene.GameScene;
 
 /**
  * Moves pipe pairs along the horizontal axis and checks whether the player has passed or hit pipes.

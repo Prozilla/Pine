@@ -2,10 +2,10 @@ package dev.prozilla.pine.examples.flappybird.system.obstacle;
 
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
-import dev.prozilla.pine.examples.flappybird.GameScene;
-import dev.prozilla.pine.examples.flappybird.Main;
+import dev.prozilla.pine.examples.flappybird.FlappyBird;
 import dev.prozilla.pine.examples.flappybird.component.PipeData;
 import dev.prozilla.pine.examples.flappybird.component.PipesData;
+import dev.prozilla.pine.examples.flappybird.scene.GameScene;
 
 import java.util.Random;
 
@@ -28,7 +28,7 @@ public class PipesInitializer extends InitSystem {
 		pipesData.gameScene = (GameScene)scene;
 		
 		// Randomize height and gap
-		int height = Math.round(random.nextFloat(Main.HEIGHT / -4f, Main.HEIGHT / 4f));
+		int height = Math.round(random.nextFloat(FlappyBird.HEIGHT / -4f, FlappyBird.HEIGHT / 4f));
 		int gap = random.nextInt(150, 200);
 		
 		// Position pipes
