@@ -25,6 +25,7 @@ public class BarPrefab extends SpritePrefab {
 		super.apply(entity);
 		
 		SpriteRenderer spriteRenderer = entity.getComponent(SpriteRenderer.class);
+		spriteRenderer.scale.x = (float)Main.WIDTH / Main.BAR_COUNT / spriteRenderer.getWidth();
 		entity.transform.position.x = ((float)index / Main.BAR_COUNT - 0.5f) * (Main.WIDTH - spriteRenderer.getWidth() * 2f);
 		entity.transform.position.y = (spriteRenderer.getHeight() - Main.HEIGHT) / 2f;
 		

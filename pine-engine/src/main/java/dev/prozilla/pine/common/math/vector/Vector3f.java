@@ -34,6 +34,17 @@ public class Vector3f extends VectorFloat<Vector3f> {
         this.z = z;
     }
     
+    public Vector3f set(float xyz) {
+        return set(xyz, xyz, xyz);
+    }
+    
+    public Vector3f set(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        return this;
+    }
+    
     public Vector3f add(float x, float y, float z) {
         this.x += x;
         this.y += y;

@@ -33,7 +33,7 @@ public class PlayerInitializer extends InitSystem {
 		transform.setPosition(PlayerData.POSITION_X, 0);
 		
 		// Set sprite properties
-		spriteRenderer.scale = 1.5f;
+		spriteRenderer.scale.set(1.5f);
 		spriteRenderer.rotation = 0;
 	}
 }

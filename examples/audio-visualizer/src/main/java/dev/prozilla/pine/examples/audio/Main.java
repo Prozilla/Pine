@@ -10,6 +10,7 @@ public class Main {
 	
 	public static final int BAR_COUNT = 25;
 	public static final float LERP_SPEED = 10;
+	public static final long SHUFFLE_SEED = 0;
 	
 	public static void main(String[] args) {
 		ApplicationBuilder applicationBuilder = new ApplicationBuilder();

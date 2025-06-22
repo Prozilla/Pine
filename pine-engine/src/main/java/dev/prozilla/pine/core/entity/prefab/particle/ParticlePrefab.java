@@ -105,8 +105,8 @@ public class ParticlePrefab extends SpritePrefab {
 	}
 	
 	@Override
-	public void setScale(float scale) {
-		setScale(new FixedProperty<>(scale));
+	public void setScale(Vector2f scale) {
+		setScale(new FixedProperty<>(scale.length()));
 	}
 	
 	public void setScale(VariableProperty<Float> scale) {
@@ -171,7 +171,8 @@ public class ParticlePrefab extends SpritePrefab {
 		
 		// Apply scale
 		if (scale != null) {
-			spriteRenderer.scale = scale.getValue();
+			spriteRenderer.scale.x = scale.getValue();
+			spriteRenderer.scale.y = scale.getValue();
 		} else if (scaleAnimation != null) {
 			particleRenderer.scaleAnimation = scaleAnimation.getValue();
 		}

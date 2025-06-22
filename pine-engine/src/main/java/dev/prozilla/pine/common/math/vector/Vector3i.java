@@ -34,6 +34,17 @@ public class Vector3i extends VectorInt<Vector3i> {
 		this.z = z;
 	}
 	
+	public Vector3i set(int xyz) {
+		return set(xyz, xyz, xyz);
+	}
+	
+	public Vector3i set(int x, int y, int z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		return this;
+	}
+	
 	public Vector3i add(int x, int y, int z) {
 		this.x += x;
 		this.y += y;

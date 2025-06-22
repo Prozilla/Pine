@@ -2,7 +2,7 @@ package dev.prozilla.pine.examples.audio;
 
 import dev.prozilla.pine.common.asset.audio.AudioSource;
 import dev.prozilla.pine.common.math.MathUtils;
-import dev.prozilla.pine.core.component.Transform;
+import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 
@@ -18,20 +18,21 @@ public class BarResizer extends UpdateSystemBase {
 	@Override
 	public void update(float deltaTime) {
 		double[] magnitudes = source.getAverageMagnitudes(Main.BAR_COUNT);
+		if (magnitudes != null) {
+			ArrayUtils.shuffle(magnitudes, Main.SHUFFLE_SEED);
+		}
 		
 		forEach((chunk) -> {
-			Transform transform = chunk.getTransform();
 			BarData barData = chunk.getComponent(BarData.class);
 			SpriteRenderer spriteRenderer = chunk.getComponent(SpriteRenderer.class);
 			
-			float y = (spriteRenderer.getHeight() - Main.HEIGHT) / 2f;
-			
+			float factor = 0.1f;
 			if (magnitudes != null && source.isPlaying()) {
 				double magnitude = magnitudes[barData.index];
-				y += (float)Math.log1p(magnitude * 100) * 20f;
+				factor += (float)Math.log1p(magnitude * 10) * (0.25f + 0.75f * (float)Math.sin((float)barData.index / (Main.BAR_COUNT - 1) * Math.PI));
 			}
 			
-			transform.position.y = MathUtils.lerp(transform.position.y, y, deltaTime * Main.LERP_SPEED);
+			spriteRenderer.scale.y = MathUtils.lerp(spriteRenderer.scale.y, factor, deltaTime * Main.LERP_SPEED);
 		});
 	}
 }

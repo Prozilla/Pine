@@ -4,13 +4,12 @@ import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Components;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
-
-import java.util.Objects;
 
 /**
  * Prefab for 2D sprite entities.
@@ -20,7 +19,7 @@ public class SpritePrefab extends Prefab {
 	
 	protected TextureBase texture;
 	protected Color color;
-	protected float scale;
+	protected Vector2f scale;
 	
 	protected boolean cropToRegion;
 	protected Vector2f regionOffset;
@@ -31,12 +30,10 @@ public class SpritePrefab extends Prefab {
 	}
 	
 	public SpritePrefab(TextureBase texture) {
-		Objects.requireNonNull(texture, "Texture must not be null.");
-		
-		this.texture = texture;
+		this.texture = Checks.isNotNull(texture, "texture");
 		
 		color = null;
-		scale = 1;
+		scale = null;
 		
 		cropToRegion = false;
 		regionOffset = new Vector2f();
@@ -56,7 +53,7 @@ public class SpritePrefab extends Prefab {
 		regionSize.y = height;
 	}
 	
-	public void setScale(float scale) {
+	public void setScale(Vector2f scale) {
 		this.scale = scale;
 	}
 	
@@ -67,8 +64,10 @@ public class SpritePrefab extends Prefab {
 	@Override
 	protected void apply(Entity entity) {
 		SpriteRenderer spriteRenderer = color != null ? new SpriteRenderer(texture, color) : new SpriteRenderer(texture);
-		spriteRenderer.scale = scale;
 		
+		if (scale != null) {
+			spriteRenderer.scale = scale.clone();
+		}
 		if (cropToRegion) {
 			spriteRenderer.setRegion(regionOffset, regionSize);
 		}

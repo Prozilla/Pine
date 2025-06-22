@@ -32,6 +32,16 @@ public class Vector2f extends VectorFloat<Vector2f> {
         this.y = y;
     }
     
+    public Vector2f set(float xy) {
+        return set(xy, xy);
+    }
+    
+    public Vector2f set(float x, float y) {
+        this.x = x;
+        this.y = y;
+        return this;
+    }
+    
     public Vector2f add(float x, float y) {
         this.x += x;
         this.y += y;
@@ -89,6 +99,13 @@ public class Vector2f extends VectorFloat<Vector2f> {
     public static Vector2f parse(String input) throws InvalidStringException {
         Float[] floats = Vector.parseToFloats(input, 2);
         return new Vector2f(floats[0], floats[1]);
+    }
+    
+    /**
+     * Creates a new vector (1, 1)
+     */
+    public static Vector2f one() {
+        return new Vector2f(1, 1);
     }
     
     /**

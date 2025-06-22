@@ -7,8 +7,10 @@ import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
@@ -58,7 +60,7 @@ public class Renderer implements Initializable, Destructible {
 	private Font debugFont;
 	
 	// Transformation
-	private float renderScale;
+	private Vector2f renderScale;
 	private boolean mirrorHorizontally;
 	private boolean mirrorVertically;
 	
@@ -66,6 +68,7 @@ public class Renderer implements Initializable, Destructible {
 	private final static int STRIDE_LENGTH = 11;
 	/** The amount of strides to fit into a single vertex buffer. */
 	private final static int VERTEX_BUFFER_SIZE = 32;
+	private final static Vector2f DEFAULT_RENDER_SCALE = Vector2f.one();
 	
 	// Config options
 	private Color fallbackColor;
@@ -252,12 +255,12 @@ public class Renderer implements Initializable, Destructible {
 		resetRegion();
 	}
 	
-	public void setScale(float scale) {
-		this.renderScale = scale;
+	public void setScale(Vector2f scale) {
+		this.renderScale = Checks.isNotNull(scale, "scale");
 	}
 	
 	public void resetScale() {
-		renderScale = 1f;
+		renderScale = DEFAULT_RENDER_SCALE;
 	}
 	
 	public void setMirrorHorizontally(boolean mirrorHorizontally) {
@@ -422,8 +425,8 @@ public class Renderer implements Initializable, Destructible {
 	 * @param c Color
 	 */
 	public void drawRect(float x, float y, float z, float width, float height, Color c) {
-		float x2 = x + width * renderScale;
-		float y2 = y + height * renderScale;
+		float x2 = x + width * renderScale.x;
+		float y2 = y + height * renderScale.y;
 		
 		drawTextureRegion(null, x, y, x2, y2, z, 0, 0, 0, 0, c);
 	}
@@ -439,8 +442,8 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		// Vertex positions
-		float x2 = x + texture.getWidth() * renderScale;
-		float y2 = y + texture.getHeight() * renderScale;
+		float x2 = x + texture.getWidth() * renderScale.x;
+		float y2 = y + texture.getHeight() * renderScale.y;
 		
 		// Texture coordinates
 		float s1 = 0f;
@@ -471,8 +474,8 @@ public class Renderer implements Initializable, Destructible {
 	 */
 	public void drawTexture(TextureBase texture, float x, float y, float z, Color c) {
 		// Vertex positions
-		float x2 = x + texture.getWidth() * renderScale;
-		float y2 = y + texture.getHeight() * renderScale;
+		float x2 = x + texture.getWidth() * renderScale.x;
+		float y2 = y + texture.getHeight() * renderScale.y;
 		
 		// Texture coordinates
 		float s1 = 0f;
@@ -494,14 +497,14 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		// Compute the center of the texture in world space
-		float centerX = x + (regWidth * renderScale) / 2.0f;
-		float centerY = y + (regHeight * renderScale) / 2.0f;
+		float centerX = x + (regWidth * renderScale.x) / 2.0f;
+		float centerY = y + (regHeight * renderScale.y) / 2.0f;
 		
 		// Compute the new corners relative to the center
-		float x1 = centerX - (regHeight * renderScale) / 2.0f;
-		float y1 = centerY - (regWidth * renderScale) / 2.0f;
-		float x2 = centerX + (regHeight * renderScale) / 2.0f;
-		float y2 = centerY + (regWidth * renderScale) / 2.0f;
+		float x1 = centerX - (regHeight * renderScale.y) / 2.0f;
+		float y1 = centerY - (regWidth * renderScale.x) / 2.0f;
+		float x2 = centerX + (regHeight * renderScale.y) / 2.0f;
+		float y2 = centerY + (regWidth * renderScale.x) / 2.0f;
 		
 		// Texture coordinates
 		float s1 = regX / texture.getWidth();
@@ -586,8 +589,8 @@ public class Renderer implements Initializable, Destructible {
 	 */
 	public void drawTextureRegion(TextureBase texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c) {
 		// Vertex positions
-		float x2 = x + regWidth * renderScale;
-		float y2 = y + regHeight * renderScale;
+		float x2 = x + regWidth * renderScale.x;
+		float y2 = y + regHeight * renderScale.y;
 		
 		if (outOfBounds(x, y, x, y2, x2, y2, x2, y)) {
 			totalVertices += 6;

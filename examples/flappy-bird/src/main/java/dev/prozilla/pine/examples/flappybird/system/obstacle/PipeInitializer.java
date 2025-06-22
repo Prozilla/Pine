@@ -24,7 +24,7 @@ public class PipeInitializer extends InitSystem {
 		
 		// Set sprite properties
 		spriteRenderer.setRegion(0, 0, PipeData.WIDTH, PipeData.HEIGHT);
-		spriteRenderer.scale = 1.25f;
+		spriteRenderer.scale.set(1.25f);
 		if (pipeData.isTop) {
 			// Flip sprite
 			spriteRenderer.rotation = 180;
