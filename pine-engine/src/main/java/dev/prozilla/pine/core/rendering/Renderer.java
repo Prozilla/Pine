@@ -255,8 +255,13 @@ public class Renderer implements Initializable, Destructible {
 		resetRegion();
 	}
 	
+	public void setScale(float scale) {
+		this.renderScale.set(scale);
+	}
+	
 	public void setScale(Vector2f scale) {
-		this.renderScale = Checks.isNotNull(scale, "scale");
+		Checks.isNotNull(scale, "scale");
+		this.renderScale.set(scale.x, scale.y);
 	}
 	
 	public void resetScale() {

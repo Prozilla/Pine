@@ -37,6 +37,12 @@ public class AudioPlayer extends Component implements AudioSourceContext {
 	}
 	
 	@Override
+	public void rewind() {
+		requireSource();
+		source.rewind();
+	}
+	
+	@Override
 	public void play() {
 		requireSource();
 		source.play();

@@ -21,6 +21,7 @@ import dev.prozilla.pine.core.system.standard.camera.*;
 import dev.prozilla.pine.core.system.standard.particle.ParticleFlowUpdater;
 import dev.prozilla.pine.core.system.standard.particle.ParticleInitializer;
 import dev.prozilla.pine.core.system.standard.particle.ParticleUpdater;
+import dev.prozilla.pine.core.system.standard.shape.RectRenderSystem;
 import dev.prozilla.pine.core.system.standard.sprite.*;
 import dev.prozilla.pine.core.system.standard.ui.*;
 import dev.prozilla.pine.core.system.standard.ui.frame.FrameRenderer;
@@ -117,6 +118,9 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		initialSystems.add(new MultiTileInitializer());
 		initialSystems.add(new TileMover());
 		initialSystems.add(new SpriteRenderSystem());
+		
+		// Shapes
+		initialSystems.add(new RectRenderSystem());
 
 		// Nodes
 		initialSystems.add(new NodeRootInitializer());

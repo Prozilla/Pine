@@ -41,7 +41,7 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	@Override
 	public void init() throws IllegalStateException {
 		if (initialized) {
-			throw new IllegalStateException("Audio source has already been initialized");
+			return;
 		}
 		
 		// Capture samples
@@ -90,6 +90,12 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	
 	public boolean isCaptured() {
 		return samples != null;
+	}
+	
+	@Override
+	public void rewind() {
+		requireInitialized();
+		alSourceRewind(sourcePointer);
 	}
 	
 	@Override

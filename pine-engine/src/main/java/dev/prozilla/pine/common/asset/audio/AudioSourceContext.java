@@ -13,6 +13,18 @@ public interface AudioSourceContext {
 		}
 	}
 	
+	default void restart() {
+		rewind();
+		play();
+	}
+	
+	default void stop() {
+		rewind();
+		pause();
+	}
+	
+	void rewind();
+	
 	void play();
 	
 	void pause();
