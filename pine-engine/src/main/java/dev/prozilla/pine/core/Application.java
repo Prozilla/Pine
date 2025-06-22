@@ -529,7 +529,11 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		stateMachine.changeState(ApplicationState.LOADING);
 		
 		if (!currentScene.initialized) {
-			currentScene.init();
+			try {
+				currentScene.init();
+			} catch (IllegalStateException e) {
+				logger.error("Failed to initialize scene", e);
+			}
 		}
 		
 		// Make sure game is resumed when new scene is loaded

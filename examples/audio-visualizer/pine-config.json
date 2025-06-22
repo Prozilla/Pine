@@ -1,0 +1,8 @@
+{
+  "mainClass": "dev.prozilla.pine.examples.audio.Main",
+  "gameName": "Audio Visualizer",
+  "developer": "Prozilla",
+  "version": "1.0.0.0",
+  "jreVersion": "21",
+  "jar": "build/libs/audio-visualizer-1.0.0.0-all.jar"
+}

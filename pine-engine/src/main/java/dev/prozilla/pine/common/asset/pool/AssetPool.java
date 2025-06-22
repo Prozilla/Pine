@@ -81,6 +81,15 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 	 * @param reason The reason of the failure
 	 * @return {@code null}
 	 */
+	protected T fail(String path, String reason) {
+		return fail(path, reason, null);
+	}
+	
+	/**
+	 * Utility method for marking the asset creation as failed.
+	 * @param reason The reason of the failure
+	 * @return {@code null}
+	 */
 	protected T fail(String path, String reason, Exception exception) {
 		eventDispatcher.invoke(AssetPoolEventType.FAILED, this, path, reason, exception);
 		return null;

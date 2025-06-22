@@ -317,6 +317,41 @@ public final class Color implements Printable, Cloneable<Color>, Transceivable<C
         return new Color(1f, 1f, 1f, 0f);
     }
     
+    public static Color hsl(int hue, int saturation, int lightness) {
+        return hsl(hue / 255f, saturation / 255f, lightness / 255f);
+    }
+    
+    /**
+     * Source: <a href="https://stackoverflow.com/a/9493060/17069783">HSL to RGB color conversion</a>
+     */
+    public static Color hsl(float hue, float saturation, float lightness) {
+        float red, green, blue;
+        
+        if (saturation == 0) {
+            red = green = blue = lightness;
+        } else {
+            float q = lightness < 0.5f ? lightness * (1f + saturation) : lightness + saturation - lightness * saturation;
+            float p = 2f * lightness - q;
+            red = hueToRGB(p, q, hue + 1f/3);
+            green = hueToRGB(p, q, hue);
+            blue = hueToRGB(p, q, hue - 1f/3);
+        }
+        
+        return new Color(red, green, blue);
+    }
+    
+    /**
+     * Source: <a href="https://stackoverflow.com/a/9493060/17069783">HSL to RGB color conversion</a>
+     */
+    private static float hueToRGB(float p, float q, float t) {
+        if (t < 0f) t += 1;
+        if (t > 1f) t -= 1;
+        if (t < 1f/6) return p + (q - p) * 6f * t;
+        if (t < 1f/2) return q;
+        if (t < 2f/3) return p + (q - p) * (2f/3 - t) * 6f;
+        return p;
+    }
+    
     /**
      * Decodes a <code>String</code> into a <code>Color</code>.
      * Supports octal and hexadecimal number representations of opaque and transparent colors.

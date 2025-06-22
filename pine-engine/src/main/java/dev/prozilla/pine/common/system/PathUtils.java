@@ -82,4 +82,12 @@ public final class PathUtils {
 		return "file:///" + absolute.toString().replace("\\", "/").replace(" ", "%20");
 	}
 	
+	public static String getFileExtension(String path) {
+		int lastIndexOf = path.lastIndexOf(".");
+		if (lastIndexOf == -1) {
+			return "";
+		}
+		return path.substring(lastIndexOf + 1).toLowerCase();
+	}
+	
 }

@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.asset.pool;
 
 import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.system.PathUtils;
-import dev.prozilla.pine.core.rendering.Shader;
+import dev.prozilla.pine.common.system.ResourceUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,8 +23,7 @@ public abstract class TextAssetPool<T extends Asset> extends AssetPool<T> {
 	protected T createAsset(String path) {
 		StringBuilder stringBuilder = new StringBuilder();
 		
-		try (InputStream in = Shader.class.getResourceAsStream(path)) {
-			assert in != null;
+		try (InputStream in = ResourceUtils.getResourceStream(path)) {
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
 				String line;
 				while ((line = reader.readLine()) != null) {
