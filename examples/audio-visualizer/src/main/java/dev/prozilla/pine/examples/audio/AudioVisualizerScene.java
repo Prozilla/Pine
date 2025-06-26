@@ -21,9 +21,10 @@ public class AudioVisualizerScene extends Scene {
 	
 	private int currentTrack;
 	private static final String[] TRACKS = new String[] {
-		"audio/KevinMacleod-PookatoriAndFriends.ogg",
 		"audio/AndrewApplepie-KeepOnTrying.ogg",
+		"audio/AndrewApplepie-PokemonInNYC.ogg",
 		"audio/PixelPlayground.ogg",
+		"audio/KevinMacleod-PookatoriAndFriends.ogg",
 	};
 	
 	@Override
@@ -35,7 +36,7 @@ public class AudioVisualizerScene extends Scene {
 		currentTrack = -1;
 		nextTrack();
 		
-		world.addSystem(new BarResizer());
+		world.addSystem(new BarResizer(this));
 		
 		barPrefab = new BarPrefab();
 		bars = new ArrayList<>();

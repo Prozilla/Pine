@@ -7,7 +7,7 @@ public class Main {
 	
 	// Window
 	public static final int WIDTH = 900;
-	public static final int HEIGHT = 600;
+	public static final int HEIGHT = 450;
 	
 	// Bars
 	public static final int BAR_COUNT = 25;

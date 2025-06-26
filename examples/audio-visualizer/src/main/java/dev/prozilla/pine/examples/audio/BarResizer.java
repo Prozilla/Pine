@@ -4,21 +4,15 @@ import dev.prozilla.pine.common.asset.audio.AudioSource;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.core.component.shape.RectRenderer;
-import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 
 public class BarResizer extends UpdateSystemBase {
 	
-	private AudioVisualizerScene scene;
+	private final AudioVisualizerScene scene;
 	
-	public BarResizer() {
+	public BarResizer(AudioVisualizerScene scene) {
 		super(BarData.class, RectRenderer.class);
-	}
-	
-	@Override
-	public void initSystem(World world) {
-		super.initSystem(world);
-		scene = (AudioVisualizerScene)world.scene;
+		this.scene = scene;
 	}
 	
 	@Override
