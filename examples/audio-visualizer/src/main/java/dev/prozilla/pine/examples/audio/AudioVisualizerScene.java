@@ -2,6 +2,7 @@ package dev.prozilla.pine.examples.audio;
 
 import dev.prozilla.pine.common.asset.audio.AudioSource;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.property.selection.SelectionProperty;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.shape.RectRenderer;
@@ -19,13 +20,16 @@ public class AudioVisualizerScene extends Scene {
 	private BarPrefab barPrefab;
 	private List<RectRenderer> bars;
 	
-	private int currentTrack;
-	private static final String[] TRACKS = new String[] {
-		"audio/AndrewApplepie-KeepOnTrying.ogg",
-		"audio/AndrewApplepie-PokemonInNYC.ogg",
-		"audio/PixelPlayground.ogg",
-		"audio/KevinMacleod-PookatoriAndFriends.ogg",
-	};
+	private final SelectionProperty<String> tracks;
+	
+	public AudioVisualizerScene() {
+		tracks = new SelectionProperty<>(
+			"audio/AndrewApplepie-KeepOnTrying.ogg",
+			"audio/AndrewApplepie-PokemonInNYC.ogg",
+			"audio/PixelPlayground.ogg",
+			"audio/KevinMacleod-PookatoriAndFriends.ogg"
+		);
+	}
 	
 	@Override
 	protected void load() {
@@ -33,7 +37,6 @@ public class AudioVisualizerScene extends Scene {
 		
 		cameraData.setBackgroundColor(Color.hsl(0f, 0f, 0.05f));
 		
-		currentTrack = -1;
 		nextTrack();
 		
 		world.addSystem(new BarResizer(this));
@@ -61,6 +64,8 @@ public class AudioVisualizerScene extends Scene {
 			updateBars();
 		} else if (input.getKeyDown(Key.N)) {
 			nextTrack();
+		} else if (input.getKeyDown(Key.R)) {
+			source.restart();
 		}
 	}
 	
@@ -71,11 +76,8 @@ public class AudioVisualizerScene extends Scene {
 		}
 		
 		// Load next track
-		currentTrack++;
-		if (currentTrack >= TRACKS.length) {
-			currentTrack = 0;
-		}
-		source = AssetPools.audioSources.load(TRACKS[currentTrack]);
+		tracks.selectNext();
+		source = AssetPools.audioSources.load(tracks.getSelectedItem());
 		source.setCapture(true);
 		source.init();
 		

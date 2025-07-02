@@ -42,12 +42,12 @@ public class ConfigOption<T> extends ObservableProperty<T> {
 	 * @param value New value for this option
 	 */
 	@Override
-	public void setValue(T value) {
+	public boolean setValue(T value) {
 		if (!isValidValue(value)) {
 			throw new IllegalArgumentException("invalid value for option");
 		}
 		
-		super.setValue(value);
+		return super.setValue(value);
 	}
 	
 	/**

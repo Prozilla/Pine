@@ -27,14 +27,16 @@ public class MutableProperty<T> extends VariableProperty<T> {
 	/**
 	 * Sets the value of this property.
 	 * @param value The new value
+	 * @return {@code true} if the value was changed.
 	 */
-	public void setValue(T value) {
+	public boolean setValue(T value) {
 		if (Objects.equals(this.value, value)) {
-			return;
+			return false;
 		}
 		
 		onValueChange(this.value, value);
 		this.value = value;
+		return true;
 	}
 	
 	/**
