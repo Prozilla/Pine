@@ -2,7 +2,7 @@ package dev.prozilla.pine.examples.audio;
 
 import dev.prozilla.pine.common.asset.audio.AudioSource;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
-import dev.prozilla.pine.common.property.selection.SelectionProperty;
+import dev.prozilla.pine.common.property.selection.SingleSelectionProperty;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.shape.RectRenderer;
@@ -20,10 +20,10 @@ public class AudioVisualizerScene extends Scene {
 	private BarPrefab barPrefab;
 	private List<RectRenderer> bars;
 	
-	private final SelectionProperty<String> tracks;
+	private final SingleSelectionProperty<String> tracks;
 	
 	public AudioVisualizerScene() {
-		tracks = new SelectionProperty<>(
+		tracks = new SingleSelectionProperty<>(
 			"audio/AndrewApplepie-KeepOnTrying.ogg",
 			"audio/AndrewApplepie-PokemonInNYC.ogg",
 			"audio/PixelPlayground.ogg",
@@ -37,7 +37,22 @@ public class AudioVisualizerScene extends Scene {
 		
 		cameraData.setBackgroundColor(Color.hsl(0f, 0f, 0.05f));
 		
-		nextTrack();
+		tracks.addObserver((track) -> {
+			// Stop previous track
+			if (source != null) {
+				source.stop();
+			}
+			
+			// Load next track
+			source = AssetPools.audioSources.load(track);
+			source.setCapture(true);
+			source.init();
+			
+			// Start track
+			source.setVolume(0.21f);
+			source.setLoop(true);
+			source.play();
+		});
 		
 		world.addSystem(new BarResizer(this));
 		
@@ -54,9 +69,7 @@ public class AudioVisualizerScene extends Scene {
 		super.input(deltaTime);
 		
 		Input input = getInput();
-		if (input.getKeyDown(Key.SPACE)) {
-			source.togglePause();
-		} else if (input.getKeyDown(Key.NUMPAD_ADD)) {
+		if (input.getKeyDown(Key.NUMPAD_ADD)) {
 			addBar();
 			updateBars();
 		} else if (input.getKeyDown(Key.NUMPAD_SUBTRACT)) {
@@ -64,27 +77,25 @@ public class AudioVisualizerScene extends Scene {
 			updateBars();
 		} else if (input.getKeyDown(Key.N)) {
 			nextTrack();
-		} else if (input.getKeyDown(Key.R)) {
-			source.restart();
+		} else if (input.getKeyDown(Key.P)) {
+			previousTrack();
+		}
+		
+		if (source != null) {
+			if (input.getKeyDown(Key.SPACE)) {
+				source.togglePause();
+			} else if (input.getKeyDown(Key.R)) {
+				source.restart();
+			}
 		}
 	}
 	
 	private void nextTrack() {
-		// Stop previous track
-		if (source != null) {
-			source.stop();
-		}
-		
-		// Load next track
 		tracks.selectNext();
-		source = AssetPools.audioSources.load(tracks.getSelectedItem());
-		source.setCapture(true);
-		source.init();
-		
-		// Start track
-		source.setVolume(0.21f);
-		source.setLoop(true);
-		source.play();
+	}
+	
+	private void previousTrack() {
+		tracks.selectPrevious();
 	}
 	
 	private void addBar() {

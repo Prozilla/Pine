@@ -3,32 +3,30 @@ package dev.prozilla.pine.common.property.selection;
 import dev.prozilla.pine.common.property.observable.ObservableProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class SelectionProperty<T> extends ObservableProperty<T> {
+/**
+ * Represents a selection of items from a list.
+ * @param <I> The type of selectable items.
+ * @param <S> The type of the selection.
+ */
+public abstract class SelectionProperty<I, S> extends ObservableProperty<S> {
 	
-	private final List<T> items;
-	private int selectedIndex;
+	protected final List<I> items;
+	protected WrapMode wrapMode;
 	
-	public SelectionProperty() {
-		this(new ArrayList<>());
-	}
-	
-	@SafeVarargs
-	public SelectionProperty(T... items) {
-		this(Arrays.stream(items).toList());
-	}
-	
-	public SelectionProperty(List<T> items) {
+	public SelectionProperty(List<I> items) {
 		super(null);
 		this.items = Checks.isNotNull(items, "items");
-		selectedIndex = -1;
+		wrapMode = WrapMode.REPEAT;
 	}
 	
-	public List<T> getItems() {
+	/**
+	 * Returns an unmodifiable clone of the list of items.
+	 * @return A clone of the list of items.
+	 */
+	public List<I> getItems() {
 		return Collections.unmodifiableList(items);
 	}
 	
@@ -36,95 +34,85 @@ public class SelectionProperty<T> extends ObservableProperty<T> {
 		return items.size();
 	}
 	
-	public boolean addItem(T item) {
+	public boolean addItem(I item) {
 		return items.add(item);
 	}
 	
-	public boolean removeItem(T item) {
-		if (isItemSelected(item)) {
-			clearSelection();
-		}
+	public boolean removeItem(I item) {
 		return items.remove(item);
 	}
 	
-	@Override
-	public boolean setValue(T value) {
-		return setSelectedItem(value);
-	}
-	
-	public boolean setSelectedItem(T item) {
-		if (item == null) {
-			return clearSelection();
-		}
-		
+	/**
+	 * Selects an item from the list of items.
+	 * @param item The item to select
+	 * @return {@code false} if the item was already selected.
+	 * @throws IllegalArgumentException If the item is not in the list of items.
+	 */
+	public boolean selectItem(I item) throws IllegalArgumentException {
 		if (!items.contains(item)) {
 			throw new IllegalArgumentException("Unknown item: " + item);
 		}
 		
-		return setSelectedIndex(items.indexOf(item));
+		return selectIndex(items.indexOf(item));
 	}
 	
+	/**
+	 * Selects an item from the list of items at a given index.
+	 * @param index The index of the item to select
+	 * @return {@code false} if the item was already selected.
+	 */
+	public abstract boolean selectIndex(int index);
+	
+	/**
+	 * Selects the first item.
+	 */
 	public void selectFirst() {
-		setSelectedIndex(0);
+		selectIndex(0);
 	}
 	
+	/**
+	 * Selects the last item.
+	 */
 	public void selectLast() {
-		setSelectedIndex(-1);
+		selectIndex(items.size() - 1);
 	}
 	
-	public void selectPrevious() {
-		setSelectedIndex(selectedIndex - 1);
-	}
+	/**
+	 * Selects the previous item.
+	 */
+	public abstract void selectPrevious();
 	
-	public void selectNext() {
-		setSelectedIndex(selectedIndex + 1);
-	}
+	/**
+	 * Selects the next item.
+	 */
+	public abstract void selectNext();
 	
-	public boolean setSelectedIndex(int index) {
-		if (items.isEmpty()) {
-			return clearSelection();
+	/**
+	 * Returns the item at the given index based on the wrap mode.
+	 * @param index The index of the item
+	 * @return The item at the given index or {@code null} if there is no corresponding item.
+	 */
+	public I getItem(int index) {
+		index = transformIndex(index);
+		
+		if (index < 0) {
+			return null;
 		}
 		
-		while (index < 0) {
-			index += items.size();
-		}
-		
-		while (index >= items.size()) {
-			index -= items.size();
-		}
-		
-		if (selectedIndex == index) {
-			return false;
-		}
-		
-		selectedIndex = index;
-		return super.setValue(items.get(index));
+		return items.get(index);
 	}
 	
-	public boolean clearSelection() {
-		if (selectedIndex == -1) {
-			return false;
-		}
-		
-		selectedIndex = -1;
-		return super.setValue(null);
+	/**
+	 * Transforms an index based on the wrap mode.
+	 * @param index The index to transform
+	 * @return The transformed index.
+	 */
+	public int transformIndex(int index) {
+		return wrapMode.transformIndex(index, items);
 	}
 	
-	public T getSelectedItem() {
-		return getValue();
-	}
-	
-	public int getSelectedIndex() {
-		return selectedIndex;
-	}
-	
-	public boolean isItemSelected(T item) {
-		T value = getValue();
-		return value != null && value.equals(item);
-	}
-	
-	public boolean isAnyItemSelected() {
-		return getValue() != null;
+	public void setWrapMode(WrapMode wrapMode) {
+		this.wrapMode = wrapMode;
 	}
 	
 }
