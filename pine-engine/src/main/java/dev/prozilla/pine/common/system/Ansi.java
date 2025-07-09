@@ -170,4 +170,19 @@ public final class Ansi {
 		Checks.isNotNull(text, "text");
 		return text.replaceAll("\u001B\\[[;\\d]*m", "");
 	}
+	
+	public static Color toColor(String ansiColor) {
+		return switch (ansiColor) {
+			case BLACK, BLACK_BACKGROUND -> Color.black();
+			case RED, RED_BACKGROUND -> Color.red();
+			case GREEN, GREEN_BACKGROUND -> Color.green();
+			case YELLOW, YELLOW_BACKGROUND -> Color.yellow();
+			case BLUE, BLUE_BACKGROUND -> Color.blue();
+			case PURPLE, PURPLE_BACKGROUND -> Color.purple();
+			case CYAN, CYAN_BACKGROUND -> Color.cyan();
+			case WHITE, WHITE_BACKGROUND -> Color.white();
+			default -> null;
+		};
+	}
+	
 }

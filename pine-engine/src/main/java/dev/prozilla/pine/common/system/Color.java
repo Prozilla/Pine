@@ -336,6 +336,10 @@ public final class Color implements Printable, Cloneable<Color>, Transceivable<C
 	 * @return Color
 	 */
 	public static Color decode(String input) throws NumberFormatException {
+		if (input.length() == 4) {
+			input = input.replaceAll("[a-zA-Z0-9]", "$0$0");
+		}
+		
 		int i = Integer.decode(input);
 		
 		if ((i >>> 24) != 0) {
@@ -378,6 +382,10 @@ public final class Color implements Printable, Cloneable<Color>, Transceivable<C
 	}
 	
 	public static Color aqua() {
+		return new Color(0, 255, 255);
+	}
+	
+	public static Color cyan() {
 		return new Color(0, 255, 255);
 	}
 	
