@@ -10,7 +10,7 @@ import dev.prozilla.pine.common.math.vector.Vector4f;
 /**
  * Represents an RGBA color.
  */
-public final class Color implements Printable, Cloneable<Color>, Transceivable<Color> {
+public class Color implements Printable, Cloneable<Color>, Transceivable<Color> {
 	
 	/** This value specifies the red component. */
 	private float red;
@@ -261,6 +261,10 @@ public final class Color implements Printable, Cloneable<Color>, Transceivable<C
 	 */
 	public Vector4f toVector4f() {
 		return new Vector4f(red, green, blue, alpha);
+	}
+	
+	public Colour toColour() {
+		return new Colour(red, green, blue, alpha);
 	}
 	
 	@Override
