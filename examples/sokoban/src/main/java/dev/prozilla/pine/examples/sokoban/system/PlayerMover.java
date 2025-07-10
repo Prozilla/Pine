@@ -1,12 +1,13 @@
 package dev.prozilla.pine.examples.sokoban.system;
 
-import dev.prozilla.pine.common.system.resource.ResourcePool;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 import dev.prozilla.pine.examples.sokoban.component.PlayerData;
 import dev.prozilla.pine.examples.sokoban.util.Command;
+import dev.prozilla.pine.examples.sokoban.util.PlayerMoveAction;
 import dev.prozilla.pine.examples.sokoban.util.TileMoveAction;
 
 public class PlayerMover extends UpdateSystem {
@@ -34,7 +35,7 @@ public class PlayerMover extends UpdateSystem {
 				sprite = sprites[0];
 			}
 			
-			spriteRenderer.texture = ResourcePool.loadTexture(sprite);
+			spriteRenderer.texture = AssetPools.textures.load(sprite);
 		}
 		
 		// Move player
@@ -50,7 +51,7 @@ public class PlayerMover extends UpdateSystem {
 				spriteRenderer.offset.x = 0;
 				spriteRenderer.offset.y = 0;
 				
-				TileMoveAction playerMoveAction = new TileMoveAction(tileRenderer, playerData.direction.x, playerData.direction.y);
+				PlayerMoveAction playerMoveAction = new PlayerMoveAction(tileRenderer, playerData);
 				TileMoveAction crateMoveAction = null;
 				
 				if (playerData.pushingCrateTile != null) {

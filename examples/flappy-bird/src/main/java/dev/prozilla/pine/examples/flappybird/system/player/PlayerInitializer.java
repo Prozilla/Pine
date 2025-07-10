@@ -1,11 +1,11 @@
 package dev.prozilla.pine.examples.flappybird.system.player;
 
-import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.Transform;
+import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
-import dev.prozilla.pine.examples.flappybird.GameScene;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
+import dev.prozilla.pine.examples.flappybird.scene.GameScene;
 
 /**
  * Initializes the player by setting its position and sprite properties.
@@ -33,7 +33,7 @@ public class PlayerInitializer extends InitSystem {
 		transform.setPosition(PlayerData.POSITION_X, 0);
 		
 		// Set sprite properties
-		spriteRenderer.scale = 1.5f;
+		spriteRenderer.scale.set(1.5f);
 		spriteRenderer.rotation = 0;
 	}
 }

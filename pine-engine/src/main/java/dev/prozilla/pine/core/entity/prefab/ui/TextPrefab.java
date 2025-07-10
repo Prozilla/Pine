@@ -1,10 +1,10 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
+import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveStringProperty;
-import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.text.Font;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.DynamicText;
 import dev.prozilla.pine.core.component.ui.Node;
@@ -48,7 +48,7 @@ public class TextPrefab extends NodePrefab {
 	}
 	
 	public void setFont(String fontPath) {
-		setFont(ResourcePool.loadFont(fontPath));
+		setFont(AssetPools.fonts.load(fontPath));
 	}
 	
 	public void setFont(Font font) {

@@ -25,7 +25,7 @@ public class ParticleInitializer extends InitSystem {
 		
 		if (particleRenderer.scaleAnimation != null) {
 			particleRenderer.scaleAnimation.setDuration(particleRenderer.lifetime);
-			spriteRenderer.scale = particleRenderer.scaleAnimation.getRestartedValue();
+			spriteRenderer.scale.set(particleRenderer.scaleAnimation.getRestartedValue());
 		}
 		if (particleRenderer.colorAnimation != null) {
 			particleRenderer.colorAnimation.setDuration(particleRenderer.lifetime);

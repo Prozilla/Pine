@@ -1,8 +1,8 @@
 package dev.prozilla.pine.examples.flappybird.component;
 
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.examples.flappybird.GameScene;
-import dev.prozilla.pine.examples.flappybird.Main;
+import dev.prozilla.pine.examples.flappybird.FlappyBird;
+import dev.prozilla.pine.examples.flappybird.scene.GameScene;
 
 public class PlayerData extends Component {
 	
@@ -15,7 +15,7 @@ public class PlayerData extends Component {
 	// Constants
 	public static final int WIDTH = 32;
 	public static final int HEIGHT = 32;
-	public static final float POSITION_X = Main.WIDTH / -4f;
+	public static final float POSITION_X = FlappyBird.WIDTH / -4f;
 	public static final float ANIMATION_SPEED = 10f;
 	public static final float SPEED = 650f;
 	public static final float ROTATION_FACTOR = 50f;

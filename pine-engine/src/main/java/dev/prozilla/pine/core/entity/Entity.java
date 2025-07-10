@@ -1,10 +1,11 @@
 package dev.prozilla.pine.core.entity;
 
-import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.Printable;
-import dev.prozilla.pine.common.event.EventDispatcher;
+import dev.prozilla.pine.common.event.Event;
+import dev.prozilla.pine.common.event.SimpleEventDispatcher;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.util.Checks;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.component.Component;
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * Represents a unique entity in the world with a list of components.
  */
-public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, Printable, EntityContext, ComponentsContext, ApplicationProvider, SceneProvider {
+public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> implements Printable, EntityContext, ComponentsContext, ApplicationProvider, SceneProvider {
 	
 	public final int id;
 	private final String name;
@@ -79,12 +80,6 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 		isActive = true;
 	}
 	
-	public void destroyChildren() {
-		for (Transform child : transform.children.toArray(new Transform[]{})) {
-			child.getEntity().destroy();
-		}
-	}
-	
 	/**
 	 * Destroys this entity at the end of the game loop.
 	 */
@@ -92,6 +87,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	public void destroy() {
 		if (application.isRunning() && !application.isLoading()) {
 			destroyChildren();
+			destroyComponents();
 			
 			// Remove child from parent
 			if (transform.parent != null) {
@@ -103,9 +99,17 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 				world.removeEntity(this);
 			}
 			
-			invoke(EntityEvent.DESTROY);
+			invoke(EntityEventType.DESTROY, this);
 			super.destroy();
 		}
+	}
+	
+	public void destroyChildren() {
+		Destructible.destroyAll(transform.children);
+	}
+	
+	public void destroyComponents() {
+		Destructible.destroyAll(components);
 	}
 	
 	/**
@@ -137,7 +141,8 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 			world.addEntity(child);
 		}
 		
-		invoke(EntityEvent.CHILDREN_UPDATE);
+		invoke(EntityEventType.CHILD_ADD, child);
+		invoke(EntityEventType.CHILDREN_UPDATE, this);
 		
 		return child;
 	}
@@ -166,7 +171,8 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 		
 		child.transform.parent = null;
 		
-		invoke(EntityEvent.CHILDREN_UPDATE);
+		invoke(EntityEventType.CHILD_REMOVE, child);
+		invoke(EntityEventType.CHILDREN_UPDATE, this);
 	}
 	
 	/**
@@ -215,8 +221,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	 * @param parent Parent entity
 	 */
 	public void setParent(Entity parent) {
-		Checks.isNotNull(parent, "parent");
-		transform.setParent(parent.transform);
+		transform.setParent(parent != null ? parent.transform : null);
 	}
 	
 	/**
@@ -250,7 +255,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 	public <C extends Component> C addComponent(C component) {
 		Checks.isNotNull(component, "component");
 		world.addComponent(this, component);
-		invoke(EntityEvent.COMPONENTS_UPDATE);
+		invoke(EntityEventType.COMPONENTS_UPDATE, this);
 		return component;
 	}
 	
@@ -265,7 +270,7 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 		}
 
 		world.removeComponent(this, component);
-		invoke(EntityEvent.COMPONENTS_UPDATE);
+		invoke(EntityEventType.COMPONENTS_UPDATE, this);
 	}
 	
 	@Override
@@ -335,6 +340,29 @@ public class Entity extends EventDispatcher<EntityEvent> implements Lifecycle, P
 		}
 		
 		return matches;
+	}
+	
+	@Override
+	protected void invoke(Event<EntityEventType, Entity> event) {
+		super.invoke(event);
+		
+		switch (event.getType()) {
+			case CHILD_ADD -> invoke(EntityEventType.DESCENDANT_ADD, event.getTarget());
+			case CHILD_REMOVE -> invoke(EntityEventType.DESCENDANT_REMOVE, event.getTarget());
+			case CHILDREN_UPDATE -> invoke(EntityEventType.DESCENDANT_UPDATE, event.getTarget());
+		}
+	}
+	
+	@Override
+	protected void propagate(Event<EntityEventType, Entity> event) {
+		if (transform.parent != null) {
+			Entity parent = transform.parent.getEntity();
+			switch (event.getType()) {
+				case DESCENDANT_ADD -> parent.invoke(EntityEventType.DESCENDANT_ADD, event.getTarget());
+				case DESCENDANT_REMOVE -> parent.invoke(EntityEventType.DESCENDANT_REMOVE, event.getTarget());
+				case DESCENDANT_UPDATE -> parent.invoke(EntityEventType.DESCENDANT_UPDATE, event.getTarget());
+			}
+		}
 	}
 	
 	public String getName() {

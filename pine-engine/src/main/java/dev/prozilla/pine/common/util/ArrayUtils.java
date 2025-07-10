@@ -1,6 +1,10 @@
 package dev.prozilla.pine.common.util;
 
+import java.util.Random;
+
 public final class ArrayUtils {
+	
+	private ArrayUtils() {}
 	
 	/**
 	 * Checks if two arrays have any overlapping elements.
@@ -53,6 +57,26 @@ public final class ArrayUtils {
 		}
 		
 		return null;
+	}
+	
+	public static <E> void shuffle(E[] array, long seed) {
+		Random rand = new Random(seed);
+		for (int i = array.length - 1; i > 0; i--) {
+			int j = rand.nextInt(i + 1);
+			E temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+	}
+	
+	public static void shuffle(double[] array, long seed) {
+		Random rand = new Random(seed);
+		for (int i = array.length - 1; i > 0; i--) {
+			int j = rand.nextInt(i + 1);
+			double temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
 	}
 	
 }

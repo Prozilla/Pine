@@ -1,6 +1,6 @@
 package dev.prozilla.pine.examples.sokoban;
 
-import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.entity.prefab.sprite.GridPrefab;
 import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
@@ -13,18 +13,18 @@ import dev.prozilla.pine.examples.sokoban.system.PlayerMover;
 
 public class GameScene extends Scene {
 	
-//	private static final String[] MAP = {
-//		"OOOOOOOOOOOO  ",
-//		"O..  O     OOO",
-//		"O..  O x  x  O",
-//		"O..  OxOOOO  O",
-//		"O..    s OO  O",
-//		"O..  O O  x OO",
-//		"OOOOOO OOx x O",
-//		"  O x  x x x O",
-//		"  O    O     O",
-//		"  OOOOOOOOOOOO"
-//	};
+	private static final String[] MAP = {
+		"OOOOOOOOOOOO  ",
+		"O..  O     OOO",
+		"O..  O x  x  O",
+		"O..  OxOOOO  O",
+		"O..    s OO  O",
+		"O..  O O  x OO",
+		"OOOOOO OOx x O",
+		"  O x  x x x O",
+		"  O    O     O",
+		"  OOOOOOOOOOOO"
+	};
 	
 //	private static final String[] MAP = {
 //		"OOOOOO  OOO ",
@@ -40,20 +40,20 @@ public class GameScene extends Scene {
 //		"   OOOOOOOOO"
 //	};
 
-	private static final String[] MAP = {
-		"###########",
-		"#---------#",
-		"#-$-$@$-$-#",
-		"#--$-$-$--#",
-		"#-$-$-$-$-#",
-		"#--$-$-$--#",
-		"#####$##$##",
-		"-#.....#-#",
-		"-#....*#-#",
-		"-#...*---#",
-		"-#....-###",
-		"-########"
-	};
+//	private static final String[] MAP = {
+//		"###########",
+//		"#---------#",
+//		"#-$-$@$-$-#",
+//		"#--$-$-$--#",
+//		"#-$-$-$-$-#",
+//		"#--$-$-$--#",
+//		"#####$##$##",
+//		"-#.....#-#",
+//		"-#....*#-#",
+//		"-#...*---#",
+//		"-#....-###",
+//		"-########"
+//	};
 	
 	private static final int TILE_SIZE = 64;
 	
@@ -92,9 +92,9 @@ public class GameScene extends Scene {
 					goalGrid.addTile(goalPrefab, j, i);
 				} else {
 					TilePrefab tilePrefab = switch (tileName) {
-						case '#', '*' -> blockPrefab;
-						case '@' -> playerPrefab;
-						case '$' -> {
+						case 'O' -> blockPrefab;
+						case 's' -> playerPrefab;
+						case 'x' -> {
 							GameManager.instance.totalCrates++;
 							yield cratePrefab;
 						}

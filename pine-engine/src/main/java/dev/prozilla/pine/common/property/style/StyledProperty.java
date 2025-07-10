@@ -7,7 +7,7 @@ import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedProperty;
 import dev.prozilla.pine.core.component.ui.Node;
-import dev.prozilla.pine.core.component.ui.NodeEvent;
+import dev.prozilla.pine.core.component.ui.NodeEventType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +59,7 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 		fallbackProperty = this.adaptiveProperty;
 		
 		// Re-apply style when selector changes
-		node.addListener(NodeEvent.SELECTOR_CHANGE, this::invalidate);
+		node.addListener(NodeEventType.SELECTOR_CHANGE, (changedNode) -> this.invalidate());
 	}
 	
 	public void addRule(StyleRule<T> rule) {

@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.system.standard.ui;
 
+import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.math.vector.Vector4f;
-import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.image.TextureBase;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.BorderImage;
 import dev.prozilla.pine.core.component.ui.Node;
@@ -46,7 +46,7 @@ public class BorderImageRenderer extends RenderSystem {
 		float top = slice.z;
 		float bottom = slice.w;
 		
-		Color color = node.color;
+		Color color = node.borderColor != null ? node.borderColor : node.color;
 		
 		// Texture slice regions
 		float textureLeft = textureWidth * left;

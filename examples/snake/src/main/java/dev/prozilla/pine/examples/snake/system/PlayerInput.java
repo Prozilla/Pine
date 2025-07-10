@@ -3,6 +3,8 @@ package dev.prozilla.pine.examples.snake.system;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
+import dev.prozilla.pine.core.state.input.gamepad.GamepadAxis;
+import dev.prozilla.pine.core.state.input.gamepad.GamepadInput;
 import dev.prozilla.pine.core.system.input.InputSystem;
 import dev.prozilla.pine.examples.snake.component.PlayerData;
 
@@ -20,15 +22,17 @@ public class PlayerInput extends InputSystem {
 			return;
 		}
 		
+		GamepadInput gamepad = input.getGamepad();
+		
 		// Change player direction based on input and previous direction
 		int newDirection = -1;
-		if (input.getKeyDown(Key.UP_ARROW) || input.getKeyDown(Key.W)) {
+		if (input.getAnyKey(Key.UP_ARROW, Key.W) || gamepad.getAxis(GamepadAxis.LEFT_Y) < -PlayerData.JOYSTICK_THRESHOLD) {
 			newDirection = 0;
-		} else if (input.getKeyDown(Key.LEFT_ARROW) || input.getKeyDown(Key.A)) {
+		} else if (input.getAnyKey(Key.LEFT_ARROW, Key.A) || gamepad.getAxis(GamepadAxis.LEFT_X) < -PlayerData.JOYSTICK_THRESHOLD) {
 			newDirection = 1;
-		} else if (input.getKeyDown(Key.DOWN_ARROW) || input.getKeyDown(Key.S)) {
+		} else if (input.getAnyKey(Key.DOWN_ARROW, Key.S) || gamepad.getAxis(GamepadAxis.LEFT_Y) > PlayerData.JOYSTICK_THRESHOLD) {
 			newDirection = 2;
-		} else if (input.getKeyDown(Key.RIGHT_ARROW) || input.getKeyDown(Key.D)) {
+		} else if (input.getAnyKey(Key.RIGHT_ARROW, Key.D) || gamepad.getAxis(GamepadAxis.LEFT_X) > PlayerData.JOYSTICK_THRESHOLD) {
 			newDirection = 3;
 		}
 		

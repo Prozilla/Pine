@@ -1,12 +1,16 @@
 package dev.prozilla.pine.core.rendering;
 
-import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.asset.text.Font;
+import dev.prozilla.pine.common.lifecycle.Destructible;
+import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.image.TextureBase;
-import dev.prozilla.pine.common.system.resource.text.Font;
+import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
@@ -30,7 +34,7 @@ import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 /**
  * Handles the rendering process.
  */
-public class Renderer implements Lifecycle {
+public class Renderer implements Initializable, Destructible {
 	
 	private VertexArrayObject vao;
 	private VertexBufferObject vbo;
@@ -56,7 +60,7 @@ public class Renderer implements Lifecycle {
 	private Font debugFont;
 	
 	// Transformation
-	private float renderScale;
+	private Vector2f renderScale;
 	private boolean mirrorHorizontally;
 	private boolean mirrorVertically;
 	
@@ -64,6 +68,7 @@ public class Renderer implements Lifecycle {
 	private final static int STRIDE_LENGTH = 11;
 	/** The amount of strides to fit into a single vertex buffer. */
 	private final static int VERTEX_BUFFER_SIZE = 32;
+	private final static Vector2f DEFAULT_RENDER_SCALE = Vector2f.one();
 	
 	// Config options
 	private Color fallbackColor;
@@ -89,26 +94,27 @@ public class Renderer implements Lifecycle {
 	public void init() {
 		setupShaderProgram();
 		
+		// Optimization: discard triangles with opacity < 0.1
 //		glEnable(GL_ALPHA_TEST);
 //		glAlphaFunc(GL_GREATER, 0.1f);
 		
 		// Read config options
-		RenderConfig config = application.getConfig().rendering;
-		config.enableBlend.read(() -> {
-			if (config.enableBlend.get()) {
+		RenderConfig config = getConfig();
+		config.enableBlend.read((enableBlend) -> {
+			if (enableBlend) {
 				glEnable(GL_BLEND);
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			}
 		});
-		config.enableDepthTest.read(() -> {
-			if (config.enableDepthTest.get()) {
+		config.enableDepthTest.read((enableDepthTest) -> {
+			if (enableDepthTest) {
 				// TO DO: improve depth handling to avoid sorting renderers and use only depth test instead
 				glEnable(GL_DEPTH_TEST);
 				glDepthFunc(GL_LEQUAL);
 			}
 		});
-		config.snapPixels.read(() -> {
-			snapPixels = config.snapPixels.get();
+		config.snapPixels.read((snapPixels) -> {
+			this.snapPixels = snapPixels;
 		});
 		
 		createFont();
@@ -149,11 +155,11 @@ public class Renderer implements Lifecycle {
 		Config config = application.getConfig();
 		
 		// Listen to config option changes
-		config.rendering.fallbackRenderColor.read(() -> {
-			fallbackColor = config.rendering.fallbackRenderColor.get();
+		config.rendering.fallbackRenderColor.read((fallbackRenderColor) -> {
+			fallbackColor = fallbackRenderColor;
 		});
-		config.rendering.renderMode.read(() -> {
-			renderMode = config.rendering.renderMode.get();
+		config.rendering.renderMode.read((renderMode) -> {
+			this.renderMode = renderMode;
 			updateRenderMode();
 		});
 	}
@@ -241,17 +247,25 @@ public class Renderer implements Lifecycle {
 		}
 	}
 	
+	//region --- Transformation state ---
+	
 	public void resetTransform() {
 		resetScale();
 		resetMirror();
+		resetRegion();
 	}
 	
 	public void setScale(float scale) {
-		this.renderScale = scale;
+		this.renderScale.set(scale);
+	}
+	
+	public void setScale(Vector2f scale) {
+		Checks.isNotNull(scale, "scale");
+		this.renderScale.set(scale.x, scale.y);
 	}
 	
 	public void resetScale() {
-		renderScale = 1f;
+		renderScale = DEFAULT_RENDER_SCALE;
 	}
 	
 	public void setMirrorHorizontally(boolean mirrorHorizontally) {
@@ -266,6 +280,29 @@ public class Renderer implements Lifecycle {
 		mirrorHorizontally = false;
 		mirrorVertically = false;
 	}
+	
+	/**
+	 * Limits the rendering to the given region.
+	 */
+	public void setRegion(float x, float y, float width, float height) {
+		setRegion(Math.round(x), Math.round(y), Math.round(width), Math.round(height));
+	}
+	
+	/**
+	 * Limits the rendering to the given region.
+	 */
+	public void setRegion(int x, int y, int width, int height) {
+		glEnable(GL_SCISSOR_TEST);
+		glScissor(x, y, width, height);
+	}
+	
+	public void resetRegion() {
+		glDisable(GL_SCISSOR_TEST);
+	}
+	
+	//endregion Transformation state
+	
+	//region --- Calculations ---
 	
 	/**
 	 * Calculates total width of a debug text.
@@ -340,6 +377,10 @@ public class Renderer implements Lifecycle {
 		return font.getHeight(text);
 	}
 	
+	//endregion Calculations
+	
+	//region --- Drawing ---
+	
 	public void drawText(CharSequence text, float x, float y, float z) {
 		drawText(defaultFont, text, x, y, z);
 	}
@@ -389,8 +430,8 @@ public class Renderer implements Lifecycle {
 	 * @param c Color
 	 */
 	public void drawRect(float x, float y, float z, float width, float height, Color c) {
-		float x2 = x + width * renderScale;
-		float y2 = y + height * renderScale;
+		float x2 = x + width * renderScale.x;
+		float y2 = y + height * renderScale.y;
 		
 		drawTextureRegion(null, x, y, x2, y2, z, 0, 0, 0, 0, c);
 	}
@@ -406,8 +447,8 @@ public class Renderer implements Lifecycle {
 		}
 		
 		// Vertex positions
-		float x2 = x + texture.getWidth() * renderScale;
-		float y2 = y + texture.getHeight() * renderScale;
+		float x2 = x + texture.getWidth() * renderScale.x;
+		float y2 = y + texture.getHeight() * renderScale.y;
 		
 		// Texture coordinates
 		float s1 = 0f;
@@ -438,8 +479,8 @@ public class Renderer implements Lifecycle {
 	 */
 	public void drawTexture(TextureBase texture, float x, float y, float z, Color c) {
 		// Vertex positions
-		float x2 = x + texture.getWidth() * renderScale;
-		float y2 = y + texture.getHeight() * renderScale;
+		float x2 = x + texture.getWidth() * renderScale.x;
+		float y2 = y + texture.getHeight() * renderScale.y;
 		
 		// Texture coordinates
 		float s1 = 0f;
@@ -461,14 +502,14 @@ public class Renderer implements Lifecycle {
 		}
 		
 		// Compute the center of the texture in world space
-		float centerX = x + (regWidth * renderScale) / 2.0f;
-		float centerY = y + (regHeight * renderScale) / 2.0f;
+		float centerX = x + (regWidth * renderScale.x) / 2.0f;
+		float centerY = y + (regHeight * renderScale.y) / 2.0f;
 		
 		// Compute the new corners relative to the center
-		float x1 = centerX - (regHeight * renderScale) / 2.0f;
-		float y1 = centerY - (regWidth * renderScale) / 2.0f;
-		float x2 = centerX + (regHeight * renderScale) / 2.0f;
-		float y2 = centerY + (regWidth * renderScale) / 2.0f;
+		float x1 = centerX - (regHeight * renderScale.y) / 2.0f;
+		float y1 = centerY - (regWidth * renderScale.x) / 2.0f;
+		float x2 = centerX + (regHeight * renderScale.y) / 2.0f;
+		float y2 = centerY + (regWidth * renderScale.x) / 2.0f;
 		
 		// Texture coordinates
 		float s1 = regX / texture.getWidth();
@@ -553,8 +594,8 @@ public class Renderer implements Lifecycle {
 	 */
 	public void drawTextureRegion(TextureBase texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c) {
 		// Vertex positions
-		float x2 = x + regWidth * renderScale;
-		float y2 = y + regHeight * renderScale;
+		float x2 = x + regWidth * renderScale.x;
+		float y2 = y + regHeight * renderScale.y;
 		
 		if (outOfBounds(x, y, x, y2, x2, y2, x2, y)) {
 			totalVertices += 6;
@@ -678,14 +719,19 @@ public class Renderer implements Lifecycle {
 		
 		numVertices += 6;
 		
-		// Change active texture and unbind previous texture
-		if (texture != null && (activeTexture == null || !activeTexture.hasEqualLocation(texture))) {
+		replaceActiveTexture(texture);
+	}
+	
+	private void replaceActiveTexture(TextureBase newTexture) {
+		if (newTexture != null && (activeTexture == null || !activeTexture.hasEqualLocation(newTexture))) {
 			if (activeTexture != null) {
 				activeTexture.unbind();
 			}
-			activeTexture = texture;
+			activeTexture = newTexture;
 		}
 	}
+	
+	//endregion Drawing
 	
 	/**
 	 * Checks if a quad is outside the screen bounds.
@@ -719,6 +765,7 @@ public class Renderer implements Lifecycle {
 	/**
 	 * Disposes renderer and cleans up its used data.
 	 */
+	@Override
 	public void destroy() {
 		MemoryUtil.memFree(vertices);
 		
@@ -770,8 +817,8 @@ public class Renderer implements Lifecycle {
 		
 		// Load shaders
 		Shader vertexShader, fragmentShader;
-		vertexShader = Shader.loadShader(GL_VERTEX_SHADER, VERTEX_SHADER_PATH);
-		fragmentShader = Shader.loadShader(GL_FRAGMENT_SHADER, FRAGMENT_SHADER_PATH);
+		vertexShader = AssetPools.shaders.load(GL_VERTEX_SHADER, VERTEX_SHADER_PATH);
+		fragmentShader = AssetPools.shaders.load(GL_FRAGMENT_SHADER, FRAGMENT_SHADER_PATH);
 		
 		// Create shader program
 		program = new ShaderProgram();
@@ -857,4 +904,9 @@ public class Renderer implements Lifecycle {
 	public FrameBufferObject getFbo() {
 		return fbo;
 	}
+	
+	public RenderConfig getConfig() {
+		return application.getConfig().rendering;
+	}
+	
 }

@@ -59,6 +59,18 @@ public class Vector4f extends VectorFloat<Vector4f> {
         this.w = w;
     }
     
+    public Vector4f set(float xyzw) {
+        return set(xyzw, xyzw, xyzw, xyzw);
+    }
+    
+    public Vector4f set(float x, float y, float z, float w) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+        return this;
+    }
+    
     public Vector4f add(float x, float y, float z, float w) {
         this.x += x;
         this.y += y;

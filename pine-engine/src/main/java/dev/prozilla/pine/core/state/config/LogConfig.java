@@ -20,6 +20,7 @@ public class LogConfig {
 	public static final ConfigKey<LogHandler> ERROR_LAYER = new ConfigKey<>("errorLayer", LogHandler.class);
 	public static final ConfigKey<Boolean> ENABLE_ANSI = new ConfigKey<>("enableAnsi", Boolean.class);
 	public static final ConfigKey<Boolean> ENABLE_APPLICATION_STATE_LOGS = new ConfigKey<>("enableApplicationStateLogs", Boolean.class);
+	public static final ConfigKey<Boolean> ENABLE_ASSET_POOL_LOGS = new ConfigKey<>("enableAssetPoolLogs", Boolean.class);
 	
 	// Predefines options
 	/** Defaults to <code>true</code>. */
@@ -34,5 +35,7 @@ public class LogConfig {
 	public final ConfigOption<Boolean> enableAnsi = new ConfigOption<>(true, Objects::nonNull);
 	/** Enables logging of state changes of the application. Defaults to <code>true</code>. */
 	public final ConfigOption<Boolean> enableApplicationStateLogs = new ConfigOption<>(true, Objects::nonNull);
+	/** Enables logging of asset pool events. Defaults to <code>true</code>. */
+	public final ConfigOption<Boolean> enableAssetPoolLogs = new ConfigOption<>(true, Objects::nonNull);
 	
 }

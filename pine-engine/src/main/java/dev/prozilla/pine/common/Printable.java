@@ -14,12 +14,15 @@ public interface Printable {
 	String toString();
 	
 	/**
-	 * Prints this object then terminates the line.
+	 * Prints this object using the system logger then terminates the line.
 	 */
 	default void print() {
 		print(Logger.system);
 	}
 	
+	/**
+	 * Prints this object then terminates the line.
+	 */
 	default void print(Logger logger) {
 		logger.log(this);
 	}

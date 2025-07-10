@@ -21,6 +21,7 @@ public class PlayerData extends Component {
 	public final GameScene scene;
 	
 	public static final float TIME_BETWEEN_MOVES = 0.15f;
+	public static final float JOYSTICK_THRESHOLD = 0.5f;
 	
 	public PlayerData(GameScene scene) {
 		this.scene = scene;

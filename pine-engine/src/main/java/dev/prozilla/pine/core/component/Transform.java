@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.component;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
-import dev.prozilla.pine.common.util.Checks;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.entity.Entity;
 
 import java.util.ArrayList;

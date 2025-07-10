@@ -1,8 +1,17 @@
 package dev.prozilla.pine.common.event;
 
+/**
+ * An event listener handles events when they occur.
+ * @param <E> The type of event to listen to
+ * @see EventDispatcher
+ */
 @FunctionalInterface
-public interface EventListener {
+public interface EventListener<E extends Event<?, ?>> {
 	
-	void execute();
+	/**
+	 * Handles an event.
+	 * @param event The event to handle
+	 */
+	void handle(E event);
 	
 }

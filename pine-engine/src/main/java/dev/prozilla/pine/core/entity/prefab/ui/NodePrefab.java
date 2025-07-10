@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
+import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
@@ -11,9 +13,7 @@ import dev.prozilla.pine.common.property.adaptive.AdaptiveDualDimensionProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.property.style.StyledPropertyKey;
-import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.image.TextureBase;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.animation.AnimationData;
 import dev.prozilla.pine.core.component.ui.Node;
@@ -43,10 +43,13 @@ public class NodePrefab extends Prefab {
 	protected boolean borderImageSliceFill;
 	protected Color color;
 	protected Color backgroundColor;
+	protected Color borderColor;
 	protected GridAlignment anchor;
 	protected boolean absolutePosition;
 	protected boolean passThrough;
 	protected String tooltipText;
+	public int tabIndex;
+	public boolean autoFocus;
 	
 	protected Set<String> classes;
 	
@@ -57,6 +60,8 @@ public class NodePrefab extends Prefab {
 		size = new DualDimension();
 		absolutePosition = false;
 		passThrough = false;
+		tabIndex = -1;
+		autoFocus = false;
 		
 		setName("CanvasElement");
 	}
@@ -65,7 +70,7 @@ public class NodePrefab extends Prefab {
 	 * Sets the style sheet that is applied to this node by loading it from a CSS file.
 	 */
 	public void setStyleSheet(String filePath) {
-		setStyleSheet(ResourcePool.loadStyleSheet(filePath));
+		setStyleSheet(AssetPools.styleSheets.load(filePath));
 	}
 	
 	/**
@@ -182,6 +187,10 @@ public class NodePrefab extends Prefab {
 		backgroundColor = color.getValue();
 	}
 	
+	public void setBorderColor(Color color) {
+		borderColor = color;
+	}
+	
 	/**
 	 * Sets the anchor point of this node.
 	 */
@@ -242,6 +251,17 @@ public class NodePrefab extends Prefab {
 		classes.add(className);
 	}
 	
+	public void setTabIndex(int tabIndex) {
+		this.tabIndex = tabIndex;
+	}
+	
+	public void setAutoFocus(boolean autoFocus) {
+		this.autoFocus = autoFocus;
+		if (tabIndex < 0) {
+			tabIndex = 0;
+		}
+	}
+	
 	protected <T> void setDefaultPropertyValue(StyledPropertyKey<T> propertyName, AdaptiveProperty<T> value) {
 		if (styleSheet == null) {
 			return;
@@ -256,6 +276,8 @@ public class NodePrefab extends Prefab {
 		node.size = size.clone();
 		node.absolutePosition = absolutePosition;
 		node.passThrough = passThrough;
+		node.tabIndex = tabIndex;
+		node.autoFocus = autoFocus;
 		
 		if (padding != null) {
 			node.padding = padding.clone();
@@ -282,6 +304,9 @@ public class NodePrefab extends Prefab {
 			node.borderImage = borderImage;
 			node.borderImageSlice = borderImageSlice.clone();
 			node.borderImageSliceFill = borderImageSliceFill;
+		}
+		if (borderColor != null) {
+			node.borderColor = borderColor;
 		}
 		
 		if (classes != null) {

@@ -1,24 +1,27 @@
 package dev.prozilla.pine.core;
 
-import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.Pine;
+import dev.prozilla.pine.common.asset.image.Image;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.asset.text.Font;
+import dev.prozilla.pine.common.lifecycle.*;
 import dev.prozilla.pine.common.logging.AppLogger;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.opengl.GLUtils;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.image.Image;
-import dev.prozilla.pine.common.system.resource.text.Font;
+import dev.prozilla.pine.common.property.SystemProperty;
+import dev.prozilla.pine.core.audio.AudioDevice;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.*;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.input.Input;
-import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.lang.Thread.sleep;
 import static org.lwjgl.glfw.GLFW.glfwInit;
@@ -29,13 +32,14 @@ import static org.lwjgl.opengl.GL43.GL_DEBUG_OUTPUT;
 /**
  * 2D application using the LWJGL library.
  */
-public class Application implements Lifecycle, ApplicationContext, StateProvider<Application, ApplicationState> {
+public class Application implements Initializable, InputHandler, Updatable, Renderable, Destructible, ApplicationContext, StateProvider<Application, ApplicationState> {
 	
 	// State
 	/** True if OpenGL has been initialized */
 	public static boolean initializedOpenGL = false;
 	protected boolean shouldStop;
 	protected boolean isPreview;
+	private static final SystemProperty devModeProperty = new SystemProperty("dev-mode");
 	
 	// Scene
 	protected Scene currentScene;
@@ -44,8 +48,9 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	// Helpers
 	protected final Config config;
 	protected final AppLogger logger;
-	protected final ApplicationTimer timer;
+	protected final Timer timer;
 	protected final Renderer renderer;
+	protected final AudioDevice audioDevice;
 	protected final Window window;
 	protected Input input;
 	protected final Tracker tracker;
@@ -60,7 +65,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	public static final int DEFAULT_TARGET_FPS = 60;
 	
 	/**
-	 * Creates an application titled "Application".
+	 * Creates an application titled {@value DEFAULT_TITLE}.
 	 * @param width Width of the window
 	 * @param height height of the window
 	 */
@@ -102,14 +107,15 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		config = new Config(this);
 		stateMachine = new StateMachine<>(ApplicationState.INITIALIZING, this);
 		
-		config.fps.set(targetFps);
-		config.window.title.set(title);
-		config.window.width.set(width);
-		config.window.height.set(height);
+		config.fps.setValue(targetFps);
+		config.window.title.setValue(title);
+		config.window.width.setValue(width);
+		config.window.height.setValue(height);
 		
-		timer = new ApplicationTimer();
+		timer = new Timer();
 		tracker = new Tracker(this);
 		renderer = new Renderer(this);
+		audioDevice = new AudioDevice(this);
 		window = new Window(this);
 		input = new Input(this);
 		modManager = new ModManager(this);
@@ -150,13 +156,14 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	/**
 	 * Initializes the application.
 	 */
+	@Override
 	public void init() throws RuntimeException {
 		if (!stateMachine.isState(ApplicationState.INITIALIZING)) {
 			throw new IllegalStateException("Application has already been initialized");
 		}
 		
 		logger.init();
-		if (config.logging.enableApplicationStateLogs.get()) {
+		if (config.logging.enableApplicationStateLogs.getValue()) {
 			logger.log("Initializing application");
 		}
 		
@@ -182,11 +189,12 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		// Initialize application
 		timer.init();
 		renderer.init();
-		input.init(window.id);
+		audioDevice.init();
+		input.init();
 		if (applicationManager != null) {
-			applicationManager.onInit(window.id);
+			applicationManager.onInit(window.getId());
 		}
-		currentScene.init(window.id);
+		currentScene.init();
 		loadIcons();
 		modManager.init();
 		
@@ -199,7 +207,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		}
 		
 		logger.init();
-		if (config.logging.enableApplicationStateLogs.get()) {
+		if (config.logging.enableApplicationStateLogs.getValue()) {
 			logger.log("Initializing preview");
 		}
 		
@@ -209,7 +217,8 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		
 		timer.init();
 		renderer.initPreview(width, height);
-		currentScene.init(renderer.getFbo().getId());
+		audioDevice.init();
+		currentScene.init();
 		
 		stateMachine.changeState(ApplicationState.LOADING);
 	}
@@ -219,7 +228,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	 * Destroys the application after the application loop has been stopped.
 	 */
 	public void start() {
-		int fps = config.fps.get();
+		int fps = config.fps.getValue();
 		double targetTime = (fps == 0) ? 0.0 : 1.0 / fps;
 		
 		stateMachine.changeState(ApplicationState.RUNNING);
@@ -232,7 +241,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		// Application loop
 		while (!window.shouldClose() && !shouldStop) {
 			double startTime = timer.getCurrentTime();
-			timer.update();
+			timer.nextFrame();
 			float deltaTime = timer.getDeltaTime();
 			
 			// Handle input and update application
@@ -321,6 +330,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		if (applicationManager != null) {
 			applicationManager.onUpdate(deltaTime);
 		}
+		timer.updateTimedActions();
 		if (currentScene != null && currentScene.initialized) {
 			currentScene.update(deltaTime);
 		}
@@ -413,13 +423,14 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		stateMachine.changeState(ApplicationState.STOPPED);
 		
 		renderer.destroy();
+		audioDevice.destroy();
 		
 		if (isStandalone()) {
 			input.destroy();
 			modManager.destroy();
 			
 			// Reset resources
-			ResourcePool.clear();
+			AssetPools.clear();
 			
 			// Destroy window and release callbacks
 			window.destroy();
@@ -441,11 +452,15 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	}
 	
 	/**
-	 * Logs versions of libraries to the console
+	 * Prints system information and library versions.
 	 */
-	public static void printVersions() {
-		Logger.system.log("Java " + System.getProperty("java.version"));
-		Logger.system.log("LWJGL " + Version.getVersion());
+	public void printInfo() {
+		Logger logger = Objects.requireNonNullElse(this.logger, Logger.system);
+		Pine.print(logger);
+		if (audioDevice != null && audioDevice.isAvailable()) {
+			logger.text( "OpenAL version: " + audioDevice.getALVersion());
+		}
+		logger.text("Dev mode: " + isDevMode());
 	}
 	
 	/**
@@ -474,6 +489,9 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	 * @param scene Reference to the scene
 	 */
 	public void loadScene(Scene scene) {
+		if (!scenes.containsKey(scene.getId())) {
+			addScene(scene);
+		}
 		loadScene(scene.getId());
 	}
 	
@@ -511,7 +529,11 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		stateMachine.changeState(ApplicationState.LOADING);
 		
 		if (!currentScene.initialized) {
-			currentScene.init(window.id);
+			try {
+				currentScene.init();
+			} catch (IllegalStateException e) {
+				logger.error("Failed to initialize scene", e);
+			}
 		}
 		
 		// Make sure game is resumed when new scene is loaded
@@ -587,7 +609,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	 * @param icons Paths of icons
 	 */
 	public void setIcons(String... icons) {
-		config.window.icon.set(icons);
+		config.window.icon.setValue(icons);
 		
 		// Reload icons if they were changed after initialization
 		if (initializedOpenGL) {
@@ -603,7 +625,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 			return;
 		}
 		
-		String[] icons = config.window.icon.get();
+		String[] icons = config.window.icon.getValue();
 		
 		if (icons.length == 0 || isPreview()) {
 			return;
@@ -612,7 +634,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		try {
 			Image[] images = new Image[icons.length];
 			for (int i = 0; i < icons.length; i++) {
-				images[i] = ResourcePool.loadImage(icons[i]);
+				images[i] = AssetPools.images.load(icons[i]);
 			}
 			window.setIcons(images);
 		} catch (Exception e) {
@@ -625,7 +647,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	 * @param fontPath Path to the font file
 	 */
 	public void setDefaultFont(String fontPath) {
-		config.defaultFontPath.set(fontPath);
+		config.defaultFontPath.setValue(fontPath);
 	}
 	
 	/**
@@ -635,7 +657,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		if (!config.defaultFontPath.exists()) {
 			return null;
 		}
-		return ResourcePool.loadFont(config.defaultFontPath.get());
+		return AssetPools.fonts.load(config.defaultFontPath.getValue());
 	}
 	
 	/**
@@ -671,7 +693,7 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 	}
 	
 	@Override
-	public ApplicationTimer getTimer() {
+	public Timer getTimer() {
 		return timer;
 	}
 	
@@ -695,7 +717,13 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 		return logger;
 	}
 	
+	@Override
+	public AudioDevice getAudioDevice() {
+		return audioDevice;
+	}
+	
 	/**
+	 * Throws an exception if OpenGL has not been initialized yet.
 	 * @throws IllegalStateException If OpenGL has not been initialized yet.
 	 */
 	public static void requireOpenGL() throws IllegalStateException {
@@ -703,4 +731,23 @@ public class Application implements Lifecycle, ApplicationContext, StateProvider
 			throw new IllegalStateException("OpenGL has not been initialized yet");
 		}
 	}
+	
+	/**
+	 * Checks if the application is running in developer mode.
+	 *
+	 * <p>This method is optimized and will only read the system property once.</p>
+	 * @see Application#readDevMode()
+	 */
+	public static boolean isDevMode() {
+		return devModeProperty.getValue().equalsIgnoreCase("true");
+	}
+	
+	/**
+	 * Checks if the application is currently running in developer mode.
+	 * @return {@code true} if system property {@code dev-mode} is currently set to {@code true}.
+	 */
+	public static boolean readDevMode() {
+		return devModeProperty.fetch().equalsIgnoreCase("true");
+	}
+	
 }

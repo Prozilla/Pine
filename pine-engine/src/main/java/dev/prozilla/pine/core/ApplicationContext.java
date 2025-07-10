@@ -1,13 +1,16 @@
 package dev.prozilla.pine.core;
 
+import dev.prozilla.pine.common.ContextOf;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.core.audio.AudioDevice;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.state.ApplicationTimer;
+import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.input.Input;
 
+@ContextOf(Application.class)
 public interface ApplicationContext {
 	
 	Input getInput();
@@ -16,7 +19,7 @@ public interface ApplicationContext {
 	
 	Renderer getRenderer();
 	
-	ApplicationTimer getTimer();
+	Timer getTimer();
 	
 	Tracker getTracker();
 	
@@ -25,5 +28,7 @@ public interface ApplicationContext {
 	ModManager getModManager();
 	
 	Logger getLogger();
+	
+	AudioDevice getAudioDevice();
 	
 }

@@ -10,7 +10,7 @@ public class Editor extends Application {
 	private final Application preview;
 	
 	public Editor(Application application) {
-		super("Pine Editor - " + application.getConfig().window.title.get(), 1200, 900, new EditorScene(application), 120);
+		super("Pine Editor - " + application.getConfig().window.title.getValue(), 1200, 900, new EditorScene(application), 120);
 		this.preview = application;
 		
 		// Make sure preview is synced to editor
@@ -27,7 +27,7 @@ public class Editor extends Application {
 	public void init() {
 		super.init();
 		WindowConfig config = preview.getConfig().window;
-		preview.initPreview(input, config.width.get(), config.height.get());
+		preview.initPreview(input, config.width.getValue(), config.height.getValue());
 	}
 	
 	@Override

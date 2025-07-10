@@ -1,7 +1,8 @@
 package dev.prozilla.pine.core.mod;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.lifecycle.Destructible;
+import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -20,7 +21,7 @@ import static dev.prozilla.pine.common.system.PathUtils.normalizePath;
 /**
  * Class responsible for loading and keeping track of modifications (mods).
  */
-public class ModManager implements Lifecycle {
+public class ModManager implements Initializable, Destructible {
 	
 	private final List<ModEntry> mods;
 	
@@ -182,15 +183,7 @@ public class ModManager implements Lifecycle {
 	 */
 	@Override
 	public void destroy() {
-		if (isEmpty()) {
-			return;
-		}
-		
-		for (ModEntry modEntry : mods) {
-			modEntry.mod.destroy();
-		}
-		
-		mods.clear();
+		Destructible.destroyAll(mods);
 	}
 	
 	/**

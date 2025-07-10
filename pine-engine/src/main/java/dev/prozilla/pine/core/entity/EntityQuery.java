@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.entity;
 
-import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.util.Checks;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.*;
@@ -10,7 +10,7 @@ import java.util.*;
 /**
  * Utility class for querying entities with specific components to be processed by a system.
  */
-public class EntityQuery implements Lifecycle {
+public class EntityQuery implements Destructible {
 	
 	/** List of entities that match this query. */
 	public final ArrayList<EntityChunk> entityChunks;

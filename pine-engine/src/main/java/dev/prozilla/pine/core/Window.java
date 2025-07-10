@@ -1,7 +1,8 @@
 package dev.prozilla.pine.core;
 
-import dev.prozilla.pine.common.Lifecycle;
-import dev.prozilla.pine.common.system.resource.image.Image;
+import dev.prozilla.pine.common.asset.image.Image;
+import dev.prozilla.pine.common.lifecycle.Destructible;
+import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.core.state.config.WindowConfig;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -14,10 +15,10 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 /**
  * Represents a GLFW window object.
  */
-public class Window implements Lifecycle {
+public class Window implements Initializable, Destructible {
 	
 	/** Handle of the window */
-	public long id;
+	private long id;
 	
 	public int width;
 	public int height;
@@ -26,9 +27,11 @@ public class Window implements Lifecycle {
 	private boolean isInitialized;
 	
 	private final Application application;
+	private final WindowConfig config;
 	
 	public Window(Application application) {
 		this.application = application;
+		config = application.getConfig().window;
 		
 		isInitialized = false;
 	}
@@ -45,22 +48,21 @@ public class Window implements Lifecycle {
 		long monitor = NULL;
 		
 		// Read config options
-		WindowConfig config = application.getConfig().window;
-		config.showDecorations.read(() -> {
-			if (config.showDecorations.get()) {
+		config.showDecorations.read((showDecorations) -> {
+			if (showDecorations) {
 				glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
 			} else {
 				glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 			}
 		});
-		config.title.read(() -> {
+		config.title.read((title) -> {
 			if (isInitialized) {
-				glfwSetWindowTitle(id, config.title.get());
+				glfwSetWindowTitle(id, title);
 			}
 		});
 		
 		// Prepare fullscreen window
-		if (config.fullscreen.get()) {
+		if (config.fullscreen.getValue()) {
 			monitor = glfwGetPrimaryMonitor();
 			GLFWVidMode videoMode = glfwGetVideoMode(monitor);
 			if (videoMode != null) {
@@ -68,12 +70,12 @@ public class Window implements Lifecycle {
 				height = videoMode.height();
 			}
 		} else {
-			width = config.width.get();
-			height = config.height.get();
+			width = config.width.getValue();
+			height = config.height.getValue();
 		}
 		
 		// Create window
-		String title = config.title.get();
+		String title = config.title.getValue();
 		id = glfwCreateWindow(width, height, title, monitor, NULL);
 		if (id == NULL) {
 			glfwTerminate();
@@ -82,7 +84,7 @@ public class Window implements Lifecycle {
 		glfwMakeContextCurrent(id);
 		
 		// Enable VSync
-		if (config.enableVSync.get()) {
+		if (config.enableVSync.getValue()) {
 			glfwSwapInterval(1);
 		}
 		
@@ -100,7 +102,6 @@ public class Window implements Lifecycle {
 	/**
 	 * Swaps the buffers and polls the events each frame.
 	 */
-	@Override
 	public void update() {
 		if (!isInitialized) {
 			return;
@@ -163,12 +164,16 @@ public class Window implements Lifecycle {
 		return height;
 	}
 	
+	public long getId() {
+		return id;
+	}
+	
 	/**
 	 * Updates the title of this window.
 	 * @param title Title
 	 */
 	public void setTitle(String title) {
-		application.getConfig().window.title.set(title);
+		config.title.setValue(title);
 	}
 	
 	/**
@@ -177,9 +182,7 @@ public class Window implements Lifecycle {
 	 * @param images Array of icon images
 	 */
 	public void setIcons(Image[] images) {
-		if (!isInitialized) {
-			throw new IllegalStateException("Window has not been initialized yet.");
-		}
+		checkStatus();
 		
 		try (GLFWImage.Buffer icons = GLFWImage.malloc(images.length)) {
 			for (int i = 0; i < images.length; i++) {
@@ -194,4 +197,24 @@ public class Window implements Lifecycle {
 			glfwSetWindowIcon(id, icons);
 		}
 	}
+	
+	/**
+	 * Sets the opacity of the entire window
+	 * @param opacity The opacity, in the range of {@code 0f} and {@code 1f}
+	 */
+	public void setOpacity(float opacity) {
+		checkStatus();
+		glfwSetWindowOpacity(id, opacity);
+	}
+	
+	/**
+	 * Checks if the window has been initialized.
+	 * @throws IllegalStateException If the window has not been initialized yet.
+	 */
+	protected void checkStatus() throws IllegalStateException {
+		if (!isInitialized) {
+			throw new IllegalStateException("window has not been initialized yet");
+		}
+	}
+	
 }

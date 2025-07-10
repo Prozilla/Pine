@@ -28,7 +28,8 @@ public class ModifierSelector extends Selector {
 		return ":" + modifier;
 	}
 	
-	public final static ModifierSelector HOVER = new ModifierSelector("hover");
+	public final static ModifierSelector HOVER = new ModifierSelector(Node.HOVER_MODIFIER);
+	public final static ModifierSelector FOCUS = new ModifierSelector(Node.FOCUS_MODIFIER);
 	
 	@Override
 	public boolean equals(Selector other) {

@@ -1,12 +1,13 @@
 package dev.prozilla.pine.core.mod;
 
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 
 /**
  * Represents a modification (mod) loaded by the {@link ModManager}.
  * Serves as a container for mod functionality and metadata.
  */
-public class ModEntry implements Printable {
+public class ModEntry implements Printable, Destructible {
 	
 	public final Mod mod;
 	public final ModMetadata metadata;
@@ -14,6 +15,11 @@ public class ModEntry implements Printable {
 	public ModEntry(Mod mod, ModMetadata metadata) {
 		this.mod = mod;
 		this.metadata = metadata;
+	}
+	
+	@Override
+	public void destroy() {
+		mod.destroy();
 	}
 	
 	/**

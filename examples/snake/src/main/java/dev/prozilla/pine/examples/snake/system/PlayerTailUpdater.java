@@ -1,7 +1,7 @@
 package dev.prozilla.pine.examples.snake.system;
 
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -40,7 +40,7 @@ public class PlayerTailUpdater extends UpdateSystem {
 		// Update tail segment sprite acc
 		if (tailData.nextTile == null) {
 			// Snake butt segment
-			sprite.texture = ResourcePool.loadTexture("snake/snake_tail.png");
+			sprite.texture = AssetPools.textures.load("snake/snake_tail.png");
 			tailData.isCurved = false;
 			
 			if (direction.y == 1) {
@@ -58,7 +58,7 @@ public class PlayerTailUpdater extends UpdateSystem {
 			
 			if (dotProduct != 0) {
 				// Straight tail segment
-				sprite.texture = ResourcePool.loadTexture("snake/snake_body_straight.png");
+				sprite.texture = AssetPools.textures.load("snake/snake_body_straight.png");
 				tailData.isCurved = false;
 				
 				if (direction.x != 0) {
@@ -68,7 +68,7 @@ public class PlayerTailUpdater extends UpdateSystem {
 				}
 			} else {
 				// Curved tail segment
-				sprite.texture = ResourcePool.loadTexture("snake/snake_body_curved.png");
+				sprite.texture = AssetPools.textures.load("snake/snake_body_curved.png");
 				tailData.isCurved = true;
 				
 				direction.add(otherDirection);

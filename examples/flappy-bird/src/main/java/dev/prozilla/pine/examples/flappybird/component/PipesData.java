@@ -2,7 +2,7 @@ package dev.prozilla.pine.examples.flappybird.component;
 
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.examples.flappybird.GameScene;
+import dev.prozilla.pine.examples.flappybird.scene.GameScene;
 
 public class PipesData extends Component {
 	

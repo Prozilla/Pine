@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.component.ui;
 
+import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector4f;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.image.TextureBase;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.Objects;
@@ -14,7 +14,7 @@ public class BorderImage extends Component {
 	public boolean fill;
 	
 	public BorderImage(String texturePath) {
-		this(ResourcePool.loadTexture(texturePath));
+		this(AssetPools.textures.load(texturePath));
 	}
 	
 	public BorderImage(TextureBase texture) {

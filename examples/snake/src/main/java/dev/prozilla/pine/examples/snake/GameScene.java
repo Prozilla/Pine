@@ -1,14 +1,15 @@
 package dev.prozilla.pine.examples.snake;
 
+import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.text.Font;
-import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
-import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.component.particle.ParticleBurstEmitter;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.sprite.GridPrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
+import dev.prozilla.pine.core.scene.Scene;
+import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.examples.snake.entity.*;
 import dev.prozilla.pine.examples.snake.system.PlayerInput;
@@ -33,7 +34,7 @@ public class GameScene extends Scene {
 	public Font font;
 	
 	// Timing
-	private float timeUntilNextSpawn;
+	private Timer.Interval appleSpawnInterval;
 	
 	private static final Random random = new Random();
 	
@@ -58,7 +59,7 @@ public class GameScene extends Scene {
 	protected void load() {
 		super.load();
 		
-		font = ResourcePool.loadFont("snake/monomaniac.ttf", 64);
+		font = AssetPools.fonts.load("snake/monomaniac.ttf", 64);
 		
 		// Create prefabs
 		PlayerHeadPrefab playerHeadPrefab = new PlayerHeadPrefab(this);
@@ -97,7 +98,7 @@ public class GameScene extends Scene {
 		gameOverText = nodeRoot.addChild(new GameOverPrefab(font));
 		
 		// Reset state
-		timeUntilNextSpawn = MIN_TIME_BETWEEN_SPAWNS;
+		appleSpawnInterval = getTimer().startRandomInterval(this::spawnApple, MIN_TIME_BETWEEN_SPAWNS, MAX_TIME_BETWEEN_SPAWNS, true);
 		gameOver = false;
 	}
 	
@@ -118,24 +119,22 @@ public class GameScene extends Scene {
 		
 		super.update(deltaTime);
 		
-		if (!gameOver) {
-			timeUntilNextSpawn -= deltaTime;
-			if (timeUntilNextSpawn <= 0) {
-				Vector2i appleCoordinate = new Vector2i();
-
-				// Search for valid spawn coordinate
-				do {
-					appleCoordinate.x = random.nextInt(MIN_GRID_X, MAX_GRID_X);
-					appleCoordinate.y = random.nextInt(MIN_GRID_Y, MAX_GRID_Y);
-				} while (foregroundGrid.coordinateToTile.containsKey(appleCoordinate));
-				
-				// Spawn apple
-				foregroundGrid.addTile(applePrefab.instantiate(world, appleCoordinate));
-				
-				// Reset apple timer
-				timeUntilNextSpawn += random.nextFloat(MIN_TIME_BETWEEN_SPAWNS, MAX_TIME_BETWEEN_SPAWNS);
-			}
+		if (gameOver) {
+			appleSpawnInterval.destroy();
 		}
+	}
+	
+	public void spawnApple() {
+		Vector2i appleCoordinate = new Vector2i();
+		
+		// Search for valid spawn coordinate
+		do {
+			appleCoordinate.x = random.nextInt(MIN_GRID_X, MAX_GRID_X);
+			appleCoordinate.y = random.nextInt(MIN_GRID_Y, MAX_GRID_Y);
+		} while (foregroundGrid.coordinateToTile.containsKey(appleCoordinate));
+		
+		// Spawn apple
+		foregroundGrid.addTile(applePrefab.instantiate(world, appleCoordinate));
 	}
 	
 	public void endGame() {

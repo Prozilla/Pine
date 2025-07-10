@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.component.sprite;
 
+import dev.prozilla.pine.common.ProviderOf;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.entity.Entity;
@@ -8,6 +9,7 @@ import dev.prozilla.pine.core.entity.EntityProvider;
 /**
  * Provides access to a {@link TileRenderer} component.
  */
+@ProviderOf(TileRenderer.class)
 public interface TileProvider extends EntityProvider {
 	
 	/**

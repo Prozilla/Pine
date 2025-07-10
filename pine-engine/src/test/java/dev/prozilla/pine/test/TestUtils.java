@@ -2,6 +2,7 @@ package dev.prozilla.pine.test;
 
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.ParseFunction;
+import dev.prozilla.pine.common.util.Parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,6 +18,13 @@ public class TestUtils {
 		
 		String className = original.getClass().getSimpleName();
 		assertEquals(original, clone, String.format("clone of %s should be equal", className));
+	}
+	
+	public static <O> void testParse(String input, O expected, Parser<O> parser) {
+		O parsed = parser.read(input);
+		
+		String className = expected.getClass().getSimpleName();
+		assertEquals(expected, parsed, String.format("parse of string representation of %s should be equal", className));
 	}
 	
 	/**

@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.scene;
 
-import dev.prozilla.pine.common.Lifecycle;
-import dev.prozilla.pine.common.util.Checks;
+import dev.prozilla.pine.common.lifecycle.*;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.ComponentManager;
@@ -16,10 +16,12 @@ import dev.prozilla.pine.core.system.SystemBuilder;
 import dev.prozilla.pine.core.system.SystemManager;
 import dev.prozilla.pine.core.system.standard.animation.AnimationInitializer;
 import dev.prozilla.pine.core.system.standard.animation.AnimationUpdater;
+import dev.prozilla.pine.core.system.standard.audio.AudioPlayerInitializer;
 import dev.prozilla.pine.core.system.standard.camera.*;
 import dev.prozilla.pine.core.system.standard.particle.ParticleFlowUpdater;
 import dev.prozilla.pine.core.system.standard.particle.ParticleInitializer;
 import dev.prozilla.pine.core.system.standard.particle.ParticleUpdater;
+import dev.prozilla.pine.core.system.standard.shape.RectRenderSystem;
 import dev.prozilla.pine.core.system.standard.sprite.*;
 import dev.prozilla.pine.core.system.standard.ui.*;
 import dev.prozilla.pine.core.system.standard.ui.frame.FrameRenderer;
@@ -27,10 +29,7 @@ import dev.prozilla.pine.core.system.standard.ui.frame.FrameResizer;
 import dev.prozilla.pine.core.system.standard.ui.image.ImageInitializer;
 import dev.prozilla.pine.core.system.standard.ui.image.ImageRenderer;
 import dev.prozilla.pine.core.system.standard.ui.layout.*;
-import dev.prozilla.pine.core.system.standard.ui.text.DynamicTextUpdater;
-import dev.prozilla.pine.core.system.standard.ui.text.TextInitializer;
-import dev.prozilla.pine.core.system.standard.ui.text.TextRenderer;
-import dev.prozilla.pine.core.system.standard.ui.text.TextResizer;
+import dev.prozilla.pine.core.system.standard.ui.text.*;
 import dev.prozilla.pine.core.system.standard.ui.tooltip.TooltipInitializer;
 import dev.prozilla.pine.core.system.standard.ui.tooltip.TooltipInputHandler;
 
@@ -40,7 +39,7 @@ import java.util.List;
 /**
  * An isolated collection of entities, components and systems that live inside a scene.
  */
-public class World implements Lifecycle {
+public class World implements Initializable, InputHandler, Updatable, Renderable, Destructible {
 	
 	// ECS managers
 	public EntityManager entityManager;
@@ -119,19 +118,25 @@ public class World implements Lifecycle {
 		initialSystems.add(new MultiTileInitializer());
 		initialSystems.add(new TileMover());
 		initialSystems.add(new SpriteRenderSystem());
+		
+		// Shapes
+		initialSystems.add(new RectRenderSystem());
 
 		// Nodes
+		initialSystems.add(new NodeRootInitializer());
 		initialSystems.add(new TooltipInitializer());
 		initialSystems.add(new NodeInitializer());
 		initialSystems.add(new LayoutNodeInitializer());
 		initialSystems.add(new TextInitializer());
 		initialSystems.add(new ImageInitializer());
+		initialSystems.add(new TextInputInitializer());
 		
 		initialSystems.add(new NodeRootInputHandler());
 		initialSystems.add(new LayoutNodeInputHandler());
 		initialSystems.add(new NodeInputHandler());
 		initialSystems.add(new TooltipInputHandler());
 		initialSystems.add(new ButtonInputHandler());
+		initialSystems.add(new TextInputInputHandler());
 		
 		initialSystems.add(new DynamicTextUpdater());
 		initialSystems.add(new NodeRootResizer());
@@ -147,6 +152,10 @@ public class World implements Lifecycle {
 		initialSystems.add(new ImageRenderer());
 		initialSystems.add(new FrameRenderer());
 		initialSystems.add(new BorderImageRenderer());
+		initialSystems.add(new TextInputRenderer());
+		
+		// Audio
+		initialSystems.add(new AudioPlayerInitializer());
 		
 		// Sprite input
 		initialSystems.add(new GridInputHandler());
@@ -169,13 +178,13 @@ public class World implements Lifecycle {
 	 * Executes all initialization systems in this world.
 	 */
 	@Override
-	public void init(long window) throws IllegalStateException {
+	public void init() throws IllegalStateException {
 		if (initialized) {
 			throw new IllegalStateException("World has already been initialized.");
 		}
 		
 		calculateDepth();
-		systemManager.init(window);
+		systemManager.init();
 		initialized = true;
 	}
 	
@@ -208,7 +217,7 @@ public class World implements Lifecycle {
 		entityManager.destroy();
 		componentManager.destroy();
 		systemManager.destroy();
-		queryPool.clear();
+		queryPool.destroy();
 		application.getTracker().reset();
 	}
 	
@@ -311,7 +320,6 @@ public class World implements Lifecycle {
 	 */
 	public <S extends SystemBuilder<? extends SystemBase, S>> SystemBase addSystem(S systemBuilder) {
 		Checks.isNotNull(systemBuilder, "systemBuilder");
-		
 		return addSystem(systemBuilder.build());
 	}
 	
@@ -333,7 +341,7 @@ public class World implements Lifecycle {
 	}
 	
 	public void calculateDepth() {
-		if (initialized && !application.getConfig().enableDepthRecalculation.get()) {
+		if (initialized && !application.getConfig().enableDepthRecalculation.getValue()) {
 			return;
 		}
 		

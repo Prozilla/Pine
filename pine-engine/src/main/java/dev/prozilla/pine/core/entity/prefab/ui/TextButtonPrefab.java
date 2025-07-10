@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
-import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.ButtonNode;
 import dev.prozilla.pine.core.component.ui.Node;
@@ -26,6 +26,7 @@ public class TextButtonPrefab extends TextPrefab {
 		addClass("button");
 		setBackgroundColor(Color.white());
 		setColor(Color.black());
+		setTabIndex(0);
 	}
 	
 	public void setClickCallback(ButtonNode.ClickCallback callback) {

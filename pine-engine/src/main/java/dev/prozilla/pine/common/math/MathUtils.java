@@ -2,6 +2,8 @@ package dev.prozilla.pine.common.math;
 
 public final class MathUtils {
 	
+	private MathUtils() {}
+	
 	/**
 	 * Clamps a value between a min and a max value.
 	 * @param value Value
@@ -52,6 +54,23 @@ public final class MathUtils {
 		return a + normalized * (b - a);
 	}
 	
+	public static void normalize(double[] values) {
+		double max = max(values);
+		if (max > 0) {
+			for (int i = 0; i < values.length; i++) {
+				values[i] /= max;
+			}
+		}
+	}
+	
+	public static double max(double[] values) {
+		double max = Double.MIN_VALUE;
+		for (double value : values) {
+			max = Math.max(max, value);
+		}
+		return max;
+	}
+	
 	/**
 	 * Calculates the value of a cubic Bézier function based on given control points.
 	 * @param p0 X coordinate of first control point
@@ -63,4 +82,14 @@ public final class MathUtils {
 		float u = 1 - t;
 		return u * u * u * p0 + 3 * u * u * t * p1 + 3 * u * t * t * p2 + t * t * t * p3;
 	}
+	
+	public static boolean isValidInteger(String string) {
+		try {
+			Integer.parseInt(string);
+			return true;
+		} catch (NumberFormatException ignored) {
+			return false;
+		}
+	}
+	
 }

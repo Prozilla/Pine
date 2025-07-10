@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.property.adaptive;
 
 import dev.prozilla.pine.common.property.ColorProperty;
 import dev.prozilla.pine.common.property.VariableProperty;
-import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.Color;
 
 public final class AdaptiveColorProperty extends AdaptiveProperty<Color> implements ColorProperty {
 	

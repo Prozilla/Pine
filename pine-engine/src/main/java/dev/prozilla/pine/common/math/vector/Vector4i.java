@@ -36,6 +36,18 @@ public class Vector4i extends VectorInt<Vector4i> {
 		this.w = w;
 	}
 	
+	public Vector4i set(int xyzw) {
+		return set(xyzw, xyzw, xyzw, xyzw);
+	}
+	
+	public Vector4i set(int x, int y, int z, int w) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
+		return this;
+	}
+	
 	public Vector4i add(int x, int y, int z, int w) {
 		this.x += x;
 		this.y += y;

@@ -1,13 +1,13 @@
 package dev.prozilla.pine.core;
 
-import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.state.Tracker;
 
 /**
  * Base class for entity, component and system managers.
  */
-public abstract class ECSManager implements Lifecycle {
+public abstract class ECSManager implements Destructible {
 	
 	protected final World world;
 	
@@ -21,4 +21,5 @@ public abstract class ECSManager implements Lifecycle {
 	protected Tracker getTracker() {
 		return world.application.getTracker();
 	}
+	
 }

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.rendering;
 
-import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL15.*;
 /**
  * Represents a Vertex Buffer Object (VBO).
  */
-public class VertexBufferObject implements Lifecycle {
+public class VertexBufferObject implements Destructible {
 
     /**
      * Stores the handle of the VBO.

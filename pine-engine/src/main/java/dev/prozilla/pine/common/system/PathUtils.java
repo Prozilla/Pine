@@ -1,12 +1,15 @@
 package dev.prozilla.pine.common.system;
 
 import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
  * Utility class for handling path strings.
  */
 public final class PathUtils {
+	
+	private PathUtils() {}
 	
 	/**
 	 * Removes a leading slash from a path if there is one.
@@ -56,17 +59,35 @@ public final class PathUtils {
 		return path;
 	}
 	
+	/**
+	 * Returns a path relative to the source root.
+	 * @param path The original path
+	 * @return The path relative to the source root
+	 */
 	public static String relativizePath(String path) {
-		java.nio.file.Path currentDir = Paths.get("").toAbsolutePath();
-		java.nio.file.Path absolute = Paths.get(path).toAbsolutePath();
-		java.nio.file.Path relative = currentDir.relativize(absolute);
+		Path currentDir = Paths.get("").toAbsolutePath();
+		Path absolute = Paths.get(path).toAbsolutePath();
+		Path relative = currentDir.relativize(absolute);
 		
 		return relative.toString();
 	}
 	
+	/**
+	 * Creates a clickable filepath URL.
+	 * @param path The path of the file or folder
+	 * @return A link to the file or folder
+	 */
 	public static String createLink(String path) {
-		java.nio.file.Path absolute = Paths.get(path).toAbsolutePath();
+		Path absolute = Paths.get(path).toAbsolutePath();
 		return "file:///" + absolute.toString().replace("\\", "/").replace(" ", "%20");
+	}
+	
+	public static String getFileExtension(String path) {
+		int lastIndexOf = path.lastIndexOf(".");
+		if (lastIndexOf == -1) {
+			return "";
+		}
+		return path.substring(lastIndexOf + 1).toLowerCase();
 	}
 	
 }

@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.ButtonNode;
 import dev.prozilla.pine.core.component.ui.ImageNode;
@@ -18,13 +18,14 @@ public class ImageButtonPrefab extends ImagePrefab {
 	protected ButtonNode.ClickCallback clickCallback;
 	
 	public ImageButtonPrefab(String imagePath) {
-		this(ResourcePool.loadTexture(imagePath));
+		this(AssetPools.textures.load(imagePath));
 	}
 	
 	public ImageButtonPrefab(TextureBase image) {
 		super(image);
 		setName("ImageButton");
 		addClass("button");
+		setTabIndex(0);
 	}
 	
 	public void setClickCallback(ButtonNode.ClickCallback callback) {

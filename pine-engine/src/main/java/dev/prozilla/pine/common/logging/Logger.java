@@ -1,6 +1,5 @@
 package dev.prozilla.pine.common.logging;
 
-import dev.prozilla.pine.common.Lifecycle;
 import dev.prozilla.pine.common.logging.handler.LogHandler;
 import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
 import dev.prozilla.pine.common.system.Ansi;
@@ -10,7 +9,7 @@ import dev.prozilla.pine.common.system.PathUtils;
  * Represents the main access points for logging.
  * Manages different log levels, each with their own log handler, and formats logs.
  */
-public class Logger implements LogHandler, Lifecycle {
+public class Logger implements LogHandler {
 	
 	// Formatting options
 	protected boolean enabled;
@@ -51,6 +50,50 @@ public class Logger implements LogHandler, Lifecycle {
 		
 		enabled = outputLogHandler != null || errorLogHandler != null;
 		enableAnsi = true;
+	}
+	
+	/**
+	 * Logs an error message and a stack trace.
+	 */
+	public void error(String message, Throwable throwable) {
+		error(message);
+		if (throwable != null) {
+			trace(throwable);
+		}
+	}
+	
+	/**
+	 * Logs the stack trace of a throwable.
+	 */
+	public void trace(Throwable throwable) {
+		if (!isErrorActive()) {
+			return;
+		}
+		
+		// Print stack trace
+		log(Ansi.red(formatBadge("error") + throwable));
+		StackTraceElement[] trace = throwable.getStackTrace();
+		for (StackTraceElement traceElement : trace) {
+			log(Ansi.red("\tat " + traceElement));
+		}
+	}
+	
+	/**
+	 * Logs an error message.
+	 */
+	public void error(String message) {
+		if (!isErrorActive()) {
+			return;
+		}
+		errorLogHandler.log(applyFormat(Ansi.red(message)));
+	}
+	
+	public void logPath(String text, String filePath) {
+		logf("%s: %s", text, formatPath(filePath));
+	}
+	
+	public void logHeader(String header) {
+		log(Logger.formatHeader(header));
 	}
 	
 	@Override
@@ -133,30 +176,23 @@ public class Logger implements LogHandler, Lifecycle {
 		outputLogHandler.logf(applyFormat(format), args);
 	}
 	
+	/**
+	 * Logs plain text without applying the logger's format.
+	 * @param text The text to log
+	 */
+	public void text(String text) {
+		if (!isOutputActive()) {
+			return;
+		}
+		outputLogHandler.log(text);
+	}
+	
 	@Override
 	public void log(String text) {
 		if (!isOutputActive()) {
 			return;
 		}
 		outputLogHandler.log(applyFormat(text));
-	}
-	
-	/**
-	 * Logs an error message and a stack trace.
-	 */
-	public void error(String message, Throwable throwable) {
-		error(message);
-		trace(throwable);
-	}
-	
-	/**
-	 * Logs an error message.
-	 */
-	public void error(String message) {
-		if (!isErrorActive()) {
-			return;
-		}
-		errorLogHandler.log(applyFormat(Ansi.red(message)));
 	}
 	
 	private String applyFormat(String text) {
@@ -171,26 +207,6 @@ public class Logger implements LogHandler, Lifecycle {
 		}
 		
 		return text;
-	}
-	
-	/**
-	 * Logs the stack trace of a throwable.
-	 */
-	public void trace(Throwable throwable) {
-		if (!isErrorActive()) {
-			return;
-		}
-		
-		// Print stack trace
-		log(Ansi.red(formatBadge("error") + throwable));
-		StackTraceElement[] trace = throwable.getStackTrace();
-		for (StackTraceElement traceElement : trace) {
-			log(Ansi.red("\tat " + traceElement));
-		}
-	}
-	
-	public void logPath(String text, String filePath) {
-		logf("%s: %s", text, formatPath(filePath));
 	}
 	
 	protected boolean isOutputActive() {
@@ -262,6 +278,10 @@ public class Logger implements LogHandler, Lifecycle {
 		} else {
 			return String.format("[%S] ", label);
 		}
+	}
+	
+	public static String formatHeader(String header) {
+		return String.format("--- %s ---", header);
 	}
 	
 }

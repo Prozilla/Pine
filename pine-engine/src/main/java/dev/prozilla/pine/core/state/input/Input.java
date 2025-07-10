@@ -1,17 +1,19 @@
 package dev.prozilla.pine.core.state.input;
 
-import dev.prozilla.pine.common.Lifecycle;
+import dev.prozilla.pine.common.asset.image.Image;
+import dev.prozilla.pine.common.lifecycle.Destructible;
+import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.common.system.resource.image.Image;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.Window;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
-import org.lwjgl.glfw.GLFWScrollCallback;
+import dev.prozilla.pine.core.state.input.gamepad.Gamepad;
+import dev.prozilla.pine.core.state.input.gamepad.GamepadInput;
+import org.lwjgl.glfw.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +23,17 @@ import static org.lwjgl.glfw.GLFW.*;
 /**
  * Handles the GLFW input system.
  */
-public class Input implements Lifecycle {
+public class Input implements Initializable, Destructible {
 	
+	// Keyboard
 	/** Array of keys that are currently pressed. */
 	private final List<Integer> keysPressed;
 	/** Array of keys that are down in the current frame. */
 	private final List<Integer> keysDown;
 	private final List<Integer> previousKeysDown;
+	private final List<TextListener> textListeners;
 	
+	// Mouse
 	private final List<Integer> mouseButtonsPressed;
 	private final List<Integer> mouseButtonsDown;
 	private final List<Integer> previousMouseButtonsDown;
@@ -45,28 +50,47 @@ public class Input implements Lifecycle {
 	private long cursorHandle;
 	private long previousCursorHandle;
 	
+	// Gamepad
+	private final Gamepad[] gamepads;
+	/** Used when no gamepad is connected. */
+	private final GamepadInput fallbackGamepad;
+	
+	// Callbacks
 	private GLFWKeyCallback keyCallback;
+	private GLFWCharCallback charCallback;
 	private GLFWScrollCallback scrollCallback;
 	private GLFWCursorPosCallback cursorPosCallback;
 	private GLFWMouseButtonCallback mouseButtonCallback;
 	
 	private final Application application;
+	private final Window window;
 	private final Logger logger;
 	
+	// Constants
 	private static final int CURSOR_TYPE_DEFAULT = CursorType.DEFAULT.getValue();
 	private static final boolean IGNORE_CURSOR_BLOCK_DEFAULT = false;
 	private static final boolean STOP_PROPAGATION_DEFAULT = false;
+	private static final int DEFAULT_GAMEPAD_ID = 0;
+	
+	@FunctionalInterface
+	public interface TextListener {
+		
+		void handle(char character);
+		
+	}
 	
 	/**
 	 * Creates an input system.
 	 */
 	public Input(Application application) {
 		this.application = application;
+		window = application.getWindow();
 		logger = application.getLogger();
 		
 		keysPressed = new ArrayList<>();
 		keysDown = new ArrayList<>();
 		previousKeysDown = new ArrayList<>();
+		textListeners = new ArrayList<>();
 		
 		mouseButtonsPressed = new ArrayList<>();
 		mouseButtonsDown = new ArrayList<>();
@@ -77,14 +101,32 @@ public class Input implements Lifecycle {
 		cursorPosition = new Vector2i();
 		cursorType = CURSOR_TYPE_DEFAULT;
 		cursorImageOffset = new Vector2i();
+		
+		gamepads = new Gamepad[GLFW_JOYSTICK_LAST + 1];
+		fallbackGamepad = new GamepadInput() {
+			@Override
+			public float getAxis(int axis) {
+				return 0;
+			}
+			
+			@Override
+			public boolean getButton(int button) {
+				return false;
+			}
+			
+			@Override
+			public boolean getButtonDown(int button) {
+				return false;
+			}
+		};
 	}
 	
 	/**
 	 * Initializes the input system.
 	 */
 	@Override
-	public void init(long window) {
-		glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
+	public void init() {
+		glfwSetKeyCallback(window.getId(), keyCallback = new GLFWKeyCallback() {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				if (action == GLFW_PRESS) {
@@ -92,11 +134,23 @@ public class Input implements Lifecycle {
 					keysDown.add(key);
 				} else if (action == GLFW_RELEASE) {
 					keysPressed.remove((Integer)key);
+				} else if (action == GLFW_REPEAT) {
+					keysDown.add(key);
 				}
 			}
 		});
 		
-		glfwSetScrollCallback(window, scrollCallback = new GLFWScrollCallback() {
+		glfwSetCharCallback(window.getId(), charCallback = new GLFWCharCallback() {
+			@Override
+			public void invoke(long window, int codepoint) {
+				char character = (char)codepoint;
+				for (TextListener listener : textListeners) {
+					listener.handle(character);
+				}
+			}
+		});
+		
+		glfwSetScrollCallback(window.getId(), scrollCallback = new GLFWScrollCallback() {
 			@Override
 			public void invoke(long window, double xOffset, double yOffset) {
 				scroll.x = (float)xOffset;
@@ -104,7 +158,7 @@ public class Input implements Lifecycle {
 			}
 		});
 		
-		glfwSetCursorPosCallback(window, cursorPosCallback = new GLFWCursorPosCallback() {
+		glfwSetCursorPosCallback(window.getId(), cursorPosCallback = new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xPos, double yPos) {
 				cursorPosition.x = (int)xPos;
@@ -112,7 +166,7 @@ public class Input implements Lifecycle {
 			}
 		});
 		
-		glfwSetMouseButtonCallback(window, mouseButtonCallback = new GLFWMouseButtonCallback() {
+		glfwSetMouseButtonCallback(window.getId(), mouseButtonCallback = new GLFWMouseButtonCallback() {
 			@Override
 			public void invoke(long window, int button, int action, int mods) {
 				if (action == GLFW_PRESS) {
@@ -123,12 +177,26 @@ public class Input implements Lifecycle {
 				}
 			}
 		});
+		
+		glfwSetJoystickCallback((gamepadId, event) -> {
+			if (event == GLFW_CONNECTED) {
+				gamepads[gamepadId] = new Gamepad(gamepadId);
+			} else if (event == GLFW_DISCONNECTED) {
+				gamepads[gamepadId].destroy();
+				gamepads[gamepadId] = null;
+			}
+		});
+		
+		for (int i = 0; i < gamepads.length; i++) {
+			if (glfwJoystickPresent(i)) {
+				gamepads[i] = new Gamepad(i);
+			}
+		}
 	}
 	
 	/**
 	 * Prepare handling of input before input systems.
 	 */
-	@Override
 	public void input() {
 		// Reset scroll
 		currentScroll.x = scroll.x;
@@ -150,12 +218,17 @@ public class Input implements Lifecycle {
 			mouseButtonsDown.removeAll(previousMouseButtonsDown);
 			previousMouseButtonsDown.clear();
 		}
+		
+		for (Gamepad gamepad : gamepads) {
+			if (gamepad != null) {
+				gamepad.input();
+			}
+		}
 	}
 	
 	/**
 	 * Finalize input handling after input systems.
 	 */
-	@Override
 	public void update() {
 		if (cursorImage != null) {
 			if (cursorImage != previousCursorImage) {
@@ -168,7 +241,7 @@ public class Input implements Lifecycle {
 		}
 		
 		if (cursorHandle != previousCursorHandle) {
-			glfwSetCursor(application.getWindow().id, cursorHandle);
+			glfwSetCursor(application.getWindow().getId(), cursorHandle);
 			previousCursorHandle = cursorHandle;
 		}
 		
@@ -184,6 +257,9 @@ public class Input implements Lifecycle {
 		if (keyCallback != null) {
 			keyCallback.free();
 		}
+		if (charCallback != null) {
+			charCallback.free();
+		}
 		if (scrollCallback != null) {
 			scrollCallback.free();
 		}
@@ -193,7 +269,15 @@ public class Input implements Lifecycle {
 		if (mouseButtonCallback != null) {
 			mouseButtonCallback.free();
 		}
+		for (Gamepad gamepad : gamepads) {
+			if (gamepad != null) {
+				gamepad.destroy();
+			}
+		}
+		textListeners.clear();
 	}
+	
+	//region --- Keyboard ---
 	
 	/**
 	 * Checks whether any key in an array is pressed.
@@ -322,8 +406,9 @@ public class Input implements Lifecycle {
 	
 	/**
 	 * Checks whether a key is down.
-	 * Returns true only in the first frame that the key is pressed.
-	 * @return True if the key is down in the current frame
+	 * Returns {@code true} in the first frame that the key is pressed
+	 * and in every frame the key is being repeated.
+	 * @return {@code true} if the key is down.
 	 */
 	public boolean getKeyDown(Key key) {
 		return getKeyDown(key, STOP_PROPAGATION_DEFAULT);
@@ -331,9 +416,10 @@ public class Input implements Lifecycle {
 	
 	/**
 	 * Checks whether a key is down.
-	 * Returns true only in the first frame that the key is pressed.
+	 * Returns {@code true} in the first frame that the key is pressed
+	 * and in every frame the key is being repeated.
 	 * @param stopPropagation Whether to stop this key from affecting other listeners
-	 * @return True if the key is down in the current frame
+	 * @return {@code true} if the key is down.
 	 */
 	public boolean getKeyDown(Key key, boolean stopPropagation) {
 		if (key == null) {
@@ -345,9 +431,10 @@ public class Input implements Lifecycle {
 	
 	/**
 	 * Checks whether a key is down.
-	 * Returns true only in the first frame that the key is pressed.
+	 * Returns {@code true} in the first frame that the key is pressed
+	 * and in every frame the key is being repeated.
 	 * @param key GLFW integer value for a key
-	 * @return True if the key is down in the current frame
+	 * @return {@code true} if the key is down.
 	 */
 	public boolean getKeyDown(int key) {
 		return getKeyDown(key, STOP_PROPAGATION_DEFAULT);
@@ -355,10 +442,11 @@ public class Input implements Lifecycle {
 	
 	/**
 	 * Checks whether a key is down.
-	 * Returns true only in the first frame that the key is pressed.
+	 * Returns {@code true} in the first frame that the key is pressed
+	 * and in every frame the key is being repeated.
 	 * @param key GLFW integer value for a key
 	 * @param stopPropagation Whether to stop this key from affecting other listeners
-	 * @return True if the key is down in the current frame
+	 * @return {@code true} if the key is down.
 	 */
 	public boolean getKeyDown(int key, boolean stopPropagation) {
 		boolean down = keysDown.contains(key);
@@ -371,6 +459,57 @@ public class Input implements Lifecycle {
 		
 		return down;
 	}
+	
+	public void addTextListener(TextListener listener) {
+		textListeners.add(listener);
+	}
+	
+	public void removeTextListener(TextListener listener) {
+		textListeners.remove(listener);
+	}
+	
+	//endregion Keyboard
+	
+	//region --- Gamepad ---
+	
+	/**
+	 * Returns the first gamepad if it is connected,
+	 * otherwise returns a fallback gamepad which returns {@code 0f} for all axes and {@code false} for all buttons.
+	 * @return The first gamepad or a fallback gamepad
+	 */
+	public GamepadInput getGamepad() {
+		return isGamepadConnected(DEFAULT_GAMEPAD_ID) ? getGamepad(DEFAULT_GAMEPAD_ID) : fallbackGamepad;
+	}
+	
+	/**
+	 * Returns the gamepad that matches the given ID.
+	 * @return The gamepad with the given ID.
+	 */
+	public GamepadInput getGamepad(int id) {
+		checkGamepadId(id);
+		GamepadInput gamepad = gamepads[id];
+		if (gamepad == null) {
+			throw new IllegalArgumentException(String.format("Gamepad %s is not connected", id));
+		}
+		return gamepad;
+	}
+	
+	/**
+	 * Checks if the gamepad that matches the given ID is connected.
+	 * @return {@code true} if the gamepad with the given ID is connected.
+	 */
+	public boolean isGamepadConnected(int id) {
+		checkGamepadId(id);
+		return gamepads[id] != null;
+	}
+	
+	private void checkGamepadId(int id) {
+		Checks.isInRange(id, 0, gamepads.length - 1, "Invalid gamepad ID: " + id);
+	}
+	
+	//endregion Gamepad
+	
+	//region --- Mouse ---
 	
 	/**
 	 * Checks whether a mouse button is pressed.
@@ -595,4 +734,7 @@ public class Input implements Lifecycle {
 		
 		cursorBlocker.print(logger);
 	}
+	
+	//endregion Mouse
+	
 }

@@ -30,9 +30,10 @@ public class SpriteRenderSystem extends RenderSystemBase {
 			
 			// Calculate screen position
 			Vector2f position = camera.applyTransform(worldX, worldY);
+			Vector2f scale = spriteRenderer.scale.clone().scale(camera.getZoom());
 			
 			// Apply render transformations
-			renderer.setScale(spriteRenderer.scale * camera.getZoom());
+			renderer.setScale(scale);
 			renderer.setMirrorHorizontally(spriteRenderer.mirrorHorizontally);
 			renderer.setMirrorVertically(spriteRenderer.mirrorVertically);
 			

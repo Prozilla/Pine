@@ -1,5 +1,9 @@
 package dev.prozilla.pine.core.system;
 
+import dev.prozilla.pine.common.lifecycle.Initializable;
+import dev.prozilla.pine.common.lifecycle.InputHandler;
+import dev.prozilla.pine.common.lifecycle.Renderable;
+import dev.prozilla.pine.common.lifecycle.Updatable;
 import dev.prozilla.pine.core.ECSManager;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -12,7 +16,7 @@ import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 import java.util.Collection;
 import java.util.Objects;
 
-public class SystemManager extends ECSManager {
+public class SystemManager extends ECSManager implements Initializable, InputHandler, Updatable, Renderable {
 	
 	private final SystemGroup<InitSystemBase> initSystems;
 	private final SystemGroup<InputSystemBase> inputSystems;
@@ -54,7 +58,7 @@ public class SystemManager extends ECSManager {
 	 * Runs all systems that handle initialization.
 	 */
 	@Override
-	public void init(long window) {
+	public void init() {
 		initSystems.forEach(InitSystemBase::init);
 	}
 	

@@ -5,7 +5,7 @@ import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
-import dev.prozilla.pine.examples.flappybird.Main;
+import dev.prozilla.pine.examples.flappybird.FlappyBird;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
 
 /**
@@ -24,7 +24,7 @@ public class PlayerMover extends UpdateSystem {
 		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		
 		// Check if player hit floor or ceiling
-		if (transform.position.y <= Main.HEIGHT / -2f || transform.position.y + PlayerData.HEIGHT >= Main.HEIGHT / 2f) {
+		if (transform.position.y <= FlappyBird.HEIGHT / -2f || transform.position.y + PlayerData.HEIGHT >= FlappyBird.HEIGHT / 2f) {
 			playerData.gameScene.endGame();
 		}
 		
@@ -43,9 +43,9 @@ public class PlayerMover extends UpdateSystem {
 		playerData.velocity -= deltaTime / 2f;
 		
 		// Clamp position inside screen bounds
-		transform.position.y = MathUtils.clamp(transform.position.y, Main.HEIGHT / -2f, Main.HEIGHT / 2f);
+		transform.position.y = MathUtils.clamp(transform.position.y, FlappyBird.HEIGHT / -2f, FlappyBird.HEIGHT / 2f);
 		
-		if (transform.position.y > Main.HEIGHT / -2f) {
+		if (transform.position.y > FlappyBird.HEIGHT / -2f) {
 			// Apply rotation based on velocity, unless player is dead
 			float targetRotation = playerData.gameScene.gameOver ? 180 : playerData.velocity * PlayerData.ROTATION_FACTOR;
 			spriteRenderer.rotation = MathUtils.lerp(spriteRenderer.rotation, targetRotation, deltaTime * PlayerData.ROTATION_SPEED);

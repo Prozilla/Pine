@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.property.animated;
 
 import dev.prozilla.pine.common.math.easing.Easing;
 import dev.prozilla.pine.common.math.easing.EasingFunction;
-import dev.prozilla.pine.common.util.Checks;
+import dev.prozilla.pine.common.util.checks.Checks;
 
 import java.util.Objects;
 import java.util.StringJoiner;

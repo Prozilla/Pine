@@ -1,9 +1,9 @@
 package dev.prozilla.pine.examples.flappybird.entity;
 
+import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
-import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.text.Font;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
 import dev.prozilla.pine.examples.flappybird.EntityTag;

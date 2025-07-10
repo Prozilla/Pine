@@ -1,5 +1,11 @@
 package dev.prozilla.pine.core.component.ui;
 
-public enum NodeEvent {
-	SELECTOR_CHANGE,
+import dev.prozilla.pine.common.event.Event;
+
+public class NodeEvent extends Event<NodeEventType, Node> {
+	
+	public NodeEvent(NodeEventType nodeEventType, Node node) {
+		super(nodeEventType, node);
+	}
+	
 }

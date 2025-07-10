@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.entity;
 
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.Map;
  * Certain entity queries are disposable, meaning the system that consumes them might dispose the results of that query.
  * Disposable queries cannot be included in the pool as their results are temporary.
  */
-public class EntityQueryPool {
+public class EntityQueryPool implements Destructible {
 	
 	private final Map<String, EntityQuery> entityQueries;
 	
@@ -52,11 +53,9 @@ public class EntityQueryPool {
 	/**
 	 * Destroys all entity queries.
 	 */
-	public void clear() {
-		for (EntityQuery query : entityQueries.values()) {
-			query.destroy();
-		}
-		entityQueries.clear();
+	@Override
+	public void destroy() {
+		Destructible.destroyAll(entityQueries.values());
 	}
 	
 	/**

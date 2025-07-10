@@ -16,6 +16,8 @@ import java.util.zip.ZipFile;
  */
 public final class FileSystem {
 	
+	private FileSystem() {}
+	
 	/**
 	 * Helper method for deleting non-empty directories.
 	 */

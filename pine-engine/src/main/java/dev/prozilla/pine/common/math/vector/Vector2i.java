@@ -32,6 +32,16 @@ public class Vector2i extends VectorInt<Vector2i> {
 		this.y = y;
 	}
 	
+	public Vector2i set(int xy) {
+		return set(xy, xy);
+	}
+	
+	public Vector2i set(int x, int y) {
+		this.x = x;
+		this.y = y;
+		return this;
+	}
+	
 	public Vector2i add(int x, int y) {
 		this.x += x;
 		this.y += y;
@@ -89,6 +99,13 @@ public class Vector2i extends VectorInt<Vector2i> {
 	public static Vector2i parse(String input) throws InvalidStringException {
 		Integer[] integers = Vector.parseToIntegers(input, 2);
 		return new Vector2i(integers[0], integers[1]);
+	}
+	
+	/**
+	 * Creates a new vector (1, 1)
+	 */
+	public static Vector2i one() {
+		return new Vector2i(1, 1);
 	}
 	
 	/**

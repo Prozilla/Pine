@@ -1,9 +1,9 @@
 package dev.prozilla.pine.core.component.ui;
 
+import dev.prozilla.pine.common.asset.image.Texture;
+import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.common.system.resource.ResourcePool;
-import dev.prozilla.pine.common.system.resource.image.Texture;
-import dev.prozilla.pine.common.system.resource.image.TextureBase;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.Objects;
@@ -19,7 +19,7 @@ public class ImageNode extends Component {
 	public Vector2i regionSize;
 	
 	public ImageNode(String imagePath) {
-		this(ResourcePool.loadTexture(imagePath));
+		this(AssetPools.textures.load(imagePath));
 	}
 	
 	public ImageNode(TextureBase image) {

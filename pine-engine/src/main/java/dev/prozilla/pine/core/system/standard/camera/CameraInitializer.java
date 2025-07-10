@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.system.standard.camera;
 
-import dev.prozilla.pine.common.system.resource.Color;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.system.init.InitSystemBase;

@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.entity;
 
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.core.ECSManager;
 import dev.prozilla.pine.core.scene.World;
 
@@ -28,11 +29,7 @@ public class EntityManager extends ECSManager {
 	 */
 	@Override
 	public void destroy() {
-		for (Entity entity : entities) {
-			entity.destroy();
-		}
-		
-		entities.clear();
+		Destructible.destroyAll(entities);
 	}
 	
 	/**

@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.system;
 
+import dev.prozilla.pine.common.util.checks.Checks;
+
 /**
  * Utility class for constructing <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">ANSI escape sequences</a>.
  */
@@ -32,6 +34,8 @@ public final class Ansi {
 	public static final String DIM = "\u001b[2m";
 	public static final String ITALIC = "\u001b[3m";
 	public static final String UNDERLINED = "\u001b[4m";
+	
+	private Ansi() {}
 	
 	public static String reset(String text) {
 		return RESET + text;
@@ -73,6 +77,9 @@ public final class Ansi {
 	 * Sets the color of the given text.
 	 */
 	public static String color(String text, String ansiColor) {
+		Checks.isNotNull(text, "text");
+		Checks.isNotNull(ansiColor, "ansiColor");
+		
 		String result = ansiColor + text;
 		if (!result.endsWith(RESET)) {
 			result += RESET;
@@ -116,6 +123,9 @@ public final class Ansi {
 	 * Sets the background color of the given text.
 	 */
 	public static String colorBg(String text, String ansiColorBg) {
+		Checks.isNotNull(text, "text");
+		Checks.isNotNull(ansiColorBg, "ansiColorBg");
+		
 		String result = ansiColorBg + text;
 		if (!result.endsWith(RESET)) {
 			result += RESET;
@@ -143,6 +153,9 @@ public final class Ansi {
 	 * Sets the decoration of the given text.
 	 */
 	public static String decorate(String text, String ansiDecoration) {
+		Checks.isNotNull(text, "text");
+		Checks.isNotNull(ansiDecoration, "ansiDecoration");
+		
 		String result = ansiDecoration + text;
 		if (!result.endsWith(RESET)) {
 			result += RESET;
@@ -154,6 +167,22 @@ public final class Ansi {
 	 * Removes all ANSI escape codes from a given text.
 	 */
 	public static String strip(String text) {
+		Checks.isNotNull(text, "text");
 		return text.replaceAll("\u001B\\[[;\\d]*m", "");
 	}
+	
+	public static Color toColor(String ansiColor) {
+		return switch (ansiColor) {
+			case BLACK, BLACK_BACKGROUND -> Color.black();
+			case RED, RED_BACKGROUND -> Color.red();
+			case GREEN, GREEN_BACKGROUND -> Color.green();
+			case YELLOW, YELLOW_BACKGROUND -> Color.yellow();
+			case BLUE, BLUE_BACKGROUND -> Color.blue();
+			case PURPLE, PURPLE_BACKGROUND -> Color.purple();
+			case CYAN, CYAN_BACKGROUND -> Color.cyan();
+			case WHITE, WHITE_BACKGROUND -> Color.white();
+			default -> null;
+		};
+	}
+	
 }

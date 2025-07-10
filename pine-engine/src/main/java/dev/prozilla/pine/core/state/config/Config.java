@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.state.config;
 
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.util.Checks;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 
 import java.util.Collection;
@@ -53,6 +53,7 @@ public class Config {
 		addOption(RenderConfig.ENABLE_DEPTH_TEST, rendering.enableDepthTest);
 		addOption(RenderConfig.RENDER_MODE, rendering.renderMode);
 		addOption(RenderConfig.SNAP_PIXELS, rendering.snapPixels);
+		addOption(RenderConfig.SNAP_TEXT, rendering.snapText);
 		
 		addOption(LogConfig.ENABLE_LOGS, logging.enableLogs);
 		addOption(LogConfig.PREFIX, logging.prefix);
@@ -60,6 +61,7 @@ public class Config {
 		addOption(LogConfig.ERROR_LAYER, logging.errorHandler);
 		addOption(LogConfig.ENABLE_ANSI, logging.enableAnsi);
 		addOption(LogConfig.ENABLE_APPLICATION_STATE_LOGS, logging.enableApplicationStateLogs);
+		addOption(LogConfig.ENABLE_ASSET_POOL_LOGS, logging.enableAssetPoolLogs);
 		
 		addOption(WindowConfig.WIDTH, window.width);
 		addOption(WindowConfig.HEIGHT, window.height);
@@ -105,7 +107,7 @@ public class Config {
 		@SuppressWarnings("unchecked")
 		ConfigOption<T> option = (ConfigOption<T>)options.get(key);
 		
-		return option.get();
+		return option.getValue();
 	}
 	
 	/**
@@ -123,7 +125,7 @@ public class Config {
 			throw new IllegalArgumentException(String.format("Invalid value for option with key '%s': %s", key, value));
 		}
 		
-		option.set(value);
+		option.setValue(value);
 	}
 	
 	/**
@@ -175,7 +177,7 @@ public class Config {
 	public <T> void copyFrom(Config otherConfig, ConfigKey<T> key) {
 		@SuppressWarnings("unchecked")
 		ConfigOption<T> option = (ConfigOption<T>)options.get(key);
-		option.set(otherConfig.getOption(key));
+		option.setValue(otherConfig.getOption(key));
 	}
 	
 	/**

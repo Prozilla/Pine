@@ -1,10 +1,12 @@
 package dev.prozilla.pine.core.entity;
 
+import dev.prozilla.pine.common.ProviderOf;
 import dev.prozilla.pine.core.component.Transform;
 
 /**
  * Interface with utility methods for finding certain entities in the current context.
  */
+@ProviderOf(Entity.class)
 public interface EntityProvider extends EntityContext {
 	
 	Entity getEntity();

@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.component.sprite;
 
+import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.math.vector.Vector2f;
-import dev.prozilla.pine.common.system.resource.Color;
-import dev.prozilla.pine.common.system.resource.image.TextureBase;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
 
 /**
@@ -15,7 +15,7 @@ public class SpriteRenderer extends Component {
 	public final Color color;
 	
 	// Transformations
-	public float scale;
+	public Vector2f scale;
 	public float rotation;
 	public Vector2f offset;
 	public boolean mirrorHorizontally;
@@ -35,7 +35,7 @@ public class SpriteRenderer extends Component {
 		this.texture = texture;
 		this.color = color;
 		
-		scale = 1f;
+		scale = Vector2f.one();
 		rotation = 0f;
 		offset = new Vector2f();
 		mirrorHorizontally = false;
@@ -76,18 +76,18 @@ public class SpriteRenderer extends Component {
 	// TO DO: apply rotation
 	public float getWidth() {
 		if (cropToRegion) {
-			return regionSize.x * scale;
+			return regionSize.x * scale.x;
 		} else {
-			return (float)texture.getWidth() * scale;
+			return (float)texture.getWidth() * scale.x;
 		}
 	}
 	
 	// TO DO: apply rotation
 	public float getHeight() {
 		if (cropToRegion) {
-			return regionSize.y * scale;
+			return regionSize.y * scale.y;
 		} else {
-			return (float)texture.getHeight() * scale;
+			return (float)texture.getHeight() * scale.y;
 		}
 	}
 	
