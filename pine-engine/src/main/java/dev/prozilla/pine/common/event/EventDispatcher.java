@@ -78,11 +78,7 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 			try {
 				listener.handle(event);
 			} catch (Exception e) {
-				if (logger != null) {
-					logger.error("Event listener failed", e);
-				} else {
-					e.printStackTrace();
-				}
+				getLogger().error("Event listener failed", e);
 			}
 			
 			if (event.isImmediatePropagationStopped()) {
@@ -111,6 +107,14 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 	 */
 	public void setLogger(Logger logger) {
 		this.logger = logger;
+	}
+	
+	protected Logger getLogger() {
+		if (logger == null) {
+			return Logger.system;
+		}
+		
+		return logger;
 	}
 	
 	/**

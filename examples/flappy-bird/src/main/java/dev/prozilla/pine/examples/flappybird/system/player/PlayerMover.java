@@ -15,6 +15,7 @@ public class PlayerMover extends UpdateSystem {
 	
 	public PlayerMover() {
 		super(Transform.class, SpriteRenderer.class, PlayerData.class);
+		setApplyTimeScale(true);
 	}
 	
 	@Override
@@ -34,12 +35,12 @@ public class PlayerMover extends UpdateSystem {
 		if (!playerData.gameScene.gameOver) {
 			// Update age and calculate frame
 			playerData.age += deltaTime;
-			playerData.animationFrame = Math.round((playerData.age * PlayerData.ANIMATION_SPEED)) % 3;
+			playerData.animationFrame = Math.round((playerData.age * playerData.animationSpeed.getValue())) % 3;
 		}
 		
 		// Update velocity and move based on current velocity
 		playerData.velocity -= deltaTime / 2f;
-		transform.position.y += playerData.velocity * PlayerData.SPEED * deltaTime;
+		transform.position.y += playerData.velocity * playerData.speed.getValue() * deltaTime;
 		playerData.velocity -= deltaTime / 2f;
 		
 		// Clamp position inside screen bounds
@@ -47,8 +48,8 @@ public class PlayerMover extends UpdateSystem {
 		
 		if (transform.position.y > FlappyBird.HEIGHT / -2f) {
 			// Apply rotation based on velocity, unless player is dead
-			float targetRotation = playerData.gameScene.gameOver ? 180 : playerData.velocity * PlayerData.ROTATION_FACTOR;
-			spriteRenderer.rotation = MathUtils.lerp(spriteRenderer.rotation, targetRotation, deltaTime * PlayerData.ROTATION_SPEED);
+			float targetRotation = playerData.gameScene.gameOver ? 180 : playerData.velocity * playerData.rotationFactor.getValue();
+			spriteRenderer.rotation = MathUtils.lerp(spriteRenderer.rotation, targetRotation, deltaTime * playerData.rotationSpeed.getValue());
 		}
 	}
 }

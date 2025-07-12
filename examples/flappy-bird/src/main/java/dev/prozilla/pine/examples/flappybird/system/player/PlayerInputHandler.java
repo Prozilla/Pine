@@ -26,7 +26,12 @@ public class PlayerInputHandler extends InputSystem {
 		if (!playerData.gameScene.gameOver) {
 			// Jump
 			if (input.getKeyDown(Key.SPACE) || input.getMouseButtonDown(MouseButton.LEFT) || input.getGamepad().getButtonDown(GamepadButton.A)) {
-				playerData.velocity = PlayerData.JUMP_VELOCITY;
+				playerData.velocity = playerData.jumpVelocity.getValue();
+				logger.log(playerData.animationSpeed.getValue());
+			}
+			// Pause
+			if (input.getKeyDown(Key.ESCAPE)) {
+				application.togglePause();
 			}
 		}
 	}

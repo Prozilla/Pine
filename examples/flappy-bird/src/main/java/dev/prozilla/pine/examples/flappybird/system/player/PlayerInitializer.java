@@ -25,10 +25,13 @@ public class PlayerInitializer extends InitSystem {
 		// Store reference to scene
 		playerData.gameScene = (GameScene)scene;
 		
+		// Create deserializer and properties
+		playerData.readData(playerData.gameScene.dataDirectory, "player.json", PlayerData.Data.class);
+		
 		// Set player properties
 		playerData.animationFrame = 0;
 		playerData.age = 0;
-		playerData.velocity = PlayerData.JUMP_VELOCITY;
+		playerData.velocity = playerData.jumpVelocity.getValue();
 		
 		transform.setPosition(PlayerData.POSITION_X, 0);
 		

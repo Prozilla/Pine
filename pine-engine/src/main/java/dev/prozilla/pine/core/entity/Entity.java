@@ -33,7 +33,6 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	
 	protected final World world;
 	protected final Application application;
-	protected final Logger logger;
 	protected final Scene scene;
 	
 	/** Components of this entity */
@@ -393,6 +392,11 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	@Override
 	public Application getApplication() {
 		return application;
+	}
+	
+	@Override
+	public Logger getLogger() {
+		return ApplicationProvider.super.getLogger();
 	}
 	
 	@Override

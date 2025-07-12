@@ -12,8 +12,27 @@ public final class PathUtils {
 	private PathUtils() {}
 	
 	/**
+	 * Transforms the path so it has a leading slash and no trailing slash.
+	 * @param path The original path
+	 * @return The path with only a leading slash.
+	 */
+	public static String onlyLeadingSlash(String path) {
+		return removeTrailingSlash(addLeadingSlash(path));
+	}
+	
+	
+	/**
+	 * Transforms the path so it has a trailing slash and no leading slash.
+	 * @param path The original path
+	 * @return The path with only a trailing slash.
+	 */
+	public static String onlyTrailingSlash(String path) {
+		return removeLeadingSlash(addTrailingSlash(path));
+	}
+	
+	/**
 	 * Removes a leading slash from a path if there is one.
-	 * @param path Path with or without leading slash
+	 * @param path The original path
 	 * @return Path without leading slash
 	 */
 	public static String removeLeadingSlash(String path) {
@@ -26,7 +45,7 @@ public final class PathUtils {
 	
 	/**
 	 * Adds a leading slash to a path if there isn't one.
-	 * @param path Path with or without leading slash
+	 * @param path The original path
 	 * @return Path with leading slash
 	 */
 	public static String addLeadingSlash(String path) {
@@ -38,9 +57,35 @@ public final class PathUtils {
 	}
 	
 	/**
+	 * Removes a trailing slash from a path if there is one.
+	 * @param path The original path
+	 * @return Path without trailing slash
+	 */
+	public static String removeTrailingSlash(String path) {
+		if (path.endsWith("/")) {
+			return path.substring(0, path.length() - 1);
+		} else {
+			return path;
+		}
+	}
+	
+	/**
+	 * Adds a trailing slash to a path if there isn't one.
+	 * @param path The original path
+	 * @return Path with trailing slash
+	 */
+	public static String addTrailingSlash(String path) {
+		if (path.endsWith("/")) {
+			return path;
+		} else {
+			return path + "/";
+		}
+	}
+	
+	/**
 	 * Normalizes a path by removing prefixes and replacing separators.
-	 * @param path Path
-	 * @return Normalized path
+	 * @param path The original path
+	 * @return The normalized path
 	 */
 	public static String normalizePath(String path) {
 		// Handle file:/ prefix
@@ -82,6 +127,11 @@ public final class PathUtils {
 		return "file:///" + absolute.toString().replace("\\", "/").replace(" ", "%20");
 	}
 	
+	/**
+	 * Returns the file extension of a given path.
+	 * @param path The path of a file
+	 * @return The file extension, or an empty string if there is no file extension.
+	 */
 	public static String getFileExtension(String path) {
 		int lastIndexOf = path.lastIndexOf(".");
 		if (lastIndexOf == -1) {

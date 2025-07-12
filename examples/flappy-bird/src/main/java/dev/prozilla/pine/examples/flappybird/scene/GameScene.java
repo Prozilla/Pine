@@ -1,5 +1,6 @@
 package dev.prozilla.pine.examples.flappybird.scene;
 
+import dev.prozilla.pine.common.property.deserialized.Directory;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
@@ -37,6 +38,9 @@ public class GameScene extends SceneBase {
 	public Entity player;
 	public Entity gameOverText;
 	
+	// Data
+	public Directory dataDirectory;
+	
 	// Constants
 	public static final float MIN_OBSTACLE_TIME = 0.75f;
 	public static final float MAX_OBSTACLE_TIME = 2.5f;
@@ -44,6 +48,8 @@ public class GameScene extends SceneBase {
 	@Override
 	protected void load() {
 		super.load();
+		
+		dataDirectory = new Directory("data");
 		
 		// Create prefabs for entities
 		PlayerPrefab playerPrefab = new PlayerPrefab();

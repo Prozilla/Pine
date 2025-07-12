@@ -14,6 +14,7 @@ public class PipesMover extends UpdateSystem {
 	
 	public PipesMover() {
 		super(PipesData.class);
+		setApplyTimeScale(true);
 	}
 	
 	@Override
