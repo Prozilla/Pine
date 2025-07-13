@@ -1,10 +1,77 @@
 # Changelog
 
+## v2.0.0
+
+### New Features
+
+- Implemented OpenAL library and added audio
+- Added support for gamepad input
+- Added text input node for text fields in user interfaces
+- Added render region to restrict rendering to a given region on the screen
+- Added node borders which can be filled with a color or image
+- Added utility class Pine, which can be used to query system/library information
+- Added developer mode, which can be used to enable developer tools based a system property
+- Added new events system and observables
+- Added new types of properties:
+  - LazyProperty
+  - SystemProperty
+  - MutableProperty
+  - ObservableProperty
+  - SingleSelectionProperty
+- Added intervals and timeouts based on JS intervals and timeouts
+- Added a rect renderer component for drawing colored rectangles
+
+### Changes
+
+- Replaced the Lifecycle interface with Initializable, InputHandler, Updatable, Renderable and Destructible
+- Refactored checks and added fluent interfaces for complex checks
+- Refactored asset pools, there are now separate asset pools for each type of asset
+- When holding a key down for a while, the key will now repeatedly fire, mimicking keyboard typing behaviour
+- Updated documentation
+- Disabled instancing of utility classes
+- Added more default colors and updated the parsing of colors
+- Added colour class, a British version of the Color class
+
+### Fixes
+
+- Improved argument validation using checks
+
+### Examples
+
+- Added chat application with communication via local networks
+- Added audio visualizer to demonstrate new audio feature
+- Flappy bird:
+  - Added a main menu 
+
+### License
+
+- Changed from GNU GPLv3 to GNU LGPLv3
+
 ## v1.2.1
+
+### Changes
+
+- Added destroy() method for components, which can be overridden to destroy objects used by the component. The default behaviour for this method is to remove the component from its entity.
+- Removed unused lifecycle method start()
+- Added the following missing bindings for keyboard keys:
+  - CAPS_LOCK
+  - SCROLL_LOCK
+  - NUM_LOCK
+  - BACKSPACE
+  - L_SUPER and R_SUPER
+  - F(13-25)
+  - Numpad keys
+  - Cursor control keys (DELETE, INSERT, PAGE_UP, etc.)
+  - Misc keys (MENU, PAUSE, PRINT, etc.)
+- Added the following missing bindings for mouse buttons:
+  - MIDDLE
+  - EXTRA_(0-4)
 
 ### Fixes
 
 - Fixed entity.getParentWithTag(tag) returning children instead of parents
+- Removed usage of unsupported lifecycle methods in systems
+- Improved null-checks and general argument validation
 
 ## v1.2.0
 
