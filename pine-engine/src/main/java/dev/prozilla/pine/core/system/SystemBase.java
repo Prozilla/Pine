@@ -144,7 +144,7 @@ public abstract class SystemBase {
 	 */
 	protected void forEach(Consumer<EntityChunk> action) {
 		try {
-			query.startIteration();
+			query.entityChunks.startIteration();
 			int count = query.entityChunks.size();
 			for (int i = 0; i < count; i++) {
 				if (!scene.isActive()) {
@@ -160,8 +160,8 @@ public abstract class SystemBase {
 		} catch (Exception e) {
 			logger.error("Failed to iterate over entities in system: " + getClass().getSimpleName(), e);
 		} finally {
-			if (scene.isActive() && query.isIterating) {
-				query.endIteration();
+			if (scene.isActive()) {
+				query.entityChunks.endIteration();
 			}
 		}
 	}
@@ -172,7 +172,7 @@ public abstract class SystemBase {
 	 */
 	protected void forEachReverse(Consumer<EntityChunk> action) {
 		try {
-			query.startIteration();
+			query.entityChunks.startIteration();
 			int count = query.entityChunks.size();
 			for (int i = count - 1; i >= 0; i--) {
 				if (!scene.isActive()) {
@@ -188,8 +188,8 @@ public abstract class SystemBase {
 		} catch (Exception e) {
 			logger.error("Failed to iterate over entities in system: " + getClass().getSimpleName(), e);
 		} finally {
-			if (scene.isActive() && query.isIterating) {
-				query.endIteration();
+			if (scene.isActive()) {
+				query.entityChunks.endIteration();
 			}
 		}
 	}
@@ -222,14 +222,7 @@ public abstract class SystemBase {
 	 * Sorts the entity chunks in this system based on a comparator.
 	 */
 	protected void sort(Comparator<EntityChunk> comparator) {
-		boolean isAlreadyIterating = query.isIterating;
-		if (!isAlreadyIterating) {
-			query.startIteration();
-		}
 		query.entityChunks.sort(comparator);
-		if (!isAlreadyIterating) {
-			query.endIteration();
-		}
 	}
 	
 	/**

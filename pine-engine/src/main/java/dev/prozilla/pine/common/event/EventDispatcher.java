@@ -2,9 +2,9 @@ package dev.prozilla.pine.common.event;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.util.DeferredList;
 import dev.prozilla.pine.common.util.checks.Checks;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public abstract class EventDispatcher<EventType extends Enum<EventType>, Target, E extends Event<EventType, ? super Target>> implements EventDispatcherContext<EventType, Target, E>, Destructible {
 	
-	private final Map<EventType, List<EventListener<E>>> listeners;
+	private final Map<EventType, DeferredList<EventListener<E>>> listeners;
 	
 	protected Logger logger;
 	
@@ -30,7 +30,7 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 		Checks.isNotNull(listener, "listener");
 		
 		if (!listeners.containsKey(eventType)) {
-			listeners.put(eventType, new ArrayList<>());
+			listeners.put(eventType, new DeferredList<>());
 		}
 		
 		listeners.get(eventType).add(listener);
@@ -68,7 +68,7 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 	 * @param event The event to invoke
 	 */
 	protected void invoke(E event) {
-		List<EventListener<E>> eventListeners = listeners.get(event.getType());
+		DeferredList<EventListener<E>> eventListeners = listeners.get(event.getType());
 		
 		if (eventListeners == null) {
 			return;
@@ -85,6 +85,7 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 				break;
 			}
 		}
+		eventListeners.endIteration();
 		
 		if (!event.isPropagationStopped()) {
 			propagate(event);

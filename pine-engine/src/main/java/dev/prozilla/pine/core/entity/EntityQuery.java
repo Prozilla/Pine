@@ -2,10 +2,13 @@ package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.util.DeferredList;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Utility class for querying entities with specific components to be processed by a system.
@@ -13,7 +16,7 @@ import java.util.*;
 public class EntityQuery implements Destructible {
 	
 	/** List of entities that match this query. */
-	public final ArrayList<EntityChunk> entityChunks;
+	public final DeferredList<EntityChunk> entityChunks;
 	
 	/** Map of entity IDs to their respective match. */
 	private final Map<Integer, EntityChunk> entityChunkMap;
@@ -30,12 +33,6 @@ public class EntityQuery implements Destructible {
 	/** Indicates whether results of this query may be disposed by the system that consumes it. */
 	private final boolean isDisposable;
 	
-	public boolean isIterating;
-	/** List of entity chunks that will be added before the next iteration. */
-	private final List<EntityChunk> entityChunkAdditionQueue;
-	/** List of entity chunks that will be removed before the next iteration. */
-	private final List<EntityChunk> entityChunkRemovalQueue;
-	
 	public EntityQuery(Class<? extends Component>[] includedComponentTypes, Class<? extends Component>[] excludedComponentTypes, boolean disposable, String tag) {
 		this.includedComponentTypes = includedComponentTypes;
 		this.excludedeComponentTypes = excludedComponentTypes;
@@ -50,12 +47,8 @@ public class EntityQuery implements Destructible {
 			Checks.areDisjunct(excludedComponentTypes, includedComponentTypes, "excludedComponentTypes and includedComponentTypes must be disjunct");
 		}
 		
-		entityChunks = new ArrayList<>();
+		entityChunks = new DeferredList<>();
 		entityChunkMap = new HashMap<>();
-		
-		isIterating = false;
-		entityChunkAdditionQueue = new ArrayList<>();
-		entityChunkRemovalQueue = new ArrayList<>();
 	}
 	
 	/**
@@ -63,39 +56,29 @@ public class EntityQuery implements Destructible {
 	 */
 	@Override
 	public void destroy() {
-		entityChunks.clear();
+		entityChunks.endIteration();
+		entityChunks.destroy();
 		entityChunkMap.clear();
-		entityChunkRemovalQueue.clear();
-		entityChunkAdditionQueue.clear();
-		isIterating = false;
 	}
 	
 	/**
 	 * Prepares this entity query for an iteration.
 	 * @throws IllegalStateException If this entity query is already being iterated.
+	 * @deprecated Replaced by {@link DeferredList#endIteration()} as of 2.0.1
 	 */
-	public void startIteration() throws IllegalStateException {
-		if (isIterating) {
-			throw new IllegalStateException("Entity query is already being iterated.");
-		}
-		
-		isIterating = true;
-		entityChunks.addAll(entityChunkAdditionQueue);
-		entityChunks.removeAll(entityChunkRemovalQueue);
-		entityChunkAdditionQueue.clear();
-		entityChunkRemovalQueue.clear();
+	@Deprecated
+	public void startIteration() {
+		entityChunks.startIteration();
 	}
 	
 	/**
 	 * Marks the ongoing iteration of this entity query as done.
 	 * @throws IllegalStateException If this entity query is not being iterated.
+	 * @deprecated Replaced by {@link DeferredList#endIteration()} as of 2.0.1
 	 */
-	public void endIteration() throws IllegalStateException {
-		if (!isIterating) {
-			throw new IllegalStateException("Entity query is not being iterated.");
-		}
-		
-		isIterating = false;
+	@Deprecated
+	public void endIteration() {
+		entityChunks.endIteration();
 	}
 	
 	/**
@@ -118,17 +101,10 @@ public class EntityQuery implements Destructible {
 			EntityChunk entityChunk = new EntityChunk(includedComponentTypes);
 			entityChunk.setComponents(matchComponents);
 			
-			if (isIterating) {
-				entityChunkRemovalQueue.remove(entityChunk);
-				entityChunkAdditionQueue.add(entityChunk);
-			} else {
-				entityChunks.add(entityChunk);
-			}
-			
+			entityChunks.add(entityChunk);
 			entityChunkMap.put(entity.id, entityChunk);
 		} catch (Exception e) {
-			System.err.println("Failed to create entity chunk.");
-			e.printStackTrace();
+			Logger.system.error("Failed to create entity chunk", e);
 			return false;
 		}
 		
@@ -146,12 +122,7 @@ public class EntityQuery implements Destructible {
 		}
 		
 		EntityChunk chunk = entityChunkMap.get(entity.id);
-		if (isIterating) {
-			entityChunkAdditionQueue.remove(chunk);
-			entityChunkRemovalQueue.add(chunk);
-		} else {
-			entityChunks.remove(chunk);
-		}
+		entityChunks.remove(chunk);
 		entityChunkMap.remove(entity.id);
 		return true;
 	}
@@ -207,7 +178,7 @@ public class EntityQuery implements Destructible {
 	 * Checks if this entity query has matched any entities.
 	 */
 	public boolean hasEntityChunks() {
-		return !entityChunks.isEmpty() || !entityChunkAdditionQueue.isEmpty();
+		return !entityChunks.isEmpty();
 	}
 	
 	public void print() {
