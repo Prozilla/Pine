@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.property.deserialized;
 
+import dev.prozilla.pine.common.event.Event;
+import dev.prozilla.pine.common.system.DirectoryWatcher;
 import dev.prozilla.pine.common.system.PathUtils;
 import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.core.Application;
@@ -23,7 +25,12 @@ public class HotDeserializer<Data> extends Deserializer<Data> {
 		filePath = getFilePath(path);
 		
 		deserialize();
-		directoryWatcher.onFileChange(path, (event) -> deserialize());
+		directoryWatcher.onFileChange(path, this::onFileChange);
+	}
+	
+	protected void onFileChange(Event<DirectoryWatcher.EventType, String> event) {
+		getLogger().log("File change detected: " + event.getTarget());
+		deserialize();
 	}
 	
 	@Override

@@ -1,7 +1,8 @@
-package dev.prozilla.pine.common.property.deserialized;
+package dev.prozilla.pine.common.system;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
-import dev.prozilla.pine.common.system.PathUtils;
+import dev.prozilla.pine.common.property.deserialized.Deserializer;
+import dev.prozilla.pine.common.property.deserialized.HotDeserializer;
 
 /**
  * Represents a directory from the file system.

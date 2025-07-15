@@ -1,5 +1,9 @@
 package dev.prozilla.pine.common.event;
 
+import dev.prozilla.pine.common.Cloneable;
+
+import java.util.Objects;
+
 /**
  * Represents an event which takes place on a target.
  *
@@ -8,7 +12,7 @@ package dev.prozilla.pine.common.event;
  * @param <Target> The type of target this event has
  * @see EventDispatcher
  */
-public class Event<EventType extends Enum<EventType>, Target> {
+public class Event<EventType extends Enum<EventType>, Target> implements Cloneable<Event<EventType, Target>> {
 
 	protected final EventType type;
 	protected final Target target;
@@ -59,4 +63,25 @@ public class Event<EventType extends Enum<EventType>, Target> {
 	public boolean isPropagationStopped() {
 		return propagationStopped;
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		return other instanceof Event<?, ?> otherEvent && equals(otherEvent);
+	}
+	
+	@Override
+	public boolean equals(Event<EventType, Target> other) {
+		return other.getType() == type && Objects.equals(other.getTarget(), target);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(type, target);
+	}
+	
+	@Override
+	public Event<EventType, Target> clone() {
+		return new Event<>(type, target);
+	}
+	
 }

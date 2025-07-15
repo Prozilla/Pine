@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.component.deserialization;
 
 import dev.prozilla.pine.common.property.deserialized.Deserializer;
-import dev.prozilla.pine.common.property.deserialized.Directory;
+import dev.prozilla.pine.common.system.Directory;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.Component;
 

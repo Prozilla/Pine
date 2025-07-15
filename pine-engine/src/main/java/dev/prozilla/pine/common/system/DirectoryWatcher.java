@@ -1,16 +1,16 @@
-package dev.prozilla.pine.common.property.deserialized;
+package dev.prozilla.pine.common.system;
 
 import dev.prozilla.pine.common.event.Event;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventListener;
-import dev.prozilla.pine.common.system.PathUtils;
-import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.core.Application;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -63,14 +63,21 @@ public class DirectoryWatcher extends EventDispatcher<DirectoryWatcher.EventType
 		while (watching) {
 			try {
 				WatchKey key = watchService.take();
+				Set<Event<EventType, String>> events = new HashSet<>();
+				
 				for (WatchEvent<?> event : key.pollEvents()) {
 					WatchEvent.Kind<?> kind = event.kind();
 					Path target = ((WatchEvent<Path>)event).context();
+					
 					if (DIRECTORY_EVENT_TYPE_MAP.containsKey(kind)) {
-						invoke(DIRECTORY_EVENT_TYPE_MAP.get(kind), path + target.toString());
+						events.add(createEvent(DIRECTORY_EVENT_TYPE_MAP.get(kind), path + target.toString()));
 					}
 				}
+				
 				key.reset();
+				for (Event<EventType, String> event : events) {
+					invoke(event);
+				}
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 				break;

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.examples.flappybird.scene;
 
-import dev.prozilla.pine.common.property.deserialized.Directory;
+import dev.prozilla.pine.common.system.Directory;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
