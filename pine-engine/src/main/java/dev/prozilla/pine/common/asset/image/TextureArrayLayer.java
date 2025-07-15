@@ -1,10 +1,14 @@
 package dev.prozilla.pine.common.asset.image;
 
+import dev.prozilla.pine.common.Cloneable;
+
+import java.util.Objects;
+
 /**
  * Represents a layer of a texture array.
  * @see TextureArray
  */
-public class TextureArrayLayer implements TextureBase {
+public class TextureArrayLayer implements TextureBase, Cloneable<TextureArrayLayer> {
 
 	/** The path of the image of this texture */
 	private final String path;
@@ -67,6 +71,26 @@ public class TextureArrayLayer implements TextureBase {
 	@Override
 	public TextureArray getArray() {
 		return textureArray;
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		return this == object || (object instanceof TextureArrayLayer textureArrayLayer && equals(textureArrayLayer));
+	}
+	
+	@Override
+	public boolean equals(TextureArrayLayer textureArrayLayer) {
+		return textureArrayLayer != null && textureArrayLayer.getArray().equals(textureArray) && textureArrayLayer.layer == layer;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(textureArray.getId(), layer);
+	}
+	
+	@Override
+	public TextureArrayLayer clone() {
+		return textureArray.addLayer(path);
 	}
 	
 	/**

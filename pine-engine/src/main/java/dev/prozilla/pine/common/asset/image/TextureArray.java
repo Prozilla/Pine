@@ -1,6 +1,8 @@
 package dev.prozilla.pine.common.asset.image;
 
+import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.core.Application;
 
 import java.nio.ByteBuffer;
@@ -18,7 +20,7 @@ import static org.lwjgl.opengl.GL42.glTexStorage3D;
  * Represents a <a href="https://www.khronos.org/opengl/wiki/Array_Texture">OpenGL Array Texture</a>.
  * An Array Texture contains multiple images of the same size.
  */
-public class TextureArray {
+public class TextureArray implements Cloneable<TextureArray>, Destructible {
 	
 	/** The handle of the texture array */
 	private final int id;
@@ -157,8 +159,13 @@ public class TextureArray {
 		return layers;
 	}
 	
-	public boolean equals(TextureArray other) {
-		return other.getId() == id;
+	@Override
+	public boolean equals(Object object) {
+		return this == object || (object instanceof TextureArray textureArray && equals(textureArray));
+	}
+	
+	public boolean equals(TextureArray textureArray) {
+		return textureArray != null && textureArray.getId() == id;
 	}
 	
 	@Override
@@ -166,9 +173,15 @@ public class TextureArray {
 		return id;
 	}
 	
+	@Override
+	public TextureArray clone() {
+		return new TextureArray(width, height, layers);
+	}
+	
 	/**
 	 * Removes this texture array from the resource pool and deletes it.
 	 */
+	@Override
 	public void destroy() {
 		AssetPools.textures.removeTextureArray(this);
 		glDeleteTextures(id);

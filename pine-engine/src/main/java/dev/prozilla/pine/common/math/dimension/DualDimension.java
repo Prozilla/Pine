@@ -134,13 +134,18 @@ public class DualDimension implements Printable, Cloneable<DualDimension> {
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		return (obj instanceof DualDimension dualDimension) ? equals(dualDimension) : super.equals(obj);
+	public boolean equals(Object object) {
+		return object == this || (object instanceof DualDimension dualDimension && equals(dualDimension));
 	}
 	
 	@Override
-	public boolean equals(DualDimension other) {
-		return other.x.equals(this.x) && other.y.equals(this.y);
+	public boolean equals(DualDimension dualDimension) {
+		return dualDimension != null && dualDimension.x.equals(this.x) && dualDimension.y.equals(this.y);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(x, y);
 	}
 	
 	/**
