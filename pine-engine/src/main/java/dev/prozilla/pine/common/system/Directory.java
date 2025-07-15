@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.system;
 
+import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.property.deserialized.Deserializer;
 import dev.prozilla.pine.common.property.deserialized.HotDeserializer;
@@ -9,7 +10,7 @@ import dev.prozilla.pine.common.property.deserialized.HotDeserializer;
  *
  * <p>Can be used to watch a directory for file changes.</p>
  */
-public class Directory implements Destructible {
+public class Directory implements Destructible, Cloneable<Directory> {
 	
 	private final String path;
 	private DirectoryWatcher watcher;
@@ -79,6 +80,21 @@ public class Directory implements Destructible {
 	 */
 	public String resolvePath(String relativePath) {
 		return path + PathUtils.removeLeadingSlash(relativePath);
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		return this == object || (object instanceof Directory directory && equals(directory));
+	}
+	
+	@Override
+	public boolean equals(Directory directory) {
+		return directory != null && path.equals(directory.getPath());
+	}
+	
+	@Override
+	public Directory clone() {
+		return new Directory(path);
 	}
 	
 	@Override

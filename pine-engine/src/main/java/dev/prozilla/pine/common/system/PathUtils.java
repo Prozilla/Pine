@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.system;
 
+import dev.prozilla.pine.common.util.checks.Checks;
+
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -36,6 +38,7 @@ public final class PathUtils {
 	 * @return Path without leading slash
 	 */
 	public static String removeLeadingSlash(String path) {
+		Checks.isNotNull(path, "path");
 		if (path.startsWith("/")) {
 			return path.substring(1);
 		} else {
@@ -49,6 +52,7 @@ public final class PathUtils {
 	 * @return Path with leading slash
 	 */
 	public static String addLeadingSlash(String path) {
+		Checks.isNotNull(path, "path");
 		if (path.startsWith("/")) {
 			return path;
 		} else {
@@ -62,6 +66,7 @@ public final class PathUtils {
 	 * @return Path without trailing slash
 	 */
 	public static String removeTrailingSlash(String path) {
+		Checks.isNotNull(path, "path");
 		if (path.endsWith("/")) {
 			return path.substring(0, path.length() - 1);
 		} else {
@@ -75,6 +80,7 @@ public final class PathUtils {
 	 * @return Path with trailing slash
 	 */
 	public static String addTrailingSlash(String path) {
+		Checks.isNotNull(path, "path");
 		if (path.endsWith("/")) {
 			return path;
 		} else {
@@ -88,6 +94,8 @@ public final class PathUtils {
 	 * @return The normalized path
 	 */
 	public static String normalizePath(String path) {
+		Checks.isNotNull(path, "path");
+		
 		// Handle file:/ prefix
 		if (path.startsWith("file:/")) {
 			path = path.substring("file:/".length());
@@ -110,6 +118,8 @@ public final class PathUtils {
 	 * @return The path relative to the source root
 	 */
 	public static String relativizePath(String path) {
+		Checks.isNotNull(path, "path");
+		
 		Path currentDir = Paths.get("").toAbsolutePath();
 		Path absolute = Paths.get(path).toAbsolutePath();
 		Path relative = currentDir.relativize(absolute);
@@ -123,6 +133,7 @@ public final class PathUtils {
 	 * @return A link to the file or folder
 	 */
 	public static String createLink(String path) {
+		Checks.isNotNull(path, "path");
 		Path absolute = Paths.get(path).toAbsolutePath();
 		return "file:///" + absolute.toString().replace("\\", "/").replace(" ", "%20");
 	}
@@ -130,9 +141,12 @@ public final class PathUtils {
 	/**
 	 * Returns the file extension of a given path.
 	 * @param path The path of a file
-	 * @return The file extension, or an empty string if there is no file extension.
+	 * @return The file extension, or an empty string if {@code path} is {@code null} or there is no file extension.
 	 */
 	public static String getFileExtension(String path) {
+		if (path == null) {
+			return "";
+		}
 		int lastIndexOf = path.lastIndexOf(".");
 		if (lastIndexOf == -1) {
 			return "";

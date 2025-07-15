@@ -1,6 +1,8 @@
 package dev.prozilla.pine.common.asset.image;
 
+import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 
@@ -11,7 +13,7 @@ import static org.lwjgl.opengl.GL13.*;
 /**
  * Represents an OpenGL texture.
  */
-public class Texture implements TextureBase, Printable {
+public class Texture implements TextureBase, Printable, Cloneable<Texture> {
 	
 	/** The handle of this texture */
 	private final int id;
@@ -151,17 +153,23 @@ public class Texture implements TextureBase, Printable {
 		return id;
 	}
 	
+	@Override
+	public boolean equals(Texture texture) {
+		return equals((TextureBase)texture);
+	}
+	
 	public boolean equals(TextureBase other) {
-		return !other.isInArray() && other.getId() == id;
+		return other != null && !other.isInArray() && other.getId() == id;
 	}
 	
 	@Override
 	public boolean equals(Object other) {
-		if (other == this) {
-			return true;
-		}
-		
-		return other instanceof Texture texture && texture.getId() == id;
+		return other == this || (other instanceof TextureBase textureBase && equals(textureBase));
+	}
+	
+	@Override
+	public Texture clone() {
+		return new Texture(path, width, height, AssetPools.images.load(path).getPixels());
 	}
 	
 	@Override

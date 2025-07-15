@@ -6,6 +6,9 @@ import dev.prozilla.pine.common.Transceivable;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.math.vector.Vector4f;
+import dev.prozilla.pine.common.util.checks.Checks;
+
+import java.util.Objects;
 
 /**
  * Represents an RGBA color.
@@ -237,6 +240,7 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 	 * @param factor Mixing factor, Range from 0f to 1f.
 	 */
 	public Color mix(Color color, float factor) {
+		Checks.isNotNull(color, "color");
 		float antiFactor = 1 - factor;
 		
 		setRed(red * antiFactor + color.getRed() * factor);
@@ -273,8 +277,8 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		return (obj instanceof Color color) ? equals(color) : super.equals(obj);
+	public boolean equals(Object object) {
+		return this == object || (object instanceof Color color && equals(color));
 	}
 	
 	/**
@@ -284,7 +288,12 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 	 */
 	@Override
 	public boolean equals(Color color) {
-		return color.getRed() == red && color.getGreen() == green && color.getBlue() == blue && color.getAlpha() == alpha;
+		return color != null && color.getRed() == red && color.getGreen() == green && color.getBlue() == blue && color.getAlpha() == alpha;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(red, green, blue, alpha);
 	}
 	
 	@Override

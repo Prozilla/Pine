@@ -134,16 +134,17 @@ public class EntityChunk implements Printable {
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof EntityChunk) {
-			return equals((EntityChunk)obj);
-		} else {
-			return super.equals(obj);
-		}
+	public boolean equals(Object object) {
+		return object == this || (object instanceof EntityChunk entityChunk && equals(entityChunk));
 	}
 	
 	public boolean equals(EntityChunk entityChunk) {
-		return entity.id == entityChunk.getEntity().id;
+		return entityChunk != null && entity.id == entityChunk.getEntity().id;
+	}
+	
+	@Override
+	public int hashCode() {
+		return entity.id;
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.asset.image;
 
+import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import org.lwjgl.glfw.GLFWImage;
@@ -12,7 +13,7 @@ import static org.lwjgl.stb.STBImage.stbi_image_free;
 /**
  * Represents an STB image with a width and a height.
  */
-public class Image implements Asset {
+public class Image implements Asset, Cloneable<Image> {
 
 	public final int id;
 	private final ByteBuffer pixels;
@@ -68,8 +69,23 @@ public class Image implements Asset {
 	}
 	
 	@Override
+	public boolean equals(Object object) {
+		return object == this || (object instanceof Image image && equals(image));
+	}
+	
+	@Override
+	public boolean equals(Image image) {
+		return image != null && image.id == id;
+	}
+	
+	@Override
 	public int hashCode() {
 		return id;
+	}
+	
+	@Override
+	public Image clone() {
+		return new Image(path, pixels, width, height, channels);
 	}
 	
 	public GLFWImage toGLFWImage() {
