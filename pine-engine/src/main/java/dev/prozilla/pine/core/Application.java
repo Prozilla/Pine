@@ -9,6 +9,7 @@ import dev.prozilla.pine.common.logging.AppLogger;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.opengl.GLUtils;
 import dev.prozilla.pine.common.property.SystemProperty;
+import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.core.audio.AudioDevice;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -739,7 +740,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * @see Application#readDevMode()
 	 */
 	public static boolean isDevMode() {
-		return devModeProperty.getValue().equalsIgnoreCase("true");
+		return BooleanUtils.isTrue(devModeProperty.getValue());
 	}
 	
 	/**
@@ -747,7 +748,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * @return {@code true} if system property {@code dev-mode} is currently set to {@code true}.
 	 */
 	public static boolean readDevMode() {
-		return devModeProperty.fetch().equalsIgnoreCase("true");
+		return BooleanUtils.isTrue(devModeProperty.fetch());
 	}
 	
 }
