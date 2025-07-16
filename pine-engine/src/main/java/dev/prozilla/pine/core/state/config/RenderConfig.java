@@ -29,6 +29,7 @@ public class RenderConfig {
 	public final ConfigOption<RenderMode> renderMode = new ConfigOption<>(RenderMode.NORMAL, Objects::nonNull);
 	/** Enables snapping of pixels. Defaults to <code>false</code>. */
 	public final ConfigOption<Boolean> snapPixels = new ConfigOption<>(false, Objects::nonNull);
-	/** Enables the snapping of text pixels. Defaults to <code>false</code>. */
+	/** Enables the snapping of text pixels. Defaults to <code>true</code>. */
 	public final ConfigOption<Boolean> snapText = new ConfigOption<>(true, Objects::nonNull);
+	
 }

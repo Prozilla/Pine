@@ -13,17 +13,13 @@ public class Main {
 		applicationBuilder.setInitialScene(new GameScene());
 		applicationBuilder.setIcons("images/crates/crate_03.png");
 		applicationBuilder.setTargetFps(120);
+		applicationBuilder.setApplicationManagerFactory(GameManager::new);
+		applicationBuilder.getRenderConfig().snapPixels.setValue(true);
 		
 		if (!Application.isDevMode()) {
 			applicationBuilder.setFullscreen(true);
 		}
 		
-		Application application = applicationBuilder.build();
-		application.getConfig().rendering.snapPixels.setValue(true);
-		
-		GameManager.instance = new GameManager(application);
-		application.setApplicationManager(GameManager.instance);
-		
-		application.run();
+		applicationBuilder.buildAndRun();
 	}
 }
