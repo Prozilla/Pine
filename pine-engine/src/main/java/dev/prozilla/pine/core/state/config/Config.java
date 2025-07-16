@@ -1,7 +1,6 @@
 package dev.prozilla.pine.core.state.config;
 
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 
 import java.util.Collection;
@@ -37,9 +36,16 @@ public class Config {
 	
 	private final Logger logger;
 	
+	public Config() {
+		this(null);
+	}
+	
 	public Config(Application application) {
-		Checks.isNotNull(application, "application");
-		logger = application.getLogger();
+		if (application != null) {
+			logger = application.getLogger();
+		} else {
+			logger = Logger.system;
+		}
 		
 		options = new HashMap<>();
 		
@@ -87,6 +93,16 @@ public class Config {
 		option.setLogger(logger);
 		
 		options.put(key, option);
+	}
+	
+	public void removeOption(ConfigKey<?> key) throws IllegalStateException {
+		if (!options.containsKey(key)) {
+			throw new IllegalStateException(String.format("option with key '%s' does not exist", key));
+		}
+		
+		ConfigOption<?> option = options.remove(key);
+		option.destroy();
+		option.setLogger(null);
 	}
 	
 	/**

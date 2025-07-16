@@ -1,9 +1,13 @@
 package dev.prozilla.pine.core;
 
+import dev.prozilla.pine.core.rendering.RenderMode;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.config.LogConfig;
+import dev.prozilla.pine.core.state.config.RenderConfig;
 import dev.prozilla.pine.core.state.config.WindowConfig;
+
+import java.util.function.Function;
 
 /**
  * Utility class for building applications.
@@ -23,9 +27,10 @@ public class ApplicationBuilder {
 	private String defaultFontPath;
 	
 	// App configuration
-	private boolean fullscreen;
-	private boolean showWindowDecorations;
-	private boolean enableLogs;
+	private Config config;
+
+	// Factories
+	private Function<Application, ApplicationManager> applicationManagerFactory;
 	
 	public ApplicationBuilder() {
 		title = Application.DEFAULT_TITLE;
@@ -34,12 +39,11 @@ public class ApplicationBuilder {
 		initialScene = null;
 		targetFps = Application.DEFAULT_TARGET_FPS;
 		
-		LogConfig defaultLogConfig = new LogConfig();
-		enableLogs = defaultLogConfig.enableLogs.getValue();
-		
-		WindowConfig defaultWindowConfig = new WindowConfig();
-		showWindowDecorations = defaultWindowConfig.showDecorations.getValue();
-		fullscreen = defaultWindowConfig.fullscreen.getValue();
+		config = new Config();
+		config.removeOption(Config.FPS);
+		config.removeOption(WindowConfig.TITLE);
+		config.removeOption(WindowConfig.WIDTH);
+		config.removeOption(WindowConfig.HEIGHT);
 	}
 	
 	/**
@@ -121,19 +125,49 @@ public class ApplicationBuilder {
 		return this;
 	}
 	
+	public ApplicationBuilder setApplicationManagerFactory(Function<Application, ApplicationManager> applicationManagerFactory) {
+		this.applicationManagerFactory = applicationManagerFactory;
+		return this;
+	}
+	
 	public ApplicationBuilder setFullscreen(boolean fullscreen) {
-		this.fullscreen = fullscreen;
+		config.window.fullscreen.setValue(fullscreen);
 		return this;
 	}
 	
 	public ApplicationBuilder setShowWindowDecorations(boolean showWindowDecorations) {
-		this.showWindowDecorations = showWindowDecorations;
+		config.window.showDecorations.setValue(showWindowDecorations);
 		return this;
 	}
 	
 	public ApplicationBuilder setEnableLogs(boolean enableLogs) {
-		this.enableLogs = enableLogs;
+		config.logging.enableLogs.setValue(enableLogs);
 		return this;
+	}
+	
+	public ApplicationBuilder setRenderMode(RenderMode renderMode) {
+		config.rendering.renderMode.setValue(renderMode);
+		return this;
+	}
+	
+	public Config getConfig() {
+		return config;
+	}
+	
+	public void setConfig(Config config) {
+		this.config = config;
+	}
+	
+	public LogConfig getLogConfig() {
+		return config.logging;
+	}
+	
+	public WindowConfig getWindowConfig() {
+		return config.window;
+	}
+	
+	public RenderConfig getRenderConfig() {
+		return config.rendering;
 	}
 	
 	/**
@@ -141,6 +175,10 @@ public class ApplicationBuilder {
 	 */
 	public Application build() {
 		Application application = new Application(title, windowWidth, windowHeight, initialScene, targetFps);
+		
+		if (applicationManagerFactory != null) {
+			application.setApplicationManager(applicationManagerFactory.apply(application));
+		}
 		
 		// Setters
 		if (icons != null) {
@@ -151,10 +189,7 @@ public class ApplicationBuilder {
 		}
 		
 		// Configuration
-		Config config = application.getConfig();
-		config.window.fullscreen.setValue(fullscreen);
-		config.window.showDecorations.setValue(showWindowDecorations);
-		config.logging.enableLogs.setValue(enableLogs);
+		application.getConfig().copyFrom(this.config);
 		
 		return application;
 	}

@@ -23,6 +23,8 @@ public class GameManager extends ApplicationManager {
 		
 		completedCrates = 0;
 		totalCrates = 0;
+		
+		instance = this;
 	}
 	
 	@Override
