@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.state.input;
 
-import dev.prozilla.pine.common.util.ArrayUtils;
+import dev.prozilla.pine.common.IntEnum;
+import dev.prozilla.pine.common.util.EnumUtils;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -8,7 +9,7 @@ import static org.lwjgl.glfw.GLFW.*;
  * Mappings for GLFW integer values for keyboard keys based on the US keyboard layout.
  * See: <a href="https://www.glfw.org/docs/3.3/group__keys.html">GLFW: Keyboard key tokens</a>
  */
-public enum Key {
+public enum Key implements IntEnum {
 	
 	// General
 	SPACE(GLFW_KEY_SPACE),
@@ -163,6 +164,6 @@ public enum Key {
 	 * @return True if the value is a valid value
 	 */
 	public static boolean isValid(int value) {
-		return ArrayUtils.contains(values(), value);
+		return EnumUtils.hasIntValue(values(), value);
 	}
 }

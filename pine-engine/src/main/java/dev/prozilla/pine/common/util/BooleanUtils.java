@@ -12,4 +12,8 @@ public final class BooleanUtils {
 		return "false".equalsIgnoreCase(input);
 	}
 	
+	public static int toInt(boolean value) {
+		return value ? 1 : 0;
+	}
+	
 }

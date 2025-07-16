@@ -1,5 +1,8 @@
 package dev.prozilla.pine.core.state.input;
 
+import dev.prozilla.pine.common.IntEnum;
+import dev.prozilla.pine.common.util.EnumUtils;
+
 import java.security.InvalidParameterException;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -8,7 +11,7 @@ import static org.lwjgl.glfw.GLFW.*;
  * Mappings for GLFW integer values for cursor types.
  * See: <a href="https://www.glfw.org/docs/3.3/group__shapes.html">GLFW: Standard cursor shapes</a>
  */
-public enum CursorType {
+public enum CursorType implements IntEnum {
 
 	DEFAULT(GLFW_ARROW_CURSOR),
 	HAND(GLFW_HAND_CURSOR),
@@ -33,14 +36,7 @@ public enum CursorType {
 	 * @return True if the value is a valid value
 	 */
 	public static boolean isValid(int value) {
-		boolean valid = false;
-		for (CursorType cursorType : values()) {
-			if (cursorType.value == value) {
-				valid = true;
-				break;
-			}
-		}
-		return valid;
+		return EnumUtils.hasIntValue(values(), value);
 	}
 	
 	/**
