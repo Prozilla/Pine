@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.state.input;
 
-import dev.prozilla.pine.common.util.ArrayUtils;
+import dev.prozilla.pine.common.IntEnum;
+import dev.prozilla.pine.common.util.EnumUtils;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -8,7 +9,7 @@ import static org.lwjgl.glfw.GLFW.*;
  * Mappings for GLFW integer values for mouse buttons.
  * See: <a href="https://www.glfw.org/docs/3.3/group__buttons.html">GLFW: Mouse buttons</a>
  */
-public enum MouseButton {
+public enum MouseButton implements IntEnum {
 	
 	LEFT(GLFW_MOUSE_BUTTON_1),
 	RIGHT(GLFW_MOUSE_BUTTON_2),
@@ -35,6 +36,6 @@ public enum MouseButton {
 	 * @return True if the value is a valid value
 	 */
 	public static boolean isValid(int value) {
-		return ArrayUtils.contains(values(), value);
+		return EnumUtils.hasIntValue(values(), value);
 	}
 }

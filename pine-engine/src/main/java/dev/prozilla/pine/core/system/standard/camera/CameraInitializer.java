@@ -29,9 +29,9 @@ public class CameraInitializer extends InitSystemBase {
 		});
 	}
 	
-	private void renderBackgroundColor(Color color) {
+	public static void renderBackgroundColor(Color color) {
 		Application.requireOpenGL();
-		
-		glClearColor(color.getRed(), color.getGreen(), color.getBlue(), 1.0f);
+		glClearColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
+	
 }

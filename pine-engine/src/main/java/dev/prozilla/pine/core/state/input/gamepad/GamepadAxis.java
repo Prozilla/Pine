@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.state.input.gamepad;
 
-import dev.prozilla.pine.common.util.ArrayUtils;
+import dev.prozilla.pine.common.IntEnum;
+import dev.prozilla.pine.common.util.EnumUtils;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -8,7 +9,7 @@ import static org.lwjgl.glfw.GLFW.*;
  * Mappings for GLFW integer values for gamepad axes.
  * See: <a href="https://www.glfw.org/docs/3.3/group__gamepad__axes.html">GLFW: Gamepad axes</a>
  */
-public enum GamepadAxis {
+public enum GamepadAxis implements IntEnum {
 	
 	LEFT_X(GLFW_GAMEPAD_AXIS_LEFT_X),
 	LEFT_Y(GLFW_GAMEPAD_AXIS_LEFT_Y),
@@ -33,6 +34,6 @@ public enum GamepadAxis {
 	 * @return True if the value is a valid value
 	 */
 	public static boolean isValid(int value) {
-		return ArrayUtils.contains(values(), value);
+		return EnumUtils.hasIntValue(values(), value);
 	}
 }

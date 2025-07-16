@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.state.input.gamepad;
 
-import dev.prozilla.pine.common.util.ArrayUtils;
+import dev.prozilla.pine.common.IntEnum;
+import dev.prozilla.pine.common.util.EnumUtils;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -8,7 +9,7 @@ import static org.lwjgl.glfw.GLFW.*;
  * Mappings for GLFW integer values for gamepad buttons.
  * See: <a href="https://www.glfw.org/docs/3.3/group__gamepad__buttons.html">GLFW: Gamepad buttons</a>
  */
-public enum GamepadButton {
+public enum GamepadButton implements IntEnum {
 	
 	A(GLFW_GAMEPAD_BUTTON_A),
 	B(GLFW_GAMEPAD_BUTTON_B),
@@ -46,6 +47,6 @@ public enum GamepadButton {
 	 * @return True if the value is a valid value
 	 */
 	public static boolean isValid(int value) {
-		return ArrayUtils.contains(values(), value);
+		return EnumUtils.hasIntValue(values(), value);
 	}
 }

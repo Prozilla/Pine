@@ -3,6 +3,9 @@ package dev.prozilla.pine.core;
 import dev.prozilla.pine.common.asset.image.Image;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
+import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.util.BooleanUtils;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.state.config.WindowConfig;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -26,12 +29,12 @@ public class Window implements Initializable, Destructible {
 	private GLFWWindowSizeCallback windowSizeCallback;
 	private boolean isInitialized;
 	
-	private final Application application;
 	private final WindowConfig config;
+	private final Logger logger;
 	
 	public Window(Application application) {
-		this.application = application;
 		config = application.getConfig().window;
+		logger = application.logger;
 		
 		isInitialized = false;
 	}
@@ -42,19 +45,13 @@ public class Window implements Initializable, Destructible {
 	@Override
 	public void init() throws RuntimeException {
 		// Set window hints
-		glfwDefaultWindowHints();
-		glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
+		setDefaultHints();
+		setVisible(true);
 		
 		long monitor = NULL;
 		
 		// Read config options
-		config.showDecorations.read((showDecorations) -> {
-			if (showDecorations) {
-				glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
-			} else {
-				glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
-			}
-		});
+		config.showDecorations.read(this::setDecorated);
 		config.title.read((title) -> {
 			if (isInitialized) {
 				glfwSetWindowTitle(id, title);
@@ -205,6 +202,62 @@ public class Window implements Initializable, Destructible {
 	public void setOpacity(float opacity) {
 		checkStatus();
 		glfwSetWindowOpacity(id, opacity);
+	}
+	
+	public void setDecorated(boolean decorated) {
+		setHint(WindowHint.DECORATED, decorated);
+	}
+	
+	public void setVisible(boolean visible) {
+		setHint(WindowHint.VISIBLE, visible);
+	}
+	
+	public void setEnableTransparentFramebuffer(boolean transparentFramebuffer) {
+		setHint(WindowHint.ENABLE_TRANSPARENT_FRAMEBUFFER, transparentFramebuffer);
+	}
+	
+	public void setResizable(boolean resizable) {
+		setHint(WindowHint.RESIZABLE, resizable);
+	}
+	
+	public void setFocused(boolean focused) {
+		setHint(WindowHint.FOCUSED, focused);
+	}
+	
+	public void setFloating(boolean floating) {
+		setHint(WindowHint.FLOATING, floating);
+	}
+	
+	public void setMaximized(boolean maximized) {
+		setHint(WindowHint.MAXIMIZED, maximized);
+	}
+	
+	public void setCenterCursor(boolean centerCursor) {
+		setHint(WindowHint.CENTER_CURSOR, centerCursor);
+	}
+	
+	public void setHint(WindowHint hint, boolean value) {
+		setHint(hint, BooleanUtils.toInt(value));
+	}
+	
+	public void setHint(WindowHint hint, int value) {
+		Checks.isNotNull(hint, "hint");
+		setHint(hint.getValue(), value);
+	}
+	
+	public void setHint(int hint, boolean value) {
+		setHint(hint, BooleanUtils.toInt(value));
+	}
+	
+	public void setHint(int hint, int value) {
+		if (!WindowHint.isValid(hint)) {
+			logger.log("Unknown window hint: " + hint);
+		}
+		glfwWindowHint(hint, value);
+	}
+	
+	public void setDefaultHints() {
+		glfwDefaultWindowHints();
 	}
 	
 	/**
