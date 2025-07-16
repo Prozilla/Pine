@@ -6,6 +6,27 @@ import dev.prozilla.pine.common.ContextOf;
 public interface EventDispatcherContext<EventType extends Enum<EventType>, Target, E extends Event<EventType, ? super Target>> {
 	
 	/**
+	 * Equivalent of {@link #addListener(Enum, EventListener)}.
+	 */
+	default void on(EventType eventType, EventListener<E> listener) {
+		addListener(eventType, listener);
+	}
+	
+	/**
+	 * Equivalent of {@link #removeListener(Enum, EventListener)}.
+	 */
+	default void off(EventType eventType, EventListener<E> listener) {
+		removeListener(eventType, listener);
+	}
+	
+	/**
+	 * Equivalent of {@link #addListener(Enum, EventListener, boolean)}, where the last argument is {@code true}.
+	 */
+	default void once(EventType eventType, EventListener<E> listener) {
+		addListener(eventType, listener, true);
+	}
+	
+	/**
 	 * Adds a listener that listens to a given type of event.
 	 *
 	 * <p>Unicity is not required. If a listener is added multiple times, it will be called multiple times per event.</p>

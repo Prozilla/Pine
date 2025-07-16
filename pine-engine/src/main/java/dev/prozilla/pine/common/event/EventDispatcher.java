@@ -85,7 +85,6 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 				break;
 			}
 		}
-		eventListeners.endIteration();
 		
 		if (!event.isPropagationStopped()) {
 			propagate(event);

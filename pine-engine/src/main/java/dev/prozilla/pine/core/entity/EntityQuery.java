@@ -56,7 +56,9 @@ public class EntityQuery implements Destructible {
 	 */
 	@Override
 	public void destroy() {
-		entityChunks.endIteration();
+		if (entityChunks.isIterating()) {
+			entityChunks.endIteration();
+		}
 		entityChunks.destroy();
 		entityChunkMap.clear();
 	}
