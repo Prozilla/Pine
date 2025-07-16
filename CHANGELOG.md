@@ -1,5 +1,25 @@
 # Changelog
 
+## v2.0.1
+
+### New Features
+
+- Added BooleanUtils utility class
+- Added EnumUtils utility class
+- Added ability to set window hints, making it possible to have a window with a transparent background
+
+### Changes
+
+- Improved ApplicationBuilder class and added config field
+- Improved equals and hashcode methods for various classes
+- Made more classes cloneable
+
+### Fixes
+
+- Fixed applications crashing when dev mode property is not set
+- Improved argument validation using checks
+- Fixed isValid methods of int enums
+
 ## v2.0.0
 
 ### New Features
