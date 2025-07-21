@@ -55,11 +55,4 @@ public class MutableProperty<T> extends VariableProperty<T> {
 		return value;
 	}
 	
-	/**
-	 * @return <code>true</code> if the value is not null.
-	 */
-	public boolean exists() {
-		return value != null;
-	}
-	
 }

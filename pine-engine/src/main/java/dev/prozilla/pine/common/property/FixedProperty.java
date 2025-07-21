@@ -12,7 +12,7 @@ public class FixedProperty<T> extends VariableProperty<T> {
 	}
 	
 	@Override
-	public T getValue() {
+	public final T getValue() {
 		return value;
 	}
 }
