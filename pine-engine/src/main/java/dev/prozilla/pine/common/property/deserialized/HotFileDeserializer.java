@@ -28,6 +28,10 @@ public class HotFileDeserializer<Data> extends FileDeserializer<Data> {
 		directoryWatcher.onFileChange(path, this::onFileChange);
 	}
 	
+	/**
+	 * Deserializes the file and updates the property of this value whenever the file changes.
+	 * @param event The file change event
+	 */
 	protected void onFileChange(Event<DirectoryWatcher.EventType, String> event) {
 		getLogger().log("File change detected: " + event.getTarget());
 		deserialize();

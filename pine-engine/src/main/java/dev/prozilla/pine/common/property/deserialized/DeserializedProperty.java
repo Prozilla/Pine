@@ -33,6 +33,15 @@ public class DeserializedProperty<T> extends ObservableProperty<T> {
 		source.addObserver((data) -> setValue(createValue(data, valueFactory, fallbackValue)));
 	}
 	
+	/**
+	 * Retrieves the value from a given source of data using a value factory.
+	 * @param data The data
+	 * @param valueFactory The value factory
+	 * @param fallbackValue An optional fallback value, for when the value factory returns {@code null}
+	 * @return The value retrieved from the data
+	 * @param <Data> The type of data
+	 * @param <V> The type of value
+	 */
 	protected static <Data, V> V createValue(Data data, ValueFactory<Data, V> valueFactory, V fallbackValue) {
 		if (data == null) {
 			return fallbackValue;

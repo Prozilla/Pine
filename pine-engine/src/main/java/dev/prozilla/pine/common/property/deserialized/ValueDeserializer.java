@@ -7,6 +7,9 @@ import dev.prozilla.pine.common.util.Parser;
 
 import java.io.IOException;
 
+/**
+ * A JSON deserializer that deserializes values by using a parser.
+ */
 public class ValueDeserializer<T> extends JsonDeserializer<T> {
 	
 	private final Class<T> type;
@@ -26,4 +29,5 @@ public class ValueDeserializer<T> extends JsonDeserializer<T> {
 	public Class<T> getType() {
 		return type;
 	}
+	
 }

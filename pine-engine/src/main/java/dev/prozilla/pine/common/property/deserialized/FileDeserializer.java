@@ -95,6 +95,10 @@ public class FileDeserializer<Data> extends ObservableProperty<Data> {
 		return new DeserializedProperty<>(this, valueFactory, fallbackValue);
 	}
 	
+	/**
+	 * Adds value deserializers to the object mapper using a {@link FileDeserializerModule}.
+	 * @param deserializers The deserializers to add
+	 */
 	public static void addDeserializers(ValueDeserializer<?>... deserializers) {
 		FileDeserializerModule module = new FileDeserializerModule();
 		for (ValueDeserializer<?> deserializer : deserializers) {
@@ -103,30 +107,44 @@ public class FileDeserializer<Data> extends ObservableProperty<Data> {
 		mapper.registerModule(module);
 	}
 	
-	public static <T> void addDeserializer(ValueDeserializer<T> deserializer) {
-		FileDeserializerModule module = new FileDeserializerModule();
-		module.addDeserializer(deserializer);
-		mapper.registerModule(module);
-	}
-	
+	/**
+	 * Resets the states of features of the object mapper to their default state.
+	 */
 	public static void resetFeatureStates() {
 		setFailOnNullForPrimitives(false);
 		setFailOnUnknowProperties(false);
 		setFailOnInvalidSubtype(false);
 	}
 	
+	/**
+	 * Sets the state of {@link DeserializationFeature#FAIL_ON_NULL_FOR_PRIMITIVES} for the object mapper.
+	 * @param state Whether to enable or disable the feature
+	 */
 	public static void setFailOnNullForPrimitives(boolean state) {
 		setFeatureState(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, state);
 	}
 	
+	/**
+	 * Sets the state of {@link DeserializationFeature#FAIL_ON_UNKNOWN_PROPERTIES} for the object mapper.
+	 * @param state Whether to enable or disable the feature
+	 */
 	public static void setFailOnUnknowProperties(boolean state) {
 		setFeatureState(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, state);
 	}
 	
+	/**
+	 * Sets the state of {@link DeserializationFeature#FAIL_ON_INVALID_SUBTYPE} for the object mapper.
+	 * @param state Whether to enable or disable the feature
+	 */
 	public static void setFailOnInvalidSubtype(boolean state) {
 		setFeatureState(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, state);
 	}
 	
+	/**
+	 * Enables or disables a deserialization feature of the object mapper.
+	 * @param feature The feature to enable or disable
+	 * @param state Whether to enable or disable the feature
+	 */
 	public static void setFeatureState(DeserializationFeature feature, boolean state) {
 		mapper.configure(feature, state);
 	}
