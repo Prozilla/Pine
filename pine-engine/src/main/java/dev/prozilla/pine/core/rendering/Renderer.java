@@ -15,7 +15,6 @@ import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.config.RenderConfig;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -25,6 +24,8 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
+import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
@@ -853,11 +854,11 @@ public class Renderer implements Initializable, Destructible {
 		
 		if (fbo == null) {
 			// Get width and height of frame buffer
-			long window = GLFW.glfwGetCurrentContext();
+			long window = glfwGetCurrentContext();
 			try (MemoryStack stack = MemoryStack.stackPush()) {
 				IntBuffer widthBuffer = stack.mallocInt(1);
 				IntBuffer heightBuffer = stack.mallocInt(1);
-				GLFW.glfwGetFramebufferSize(window, widthBuffer, heightBuffer);
+				glfwGetFramebufferSize(window, widthBuffer, heightBuffer);
 				width = widthBuffer.get();
 				height = heightBuffer.get();
 			}

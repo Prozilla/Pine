@@ -24,7 +24,9 @@ public class CameraInitializer extends InitSystemBase {
 		forEach(chunk -> {
 			CameraData cameraData = chunk.getComponent(CameraData.class);
 			
-			renderBackgroundColor(cameraData.backgroundColor);
+			if (application.getMode().usesOpenGL) {
+				renderBackgroundColor(cameraData.backgroundColor);
+			}
 			cameraData.setSize(width, height);
 		});
 	}

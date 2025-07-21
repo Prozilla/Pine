@@ -27,7 +27,7 @@ public class Window implements Initializable, Destructible {
 	public int height;
 	
 	private GLFWWindowSizeCallback windowSizeCallback;
-	private boolean isInitialized;
+	protected boolean isInitialized;
 	
 	private final WindowConfig config;
 	private final Logger logger;

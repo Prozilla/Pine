@@ -21,6 +21,7 @@ public class ApplicationBuilder {
 	private int windowHeight;
 	private Scene initialScene;
 	private int targetFps;
+	private ApplicationMode mode;
 	
 	// App setters parameters
 	private String[] icons;
@@ -38,6 +39,7 @@ public class ApplicationBuilder {
 		windowHeight = 600;
 		initialScene = null;
 		targetFps = Application.DEFAULT_TARGET_FPS;
+		mode = Application.DEFAULT_MODE;
 		
 		config = new Config();
 		config.removeOption(Config.FPS);
@@ -111,6 +113,11 @@ public class ApplicationBuilder {
 		return this;
 	}
 	
+	public ApplicationBuilder setMode(ApplicationMode mode) {
+		this.mode = mode;
+		return this;
+	}
+	
 	/**
 	 * Sets the icons of the application's window.
 	 * @param icons String paths of the icons relative to the resources directory.
@@ -174,7 +181,7 @@ public class ApplicationBuilder {
 	 * Creates a new application.
 	 */
 	public Application build() {
-		Application application = new Application(title, windowWidth, windowHeight, initialScene, targetFps);
+		Application application = new Application(title, windowWidth, windowHeight, initialScene, targetFps, mode);
 		
 		if (applicationManagerFactory != null) {
 			application.setApplicationManager(applicationManagerFactory.apply(application));

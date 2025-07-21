@@ -39,7 +39,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	/** True if OpenGL has been initialized */
 	public static boolean initializedOpenGL = false;
 	protected boolean shouldStop;
-	protected boolean isPreview;
+	protected final ApplicationMode mode;
 	private static final SystemProperty devModeProperty = new SystemProperty("dev-mode");
 	
 	// Scene
@@ -64,6 +64,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	
 	public static final String DEFAULT_TITLE = "Untitled";
 	public static final int DEFAULT_TARGET_FPS = 60;
+	public static final ApplicationMode DEFAULT_MODE = ApplicationMode.STANDALONE;
 	
 	/**
 	 * Creates an application titled {@value DEFAULT_TITLE}.
@@ -94,7 +95,6 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	public Application(String title, int width, int height, Scene scene) {
 		this(title, width, height, scene, DEFAULT_TARGET_FPS);
 	}
-	
 	/**
 	 * Creates an application.
 	 * @param title Title of the application
@@ -104,6 +104,19 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * @param targetFps Amount of frames per second to target
 	 */
 	public Application(String title, int width, int height, Scene scene, int targetFps) {
+		this(title, width, height, scene, targetFps, ApplicationMode.STANDALONE);
+	}
+	
+	
+	/**
+	 * Creates an application.
+	 * @param title Title of the application
+	 * @param width Width of the window
+	 * @param height height of the window
+	 * @param scene Starting scene
+	 * @param targetFps Amount of frames per second to target
+	 */
+	public Application(String title, int width, int height, Scene scene, int targetFps, ApplicationMode mode) {
 		logger = new AppLogger(this);
 		config = new Config(this);
 		stateMachine = new StateMachine<>(ApplicationState.INITIALIZING, this);
@@ -113,16 +126,16 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		config.window.width.setValue(width);
 		config.window.height.setValue(height);
 		
-		timer = new Timer();
+		timer = mode.createTimer();
 		tracker = new Tracker(this);
-		renderer = new Renderer(this);
-		audioDevice = new AudioDevice(this);
-		window = new Window(this);
-		input = new Input(this);
+		renderer = mode.createRenderer(this);
+		audioDevice = mode.createAudioDevice(this);
+		window = mode.createWindow(this);
+		input = mode.createInput(this);
 		modManager = new ModManager(this);
 		
 		shouldStop = false;
-		isPreview = false;
+		this.mode = mode;
 
 		// Prepare scene
 		if (scene == null) {
@@ -182,10 +195,14 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		logger.log("Created window (Initialization: 2/4)");
 		
 		// Initialize OpenGL
-		GL.createCapabilities();
-		glEnable(GL_DEBUG_OUTPUT);
-		initializedOpenGL = true;
-		logger.log("Initialized OpenGL (Initialization: 3/4)");
+		if (mode.usesOpenGL) {
+			GL.createCapabilities();
+			glEnable(GL_DEBUG_OUTPUT);
+			initializedOpenGL = true;
+			logger.log("Initialized OpenGL (Initialization: 3/4)");
+		} else {
+			logger.log("Skipping initialization of OpenGL (Initialization: 3/4)");
+		}
 		
 		// Initialize application
 		timer.init();
@@ -211,8 +228,6 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		if (config.logging.enableApplicationStateLogs.getValue()) {
 			logger.log("Initializing preview");
 		}
-		
-		isPreview = true;
 		
 		this.input = input;
 		
@@ -276,9 +291,11 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			}
 			
 			// Check for OpenGL errors
-			int error = glGetError();
-			if (error != GL_NO_ERROR) {
-				logger.error(String.format("OpenGL error: %s - %s", error, GLUtils.getErrorString(error)));
+			if (mode.usesOpenGL) {
+				int error = glGetError();
+				if (error != GL_NO_ERROR) {
+					logger.error(String.format("OpenGL error: %s - %s", error, GLUtils.getErrorString(error)));
+				}
 			}
 			
 			// Update the window and timer
@@ -351,6 +368,10 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 */
 	@Override
 	public void render(Renderer renderer) {
+		if (!mode.renders) {
+			return;
+		}
+		
 		window.refreshSize();
 		renderer.clear();
 		renderer.begin();
@@ -462,6 +483,8 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			logger.text( "OpenAL version: " + audioDevice.getALVersion());
 		}
 		logger.text("Dev mode: " + isDevMode());
+		logger.text("App state: " + getState());
+		logger.text("App mode: " + mode);
 	}
 	
 	/**
@@ -570,7 +593,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * Checks whether this application hasn't been stopped yet.
 	 */
 	public boolean isRunning() {
-		return !stateMachine.isState(ApplicationState.STOPPED);
+		return !stateMachine.isAnyState(ApplicationState.STOPPED);
 	}
 	
 	public boolean isLoading() {
@@ -622,7 +645,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * Loads the window icons.
 	 */
 	public void loadIcons() {
-		if (!config.window.icon.exists()) {
+		if (!config.window.icon.exists() || !mode.usesOpenGL) {
 			return;
 		}
 		
@@ -671,11 +694,15 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	}
 	
 	public boolean isPreview() {
-		return isPreview;
+		return mode == ApplicationMode.EMBEDDED;
 	}
 	
 	public boolean isStandalone() {
-		return !isPreview;
+		return mode == ApplicationMode.STANDALONE;
+	}
+	
+	public ApplicationMode getMode() {
+		return mode;
 	}
 	
 	@Override
