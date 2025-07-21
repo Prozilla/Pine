@@ -24,11 +24,11 @@ public class DeserializedProperty<T> extends ObservableProperty<T> {
 		
 	}
 	
-	public <Data> DeserializedProperty(Deserializer<Data> source, ValueFactory<Data, T> valueFactory) {
+	public <Data> DeserializedProperty(FileDeserializer<Data> source, ValueFactory<Data, T> valueFactory) {
 		this(source, valueFactory, null);
 	}
 	
-	public <Data> DeserializedProperty(Deserializer<Data> source, ValueFactory<Data, T> valueFactory, T fallbackValue) {
+	public <Data> DeserializedProperty(FileDeserializer<Data> source, ValueFactory<Data, T> valueFactory, T fallbackValue) {
 		super(createValue(source.getValue(), valueFactory, fallbackValue));
 		source.addObserver((data) -> setValue(createValue(data, valueFactory, fallbackValue)));
 	}

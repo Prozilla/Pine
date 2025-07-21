@@ -102,9 +102,13 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 	abstract public String toString();
 	
 	protected static <T> T[] parseToNumbers(String input, Function<String, T> parser, Class<T> type) throws InvalidStringException {
-		Checks.string(input, "input").startsWith("(").endsWith(")");
+		Checks.isNotNull(input, "input");
 		
-		String[] strings = input.substring(1, input.length() - 1).split(",");
+		if (input.startsWith("(") && input.endsWith(")")) {
+			input = input.substring(1, input.length() - 1);
+		}
+		
+		String[] strings = input.split(",");
 		
 		@SuppressWarnings("unchecked")
 		T[] numbers = (T[])Array.newInstance(type, strings.length);
@@ -112,6 +116,11 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 		for (int i = 0; i < strings.length; i++) {
 			numbers[i] = parser.apply(strings[i].trim());
 		}
+		
+		if (numbers.length == 0) {
+			throw new InvalidStringException("input must contain at least one number");
+		}
+		
 		return numbers;
 	}
 	

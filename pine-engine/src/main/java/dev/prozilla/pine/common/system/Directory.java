@@ -2,8 +2,8 @@ package dev.prozilla.pine.common.system;
 
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.lifecycle.Destructible;
-import dev.prozilla.pine.common.property.deserialized.Deserializer;
-import dev.prozilla.pine.common.property.deserialized.HotDeserializer;
+import dev.prozilla.pine.common.property.deserialized.FileDeserializer;
+import dev.prozilla.pine.common.property.deserialized.HotFileDeserializer;
 
 /**
  * Represents a directory from the file system.
@@ -27,7 +27,7 @@ public class Directory implements Destructible, Cloneable<Directory> {
 	 * @return The new file deserializer.
 	 * @param <Data> The type to deserialize the file to
 	 */
-	public <Data> Deserializer<Data> createFileDeserializer(String relativePath, Class<Data> dataType, boolean hot) {
+	public <Data> FileDeserializer<Data> createFileDeserializer(String relativePath, Class<Data> dataType, boolean hot) {
 		if (hot) {
 			return createHotFileDeserializer(relativePath, dataType);
 		} else {
@@ -42,8 +42,8 @@ public class Directory implements Destructible, Cloneable<Directory> {
 	 * @return The new file deserializer.
 	 * @param <Data> The type to deserialize the file to
 	 */
-	public <Data> Deserializer<Data> createFileDeserializer(String relativePath, Class<Data> dataType) {
-		return new Deserializer<>(resolvePath(relativePath), dataType);
+	public <Data> FileDeserializer<Data> createFileDeserializer(String relativePath, Class<Data> dataType) {
+		return new FileDeserializer<>(resolvePath(relativePath), dataType);
 	}
 	
 	/**
@@ -53,8 +53,8 @@ public class Directory implements Destructible, Cloneable<Directory> {
 	 * @return The new file deserializer with hot reloading.
 	 * @param <Data> The type to deserialize the file to
 	 */
-	public <Data> HotDeserializer<Data> createHotFileDeserializer(String relativePath, Class<Data> dataType) {
-		return new HotDeserializer<>(getWatcher(), resolvePath(relativePath), dataType);
+	public <Data> HotFileDeserializer<Data> createHotFileDeserializer(String relativePath, Class<Data> dataType) {
+		return new HotFileDeserializer<>(getWatcher(), resolvePath(relativePath), dataType);
 	}
 	
 	/**

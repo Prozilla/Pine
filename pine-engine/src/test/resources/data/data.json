@@ -1,0 +1,9 @@
+{
+	"string": "This is a string",
+	"integer": 10,
+	"array": ["one", "two", "three"],
+	"bool": true,
+	"vector2i": "(1, 2)",
+	"vector4f": "3, 2",
+	"color": "#FF0000"
+}

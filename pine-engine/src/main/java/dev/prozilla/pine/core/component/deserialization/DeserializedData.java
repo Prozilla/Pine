@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.component.deserialization;
 
-import dev.prozilla.pine.common.property.deserialized.Deserializer;
+import dev.prozilla.pine.common.property.deserialized.FileDeserializer;
 import dev.prozilla.pine.common.system.Directory;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.Component;
@@ -11,7 +11,7 @@ import dev.prozilla.pine.core.component.Component;
  */
 public class DeserializedData<Data> extends Component {
 	
-	protected Deserializer<Data> deserializer;
+	protected FileDeserializer<Data> deserializer;
 	
 	/**
 	 * Creates a file deserializer and reads data from it.
@@ -42,7 +42,7 @@ public class DeserializedData<Data> extends Component {
 	 * <p>This method can be used to initialize the component and create properties based on the data from the deserialized file.</p>
 	 * @param deserializer The file deserializer
 	 */
-	public void readData(Deserializer<Data> deserializer) {
+	public void readData(FileDeserializer<Data> deserializer) {
 		this.deserializer = deserializer;
 	}
 	

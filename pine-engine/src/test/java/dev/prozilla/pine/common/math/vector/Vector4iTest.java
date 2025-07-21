@@ -20,7 +20,10 @@ public class Vector4iTest {
 	
 	@Test
 	void testParse() {
-		TestUtils.testParse(mockVector4iString(), mockVector4i(), Vector4i::parse);
+		Vector4i.Parser parser = new Vector4i.Parser();
+		TestUtils.testParse(mockVector4iString(), mockVector4i(), parser);
+		TestUtils.testParse("(20, 30)", new Vector4i(20, 30, 20, 30), parser);
+		TestUtils.testParse("20, 30", new Vector4i(20, 30, 20, 30), parser);
 	}
 	
 	@Test

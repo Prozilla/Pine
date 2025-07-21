@@ -16,11 +16,11 @@ import java.nio.file.Paths;
 /**
  * Deserializes data from a JSON file and hot reloads it whenever changes are detected.
  */
-public class HotDeserializer<Data> extends Deserializer<Data> {
+public class HotFileDeserializer<Data> extends FileDeserializer<Data> {
 	
 	private final Path filePath;
 	
-	public HotDeserializer(DirectoryWatcher directoryWatcher, String path, Class<Data> dataType) {
+	public HotFileDeserializer(DirectoryWatcher directoryWatcher, String path, Class<Data> dataType) {
 		super(path, dataType);
 		filePath = getFilePath(path);
 		

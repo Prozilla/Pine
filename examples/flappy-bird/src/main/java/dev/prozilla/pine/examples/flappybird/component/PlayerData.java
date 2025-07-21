@@ -1,6 +1,6 @@
 package dev.prozilla.pine.examples.flappybird.component;
 
-import dev.prozilla.pine.common.property.deserialized.Deserializer;
+import dev.prozilla.pine.common.property.deserialized.FileDeserializer;
 import dev.prozilla.pine.common.property.observable.ObservableProperty;
 import dev.prozilla.pine.core.component.deserialization.DeserializedData;
 import dev.prozilla.pine.examples.flappybird.FlappyBird;
@@ -36,7 +36,7 @@ public class PlayerData extends DeserializedData<PlayerData.Data> {
 	}
 	
 	@Override
-	public void readData(Deserializer<Data> deserializer) {
+	public void readData(FileDeserializer<Data> deserializer) {
 		super.readData(deserializer);
 		
 		jumpVelocity = deserializer.createProperty((data) -> data.jumpVelocity, 0.65f);

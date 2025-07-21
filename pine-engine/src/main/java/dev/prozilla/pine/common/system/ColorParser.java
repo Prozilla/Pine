@@ -11,9 +11,9 @@ import java.util.function.Supplier;
 
 public class ColorParser extends Parser<Color> {
 	
-	private final Map<String, Supplier<Color>> colorNames;
+	private static final Map<String, Supplier<Color>> colorNames;
 	
-	public ColorParser() {
+	static {
 		colorNames = new HashMap<>();
 		colorNames.put("white", Color::white);
 		colorNames.put("black", Color::black);
