@@ -118,6 +118,13 @@ public class Vector4i extends VectorInt<Vector4i> {
 	}
 	
 	/**
+	 * Creates a new vector (1, 1, 1, 1)
+	 */
+	public static Vector4i one() {
+		return new Vector4i(1, 1, 1, 1);
+	}
+	
+	/**
 	 * Returns a temporary vector with given values.
 	 * Note that this temporary vector is a global instance, so avoid concurrent usage.
 	 */

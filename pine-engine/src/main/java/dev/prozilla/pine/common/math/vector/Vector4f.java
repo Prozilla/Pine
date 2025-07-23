@@ -141,6 +141,13 @@ public class Vector4f extends VectorFloat<Vector4f> {
 	}
 	
 	/**
+	 * Creates a new vector (1, 1, 1, 1)
+	 */
+	public static Vector4f one() {
+		return new Vector4f(1, 1, 1, 1);
+	}
+	
+	/**
 	 * Returns a temporary vector with given values.
 	 * Note that this temporary vector is a global instance, so avoid concurrent usage.
 	 */

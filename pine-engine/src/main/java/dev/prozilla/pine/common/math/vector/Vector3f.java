@@ -112,6 +112,13 @@ public class Vector3f extends VectorFloat<Vector3f> {
 	}
 	
 	/**
+	 * Creates a new vector (1, 1, 1)
+	 */
+	public static Vector3f one() {
+		return new Vector3f(1, 1, 1);
+	}
+	
+	/**
 	 * Returns a temporary vector with given values.
 	 * Note that this temporary vector is a global instance, so avoid concurrent usage.
 	 */
