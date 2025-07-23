@@ -15,6 +15,6 @@ public class NodeRootRenderer extends RenderSystemBase {
 	
 	@Override
 	public void render(Renderer renderer) {
-		renderer.resetScale();
+		renderer.resetTransform();
 	}
 }
