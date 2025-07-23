@@ -127,8 +127,7 @@ public class EntityQuery implements Destructible {
 			
 			entityChunkMap.put(entity.id, entityChunk);
 		} catch (Exception e) {
-			System.err.println("Failed to create entity chunk.");
-			e.printStackTrace();
+			Logger.system.error("Failed to create entity chunk", e);
 			return false;
 		}
 		

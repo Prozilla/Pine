@@ -183,7 +183,7 @@ public class ModManager implements Initializable, Destructible {
 	 */
 	@Override
 	public void destroy() {
-		Destructible.destroyAll(mods);
+		Destructible.destroyAndClear(mods);
 	}
 	
 	/**

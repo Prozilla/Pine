@@ -105,7 +105,14 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	}
 	
 	public void destroyChildren() {
-		Destructible.destroyAll(transform.children);
+		if (transform.children.isEmpty()) {
+			return;
+		}
+		
+		List<Transform> children = new ArrayList<>(transform.children);
+		for (Transform child : children) {
+			child.getEntity().destroy();
+		}
 	}
 	
 	public void destroyComponents() {

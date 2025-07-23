@@ -134,7 +134,7 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 	 */
 	@Override
 	public void destroy() {
-		Destructible.destroyAll(pool.values());
+		Destructible.destroyAndClear(pool.values());
 	}
 	
 	/**

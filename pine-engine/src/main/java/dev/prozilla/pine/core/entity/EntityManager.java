@@ -29,7 +29,7 @@ public class EntityManager extends ECSManager {
 	 */
 	@Override
 	public void destroy() {
-		Destructible.destroyAll(entities);
+		Destructible.destroyAndClear(entities);
 	}
 	
 	/**
