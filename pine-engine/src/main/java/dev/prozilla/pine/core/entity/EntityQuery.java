@@ -180,7 +180,7 @@ public class EntityQuery implements Destructible {
 	 * Checks if this entity query has matched any entities.
 	 */
 	public boolean hasEntityChunks() {
-		return !entityChunks.isEmpty();
+		return !entityChunks.isSnapshotEmpty();
 	}
 	
 	public void print() {

@@ -55,7 +55,7 @@ public class EntityQueryPool implements Destructible {
 	 */
 	@Override
 	public void destroy() {
-		Destructible.destroyAll(entityQueries.values());
+		Destructible.destroyAndClear(entityQueries.values());
 	}
 	
 	/**

@@ -11,6 +11,7 @@ import dev.prozilla.pine.core.entity.prefab.ui.TooltipPrefab;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A component for rendering user interfaces.
@@ -81,20 +82,27 @@ public class NodeRoot extends Component implements NodeContext {
 	}
 	
 	public void showTooltip(Node activator, String text) {
-		if (currentTooltipText != null && currentTooltipText.equals(text)) {
+		if (Objects.equals(currentTooltipText, text)) {
 			return;
 		}
 		
+		// Hide previous tooltip
 		if (tooltip != null) {
 			tooltip.destroy();
 		}
 		
+		// Show new tooltip
 		tooltip = tooltipCreator.createTooltip(text);
-		tooltip.setActive(activator.cursorHit);
-		entity.addChild(tooltip);
-		
-		currentTooltipText = text;
-		tooltipActivator = activator;
+		if (tooltip != null) {
+			tooltip.setActive(activator.cursorHit);
+			entity.addChild(tooltip);
+			
+			currentTooltipText = text;
+			tooltipActivator = activator;
+		} else {
+			currentTooltipText = null;
+			tooltipActivator = null;
+		}
 	}
 	
 	public void hideTooltip() {

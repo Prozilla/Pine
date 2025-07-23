@@ -18,7 +18,7 @@ public interface Destructible {
 	 * @param destructibles The objects to destroy
 	 * @param <D> The type of objects in the collection
 	 */
-	static <D extends Destructible> void destroyAll(Collection<D> destructibles) {
+	static <D extends Destructible> void destroyAndClear(Collection<D> destructibles) {
 		if (destructibles.isEmpty()) {
 			return;
 		}
@@ -31,5 +31,27 @@ public interface Destructible {
 			}
 		}
 	}
+	
+	/**
+	 * Destroys all objects in a collection.
+	 *
+	 * <p>Use this method if the destroy methods of the items depend on being able to remove themselves from the collection.
+	 * Which would cause a concurrent modification exception if done using a simple for-each loop.</p>
+	 * @param destructibles The objects to destroy
+	 * @param <D> The type of objects in the collection
+	 */
+	static <D extends Destructible> void destroyAll(Collection<D> destructibles) {
+		if (destructibles.isEmpty()) {
+			return;
+		}
+		
+		List<D> clone = new ArrayList<>(destructibles);
+		for (D destructible : clone) {
+			if (destructible != null) {
+				destructible.destroy();
+			}
+		}
+	}
+	
 	
 }

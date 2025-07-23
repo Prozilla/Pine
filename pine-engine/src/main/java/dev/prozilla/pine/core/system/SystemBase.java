@@ -94,7 +94,7 @@ public abstract class SystemBase {
 	 * If there are already entities in the world, this will register each entity in this system.
 	 */
 	public void initSystem(World world) {
-		Objects.requireNonNull(world, "world must not be null");
+		Checks.isNotNull(world, "world");
 		
 		this.world = world;
 		application = world.application;
