@@ -60,7 +60,7 @@ public class Renderer implements Initializable, Destructible {
 	private Font debugFont;
 	
 	// Transformation
-	private Vector2f renderScale;
+	private final Vector2f renderScale;
 	private boolean mirrorHorizontally;
 	private boolean mirrorVertically;
 	
@@ -68,7 +68,6 @@ public class Renderer implements Initializable, Destructible {
 	private final static int STRIDE_LENGTH = 11;
 	/** The amount of strides to fit into a single vertex buffer. */
 	private final static int VERTEX_BUFFER_SIZE = 32;
-	private final static Vector2f DEFAULT_RENDER_SCALE = Vector2f.one();
 	
 	// Config options
 	private Color fallbackColor;
@@ -88,6 +87,7 @@ public class Renderer implements Initializable, Destructible {
 		this.application = application;
 		tracker = application.getTracker();
 		logger = application.getLogger();
+		renderScale = Vector2f.one();
 	}
 	
 	@Override
@@ -255,6 +255,10 @@ public class Renderer implements Initializable, Destructible {
 		resetRegion();
 	}
 	
+	public void resetScale() {
+		setScale(1f);
+	}
+	
 	public void setScale(float scale) {
 		this.renderScale.set(scale);
 	}
@@ -262,10 +266,6 @@ public class Renderer implements Initializable, Destructible {
 	public void setScale(Vector2f scale) {
 		Checks.isNotNull(scale, "scale");
 		this.renderScale.set(scale.x, scale.y);
-	}
-	
-	public void resetScale() {
-		renderScale = DEFAULT_RENDER_SCALE;
 	}
 	
 	public void setMirrorHorizontally(boolean mirrorHorizontally) {

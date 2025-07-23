@@ -223,6 +223,10 @@ public class NodePrefab extends Prefab {
 		this.border = border;
 	}
 	
+	public void setBorderImage(String borderImagePath, Vector4f slice, boolean fill) {
+		setBorderImage(AssetPools.textures.load(borderImagePath), slice, fill);
+	}
+	
 	public void setBorderImage(TextureBase borderImage, Vector4f slice, boolean fill) {
 		this.borderImage = Objects.requireNonNull(borderImage);
 		borderImageSlice = Objects.requireNonNull(slice);
