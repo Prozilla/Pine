@@ -38,9 +38,10 @@ public class ColorTest {
 	
 	@Test
 	void testParse() {
-		TestUtils.testParse("rgba(0.25, 0.75, 0.5, 1)", new Color(0.25f, 0.75f, 0.5f), Color::parse);
-		TestUtils.testParse("#FFF", new Color(1f, 1f, 1f), Color::parse);
-		TestUtils.testParse("rebeccapurple", Color.rebeccaPurple(), Color::parse);
+		ColorParser colorParser = new ColorParser();
+		TestUtils.testParse("rgba(0.25, 0.75, 0.5, 1)", new Color(0.25f, 0.75f, 0.5f), colorParser);
+		TestUtils.testParse("#FFF", new Color(1f, 1f, 1f), colorParser);
+		TestUtils.testParse("rebeccapurple", Color.rebeccaPurple(), colorParser);
 	}
 	
 }

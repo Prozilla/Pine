@@ -97,11 +97,21 @@ public class ColorParser extends Parser<Color> {
 		String inner = input.substring(start, end + 1);
 		
 		if (includesAlpha) {
-			Vector4f vector4f = Vector4f.parse(inner);
-			return succeed(new Color(vector4f.x, vector4f.y, vector4f.z, vector4f.w));
+			Vector4f.Parser vector4fParser = new Vector4f.Parser();
+			if (vector4fParser.parse(inner)) {
+				Vector4f vector4f = vector4fParser.getResult();
+				return succeed(new Color(vector4f.x, vector4f.y, vector4f.z, vector4f.w));
+			} else {
+				return fail(vector4fParser.getError());
+			}
 		} else {
-			Vector3f vector3f = Vector3f.parse(inner);
-			return succeed(new Color(vector3f.x, vector3f.y, vector3f.z));
+			Vector3f.Parser vector3fParser = new Vector3f.Parser();
+			if (vector3fParser.parse(inner)) {
+				Vector3f vector3f = vector3fParser.getResult();
+				return succeed(new Color(vector3f.x, vector3f.y, vector3f.z));
+			} else {
+				return fail(vector3fParser.getError());
+			}
 		}
 	}
 	

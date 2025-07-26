@@ -1,10 +1,10 @@
 package dev.prozilla.pine.test;
 
 import dev.prozilla.pine.common.Cloneable;
-import dev.prozilla.pine.common.ParseFunction;
 import dev.prozilla.pine.common.util.Parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestUtils {
 	
@@ -20,38 +20,38 @@ public class TestUtils {
 		assertEquals(original, clone, String.format("clone of %s should be equal", className));
 	}
 	
-	public static <O> void testParse(String input, O expected, Parser<O> parser) {
-		O parsed = parser.read(input);
-		
-		String className = expected.getClass().getSimpleName();
-		assertEquals(expected, parsed, String.format("parse of string representation of %s should be equal", className));
-	}
-	
 	/**
 	 * Tests whether a string can be parsed to an object.
 	 * @param input Input string to parse
 	 * @param expected Expected output of parse function
-	 * @param parser Function to parse input string into an object
+	 * @param parser The parser to use
 	 * @param <O> Type of the object
 	 */
-	public static <O> void testParse(String input, O expected, ParseFunction<O> parser) {
-		O parsed = parser.parse(input);
+	public static <O> void testParse(String input, O expected, Parser<O> parser) {
+		if (!parser.parse(input)) {
+			fail(parser.getError());
+			return;
+		}
 		
 		String className = expected.getClass().getSimpleName();
-		assertEquals(expected, parsed, String.format("parse of string representation of %s should be equal", className));
+		assertEquals(expected, parser.getResult(), String.format("parsed result of string representation of %s should be equal", className));
 	}
 	
 	/**
 	 * Tests whether an object can be converted to a string and parsed back into an equal object.
 	 * @param original Original object to convert to a string and then parse
-	 * @param parser Function to parse string representation of object back into an object
+	 * @param parser The parser to use
 	 * @param <O> Type of the object
 	 */
-	public static <O> void testToString(O original, ParseFunction<O> parser) {
+	public static <O> void testToString(O original, Parser<O> parser) {
 	    String string = original.toString();
-		O parsed = parser.parse(string);
+		if (!parser.parse(string)) {
+			fail(parser.getError());
+			return;
+		}
 		
 		String className = original.getClass().getSimpleName();
-		assertEquals(original, parsed, String.format("parsed result of string conversion of %s should equal original", className));
+		assertEquals(original, parser.getResult(), String.format("parsed result of string conversion of %s should equal original", className));
 	}
+	
 }

@@ -23,7 +23,7 @@ public class DualDimensionTest {
 	
 	@Test
 	void testParse() {
-		TestUtils.testParse("20 30", new DualDimension(new Dimension(20), new Dimension(30)), DualDimension::parse);
+		TestUtils.testParse("20 30", new DualDimension(new Dimension(20), new Dimension(30)), new DualDimensionParser());
 	}
 	
 	@Test
@@ -33,6 +33,6 @@ public class DualDimensionTest {
 	
 	@Test
 	void testToString() {
-		TestUtils.testToString(new DualDimension(new Dimension(20), new Dimension(30)), DualDimension::parse);
+		TestUtils.testToString(new DualDimension(new Dimension(20), new Dimension(30)), new DualDimensionParser());
 	}
 }

@@ -78,37 +78,12 @@ public class AnimationCurve {
 		return stringJoiner.toString();
 	}
 	
+	/**
+	 * @deprecated Replaced by {@link AnimationCurveParser} as of 2.0.1
+	 */
+	@Deprecated
 	public static AnimationCurve parse(String input) {
-		String[] parts = input.split(" ");
-		
-		float duration;
-		try {
-			if (parts[0].endsWith("s")) {
-				duration = Float.parseFloat(parts[0].substring(0, parts[0].length() - 1));
-			} else {
-				return null;
-			}
-		} catch (NumberFormatException e) {
-			return null;
-		}
-		
-		if (parts.length == 1) {
-			return new AnimationCurve(duration);
-		}
-		
-		EasingFunction easingFunction = Easing.parse(parts[1]);
-		if (easingFunction == null) {
-			return null;
-		}
-		if (parts.length == 2) {
-			return new AnimationCurve(duration, easingFunction);
-		}
-		
-		AnimationDirection direction = AnimationDirection.parse(input);
-		if (direction == null) {
-			return null;
-		}
-		return new AnimationCurve(duration, easingFunction, direction);
+		return new AnimationCurveParser().read(input);
 	}
 	
 }

@@ -20,7 +20,7 @@ public class Vector2iTest {
 	
 	@Test
 	void testParse() {
-		TestUtils.testParse(mockVector2iString(), mockVector2i(), Vector2i::parse);
+		TestUtils.testParse(mockVector2iString(), mockVector2i(), new Vector2i.Parser());
 	}
 	
 	@Test
@@ -30,7 +30,7 @@ public class Vector2iTest {
 	
 	@Test
 	void testToString() {
-		TestUtils.testToString(mockVector2i(), Vector2i::parse);
+		TestUtils.testToString(mockVector2i(), new Vector2i.Parser());
 	}
 	
 	String mockVector2iString() {
