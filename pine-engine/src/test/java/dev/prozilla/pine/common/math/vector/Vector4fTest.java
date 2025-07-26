@@ -30,7 +30,7 @@ public class Vector4fTest {
 	
 	@Test
 	void testToString() {
-		TestUtils.testToString(mockVector4f(), Vector4f::parse);
+		TestUtils.testToString(mockVector4f(), new Vector4f.Parser());
 	}
 	
 	String mockVector4fString() {

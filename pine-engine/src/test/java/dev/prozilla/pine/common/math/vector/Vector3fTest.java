@@ -20,7 +20,7 @@ public class Vector3fTest {
 	
 	@Test
 	void testParse() {
-		TestUtils.testParse(mockVector3fString(), mockVector3f(), Vector3f::parse);
+		TestUtils.testParse(mockVector3fString(), mockVector3f(), new Vector3f.Parser());
 	}
 	
 	@Test
@@ -30,7 +30,7 @@ public class Vector3fTest {
 	
 	@Test
 	void testToString() {
-		TestUtils.testToString(mockVector3f(), Vector3f::parse);
+		TestUtils.testToString(mockVector3f(), new Vector3f.Parser());
 	}
 	
 	String mockVector3fString() {

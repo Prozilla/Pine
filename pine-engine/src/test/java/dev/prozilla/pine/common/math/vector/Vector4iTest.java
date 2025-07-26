@@ -30,7 +30,7 @@ public class Vector4iTest {
 	
 	@Test
 	void testToString() {
-		TestUtils.testToString(mockVector4i(), Vector4i::parse);
+		TestUtils.testToString(mockVector4i(), new Vector4i.Parser());
 	}
 	
 	String mockVector4iString() {
