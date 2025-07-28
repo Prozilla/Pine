@@ -27,7 +27,7 @@ public class TestUtils {
 	 * @param parser The parser to use
 	 * @param <O> Type of the object
 	 */
-	public static <O> void testParse(String input, O expected, Parser<O> parser) {
+	public static <O> void testParser(String input, O expected, Parser<O> parser) {
 		if (!parser.parse(input)) {
 			fail(parser.getError());
 			return;

@@ -55,4 +55,13 @@ public class Style<T> {
 		
 	}
 	
+	@Override
+	public boolean equals(Object object) {
+		return object == this || (object instanceof Style<?> otherStyle && equals(otherStyle));
+	}
+	
+	public boolean equals(Style<?> style) {
+		return style != null && rules.equals(style.rules) && transitionRules.equals(style.transitionRules) && Objects.equals(defaultValue, style.defaultValue);
+	}
+	
 }

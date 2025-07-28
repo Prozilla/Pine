@@ -19,8 +19,8 @@ public class Vector3fTest {
 	}
 	
 	@Test
-	void testParse() {
-		TestUtils.testParse(mockVector3fString(), mockVector3f(), new Vector3f.Parser());
+	void testParser() {
+		TestUtils.testParser(mockVector3fString(), mockVector3f(), new Vector3f.Parser());
 	}
 	
 	@Test

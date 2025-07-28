@@ -22,12 +22,12 @@ public class DimensionTest {
 	}
 	
 	@Test
-	void testParse() {
+	void testParser() {
 		DimensionParser dimensionParser = new DimensionParser();
-		TestUtils.testParse("50vw", new Dimension(50, Unit.VIEWPORT_WIDTH), dimensionParser);
-		TestUtils.testParse("clamp(10vh, 5px, 10px)", Dimension.clamp(new Dimension(10, Unit.VIEWPORT_HEIGHT), new Dimension(5), new Dimension(10)), dimensionParser);
-		TestUtils.testParse(".75px", new Dimension(0.75f), dimensionParser);
-		TestUtils.testParse("0.75px", new Dimension(0.75f), dimensionParser);
+		TestUtils.testParser("50vw", new Dimension(50, Unit.VIEWPORT_WIDTH), dimensionParser);
+		TestUtils.testParser("clamp(10vh, 5px, 10px)", Dimension.clamp(new Dimension(10, Unit.VIEWPORT_HEIGHT), new Dimension(5), new Dimension(10)), dimensionParser);
+		TestUtils.testParser(".75px", new Dimension(0.75f), dimensionParser);
+		TestUtils.testParser("0.75px", new Dimension(0.75f), dimensionParser);
 	}
 	
 	@Test
