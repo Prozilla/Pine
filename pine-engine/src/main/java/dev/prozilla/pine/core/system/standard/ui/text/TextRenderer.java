@@ -54,7 +54,6 @@ public class TextRenderer extends RenderSystem {
 			return;
 		}
 		
-		renderer.flush();
 		if (renderer.getConfig().snapText.getValue()) {
 			int roundedX = Math.round(x);
 			int roundedY = Math.round(y);
@@ -75,7 +74,6 @@ public class TextRenderer extends RenderSystem {
 			renderer.drawText(font, text, x, y, z, color);
 		}
 		
-		renderer.flush();
 		renderer.resetRegion();
 	}
 }
