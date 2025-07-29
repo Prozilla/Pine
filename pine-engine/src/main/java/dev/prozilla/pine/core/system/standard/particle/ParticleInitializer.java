@@ -5,7 +5,7 @@ import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
-public class ParticleInitializer extends InitSystem {
+public final class ParticleInitializer extends InitSystem {
 	
 	public ParticleInitializer() {
 		super(ParticleRenderer.class, SpriteRenderer.class);

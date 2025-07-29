@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 /**
  * Initializes cameras by displaying their background color and settings their size based on the window's dimensions.
  */
-public class CameraInitializer extends InitSystemBase {
+public final class CameraInitializer extends InitSystemBase {
 	
 	public CameraInitializer() {
 		super(CameraData.class);

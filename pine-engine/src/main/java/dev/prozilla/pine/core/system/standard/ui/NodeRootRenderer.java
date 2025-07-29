@@ -7,7 +7,7 @@ import dev.prozilla.pine.core.system.render.RenderSystemBase;
 /**
  * Prepares the rendering of nodes.
  */
-public class NodeRootRenderer extends RenderSystemBase {
+public final class NodeRootRenderer extends RenderSystemBase {
 	
 	public NodeRootRenderer() {
 		super(NodeRoot.class);

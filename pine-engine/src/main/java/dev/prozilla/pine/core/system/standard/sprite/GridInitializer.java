@@ -10,7 +10,7 @@ import dev.prozilla.pine.core.system.init.InitSystem;
 
 import java.util.List;
 
-public class GridInitializer extends InitSystem {
+public final class GridInitializer extends InitSystem {
 	
 	public GridInitializer() {
 		super(GridGroup.class);

@@ -5,7 +5,7 @@ import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
-public class MultiTileInitializer extends InitSystem {
+public final class MultiTileInitializer extends InitSystem {
 	
 	public MultiTileInitializer() {
 		super(TileRenderer.class, MultiTileRenderer.class);

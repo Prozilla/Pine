@@ -10,7 +10,7 @@ import dev.prozilla.pine.core.system.render.RenderSystemBase;
 /**
  * Renders sprites to the screen.
  */
-public class SpriteRenderSystem extends RenderSystemBase {
+public final class SpriteRenderSystem extends RenderSystemBase {
 	
 	public SpriteRenderSystem() {
 		super(SpriteRenderer.class);

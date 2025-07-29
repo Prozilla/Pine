@@ -12,7 +12,7 @@ import dev.prozilla.pine.core.system.update.UpdateSystem;
 /**
  * Arranges children of layout nodes based on their size and the alignment and distribution of the layout.
  */
-public class LayoutNodeArranger extends UpdateSystem {
+public final class LayoutNodeArranger extends UpdateSystem {
 	
 	public LayoutNodeArranger() {
 		super(LayoutNode.class, Node.class);

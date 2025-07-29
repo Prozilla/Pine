@@ -7,7 +7,7 @@ import dev.prozilla.pine.core.system.init.InitSystem;
 /**
  * Initializes text elements by calculating their initial size.
  */
-public class TextInitializer extends InitSystem {
+public final class TextInitializer extends InitSystem {
 	
 	public TextInitializer() {
 		super(TextNode.class);

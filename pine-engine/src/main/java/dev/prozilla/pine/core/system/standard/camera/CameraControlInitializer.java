@@ -11,7 +11,7 @@ import dev.prozilla.pine.core.system.init.InitSystemBase;
 /**
  * Initializes controllable cameras by settings their keybindings and initial positions and zoom.
  */
-public class CameraControlInitializer extends InitSystemBase {
+public final class CameraControlInitializer extends InitSystemBase {
 	
 	public CameraControlInitializer() {
 		super(CameraControlData.class, Transform.class, CameraData.class);

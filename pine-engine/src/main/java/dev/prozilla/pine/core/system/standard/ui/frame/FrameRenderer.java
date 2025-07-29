@@ -8,7 +8,7 @@ import dev.prozilla.pine.core.rendering.FrameBufferObject;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderSystem;
 
-public class FrameRenderer extends RenderSystem {
+public final class FrameRenderer extends RenderSystem {
 	
 	public FrameRenderer() {
 		super(Node.class, FrameNode.class);

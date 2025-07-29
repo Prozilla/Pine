@@ -6,7 +6,7 @@ import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 
-public class ParticleUpdater extends UpdateSystem {
+public final class ParticleUpdater extends UpdateSystem {
 	
 	public ParticleUpdater() {
 		super(ParticleRenderer.class, SpriteRenderer.class);

@@ -11,7 +11,7 @@ import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderSystem;
 import dev.prozilla.pine.core.system.standard.ui.image.ImageRenderer;
 
-public class BorderImageRenderer extends RenderSystem {
+public final class BorderImageRenderer extends RenderSystem {
 	
 	public BorderImageRenderer() {
 		super(Node.class, BorderImage.class);

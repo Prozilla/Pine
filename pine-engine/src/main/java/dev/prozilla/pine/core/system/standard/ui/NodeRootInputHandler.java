@@ -6,7 +6,7 @@ import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.system.input.InputSystem;
 
-public class NodeRootInputHandler extends InputSystem {
+public final class NodeRootInputHandler extends InputSystem {
 	
 	public NodeRootInputHandler() {
 		super(NodeRoot.class);

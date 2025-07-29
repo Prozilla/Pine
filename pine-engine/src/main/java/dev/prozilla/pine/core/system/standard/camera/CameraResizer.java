@@ -6,7 +6,7 @@ import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 /**
  * Resizes cameras based on the window's dimensions.
  */
-public class CameraResizer extends UpdateSystemBase {
+public final class CameraResizer extends UpdateSystemBase {
 	
 	public CameraResizer() {
 		super(CameraData.class);

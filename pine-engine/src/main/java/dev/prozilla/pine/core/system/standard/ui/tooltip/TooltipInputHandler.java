@@ -5,7 +5,7 @@ import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.TooltipNode;
 import dev.prozilla.pine.core.system.input.InputSystemBase;
 
-public class TooltipInputHandler extends InputSystemBase {
+public final class TooltipInputHandler extends InputSystemBase {
 	
 	public TooltipInputHandler() {
 		super(TooltipNode.class, Node.class);

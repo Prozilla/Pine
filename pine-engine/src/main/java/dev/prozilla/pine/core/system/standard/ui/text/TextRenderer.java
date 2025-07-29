@@ -12,7 +12,7 @@ import dev.prozilla.pine.core.system.render.RenderSystem;
 /**
  * Renders text elements to the screen.
  */
-public class TextRenderer extends RenderSystem {
+public final class TextRenderer extends RenderSystem {
 	
 	public TextRenderer() {
 		super(TextNode.class, Node.class);

@@ -8,7 +8,7 @@ import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.entity.EntityEventType;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
-public class NodeRootInitializer extends InitSystem {
+public final class NodeRootInitializer extends InitSystem {
 	
 	public NodeRootInitializer() {
 		super(NodeRoot.class);

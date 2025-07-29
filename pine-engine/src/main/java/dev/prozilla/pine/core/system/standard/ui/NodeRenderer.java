@@ -9,7 +9,7 @@ import dev.prozilla.pine.core.system.render.RenderSystem;
 /**
  * Renders nodes to the screen.
  */
-public class NodeRenderer extends RenderSystem {
+public final class NodeRenderer extends RenderSystem {
 	
 	public NodeRenderer() {
 		super(Node.class);

@@ -4,7 +4,7 @@ import dev.prozilla.pine.core.component.animation.AnimationData;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
-public class AnimationInitializer extends InitSystem {
+public final class AnimationInitializer extends InitSystem {
 	
 	public AnimationInitializer() {
 		super(AnimationData.class);

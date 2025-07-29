@@ -5,7 +5,7 @@ import dev.prozilla.pine.core.component.ui.style.NodeStyle;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 
-public class NodeStyler extends UpdateSystem {
+public final class NodeStyler extends UpdateSystem {
 	
 	public NodeStyler() {
 		super( Node.class, NodeStyle.class);

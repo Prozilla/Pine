@@ -14,7 +14,7 @@ import java.util.Comparator;
 /**
  * Handles clicks on nodes.
  */
-public class NodeInputHandler extends InputSystemBase {
+public final class NodeInputHandler extends InputSystemBase {
 	
 	public NodeInputHandler() {
 		super(Node.class);

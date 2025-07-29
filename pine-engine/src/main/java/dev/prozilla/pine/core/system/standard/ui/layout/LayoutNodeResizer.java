@@ -10,7 +10,7 @@ import dev.prozilla.pine.core.system.update.UpdateSystem;
 /**
  * Resizes layout nodes based on the sizes of their children.
  */
-public class LayoutNodeResizer extends UpdateSystem {
+public final class LayoutNodeResizer extends UpdateSystem {
 	
 	public LayoutNodeResizer() {
 		super(LayoutNode.class, Node.class);

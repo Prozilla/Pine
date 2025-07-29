@@ -5,7 +5,7 @@ import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 
-public class DynamicTextUpdater extends UpdateSystem {
+public final class DynamicTextUpdater extends UpdateSystem {
 	
 	public DynamicTextUpdater() {
 		super(TextNode.class, DynamicText.class);

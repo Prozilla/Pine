@@ -8,7 +8,7 @@ import dev.prozilla.pine.core.system.update.UpdateSystem;
 /**
  * Updates the position of tiles based on their coordinate.
  */
-public class TileMover extends UpdateSystem {
+public final class TileMover extends UpdateSystem {
 	
 	public TileMover() {
 		super( Transform.class, TileRenderer.class);

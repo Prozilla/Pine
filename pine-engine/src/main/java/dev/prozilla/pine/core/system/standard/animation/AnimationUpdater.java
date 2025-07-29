@@ -4,7 +4,7 @@ import dev.prozilla.pine.core.component.animation.AnimationData;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 
-public class AnimationUpdater extends UpdateSystem {
+public final class AnimationUpdater extends UpdateSystem {
 	
 	public AnimationUpdater() {
 		super(AnimationData.class);

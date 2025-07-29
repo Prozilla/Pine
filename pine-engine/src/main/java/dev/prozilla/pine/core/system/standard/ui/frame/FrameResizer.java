@@ -5,7 +5,7 @@ import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 
-public class FrameResizer extends UpdateSystem {
+public final class FrameResizer extends UpdateSystem {
 	
 	public FrameResizer() {
 		super(Node.class, FrameNode.class);

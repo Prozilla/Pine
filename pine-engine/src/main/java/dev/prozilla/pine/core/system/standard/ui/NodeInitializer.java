@@ -6,7 +6,7 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
-public class NodeInitializer extends InitSystem {
+public final class NodeInitializer extends InitSystem {
 	
 	public NodeInitializer() {
 		super(Node.class);

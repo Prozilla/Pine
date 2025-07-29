@@ -6,7 +6,7 @@ import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 /**
  * Resizes canvases based on the window's dimensions.
  */
-public class NodeRootResizer extends UpdateSystemBase {
+public final class NodeRootResizer extends UpdateSystemBase {
 	
 	public NodeRootResizer() {
 		super(NodeRoot.class);

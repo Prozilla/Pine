@@ -5,7 +5,7 @@ import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
-public class ImageInitializer extends InitSystem {
+public final class ImageInitializer extends InitSystem {
 	
 	public ImageInitializer() {
 		super(ImageNode.class, Node.class);

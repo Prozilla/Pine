@@ -7,7 +7,7 @@ import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.system.input.InputSystem;
 
-public class GridInputHandler extends InputSystem {
+public final class GridInputHandler extends InputSystem {
 	
 	public GridInputHandler() {
 		super(GridGroup.class);

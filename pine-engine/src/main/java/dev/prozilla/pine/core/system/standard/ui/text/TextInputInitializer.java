@@ -7,7 +7,7 @@ import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
-public class TextInputInitializer extends InitSystem {
+public final class TextInputInitializer extends InitSystem {
 	
 	public TextInputInitializer() {
 		super(TextInputNode.class, TextNode.class, Node.class);

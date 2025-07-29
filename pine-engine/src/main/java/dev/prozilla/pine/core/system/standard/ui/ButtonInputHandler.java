@@ -9,7 +9,7 @@ import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.MouseButton;
 import dev.prozilla.pine.core.system.input.InputSystem;
 
-public class ButtonInputHandler extends InputSystem {
+public final class ButtonInputHandler extends InputSystem {
 	
 	public ButtonInputHandler() {
 		super(ButtonNode.class, Node.class);

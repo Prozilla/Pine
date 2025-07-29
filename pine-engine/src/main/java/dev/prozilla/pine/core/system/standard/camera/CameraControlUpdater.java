@@ -10,7 +10,7 @@ import dev.prozilla.pine.core.system.update.UpdateSystem;
 /**
  * Updates controllable cameras based on their target positions and zoom and their velocity.
  */
-public class CameraControlUpdater extends UpdateSystem {
+public final class CameraControlUpdater extends UpdateSystem {
 	
 	public CameraControlUpdater() {
 		super(CameraControlData.class, CameraData.class, Transform.class);

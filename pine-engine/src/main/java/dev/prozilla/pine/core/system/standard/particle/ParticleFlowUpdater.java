@@ -5,7 +5,7 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 
-public class ParticleFlowUpdater extends UpdateSystem {
+public final class ParticleFlowUpdater extends UpdateSystem {
 	
 	public ParticleFlowUpdater() {
 		super(ParticleFlowEmitter.class);

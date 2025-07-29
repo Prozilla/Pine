@@ -9,7 +9,7 @@ import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderSystem;
 
-public class ImageRenderer extends RenderSystem {
+public final class ImageRenderer extends RenderSystem {
 	
 	public ImageRenderer() {
 		super(ImageNode.class, Node.class);

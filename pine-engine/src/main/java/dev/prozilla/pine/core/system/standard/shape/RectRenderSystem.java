@@ -7,7 +7,7 @@ import dev.prozilla.pine.core.component.shape.RectRenderer;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderSystemBase;
 
-public class RectRenderSystem extends RenderSystemBase {
+public final class RectRenderSystem extends RenderSystemBase {
 	
 	public RectRenderSystem() {
 		super(RectRenderer.class);

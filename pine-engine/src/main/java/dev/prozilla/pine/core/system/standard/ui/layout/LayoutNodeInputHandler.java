@@ -10,7 +10,7 @@ import dev.prozilla.pine.core.system.input.InputSystem;
 /**
  * Updates the <code>passThrough</code> properties of layout nodes based on their background color.
  */
-public class LayoutNodeInputHandler extends InputSystem {
+public final class LayoutNodeInputHandler extends InputSystem {
 	
 	public LayoutNodeInputHandler() {
 		super(LayoutNode.class, Node.class);

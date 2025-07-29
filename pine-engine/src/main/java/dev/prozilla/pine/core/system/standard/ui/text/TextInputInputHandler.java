@@ -9,7 +9,7 @@ import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.system.input.InputSystem;
 
-public class TextInputInputHandler extends InputSystem {
+public final class TextInputInputHandler extends InputSystem {
 	
 	public TextInputInputHandler() {
 		super(TextInputNode.class, TextNode.class, Node.class);

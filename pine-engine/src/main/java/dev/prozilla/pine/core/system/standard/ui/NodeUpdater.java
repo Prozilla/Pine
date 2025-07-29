@@ -9,7 +9,7 @@ import dev.prozilla.pine.core.system.update.UpdateSystem;
 /**
  * Positions nodes based on their offset and anchor point.
  */
-public class NodeUpdater extends UpdateSystem {
+public final class NodeUpdater extends UpdateSystem {
 	
 	public NodeUpdater() {
 		super( Node.class);

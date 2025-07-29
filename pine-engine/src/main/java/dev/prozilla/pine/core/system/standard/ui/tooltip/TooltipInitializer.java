@@ -7,7 +7,7 @@ import dev.prozilla.pine.core.component.ui.TooltipNode;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
-public class TooltipInitializer extends InitSystem {
+public final class TooltipInitializer extends InitSystem {
 	
 	public TooltipInitializer() {
 		super(TooltipNode.class, Node.class);

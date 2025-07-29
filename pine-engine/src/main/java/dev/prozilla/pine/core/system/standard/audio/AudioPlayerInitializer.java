@@ -4,7 +4,7 @@ import dev.prozilla.pine.core.component.audio.AudioPlayer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
-public class AudioPlayerInitializer extends InitSystem {
+public final class AudioPlayerInitializer extends InitSystem {
 	
 	public AudioPlayerInitializer() {
 		super(AudioPlayer.class);

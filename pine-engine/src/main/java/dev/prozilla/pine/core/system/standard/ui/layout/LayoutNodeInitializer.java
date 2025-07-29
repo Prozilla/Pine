@@ -8,7 +8,7 @@ import dev.prozilla.pine.core.system.init.InitSystem;
 /**
  * Initializes layout nodes by fetching their children.
  */
-public class LayoutNodeInitializer extends InitSystem {
+public final class LayoutNodeInitializer extends InitSystem {
 	
 	public LayoutNodeInitializer() {
 		super(LayoutNode.class);

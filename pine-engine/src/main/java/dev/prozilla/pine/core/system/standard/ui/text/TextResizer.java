@@ -6,7 +6,7 @@ import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 
-public class TextResizer extends UpdateSystem {
+public final class TextResizer extends UpdateSystem {
 	
 	public TextResizer() {
 		super(TextNode.class, Node.class);

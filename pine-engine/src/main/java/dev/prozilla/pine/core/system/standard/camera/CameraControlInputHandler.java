@@ -10,7 +10,7 @@ import dev.prozilla.pine.core.system.input.InputSystem;
 /**
  * Handles input for controllable cameras.
  */
-public class CameraControlInputHandler extends InputSystem {
+public final class CameraControlInputHandler extends InputSystem {
 	
 	public CameraControlInputHandler() {
 		super(CameraControlData.class, CameraData.class);
