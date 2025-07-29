@@ -64,6 +64,7 @@ public class Renderer implements Initializable, Destructible {
 	private final Vector2f renderScale;
 	private boolean mirrorHorizontally;
 	private boolean mirrorVertically;
+	private boolean isRenderRegionEnabled;
 	
 	// Constants
 	private final static int STRIDE_LENGTH = 11;
@@ -218,34 +219,36 @@ public class Renderer implements Initializable, Destructible {
 	 * Flushes the data to the GPU to let it get rendered.
 	 */
 	public void flush() {
-		if (numVertices > 0) {
-			vertices.flip();
-			
-			if (vao != null) {
-				vao.bind();
-			} else {
-				vbo.bind(GL_ARRAY_BUFFER);
-				specifyVertexAttributes();
-			}
-			program.use();
-			
-			// Bind the active texture
-			if (activeTexture != null) {
-				activeTexture.bind();
-			}
-			
-			// Upload the new vertex data
-			vbo.bind(GL_ARRAY_BUFFER);
-			vbo.uploadSubData(GL_ARRAY_BUFFER, 0, vertices);
-			
-			// Draw batch
-			glDrawArrays(GL_TRIANGLES, 0, numVertices);
-			
-			// Clear vertex data for next batch
-			vertices.clear();
-			renderedVertices += numVertices;
-			numVertices = 0;
+		if (numVertices <= 0) {
+			return;
 		}
+		
+		vertices.flip();
+		
+		if (vao != null) {
+			vao.bind();
+		} else {
+			vbo.bind(GL_ARRAY_BUFFER);
+			specifyVertexAttributes();
+		}
+		program.use();
+		
+		// Bind the active texture
+		if (activeTexture != null) {
+			activeTexture.bind();
+		}
+		
+		// Upload the new vertex data
+		vbo.bind(GL_ARRAY_BUFFER);
+		vbo.uploadSubData(GL_ARRAY_BUFFER, 0, vertices);
+		
+		// Draw batch
+		glDrawArrays(GL_TRIANGLES, 0, numVertices);
+		
+		// Clear vertex data for next batch
+		vertices.clear();
+		renderedVertices += numVertices;
+		numVertices = 0;
 	}
 	
 	//region --- Transformation state ---
@@ -293,12 +296,22 @@ public class Renderer implements Initializable, Destructible {
 	 * Limits the rendering to the given region.
 	 */
 	public void setRegion(int x, int y, int width, int height) {
-		glEnable(GL_SCISSOR_TEST);
+		flush();
+		if (!isRenderRegionEnabled) {
+			glEnable(GL_SCISSOR_TEST);
+		}
 		glScissor(x, y, width, height);
+		isRenderRegionEnabled = true;
 	}
 	
 	public void resetRegion() {
+		if (!isRenderRegionEnabled) {
+			return;
+		}
+		
+		flush();
 		glDisable(GL_SCISSOR_TEST);
+		isRenderRegionEnabled = false;
 	}
 	
 	//endregion Transformation state
