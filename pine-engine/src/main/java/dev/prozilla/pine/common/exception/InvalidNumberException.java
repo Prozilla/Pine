@@ -3,7 +3,7 @@ package dev.prozilla.pine.common.exception;
 /**
  * Thrown to indicate that a method has been passed an invalid number value.
  */
-public class InvalidNumberException extends IllegalArgumentException {
+public class InvalidNumberException extends PineException {
 	
 	/**
 	 * Creates an invalid number exception with no detail message.

@@ -3,7 +3,7 @@ package dev.prozilla.pine.common.exception;
 /**
  * Thrown to indicate that a method has been passed an invalid string.
  */
-public class InvalidStringException extends IllegalArgumentException {
+public class InvalidStringException extends InvalidObjectException {
 	
 	/**
 	 * Creates an invalid string exception with no detail message.
