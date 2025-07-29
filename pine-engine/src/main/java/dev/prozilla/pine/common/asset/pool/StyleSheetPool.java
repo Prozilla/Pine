@@ -16,8 +16,7 @@ public final class StyleSheetPool extends TextAssetPool<StyleSheet> {
 		
 		CSSParser parser = new CSSParser();
 		if (!parser.parse(content)) {
-			fail(content, "Error while parsing: " + parser.getError(), null);
-			styleSheet = new StyleSheet();
+			return fail(content, "Error while parsing: " + parser.getError(), null);
 		} else {
 			styleSheet = parser.getResult();
 		}

@@ -23,12 +23,11 @@ public abstract class TextAssetPool<T extends Asset> extends AssetPool<T> {
 	protected T createAsset(String path) {
 		StringBuilder stringBuilder = new StringBuilder();
 		
-		try (InputStream in = ResourceUtils.getResourceStream(path)) {
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-				String line;
-				while ((line = reader.readLine()) != null) {
-					stringBuilder.append(line).append("\n");
-				}
+		try (InputStream in = ResourceUtils.getResourceStream(path);
+	            BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				stringBuilder.append(line).append("\n");
 			}
 		} catch (IOException e) {
 			return fail(path, null, e);
