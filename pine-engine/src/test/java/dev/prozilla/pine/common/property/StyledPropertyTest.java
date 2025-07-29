@@ -30,6 +30,14 @@ public class StyledPropertyTest {
 	}
 	
 	@Test
+	void testSelectorParserFailure() {
+		SelectorParser selectorParser = new SelectorParser();
+		TestUtils.testParserFailure(":", "Invalid modifier", selectorParser);
+		TestUtils.testParserFailure(".", "Invalid class", selectorParser);
+		TestUtils.testParserFailure("#", "Invalid id", selectorParser);
+	}
+	
+	@Test
 	void testStyleSheetParser() {
 		StyleSheet expected = new StyleSheet();
 		expected.addRule(Selector.UNIVERSAL, StyledPropertyKey.COLOR, Color.decode("#fff"));

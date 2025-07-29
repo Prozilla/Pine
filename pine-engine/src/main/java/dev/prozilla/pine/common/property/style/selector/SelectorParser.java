@@ -1,70 +1,81 @@
 package dev.prozilla.pine.common.property.style.selector;
 
-import dev.prozilla.pine.common.util.Parser;
+import dev.prozilla.pine.common.util.SequentialParser;
 import dev.prozilla.pine.common.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectorParser extends Parser<Selector> {
+public class SelectorParser extends SequentialParser<Selector> {
 	
 	@Override
 	public boolean parse(String input) {
-		input = input.trim();
+		setInput(input.trim());
 		List<Selector> parts = new ArrayList<>();
 		
-		int i = 0;
-		while (i < input.length()) {
-			char c = input.charAt(i);
+		while (!endOfInput()) {
+			char c = getChar();
 			
 			if (c == '*') {
 				parts.add(Selector.UNIVERSAL);
-				i++;
+				moveCursor();
 			} else if (c == '.') {
-				int start = i + 1;
-				while (++i < input.length() && isValidNameChar(input.charAt(i))) {}
-				parts.add(new ClassSelector(input.substring(start, i)));
+				moveCursor();
+				String className = readWhile(SelectorParser::isValidNameChar);
+				if (className.isEmpty()) {
+					return fail("Invalid class selector");
+				}
+				parts.add(new ClassSelector(className));
 			} else if (c == '#') {
-				int start = i + 1;
-				while (++i < input.length() && isValidNameChar(input.charAt(i))) {}
-				parts.add(new IdSelector(input.substring(start, i)));
+				moveCursor(); // skip '#'
+				String id = readWhile(SelectorParser::isValidNameChar);
+				if (id.isEmpty()) {
+					return fail("Invalid id selector");
+				}
+				parts.add(new IdSelector(id));
 			} else if (c == ':') {
-				if (input.startsWith(":not(", i)) {
-					int start = i + 5;
-					int end = StringUtils.findClosingParenthesis(input, start - 1);
-					if (end == -1) throw new IllegalArgumentException("Unmatched :not()");
-					String inner = input.substring(start, end);
-					if (parse(inner)) {
+				if (getInput().startsWith(":not(", getCursor())) {
+					moveCursor(5);
+					int end = StringUtils.findClosingParenthesis(input, getCursor() - 1);
+					if (end == -1) {
+						return fail("Unmatched :not()");
+					}
+					String inner = input.substring(getCursor(), end);
+					if (parseRecursively(inner)) {
 						parts.add(new NotSelector(getResult()));
-						i = end + 1;
+						setCursor(end + 1);
 					} else {
-						return false;
+						fail(getError());
 					}
 				} else {
-					int start = i + 1;
-					while (++i < input.length() && isValidNameChar(input.charAt(i))) {}
-					parts.add(new ModifierSelector(input.substring(start, i)));
+					moveCursor(); // skip ':'
+					String modifier = readWhile(SelectorParser::isValidNameChar);
+					if (modifier.isEmpty()) {
+						return fail("Invalid modifier selector");
+					}
+					parts.add(new ModifierSelector(modifier));
 				}
 			} else if (isValidNameChar(c)) {
 				// Type selector
-				int start = i;
-				while (i < input.length() && isValidNameChar(input.charAt(i))) i++;
-				parts.add(new TypeSelector(input.substring(start, i)));
+				String typeName = readWhile(SelectorParser::isValidNameChar);
+				parts.add(new TypeSelector(typeName));
 			} else {
 				// Skip unknown or invalid characters
-				i++;
+				moveCursor();
 			}
 		}
 		
-		if (parts.size() == 1) {
+		if (parts.isEmpty()) {
+			return fail("Empty selector");
+		} else if (parts.size() == 1) {
 			return succeed(parts.getFirst());
 		} else {
 			return succeed(new SelectorCombo(parts.toArray(new Selector[0])));
 		}
 	}
 	
-	private static boolean isValidNameChar(char c) {
-		return Character.isLetterOrDigit(c) || c == '-' || c == '_';
+	private static boolean isValidNameChar(char character) {
+		return Character.isLetterOrDigit(character) || character == '-' || character == '_';
 	}
 	
 }

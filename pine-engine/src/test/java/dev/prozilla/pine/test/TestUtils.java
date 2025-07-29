@@ -3,8 +3,7 @@ package dev.prozilla.pine.test;
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.util.Parser;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestUtils {
 	
@@ -34,7 +33,19 @@ public class TestUtils {
 		}
 		
 		String className = expected.getClass().getSimpleName();
+		assertNull(parser.getError());
 		assertEquals(expected, parser.getResult(), String.format("parsed result of string representation of %s should be equal", className));
+	}
+	
+	public static <O> void testParserFailure(String input, String expectedError, Parser<O> parser) {
+		if (parser.parse(input)) {
+			fail("Parser should fail, but succeeded with result: " + parser.getResult());
+			return;
+		}
+		
+		String actualError = parser.getError();
+		assertNotNull(actualError);
+		assertTrue(actualError.toLowerCase().contains(expectedError.toLowerCase()));
 	}
 	
 	/**
