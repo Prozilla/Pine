@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.deserialized;
 
 import dev.prozilla.pine.common.event.Event;
+import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.common.system.DirectoryWatcher;
 import dev.prozilla.pine.common.system.PathUtils;
 import dev.prozilla.pine.common.system.ResourceUtils;
@@ -19,13 +20,16 @@ import java.nio.file.Paths;
 public class HotFileDeserializer<Data> extends FileDeserializer<Data> {
 	
 	private final Path filePath;
+	private final DirectoryWatcher directoryWatcher;
+	private final EventListener<Event<DirectoryWatcher.EventType, String>> listener;
 	
 	public HotFileDeserializer(DirectoryWatcher directoryWatcher, String path, Class<Data> dataType) {
 		super(path, dataType);
 		filePath = getFilePath(path);
+		this.directoryWatcher = directoryWatcher;
 		
 		deserialize();
-		directoryWatcher.onFileChange(path, this::onFileChange);
+		listener = directoryWatcher.onFileChange(path, this::onFileChange);
 	}
 	
 	/**
@@ -50,6 +54,13 @@ public class HotFileDeserializer<Data> extends FileDeserializer<Data> {
 		}
 		
 		return null;
+	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		
+		directoryWatcher.removeListener(DirectoryWatcher.EventType.MODIFIED, listener);
 	}
 	
 	private static Path getFilePath(String path) {

@@ -2,14 +2,16 @@ package dev.prozilla.pine.common.event;
 
 import dev.prozilla.pine.common.ContextOf;
 
+import java.util.Objects;
+
 @ContextOf(EventDispatcher.class)
 public interface EventDispatcherContext<EventType extends Enum<EventType>, Target, E extends Event<EventType, ? super Target>> {
 	
 	/**
 	 * Equivalent of {@link #addListener(Enum, EventListener)}.
 	 */
-	default void on(EventType eventType, EventListener<E> listener) {
-		addListener(eventType, listener);
+	default EventListener<E> on(EventType eventType, EventListener<E> listener) {
+		return addListener(eventType, listener);
 	}
 	
 	/**
@@ -22,8 +24,23 @@ public interface EventDispatcherContext<EventType extends Enum<EventType>, Targe
 	/**
 	 * Equivalent of {@link #addListener(Enum, EventListener, boolean)}, where the last argument is {@code true}.
 	 */
-	default void once(EventType eventType, EventListener<E> listener) {
-		addListener(eventType, listener, true);
+	default EventListener<E> once(EventType eventType, EventListener<E> listener) {
+		return addListener(eventType, listener, true);
+	}
+	
+	/**
+	 * Adds a listener that only listens to events of a given type with the given target.
+	 * @param eventType The type of event to listen to
+	 * @param target The target of the event
+	 * @param listener The listener that handles events with the given target
+	 * @return The targeted listener that was added.
+	 */
+	default EventListener<E> addTargetedListener(EventType eventType, Target target, EventListener<E> listener) {
+		return addListener(eventType, (event) -> {
+			if (Objects.equals(event.getTarget(), target)) {
+				listener.handle(event);
+			}
+		});
 	}
 	
 	/**
@@ -33,12 +50,13 @@ public interface EventDispatcherContext<EventType extends Enum<EventType>, Targe
 	 * @param eventType The type of event to listen to
 	 * @param listener The listener to add
 	 * @param once When set to {@code true}, the event listener will be removed after the first event of the given type
+	 * @return The listener that was added.
 	 */
-	default void addListener(EventType eventType, EventListener<E> listener, boolean once) {
+	default EventListener<E> addListener(EventType eventType, EventListener<E> listener, boolean once) {
 		if (once) {
-			addListener(eventType, new EphemeralEventListener<>(this, eventType, listener));
+			return addListener(eventType, new EphemeralEventListener<>(this, eventType, listener));
 		} else {
-			addListener(eventType, listener);
+			return addListener(eventType, listener);
 		}
 	}
 	
@@ -48,8 +66,9 @@ public interface EventDispatcherContext<EventType extends Enum<EventType>, Targe
 	 * <p>Unicity is not required. If a listener is added multiple times, it will be called multiple times per event.</p>
 	 * @param eventType The type of event to listen to
 	 * @param listener The listener to add
+	 * @return The listener that was added.
 	 */
-	void addListener(EventType eventType, EventListener<E> listener);
+	EventListener<E> addListener(EventType eventType, EventListener<E> listener);
 	
 	/**
 	 * Removes a listener that was listening to a given type of event.

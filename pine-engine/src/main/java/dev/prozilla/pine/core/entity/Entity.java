@@ -350,6 +350,10 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	
 	@Override
 	protected void invoke(Event<EntityEventType, Entity> event) {
+		if (!shouldInvoke()) {
+			return;
+		}
+		
 		super.invoke(event);
 		
 		switch (event.getType()) {
@@ -357,6 +361,11 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 			case CHILD_REMOVE -> invoke(EntityEventType.DESCENDANT_REMOVE, event.getTarget());
 			case CHILDREN_UPDATE -> invoke(EntityEventType.DESCENDANT_UPDATE, event.getTarget());
 		}
+	}
+	
+	@Override
+	protected boolean shouldPropagate() {
+		return transform.parent != null;
 	}
 	
 	@Override

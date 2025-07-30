@@ -1,6 +1,10 @@
 package dev.prozilla.pine.core.state.input;
 
+import dev.prozilla.pine.common.Callback;
 import dev.prozilla.pine.common.asset.image.Image;
+import dev.prozilla.pine.common.event.Event;
+import dev.prozilla.pine.common.event.EventListener;
+import dev.prozilla.pine.common.event.SimpleEventDispatcher;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
@@ -12,6 +16,7 @@ import dev.prozilla.pine.core.Window;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.state.input.gamepad.Gamepad;
+import dev.prozilla.pine.core.state.input.gamepad.GamepadEventType;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadInput;
 import org.lwjgl.glfw.*;
 
@@ -54,6 +59,7 @@ public class Input implements Initializable, Destructible {
 	private final Gamepad[] gamepads;
 	/** Used when no gamepad is connected. */
 	private final GamepadInput fallbackGamepad;
+	public final SimpleEventDispatcher<GamepadEventType, Integer> gamepadEvents;
 	
 	// Callbacks
 	private GLFWKeyCallback keyCallback;
@@ -119,6 +125,7 @@ public class Input implements Initializable, Destructible {
 				return false;
 			}
 		};
+		gamepadEvents = new SimpleEventDispatcher<>();
 	}
 	
 	/**
@@ -181,9 +188,11 @@ public class Input implements Initializable, Destructible {
 		glfwSetJoystickCallback((gamepadId, event) -> {
 			if (event == GLFW_CONNECTED) {
 				gamepads[gamepadId] = new Gamepad(gamepadId);
+				gamepadEvents.invoke(GamepadEventType.CONNECT, gamepadId);
 			} else if (event == GLFW_DISCONNECTED) {
 				gamepads[gamepadId].destroy();
 				gamepads[gamepadId] = null;
+				gamepadEvents.invoke(GamepadEventType.DISCONNECT, gamepadId);
 			}
 		});
 		
@@ -274,6 +283,7 @@ public class Input implements Initializable, Destructible {
 				gamepad.destroy();
 			}
 		}
+		gamepadEvents.destroy();
 		textListeners.clear();
 	}
 	
@@ -501,6 +511,19 @@ public class Input implements Initializable, Destructible {
 	public boolean isGamepadConnected(int id) {
 		checkGamepadId(id);
 		return gamepads[id] != null;
+	}
+	
+	public EventListener<Event<GamepadEventType, Integer>> onGamepadConnect(int id, Callback callback) {
+		return onGamepadEvent(id, callback, GamepadEventType.CONNECT);
+	}
+	
+	public EventListener<Event<GamepadEventType, Integer>> onGamepadDisconnect(int id, Callback callback) {
+		return onGamepadEvent(id, callback, GamepadEventType.DISCONNECT);
+	}
+	
+	private EventListener<Event<GamepadEventType, Integer>> onGamepadEvent(int id, Callback callback, GamepadEventType eventType) {
+		checkGamepadId(id);
+		return gamepadEvents.addTargetedListener(eventType, id, (event) -> callback.run());
 	}
 	
 	private void checkGamepadId(int id) {
