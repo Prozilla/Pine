@@ -92,9 +92,9 @@ public class DirectoryWatcher extends EventDispatcher<DirectoryWatcher.EventType
 	 * @param path Path to the file
 	 * @param listener File change listener
 	 */
-	public void onFileChange(String path, EventListener<Event<EventType, String>> listener) {
+	public EventListener<Event<EventType, String>> onFileChange(String path, EventListener<Event<EventType, String>> listener) {
 		String normalizedPath = PathUtils.removeLeadingSlash(path);
-		addListener(EventType.MODIFIED, (event) -> {
+		return addListener(EventType.MODIFIED, (event) -> {
 			if (event.getTarget().equals(normalizedPath)) {
 				listener.handle(event);
 			}
