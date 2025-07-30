@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.component.ui;
 
 import dev.prozilla.pine.common.math.dimension.Dimension;
+import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
@@ -43,13 +44,13 @@ public class NodeRoot extends Component implements NodeContext {
 			tooltipPrefab.setAnchor(GridAlignment.TOP_LEFT);
 			tooltipPrefab.setOffsetX(new Dimension(16));
 			tooltipPrefab.setActive(false);
-			Entity tooltip = tooltipPrefab.instantiate(getWorld());
 			
 			TextPrefab textPrefab = new TextPrefab(text);
 			textPrefab.setColor(Color.white());
-			tooltip.addChild(textPrefab);
-			
-			return tooltip;
+			textPrefab.setPadding(new DualDimension(8, 4));
+			tooltipPrefab.addChild(textPrefab);
+
+			return getWorld().addEntity(tooltipPrefab);
 		};
 		focusedNodeIndex = -1;
 		focusedNode = null;

@@ -6,7 +6,6 @@ import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextButtonPrefab;
@@ -36,28 +35,27 @@ public class MainScene extends Scene {
 		TextButtonPrefab textButton1Prefab = new TextButtonPrefab("This is a button");
 		textButton1Prefab.setPadding(new DualDimension(16, 8));
 		textButton1Prefab.setClickCallback((entity) -> logger.log("Button 1 clicked"));
+		textButton1Prefab.setTooltipText("Button 1");
 		
 		TextButtonPrefab textButton2Prefab = new TextButtonPrefab("This is also a button");
 		textButton2Prefab.setPadding(new DualDimension(16, 8));
 		textButton2Prefab.setClickCallback((entity) -> logger.log("Button 2 clicked"));
+		textButton2Prefab.setTooltipText("Button 2");
 		
 		TextButtonPrefab textButton3Prefab = new TextButtonPrefab("This is another a button");
 		textButton3Prefab.setPadding(new DualDimension(16, 8));
 		textButton3Prefab.setClickCallback((entity) -> logger.log("Button 3 clicked"));
-		
+		textButton3Prefab.setTooltipText("Button 3");
 		
 		TextPrefab textPrefab = new TextPrefab("This is a text element");
 		textPrefab.setColor(Color.black());
 		
-		// Instantiate prefabs
-		Entity nodeRoot = nodeRootPrefab.instantiate(world);
-		Entity menu = nodeRoot.addChild(menuPrefab);
-		menu.addChild(titleTextPrefab);
-		menu.addChild(textPrefab);
-		menu.addChild(textButton1Prefab);
-		menu.addChild(textButton2Prefab);
-		menu.addChild(textButton3Prefab);
+		menuPrefab.addChildren(titleTextPrefab, textPrefab,
+			textButton1Prefab, textButton2Prefab, textButton3Prefab);
 		
-		world.addEntity(nodeRoot);
+		nodeRootPrefab.addChild(menuPrefab);
+		
+		// Instantiate prefabs
+		world.addEntity(nodeRootPrefab);
 	}
 }

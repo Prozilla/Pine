@@ -20,4 +20,5 @@ public class NodeRootPrefab extends Prefab {
 	protected void apply(Entity entity) {
 		entity.addComponent(new NodeRoot());
 	}
+	
 }
