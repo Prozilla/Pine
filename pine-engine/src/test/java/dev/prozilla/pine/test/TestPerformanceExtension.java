@@ -54,6 +54,10 @@ public class TestPerformanceExtension extends TestLoggingExtension implements Af
 			System.out.println(Ansi.white("├── ") + ("Average execution time: " + avgExecutionTime + " ms"));
 			System.out.println(Ansi.white("└── ") + ("Average memory used: " + avgMemoryUsage + " KB"));
 		}
+		
+		totalExecutionTime.set(0);
+		totalMemoryUsage.set(0);
+		testCount.set(0);
 	}
 	
 	@Override
