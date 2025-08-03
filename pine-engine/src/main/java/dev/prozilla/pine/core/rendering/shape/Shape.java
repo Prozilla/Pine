@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.rendering.shape;
 import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.rendering.shape.modifier.ShapeModifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ public abstract class Shape implements Renderable {
 	
 	private float[] vertices;
 	private float[] uvArray;
-	protected boolean isDirty;
+	public boolean isDirty;
 	
 	private final List<ShapeModifier> modifiers = new ArrayList<>();
 	
@@ -76,10 +77,14 @@ public abstract class Shape implements Renderable {
 	
 	public void addModifier(ShapeModifier modifier) {
 		modifiers.add(modifier);
+		modifier.addTarget(this);
+		isDirty = true;
 	}
 	
 	public void removeModifier(ShapeModifier modifier) {
 		modifiers.remove(modifier);
+		modifier.removeTarget(this);
+		isDirty = true;
 	}
 	
 }
