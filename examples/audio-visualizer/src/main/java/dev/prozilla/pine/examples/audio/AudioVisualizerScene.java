@@ -55,6 +55,7 @@ public class AudioVisualizerScene extends Scene {
 		});
 		
 		world.addSystem(new BarResizer(this));
+		world.addSystem(new CircleRenderer());
 		
 		barPrefab = new BarPrefab();
 		bars = new ArrayList<>();

@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
@@ -673,7 +674,7 @@ public class Renderer implements Initializable, Destructible {
 			flush();
 		}
 		
-		// Get color components from the Color object
+		// Get color components
 		float r = c.getRed();
 		float g = c.getGreen();
 		float b = c.getBlue();
@@ -736,6 +737,111 @@ public class Renderer implements Initializable, Destructible {
 		replaceActiveTexture(texture);
 	}
 	
+	public void drawTriangles(TextureBase texture, float[] vertices, float z, float[] uvArray, Color c) {
+		if (vertices.length != uvArray.length) {
+			throw new IllegalArgumentException("Length of vertex array must match length of UV array");
+		}
+		
+		int triangleCount = vertices.length / 6;
+		
+		if (triangleCount == 0) {
+			return;
+		}
+		
+		for (int i = 0; i < triangleCount; i++) {
+			float x1 = vertices[i * 6];
+			float y1 = vertices[i * 6 + 1];
+			float x2 = vertices[i * 6 + 2];
+			float y2 = vertices[i * 6 + 3];
+			float x3 = vertices[i * 6 + 4];
+			float y3 = vertices[i * 6 + 5];
+			
+			float u1 = uvArray[i * 6];
+			float v1 = uvArray[i * 6 + 1];
+			float u2 = uvArray[i * 6 + 2];
+			float v2 = uvArray[i * 6 + 3];
+			float u3 = uvArray[i * 6 + 4];
+			float v3 = uvArray[i * 6 + 5];
+			
+			drawTriangle(texture, x1, y1, x2, y2, x3, y3, z, u1, v1, u2, v2, u3, v3, c);
+		}
+	}
+	
+	public void drawTriangle(TextureBase texture, float x1, float y1, float x2, float y2, float x3, float y3, float z,
+	                              float u1, float v1, float u2, float v2, float u3, float v3, Color c) {
+		totalVertices += 3;
+		
+		// Discard draw call if object is outside the viewport bounds
+		if (outOfBounds(x1, y1, x2, y2, x3, y3)) {
+			return;
+		}
+		
+		// Check if previous batch should be finished first
+		if (vertices.remaining() < STRIDE_LENGTH * 3 || (texture != null && activeTexture != null && !texture.hasEqualLocation(activeTexture))) {
+			flush();
+		}
+		
+		// Get color components
+		float r = c.getRed();
+		float g = c.getGreen();
+		float b = c.getBlue();
+		float a = c.getAlpha();
+		
+		// Get texture ID and type
+		int texId = -1;
+		float texType = 0f;
+		if (texture != null) {
+			texId = texture.getId();
+			texType = texture.isInArray() ? 1f : 0f;
+		}
+		
+		// Handle depth render mode
+		if (renderMode == RenderMode.DEPTH) {
+			float depth = z * z;
+			r = depth;
+			g = depth;
+			b = depth;
+			a = 1f;
+			texId = -1;
+		}
+		
+		// Avoid subpixel issues by snapping to nearest pixel
+		if (snapPixels) {
+			x1 = Math.round(x1);
+			x2 = Math.round(x2);
+			x3 = Math.round(x3);
+			
+			y1 = Math.round(y1);
+			y2 = Math.round(y2);
+			y3 = Math.round(y3);
+		}
+		
+		// Transform texture coordinates
+		if (mirrorHorizontally) {
+			float tmp1 = u1;
+			float tmp2 = u2;
+			u1 = u3;
+			u2 = tmp2;
+			u3 = tmp1;
+		}
+		if (mirrorVertically) {
+			float tmp1 = v1;
+			float tmp2 = v2;
+			v1 = v3;
+			v2 = tmp2;
+			v3 = tmp1;
+		}
+		
+		// Push the vertices to the buffer
+		vertices.put(x1).put(y1).put(z).put(r).put(g).put(b).put(a).put(u1).put(v1).put(texId).put(texType);
+		vertices.put(x2).put(y2).put(z).put(r).put(g).put(b).put(a).put(u2).put(v2).put(texId).put(texType);
+		vertices.put(x3).put(y3).put(z).put(r).put(g).put(b).put(a).put(u3).put(v3).put(texId).put(texType);
+		
+		numVertices += 3;
+		
+		replaceActiveTexture(texture);
+	}
+	
 	private void replaceActiveTexture(TextureBase newTexture) {
 		if (newTexture != null && (activeTexture == null || !activeTexture.hasEqualLocation(newTexture))) {
 			if (activeTexture != null) {
@@ -751,19 +857,27 @@ public class Renderer implements Initializable, Destructible {
 	 * Checks if a quad is outside the screen bounds.
 	 */
 	public boolean outOfBounds(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
-		// TO DO: calculate intersection of quad with screen
-		return x1 < 0 && x2 < 0 && x3 < 0 && x4 < 0 || // Left
-		        x1 >= viewWidth && x2 >= viewWidth && x3 >= viewWidth && x4 >= viewWidth || // Right
-		        y1 < 0 && y2 < 0 && y3 < 0 && y4 < 0 || // Above
-		        y1 >= viewHeight && y2 >= viewHeight && y3 >= viewHeight && y4 >= viewHeight; // Below
+		return MathUtils.max(x1, x2, x3, x4) < 0
+			|| MathUtils.min(x1, x2, x3, x4) >= viewWidth
+			|| MathUtils.max(y1, y2, y3, y4) < 0
+	        || MathUtils.min(y1, y2, y3, y4) >= viewHeight;
+	}
+	
+	public boolean outOfBounds(float x1, float y1, float x2, float y2, float x3, float y3) {
+		return MathUtils.max(x1, x2, x3) < 0
+			|| MathUtils.min(x1, x2, x3) >= viewWidth
+			|| MathUtils.max(y1, y2, y3) < 0
+			|| MathUtils.min(y1, y2, y3) >= viewHeight;
 	}
 	
 	/**
 	 * Checks if a line is outside the screen bounds.
 	 */
 	public boolean outOfBounds(float x1, float y1, float x2, float y2) {
-		// TO DO: calculate intersection of line with screen
-		return outOfBounds(x1, y1) && outOfBounds(x2, y2);
+		return Math.max(x1, x2) < 0
+			|| Math.min(x1, x2) >= viewWidth
+			|| Math.max(y1, y2) < 0
+			|| Math.min(y1, y2) >= viewHeight;
 	}
 	
 	/**
@@ -773,7 +887,10 @@ public class Renderer implements Initializable, Destructible {
 	 * @return True if the coordinate is outside of bounds
 	 */
 	public boolean outOfBounds(float x, float y) {
-		return x < 0f || x >= viewWidth || y < 0f || y >= viewHeight;
+		return x < 0
+			|| x >= viewWidth
+			|| y < 0
+			|| y >= viewHeight;
 	}
 	
 	/**
@@ -921,6 +1038,17 @@ public class Renderer implements Initializable, Destructible {
 	
 	public RenderConfig getConfig() {
 		return application.getConfig().rendering;
+	}
+	
+	public Color getFallbackColor() {
+		return fallbackColor;
+	}
+	
+	/**
+	 * Generates a new {@link Vector2f} that represents the center of the viewport.
+	 */
+	public Vector2f getViewportCenter() {
+		return new Vector2f(viewWidth / 2f, viewHeight / 2f);
 	}
 	
 }
