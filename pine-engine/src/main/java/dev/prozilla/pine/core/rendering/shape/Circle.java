@@ -1,12 +1,13 @@
 package dev.prozilla.pine.core.rendering.shape;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.util.checks.Checks;
 
 public class Circle extends Shape {
 	
-	private Vector2f position;
-	private float radius;
-	private int edges;
+	protected Vector2f position;
+	protected float radius;
+	protected int edges;
 	
 	public Circle(Vector2f position, float radius) {
 		this(position, radius, 0);
@@ -14,7 +15,7 @@ public class Circle extends Shape {
 	}
 	
 	public Circle(Vector2f position, float radius, int edges) {
-		this.position = position;
+		this.position = Checks.isNotNull(position, "position");
 		this.radius = radius;
 		this.edges = edges;
 	}
@@ -86,14 +87,58 @@ public class Circle extends Shape {
 		return uvArray;
 	}
 	
+	public float getX() {
+		return position.x;
+	}
+	
+	public float getY() {
+		return position.y;
+	}
+	
+	public void setX(float x) {
+		if (x == position.x) {
+			return;
+		}
+		
+		position.x = x;
+		isDirty = true;
+	}
+	
+	public void setY(float y) {
+		if (y == position.y) {
+			return;
+		}
+		
+		position.y = y;
+		isDirty = true;
+	}
+	
 	public void setPosition(Vector2f position) {
+		Checks.isNotNull(position, "position");
+		
+		if (position.equals(this.position)) {
+			return;
+		}
+		
 		this.position = position;
 		isDirty = true;
 	}
 	
+	public float getRadius() {
+		return radius;
+	}
+	
 	public void setRadius(float radius) {
+		if (radius == this.radius) {
+			return;
+		}
+
 		this.radius = radius;
 		isDirty = true;
+	}
+	
+	public int getEdges() {
+		return edges;
 	}
 	
 	public void setAutoEdges() {
@@ -101,6 +146,10 @@ public class Circle extends Shape {
 	}
 	
 	public void setEdges(int edges) {
+		if (edges == this.edges) {
+			return;
+		}
+		
 		this.edges = edges;
 		isDirty = true;
 	}
