@@ -18,7 +18,7 @@ public class GameScene extends Scene {
 		"O..  O     OOO",
 		"O..  O x  x  O",
 		"O..  OxOOOO  O",
-		"O..    s OO  O",
+		"O..    ssOO  O",
 		"O..  O O  x OO",
 		"OOOOOO OOx x O",
 		"  O x  x x x O",

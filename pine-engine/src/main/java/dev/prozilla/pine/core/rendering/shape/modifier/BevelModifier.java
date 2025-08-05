@@ -69,9 +69,9 @@ public class BevelModifier extends ShapeModifier {
 	
 	private Vector2f computeCentroid(List<Vector2f> points) {
 		Vector2f centroid = new Vector2f();
-		for (Vector2f p : points) {
-			centroid.x += p.x;
-			centroid.y += p.y;
+		for (Vector2f point : points) {
+			centroid.x += point.x;
+			centroid.y += point.y;
 		}
 		return centroid.divide(points.size());
 	}
@@ -193,6 +193,10 @@ public class BevelModifier extends ShapeModifier {
 	}
 	
 	public void setBevelAmount(float bevelAmount) {
+		if (bevelAmount == this.bevelAmount) {
+			return;
+		}
+		
 		this.bevelAmount = bevelAmount;
 		markAsDirty();
 	}
@@ -202,6 +206,10 @@ public class BevelModifier extends ShapeModifier {
 	}
 	
 	public void setSegments(int segments) {
+		if (segments == this.segments) {
+			return;
+		}
+		
 		this.segments = segments;
 		markAsDirty();
 	}
