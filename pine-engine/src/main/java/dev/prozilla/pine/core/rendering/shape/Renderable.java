@@ -4,6 +4,9 @@ import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.Renderer;
 
+/**
+ * Represents an object that can be drawn on the screen with a given texture, color and depth.
+ */
 public interface Renderable {
 	
 	/**

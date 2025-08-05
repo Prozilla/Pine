@@ -9,7 +9,7 @@ public class BarPrefab extends RectPrefab {
 	
 	protected int index;
 	
-	protected BarPrefab() {
+	public BarPrefab() {
 		super(new Rect(), Color.white());
 		index = 0;
 	}

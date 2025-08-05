@@ -54,7 +54,7 @@ public class ShapePrefab<S extends Shape> extends Prefab {
 		this.color = color;
 	}
 	
-	protected ShapeRenderer<S> createRenderer(S shape, TextureBase texture) {
+	protected final ShapeRenderer<S> createRenderer(S shape, TextureBase texture) {
 		return createRenderer(shape, texture, null);
 	}
 	

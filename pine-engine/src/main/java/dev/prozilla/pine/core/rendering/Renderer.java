@@ -737,6 +737,19 @@ public class Renderer implements Initializable, Destructible {
 		replaceActiveTexture(texture);
 	}
 	
+	/**
+	 * Draws multiple textured triangles using the given vertex and UV arrays.
+	 *
+	 * <p>
+	 * Each triangle is defined by 3 vertices (6 floats: x1, y1, x2, y2, x3, y3) and corresponding
+	 * texture coordinates (u1, v1, u2, v2, u3, v3) from the UV array. The number of triangles drawn
+	 * is determined by dividing the length of the vertex array by 6.
+	 * </p>
+	 * @param vertices A flat float array containing x and y coordinates for each triangle vertex
+	 * @param z The depth value used when rendering each triangle
+	 * @param uvArray A flat float array containing the corresponding u and v texture coordinates. Must be the same length as {@code vertices}.
+	 * @throws IllegalArgumentException if the length of {@code vertices} does not match {@code uvArray}
+	 */
 	public void drawTriangles(TextureBase texture, float[] vertices, float z, float[] uvArray, Color c) {
 		if (vertices.length != uvArray.length) {
 			throw new IllegalArgumentException("Length of vertex array must match length of UV array");
@@ -767,6 +780,28 @@ public class Renderer implements Initializable, Destructible {
 		}
 	}
 	
+	/**
+	 * Draws a single textured triangle with the given vertex coordinates, texture coordinates,
+	 * depth value, and color.
+	 *
+	 * <p>
+	 * The triangle is defined by three points: (x1, y1), (x2, y2), and (x3, y3), with corresponding
+	 * texture coordinates (u1, v1), (u2, v2), and (u3, v3).
+	 * </p>
+	 * @param x1 The x-coordinate of the first vertex
+	 * @param y1 The y-coordinate of the first vertex
+	 * @param x2 The x-coordinate of the second vertex
+	 * @param y2 The y-coordinate of the second vertex
+	 * @param x3 The x-coordinate of the third vertex
+	 * @param y3 The y-coordinate of the third vertex
+	 * @param z The depth value
+	 * @param u1 The u texture coordinate for the first vertex
+	 * @param v1 The v texture coordinate for the first vertex
+	 * @param u2 The u texture coordinate for the second vertex
+	 * @param v2 The v texture coordinate for the second vertex
+	 * @param u3 The u texture coordinate for the third vertex
+	 * @param v3 The v texture coordinate for the third vertex
+	 */
 	public void drawTriangle(TextureBase texture, float x1, float y1, float x2, float y2, float x3, float y3, float z,
 	                              float u1, float v1, float u2, float v2, float u3, float v3, Color c) {
 		totalVertices += 3;

@@ -25,4 +25,8 @@ public class RoundedRect extends Rect {
 		bevelModifier.setSegments(segments);
 	}
 	
+	public BevelModifier getBevelModifier() {
+		return bevelModifier;
+	}
+	
 }
