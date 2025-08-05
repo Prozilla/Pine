@@ -13,6 +13,10 @@ public class Rect extends Shape implements Cloneable<Rect> {
 	protected Vector2f size;
 	protected GridAlignment anchor;
 	
+	public Rect() {
+		this(new Vector2f(), new Vector2f());
+	}
+	
 	public Rect(Vector2f position, Vector2f size) {
 		this(position, size, GridAlignment.BOTTOM_LEFT);
 	}

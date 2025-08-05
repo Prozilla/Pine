@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.rendering.shape;
 
 import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.common.util.ListUtils;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.rendering.shape.modifier.ShapeModifier;
 
@@ -73,6 +74,10 @@ public abstract class Shape implements Renderable {
 		}
 		
 		renderer.drawTriangles(texture, vertices, depth, uvArray, color);
+	}
+	
+	public <M extends ShapeModifier> M getModifier(Class<M> modifierType) {
+		return ListUtils.getInstance(modifiers, modifierType);
 	}
 	
 	public void addModifier(ShapeModifier modifier) {

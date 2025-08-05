@@ -1,7 +1,10 @@
 package dev.prozilla.pine.examples.audio;
 
 import dev.prozilla.pine.common.asset.audio.AudioSource;
+import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.util.ArrayUtils;
+import dev.prozilla.pine.core.component.shape.RectRenderer;
+import dev.prozilla.pine.core.rendering.shape.Rect;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 
 public class BarResizer extends UpdateSystemBase {
@@ -9,7 +12,7 @@ public class BarResizer extends UpdateSystemBase {
 	private final AudioVisualizerScene scene;
 	
 	public BarResizer(AudioVisualizerScene scene) {
-		super(BarData.class);
+		super(BarData.class, RectRenderer.class);
 		this.scene = scene;
 	}
 	
@@ -27,6 +30,8 @@ public class BarResizer extends UpdateSystemBase {
 		
 		forEach((chunk) -> {
 			BarData barData = chunk.getComponent(BarData.class);
+			RectRenderer rectRenderer = chunk.getComponent(RectRenderer.class);
+			Rect rect = rectRenderer.getShape();
 			
 			float factor = 0.1f;
 			if (magnitudes != null && source.isPlaying()) {
@@ -34,7 +39,7 @@ public class BarResizer extends UpdateSystemBase {
 				factor += (float)Math.log1p(magnitude * 10) * (0.25f + 0.75f * (float)Math.sin((float)barData.index / (scene.getBarCount() - 1) * Math.PI));
 			}
 			
-			barData.barRect.updateHeight(factor, deltaTime);
+			rect.setHeight(MathUtils.lerp(rect.getHeight(), factor * 64f, deltaTime * Main.LERP_SPEED));
 		});
 	}
 }

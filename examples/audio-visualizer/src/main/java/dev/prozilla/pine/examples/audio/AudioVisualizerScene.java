@@ -4,8 +4,9 @@ import dev.prozilla.pine.common.asset.audio.AudioSource;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.property.selection.SingleSelectionProperty;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.component.shape.ShapeRenderer;
+import dev.prozilla.pine.core.component.shape.RectRenderer;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.rendering.shape.Rect;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
@@ -17,8 +18,7 @@ public class AudioVisualizerScene extends Scene {
 	
 	private AudioSource source;
 	private BarPrefab barPrefab;
-	private List<BarData> bars;
-	private List<ShapeRenderer> barRenderers;
+	private List<RectRenderer> bars;
 	
 	private final SingleSelectionProperty<String> tracks;
 	
@@ -55,11 +55,9 @@ public class AudioVisualizerScene extends Scene {
 		});
 		
 		world.addSystem(new BarResizer(this));
-		world.addSystem(new CircleRenderer());
 		
 		barPrefab = new BarPrefab();
 		bars = new ArrayList<>();
-		barRenderers = new ArrayList<>();
 		for (int i = 0; i < Main.BAR_COUNT; i++) {
 			addBar();
 		}
@@ -103,8 +101,7 @@ public class AudioVisualizerScene extends Scene {
 	private void addBar() {
 		barPrefab.setIndex(bars.size());
 		Entity bar = world.addEntity(barPrefab);
-		bars.add(bar.getComponent(BarData.class));
-		barRenderers.add(bar.getComponent(ShapeRenderer.class));
+		bars.add(bar.getComponent(RectRenderer.class));
 	}
 	
 	private void removeBar() {
@@ -112,14 +109,15 @@ public class AudioVisualizerScene extends Scene {
 	}
 	
 	private void updateBars() {
-		for (int i = 0; i < bars.size(); i++) {
-			BarData barData = bars.get(i);
-			ShapeRenderer shapeRenderer = barRenderers.get(i);
+		int barCount = bars.size();
+		for (int i = 0; i < barCount; i++) {
+			RectRenderer rectRenderer = bars.get(i);
+			Rect rect = rectRenderer.getShape();
 			
-			float position = (float)i / bars.size();
-			barData.barRect.setX((position) * (Main.WIDTH));
-			barData.barRect.setWidth((float)Main.WIDTH / bars.size() - Main.BAR_GAP);
-			shapeRenderer.color.setRGB(Color.hsl(position, 0.9f, 0.65f));
+			float position = (float)i / barCount;
+			rect.setX((position) * (Main.WIDTH));
+			rect.setWidth((float)Main.WIDTH / barCount - Main.BAR_GAP);
+			rectRenderer.color.setRGB(Color.hsl(position, 0.9f, 0.65f));
 		}
 	}
 	

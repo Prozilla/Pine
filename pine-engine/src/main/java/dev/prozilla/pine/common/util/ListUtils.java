@@ -13,4 +13,28 @@ public final class ListUtils {
 		return list;
 	}
 	
+	/**
+	 * Finds the first element in a list of a given type.
+	 *
+	 * <p>This method is not suitable for frequent usage or usage with large lists.</p>
+	 * @param list The list to search in
+	 * @param type The type to search for
+	 * @return The element of the given type, or {@code null} if there is none.
+	 * @param <E> The type of elements in the list
+	 * @param <T> The type of element to search for
+	 */
+	public static <E, T extends E> T getInstance(List<E> list, Class<T> type) {
+		if (list.isEmpty()) {
+			return null;
+		}
+		
+		for (E element : list) {
+			if (type.isInstance(element)) {
+				return type.cast(element);
+			}
+		}
+		
+		return null;
+	}
+	
 }
