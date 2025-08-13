@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.event.Event;
 import dev.prozilla.pine.common.event.SimpleEventDispatcher;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.util.ListUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationProvider;
@@ -310,20 +311,7 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	 */
 	@Override
 	public <ComponentType extends Component> ComponentType getComponent(Class<ComponentType> componentClass) {
-		if (components.isEmpty()) {
-			return null;
-		}
-
-		// Find component that is an instance of componentClass
-		ComponentType match = null;
-		for (Component component : components) {
-			if (componentClass.isInstance(component)) {
-				match = componentClass.cast(component);
-				break;
-			}
-		}
-		
-		return match;
+		return ListUtils.getInstance(components, componentClass);
 	}
 	
 	/**

@@ -31,13 +31,13 @@ public class PlayerInputHandler extends InputSystem {
 			} else {
 				playerData.history.undo();
 			}
-		} else if (input.getAnyKey(Key.DOWN_ARROW, Key.S) || gamepad.getAxis(GamepadAxis.LEFT_Y) > PlayerData.JOYSTICK_THRESHOLD) {
+		} else if (input.getAnyKey(playerData.index != 0 ? Key.DOWN_ARROW : Key.S) || gamepad.getAxis(GamepadAxis.LEFT_Y) > PlayerData.JOYSTICK_THRESHOLD) {
 			playerData.moveInDirection(Direction.DOWN, tileRenderer);
-		} else if (input.getAnyKey(Key.UP_ARROW, Key.W) || gamepad.getAxis(GamepadAxis.LEFT_Y) < -PlayerData.JOYSTICK_THRESHOLD) {
+		} else if (input.getAnyKey(playerData.index != 0 ? Key.UP_ARROW : Key.W) || gamepad.getAxis(GamepadAxis.LEFT_Y) < -PlayerData.JOYSTICK_THRESHOLD) {
 			playerData.moveInDirection(Direction.UP, tileRenderer);
-		} else if (input.getAnyKey(Key.LEFT_ARROW, Key.A) || gamepad.getAxis(GamepadAxis.LEFT_X) < -PlayerData.JOYSTICK_THRESHOLD) {
+		} else if (input.getAnyKey(playerData.index != 0 ? Key.LEFT_ARROW : Key.A) || gamepad.getAxis(GamepadAxis.LEFT_X) < -PlayerData.JOYSTICK_THRESHOLD) {
 			playerData.moveInDirection(Direction.LEFT, tileRenderer);
-		} else if (input.getAnyKey(Key.RIGHT_ARROW, Key.D) || gamepad.getAxis(GamepadAxis.LEFT_X) > PlayerData.JOYSTICK_THRESHOLD) {
+		} else if (input.getAnyKey(playerData.index != 0 ? Key.RIGHT_ARROW : Key.D) || gamepad.getAxis(GamepadAxis.LEFT_X) > PlayerData.JOYSTICK_THRESHOLD) {
 			playerData.moveInDirection(Direction.RIGHT, tileRenderer);
 		}
 	}

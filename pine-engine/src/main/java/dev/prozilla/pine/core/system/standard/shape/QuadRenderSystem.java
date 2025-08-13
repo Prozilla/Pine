@@ -3,14 +3,14 @@ package dev.prozilla.pine.core.system.standard.shape;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.camera.CameraData;
-import dev.prozilla.pine.core.component.shape.RectRenderer;
+import dev.prozilla.pine.core.component.shape.QuadRenderer;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderSystemBase;
 
-public final class RectRenderSystem extends RenderSystemBase {
+public final class QuadRenderSystem extends RenderSystemBase {
 	
-	public RectRenderSystem() {
-		super(RectRenderer.class);
+	public QuadRenderSystem() {
+		super(QuadRenderer.class);
 	}
 	
 	@Override
@@ -19,9 +19,9 @@ public final class RectRenderSystem extends RenderSystemBase {
 		
 		forEach(chunk -> {
 			Transform transform = chunk.getTransform();
-			RectRenderer rectRenderer = chunk.getComponent(RectRenderer.class);
+			QuadRenderer quadRenderer = chunk.getComponent(QuadRenderer.class);
 			
-			if (rectRenderer.size.x == 0 && rectRenderer.size.y == 0) {
+			if (quadRenderer.size.x == 0 && quadRenderer.size.y == 0) {
 				return;
 			}
 			
@@ -35,7 +35,7 @@ public final class RectRenderSystem extends RenderSystemBase {
 			// Apply render transformations
 			renderer.setScale(camera.getZoom());
 			
-			renderer.drawRect(position.x, position.y, transform.getDepth(), rectRenderer.size.x, rectRenderer.size.y, rectRenderer.color);
+			renderer.drawRect(position.x, position.y, transform.getDepth(), quadRenderer.size.x, quadRenderer.size.y, quadRenderer.color);
 			
 			renderer.resetTransform();
 		});

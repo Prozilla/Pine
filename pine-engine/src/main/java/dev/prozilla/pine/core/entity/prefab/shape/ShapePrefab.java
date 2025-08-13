@@ -8,33 +8,33 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.rendering.shape.Shape;
 
-public class ShapePrefab extends Prefab {
+public class ShapePrefab<S extends Shape> extends Prefab {
 	
-	protected Shape shape;
+	protected S shape;
 	protected TextureBase texture;
 	protected Color color;
 	
-	public ShapePrefab(Shape shape) {
+	public ShapePrefab(S shape) {
 		this(shape, (TextureBase)null);
 	}
 	
-	public ShapePrefab(Shape shape, Color color) {
+	public ShapePrefab(S shape, Color color) {
 		this(shape, (TextureBase)null, color);
 	}
 	
-	public ShapePrefab(Shape shape, String texturePath) {
+	public ShapePrefab(S shape, String texturePath) {
 		this(shape, AssetPools.textures.load(texturePath), null);
 	}
 	
-	public ShapePrefab(Shape shape, TextureBase texture) {
+	public ShapePrefab(S shape, TextureBase texture) {
 		this(shape, texture, null);
 	}
 	
-	public ShapePrefab(Shape shape, String texturePath, Color color) {
+	public ShapePrefab(S shape, String texturePath, Color color) {
 		this(shape, AssetPools.textures.load(texturePath), color);
 	}
 	
-	public ShapePrefab(Shape shape, TextureBase texture, Color color) {
+	public ShapePrefab(S shape, TextureBase texture, Color color) {
 		setName("Shape");
 		
 		this.shape = shape;
@@ -42,7 +42,7 @@ public class ShapePrefab extends Prefab {
 		this.color = color;
 	}
 	
-	public void setShape(Shape shape) {
+	public void setShape(S shape) {
 		this.shape = shape;
 	}
 	
@@ -54,12 +54,20 @@ public class ShapePrefab extends Prefab {
 		this.color = color;
 	}
 	
+	protected final ShapeRenderer<S> createRenderer(S shape, TextureBase texture) {
+		return createRenderer(shape, texture, null);
+	}
+	
+	protected ShapeRenderer<S> createRenderer(S shape, TextureBase texture, Color color) {
+		return new ShapeRenderer<>(shape, texture, color);
+	}
+	
 	@Override
 	protected void apply(Entity entity) {
 		if (color == null) {
-			entity.addComponent(new ShapeRenderer(shape, texture));
+			entity.addComponent(createRenderer(shape, texture));
 		} else {
-			entity.addComponent(new ShapeRenderer(shape, texture, color.clone()));
+			entity.addComponent(createRenderer(shape, texture, color.clone()));
 		}
 	}
 	

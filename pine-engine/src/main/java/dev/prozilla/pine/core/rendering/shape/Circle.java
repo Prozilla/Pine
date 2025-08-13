@@ -3,6 +3,9 @@ package dev.prozilla.pine.core.rendering.shape;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.util.checks.Checks;
 
+/**
+ * Generates a circular shape.
+ */
 public class Circle extends Shape {
 	
 	protected Vector2f position;
@@ -87,14 +90,26 @@ public class Circle extends Shape {
 		return uvArray;
 	}
 	
+	/**
+	 * Returns the x-coordinate of this circle.
+	 * @return The x-coordinate of this circle.
+	 */
 	public float getX() {
 		return position.x;
 	}
 	
+	/**
+	 * Returns the y-coordinate of this circle.
+	 * @return The y-coordinate of this circle.
+	 */
 	public float getY() {
 		return position.y;
 	}
 	
+	/**
+	 * Sets the x-coordinate of this circle.
+	 * @param x The new x-coordinate
+	 */
 	public void setX(float x) {
 		if (x == position.x) {
 			return;
@@ -104,6 +119,10 @@ public class Circle extends Shape {
 		isDirty = true;
 	}
 	
+	/**
+	 * Sets the y-coordinate of this circle.
+	 * @param y The new y-coordinate
+	 */
 	public void setY(float y) {
 		if (y == position.y) {
 			return;
@@ -113,6 +132,10 @@ public class Circle extends Shape {
 		isDirty = true;
 	}
 	
+	/**
+	 * Sets the position of this circle.
+	 * @param position The new position
+	 */
 	public void setPosition(Vector2f position) {
 		Checks.isNotNull(position, "position");
 		
@@ -124,10 +147,18 @@ public class Circle extends Shape {
 		isDirty = true;
 	}
 	
+	/**
+	 * Returns the radius of this circle.
+	 * @return The radius of this circle.
+	 */
 	public float getRadius() {
 		return radius;
 	}
 	
+	/**
+	 * Sets the radius of this circle.
+	 * @param radius The new radius of this circle
+	 */
 	public void setRadius(float radius) {
 		if (radius == this.radius) {
 			return;
@@ -137,14 +168,25 @@ public class Circle extends Shape {
 		isDirty = true;
 	}
 	
+	/**
+	 * Returns the amount of edges of this circle.
+	 * @return The amount of edges.
+	 */
 	public int getEdges() {
 		return edges;
 	}
 	
+	/**
+	 * Automatically sets the amount of edges based on the radius.
+	 */
 	public void setAutoEdges() {
 		setEdges(Math.round(radius / 2f));
 	}
 	
+	/**
+	 * Sets the amount of edges of this circle.
+	 * @param edges The new amount of edges
+	 */
 	public void setEdges(int edges) {
 		if (edges == this.edges) {
 			return;

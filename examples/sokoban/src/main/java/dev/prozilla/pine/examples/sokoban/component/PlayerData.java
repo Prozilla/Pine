@@ -22,6 +22,8 @@ public class PlayerData extends Component {
 	
 	public final History history;
 	
+	public final int index;
+	
 	public static final Map<Direction, String[]> directionToSprites = Map.of(
 		Direction.DOWN, new String[]{
 			"images/player/player_23.png",
@@ -48,7 +50,8 @@ public class PlayerData extends Component {
 	public static final float TIME_TO_MOVE = 0.25f;
 	public static final float JOYSTICK_THRESHOLD = 0.5f;
 	
-	public PlayerData() {
+	public PlayerData(int index) {
+		this.index = index;
 		timeUntilMoveCompletes = 0;
 		canMove = false;
 		history = new History();
@@ -71,7 +74,7 @@ public class PlayerData extends Component {
 		// Check if player can move to an empty tile or push a crate
 		if (targetTile == null) {
 			canMove = true;
-		} else if (!targetTile.getEntity().hasTag(EntityTag.BLOCK)) {
+		} else if (!targetTile.getEntity().hasTag(EntityTag.BLOCK) && !targetTile.getEntity().hasTag(EntityTag.PLAYER)) {
 			Vector2i behindTargetCoordinate = direction.toIntVector().add(targetCoordinate);
 			TileRenderer behindTargetTile = gridGroup.getTile(behindTargetCoordinate);
 			
