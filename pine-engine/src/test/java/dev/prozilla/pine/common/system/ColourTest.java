@@ -29,11 +29,11 @@ public class ColourTest {
 	}
 	
 	@Test
-	void testParse() {
+	void testParser() {
 		ColourParser parser = new ColourParser();
-		TestUtils.testParse("rgba(0.25, 0.75, 0.5, 1)", new Colour(0.25f, 0.75f, 0.5f), parser);
-		TestUtils.testParse("#FFF", new Colour(1f, 1f, 1f), parser);
-		TestUtils.testParse("rebeccapurple", Colour.rebeccaPurple(), parser);
+		TestUtils.testParser("rgba(0.25, 0.75, 0.5, 1)", new Colour(0.25f, 0.75f, 0.5f), parser);
+		TestUtils.testParser("#FFF", new Colour(1f, 1f, 1f), parser);
+		TestUtils.testParser("rebeccapurple", Colour.rebeccaPurple(), parser);
 	}
 	
 }

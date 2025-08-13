@@ -22,8 +22,8 @@ public class DualDimensionTest {
 	}
 	
 	@Test
-	void testParse() {
-		TestUtils.testParse("20 30", new DualDimension(new Dimension(20), new Dimension(30)), new DualDimensionParser());
+	void testParser() {
+		TestUtils.testParser("20 30", new DualDimension(new Dimension(20), new Dimension(30)), new DualDimensionParser());
 	}
 	
 	@Test

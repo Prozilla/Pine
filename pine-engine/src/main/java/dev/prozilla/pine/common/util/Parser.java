@@ -1,8 +1,7 @@
 package dev.prozilla.pine.common.util;
 
 import dev.prozilla.pine.common.Printable;
-
-import java.util.Objects;
+import dev.prozilla.pine.common.util.checks.Checks;
 
 /**
  * Abstract class for a stateful parser.
@@ -50,7 +49,7 @@ public abstract class Parser<T> implements Printable {
 	public abstract boolean parse(String input);
 	
 	protected boolean succeed(T result) {
-		this.result = Objects.requireNonNull(result, "result must not be null");
+		this.result = Checks.isNotNull(result, "result");
 		errorMessage = null;
 		return true;
 	}
@@ -60,7 +59,7 @@ public abstract class Parser<T> implements Printable {
 	}
 	
 	protected boolean fail(String errorMessage) {
-		this.errorMessage = Objects.requireNonNull(errorMessage, "errorMessage must not be null");
+		this.errorMessage = Checks.isNotNull(errorMessage, "errorMessage");
 		result = null;
 		return false;
 	}

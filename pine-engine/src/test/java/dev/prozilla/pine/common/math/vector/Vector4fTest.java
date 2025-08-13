@@ -19,11 +19,11 @@ public class Vector4fTest {
 	}
 	
 	@Test
-	void testParse() {
+	void testParser() {
 		Vector4f.Parser parser = new Vector4f.Parser();
-		TestUtils.testParse(mockVector4fString(), mockVector4f(), parser);
-		TestUtils.testParse("(0.5f, 1.5f)", new Vector4f(0.5f, 1.5f, 0.5f, 1.5f), parser);
-		TestUtils.testParse("0.5f, 1.5f", new Vector4f(0.5f, 1.5f, 0.5f, 1.5f), parser);
+		TestUtils.testParser(mockVector4fString(), mockVector4f(), parser);
+		TestUtils.testParser("(0.5f, 1.5f)", new Vector4f(0.5f, 1.5f, 0.5f, 1.5f), parser);
+		TestUtils.testParser("0.5f, 1.5f", new Vector4f(0.5f, 1.5f, 0.5f, 1.5f), parser);
 	}
 	
 	@Test
