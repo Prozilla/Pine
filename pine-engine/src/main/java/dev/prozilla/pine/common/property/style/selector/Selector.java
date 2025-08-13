@@ -54,7 +54,7 @@ public abstract class Selector implements Printable {
 	};
 	
 	/**
-	 * @deprecated Replaced by {@link SelectorParser} as of 2.0.1
+	 * @deprecated Replaced by {@link SelectorParser} as of 2.0.2
 	 */
 	@Deprecated
 	public static Selector parse(String input) {

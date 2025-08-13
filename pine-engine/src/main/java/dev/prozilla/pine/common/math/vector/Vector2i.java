@@ -98,7 +98,7 @@ public class Vector2i extends VectorInt<Vector2i> {
 	}
 	
 	/**
-	 * @deprecated Replaced by {@link Parser} as of 2.1.0
+	 * @deprecated Replaced by {@link Parser} as of 2.0.2
 	 */
 	@Deprecated
 	public static Vector2i parse(String input) throws InvalidStringException {

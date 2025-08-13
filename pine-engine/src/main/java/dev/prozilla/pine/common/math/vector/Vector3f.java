@@ -104,7 +104,7 @@ public class Vector3f extends VectorFloat<Vector3f> {
 	}
 	
 	/**
-	 * @deprecated Replaced by {@link Parser} as of 2.1.0
+	 * @deprecated Replaced by {@link Parser} as of 2.0.2
 	 */
 	@Deprecated
 	public static Vector3f parse(String input) throws InvalidStringException {

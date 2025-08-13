@@ -20,14 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class StyledPropertyTest {
 	
 	@Test
-	void testSelectorParse() {
+	void testSelectorParser() {
 		SelectorParser selectorParser = new SelectorParser();
-		TestUtils.testParse("div.class#id:not(:hover)", new SelectorCombo(new TypeSelector("div"), new ClassSelector("class"), new IdSelector("id"), new NotSelector(new ModifierSelector("hover"))), selectorParser);
-		TestUtils.testParse("*", Selector.UNIVERSAL, selectorParser);
+		TestUtils.testParser("div.class#id:not(:hover)", new SelectorCombo(new TypeSelector("div"), new ClassSelector("class"), new IdSelector("id"), new NotSelector(new ModifierSelector("hover"))), selectorParser);
+		TestUtils.testParser("*", Selector.UNIVERSAL, selectorParser);
 	}
 	
 	@Test
-	void testStyleSheetParse() {
+	void testStyleSheetParser() {
 		String input = ":hover { color: rgba(0.25, 0.75, 0.5, 1.0); }";
 		StyleSheet styleSheet = new CSSParser().read(input);
 		
@@ -35,8 +35,8 @@ public class StyledPropertyTest {
 	}
 	
 	@Test
-	void testAnimationCurveParse() {
-		TestUtils.testParse("0.25s ease-in-out-quad", new AnimationCurve(0.25f, Easing.EASE_IN_OUT_QUAD), new AnimationCurveParser());
+	void testAnimationCurveParser() {
+		TestUtils.testParser("0.25s ease-in-out-quad", new AnimationCurve(0.25f, Easing.EASE_IN_OUT_QUAD), new AnimationCurveParser());
 	}
 	
 }

@@ -110,7 +110,7 @@ public class Vector4i extends VectorInt<Vector4i> {
 	}
 	
 	/**
-	 * @deprecated Replaced by {@link Parser} as of 2.1.0
+	 * @deprecated Replaced by {@link Parser} as of 2.0.2
 	 */
 	@Deprecated
 	public static Vector4i parse(String input) throws InvalidStringException {
