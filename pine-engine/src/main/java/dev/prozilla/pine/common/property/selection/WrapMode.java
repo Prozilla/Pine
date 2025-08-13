@@ -3,6 +3,7 @@ package dev.prozilla.pine.common.property.selection;
 import dev.prozilla.pine.common.math.MathUtils;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Determines how values outside of bounds are transformed.
@@ -45,6 +46,14 @@ public enum WrapMode {
 			return MathUtils.clamp(value, min, max);
 		}
 	};
+	
+	public <E> E getElement(int index, List<E> list) {
+		return list.get(transformIndex(index, list));
+	}
+	
+	public <E> E getElement(int index, E[] array) {
+		return array[transformIndex(index, array)];
+	}
 	
 	/**
 	 * Transforms an index based on the size of a collection.

@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.math.vector;
 
 import dev.prozilla.pine.common.exception.InvalidStringException;
+import dev.prozilla.pine.common.property.selection.WrapMode;
 
 import java.nio.IntBuffer;
 
@@ -108,9 +109,12 @@ public class Vector4i extends VectorInt<Vector4i> {
 		return String.format("(%s,%s,%s,%s)", x, y, z, w);
 	}
 	
+	/**
+	 * @deprecated Replaced by {@link Parser} as of 2.1.0
+	 */
+	@Deprecated
 	public static Vector4i parse(String input) throws InvalidStringException {
-		Integer[] integers = Vector.parseToIntegers(input, 4);
-		return new Vector4i(integers[0], integers[1], integers[2], integers[3]);
+		return new Parser().read(input);
 	}
 	
 	/**
@@ -131,4 +135,22 @@ public class Vector4i extends VectorInt<Vector4i> {
 		temp.w = w;
 		return temp;
 	}
+	
+	public static class Parser extends dev.prozilla.pine.common.util.Parser<Vector4i> {
+		
+		@Override
+		public boolean parse(String input) {
+			Integer[] integers = Vector.parseToIntegers(input);
+			WrapMode wrapMode = WrapMode.REPEAT;
+			
+			return succeed(new Vector4i(
+				wrapMode.getElement(0, integers),
+				wrapMode.getElement(1, integers),
+				wrapMode.getElement(2, integers),
+				wrapMode.getElement(3, integers)
+			));
+		}
+		
+	}
+	
 }
