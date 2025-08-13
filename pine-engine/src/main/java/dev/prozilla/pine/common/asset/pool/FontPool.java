@@ -32,8 +32,7 @@ public final class FontPool extends AssetPool<Font> {
 			font = new Font(stream, size);
 			font.path = path;
 		} catch (FontFormatException | IOException e) {
-			fail(path, null, e);
-			font = new Font();
+			return fail(path, null, e);
 		}
 		
 		return font;
