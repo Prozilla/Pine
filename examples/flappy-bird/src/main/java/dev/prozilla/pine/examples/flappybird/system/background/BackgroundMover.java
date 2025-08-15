@@ -13,7 +13,7 @@ public class BackgroundMover extends UpdateSystem {
 	
 	public BackgroundMover() {
 		super(BackgroundData.class, Transform.class);
-		setRunWhenPaused(false);
+		setApplyTimeScale(true);
 	}
 	
 	@Override

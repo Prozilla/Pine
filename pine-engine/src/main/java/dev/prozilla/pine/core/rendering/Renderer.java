@@ -1080,7 +1080,7 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	/**
-	 * Generates a new {@link Vector2f} that represents the center of the viewport.
+	 * Creates a new {@link Vector2f} that represents the center of the viewport.
 	 */
 	public Vector2f getViewportCenter() {
 		return new Vector2f(viewWidth / 2f, viewHeight / 2f);

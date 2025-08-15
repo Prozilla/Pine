@@ -187,10 +187,6 @@ public class ApplicationBuilder {
 			application.setApplicationManager(applicationManagerFactory.apply(application));
 		}
 		
-		if (applicationManagerFactory != null) {
-			application.setApplicationManager(applicationManagerFactory.apply(application));
-		}
-		
 		// Setters
 		if (icons != null) {
 			application.setIcons(icons);

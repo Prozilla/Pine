@@ -64,14 +64,6 @@ public enum WrapMode {
 		}
 	};
 	
-	public <E> E getElement(int index, List<E> list) {
-		return list.get(transformIndex(index, list));
-	}
-	
-	public <E> E getElement(int index, E[] array) {
-		return array[transformIndex(index, array)];
-	}
-	
 	/**
 	 * Applies this wrap mode to an index for a list and returns the corresponding element.
 	 * <p>The transformation is based on the list's index range ({@code 0} to {@code list.size() - 1}).</p>

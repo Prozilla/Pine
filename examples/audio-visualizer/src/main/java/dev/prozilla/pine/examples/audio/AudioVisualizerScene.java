@@ -105,7 +105,9 @@ public class AudioVisualizerScene extends Scene {
 	}
 	
 	private void removeBar() {
-		bars.removeLast().getEntity().destroy();
+		if (!bars.isEmpty()) {
+			bars.removeLast().getEntity().destroy();
+		}
 	}
 	
 	private void updateBars() {
