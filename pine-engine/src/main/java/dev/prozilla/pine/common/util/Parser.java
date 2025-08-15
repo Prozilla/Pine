@@ -16,7 +16,7 @@ public abstract class Parser<T> implements Printable {
 	/**
 	 * Parses an input string and throws an exception if the parsing fails.
 	 * @param input The input string to parse
-	 * @return The parsed value or {@code null}, if the parsing failed.
+	 * @return The parsed value
 	 * @throws ParsingException If this parser failed to parse the input string.
 	 */
 	public T read(String input) throws ParsingException {

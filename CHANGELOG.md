@@ -1,5 +1,24 @@
 # Changelog
 
+## v2.0.2
+
+### New Features
+
+- Added ConditionalProperty class
+
+### Changes
+
+- Added static one() method to each vector class, to create vectors with all values set to 1
+- Replaced all remaining parsing functions with stateful parsers and marked outdated methods as deprecated
+
+### Fixes
+
+- Fixed render scale not being reset properly
+- Fixed children and components of entities not being destroyed when entity is destroyed
+- Fixed renderer not flushing to reflect render region changes
+- Fixed asset pools not returning null when failing to load an asset
+- Fixed components and entity providers throwing exceptions instead of returning null when the entity is missing
+
 ## v2.0.1
 
 ### New Features

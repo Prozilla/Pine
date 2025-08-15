@@ -79,7 +79,7 @@ public class AnimationCurve {
 	}
 	
 	/**
-	 * @deprecated Replaced by {@link AnimationCurveParser} as of 2.0.1
+	 * @deprecated Replaced by {@link AnimationCurveParser} as of 2.0.2
 	 */
 	@Deprecated
 	public static AnimationCurve parse(String input) {
