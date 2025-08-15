@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
@@ -15,7 +16,6 @@ import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.config.RenderConfig;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
+import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
@@ -672,7 +674,7 @@ public class Renderer implements Initializable, Destructible {
 			flush();
 		}
 		
-		// Get color components from the Color object
+		// Get color components
 		float r = c.getRed();
 		float g = c.getGreen();
 		float b = c.getBlue();
@@ -750,19 +752,27 @@ public class Renderer implements Initializable, Destructible {
 	 * Checks if a quad is outside the screen bounds.
 	 */
 	public boolean outOfBounds(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
-		// TO DO: calculate intersection of quad with screen
-		return x1 < 0 && x2 < 0 && x3 < 0 && x4 < 0 || // Left
-		        x1 >= viewWidth && x2 >= viewWidth && x3 >= viewWidth && x4 >= viewWidth || // Right
-		        y1 < 0 && y2 < 0 && y3 < 0 && y4 < 0 || // Above
-		        y1 >= viewHeight && y2 >= viewHeight && y3 >= viewHeight && y4 >= viewHeight; // Below
+		return MathUtils.max(x1, x2, x3, x4) < 0
+			|| MathUtils.min(x1, x2, x3, x4) >= viewWidth
+			|| MathUtils.max(y1, y2, y3, y4) < 0
+	        || MathUtils.min(y1, y2, y3, y4) >= viewHeight;
+	}
+	
+	public boolean outOfBounds(float x1, float y1, float x2, float y2, float x3, float y3) {
+		return MathUtils.max(x1, x2, x3) < 0
+			|| MathUtils.min(x1, x2, x3) >= viewWidth
+			|| MathUtils.max(y1, y2, y3) < 0
+			|| MathUtils.min(y1, y2, y3) >= viewHeight;
 	}
 	
 	/**
 	 * Checks if a line is outside the screen bounds.
 	 */
 	public boolean outOfBounds(float x1, float y1, float x2, float y2) {
-		// TO DO: calculate intersection of line with screen
-		return outOfBounds(x1, y1) && outOfBounds(x2, y2);
+		return Math.max(x1, x2) < 0
+			|| Math.min(x1, x2) >= viewWidth
+			|| Math.max(y1, y2) < 0
+			|| Math.min(y1, y2) >= viewHeight;
 	}
 	
 	/**
@@ -772,7 +782,10 @@ public class Renderer implements Initializable, Destructible {
 	 * @return True if the coordinate is outside of bounds
 	 */
 	public boolean outOfBounds(float x, float y) {
-		return x < 0f || x >= viewWidth || y < 0f || y >= viewHeight;
+		return x < 0
+			|| x >= viewWidth
+			|| y < 0
+			|| y >= viewHeight;
 	}
 	
 	/**
@@ -866,11 +879,11 @@ public class Renderer implements Initializable, Destructible {
 		
 		if (fbo == null) {
 			// Get width and height of frame buffer
-			long window = GLFW.glfwGetCurrentContext();
+			long window = glfwGetCurrentContext();
 			try (MemoryStack stack = MemoryStack.stackPush()) {
 				IntBuffer widthBuffer = stack.mallocInt(1);
 				IntBuffer heightBuffer = stack.mallocInt(1);
-				GLFW.glfwGetFramebufferSize(window, widthBuffer, heightBuffer);
+				glfwGetFramebufferSize(window, widthBuffer, heightBuffer);
 				width = widthBuffer.get();
 				height = heightBuffer.get();
 			}
@@ -920,6 +933,17 @@ public class Renderer implements Initializable, Destructible {
 	
 	public RenderConfig getConfig() {
 		return application.getConfig().rendering;
+	}
+	
+	public Color getFallbackColor() {
+		return fallbackColor;
+	}
+	
+	/**
+	 * Creates a new {@link Vector2f} that represents the center of the viewport.
+	 */
+	public Vector2f getViewportCenter() {
+		return new Vector2f(viewWidth / 2f, viewHeight / 2f);
 	}
 	
 }

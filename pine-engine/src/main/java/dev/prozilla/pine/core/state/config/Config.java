@@ -101,7 +101,7 @@ public class Config {
 		}
 		
 		ConfigOption<?> option = options.remove(key);
-		option.setLogger(null);
+		option.destroy();
 	}
 	
 	/**
