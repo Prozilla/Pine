@@ -13,16 +13,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PineTest {
 	
+	private static final boolean ENABLE_LOGGING = true;
+	
 	@Test
 	void testVersion() {
-		assertNotNull(Pine.getVersion());
-		assertFalse(Pine.getVersion().isBlank());
+		testPineString(Pine.getVersion(), "Pine Version");
 	}
 	
 	@Test
 	void testPlatformName() {
-		assertNotNull(Pine.getPlatformName());
-		assertFalse(Pine.getVersion().isBlank());
+		testPineString(Pine.getPlatformName(), "Platform Name");
 	}
 	
 	@Test
@@ -37,20 +37,25 @@ public class PineTest {
 	
 	@Test
 	void testJavaVersion() {
-		assertNotNull(Pine.getJavaVersion());
-		assertFalse(Pine.getJavaVersion().isBlank());
+		testPineString(Pine.getJavaVersion(), "Java Version");
 	}
 	
 	@Test
 	void testLWJGLVersion() {
-		assertNotNull(Pine.getLWJGLVersion());
-		assertFalse(Pine.getLWJGLVersion().isBlank());
+		testPineString(Pine.getLWJGLVersion(), "LWJGL Version");
 	}
 	
 	@Test
 	void testLGLFWVersion() {
-		assertNotNull(Pine.getGLFWVersion());
-		assertFalse(Pine.getGLFWVersion().isBlank());
+		testPineString(Pine.getGLFWVersion(), "GLFW Version");
+	}
+	
+	void testPineString(String string, String label) {
+		assertNotNull(string);
+		assertFalse(string.isBlank());
+		if (ENABLE_LOGGING) {
+			TestLoggingExtension.log(label + ": " + string);
+		}
 	}
 	
 }
