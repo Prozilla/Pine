@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 
 import java.nio.FloatBuffer;
+import java.util.Objects;
 
 /**
  * 2-dimensional vector with floating point precision. GLSL equivalent to <code>vec2</code>.
@@ -80,8 +81,13 @@ public class Vector2f extends VectorFloat<Vector2f> {
 	}
 	
 	@Override
+	public int hashCode() {
+		return Objects.hash(x, y);
+	}
+	
+	@Override
 	public boolean equals(Vector2f vector) {
-		return vector.x == x && vector.y == y;
+		return vector != null && vector.x == x && vector.y == y;
 	}
 	
 	@Override

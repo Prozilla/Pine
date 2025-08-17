@@ -28,7 +28,7 @@ public class Vector4fTest {
 	
 	@Test
 	void testClone() {
-		TestUtils.testClone(mockVector4f());
+		TestUtils.testCloneable(mockVector4f());
 	}
 	
 	@Test

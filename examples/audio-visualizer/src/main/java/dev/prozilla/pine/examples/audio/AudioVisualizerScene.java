@@ -22,6 +22,11 @@ public class AudioVisualizerScene extends Scene {
 	
 	private final SingleSelectionProperty<String> tracks;
 	
+	// Constants
+	public static final int BAR_COUNT = 25;
+	public static final float BAR_GAP = 4;
+	public static final float VOLUME = 0.21f;
+	
 	public AudioVisualizerScene() {
 		tracks = new SingleSelectionProperty<>(
 			"audio/AndrewApplepie-KeepOnTrying.ogg",
@@ -49,7 +54,7 @@ public class AudioVisualizerScene extends Scene {
 			source.init();
 			
 			// Start track
-			source.setVolume(0.21f);
+			source.setVolume(VOLUME);
 			source.setLoop(true);
 			source.play();
 		});
@@ -58,7 +63,7 @@ public class AudioVisualizerScene extends Scene {
 		
 		barPrefab = new BarPrefab();
 		bars = new ArrayList<>();
-		for (int i = 0; i < Main.BAR_COUNT; i++) {
+		for (int i = 0; i < BAR_COUNT; i++) {
 			addBar();
 		}
 		updateBars();
