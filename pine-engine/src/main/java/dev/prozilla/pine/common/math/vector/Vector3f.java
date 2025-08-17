@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 
 import java.nio.FloatBuffer;
+import java.util.Objects;
 
 /**
  * 3-dimensional vector with floating point precision. GLSL equivalent to <code>vec3</code>.
@@ -86,8 +87,13 @@ public class Vector3f extends VectorFloat<Vector3f> {
 	}
 	
 	@Override
+	public int hashCode() {
+		return Objects.hash(x, y, z);
+	}
+	
+	@Override
 	public boolean equals(Vector3f vector) {
-		return vector.x == x && vector.y == y && vector.z == z;
+		return vector != null && vector.x == x && vector.y == y && vector.z == z;
 	}
 	
 	@Override

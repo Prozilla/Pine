@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.rendering.shape;
 
+import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.ListUtils;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Represents a shape using vertex and UV arrays which respectively represent the vertex and texture coordinates of each triangle.
  */
-public abstract class Shape implements Renderable {
+public abstract class Shape implements Renderable, Cloneable<Shape> {
 	
 	private float[] vertices;
 	private float[] uvArray;
@@ -120,5 +121,16 @@ public abstract class Shape implements Renderable {
 		modifier.removeTarget(this);
 		isDirty = true;
 	}
+	
+	public Shape cloneWithModifiers() {
+		Shape clone = clone();
+		for (ShapeModifier modifier : modifiers) {
+			clone.addModifier(modifier);
+		}
+		return clone;
+	}
+	
+	@Override
+	public abstract Shape clone();
 	
 }

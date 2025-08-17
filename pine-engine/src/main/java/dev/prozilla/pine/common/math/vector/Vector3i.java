@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 
 import java.nio.IntBuffer;
+import java.util.Objects;
 
 /**
  * 3-dimensional vector with integer precision. GLSL equivalent to <code>ivec3</code>.
@@ -86,8 +87,13 @@ public class Vector3i extends VectorInt<Vector3i> {
 	}
 	
 	@Override
+	public int hashCode() {
+		return Objects.hash(x, y, z);
+	}
+	
+	@Override
 	public boolean equals(Vector3i vector) {
-		return vector.x == x && vector.y == y && vector.z == z;
+		return vector != null && vector.x == x && vector.y == y && vector.z == z;
 	}
 	
 	@Override

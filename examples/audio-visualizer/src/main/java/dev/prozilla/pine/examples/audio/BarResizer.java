@@ -11,6 +11,11 @@ public class BarResizer extends UpdateSystemBase {
 	
 	private final AudioVisualizerScene scene;
 	
+	// Constants
+	public static final boolean ENABLE_SHUFFLE = true;
+	public static final long SHUFFLE_SEED = 0;
+	public static final float LERP_SPEED = 10;
+	
 	public BarResizer(AudioVisualizerScene scene) {
 		super(BarData.class, RectRenderer.class);
 		this.scene = scene;
@@ -24,8 +29,8 @@ public class BarResizer extends UpdateSystemBase {
 		}
 		
 		double[] magnitudes = source.getAverageMagnitudes(scene.getBarCount());
-		if (magnitudes != null && Main.ENABLE_SHUFFLE) {
-			ArrayUtils.shuffle(magnitudes, Main.SHUFFLE_SEED);
+		if (magnitudes != null && ENABLE_SHUFFLE) {
+			ArrayUtils.shuffle(magnitudes, SHUFFLE_SEED);
 		}
 		
 		forEach((chunk) -> {
@@ -39,7 +44,7 @@ public class BarResizer extends UpdateSystemBase {
 				factor += (float)Math.log1p(magnitude * 10) * (0.25f + 0.75f * (float)Math.sin((float)barData.index / (scene.getBarCount() - 1) * Math.PI));
 			}
 			
-			rect.setHeight(MathUtils.lerp(rect.getHeight(), factor * 64f, deltaTime * Main.LERP_SPEED));
+			rect.setHeight(MathUtils.lerp(rect.getHeight(), factor * 64f, deltaTime * LERP_SPEED));
 		});
 	}
 }

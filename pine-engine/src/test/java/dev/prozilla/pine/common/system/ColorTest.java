@@ -23,7 +23,7 @@ public class ColorTest {
 	
 	@Test
 	void testClone() {
-		TestUtils.testClone(new Color(0.25f, 0.5f, 0.75f));
+		TestUtils.testCloneable(new Color(0.25f, 0.5f, 0.75f));
 	}
 	
 	@Test

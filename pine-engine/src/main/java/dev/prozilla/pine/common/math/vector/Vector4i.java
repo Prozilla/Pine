@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 
 import java.nio.IntBuffer;
+import java.util.Objects;
 
 /**
  * 4-dimensional vector with integer precision. GLSL equivalent to <code>ivec4</code>.
@@ -92,8 +93,13 @@ public class Vector4i extends VectorInt<Vector4i> {
 	}
 	
 	@Override
+	public int hashCode() {
+		return Objects.hash(x, y, z, w);
+	}
+	
+	@Override
 	public boolean equals(Vector4i vector) {
-		return vector.x == x && vector.y == y && vector.z == z && vector.w == w;
+		return vector != null && vector.x == x && vector.y == y && vector.z == z && vector.w == w;
 	}
 	
 	@Override

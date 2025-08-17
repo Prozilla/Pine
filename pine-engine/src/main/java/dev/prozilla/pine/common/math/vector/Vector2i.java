@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 
 import java.nio.IntBuffer;
+import java.util.Objects;
 
 /**
  * 2-dimensional vector with integer precision. GLSL equivalent to <code>ivec2</code>.
@@ -80,8 +81,13 @@ public class Vector2i extends VectorInt<Vector2i> {
 	}
 	
 	@Override
+	public int hashCode() {
+		return Objects.hash(x, y);
+	}
+	
+	@Override
 	public boolean equals(Vector2i vector) {
-		return vector.x == x && vector.y == y;
+		return vector != null && vector.x == x && vector.y == y;
 	}
 	
 	@Override

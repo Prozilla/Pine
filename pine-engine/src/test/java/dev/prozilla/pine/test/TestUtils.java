@@ -8,15 +8,17 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestUtils {
 	
 	/**
-	 * Tests whether the clone of an object is equal to the original object.
+	 * Tests whether the clone of an object is equal to the original object
+	 * and whether the original object is not equal to null.
 	 * @param original Original object to clone
 	 * @param <O> Type of the object
 	 */
-	public static <O extends Cloneable<O>> void testClone(O original) {
+	public static <O extends Cloneable<O>> void testCloneable(O original) {
 		O clone = original.clone();
 		
 		String className = original.getClass().getSimpleName();
 		assertEquals(original, clone, String.format("clone of %s should be equal", className));
+		assertFalse(original.equals(null), "Object should not equal null");
 	}
 	
 	/**

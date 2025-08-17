@@ -28,7 +28,7 @@ public class DualDimensionTest {
 	
 	@Test
 	void testClone() {
-		TestUtils.testClone(new DualDimension(new Dimension(20), new Dimension(30)));
+		TestUtils.testCloneable(new DualDimension(new Dimension(20), new Dimension(30)));
 	}
 	
 	@Test
