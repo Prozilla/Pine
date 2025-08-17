@@ -1,5 +1,6 @@
 package dev.prozilla.pine.test;
 
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.system.Ansi;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -95,6 +96,13 @@ public class TestLoggingExtension implements TestWatcher, BeforeTestExecutionCal
 	 */
 	private String getTestMethodKey(ExtensionContext context) {
 		return context.getTestClass().orElseThrow().getName() + "#" + context.getTestMethod().orElseThrow().getName();
+	}
+	
+	/**
+	 * Logs text during a test.
+	 */
+	public static void log(String text) {
+		System.out.println(Ansi.white("│   ├── ") + Logger.formatBadge("INFO", Ansi.CYAN) + text);
 	}
 	
 }
