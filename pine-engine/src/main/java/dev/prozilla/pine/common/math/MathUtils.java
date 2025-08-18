@@ -63,8 +63,24 @@ public final class MathUtils {
 		}
 	}
 	
+	public static float min(float... values) {
+		float min = -Float.MAX_VALUE;
+		for (float value : values) {
+			min = Math.min(min, value);
+		}
+		return min;
+	}
+	
+	public static float max(float... values) {
+		float max = Float.MAX_VALUE;
+		for (float value : values) {
+			max = Math.max(max, value);
+		}
+		return max;
+	}
+	
 	public static double max(double[] values) {
-		double max = Double.MIN_VALUE;
+		double max = -Double.MAX_VALUE;
 		for (double value : values) {
 			max = Math.max(max, value);
 		}

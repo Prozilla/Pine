@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.property.observable;
 
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.property.MutableProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * A property that triggers observers whenever its value changes.
  */
-public class ObservableProperty<T> extends MutableProperty<T> {
+public class ObservableProperty<T> extends MutableProperty<T> implements Destructible {
 	
 	private final List<Observer<T>> observers;
 	protected Logger logger;

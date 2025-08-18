@@ -8,8 +8,8 @@ public interface EventDispatcherProvider<EventType extends Enum<EventType>, Targ
 	EventDispatcher<EventType, Target, E> getEventDispatcher();
 	
 	@Override
-	default void addListener(EventType eventType, EventListener<E> listener) {
-		getEventDispatcher().addListener(eventType, listener);
+	default EventListener<E> addListener(EventType eventType, EventListener<E> listener) {
+		return getEventDispatcher().addListener(eventType, listener);
 	}
 	
 	@Override

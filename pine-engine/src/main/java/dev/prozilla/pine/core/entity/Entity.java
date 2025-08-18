@@ -407,6 +407,11 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	}
 	
 	@Override
+	public Logger getLogger() {
+		return ApplicationProvider.super.getLogger();
+	}
+	
+	@Override
 	public Scene getScene() {
 		return scene;
 	}
