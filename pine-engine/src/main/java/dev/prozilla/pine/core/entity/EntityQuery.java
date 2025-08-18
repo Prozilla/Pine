@@ -66,7 +66,7 @@ public class EntityQuery implements Destructible {
 	/**
 	 * Prepares this entity query for an iteration.
 	 * @throws IllegalStateException If this entity query is already being iterated.
-	 * @deprecated Replaced by {@link DeferredList#endIteration()} as of 2.0.1
+	 * @deprecated Replaced by {@link DeferredList#endIteration()} as of 2.0.3
 	 */
 	@Deprecated
 	public void startIteration() {
@@ -76,7 +76,7 @@ public class EntityQuery implements Destructible {
 	/**
 	 * Marks the ongoing iteration of this entity query as done.
 	 * @throws IllegalStateException If this entity query is not being iterated.
-	 * @deprecated Replaced by {@link DeferredList#endIteration()} as of 2.0.1
+	 * @deprecated Replaced by {@link DeferredList#endIteration()} as of 2.0.3
 	 */
 	@Deprecated
 	public void endIteration() {
