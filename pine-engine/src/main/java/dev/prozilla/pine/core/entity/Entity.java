@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.event.Event;
 import dev.prozilla.pine.common.event.SimpleEventDispatcher;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.util.ListUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationProvider;
@@ -33,7 +34,6 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	
 	protected final World world;
 	protected final Application application;
-	protected final Logger logger;
 	protected final Scene scene;
 	
 	/** Components of this entity */
@@ -315,20 +315,7 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	 */
 	@Override
 	public <ComponentType extends Component> ComponentType getComponent(Class<ComponentType> componentClass) {
-		if (components.isEmpty()) {
-			return null;
-		}
-
-		// Find component that is an instance of componentClass
-		ComponentType match = null;
-		for (Component component : components) {
-			if (componentClass.isInstance(component)) {
-				match = componentClass.cast(component);
-				break;
-			}
-		}
-		
-		return match;
+		return ListUtils.getInstance(components, componentClass);
 	}
 	
 	/**
@@ -355,6 +342,10 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	
 	@Override
 	protected void invoke(Event<EntityEventType, Entity> event) {
+		if (!shouldInvoke()) {
+			return;
+		}
+		
 		super.invoke(event);
 		
 		switch (event.getType()) {
@@ -362,6 +353,11 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 			case CHILD_REMOVE -> invoke(EntityEventType.DESCENDANT_REMOVE, event.getTarget());
 			case CHILDREN_UPDATE -> invoke(EntityEventType.DESCENDANT_UPDATE, event.getTarget());
 		}
+	}
+	
+	@Override
+	protected boolean shouldPropagate() {
+		return transform.parent != null;
 	}
 	
 	@Override

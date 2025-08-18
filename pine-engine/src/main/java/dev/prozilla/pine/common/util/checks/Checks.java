@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.util.checks;
 
 import dev.prozilla.pine.common.exception.InvalidArrayException;
 import dev.prozilla.pine.common.exception.InvalidNumberException;
+import dev.prozilla.pine.common.exception.InvalidObjectException;
 import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.util.ArrayUtils;
 import org.gradle.internal.impldep.javax.annotation.Nonnull;
@@ -17,9 +18,9 @@ public final class Checks {
 	
 	// Objects
 	
-	public static <O> O isNotNull(O object, String name) throws IllegalArgumentException {
+	public static <O> O isNotNull(O object, String name) throws InvalidObjectException {
 		if (object == null) {
-			throw new IllegalArgumentException(name + " must not be null");
+			throw new InvalidObjectException(name + " must not be null");
 		}
 		return object;
 	}

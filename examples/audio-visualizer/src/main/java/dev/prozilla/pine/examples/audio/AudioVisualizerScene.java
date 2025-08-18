@@ -123,7 +123,7 @@ public class AudioVisualizerScene extends Scene {
 			float position = (float)i / bars.size();
 			transform.position.x = (position - 0.5f) * (Main.WIDTH);
 			
-			rectRenderer.size.x = (float)Main.WIDTH / bars.size() - Main.BAR_GAP;
+			rectRenderer.size.x = (float)Main.WIDTH / bars.size() - BAR_GAP;
 			rectRenderer.color.setRGB(Color.hsl(position, 0.9f, 0.65f));
 		}
 	}

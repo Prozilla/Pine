@@ -220,4 +220,13 @@ public class StyleSheet implements Printable, Asset {
 		return new CSSParser().read(css);
 	}
 	
+	@Override
+	public boolean equals(Object object) {
+		return object == this || (object instanceof StyleSheet styleSheet && equals(styleSheet));
+	}
+	
+	public boolean equals(StyleSheet styleSheet) {
+		return styleSheet != null && Objects.equals(styles, styleSheet.styles);
+	}
+	
 }

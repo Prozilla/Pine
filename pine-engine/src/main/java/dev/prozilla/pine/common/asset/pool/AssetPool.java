@@ -145,6 +145,11 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 		return pool.size();
 	}
 	
+	/**
+	 * Creates a key for the current asset.
+	 * @param path The normalized path of the asset
+	 * @return The new key.
+	 */
 	protected String createKey(String path) {
 		return path;
 	}

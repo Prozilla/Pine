@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.util;
 
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.exception.ParsingException;
 import dev.prozilla.pine.common.util.checks.Checks;
 
 /**
@@ -16,11 +17,11 @@ public abstract class Parser<T> implements Printable {
 	 * Parses an input string and throws an exception if the parsing fails.
 	 * @param input The input string to parse
 	 * @return The parsed value
-	 * @throws IllegalArgumentException If this parser failed to parse the input string.
+	 * @throws ParsingException If this parser failed to parse the input string.
 	 */
-	public T read(String input) throws IllegalArgumentException {
+	public T read(String input) throws ParsingException {
 		if (!parse(input)) {
-			throw new IllegalArgumentException(getError());
+			throw new ParsingException(getError());
 		}
 		return getResult();
 	}

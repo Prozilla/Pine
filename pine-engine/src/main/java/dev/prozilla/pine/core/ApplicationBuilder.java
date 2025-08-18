@@ -176,6 +176,10 @@ public class ApplicationBuilder {
 	public Application build() {
 		Application application = new Application(title, windowWidth, windowHeight, initialScene, targetFps);
 		
+		if (applicationManagerFactory != null) {
+			application.setApplicationManager(applicationManagerFactory.apply(application));
+		}
+		
 		// Setters
 		if (icons != null) {
 			application.setIcons(icons);

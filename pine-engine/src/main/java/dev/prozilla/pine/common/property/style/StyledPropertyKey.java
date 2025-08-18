@@ -14,6 +14,8 @@ import dev.prozilla.pine.common.util.EnumParser;
 import dev.prozilla.pine.common.util.Parser;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 
+import java.util.Objects;
+
 public final class StyledPropertyKey<T> {
 	
 	private static final ColorParser colorParser = new ColorParser();
@@ -111,6 +113,15 @@ public final class StyledPropertyKey<T> {
 	
 	public static StyledPropertyKey<?> parse(String string) {
 		return ArrayUtils.findByString(keys, string);
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		return object == this || (object instanceof StyledPropertyKey<?> styledPropertyKey && equals(styledPropertyKey));
+	}
+	
+	public boolean equals(StyledPropertyKey<?> styledPropertyKey) {
+		return styledPropertyKey != null && Objects.equals(string, styledPropertyKey.string);
 	}
 	
 }

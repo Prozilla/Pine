@@ -42,7 +42,7 @@ public class BarResizer extends UpdateSystemBase {
 				factor += (float)Math.log1p(magnitude * 10) * (0.25f + 0.75f * (float)Math.sin((float)barData.index / (scene.getBarCount() - 1) * Math.PI));
 			}
 			
-			rectRenderer.size.y = MathUtils.lerp(rectRenderer.size.y, factor * 64f, deltaTime * Main.LERP_SPEED);
+			rectRenderer.size.y = MathUtils.lerp(rectRenderer.size.y, factor * 64f, deltaTime * LERP_SPEED);
 		});
 	}
 }

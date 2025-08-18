@@ -3,7 +3,7 @@ package dev.prozilla.pine.common.exception;
 /**
  * Thrown to indicate that a method has been passed an invalid collection.
  */
-public class InvalidCollectionException extends IllegalArgumentException {
+public class InvalidCollectionException extends InvalidObjectException {
 	
 	/**
 	 * Creates an invalid collection exception with no detail message.
