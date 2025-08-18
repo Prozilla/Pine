@@ -1,5 +1,3 @@
-import org.codehaus.groovy.runtime.GStringImpl
-
 import java.time.Year
 import java.util.regex.Pattern
 
@@ -43,7 +41,7 @@ ext {
 // Determine platform
 switch (org.gradle.internal.os.OperatingSystem.current()) {
 	case org.gradle.internal.os.OperatingSystem.LINUX:
-		project.ext.lwjglNatives = "natives-linux" as GStringImpl
+		project.ext.lwjglNatives = "natives-linux"
 		def osArch = System.getProperty("os.arch")
 		if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
 			project.ext.lwjglNatives += osArch.contains("64") || osArch.startsWith("armv8") ? "-arm64" : "-arm32"
@@ -55,9 +53,9 @@ switch (org.gradle.internal.os.OperatingSystem.current()) {
 		break
 	case org.gradle.internal.os.OperatingSystem.WINDOWS:
 		def osArch = System.getProperty("os.arch")
-		project.ext.lwjglNatives = (osArch.contains("64")
+		project.ext.lwjglNatives = osArch.contains("64")
 				? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
-				: "natives-windows-x86") as GStringImpl
+				: "natives-windows-x86"
 		break
 }
 
@@ -165,6 +163,12 @@ githubRelease {
 
 tasks.named("publish") {
 	dependsOn("githubRelease")
+}
+
+tasks.named("githubRelease") {
+	dependsOn("jar")
+	dependsOn("sourcesJar")
+	dependsOn("javadocJar")
 }
 
 // Javadoc generation

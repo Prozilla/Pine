@@ -10,7 +10,7 @@ From this version on, all releases will come with a sources and javadoc jar.
 
 ### Changes
 
-- Optimized event dispatches so they only create events when necessary
+- Optimized event dispatchers so they only create events when necessary
 - Updated the event dispatcher with new utility methods and ephemeral listeners, which only listen for an event once
 - Added a superclass for all Pine-related exceptions (PineException)
 - Updated hashcode and equals methods of all vector classes
