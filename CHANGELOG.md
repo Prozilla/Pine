@@ -1,5 +1,36 @@
 # Changelog
 
+## v2.0.3
+
+From this version on, all releases will come with a sources and javadoc jar.
+
+### New Features
+
+- Added events for gamepads connecting and disconnecting
+
+### Changes
+
+- Optimized event dispatches so they only create events when necessary
+- Updated the event dispatcher with new utility methods and ephemeral listeners, which only listen for an event once
+- Added a superclass for all Pine-related exceptions (PineException)
+- Updated hashcode and equals methods of all vector classes
+- Updated equals methods of style-related classes
+- Classes that would previously resort to printing the stack trace when they did not have access to a logger, will now use the system logger to log exceptions
+
+### Fixes
+
+- Fixed formatting of error messages (mostly related to null-checks) being inconsistent
+- Fixed out-of-bounds calculations used for culling
+
+### Documentation
+
+- Added custom CSS to Javadoc pages
+
+### Dependencies
+
+- Updated LWJGL to 3.3.6
+- Updated shadow plugin (com.gradleup.shadow) to 8.3.9
+
 ## v2.0.2
 
 ### New Features
