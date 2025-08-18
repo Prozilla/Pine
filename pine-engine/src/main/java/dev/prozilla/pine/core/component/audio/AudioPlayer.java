@@ -3,9 +3,8 @@ package dev.prozilla.pine.core.component.audio;
 import dev.prozilla.pine.common.asset.audio.AudioSource;
 import dev.prozilla.pine.common.asset.audio.AudioSourceContext;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
-
-import java.util.Objects;
 
 public class AudioPlayer extends Component implements AudioSourceContext {
 	
@@ -27,7 +26,7 @@ public class AudioPlayer extends Component implements AudioSourceContext {
 	}
 	
 	public AudioPlayer(AudioSource source, float volume) {
-		this.source = Objects.requireNonNull(source, "source must not be null");
+		this.source = Checks.isNotNull(source, "source");
 		this.volume = DEFAULT_VOLUME;
 		
 		setVolume(volume);

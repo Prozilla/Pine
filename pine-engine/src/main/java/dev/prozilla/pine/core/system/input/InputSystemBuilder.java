@@ -1,12 +1,11 @@
 package dev.prozilla.pine.core.system.input;
 
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.system.SystemBuilder;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
-
-import java.util.Objects;
 
 /**
  * Utility class for building input systems.
@@ -33,7 +32,7 @@ public class InputSystemBuilder extends SystemBuilder<InputSystem, InputSystemBu
 	
 	@Override
 	public InputSystem build() {
-		Objects.requireNonNull(callback, "Callback must not be null.");
+		Checks.isNotNull(callback, "callback");
 		
 		InputSystem inputSystem = new InputSystem(componentTypes) {
 			@Override

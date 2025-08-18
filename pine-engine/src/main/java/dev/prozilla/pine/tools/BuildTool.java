@@ -86,7 +86,7 @@ public class BuildTool {
 	
 	private static void prepareBuildDir(Path buildDir) {
 		logger.log("Clearing build directory...");
-		for (File file : Objects.requireNonNull(buildDir.toFile().listFiles())) {
+		for (File file : Objects.requireNonNull(buildDir.toFile().listFiles(), "build directory is not a directory")) {
 			if (!file.isDirectory() || !file.getName().equals("jre")) {
 				file.delete();
 			}
@@ -136,7 +136,7 @@ public class BuildTool {
 		FileSystem.unzip(tempZip, jreOutputDir);
 		
 		// Pull contents of JDK directory up and remove JDK directory
-		Path jdkDir = Objects.requireNonNull(FileSystem.getSubdirectory(jreOutputDir));
+		Path jdkDir = Objects.requireNonNull(FileSystem.getSubdirectory(jreOutputDir), "JRE output directory not found");
 		FileSystem.unwrapDirectory(jdkDir);
 		
 		return jreOutputDir;

@@ -12,6 +12,7 @@ import dev.prozilla.pine.common.property.adaptive.*;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.style.selector.Selector;
 import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.Node;
 
@@ -64,7 +65,7 @@ public class StyleSheet implements Printable, Asset {
 	}
 	
 	public <T> void setDefaultValue(StyledPropertyKey<T> propertyName, AdaptiveProperty<T> defaultValue) {
-		Objects.requireNonNull(defaultValue, "defaultValue must not be null");
+		Checks.isNotNull(defaultValue, "defaultValue");
 		
 		Style<T> style = getStyle(propertyName, true);
 		style.setDefaultValue(defaultValue);

@@ -4,9 +4,8 @@ import dev.prozilla.pine.common.asset.image.Texture;
 import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
-
-import java.util.Objects;
 
 /**
  * A component for rendering an image in the UI.
@@ -23,7 +22,7 @@ public class ImageNode extends Component {
 	}
 	
 	public ImageNode(TextureBase image) {
-		Objects.requireNonNull(image, "image must not be null");
+		Checks.isNotNull(image, "image");
 		
 		this.image = image;
 		

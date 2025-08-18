@@ -8,7 +8,6 @@ import dev.prozilla.pine.core.component.Component;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Utility class for querying entities with specific components to be processed by a system.
@@ -40,7 +39,7 @@ public class EntityQuery implements Destructible {
 		this.entityTag = tag;
 		
 		// Validate arguments
-		Objects.requireNonNull(includedComponentTypes, "includedComponentTypes must not be null");
+		Checks.isNotNull(includedComponentTypes, "includedComponentTypes");
 		Checks.isNotEmpty(includedComponentTypes, "length of includedComponentTypes must be greater than 0");
 		
 		if (excludedComponentTypes != null) {

@@ -1,10 +1,9 @@
 package dev.prozilla.pine.core.system.update;
 
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.SystemBuilder;
-
-import java.util.Objects;
 
 /**
  * Utility class for building update systems.
@@ -31,7 +30,7 @@ public class UpdateSystemBuilder extends SystemBuilder<UpdateSystem, UpdateSyste
 	
 	@Override
 	public UpdateSystem build() {
-		Objects.requireNonNull(callback, "Callback must not be null.");
+		Checks.isNotNull(callback, "callback");
 		
 		UpdateSystem updateSystem = new UpdateSystem(componentTypes) {
 			@Override
