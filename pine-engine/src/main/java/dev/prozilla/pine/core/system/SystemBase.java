@@ -13,7 +13,6 @@ import dev.prozilla.pine.core.system.init.InitSystemBase;
 
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -200,8 +199,8 @@ public abstract class SystemBase {
 	 * @param action Action to perform on entity chunk
 	 */
 	private void accept(EntityChunk entityChunk, Consumer<EntityChunk> action) throws NullPointerException {
-		Objects.requireNonNull(entityChunk, "Entity chunk must not be null.");
-		Objects.requireNonNull(action, "Action must not be null.");
+		Checks.isNotNull(entityChunk, "entityChunk");
+		Checks.isNotNull(action, "action");
 		
 		if (!entityChunk.isActive() || (runOnce && processedEntityIds.contains(entityChunk.getEntity().id))) {
 			return;

@@ -43,7 +43,7 @@ public class EntityQuery implements Destructible {
 		this.entityTag = tag;
 		
 		// Validate arguments
-		Objects.requireNonNull(includedComponentTypes, "includedComponentTypes must not be null");
+		Checks.isNotNull(includedComponentTypes, "includedComponentTypes");
 		Checks.isNotEmpty(includedComponentTypes, "length of includedComponentTypes must be greater than 0");
 		
 		if (excludedComponentTypes != null) {

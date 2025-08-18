@@ -25,7 +25,7 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 	}
 	
 	@Override
-	public void addListener(EventType eventType, EventListener<E> listener) {
+	public EventListener<E> addListener(EventType eventType, EventListener<E> listener) {
 		Checks.isNotNull(eventType, "eventType");
 		Checks.isNotNull(listener, "listener");
 		
@@ -34,6 +34,7 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 		}
 		
 		listeners.get(eventType).add(listener);
+		return listener;
 	}
 	
 	@Override
@@ -52,6 +53,9 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 	
 	@Override
 	public void invoke(EventType eventType, Target target) {
+		if (!shouldInvoke()) {
+			return;
+		}
 		invoke(createEvent(eventType, target));
 	}
 	
@@ -68,31 +72,37 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 	 * @param event The event to invoke
 	 */
 	protected void invoke(E event) {
-		List<EventListener<E>> eventListeners = listeners.get(event.getType());
-		
-		if (eventListeners == null) {
+		if (!shouldInvoke()) {
 			return;
 		}
 		
-		for (EventListener<E> listener : eventListeners) {
-			try {
-				listener.handle(event);
-			} catch (Exception e) {
-				if (logger != null) {
-					logger.error("Event listener failed", e);
-				} else {
-					e.printStackTrace();
+		List<EventListener<E>> eventListeners = listeners.get(event.getType());
+		
+		if (eventListeners != null) {
+			for (EventListener<E> listener : eventListeners) {
+				try {
+					listener.handle(event);
+				} catch (Exception e) {
+					getLogger().error("Event listener failed", e);
 				}
-			}
-			
-			if (event.isImmediatePropagationStopped()) {
-				break;
+				
+				if (event.isImmediatePropagationStopped()) {
+					break;
+				}
 			}
 		}
 		
-		if (!event.isPropagationStopped()) {
+		if (shouldPropagate() && !event.isPropagationStopped()) {
 			propagate(event);
 		}
+	}
+	
+	protected boolean shouldInvoke() {
+		return shouldPropagate() || !listeners.isEmpty();
+	}
+	
+	protected boolean shouldPropagate() {
+		return false;
 	}
 	
 	/**
@@ -111,6 +121,14 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 	 */
 	public void setLogger(Logger logger) {
 		this.logger = logger;
+	}
+	
+	protected Logger getLogger() {
+		if (logger == null) {
+			return Logger.system;
+		}
+		
+		return logger;
 	}
 	
 	/**

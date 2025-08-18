@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.scene;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.lifecycle.*;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.component.camera.CameraData;
@@ -10,8 +11,6 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.camera.CameraPrefab;
 import dev.prozilla.pine.core.rendering.Renderer;
-
-import java.util.Objects;
 
 /**
  * Responsible for loading objects into the world.
@@ -56,7 +55,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	}
 	
 	public void setApplication(Application application) {
-		this.application = Objects.requireNonNull(application, "application must not be null");
+		this.application = Checks.isNotNull(application, "application");
 		logger = application.getLogger();
 	}
 	

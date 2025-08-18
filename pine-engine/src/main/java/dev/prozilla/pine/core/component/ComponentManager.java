@@ -1,12 +1,12 @@
 package dev.prozilla.pine.core.component;
 
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.ECSManager;
-import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.scene.World;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ComponentManager extends ECSManager {
 	
@@ -26,14 +26,14 @@ public class ComponentManager extends ECSManager {
 	}
 	
 	public void addComponent(Entity entity, Component component) throws NullPointerException, IllegalStateException {
-		Objects.requireNonNull(entity, "Entity must not be null.");
-		Objects.requireNonNull(component, "Component must not be null.");
+		Checks.isNotNull(entity, "entity");
+		Checks.isNotNull(component, "component");
 		
 		if (components.contains(component)) {
-			throw new IllegalStateException("Component has already been added to an entity.");
+			throw new IllegalStateException("component has already been added to an entity");
 		}
 		if (!world.entityManager.contains(entity)) {
-			throw new IllegalStateException("Entity must be registered before attaching components.");
+			throw new IllegalStateException("entity must be registered before attaching components");
 		}
 		
 		components.add(component);
@@ -53,13 +53,13 @@ public class ComponentManager extends ECSManager {
 	}
 	
 	public void removeComponent(Entity entity, Component component) {
-		Objects.requireNonNull(component, "Component must not be null.");
+		Checks.isNotNull(component, "component");
 		
 		if (!components.contains(component)) {
-			throw new IllegalStateException("Component has not been added to an entity yet.");
+			throw new IllegalStateException("component has not been added to an entity yet");
 		}
 		if (!world.entityManager.contains(entity)) {
-			throw new IllegalStateException("Entity must be registered before removing components.");
+			throw new IllegalStateException("entity must be registered before removing components");
 		}
 		
 		components.remove(component);

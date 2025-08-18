@@ -1,11 +1,10 @@
 package dev.prozilla.pine.core.system.render;
 
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.SystemBuilder;
-
-import java.util.Objects;
 
 /**
  * Utility class for building render systems.
@@ -32,7 +31,7 @@ public class RenderSystemBuilder extends SystemBuilder<RenderSystem, RenderSyste
 	
 	@Override
 	public RenderSystem build() {
-		Objects.requireNonNull(callback, "Callback must not be null.");
+		Checks.isNotNull(callback, "callback");
 		
 		RenderSystem renderSystem = new RenderSystem(componentTypes) {
 			@Override

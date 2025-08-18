@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedProperty;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.NodeEventType;
 
@@ -52,9 +53,9 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 	 */
 	public StyledProperty(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, AdaptivePropertyBase<T> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
 		this.name = name;
-		this.node = Objects.requireNonNull(node, "node must not be null");
+		this.node = Checks.isNotNull(node, "node");
 		this.rules = Objects.requireNonNullElse(rules, new ArrayList<>());
-		this.adaptiveProperty = Objects.requireNonNull(defaultValue, "defaultValue must not be null");
+		this.adaptiveProperty = Checks.isNotNull(defaultValue, "defaultValue");
 		this.transitionRules = Objects.requireNonNullElse(transitionRules, new ArrayList<>());
 		fallbackProperty = this.adaptiveProperty;
 		

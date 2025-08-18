@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.lifecycle.InputHandler;
 import dev.prozilla.pine.common.lifecycle.Renderable;
 import dev.prozilla.pine.common.lifecycle.Updatable;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.ECSManager;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -14,7 +15,6 @@ import dev.prozilla.pine.core.system.render.RenderSystemBase;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 
 import java.util.Collection;
-import java.util.Objects;
 
 public class SystemManager extends ECSManager implements Initializable, InputHandler, Updatable, Renderable {
 	
@@ -100,7 +100,7 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 	 * Registers an entity in all systems.
 	 */
 	public void register(Entity entity) {
-		Objects.requireNonNull(entity, "Entity must not be null.");
+		Checks.isNotNull(entity, "entity");
 		
 		for (SystemGroup<? extends SystemBase> systemGroup : systemGroups) {
 			systemGroup.register(entity);
@@ -111,7 +111,7 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 	 * Unregisters an entity from all systems.
 	 */
 	public void unregister(Entity entity) {
-		Objects.requireNonNull(entity, "Entity must not be null.");
+		Checks.isNotNull(entity, "entity");
 		
 		for (SystemGroup<? extends SystemBase> systemGroup : systemGroups) {
 			systemGroup.unregister(entity);
@@ -119,7 +119,7 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 	}
 	
 	public void activateEntity(Entity entity) {
-		Objects.requireNonNull(entity, "Entity must not be null.");
+		Checks.isNotNull(entity, "entity");
 		
 		initSystems.forEach((initSystem) -> {
 			initSystem.activateEntity(entity);
@@ -127,7 +127,7 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 	}
 	
 	public boolean addSystem(SystemBase system) {
-		Objects.requireNonNull(system, "System must not be null.");
+		Checks.isNotNull(system, "system");
 		
 		boolean added = false;
 		for (SystemGroup<? extends SystemBase> systemGroup : systemGroups) {

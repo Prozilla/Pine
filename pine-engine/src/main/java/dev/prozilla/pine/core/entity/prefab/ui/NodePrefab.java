@@ -14,6 +14,7 @@ import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.property.style.StyledPropertyKey;
 import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.animation.AnimationData;
 import dev.prozilla.pine.core.component.ui.Node;
@@ -24,7 +25,6 @@ import dev.prozilla.pine.core.entity.prefab.Prefab;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -228,8 +228,8 @@ public class NodePrefab extends Prefab {
 	}
 	
 	public void setBorderImage(TextureBase borderImage, Vector4f slice, boolean fill) {
-		this.borderImage = Objects.requireNonNull(borderImage);
-		borderImageSlice = Objects.requireNonNull(slice);
+		this.borderImage = Checks.isNotNull(borderImage, "borderImage");
+		borderImageSlice = Checks.isNotNull(slice, "slice");
 		borderImageSliceFill = fill;
 	}
 	
