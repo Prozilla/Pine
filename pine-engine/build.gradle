@@ -94,6 +94,15 @@ tasks.register("runBuildTool", JavaExec) {
 	args = []
 }
 
+java {
+	withSourcesJar()
+	withJavadocJar()
+}
+
+tasks.named("sourcesJar", Jar) {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 // Publishing to GitHub Packages and creating release
 publishing {
 	publications {
@@ -147,6 +156,11 @@ githubRelease {
 	body = getChangelogEntry()
 	targetCommitish = "main"
 	overwrite = true
+	releaseAssets = [
+		tasks.named("jar").get().archiveFile.get().asFile,
+		tasks.named("sourcesJar").get().archiveFile.get().asFile,
+		tasks.named("javadocJar").get().archiveFile.get().asFile
+	]
 }
 
 tasks.named("publish") {
@@ -161,9 +175,10 @@ tasks.withType(Javadoc).configureEach {
 	options.encoding = "UTF-8"
 	options.windowTitle = "Pine ${project.version}"
 	options.docTitle = "Pine API Docs"
-	options.header = "Pine API documentation."
+	options.header = "Pine API documentation"
 	options.bottom = "Copyright © ${Year.now().value} Prozilla"
 	options.links("https://javadoc.lwjgl.org/")
+	options.addStringOption("-add-stylesheet", "${projectDir}/src/main/javadoc/style.css")
 }
 
 // Unit testing
