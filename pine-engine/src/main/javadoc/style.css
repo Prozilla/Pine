@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+/* Color palette from website */
+:root {
+	--sl-color-accent-low: hsl(204, 31%, 11%);
+	--sl-color-accent: hsl(204, 70%, 53%);
+	--sl-color-accent-high: hsl(204, 70%, 77%);
+	--sl-color-white: hsl(216, 28%, 93%);
+	--sl-color-gray-1: hsl(214, 29%, 81%);
+	--sl-color-gray-2: hsl(214, 20%, 75%);
+	--sl-color-gray-3: hsl(210, 17%, 46%);
+	--sl-color-gray-4: hsl(210, 7%, 28%);
+	--sl-color-gray-5: hsl(210, 9%, 22%);
+	--sl-color-gray-6: hsl(213, 11%, 16%);
+	--sl-color-gray-7: hsl(214, 13%, 11%);
+
+	--color-black-hsl: 214, 13%, 11%;
+	--sl-color-black: hsl(var(--color-black-hsl));
+
+	--pine-brand-1: rgb(46, 204, 113);
+	--pine-brand-2: rgb(39, 174, 117);
+	--pine-brand-3: rgb(52, 152, 219);
+	--pine-gradient: linear-gradient(180deg, var(--pine-brand-1) 11%, var(--pine-brand-2) 54%, var(--pine-brand-3) 96%);
+}
+
+/* Colors */
+:root {
+	--body-text-color: var(--sl-color-gray-1);
+	--block-text-color: var(--sl-color-gray-2);
+	--body-background-color: var(--sl-color-gray-6);
+	--section-background-color: var(--sl-color-gray-5);
+	--detail-background-color: var(--sl-color-gray-6);
+	--navbar-background-color: var(--sl-color-gray-3);
+	--navbar-text-color: var(--sl-color-white);
+	--subnav-background-color: var(--sl-color-gray-7);
+	--selected-background-color: var(--sl-color-accent-high);
+	--selected-text-color: var(--sl-color-black);
+	--selected-link-color: var(--sl-color-accent);
+	--even-row-color: var(--sl-color-gray-5);
+	--odd-row-color: var(--sl-color-gray-6);
+	--title-color: var(--sl-color-white);
+	--link-color: var(--sl-color-accent-high);
+	--link-color-active: var(--sl-color-accent);
+	--snippet-background-color: var(--sl-color-gray-6);
+	--snippet-text-color: var(--block-text-color);
+	--snippet-highlight-color: var(--pine-brand-1);
+	--border-color: var(--sl-color-gray-4);
+	--table-border-color: var(--sl-color-black);
+	--search-input-background-color: var(--sl-color-black);
+	--search-input-text-color: var(--sl-color-white);
+	--search-input-placeholder-color: var(--sl-color-gray-3);
+	--search-tag-highlight-color: var(--pine-brand-3);
+	--copy-icon-brightness: 250%;
+	--copy-button-background-color-active: rgba(168, 168, 176, 0.3);
+	--invalid-tag-background-color: #ffe6e6;
+	--invalid-tag-text-color: var(--sl-color-black);
+}
+
+.top-nav {
+	--link-color-active: var(--sl-color-accent-low);
+}
+
+main a[href*="://"]:hover::after {
+	/* Use link color active */
+	background-image: url('data:image/svg+xml; utf8, \
+		<svg xmlns="http://www.w3.org/2000/svg" width="768" height="768">\
+		  <path d="M584 664H104V184h216V80H0v688h688V448H584zM384 0l132 \
+		  132-240 240 120 120 240-240 132 132V0z" fill="hsl(204, 70%, 53%)"/>\
+		</svg>');
+}
+
+main a[href*="://"]::after {
+	/* Use link color */
+	background-image: url('data:image/svg+xml; utf8, \
+		<svg xmlns="http://www.w3.org/2000/svg" width="768" height="768">\
+		  <path d="M584 664H104V184h216V80H0v688h688V448H584zM384 0l132 \
+		  132-240 240 120 120 240-240 132 132V0z" fill="hsl(204, 70%, 77%)"/>\
+		</svg>');
+}
+
+/* Fonts */
+:root {
+	--body-font-family: "Rubik", sans-serif;
+	--block-font-family: "Rubik", sans-serif;
+	--code-font-family: "JetBrains Mono", monospace;
+}
