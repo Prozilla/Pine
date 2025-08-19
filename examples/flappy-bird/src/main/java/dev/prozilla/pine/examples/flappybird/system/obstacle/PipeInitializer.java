@@ -23,8 +23,8 @@ public class PipeInitializer extends InitSystem {
 		Transform transform = chunk.getComponent(Transform.class);
 		
 		// Set sprite properties
-		spriteRenderer.setRegion(0, 0, PipeData.WIDTH, PipeData.HEIGHT);
-		spriteRenderer.scale.set(1.25f);
+		spriteRenderer.setRegion(0, 0, PipeData.SPRITE_WIDTH, PipeData.SPRITE_HEIGHT);
+		spriteRenderer.scale.set(PipeData.SCALE);
 		if (pipeData.isTop) {
 			// Flip sprite
 			spriteRenderer.rotation = 180;
