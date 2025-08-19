@@ -8,13 +8,14 @@ import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadButton;
 import dev.prozilla.pine.examples.flappybird.EntityTag;
+import dev.prozilla.pine.examples.flappybird.FlappyBird;
+import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
-import dev.prozilla.pine.examples.flappybird.entity.GameOverPrefab;
-import dev.prozilla.pine.examples.flappybird.entity.PipesPrefab;
-import dev.prozilla.pine.examples.flappybird.entity.PlayerPrefab;
-import dev.prozilla.pine.examples.flappybird.entity.ScorePrefab;
+import dev.prozilla.pine.examples.flappybird.entity.*;
 import dev.prozilla.pine.examples.flappybird.system.background.BackgroundMover;
 import dev.prozilla.pine.examples.flappybird.system.canvas.ScoreTextUpdater;
+import dev.prozilla.pine.examples.flappybird.system.ground.GroundInitializer;
+import dev.prozilla.pine.examples.flappybird.system.ground.GroundMover;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipeInitializer;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipesInitializer;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipesMover;
@@ -42,7 +43,7 @@ public class GameScene extends SceneBase {
 	public Directory dataDirectory;
 	
 	// Constants
-	public static final float MIN_OBSTACLE_TIME = 0.75f;
+	public static final float MIN_OBSTACLE_TIME = 1f;
 	public static final float MAX_OBSTACLE_TIME = 2.5f;
 	
 	@Override
@@ -55,6 +56,7 @@ public class GameScene extends SceneBase {
 		PlayerPrefab playerPrefab = new PlayerPrefab();
 		ScorePrefab scorePrefab = new ScorePrefab(font);
 		GameOverPrefab gameOverPrefab = new GameOverPrefab(font);
+		GroundPrefab groundPrefab = new GroundPrefab();
 		pipesPrefab = new PipesPrefab();
 		
 		// Add systems
@@ -66,12 +68,24 @@ public class GameScene extends SceneBase {
 		world.addSystem(new PipesInitializer());
 		world.addSystem(new PipesMover());
 		world.addSystem(new ScoreTextUpdater());
+		world.addSystem(new GroundInitializer());
+		world.addSystem(new GroundMover());
 		
-		// Create player object
-		player = world.addEntity(playerPrefab);
+//		if (Application.isDevMode()) {
+//			world.addSystem(new PipesDebugRenderer());
+//		}
 		
 		// Create empty parent for obstacles
 		obstacles = world.addEntity(new Entity(world));
+		
+		// Create ground objects
+		int groundCount = Math.round((float)FlappyBird.WIDTH / BackgroundData.WIDTH + 0.5f) + 1;
+		for (int i = 0; i < groundCount; i++) {
+			world.addEntity(groundPrefab.instantiate(world, i));
+		}
+		
+		// Create player object
+		player = world.addEntity(playerPrefab);
 		
 		// Create user interface
 		Entity nodeRoot = world.addEntity(new NodeRootPrefab());

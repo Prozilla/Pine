@@ -283,7 +283,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 				logger.error("Failed to render application", e);
 				
 				// Abort rendering
-				if (renderer.isDrawing()) {
+				if (renderer.isRendering()) {
 					renderer.end();
 				}
 			} finally {
