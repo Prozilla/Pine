@@ -36,6 +36,6 @@ public class FlappyBird {
 	
 	public static void main(String[] args) {
 		ApplicationBuilder flappyBird = getApplication();
-		flappyBird.buildAndRun();
+		flappyBird.build().run();
 	}
 }

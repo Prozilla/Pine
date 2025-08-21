@@ -16,6 +16,6 @@ public class Main {
 		snake.setIcons("snake/apple.png");
 		snake.setTargetFps(120);
 		
-		snake.buildAndRun();
+		snake.build().run();
 	}
 }

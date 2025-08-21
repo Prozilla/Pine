@@ -23,6 +23,6 @@ public class Main {
 			applicationBuilder.setFullscreen(true);
 		}
 		
-		applicationBuilder.buildAndRun();
+		applicationBuilder.build().run();
 	}
 }
