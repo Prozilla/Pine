@@ -47,4 +47,5 @@ public class GameManager extends ApplicationManager {
 			application.reloadScene();
 		}
 	}
+	
 }

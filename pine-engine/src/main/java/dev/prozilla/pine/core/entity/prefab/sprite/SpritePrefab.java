@@ -63,6 +63,8 @@ public class SpritePrefab extends Prefab {
 	
 	@Override
 	protected void apply(Entity entity) {
+		super.apply(entity);
+		
 		SpriteRenderer spriteRenderer = color != null ? new SpriteRenderer(texture, color) : new SpriteRenderer(texture);
 		
 		if (scale != null) {

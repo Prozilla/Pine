@@ -5,419 +5,324 @@ import dev.prozilla.pine.common.asset.image.Texture;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.Renderer;
-import org.lwjgl.system.MemoryUtil;
+import org.jetbrains.annotations.NotNull;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBTTAlignedQuad;
+import org.lwjgl.stb.STBTTBakedChar;
+import org.lwjgl.stb.STBTTFontinfo;
+import org.lwjgl.system.MemoryStack;
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.awt.Font.*;
+import static org.lwjgl.stb.STBTruetype.*;
+import static org.lwjgl.system.MemoryUtil.memAlloc;
+import static org.lwjgl.system.MemoryUtil.memFree;
 
 /**
  * Contains a font texture for drawing text.
+ *
+ * <p>Font textures are created using <a href="https://github.com/nothings/stb/blob/f1c79c02822848a9bed4315b12c8c8f3761e1296/stb_truetype.h">stb_truetype</a></p>
  */
 public class Font implements Asset {
-
-    /**
-     * Contains the glyphs for each char.
-     */
-    private final Map<Character, Glyph> glyphs;
-    /**
-     * Contains the font texture.
-     */
-    private final Texture texture;
-
-    /**
-     * Height of the font.
-     */
-    private int fontHeight;
-    
-    private final int size;
-    
-    public String path;
-    
-    public final static int DEFAULT_SIZE = 16;
-    public final static Color DEFAULT_COLOR = Color.white();
-
-    /**
-     * Creates a default anti-aliased font with monospaced glyphs and default
-     * size 16.
-     */
-    public Font() {
-        this(new java.awt.Font(MONOSPACED, PLAIN, 16), true);
-    }
-
-    /**
-     * Creates a default font with monospaced glyphs and default size 16.
-     *
-     * @param antiAlias Whether the font should be anti-aliased or not
-     */
-    public Font(boolean antiAlias) {
-        this(new java.awt.Font(MONOSPACED, PLAIN, 16), antiAlias);
-    }
-
-    /**
-     * Creates a default anti-aliased font with monospaced glyphs and specified
-     * size.
-     *
-     * @param size Font size
-     */
-    public Font(int size) {
-        this(new java.awt.Font(MONOSPACED, PLAIN, size), true);
-    }
-
-    /**
-     * Creates a default font with monospaced glyphs and specified size.
-     *
-     * @param size      Font size
-     * @param antiAlias Whether the font should be anti-aliased or not
-     */
-    public Font(int size, boolean antiAlias) {
-        this(new java.awt.Font(MONOSPACED, PLAIN, size), antiAlias);
-    }
-
-    /**
-     * Creates an anti-aliased Font from an input stream.
-     *
-     * @param in   The input stream
-     * @param size Font size
-     *
-     * @throws FontFormatException if fontFile does not contain the required
-     *                             font tables for the specified format
-     * @throws IOException         If font can't be read
-     */
-    public Font(InputStream in, int size) throws FontFormatException, IOException {
-        this(in, size, true);
-    }
-
-    /**
-     * Creates a Font from an input stream.
-     *
-     * @param in        The input stream
-     * @param size      Font size
-     * @param antiAlias Whether the font should be anti-aliased or not
-     *
-     * @throws FontFormatException if fontFile does not contain the required
-     *                             font tables for the specified format
-     * @throws IOException         If font can't be read
-     */
-    public Font(InputStream in, int size, boolean antiAlias) throws FontFormatException, IOException {
-        this(java.awt.Font.createFont(TRUETYPE_FONT, in).deriveFont(PLAIN, size), antiAlias);
-    }
-
-    /**
-     * Creates an anti-aliased font from an AWT Font.
-     *
-     * @param font The AWT Font
-     */
-    public Font(java.awt.Font font) {
-        this(font, true);
-    }
-
-    /**
-     * Creates a font from an AWT Font.
-     *
-     * @param font      The AWT Font
-     * @param antiAlias Whether the font should be anti-aliased or not
-     */
-    public Font(java.awt.Font font, boolean antiAlias) {
-        glyphs = new HashMap<>();
-        texture = createFontTexture(font, antiAlias);
-        size = font.getSize();
-    }
-
-    /**
-     * Creates a font texture from specified AWT font.
-     *
-     * @param font      The AWT font
-     * @param antiAlias Whether the font should be anti-aliased or not
-     *
-     * @return Font texture
-     */
-    private Texture createFontTexture(java.awt.Font font, boolean antiAlias) {
-        /* Loop through the characters to get charWidth and charHeight */
-        int imageWidth = 0;
-        int imageHeight = 0;
-
-        /* Start at char #32, because ASCII 0 to 31 are just control codes */
-        for (int i = 32; i < 256; i++) {
-            if (i == 127) {
-                /* ASCII 127 is the DEL control code, so we can skip it */
-                continue;
-            }
-            char c = (char) i;
-            BufferedImage ch = createCharImage(font, c, antiAlias);
-            if (ch == null) {
-                /* If char image is null that font does not contain the char */
-                continue;
-            }
-
-            imageWidth += ch.getWidth();
-            imageHeight = Math.max(imageHeight, ch.getHeight());
-        }
-
-        fontHeight = imageHeight;
-
-        /* Image for the texture */
-        BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = image.createGraphics();
-
-        int x = 0;
-
-        /* Create image for the standard chars, again we omit ASCII 0 to 31
-         * because they are just control codes */
-        for (int i = 32; i < 256; i++) {
-            if (i == 127) {
-                /* ASCII 127 is the DEL control code, so we can skip it */
-                continue;
-            }
-            char c = (char) i;
-            BufferedImage charImage = createCharImage(font, c, antiAlias);
-            if (charImage == null) {
-                /* If char image is null that font does not contain the char */
-                continue;
-            }
-
-            int charWidth = charImage.getWidth();
-            int charHeight = charImage.getHeight();
-
-            /* Create glyph and draw char on image */
-            Glyph ch = new Glyph(charWidth, charHeight, x, image.getHeight() - charHeight, 0f);
-            g.drawImage(charImage, x, 0, null);
-            x += ch.width;
-            glyphs.put(c, ch);
-        }
-
-        /* Flip image Horizontal to get the origin to bottom left */
-        AffineTransform transform = AffineTransform.getScaleInstance(1f, -1f);
-        transform.translate(0, -image.getHeight());
-        AffineTransformOp operation = new AffineTransformOp(transform,
-                                                            AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-        image = operation.filter(image, null);
-
-        /* Get charWidth and charHeight of image */
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        /* Get pixel data of image */
-        int[] pixels = new int[width * height];
-        image.getRGB(0, 0, width, height, pixels, 0, width);
-
-        /* Put pixel data into a ByteBuffer */
-        ByteBuffer buffer = MemoryUtil.memAlloc(width * height * 4);
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                /* Pixel as RGBA: 0xAARRGGBB */
-                int pixel = pixels[i * width + j];
-                /* Red component 0xAARRGGBB >> 16 = 0x0000AARR */
-                buffer.put((byte) ((pixel >> 16) & 0xFF));
-                /* Green component 0xAARRGGBB >> 8 = 0x00AARRGG */
-                buffer.put((byte) ((pixel >> 8) & 0xFF));
-                /* Blue component 0xAARRGGBB >> 0 = 0xAARRGGBB */
-                buffer.put((byte) (pixel & 0xFF));
-                /* Alpha component 0xAARRGGBB >> 24 = 0x000000AA */
-                buffer.put((byte) ((pixel >> 24) & 0xFF));
-            }
-        }
-        /* Do not forget to flip the buffer! */
-        buffer.flip();
-
-        /* Create texture */
-        Texture fontTexture = new Texture(null, width, height, buffer);
-        MemoryUtil.memFree(buffer);
-        return fontTexture;
-    }
-
-    /**
-     * Creates a char image from specified AWT font and char.
-     *
-     * @param font      The AWT font
-     * @param c         The char
-     * @param antiAlias Whether the char should be anti-aliased or not
-     *
-     * @return Char image
-     */
-    private BufferedImage createCharImage(java.awt.Font font, char c, boolean antiAlias) {
-        /* Creating temporary image to extract character size */
-        BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = image.createGraphics();
-        if (antiAlias) {
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        }
-        g.setFont(font);
-        FontMetrics metrics = g.getFontMetrics();
-        g.dispose();
-
-        /* Get char charWidth and charHeight */
-        int charWidth = metrics.charWidth(c);
-        int charHeight = metrics.getHeight();
-
-        /* Check if charWidth is 0 */
-        if (charWidth == 0) {
-            return null;
-        }
-
-        /* Create image for holding the char */
-        image = new BufferedImage(charWidth, charHeight, BufferedImage.TYPE_INT_ARGB);
-        g = image.createGraphics();
-        if (antiAlias) {
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        }
-        g.setFont(font);
-        g.setPaint(java.awt.Color.WHITE);
-        g.drawString(String.valueOf(c), 0, metrics.getAscent());
-        g.dispose();
-        return image;
-    }
-
-    /**
-     * Gets the width of the specified text.
-     *
-     * @param text The text
-     *
-     * @return Width of text
-     */
-    public int getWidth(CharSequence text) {
-        int width = 0;
-        int lineWidth = 0;
-        for (int i = 0; i < text.length(); i++) {
-            char character = text.charAt(i);
-            if (character == '\n') {
-                /* Line end, set width to maximum from line width and stored
-                 * width */
-                width = Math.max(width, lineWidth);
-                lineWidth = 0;
-                continue;
-            }
-            if (character == '\r') {
-                /* Carriage return, just skip it */
-                continue;
-            }
-            Glyph glyph = glyphs.get(character);
-            if (glyph != null) {
-                lineWidth += glyph.width;
-            }
-        }
-        width = Math.max(width, lineWidth);
-        return width;
-    }
-
-    /**
-     * Gets the height of the specified text.
-     *
-     * @param text The text
-     *
-     * @return Height of text
-     */
-    public int getHeight(CharSequence text) {
-        int height = 0;
-        int lineHeight = 0;
-        for (int i = 0; i < text.length(); i++) {
-            char character = text.charAt(i);
-            if (character == '\n') {
-                /* Line end, add line height to stored height */
-                height += lineHeight;
-                lineHeight = 0;
-                continue;
-            }
-            if (character == '\r') {
-                /* Carriage return, just skip it */
-                continue;
-            }
-            Glyph glyph = glyphs.get(character);
-            if (glyph != null) {
-                lineHeight = Math.max(lineHeight, glyph.height);
-            }
-        }
-        height += lineHeight;
-        return height;
-    }
-    
-    public int getSize() {
-        return size;
-    }
-    
-    /**
-     * Draw text at the specified position and color.
-     *
-     * @param renderer The renderer to use
-     * @param text     TextRenderer to draw
-     * @param x        X coordinate of the text position
-     * @param y        Y coordinate of the text position
-     * @param c        Color to use
-     */
-    public void drawText(Renderer renderer, CharSequence text, float x, float y, float z, Color c) {
-        int textHeight = getHeight(text);
-
-        float drawX = x;
-        float drawY = y;
-        if (textHeight > fontHeight) {
-            drawY += textHeight - fontHeight;
-        }
-
-        for (int i = 0; i < text.length(); i++) {
-            char character = text.charAt(i);
-            if (character == '\n') {
-                /* Line feed, set x and y to draw at the next line */
-                drawY -= fontHeight;
-                drawX = x;
-                continue;
-            }
-            if (character == '\r') {
-                /* Carriage return, just skip it */
-                continue;
-            }
-            Glyph glyph = glyphs.get(character);
-            if (glyph != null) {
-                renderer.drawTextureRegion(texture, drawX, drawY, z, glyph.x, glyph.y, glyph.width, glyph.height, c);
-                drawX += glyph.width;
-            }
-        }
-    }
-
-    /**
-     * Draw text at the specified position.
-     *
-     * @param renderer The renderer to use
-     * @param text     TextRenderer to draw
-     * @param x        X coordinate of the text position
-     * @param y        Y coordinate of the text position
-     */
-    public void drawText(Renderer renderer, CharSequence text, float x, float y, float z) {
-        drawText(renderer, text, x, y, z, DEFAULT_COLOR);
-    }
-    
-    /**
-     * Creates a new font from the same font file, but with a different size.
-     */
-    public Font setSize(int size) {
-        return AssetPools.fonts.load(path, size);
-    }
-    
-    @Override
-    public String getPath() {
-        return path;
-    }
-    
-    /**
-     * Deletes the font.
-     */
-    @Override
-    public void destroy() {
-        String path = getPath();
-        if (path != null) {
-            AssetPools.fonts.remove(this);
-        }
-        texture.destroy();
-    }
-    
-    public static String generateKey(String path, int size) {
-        return String.format("%s:%s", path, size);
-    }
+	
+	/** The glyphs for each char. */
+	private final Map<Character, Glyph> glyphs;
+	private final Texture texture;
+	
+	/** Height of the font. */
+	private float fontHeight;
+	private float fontDescent;
+	private final int size;
+	public String path;
+	
+	public static final int DEFAULT_SIZE = 16;
+	public static final Color DEFAULT_COLOR = Color.white();
+	
+	public static final int FIRST_CHAR = 32;
+	public static final int CHAR_COUNT = 224;
+	public static final int DEL_CHAR = 127;
+	
+	/**
+	 * Creates a font from a TTF input stream.
+	 */
+	public Font(InputStream in, int size) throws IOException {
+		this(in, size, true);
+	}
+	
+	/**
+	 * Creates a font from a TTF input stream.
+	 */
+	public Font(InputStream in, int size, boolean antiAlias) throws IOException {
+		glyphs = new HashMap<>();
+		this.size = size;
+		this.texture = createFontTexture(in, size);
+	}
+	
+	public Font(int size) {
+		try (InputStream defaultFont = Font.class.getResourceAsStream("/fonts/Inconsolata.ttf")) {
+			if (defaultFont == null) {
+				throw new RuntimeException("Default font missing.");
+			}
+			glyphs = new HashMap<>();
+			this.size = size;
+			this.texture = createFontTexture(defaultFont, size);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Creates a font texture from a given input stream.
+	 * @param fontStream The input stream
+	 * @param fontSize The size of the font
+	 * @return The font texture
+	 */
+	private Texture createFontTexture(InputStream fontStream, int fontSize) throws IOException {
+		ByteBuffer fontBuffer = null;
+		try {
+			// Load font bytes
+			byte[] fontBytes = fontStream.readAllBytes();
+			fontBuffer = memAlloc(fontBytes.length);
+			fontBuffer.put(fontBytes).flip();
+			
+			int bitmapWidth = 512;
+			int bitmapHeight = 512;
+			ByteBuffer bitmap = BufferUtils.createByteBuffer(bitmapWidth * bitmapHeight);
+			
+			// Bake ASCII glyphs into a bitmap
+			STBTTBakedChar.Buffer characterData = STBTTBakedChar.malloc(CHAR_COUNT);
+			stbtt_BakeFontBitmap(fontBuffer, fontSize, bitmap, bitmapWidth, bitmapHeight, FIRST_CHAR, characterData);
+			
+			ByteBuffer pixels = createPixelData(bitmapWidth, bitmapHeight, bitmap);
+			Texture texture = new Texture(null, bitmapWidth, bitmapHeight, pixels);
+			
+			STBTTFontinfo fontInfo = STBTTFontinfo.malloc();
+			if (!stbtt_InitFont(fontInfo, fontBuffer)) {
+				throw new IOException("Failed to initialize font");
+			}
+			
+			// Get vertical metrics for proper line height
+			try (MemoryStack stack = MemoryStack.stackPush()) {
+				IntBuffer ascent = stack.mallocInt(1);
+				IntBuffer descent = stack.mallocInt(1);
+				IntBuffer lineGap = stack.mallocInt(1);
+				
+				stbtt_GetFontVMetrics(fontInfo, ascent, descent, lineGap);
+				
+				// Scale to pixel height
+				float scale = stbtt_ScaleForPixelHeight(fontInfo, fontSize);
+				fontHeight = (ascent.get(0) - descent.get(0) + lineGap.get(0)) * scale;
+				fontDescent = descent.get(0) * scale;
+				
+				// Measure each character’s quad size
+				FloatBuffer xPos = stack.floats(0.0f);
+				FloatBuffer yPos = stack.floats(0.0f);
+				STBTTAlignedQuad quad = STBTTAlignedQuad.malloc(stack);
+				
+				for (int i = 0; i < CHAR_COUNT; i++) {
+					createGlyph(i, xPos, yPos, characterData, bitmapWidth, bitmapHeight, quad);
+				}
+			}
+			
+			characterData.free();
+			fontInfo.free();
+			return texture;
+		} finally {
+			if (fontBuffer != null) {
+				memFree(fontBuffer);
+			}
+		}
+	}
+	
+	/**
+	 * Creates a glyph of a given character and stores it.
+	 * @param i The index of the character in the character data array
+	 * @param xPos The current x position
+	 * @param yPos The current y position
+	 * @param characterData The character data array
+	 * @param bitmapWidth The width of the bitmap
+	 * @param bitmapHeight The height of the bitmap
+	 * @param quad The quad struct to store the character metrics in
+	 */
+	private void createGlyph(int i, FloatBuffer xPos, FloatBuffer yPos, STBTTBakedChar.Buffer characterData, int bitmapWidth, int bitmapHeight, STBTTAlignedQuad quad) {
+		int code = FIRST_CHAR + i;
+		if (code == DEL_CHAR) {
+			return;
+		}
+		char character = (char)code;
+		
+		float startX = xPos.get(0);
+		stbtt_GetBakedQuad(characterData, bitmapWidth, bitmapHeight, i, xPos, yPos, quad, true);
+		float endX = xPos.get(0);
+		
+		float regionX = quad.s0() * bitmapWidth;
+		float regionY = (1f - quad.t1()) * bitmapHeight;
+		float regionWidth  = (quad.s1() - quad.s0()) * bitmapWidth;
+		float regionHeight = (quad.t1() - quad.t0()) * bitmapHeight;
+		
+		float y = quad.y1();
+		float height = quad.y1() - quad.y0();
+		float advance = endX - startX;
+		
+		Glyph glyph = new Glyph(regionWidth, regionHeight, regionX, regionY, y, height, advance);
+		glyphs.put(character, glyph);
+	}
+	
+	/**
+	 * Calculates the width of a character sequence in this font.
+	 * @param text The character sequence
+	 * @return The width of the character sequence.
+	 */
+	public float getWidth(CharSequence text) {
+		float width = 0;
+		float lineWidth = 0;
+		for (int i = 0; i < text.length(); i++) {
+			char character = text.charAt(i);
+			if (character == '\n') {
+				width = Math.max(width, lineWidth);
+				lineWidth = 0;
+				continue;
+			}
+			if (character == '\r') {
+				continue;
+			}
+			Glyph glyph = glyphs.get(character);
+			if (glyph != null) {
+				lineWidth += glyph.advance;
+			}
+		}
+		return Math.max(width, lineWidth);
+	}
+	
+	/**
+	 * Calculates the height of a character sequence in this font.
+	 * @param text The character sequence
+	 * @return The height of the character sequence.
+	 */
+	public float getHeight(CharSequence text) {
+		float height = 0;
+		for (int i = 0; i < text.length(); i++) {
+			char character = text.charAt(i);
+			if (character == '\n') {
+				height += fontHeight;
+			}
+		}
+		height += fontHeight;
+		return height;
+	}
+	
+	public int getSize() {
+		return size;
+	}
+	
+	/**
+	 * Draws text on the screen at the given coordinates with the default text color using this font.
+	 * @param renderer The renderer to use
+	 * @param text The text to draw
+	 * @param x The x position
+	 * @param y The y position
+	 * @param z The z position
+	 */
+	public void drawText(Renderer renderer, CharSequence text, float x, float y, float z) {
+		drawText(renderer, text, x, y, z, DEFAULT_COLOR);
+	}
+	
+	/**
+	 * Draws text on the screen at the given coordinates using this font.
+	 * @param renderer The renderer to use
+	 * @param text The text to draw
+	 * @param x The x position
+	 * @param y The y position
+	 * @param z The z position
+	 * @param c The color to draw the text in
+	 */
+	public void drawText(Renderer renderer, CharSequence text, float x, float y, float z, Color c) {
+		float drawX = x;
+		float drawY = y;
+		
+		float textHeight = getHeight(text);
+		if (textHeight > fontHeight) {
+			drawY += textHeight - fontHeight;
+		}
+		
+		drawY -= fontDescent;
+		
+		for (int i = 0; i < text.length(); i++) {
+			char character = text.charAt(i);
+			if (character == '\n') {
+				drawY -= fontHeight;
+				drawX = x;
+				continue;
+			}
+			if (character == '\r') {
+				continue;
+			}
+			Glyph glyph = glyphs.get(character);
+			if (glyph != null) {
+				renderer.drawTextureRegion(texture, drawX, drawY - glyph.y, z, glyph.regionX, glyph.regionY, glyph.regionWidth, glyph.regionHeight, c);
+				drawX += glyph.advance;
+			}
+		}
+	}
+	
+	/**
+	 * Creates a new font from the same font file, but with a different size.
+	 */
+	public Font setSize(int size) {
+		return AssetPools.fonts.load(path, size);
+	}
+	
+	@Override
+	public String getPath() {
+		return path;
+	}
+	
+	/**
+	 * Deletes the font.
+	 */
+	@Override
+	public void destroy() {
+		String path = getPath();
+		if (path != null) {
+			AssetPools.fonts.remove(this);
+		}
+		texture.destroy();
+	}
+	
+	public static String generateKey(String path, int size) {
+		return String.format("%s:%s", path, size);
+	}
+	
+	/**
+	 * Converts a bitmap to a buffer with RGBA values for each pixel.
+	 * @param bitmapWidth The width of the bitmap
+	 * @param bitmapHeight The height of the bitmap
+	 * @param bitmap The bitmap
+	 * @return The buffer containing RGBA values for each pixel
+	 */
+	private static @NotNull ByteBuffer createPixelData(int bitmapWidth, int bitmapHeight, ByteBuffer bitmap) {
+		ByteBuffer rgba = BufferUtils.createByteBuffer(bitmapWidth * bitmapHeight * 4);
+		for (int y = 0; y < bitmapHeight; y++) {
+			for (int x = 0; x < bitmapWidth; x++) {
+				int source = y * bitmapWidth + x;
+				int destination = (bitmapHeight - 1 - y) * bitmapWidth + x;
+				
+				byte alpha = bitmap.get(source);
+				
+				rgba.put(destination * 4, (byte)0xFF);
+				rgba.put(destination * 4 + 1, (byte)0xFF);
+				rgba.put(destination * 4 + 2, (byte)0xFF);
+				rgba.put(destination * 4 + 3, alpha);
+			}
+		}
+		rgba.flip();
+		return rgba;
+	}
+	
 }

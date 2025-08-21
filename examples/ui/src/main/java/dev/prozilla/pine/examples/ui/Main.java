@@ -9,11 +9,12 @@ public class Main {
 		
 		applicationBuilder.setInitialScene(new MainScene());
 		applicationBuilder.setTitle("UI Demo");
+		applicationBuilder.setCompanyName("Pine");
 		applicationBuilder.setWindowSize(900, 600);
 		applicationBuilder.setTargetFps(120);
 		applicationBuilder.getRenderConfig().snapPixels.setValue(true);
 		
-		applicationBuilder.buildAndRun();
+		applicationBuilder.build().run();
 	}
 	
 }

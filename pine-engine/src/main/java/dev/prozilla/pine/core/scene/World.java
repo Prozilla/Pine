@@ -42,11 +42,11 @@ import java.util.List;
 public class World implements Initializable, InputHandler, Updatable, Renderable, Destructible {
 	
 	// ECS managers
-	public EntityManager entityManager;
-	public ComponentManager componentManager;
-	public SystemManager systemManager;
+	public final EntityManager entityManager;
+	public final ComponentManager componentManager;
+	public final SystemManager systemManager;
 	
-	public EntityQueryPool queryPool;
+	public final EntityQueryPool queryPool;
 	
 	public final Application application;
 	public final Scene scene;

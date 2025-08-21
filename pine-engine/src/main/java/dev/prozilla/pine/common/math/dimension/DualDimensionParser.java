@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.math.dimension;
 
+import dev.prozilla.pine.common.property.selection.WrapMode;
 import dev.prozilla.pine.common.util.Parser;
 
 import java.util.ArrayList;
@@ -19,16 +20,7 @@ public class DualDimensionParser extends Parser<DualDimension> {
 			dimensions.add(dimensionParser.getResult());
 		}
 		
-		DualDimension dualDimension = switch (dimensions.size()) {
-			case 1 -> new DualDimension(dimensions.get(0));
-			case 2 -> new DualDimension(dimensions.get(0), dimensions.get(1));
-			default -> null;
-		};
-		
-		if (dualDimension == null) {
-			return fail();
-		}
-		
-		return succeed(dualDimension);
+		WrapMode.REPEAT.resizeList(dimensions, 2);
+		return succeed(new DualDimension(dimensions.getFirst(), dimensions.get(1)));
 	}
 }

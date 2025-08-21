@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class AnimationData extends Component implements Animatable {
 	
-	public List<Animatable> properties;
+	public final List<Animatable> properties;
 	public final boolean applyTimeScale;
 	
 	public AnimationData(boolean applyTimeScale) {

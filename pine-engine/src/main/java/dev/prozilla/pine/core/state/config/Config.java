@@ -19,6 +19,9 @@ public class Config {
 	public static final ConfigKey<Integer> FPS = new ConfigKey<>("fps", Integer.class);
 	public static final ConfigKey<Boolean> ENABLE_DEPTH_RECALCULATION = new ConfigKey<>("enableDepthRecalculation", Boolean.class);
 	public static final ConfigKey<String> DEFAULT_FONT_PATH = new ConfigKey<>("defaultFontPath", String.class);
+	public static final ConfigKey<String> COMPANY_NAME = new ConfigKey<>("companyName", String.class);
+	public static final ConfigKey<String> APP_NAME = new ConfigKey<>("appName", String.class);
+	public static final ConfigKey<Boolean> AUTO_CREATE_DIRECTORIES = new ConfigKey<>("autoCreateDirectories", Boolean.class);
 	
 	// Predefines options
 	/** Target frames per second. When set to <code>0</code>, fps is uncapped. Defaults to <code>120</code>. */
@@ -27,12 +30,17 @@ public class Config {
 	public final ConfigOption<Boolean> enableDepthRecalculation = new ConfigOption<>(true, Objects::nonNull);
 	/** Default font used to render text elements. Defaults to <code>null</code>. */
 	public final ConfigOption<String> defaultFontPath = new ConfigOption<>(null);
+	public final ConfigOption<String> companyName = new ConfigOption<>(null);
+	public final ConfigOption<String> appName = new ConfigOption<>("Untitled", Objects::nonNull);
+	public final ConfigOption<Boolean> autoCreateDirectories = new ConfigOption<>(true, Objects::nonNull);
 	/** Options related to rendering. */
 	public final RenderConfig rendering = new RenderConfig();
 	/** Options related to logging. */
 	public final LogConfig logging = new LogConfig();
 	/** Options related to the application window. */
 	public final WindowConfig window = new WindowConfig();
+	/** Options related to storage. */
+	public final StorageConfig storage = new StorageConfig();
 	
 	private final Logger logger;
 	
@@ -53,6 +61,9 @@ public class Config {
 		addOption(FPS, fps);
 		addOption(ENABLE_DEPTH_RECALCULATION, enableDepthRecalculation);
 		addOption(DEFAULT_FONT_PATH, defaultFontPath);
+		addOption(COMPANY_NAME, companyName);
+		addOption(APP_NAME, appName);
+		addOption(AUTO_CREATE_DIRECTORIES, autoCreateDirectories);
 		
 		addOption(RenderConfig.FALLBACK_RENDER_COLOR, rendering.fallbackRenderColor);
 		addOption(RenderConfig.ENABLE_BLEND, rendering.enableBlend);
@@ -68,6 +79,7 @@ public class Config {
 		addOption(LogConfig.ENABLE_ANSI, logging.enableAnsi);
 		addOption(LogConfig.ENABLE_APPLICATION_STATE_LOGS, logging.enableApplicationStateLogs);
 		addOption(LogConfig.ENABLE_ASSET_POOL_LOGS, logging.enableAssetPoolLogs);
+		addOption(LogConfig.ENABLE_TIMESTAMPS, logging.enableTimestamps);
 		
 		addOption(WindowConfig.WIDTH, window.width);
 		addOption(WindowConfig.HEIGHT, window.height);
@@ -76,6 +88,11 @@ public class Config {
 		addOption(WindowConfig.SHOW_DECORATIONS, window.showDecorations);
 		addOption(WindowConfig.FULLSCREEN, window.fullscreen);
 		addOption(WindowConfig.ENABLE_VSYNC, window.enableVSync);
+		addOption(WindowConfig.ENABLE_TOGGLE_FULLSCREEN, window.enableToggleFullscreen);
+		
+		addOption(StorageConfig.ENABLE_LOCAL_STORAGE, storage.enableLocalStorage);
+		addOption(StorageConfig.LOAD_ON_READ, storage.loadOnRead);
+		addOption(StorageConfig.SAVE_ON_WRITE, storage.saveOnWrite);
 	}
 	
 	/**
@@ -112,6 +129,15 @@ public class Config {
 		return options.containsKey(key);
 	}
 	
+	public String getOption(String key) {
+		for (ConfigKey<?> candidateKey : options.keySet()) {
+			if (candidateKey.key().equalsIgnoreCase(key)) {
+				return String.valueOf(getOption(candidateKey));
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Returns the value of an option.
 	 * @param key Key of the config option
@@ -123,6 +149,16 @@ public class Config {
 		ConfigOption<T> option = (ConfigOption<T>)options.get(key);
 		
 		return option.getValue();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> void setOption(String key, T value) {
+		for (ConfigKey<?> candidateKey : options.keySet()) {
+			if (candidateKey.key().equalsIgnoreCase(key) && candidateKey.type().isInstance(value)) {
+				setOption((ConfigKey<T>)candidateKey, value);
+				return;
+			}
+		}
 	}
 	
 	/**

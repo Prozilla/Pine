@@ -1,6 +1,8 @@
 package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.pool.AssetPoolEvent;
+import dev.prozilla.pine.common.asset.pool.AssetPoolEventType;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.lifecycle.Destructible;
@@ -16,11 +18,11 @@ import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.config.RenderConfig;
+import org.jetbrains.annotations.Contract;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
-import java.awt.*;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -28,20 +30,16 @@ import java.nio.IntBuffer;
 import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
-import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
-import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 
 /**
  * Handles the rendering process.
  */
 public class Renderer implements Initializable, Destructible {
 	
-	private VertexArrayObject vao;
-	private VertexBufferObject vbo;
+	private VertexArrayObject vertexArrayObject;
+	private VertexBufferObject vertexBufferObject;
 	private ShaderProgram program;
-	private FrameBufferObject fbo;
+	private FrameBufferObject frameBufferObject;
 	
 	// Vertex buffer
 	private FloatBuffer vertices;
@@ -126,8 +124,8 @@ public class Renderer implements Initializable, Destructible {
 	
 	public void initPreview(int width, int height) {
 		try {
-			fbo = new FrameBufferObject(width, height);
-			fbo.init();
+			frameBufferObject = new FrameBufferObject(width, height);
+			frameBufferObject.init();
 		} catch (Exception e) {
 			logger.error("Failed to create frame buffer", e);
 		}
@@ -140,11 +138,11 @@ public class Renderer implements Initializable, Destructible {
 	private void createFont() {
 		try {
 			defaultFont = new Font(getClass().getResourceAsStream(FONT_PATH), 16);
-		} catch (FontFormatException | IOException e) {
+		} catch (IOException e) {
 			logger.error("Failed to create font", e);
-			defaultFont = new Font();
+			defaultFont = new Font(12);
 		}
-		debugFont = new Font(12, false);
+		debugFont = new Font(12);
 	}
 	
 	private void reset() {
@@ -189,8 +187,8 @@ public class Renderer implements Initializable, Destructible {
 			throw new IllegalStateException("Renderer is already drawing!");
 		}
 		
-		if (fbo != null) {
-			fbo.bind();
+		if (frameBufferObject != null) {
+			frameBufferObject.bind();
 		}
 		
 		isRendering = true;
@@ -209,8 +207,8 @@ public class Renderer implements Initializable, Destructible {
 		isRendering = false;
 		flush();
 		
-		if (fbo != null) {
-			fbo.unbind();
+		if (frameBufferObject != null) {
+			frameBufferObject.unbind();
 		}
 		
 		tracker.setVertices(renderedVertices, totalVertices);
@@ -226,10 +224,10 @@ public class Renderer implements Initializable, Destructible {
 		
 		vertices.flip();
 		
-		if (vao != null) {
-			vao.bind();
+		if (vertexArrayObject != null) {
+			vertexArrayObject.bind();
 		} else {
-			vbo.bind(GL_ARRAY_BUFFER);
+			vertexBufferObject.bind(VertexBufferObject.Target.ARRAY_BUFFER);
 			specifyVertexAttributes();
 		}
 		program.use();
@@ -240,8 +238,8 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		// Upload the new vertex data
-		vbo.bind(GL_ARRAY_BUFFER);
-		vbo.uploadSubData(GL_ARRAY_BUFFER, 0, vertices);
+		vertexBufferObject.bind(VertexBufferObject.Target.ARRAY_BUFFER);
+		vertexBufferObject.uploadSubData(VertexBufferObject.Target.ARRAY_BUFFER, 0, vertices);
 		
 		// Draw batch
 		glDrawArrays(GL_TRIANGLES, 0, numVertices);
@@ -325,7 +323,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @return Total width of the text
 	 */
 	public int getDebugTextWidth(CharSequence text) {
-		return debugFont.getWidth(text);
+		return (int)debugFont.getWidth(text);
 	}
 	
 	/**
@@ -334,7 +332,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @return Total width of the text
 	 */
 	public int getDebugTextHeight(CharSequence text) {
-		return debugFont.getHeight(text);
+		return (int)debugFont.getHeight(text);
 	}
 	
 	/**
@@ -376,7 +374,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @return Total width of the text
 	 */
 	public int getTextWidth(Font font, CharSequence text) {
-		return font.getWidth(text);
+		return (int)font.getWidth(text);
 	}
 	
 	public int getTextHeight(CharSequence text) {
@@ -389,7 +387,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @return Total width of the text
 	 */
 	public int getTextHeight(Font font, CharSequence text) {
-		return font.getHeight(text);
+		return (int)font.getHeight(text);
 	}
 	
 	//endregion Calculations
@@ -797,55 +795,44 @@ public class Renderer implements Initializable, Destructible {
 		MemoryUtil.memFree(vertices);
 		
 		// Dispose of shader program
-		if (vao != null) {
-			vao.destroy();
-		}
-		if (vbo != null) {
-			vbo.destroy();
-		}
-		if (program != null) {
-			program.destroy();
-		}
-		if (fbo != null) {
-			fbo.destroy();
-		}
+		Destructible.destroy(vertexArrayObject, vertexBufferObject, program, frameBufferObject);
 		
 		// Dispose of fonts
-		if (defaultFont != null) {
-			defaultFont.destroy();
-		}
-		if (debugFont != null) {
-			debugFont.destroy();
-		}
+		Destructible.destroy(defaultFont, debugFont);
 	}
 	
 	/**
 	 * Initializes the default shader program.
 	 */
 	private void setupShaderProgram() {
+		if (vertexArrayObject != null || vertexBufferObject != null) {
+			throw new IllegalStateException("shader program has already been set up");
+		}
+		
 		// Generate Vertex Array Object
-		vao = new VertexArrayObject();
-		vao.bind();
+		vertexArrayObject = new VertexArrayObject();
+		vertexArrayObject.bind();
 		
 		// Generate Vertex Buffer Object
-		vbo = new VertexBufferObject();
-		vbo.bind(GL_ARRAY_BUFFER);
+		vertexBufferObject = new VertexBufferObject();
+		vertexBufferObject.bind(VertexBufferObject.Target.ARRAY_BUFFER);
 		
 		// Create FloatBuffer
 		vertices = MemoryUtil.memAllocFloat(VERTEX_BUFFER_SIZE * STRIDE_LENGTH);
 		
 		// Upload null data to allocate storage for the VBO
 		long size = (long) vertices.capacity() * Float.BYTES;
-		vbo.uploadData(GL_ARRAY_BUFFER, size, GL_DYNAMIC_DRAW);
+		vertexBufferObject.uploadData(VertexBufferObject.Target.ARRAY_BUFFER, size, VertexBufferObject.Usage.DYNAMIC_DRAW);
 		
 		// Initialize variables */
 		numVertices = 0;
 		isRendering = false;
 		
 		// Load shaders
-		Shader vertexShader, fragmentShader;
-		vertexShader = AssetPools.shaders.load(GL_VERTEX_SHADER, VERTEX_SHADER_PATH);
-		fragmentShader = AssetPools.shaders.load(GL_FRAGMENT_SHADER, FRAGMENT_SHADER_PATH);
+		AssetPools.shaders.addListener(AssetPoolEventType.FAILED, this::handleShaderLoadingError);
+		Shader vertexShader = AssetPools.shaders.loadVertexShader(VERTEX_SHADER_PATH);
+		Shader fragmentShader = AssetPools.shaders.loadFragmentShader(FRAGMENT_SHADER_PATH);
+		AssetPools.shaders.removeListener(AssetPoolEventType.FAILED, this::handleShaderLoadingError);
 		
 		// Create shader program
 		program = new ShaderProgram();
@@ -872,13 +859,22 @@ public class Renderer implements Initializable, Destructible {
 		resize();
 	}
 	
+	private void handleShaderLoadingError(AssetPoolEvent<Shader> event) {
+		String message = String.format("Failed to load shader: %s", event.getPath());
+		String error = event.getError();
+		if (error != null) {
+			message += System.lineSeparator() + error;
+		}
+		logger.error(message, event.getException());
+	}
+	
 	/**
 	 * Updates the projection matrix according to the window's dimensions.
 	 */
 	public void resize() {
 		int width, height;
 		
-		if (fbo == null) {
+		if (frameBufferObject == null) {
 			// Get width and height of frame buffer
 			long window = glfwGetCurrentContext();
 			try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -889,13 +885,15 @@ public class Renderer implements Initializable, Destructible {
 				height = heightBuffer.get();
 			}
 		} else {
-			width = fbo.getWidth();
-			height = fbo.getHeight();
+			width = frameBufferObject.getWidth();
+			height = frameBufferObject.getHeight();
 		}
 		
 		if (width == viewWidth && height == viewHeight) {
 			return;
 		}
+		
+		glViewport(0, 0, width, height);
 		
 		// Set projection matrix to an orthographic projection
 		Matrix4f projection = Matrix4f.orthographic(0f, width, 0f, height, -1f, 1f);
@@ -909,11 +907,11 @@ public class Renderer implements Initializable, Destructible {
 	 * Specifies the vertex pointers.
 	 */
 	private void specifyVertexAttributes() {
-		program.setVertexAttribute("vPosition", 3, STRIDE_LENGTH * Float.BYTES, 0);
-		program.setVertexAttribute("vColor", 4, STRIDE_LENGTH * Float.BYTES, 3 * Float.BYTES);
-		program.setVertexAttribute("vTexCoords", 2, STRIDE_LENGTH * Float.BYTES, 7 * Float.BYTES);
-		program.setVertexAttribute("vTexId", 1, STRIDE_LENGTH * Float.BYTES, 9 * Float.BYTES);
-		program.setVertexAttribute("vIsArrayTexture", 1, STRIDE_LENGTH * Float.BYTES, 10 * Float.BYTES);
+		program.setVertexAttributes(
+			new CharSequence[]{"vPosition", "vColor", "vTexCoords", "vTexId", "vIsArrayTexture"},
+			new int[]{3, 4, 2, 1, 1},
+			STRIDE_LENGTH
+		);
 	}
 	
 	public int getWidth() {
@@ -942,8 +940,8 @@ public class Renderer implements Initializable, Destructible {
 		return isRendering;
 	}
 	
-	public FrameBufferObject getFbo() {
-		return fbo;
+	public FrameBufferObject getFrameBufferObject() {
+		return frameBufferObject;
 	}
 	
 	public RenderConfig getConfig() {
@@ -957,6 +955,7 @@ public class Renderer implements Initializable, Destructible {
 	/**
 	 * Creates a new {@link Vector2f} that represents the center of the viewport.
 	 */
+	@Contract("-> new")
 	public Vector2f getViewportCenter() {
 		return new Vector2f(viewWidth / 2f, viewHeight / 2f);
 	}

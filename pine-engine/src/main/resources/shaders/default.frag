@@ -1,4 +1,4 @@
-#version 330 core
+#version 410 core
 
 in vec4 fColor;
 in vec2 fTexCoords;
@@ -16,7 +16,7 @@ void main() {
 
         if (fIsArrayTexture > 0.5) {
             // Use texture array
-            textureColor = texture(uTextureArray, vec3(fTexCoords, int(fTexId)));
+            textureColor = texture(uTextureArray, vec3(fTexCoords, round(fTexId)));
         } else {
             // Use texture
             textureColor = texture(uTexture, fTexCoords);

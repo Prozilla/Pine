@@ -1,5 +1,6 @@
-package dev.prozilla.pine.common.openal;
+package dev.prozilla.pine.common.lwjgl;
 
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.openal.ALC10;
 
 import static org.lwjgl.openal.AL10.*;
@@ -17,7 +18,7 @@ public final class ALUtils {
 	 * @param errorCode The error code, as returned by {@link ALC10#alcGetError}
 	 * @return The error description.
 	 */
-	public static String getErrorString(int errorCode) {
+	public static @NotNull String getErrorString(int errorCode) {
 		return switch (errorCode) {
 			case AL_NO_ERROR -> "No error";
 			case AL_INVALID_NAME -> "A bad name (ID) was passed to an OpenAL function";

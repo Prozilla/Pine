@@ -10,6 +10,8 @@ public interface EntityContext {
 	
 	Entity getLastChild();
 	
+	Entity getChild(int i);
+	
 	default boolean isDescendantOf(Entity parent) {
 		return isDescendantOf(parent.transform);
 	}

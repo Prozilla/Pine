@@ -35,6 +35,8 @@ public class ParticleFlowEmitterPrefab extends ParticleEmitterPrefab {
 	
 	@Override
 	protected void apply(Entity entity) {
+		super.apply(entity);
+		
 		ParticleFlowEmitter particleFlowEmitter = entity.addComponent(new ParticleFlowEmitter(particlePrefab, spawnDelay, count));
 		particleFlowEmitter.applyTimeScale = applyTimeScale;
 	}

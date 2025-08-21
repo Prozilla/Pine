@@ -7,8 +7,12 @@ import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.lifecycle.*;
 import dev.prozilla.pine.common.logging.AppLogger;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.opengl.GLUtils;
+import dev.prozilla.pine.common.lwjgl.GLFWUtils;
+import dev.prozilla.pine.common.lwjgl.GLUtils;
+import dev.prozilla.pine.common.property.LazyProperty;
 import dev.prozilla.pine.common.property.SystemProperty;
+import dev.prozilla.pine.common.system.PathUtils;
+import dev.prozilla.pine.common.system.Platform;
 import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.core.audio.AudioDevice;
 import dev.prozilla.pine.core.mod.ModManager;
@@ -17,14 +21,16 @@ import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.*;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.input.Input;
+import dev.prozilla.pine.core.storage.LocalStorage;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLCapabilities;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.StringJoiner;
 
-import static java.lang.Thread.sleep;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.opengl.GL11.*;
@@ -36,11 +42,27 @@ import static org.lwjgl.opengl.GL43.GL_DEBUG_OUTPUT;
 public class Application implements Initializable, InputHandler, Updatable, Renderable, Destructible, ApplicationContext, StateProvider<Application, ApplicationState> {
 	
 	// State
-	/** True if OpenGL has been initialized */
-	public static boolean initializedOpenGL = false;
+	/** The capabilities of the OpenGL context, or {@code null} if OpenGL has not been initialized yet. */
+	public static GLCapabilities glCapabilities = null;
 	protected boolean shouldStop;
 	protected boolean isPreview;
 	private static final SystemProperty devModeProperty = new SystemProperty("dev-mode");
+	
+	protected final LazyProperty<String> persistentDataPathProperty = new LazyProperty<>() {
+		@Override
+		protected String fetch() {
+			StringJoiner stringJoiner = new StringJoiner("/");
+			if (config.companyName.exists()) {
+				stringJoiner.add(config.companyName.getValue());
+			}
+			if (config.appName.exists()) {
+				stringJoiner.add(config.appName.getValue());
+			}
+			value = Platform.getPersistentDataPath(stringJoiner.toString(), config.autoCreateDirectories.getValue());
+			return PathUtils.addTrailingSlash(value);
+		}
+		
+	};
 	
 	// Scene
 	protected Scene currentScene;
@@ -57,6 +79,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	protected final Tracker tracker;
 	protected final ModManager modManager;
 	protected final StateMachine<Application, ApplicationState> stateMachine;
+	protected final LocalStorage localStorage;
 	
 	protected ApplicationManager applicationManager;
 	
@@ -112,6 +135,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		config.window.title.setValue(title);
 		config.window.width.setValue(width);
 		config.window.height.setValue(height);
+		config.appName.setValue(title);
 		
 		timer = new Timer();
 		tracker = new Tracker(this);
@@ -120,6 +144,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		window = new Window(this);
 		input = new Input(this);
 		modManager = new ModManager(this);
+		localStorage = new LocalStorage(this);
 		
 		shouldStop = false;
 		isPreview = false;
@@ -182,9 +207,10 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		logger.log("Created window (Initialization: 2/4)");
 		
 		// Initialize OpenGL
-		GL.createCapabilities();
-		glEnable(GL_DEBUG_OUTPUT);
-		initializedOpenGL = true;
+		glCapabilities = GL.createCapabilities();
+		if (glCapabilities.OpenGL43) {
+			glEnable(GL_DEBUG_OUTPUT);
+		}
 		logger.log("Initialized OpenGL (Initialization: 3/4)");
 		
 		// Initialize application
@@ -198,6 +224,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		currentScene.init();
 		loadIcons();
 		modManager.init();
+		localStorage.init();
 		
 		stateMachine.changeState(ApplicationState.LOADING);
 	}
@@ -262,7 +289,6 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			
 			// Render application
 			try {
-				resize();
 				render(renderer);
 			} catch (Exception e) {
 				logger.error("Failed to render application", e);
@@ -293,7 +319,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 					double timeout = startTime + targetTime - endTime;
 					
 					if (timeout > 0) {
-						sleep((long)(timeout * 1000));
+						Thread.sleep((long)(timeout * 1000));
 					}
 				} catch (InterruptedException e) {
 					throw new RuntimeException(e);
@@ -311,6 +337,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	@Override
 	public void input(float deltaTime) {
 		input.input();
+		window.input(input);
 		modManager.beforeInput(deltaTime);
 		if (applicationManager != null) {
 			applicationManager.onInput(deltaTime);
@@ -351,7 +378,6 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 */
 	@Override
 	public void render(Renderer renderer) {
-		window.refreshSize();
 		renderer.clear();
 		renderer.begin();
 		modManager.beforeRender();
@@ -367,7 +393,6 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	
 	public void renderPreview() {
 		try {
-			resize();
 			render(renderer);
 		} catch (Exception e) {
 			logger.trace(e);
@@ -429,6 +454,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		if (isStandalone()) {
 			input.destroy();
 			modManager.destroy();
+			localStorage.destroy();
 			
 			// Reset resources
 			AssetPools.clear();
@@ -444,7 +470,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			
 			// Terminate GLFW and release error callback
 			glfwTerminate();
-			errorCallback.free();
+			errorCallback = GLFWUtils.free(errorCallback);
 		} else {
 			if (currentScene.initialized) {
 				currentScene.destroy();
@@ -462,6 +488,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			logger.text( "OpenAL version: " + audioDevice.getALVersion());
 		}
 		logger.text("Dev mode: " + isDevMode());
+		logger.text("App state: " + getState());
 	}
 	
 	/**
@@ -613,7 +640,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		config.window.icon.setValue(icons);
 		
 		// Reload icons if they were changed after initialization
-		if (initializedOpenGL) {
+		if (isOpenGLInitialized()) {
 			loadIcons();
 		}
 	}
@@ -661,13 +688,8 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		return AssetPools.fonts.load(config.defaultFontPath.getValue());
 	}
 	
-	/**
-	 * Resizes the application window.
-	 */
-	public void resize() {
-		if (window.getWidth() != renderer.getHeight() || window.getHeight() != renderer.getHeight()) {
-			renderer.resize();
-		}
+	public String getPersistentDataPath() {
+		return persistentDataPathProperty.getValue();
 	}
 	
 	public boolean isPreview() {
@@ -723,14 +745,36 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		return audioDevice;
 	}
 	
+	@Override
+	public LocalStorage getLocalStorage() {
+		return localStorage;
+	}
+	
+	/**
+	 * Returns the current time if the application is still running, or the timestamp of the last frame.
+	 *
+	 * <p>This is the time elapsed since GLFW was initialized.</p>
+	 * @return The current time in seconds.
+	 */
+	public double getTime() {
+		if (isState(ApplicationState.STOPPED)) {
+			return timer.getTime();
+		}
+		return timer.getCurrentTime();
+	}
+	
 	/**
 	 * Throws an exception if OpenGL has not been initialized yet.
 	 * @throws IllegalStateException If OpenGL has not been initialized yet.
 	 */
 	public static void requireOpenGL() throws IllegalStateException {
-		if (!initializedOpenGL) {
+		if (!isOpenGLInitialized()) {
 			throw new IllegalStateException("OpenGL has not been initialized yet");
 		}
+	}
+	
+	public static boolean isOpenGLInitialized() {
+		return glCapabilities != null;
 	}
 	
 	/**
@@ -749,6 +793,10 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 */
 	public static boolean readDevMode() {
 		return BooleanUtils.isTrue(devModeProperty.fetch());
+	}
+	
+	public static void setDevMode(boolean enabled) {
+		devModeProperty.setValue(String.valueOf(enabled));
 	}
 	
 }

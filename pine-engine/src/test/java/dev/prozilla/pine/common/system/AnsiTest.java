@@ -17,7 +17,7 @@ public class AnsiTest {
 		String original = "This is a piece of text.";
 		String decorated = Ansi.black(Ansi.bold(original)).replace("piece", Ansi.green("piece"));
 		
-		assertEquals(Ansi.strip(decorated), original, "Stripped text should not contain any ANSI escape codes.");
+		assertEquals(original, Ansi.strip(decorated), "Stripped text should not contain any ANSI escape codes.");
 	}
 	
 }

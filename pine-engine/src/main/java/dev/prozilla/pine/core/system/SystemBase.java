@@ -118,7 +118,7 @@ public abstract class SystemBase {
 	public void register(Entity entity) {
 		if (query.register(entity)) {
 			if (runOnce && !processedEntityIds.contains(entity.id)) {
-				if (this instanceof InitSystemBase initSystemBase && world.initialized) {
+				if (world.initialized && this instanceof InitSystemBase initSystemBase) {
 					initSystemBase.init();
 				}
 			}

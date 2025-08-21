@@ -1,6 +1,11 @@
-package dev.prozilla.pine.common.opengl;
+package dev.prozilla.pine.common.lwjgl;
 
+import dev.prozilla.pine.common.exception.GLException;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.ARBImaging.GL_TABLE_TOO_LARGE;
 import static org.lwjgl.opengl.GL11.*;
@@ -19,7 +24,7 @@ public final class GLUtils {
 	 * @param errorCode The error code, as returned by {@link GL11#glGetError}
 	 * @return The error description.
 	 */
-	public static String getErrorString(int errorCode) {
+	public static @NotNull String getErrorString(int errorCode) {
 		return switch (errorCode) {
 			case GL_NO_ERROR -> "No error";
 			case GL_INVALID_ENUM -> "Enum argument out of range";
@@ -32,6 +37,25 @@ public final class GLUtils {
 			case GL_TABLE_TOO_LARGE -> "The specified table is too large";
 			default -> "Unknown error";
 		};
+	}
+	
+	/**
+	 * Checks if an OpenGL error has been detected and throws a {@link GLException} if it has.
+	 * @throws GLException If an OpenGL error has been detected.
+	 */
+	public static void checkError() throws GLException {
+		int error = glGetError();
+		if (error != GL_NO_ERROR) {
+			throw new GLException(error);
+		}
+	}
+	
+	public static int getInt(int name) {
+		IntBuffer intBuffer = MemoryUtil.memAllocInt(1);
+		glGetIntegerv(name, intBuffer);
+		int id = intBuffer.get();
+		MemoryUtil.memFree(intBuffer);
+		return id;
 	}
 	
 }

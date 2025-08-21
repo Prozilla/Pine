@@ -9,11 +9,13 @@ import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.input.Input;
+import dev.prozilla.pine.core.storage.LocalStorage;
 
 /**
  * Provides access to the application and all its helper classes.
  */
 @ProviderOf(Application.class)
+@FunctionalInterface
 public interface ApplicationProvider extends ApplicationContext {
 	
 	Application getApplication();
@@ -61,6 +63,15 @@ public interface ApplicationProvider extends ApplicationContext {
 	@Override
 	default AudioDevice getAudioDevice() {
 		return getApplication().getAudioDevice();
+	}
+	
+	@Override
+	default LocalStorage getLocalStorage() {
+		return  getApplication().getLocalStorage();
+	}
+	
+	static void stopApplication(ApplicationProvider applicationProvider) {
+		applicationProvider.getApplication().stop();
 	}
 	
 }

@@ -11,11 +11,12 @@ public class Main {
 		ApplicationBuilder snake = new ApplicationBuilder();
 		
 		snake.setTitle("Snake");
+		snake.setCompanyName("Pine");
 		snake.setWindowSize(WORLD_WIDTH, WORLD_HEIGHT);
 		snake.setInitialScene(new GameScene());
 		snake.setIcons("snake/apple.png");
 		snake.setTargetFps(120);
 		
-		snake.buildAndRun();
+		snake.build().run();
 	}
 }

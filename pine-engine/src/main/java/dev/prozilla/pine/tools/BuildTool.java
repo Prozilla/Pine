@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.logging.handler.StandardErrorLogHandler;
 import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
 import dev.prozilla.pine.common.system.Ansi;
 import dev.prozilla.pine.common.system.FileSystem;
+import dev.prozilla.pine.common.system.Platform;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
 
@@ -112,7 +113,7 @@ public class BuildTool {
 	private static Path downloadAndExtractJRE(BuildConfig config, Path buildDir) throws IOException {
 		logger.log(String.format("Downloading and preparing JRE... (version: %S)", config.getJreVersion()));
 		
-		String os = System.getProperty("os.name").toLowerCase().contains("win") ? "windows" : "linux";
+		String os = Platform.get().getIdentifier();
 		String jreUrl = "https://api.adoptium.net/v3/binary/latest/%s/ga/%s/x64/jdk/hotspot/normal/adoptium".formatted(config.getJreVersion(), os);
 		
 		Path tempZip = Files.createTempFile("jre", ".zip");
@@ -292,6 +293,10 @@ public class BuildTool {
 		
 		FileSystem.deleteDirectory(launch4jDir);
 		Files.writeString(buildDir.resolve("version.txt"), config.getVersion());
+		
+		if (config.shouldIncludeZip()) {
+			FileSystem.zip(buildDir, config.getZipFileName());
+		}
 	}
 	
 	public static class BuildConfig {
@@ -305,6 +310,7 @@ public class BuildTool {
 		public String iconPath;
 		public boolean debug = false;
 		public String resourcesPath;
+		public boolean includeZip = true;
 		
 		public String getMainClass() {
 			return Objects.requireNonNullElse(mainClass, "Main");
@@ -342,8 +348,20 @@ public class BuildTool {
 			return Objects.requireNonNullElse(resourcesPath, "src/main/resources");
 		}
 	
+		public boolean shouldIncludeZip() {
+			return includeZip;
+		}
+		
 		public String getOutputFileName() {
-			return String.format("%s.exe", getGameName().replaceAll("\\s+", ""));
+			return getFileName("exe");
+		}
+		
+		public String getZipFileName() {
+			return getFileName("zip");
+		}
+		
+		public String getFileName(String extension) {
+			return String.format("%s.%s", getGameName().replaceAll("\\s+", ""), extension);
 		}
 	}
 }

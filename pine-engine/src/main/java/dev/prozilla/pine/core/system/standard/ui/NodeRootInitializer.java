@@ -22,18 +22,26 @@ public class NodeRootInitializer extends InitSystem {
 		entity.addListener(EntityEventType.DESCENDANT_ADD, (event) -> onChildAdd(nodeRoot, event.getTarget()));
 		entity.addListener(EntityEventType.DESCENDANT_REMOVE, (event) -> onChildRemove(nodeRoot, event.getTarget()));
 		
-		initializeChildren(nodeRoot, entity);
+		addChildren(nodeRoot, entity);
 	}
 	
-	private void initializeChildren(NodeRoot nodeRoot, Entity entity) {
+	private void addChildren(NodeRoot nodeRoot, Entity entity) {
 		for (Transform child : entity.transform.children) {
 			onChildAdd(nodeRoot, child.entity);
-			initializeChildren(nodeRoot, child.entity);
+			addChildren(nodeRoot, child.entity);
 		}
 	}
 	
 	private void onChildAdd(NodeRoot nodeRoot, Entity child) {
-		Node node = child.getComponent(Node.class);
+		onChildAdd(nodeRoot, child.getComponent(Node.class));
+		
+		// Add grandchildren
+		for (Transform descendant : child.transform.children) {
+			onChildAdd(nodeRoot, descendant.entity);
+		}
+	}
+	
+	private void onChildAdd(NodeRoot nodeRoot, Node node) {
 		if (node == null) {
 			return;
 		}
@@ -61,7 +69,15 @@ public class NodeRootInitializer extends InitSystem {
 	}
 	
 	private void onChildRemove(NodeRoot nodeRoot, Entity child) {
-		Node node = child.getComponent(Node.class);
+		onChildRemove(nodeRoot, child.getComponent(Node.class));
+		
+		// Remove grandchildren
+		for (Transform descendant : child.transform.children) {
+			onChildRemove(nodeRoot, descendant.entity);
+		}
+	}
+	
+	private void onChildRemove(NodeRoot nodeRoot, Node node) {
 		if (node == null) {
 			return;
 		}
@@ -69,4 +85,5 @@ public class NodeRootInitializer extends InitSystem {
 			nodeRoot.focusPreviousNode();
 		}
 	}
+	
 }

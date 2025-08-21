@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.component.sprite;
 
+import dev.prozilla.pine.common.math.vector.Direction;
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Component;
 
@@ -111,4 +113,29 @@ public class TileRenderer extends Component implements TileProvider {
 	public TileRenderer getTile() {
 		return this;
 	}
+	
+	/**
+	 * Returns the closest edge of this tile relative to a position in the world.
+	 * @return The closest edge.
+	 */
+	public Direction getClosestEdge(Vector2f position) {
+		return position != null ? getClosestEdge(position.x, position.y) : null;
+	}
+	
+	/**
+	 * Returns the closest edge of this tile relative to a position in the world.
+	 * @param x The x position
+	 * @param y The y position
+	 * @return The closest edge.
+	 */
+	public Direction getClosestEdge(float x, float y) {
+		float tileX = entity.transform.getGlobalX();
+		float tileY = entity.transform.getGlobalY();
+		
+		float offsetX = x - (tileX + (size / 2f));
+		float offsetY = y - (tileY + (size / 2f));
+		
+		return Direction.fromFloatVector(offsetX, offsetY);
+	}
+	
 }

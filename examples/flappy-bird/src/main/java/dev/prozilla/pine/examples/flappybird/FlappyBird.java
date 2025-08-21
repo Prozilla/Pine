@@ -22,13 +22,16 @@ public class FlappyBird {
 		ApplicationBuilder flappyBird = new ApplicationBuilder();
 		
 		flappyBird.setTitle(TITLE);
+		flappyBird.setCompanyName("Pine");
 		flappyBird.setWindowSize(WIDTH, HEIGHT);
 		flappyBird.setInitialScene(menuScene);
 		flappyBird.setIcons("flappybird/icon.png");
 		flappyBird.setTargetFps(120);
+		flappyBird.setEnableLocalStorage(true);
 		
 		if (!Application.isDevMode()) {
 			flappyBird.setFullscreen(true);
+			flappyBird.setTargetFps(0);
 		}
 		
 		return flappyBird;
@@ -36,6 +39,6 @@ public class FlappyBird {
 	
 	public static void main(String[] args) {
 		ApplicationBuilder flappyBird = getApplication();
-		flappyBird.buildAndRun();
+		flappyBird.build().run();
 	}
 }

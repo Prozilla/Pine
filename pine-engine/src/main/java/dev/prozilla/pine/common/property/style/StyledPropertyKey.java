@@ -112,7 +112,7 @@ public final class StyledPropertyKey<T> {
 	}
 	
 	public static StyledPropertyKey<?> parse(String string) {
-		return ArrayUtils.findByString(keys, string);
+		return ArrayUtils.findByString(keys, string, true);
 	}
 	
 	@Override

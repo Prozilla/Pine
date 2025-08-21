@@ -1,0 +1,1 @@
+dev.prozilla.pine.mods.DevModeActivatorMod

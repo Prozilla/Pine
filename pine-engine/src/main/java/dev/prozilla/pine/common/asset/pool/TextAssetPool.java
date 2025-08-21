@@ -33,7 +33,13 @@ public abstract class TextAssetPool<T extends Asset> extends AssetPool<T> {
 			return fail(path, null, e);
 		}
 		
-		return parse(path, stringBuilder.toString());
+		T result = parse(path, stringBuilder.toString());
+		
+		if (result == null) {
+			return fail(path, "Failed to parse");
+		}
+		
+		return result;
 	}
 	
 	/**

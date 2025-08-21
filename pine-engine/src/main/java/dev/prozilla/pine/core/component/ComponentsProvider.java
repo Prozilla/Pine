@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * Interface with utility methods for finding certain components in the current context.
  */
+@FunctionalInterface
 public interface ComponentsProvider extends ComponentsContext {
 	
 	Entity getEntity();

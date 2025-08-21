@@ -2,6 +2,7 @@ package dev.prozilla.pine.test;
 
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.util.Parser;
+import dev.prozilla.pine.common.util.StringUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,6 +40,10 @@ public class TestUtils {
 		assertEquals(expected, parser.getResult(), String.format("parsed result of string representation of %s should be equal", className));
 	}
 	
+	public static <O> void testParserFailure(String input, Parser<O> parser) {
+		testParserFailure(input, null, parser);
+	}
+	
 	public static <O> void testParserFailure(String input, String expectedError, Parser<O> parser) {
 		if (parser.parse(input)) {
 			fail("Parser should fail, but succeeded with result: " + parser.getResult());
@@ -47,7 +52,9 @@ public class TestUtils {
 		
 		String actualError = parser.getError();
 		assertNotNull(actualError);
-		assertTrue(actualError.toLowerCase().contains(expectedError.toLowerCase()));
+		if (expectedError != null) {
+			assertTrue(actualError.toLowerCase().contains(expectedError.toLowerCase()), String.format("error message of parser should contain '%s', but was '%s'", expectedError, actualError));
+		}
 	}
 	
 	/**
@@ -65,6 +72,29 @@ public class TestUtils {
 		
 		String className = original.getClass().getSimpleName();
 		assertEquals(original, parser.getResult(), String.format("parsed result of string conversion of %s should equal original", className));
+	}
+	
+	/**
+	 * Asserts that the given string is not {@code null} or blank.
+	 */
+	public static void assertNonBlankString(String string) {
+		assertNotNull(string);
+		assertFalse(string.isBlank(), "string should not be blank");
+	}
+	
+	public static void assertEndsWith(String string, String suffix) {
+		assertNotNull(string);
+		assertTrue(string.endsWith(suffix), String.format("string should end with '%s', but was: %s", suffix, string));
+	}
+	
+	public static void assertContains(String string, String substring) {
+		assertNotNull(string);
+		assertTrue(string.contains(substring), String.format("string should contain '%s', but was: %s", substring, string));
+	}
+	
+	public static void assertContainsOnce(String string, String substring) {
+		assertNotNull(string);
+		assertTrue(StringUtils.containsOnce(string, substring), String.format("string should contain '%s' once, but was: %s", substring, string));
 	}
 	
 }

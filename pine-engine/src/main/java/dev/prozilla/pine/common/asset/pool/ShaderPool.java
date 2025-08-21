@@ -6,6 +6,26 @@ public final class ShaderPool extends TextAssetPool<Shader> {
 	
 	private int type;
 	
+	public Shader loadVertexShader(String path) {
+		return load(Shader.Type.VERTEX, path);
+	}
+	
+	public Shader loadFragmentShader(String path) {
+		return load(Shader.Type.FRAGMENT, path);
+	}
+	
+	public Shader loadComputeShader(String path) {
+		return load(Shader.Type.COMPUTE, path);
+	}
+	
+	public Shader loadGeometryShader(String path) {
+		return load(Shader.Type.GEOMETRY, path);
+	}
+	
+	public Shader load(Shader.Type type, String path) {
+		return load(type.getValue(), path);
+	}
+	
 	public Shader load(int type, String path) {
 		this.type = type;
 		return load(path);

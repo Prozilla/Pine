@@ -18,6 +18,6 @@ public class PreviewFrameUpdater extends UpdateSystem {
 		FrameNode frame = chunk.getComponent(FrameNode.class);
 		PreviewData previewData = chunk.getComponent(PreviewData.class);
 		
-		frame.fbo = previewData.preview.getRenderer().getFbo();
+		frame.fbo = previewData.preview.getRenderer().getFrameBufferObject();
 	}
 }

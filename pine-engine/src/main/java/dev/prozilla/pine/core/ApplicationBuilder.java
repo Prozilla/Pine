@@ -130,6 +130,11 @@ public class ApplicationBuilder {
 		return this;
 	}
 	
+	public ApplicationBuilder setCompanyName(String companyName) {
+		config.companyName.setValue(companyName);
+		return this;
+	}
+	
 	public ApplicationBuilder setFullscreen(boolean fullscreen) {
 		config.window.fullscreen.setValue(fullscreen);
 		return this;
@@ -147,6 +152,11 @@ public class ApplicationBuilder {
 	
 	public ApplicationBuilder setRenderMode(RenderMode renderMode) {
 		config.rendering.renderMode.setValue(renderMode);
+		return this;
+	}
+	
+	public ApplicationBuilder setEnableLocalStorage(boolean enableLocalStorage) {
+		config.storage.enableLocalStorage.setValue(enableLocalStorage);
 		return this;
 	}
 	
@@ -190,13 +200,16 @@ public class ApplicationBuilder {
 		
 		// Configuration
 		application.getConfig().copyFrom(this.config);
+		application.getConfig().appName.setValue(title);
 		
 		return application;
 	}
 	
 	/**
 	 * Creates a new application and runs it.
+	 * @deprecated Deprecated in favor of chaining {@link #build()} and {@link Application#run()} as of 2.1.0
 	 */
+	@Deprecated
 	public Application buildAndRun() {
 		Application application = build();
 		application.run();

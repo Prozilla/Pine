@@ -89,14 +89,14 @@ public final class MathUtils {
 	
 	/**
 	 * Calculates the value of a cubic Bézier function based on given control points.
-	 * @param p0 X coordinate of first control point
-	 * @param p1 Y coordinate of first control point
-	 * @param p2 X coordinate of second control point
-	 * @param p3 Y coordinate of second control point
+	 * @param x1 X coordinate of first control point
+	 * @param y1 Y coordinate of first control point
+	 * @param x2 X coordinate of second control point
+	 * @param y2 Y coordinate of second control point
 	 */
-	public static float cubicBezier(float t, float p0, float p1, float p2, float p3) {
+	public static float cubicBezier(float t, float x1, float y1, float x2, float y2) {
 		float u = 1 - t;
-		return u * u * u * p0 + 3 * u * u * t * p1 + 3 * u * t * t * p2 + t * t * t * p3;
+		return u * u * u * x1 + 3 * u * u * t * y1 + 3 * u * t * t * x2 + t * t * t * y2;
 	}
 	
 	public static boolean isValidInteger(String string) {
@@ -106,6 +106,18 @@ public final class MathUtils {
 		} catch (NumberFormatException ignored) {
 			return false;
 		}
+	}
+	
+	public static String floatToString(float value) {
+		if (isRound(value)) {
+			return Integer.toString((int)value);
+		} else {
+			return Float.toString(value);
+		}
+	}
+	
+	public static boolean isRound(float value) {
+		return value == Math.round(value);
 	}
 	
 }

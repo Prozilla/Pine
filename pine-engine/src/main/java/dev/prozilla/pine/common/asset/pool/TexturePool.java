@@ -6,7 +6,7 @@ import dev.prozilla.pine.common.logging.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class TexturePool extends AssetPool<TextureBase> {
+public final class TexturePool extends AssetPool<TextureBase> implements MultiAssetLoader<TextureBase> {
 	
 	private final ImagePool imagePool;
 	private TextureArrayPolicy textureArrayPolicy;

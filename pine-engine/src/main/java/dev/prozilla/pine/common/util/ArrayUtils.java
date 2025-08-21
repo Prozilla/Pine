@@ -1,5 +1,8 @@
 package dev.prozilla.pine.common.util;
 
+import org.jetbrains.annotations.Contract;
+
+import java.util.Arrays;
 import java.util.Random;
 
 public final class ArrayUtils {
@@ -13,6 +16,7 @@ public final class ArrayUtils {
 	 * @return True if any of the elements in <code>arrayA</code> also appear in <code>arrayB</code>.
 	 * @param <E> Type of the array elements
 	 */
+	@Contract("_, null -> false; null, _ -> false")
 	public static <E> boolean overlaps(E[] arrayA, E[] arrayB) {
 		if (arrayA == null || arrayB == null || arrayA.length == 0 || arrayB.length == 0) {
 			return false;
@@ -50,10 +54,21 @@ public final class ArrayUtils {
 	 * @param <E> Type of the array elements
 	 */
 	public static <E> E findByString(E[] array, String string) {
+		return findByString(array, string, false);
+	}
+	
+	public static <E> E findByString(E[] array, String string, boolean ignoreCase) {
 		for (E element : array) {
-			if (element.toString().equals(string)) {
-				return element;
+			if (ignoreCase) {
+				if (element.toString().equalsIgnoreCase(string)) {
+					return element;
+				}
+			} else {
+				if (element.toString().equals(string)) {
+					return element;
+				}
 			}
+			
 		}
 		
 		return null;
@@ -77,6 +92,44 @@ public final class ArrayUtils {
 			array[i] = array[j];
 			array[j] = temp;
 		}
+	}
+	
+	/**
+	 * Creates a copy of an array without the first element.
+	 * @param array The original array
+	 * @return The copy of the array
+	 */
+	public static <E> E[] removeFirst(E[] array) {
+		return removeFirst(1, array);
+	}
+	
+	/**
+	 * Creates a copy of an array without the first element(s).
+	 * @param count The amount of elements to exclude in the copy
+	 * @param array The original array
+	 * @return The copy of the array
+	 */
+	public static <E> E[] removeFirst(int count, E[] array) {
+		return Arrays.copyOfRange(array, count, array.length);
+	}
+	
+	/**
+	 * Creates a copy of an array without the last element.
+	 * @param array The original array
+	 * @return The copy of the array
+	 */
+	public static <E> E[] removeLast(E[] array) {
+		return removeLast(1, array);
+	}
+	
+	/**
+	 * Creates a copy of an array without the last element(s).
+	 * @param count The amount of elements to exclude in the copy
+	 * @param array The original array
+	 * @return The copy of the array
+	 */
+	public static <E> E[] removeLast(int count, E[] array) {
+		return Arrays.copyOfRange(array, 0, array.length - count);
 	}
 	
 }

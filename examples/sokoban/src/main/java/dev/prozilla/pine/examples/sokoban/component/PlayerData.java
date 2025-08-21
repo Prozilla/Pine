@@ -3,6 +3,7 @@ package dev.prozilla.pine.examples.sokoban.component;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.audio.AudioEffectPlayer;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
@@ -21,6 +22,8 @@ public class PlayerData extends Component {
 	public TileRenderer pushingCrateTile;
 	
 	public final History history;
+	
+	public final int index;
 	
 	public static final Map<Direction, String[]> directionToSprites = Map.of(
 		Direction.DOWN, new String[]{
@@ -48,13 +51,14 @@ public class PlayerData extends Component {
 	public static final float TIME_TO_MOVE = 0.25f;
 	public static final float JOYSTICK_THRESHOLD = 0.5f;
 	
-	public PlayerData() {
+	public PlayerData(int index) {
+		this.index = index;
 		timeUntilMoveCompletes = 0;
 		canMove = false;
 		history = new History();
 	}
 	
-	public void moveInDirection(Direction direction, TileRenderer tileRenderer) {
+	public void moveInDirection(Direction direction, TileRenderer tileRenderer, AudioEffectPlayer audioEffectPlayer) {
 		if (timeUntilMoveCompletes > 0) {
 			return;
 		}
@@ -71,7 +75,7 @@ public class PlayerData extends Component {
 		// Check if player can move to an empty tile or push a crate
 		if (targetTile == null) {
 			canMove = true;
-		} else if (!targetTile.getEntity().hasTag(EntityTag.BLOCK)) {
+		} else if (!targetTile.getEntity().hasTag(EntityTag.BLOCK) && !targetTile.getEntity().hasTag(EntityTag.PLAYER)) {
 			Vector2i behindTargetCoordinate = direction.toIntVector().add(targetCoordinate);
 			TileRenderer behindTargetTile = gridGroup.getTile(behindTargetCoordinate);
 			
@@ -81,6 +85,7 @@ public class PlayerData extends Component {
 			if (canMove && targetTile.getEntity().hasTag(EntityTag.CRATE)) {
 				pushingCrateTile = targetTile;
 				pushingCrateSprite = targetTile.getComponent(SpriteRenderer.class);
+				audioEffectPlayer.play(0);
 			}
 		} else {
 			canMove = false;
@@ -88,6 +93,11 @@ public class PlayerData extends Component {
 		
 		// Reset timer
 		timeUntilMoveCompletes = canMove ? TIME_TO_MOVE : 0;
+		
+		// Play audio
+		if (canMove) {
+//			audioEffectPlayer.playRandom(1, 9);
+		}
 	}
 	
 }

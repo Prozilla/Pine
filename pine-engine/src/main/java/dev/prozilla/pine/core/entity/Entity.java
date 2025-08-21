@@ -16,6 +16,7 @@ import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.scene.SceneProvider;
 import dev.prozilla.pine.core.scene.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -213,6 +214,11 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	}
 	
 	@Override
+	public Entity getChild(int i) {
+		return transform.getChild(i);
+	}
+	
+	@Override
 	public boolean isDescendantOf(Transform parent) {
 		return transform.isDescendantOf(parent);
 	}
@@ -341,8 +347,13 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	}
 	
 	@Override
+	public void invoke(EntityEventType entityEventType) {
+		super.invoke(entityEventType, this);
+	}
+	
+	@Override
 	protected void invoke(Event<EntityEventType, Entity> event) {
-		if (!shouldInvoke()) {
+		if (!shouldInvoke(event.getType())) {
 			return;
 		}
 		
@@ -356,7 +367,18 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	}
 	
 	@Override
-	protected boolean shouldPropagate() {
+	protected boolean shouldInvoke(EntityEventType entityEventType) {
+		boolean shouldInvoke = switch (entityEventType) {
+			case CHILD_ADD -> super.shouldInvoke(EntityEventType.DESCENDANT_ADD);
+			case CHILD_REMOVE -> super.shouldInvoke(EntityEventType.DESCENDANT_REMOVE);
+			case CHILDREN_UPDATE -> super.shouldInvoke(EntityEventType.DESCENDANT_UPDATE);
+			default -> false;
+		};
+		return shouldInvoke || super.shouldInvoke(entityEventType);
+	}
+	
+	@Override
+	protected boolean shouldPropagate(EntityEventType eventType) {
 		return transform.parent != null;
 	}
 	
@@ -453,7 +475,7 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		String className = getClass().getSimpleName();
 		int componentCount = components.size();
 		String[] componentNames = new String[componentCount];

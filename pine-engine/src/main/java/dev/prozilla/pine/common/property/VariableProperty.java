@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.property;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.Objects;
 import java.util.Random;
 
@@ -33,5 +35,36 @@ public abstract class VariableProperty<T> {
 	public boolean hasValue(T value) {
 		return Objects.equals(getValue(), value);
 	}
-
+	
+	/**
+	 * Returns the value of a given property, or {@code null} if the property is {@code null}.
+	 * @param property The property or {@code null}
+	 * @return The value
+	 * @param <T> The type of value
+	 */
+	@Contract("null -> null")
+	public static <T> T getValue(VariableProperty<T> property) {
+		return getValue(property, null);
+	}
+	
+	/**
+	 * Returns the value of a given property, or a default value if the property or its value is {@code null}.
+	 * @param property The property or {@code null}
+	 * @param defaultValue The value to use in case the property or its value is {@code null}.
+	 * @return The value
+	 * @param <T> The type of value
+	 */
+	@Contract("null, _ -> param2")
+	public static <T> T getValue(VariableProperty<T> property, T defaultValue) {
+		if (property == null) {
+			return defaultValue;
+		}
+		
+		T value = property.getValue();
+		if (value == null) {
+			return defaultValue;
+		}
+		return value;
+	}
+	
 }

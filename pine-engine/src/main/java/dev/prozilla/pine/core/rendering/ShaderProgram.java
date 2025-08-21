@@ -1,6 +1,8 @@
 package dev.prozilla.pine.core.rendering;
 
+import dev.prozilla.pine.common.exception.GLException;
 import dev.prozilla.pine.common.lifecycle.Destructible;
+import dev.prozilla.pine.common.lwjgl.GLUtils;
 import dev.prozilla.pine.common.math.matrix.Matrix2f;
 import dev.prozilla.pine.common.math.matrix.Matrix3f;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
@@ -54,10 +56,34 @@ public class ShaderProgram implements Destructible {
 	 */
 	public void link() {
 		glLinkProgram(id);
-		
 		checkStatus();
 	}
 	
+	/**
+	 * Sets multiple vertex attributes.
+	 * @param names The names of each attribute
+	 * @param sizes The amount of floats used for each attribute
+	 * @param stride The amount of floats used per vertex
+	 */
+	public void setVertexAttributes(CharSequence[] names, int[] sizes, int stride) {
+		if (names.length != sizes.length) {
+			throw new IllegalArgumentException("arrays of names and sizes must have an equal length");
+		}
+		
+		int offset = 0;
+		for (int i = 0; i < names.length; i++) {
+			setVertexAttribute(names[i], sizes[i], stride, offset);
+			offset += sizes[i];
+		}
+	}
+	
+	/**
+	 * Enables a vertex attribute and sets its pointer.
+	 * @param name The name of the attribute
+	 * @param size The amount of floats used for the attribute
+	 * @param stride The amount of floats used per vertex
+	 * @param offset The offset from the first component
+	 */
 	public void setVertexAttribute(CharSequence name, int size, int stride, int offset) {
 		int location = requireAttributeLocation(name);
 		enableVertexAttribute(location);
@@ -83,14 +109,12 @@ public class ShaderProgram implements Destructible {
 	/**
 	 * Sets the vertex attribute pointer.
 	 * @param location Location of the vertex attribute
-	 * @param size     Number of values per vertex
-	 * @param stride   Offset between consecutive generic vertex attributes in
-	 *                 bytes
-	 * @param offset   Offset of the first component of the first generic vertex
-	 *                 attribute in bytes
+	 * @param size Number of values per vertex
+	 * @param stride Offset between consecutive generic vertex attributes in bytes
+	 * @param offset Offset of the first component of the first generic vertex attribute in bytes
 	 */
 	public void pointVertexAttribute(int location, int size, int stride, int offset) {
-		glVertexAttribPointer(location, size, GL_FLOAT, false, stride, offset);
+		glVertexAttribPointer(location, size, GL_FLOAT, false, stride * Float.BYTES, (long)offset * Float.BYTES);
 	}
 	
 	public int requireAttributeLocation(CharSequence name) throws RuntimeException {
@@ -277,11 +301,12 @@ public class ShaderProgram implements Destructible {
 	
 	/**
 	 * Checks if the program was linked successfully.
+	 * @throws GLException If the program failed to link.
 	 */
-	public void checkStatus() throws RuntimeException {
+	public void checkStatus() throws GLException {
 		int status = glGetProgrami(id, GL_LINK_STATUS);
 		if (status != GL_TRUE) {
-			throw new RuntimeException(glGetProgramInfoLog(id));
+			throw new GLException(glGetProgramInfoLog(id));
 		}
 	}
 	
@@ -291,6 +316,10 @@ public class ShaderProgram implements Destructible {
 	@Override
 	public void destroy() {
 		glDeleteProgram(id);
+	}
+	
+	public static int getMaxVertexAttributes() {
+		return GLUtils.getInt(GL_MAX_VERTEX_ATTRIBS);
 	}
 	
 }

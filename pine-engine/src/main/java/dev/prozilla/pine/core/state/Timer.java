@@ -20,6 +20,7 @@ public class Timer implements Initializable {
 	private double previousLoopTime;
 	private float currentLoopTime;
 	
+	private double elapsedTime;
 	/** Total time elapsed since GLFW was initialized in seconds, affected by <code>timeScale</code>.  */
 	private float scaledElapsedTime;
 	/** The scale at which time passes. */
@@ -120,6 +121,13 @@ public class Timer implements Initializable {
 	 */
 	public double getCurrentTime() {
 		return glfwGetTime();
+	}
+	
+	/**
+	 * @return Time elapsed at the start of the current frame since GLFW was initialized, in seconds.
+	 */
+	public double getTime() {
+		return previousLoopTime;
 	}
 	
 	public float getScaledElapsedTime() {

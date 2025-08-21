@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.exception.InvalidArrayException;
 import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.util.checks.Checks;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Array;
 import java.util.function.Function;
@@ -45,9 +46,7 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 	 * Subtracts another vector from this vector.
 	 * @return Self
 	 */
-	public V subtract(V vector) {
-		return add(vector.negate());
-	}
+	abstract public V subtract(V vector);
 	
 	/**
 	 * Scales this vector by a scalar.
@@ -69,8 +68,10 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 	 * @return Self
 	 */
 	public V lerp(V vector, float alpha) {
-		return scale(1f - alpha).add(vector.scale(alpha));
+		return scale(1f - alpha).add(vector.clone().scale(alpha));
 	}
+	
+	public abstract boolean isZero();
 	
 	@Override
 	public boolean equals(Object object) {
@@ -99,7 +100,7 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 	 * Converts this vector to a string representation.
 	 */
 	@Override
-	abstract public String toString();
+	abstract public @NotNull String toString();
 	
 	protected static <T> T[] parseToNumbers(String input, Function<String, T> parser, Class<T> type) throws InvalidStringException {
 		Checks.isNotNull(input, "input");

@@ -9,17 +9,19 @@ public class Main {
 		ApplicationBuilder applicationBuilder = new ApplicationBuilder();
 		
 		applicationBuilder.setTitle("Sokoban");
+		applicationBuilder.setCompanyName("Pine");
 		applicationBuilder.setWindowSize(900, 600);
 		applicationBuilder.setInitialScene(new GameScene());
 		applicationBuilder.setIcons("images/crates/crate_03.png");
 		applicationBuilder.setTargetFps(120);
 		applicationBuilder.setApplicationManagerFactory(GameManager::new);
 		applicationBuilder.getRenderConfig().snapPixels.setValue(true);
+		applicationBuilder.setEnableLocalStorage(true);
 		
 		if (!Application.isDevMode()) {
 			applicationBuilder.setFullscreen(true);
 		}
 		
-		applicationBuilder.buildAndRun();
+		applicationBuilder.build().run();
 	}
 }

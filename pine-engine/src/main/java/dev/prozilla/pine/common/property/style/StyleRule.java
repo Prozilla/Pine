@@ -3,6 +3,7 @@ package dev.prozilla.pine.common.property.style;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.property.style.selector.Selector;
 import dev.prozilla.pine.core.component.ui.Node;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A rule that defines the value of a styled property of any node that matches its selector.
@@ -29,7 +30,7 @@ public record StyleRule<T>(Selector selector, T value) implements Printable {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return String.format("%s { %s }", selector, value);
 	}
 	

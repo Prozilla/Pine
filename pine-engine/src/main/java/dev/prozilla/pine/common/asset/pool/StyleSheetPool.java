@@ -3,7 +3,7 @@ package dev.prozilla.pine.common.asset.pool;
 import dev.prozilla.pine.common.property.style.CSSParser;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 
-public final class StyleSheetPool extends TextAssetPool<StyleSheet> {
+public final class StyleSheetPool extends TextAssetPool<StyleSheet> implements MultiAssetLoader<StyleSheet> {
 	
 	@Override
 	public StyleSheet load(String path) {

@@ -3,6 +3,8 @@ package dev.prozilla.pine.common.util;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.exception.ParsingException;
 import dev.prozilla.pine.common.util.checks.Checks;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Abstract class for a stateful parser.
@@ -13,10 +15,13 @@ public abstract class Parser<T> implements Printable {
 	private T result;
 	private String errorMessage;
 	
+	public static final String GENERIC_ERROR = "Failed to parse input";
+	public static final String UNEXPECTED_END_OF_INPUT_ERROR = "Unexpected end of input";
+	
 	/**
 	 * Parses an input string and throws an exception if the parsing fails.
 	 * @param input The input string to parse
-	 * @return The parsed value
+	 * @return The parsed value or {@code null}, if the parsing failed.
 	 * @throws ParsingException If this parser failed to parse the input string.
 	 */
 	public T read(String input) throws ParsingException {
@@ -49,16 +54,19 @@ public abstract class Parser<T> implements Printable {
 	 */
 	public abstract boolean parse(String input);
 	
+	@Contract("null -> fail; _ -> true")
 	protected boolean succeed(T result) {
 		this.result = Checks.isNotNull(result, "result");
 		errorMessage = null;
 		return true;
 	}
 	
+	@Contract("-> false")
 	protected boolean fail() {
-		return fail("Failed to parse input");
+		return fail(GENERIC_ERROR);
 	}
 	
+	@Contract("null -> fail; _ -> false")
 	protected boolean fail(String errorMessage) {
 		this.errorMessage = Checks.isNotNull(errorMessage, "errorMessage");
 		result = null;
@@ -66,7 +74,7 @@ public abstract class Parser<T> implements Printable {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		StringBuilder stringBuilder = new StringBuilder("Parser: ");
 		
 		if (result != null) {

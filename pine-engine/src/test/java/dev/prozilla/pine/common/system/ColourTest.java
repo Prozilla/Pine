@@ -20,7 +20,8 @@ public class ColourTest {
 		assertEquals(Color.decode("#FFF"), Colour.decode("#FFF"));
 		assertEquals(Color.rebeccaPurple(), Colour.rebeccaPurple());
 		assertEquals(Color.hsl(30, 70, 50), Colour.hsl(30, 70, 50));
-		assertEquals(Color.parse("rgba(0.25, 0.75, 0.5, 1)"), Colour.parse("rgba(0.25, 0.75, 0.5, 1)"));
+		
+		assertEquals(new ColorParser().read("rgba(0.25, 0.75, 0.5, 1)"), new ColourParser().read("rgba(0.25, 0.75, 0.5, 1)"));
 	}
 	
 	@Test
@@ -34,6 +35,8 @@ public class ColourTest {
 		TestUtils.testParser("rgba(0.25, 0.75, 0.5, 1)", new Colour(0.25f, 0.75f, 0.5f), parser);
 		TestUtils.testParser("#FFF", new Colour(1f, 1f, 1f), parser);
 		TestUtils.testParser("rebeccapurple", Colour.rebeccaPurple(), parser);
+		TestUtils.testParser("red", Colour.red(), parser);
+		TestUtils.testParser("RED", Colour.red(), parser);
 	}
 	
 }

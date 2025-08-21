@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.math.vector;
 
 import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.property.selection.WrapMode;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.FloatBuffer;
 import java.util.Objects;
@@ -58,6 +59,13 @@ public class Vector2f extends VectorFloat<Vector2f> {
 	}
 	
 	@Override
+	public Vector2f subtract(Vector2f vector) {
+		x -= vector.x;
+		y -= vector.y;
+		return this;
+	}
+	
+	@Override
 	public Vector2f scale(float scalar) {
 		x *= scalar;
 		y *= scalar;
@@ -75,9 +83,18 @@ public class Vector2f extends VectorFloat<Vector2f> {
 	}
 	
 	@Override
+	public boolean isZero() {
+		return x == 0 && y == 0;
+	}
+	
+	@Override
 	public void toBuffer(FloatBuffer buffer) {
 		buffer.put(x).put(y);
 		buffer.flip();
+	}
+	
+	public Direction toDirection() {
+		return Direction.fromFloatVector(this);
 	}
 	
 	@Override
@@ -99,7 +116,7 @@ public class Vector2f extends VectorFloat<Vector2f> {
 	 * Converts this vector to a string representation in the format "(x,y)".
 	 */
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return String.format("(%s,%s)", x, y);
 	}
 	

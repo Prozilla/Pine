@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.math.vector;
 
 import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.property.selection.WrapMode;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.IntBuffer;
 import java.util.Objects;
@@ -63,6 +64,14 @@ public class Vector3i extends VectorInt<Vector3i> {
 	}
 	
 	@Override
+	public Vector3i subtract(Vector3i vector) {
+		x -= vector.x;
+		y -= vector.y;
+		z -= vector.z;
+		return this;
+	}
+	
+	@Override
 	public Vector3i scale(float scalar) {
 		x = Math.round(x * scalar);
 		y = Math.round(y * scalar);
@@ -78,6 +87,11 @@ public class Vector3i extends VectorInt<Vector3i> {
 	@Override
 	public int dot(Vector3i vector3i) {
 		return x * vector3i.x + y * vector3i.y + z * vector3i.z;
+	}
+	
+	@Override
+	public boolean isZero() {
+		return x == 0 && y == 0 && z == 0;
 	}
 	
 	@Override
@@ -105,7 +119,7 @@ public class Vector3i extends VectorInt<Vector3i> {
 	 * Converts this vector to a string representation in the format "(x,y,z)".
 	 */
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return String.format("(%s,%s,%s)", x, y, z);
 	}
 	

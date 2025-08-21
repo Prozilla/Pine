@@ -5,7 +5,6 @@ import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.math.vector.Vector2f;
-import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.core.component.Component;
 
@@ -27,7 +26,7 @@ public class LayoutNode extends Component implements NodeContext {
 	public DimensionBase gap;
 	
 	public Vector2f innerSize;
-	public Vector2i totalChildrenSize;
+	public Vector2f totalChildrenSize;
 	
 	/** Array of node components in children of the attached entity */
 	public List<Node> childNodes;
@@ -80,7 +79,7 @@ public class LayoutNode extends Component implements NodeContext {
 		
 		childNodes = new ArrayList<>();
 		innerSize = new Vector2f();
-		totalChildrenSize = new Vector2i();
+		totalChildrenSize = new Vector2f();
 		arrangeChildren = true;
 	}
 	

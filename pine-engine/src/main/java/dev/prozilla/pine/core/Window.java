@@ -1,15 +1,23 @@
 package dev.prozilla.pine.core;
 
+import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.asset.image.Image;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
+import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.config.WindowConfig;
+import dev.prozilla.pine.core.state.input.Input;
+import dev.prozilla.pine.core.state.input.Key;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
+
+import java.util.StringJoiner;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.glViewport;
@@ -18,7 +26,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 /**
  * Represents a GLFW window object.
  */
-public class Window implements Initializable, Destructible {
+public class Window implements Initializable, Destructible, Printable {
 	
 	/** Handle of the window */
 	private long id;
@@ -29,10 +37,12 @@ public class Window implements Initializable, Destructible {
 	private GLFWWindowSizeCallback windowSizeCallback;
 	protected boolean isInitialized;
 	
+	private final Renderer renderer;
 	private final WindowConfig config;
 	private final Logger logger;
 	
 	public Window(Application application) {
+		renderer = application.getRenderer();
 		config = application.getConfig().window;
 		logger = application.logger;
 		
@@ -46,19 +56,42 @@ public class Window implements Initializable, Destructible {
 	public void init() throws RuntimeException {
 		// Set window hints
 		setDefaultHints();
+		setHint(WindowHint.GL_VERSION_MAJOR, 4);
+		setHint(WindowHint.GL_VERSION_MINOR, 1);
+		setHint(WindowHint.GL_FORWARD_COMPATIBLE, true);
+		setHint(WindowHint.GL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		setVisible(true);
 		
-		long monitor = NULL;
-		
 		// Read config options
-		config.showDecorations.read(this::setDecorated);
-		config.title.read((title) -> {
-			if (isInitialized) {
-				glfwSetWindowTitle(id, title);
-			}
-		});
+		if (!isInitialized) {
+			config.showDecorations.read(this::setDecorated);
+			config.title.read((title) -> {
+				if (isInitialized) {
+					glfwSetWindowTitle(id, title);
+				}
+			});
+			config.fullscreen.addObserver((fullscreen) -> {
+				long monitor = glfwGetPrimaryMonitor();
+				GLFWVidMode videoMode = glfwGetVideoMode(monitor);
+				if (fullscreen && videoMode != null) {
+					glfwSetWindowMonitor(id, monitor, 0, 0,
+						videoMode.width(), videoMode.height(), videoMode.refreshRate());
+				} else {
+					width = config.width.getValue();
+					height = config.height.getValue();
+					if (videoMode != null) {
+						int x = (videoMode.width() - width) / 2;
+						int y = (videoMode.height() - height) / 2;
+						glfwSetWindowMonitor(id, NULL, x, y, width, height, 0);
+					} else {
+						glfwSetWindowMonitor(id, NULL, 0, 0, width, height, 0);
+					}
+				}
+			});
+		}
 		
 		// Prepare fullscreen window
+		long monitor = NULL;
 		if (config.fullscreen.getValue()) {
 			monitor = glfwGetPrimaryMonitor();
 			GLFWVidMode videoMode = glfwGetVideoMode(monitor);
@@ -89,7 +122,7 @@ public class Window implements Initializable, Destructible {
 		glfwSetWindowSizeCallback(id, windowSizeCallback = new GLFWWindowSizeCallback() {
 			@Override
 			public void invoke(long window, int width, int height) {
-				setSize(width, height);
+				updateSize(width, height);
 			}
 		});
 		
@@ -106,6 +139,16 @@ public class Window implements Initializable, Destructible {
 		
 		glfwSwapBuffers(id);
 		glfwPollEvents();
+	}
+	
+	public void input(Input input) {
+		if (!isInitialized) {
+			return;
+		}
+		
+		if (config.enableToggleFullscreen.getValue() && (input.getKey(Key.L_ALT) || input.getKey(Key.R_ALT)) && input.getKeyDown(Key.ENTER)) {
+			config.fullscreen.setValue(!config.fullscreen.getValue());
+		}
 	}
 	
 	/**
@@ -133,28 +176,27 @@ public class Window implements Initializable, Destructible {
 		return glfwWindowShouldClose(id);
 	}
 	
-	private void setSize(int width, int height) {
-		setWidth(width);
-		setHeight(height);
+	private void updateSize(int width, int height) {
+		this.width = width;
+		this.height = height;
+		renderer.resize();
 	}
 	
 	/**
 	 * Sets the size of the rendering viewport to match the window.
+	 * @deprecated Replaced by {@link Renderer#resize()} as of 2.1.0
 	 */
+	@Deprecated
 	public void refreshSize() {
 		glViewport(0, 0, width, height);
 	}
 	
-	private void setWidth(int width) {
-		this.width = width;
+	public Vector2i getSize() {
+		return new Vector2i(width, height);
 	}
 	
 	public int getWidth() {
 		return width;
-	}
-	
-	private void setHeight(int height) {
-		this.height = height;
 	}
 	
 	public int getHeight() {
@@ -268,6 +310,29 @@ public class Window implements Initializable, Destructible {
 		if (!isInitialized) {
 			throw new IllegalStateException("window has not been initialized yet");
 		}
+	}
+	
+	public float getPixelRatioX() {
+		return renderer.getWidth() / (float)width;
+	}
+	
+	public float getPixelRatioY() {
+		return renderer.getHeight() / (float)height;
+	}
+	
+	@Override
+	public @NotNull String toString() {
+		StringJoiner stringJoiner = new StringJoiner("\n");
+		
+		stringJoiner.add(Logger.formatHeader("Window Info"));
+		stringJoiner.add("Title: " + config.title.getValue());
+		stringJoiner.add(String.format("Window: %sx%s", width, height));
+		stringJoiner.add(String.format("Viewport: %sx%s", renderer.getWidth(), renderer.getHeight()));
+		stringJoiner.add(String.format("Pixel ratio: %s, %s", getPixelRatioX(), getPixelRatioY()));
+		stringJoiner.add("Fullscreen: " + config.fullscreen.getValue());
+		stringJoiner.add("Show decorations: " + config.showDecorations.getValue());
+		
+		return stringJoiner.toString();
 	}
 	
 }

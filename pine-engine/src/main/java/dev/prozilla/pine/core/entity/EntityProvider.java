@@ -7,6 +7,7 @@ import dev.prozilla.pine.core.component.Transform;
  * Interface with utility methods for finding certain entities in the current context.
  */
 @ProviderOf(Entity.class)
+@FunctionalInterface
 public interface EntityProvider extends EntityContext {
 	
 	Entity getEntity();
@@ -35,6 +36,14 @@ public interface EntityProvider extends EntityContext {
 	}
 	
 	@Override
+	default Entity getChild(int i) {
+		if (getTransform() == null) {
+			return null;
+		}
+		return getTransform().getChild(i);
+	}
+	
+	@Override
 	default boolean isDescendantOf(Transform parent) {
 		if (getTransform() == null) {
 			return false;
@@ -57,4 +66,5 @@ public interface EntityProvider extends EntityContext {
 		}
 		return getTransform().getParentWithTag(tag);
 	}
+	
 }

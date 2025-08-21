@@ -36,6 +36,7 @@ public class TextPrefab extends NodePrefab {
 		setColor(color);
 		setName("Text");
 		addClass("text");
+		setHTMLTag("p");
 	}
 	
 	public void setText(VariableProperty<String> textProperty) {

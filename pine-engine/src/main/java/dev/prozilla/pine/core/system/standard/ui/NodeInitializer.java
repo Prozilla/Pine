@@ -16,6 +16,7 @@ public class NodeInitializer extends InitSystem {
 	protected void process(EntityChunk chunk) {
 		Entity entity = chunk.getEntity();
 		Node node = chunk.getComponent(Node.class);
+		node.updateHierarchy();
 		
 		LayoutNode group = entity.getComponentInParent(LayoutNode.class, false);
 		if (group != null) {

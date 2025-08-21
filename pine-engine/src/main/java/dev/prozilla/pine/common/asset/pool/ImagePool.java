@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static org.lwjgl.stb.STBImage.*;
 
-public final class ImagePool extends AssetPool<Image> {
+public final class ImagePool extends AssetPool<Image> implements MultiAssetLoader<Image> {
 	
 	@Override
 	public Image load(String path) {
@@ -37,7 +37,7 @@ public final class ImagePool extends AssetPool<Image> {
 			try {
 				filePath = ResourceUtils.getResourcePath(path);
 			} catch (RuntimeException e) {
-				return fail(path, "File not found", e);
+				return fail(path, NOT_FOUND_ERROR, e);
 			}
 			
 			// Load the image file

@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.math.dimension;
 
 import dev.prozilla.pine.core.component.ui.Node;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents four dimensions (X, Y, Z and W) for a UI element. Each dimension is defined using a {@link DimensionBase}.
@@ -129,7 +130,7 @@ public class QuadDimension extends DualDimension {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return String.format("(%s,%s,%s,%s)", x, y, z, w);
 	}
 }

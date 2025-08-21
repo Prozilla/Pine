@@ -9,7 +9,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Utility class for manipulating files and directories.
@@ -20,6 +22,7 @@ public final class FileSystem {
 	
 	/**
 	 * Helper method for deleting non-empty directories.
+	 * @param directory The directory to delete
 	 */
 	public static void deleteDirectory(Path directory) {
 		try (Stream<Path> pathStream = Files.walk(directory)) {
@@ -33,6 +36,8 @@ public final class FileSystem {
 	
 	/**
 	 * Helper method for copying a directory and its contents recursively.
+	 * @param source The directory to copy from
+	 * @param target The directory to paste into
 	 */
 	public static void copyDirectory(File source, File target) throws IOException {
 		if (source.isDirectory()) {
@@ -73,6 +78,7 @@ public final class FileSystem {
 	
 	/**
 	 * Moves the contents of a directory one level up and deletes the directory.
+	 * @param directory The directory to unwrap
 	 */
 	public static void unwrapDirectory(Path directory) throws IOException {
 		Path parent = directory.getParent();
@@ -93,6 +99,8 @@ public final class FileSystem {
 	
 	/**
 	 * Downloads a URL into a target directory.
+	 * @param url The URL to download from
+	 * @param target The path to download to
 	 */
 	public static void download(String url, Path target) throws URISyntaxException, IOException {
 		try (InputStream in = new URI(url).toURL().openStream()) {
@@ -102,6 +110,8 @@ public final class FileSystem {
 	
 	/**
 	 * Unzips a zip file into a target directory and deletes it.
+	 * @param zip The zip to unzip
+	 * @param target The path to unzip into
 	 */
 	public static void unzip(Path zip, Path target) throws IOException {
 		try (ZipFile zipFile = new ZipFile(zip.toFile())) {
@@ -125,4 +135,38 @@ public final class FileSystem {
 		Files.delete(zip);
 	}
 	
+	/**
+	 * Creates a zip of the contents of a directory. The zip file is placed inside the same directory.
+	 * @param directory The directory to create a zip of
+	 * @param fileName The filename to use for the zip file
+	 */
+	public static void zip(Path directory, String fileName) throws IOException {
+        Path zipFile = Files.createFile(directory.resolve(fileName));
+        try (ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(zipFile));
+                Stream<Path> files = Files.walk(directory)) {
+	        files.forEach((file) -> {
+				if (file.equals(zipFile) || file.equals(directory)) {
+					return;
+				}
+				
+				String entryName = PathUtils.replaceFileSeparator(directory.relativize(file).toString());
+				if (Files.isDirectory(file)) {
+					entryName = PathUtils.addTrailingSlash(entryName);
+				}
+				
+		        ZipEntry entry = new ZipEntry(entryName);
+		        try {
+			        zos.putNextEntry(entry);
+					if (!Files.isDirectory(file)) {
+						Files.copy(file, zos);
+					}
+			        zos.closeEntry();
+		        } catch (IOException e) {
+			        throw new RuntimeException(e);
+		        }
+	        });
+        }
+		
+    }
+
 }

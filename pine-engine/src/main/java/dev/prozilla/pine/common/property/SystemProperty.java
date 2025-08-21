@@ -2,6 +2,8 @@ package dev.prozilla.pine.common.property;
 
 import dev.prozilla.pine.common.util.checks.Checks;
 
+import java.util.Objects;
+
 /**
  * Represents a system property whose value is read using {@link System#getProperty}.
  *
@@ -17,13 +19,25 @@ public class SystemProperty extends LazyProperty<String> {
 	}
 	
 	/**
-	 * Reads the system property.
+	 * Reads the value of this system property.
 	 * @see System#getProperty
 	 */
 	@Override
 	public String fetch() {
 		value = System.getProperty(key);
 		return value;
+	}
+	
+	/**
+	 * Overrides the value of this property without modifying the actual system property.
+	 * @param value The new value
+	 */
+	public boolean setValue(String value) {
+		if (Objects.equals(this.value, value)) {
+			return false;
+		}
+		this.value = value;
+		return true;
 	}
 	
 }

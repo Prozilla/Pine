@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.ProviderOf;
  * Provides information about the state in a certain context.
  */
 @ProviderOf(State.class)
+@FunctionalInterface
 public interface StateProvider<Context, S extends State<Context>> {
 	
 	/**

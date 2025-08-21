@@ -8,6 +8,8 @@ public class MenuScene extends SceneBase {
 	protected void load() {
 		super.load();
 		
+		getInput().showCursor();
+		
 		world.addEntity(new MenuPrefab(font));
 	}
 }

@@ -2,8 +2,10 @@ package dev.prozilla.pine.common.math.dimension;
 
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.Node;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -108,6 +110,10 @@ public class DualDimension implements Printable, Cloneable<DualDimension> {
 		}
 	}
 	
+	public Vector2f compute(Node element) {
+		return new Vector2f(computeX(element), computeY(element));
+	}
+	
 	/**
 	 * Computes the X-dimension for a given element.
 	 */
@@ -184,7 +190,7 @@ public class DualDimension implements Printable, Cloneable<DualDimension> {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return String.format("%s %s", x, y);
 	}
 }

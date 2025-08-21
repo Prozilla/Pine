@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.style.selector;
 
 import dev.prozilla.pine.core.component.ui.Node;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A selector that matches elements with a specific name.
@@ -15,7 +16,7 @@ public class TypeSelector extends Selector {
 	
 	@Override
 	public boolean matches(Node node) {
-		return node.getEntity().getName().toLowerCase().equals(type);
+		return type.equals(node.htmlTag);
 	}
 	
 	@Override
@@ -24,7 +25,7 @@ public class TypeSelector extends Selector {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return type;
 	}
 	

@@ -85,6 +85,14 @@ public enum Direction {
 		this.string = string;
 	}
 	
+	public boolean isVertical() {
+		return x == 0;
+	}
+	
+	public boolean isHorizontal() {
+		return y == 0;
+	}
+	
 	/**
 	 * @return The opposite direction.
 	 */
@@ -121,6 +129,25 @@ public enum Direction {
 	
 	public static Direction parse(String input) {
 		return ArrayUtils.findByString(Direction.values(), input);
+	}
+	
+	public static Direction fromIntVector(Vector2i vector) {
+		return vector != null ? fromFloatVector(vector.x, vector.y) : null;
+	}
+	
+	public static Direction fromFloatVector(Vector2f vector) {
+		return vector != null ? fromFloatVector(vector.x, vector.y) : null;
+	}
+	
+	public static Direction fromFloatVector(float x, float y) {
+		float absX = Math.abs(x);
+		if (absX == Math.abs(y)) {
+			return null;
+		} else if (y < absX && y > -absX) {
+			return x > 0 ? Direction.RIGHT : Direction.LEFT;
+		} else {
+			return y > 0 ? Direction.UP : Direction.DOWN;
+		}
 	}
 	
 }

@@ -1,5 +1,8 @@
 package dev.prozilla.pine.common;
 
+import dev.prozilla.pine.common.util.checks.Checks;
+import org.jetbrains.annotations.Contract;
+
 /**
  * Represents an object that can both transmit and receive data.
  * @param <T> The type of the transceivable object
@@ -8,11 +11,19 @@ public interface Transceivable<T extends Transceivable<T>> extends Transmittable
 	
 	/**
 	 * Transmits data from the <code>source</code> object to this object.
+	 *
+	 * <p>Equivalent of {@code source.transmit(this)}.</p>
 	 * @param source The object from which data will be received
 	 */
 	default void receive(T source) {
+		Checks.isNotNull(source, "source");
 		source.transmit(self());
 	}
 	
+	@Override
+	void transmit(T target);
+	
+	@Contract("-> this")
 	T self();
+	
 }

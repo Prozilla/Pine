@@ -5,25 +5,34 @@ package dev.prozilla.pine.common.asset.text;
  */
 public class Glyph {
 	
-	public final int width;
-	public final int height;
-	public final int x;
-	public final int y;
+	// Texture region
+	public final float regionWidth;
+	public final float regionHeight;
+	public final float regionX;
+	public final float regionY;
+	
+	// Positioning
+	public final float y;
+	public final float height;
 	public final float advance;
 	
 	/**
 	 * Creates a font Glyph.
-	 * @param width Width of the Glyph
-	 * @param height Height of the Glyph
-	 * @param x X coordinate on the font texture
-	 * @param y Y coordinate on the font texture
+	 * @param regionWidth Width of the Glyph
+	 * @param regionHeight Height of the Glyph
+	 * @param regionX X coordinate on the font texture
+	 * @param regionY Y coordinate on the font texture
+	 * @param y Vertical offset from the baseline
 	 * @param advance Advance width
 	 */
-	public Glyph(int width, int height, int x, int y, float advance) {
-		this.width = width;
-		this.height = height;
-		this.x = x;
+	public Glyph(float regionWidth, float regionHeight, float regionX, float regionY, float y, float height, float advance) {
+		this.regionWidth = regionWidth;
+		this.regionHeight = regionHeight;
+		this.regionX = regionX;
+		this.regionY = regionY;
 		this.y = y;
+		this.height = height;
 		this.advance = advance;
 	}
+	
 }

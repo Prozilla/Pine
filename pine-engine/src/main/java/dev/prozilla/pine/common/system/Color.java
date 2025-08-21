@@ -7,6 +7,8 @@ import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.util.checks.Checks;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -36,6 +38,7 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 	 * Creates an RGB-Color from a java.awt.Color instance.
 	 * @param color Color instance
 	 */
+	@Deprecated
 	public Color(java.awt.Color color) {
 		this(color.getRed(), color.getGreen(), color.getBlue());
 	}
@@ -86,6 +89,7 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 	
 	@Override
 	public void transmit(Color target) {
+		Checks.isNotNull(target, "target");
 		target.set(getRed(), getGreen(), getBlue(), getAlpha());
 	}
 	
@@ -255,6 +259,7 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 	 * Returns the color as a (x,y,z)-Vector.
 	 * @return The color as vec3.
 	 */
+	@Contract("-> new")
 	public Vector3f toVector3f() {
 		return new Vector3f(red, green, blue);
 	}
@@ -263,10 +268,12 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 	 * Returns the color as a (x,y,z,w)-Vector.
 	 * @return The color as vec4.
 	 */
+	@Contract("-> new")
 	public Vector4f toVector4f() {
 		return new Vector4f(red, green, blue, alpha);
 	}
 	
+	@Contract("-> new")
 	public Colour toColour() {
 		return new Colour(red, green, blue, alpha);
 	}
@@ -302,8 +309,12 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 	}
 	
 	@Override
-	public String toString() {
-		return String.format("rgba(%s, %s, %s, %s)", red, green, blue, alpha);
+	public @NotNull String toString() {
+		if (alpha != 1) {
+			return String.format("rgba(%s, %s, %s, %s)", red, green, blue, alpha);
+		} else {
+			return String.format("rgb(%s, %s, %s)", red, green, blue);
+		}
 	}
 	
 	public static Color hsl(int hue, int saturation, int lightness) {

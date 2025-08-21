@@ -21,6 +21,8 @@ public class ParticleBurstEmitterPrefab extends ParticleEmitterPrefab {
 	
 	@Override
 	protected void apply(Entity entity) {
+		super.apply(entity);
+		
 		entity.addComponent(new ParticleBurstEmitter(particlePrefab, count));
 	}
 }

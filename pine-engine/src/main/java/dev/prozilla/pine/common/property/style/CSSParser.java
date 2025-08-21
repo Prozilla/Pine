@@ -1,107 +1,118 @@
 package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
+import dev.prozilla.pine.common.property.animated.AnimationCurveParser;
 import dev.prozilla.pine.common.property.style.selector.Selector;
-import dev.prozilla.pine.common.util.Parser;
+import dev.prozilla.pine.common.property.style.selector.SelectorParser;
+import dev.prozilla.pine.common.util.SequentialParser;
 
-public class CSSParser extends Parser<StyleSheet> {
+public class CSSParser extends SequentialParser<StyleSheet> {
+	
+	private static final SelectorParser selectorParser = new SelectorParser();
+	private static final AnimationCurveParser animationCurveParser = new AnimationCurveParser();
 	
 	@Override
 	public boolean parse(String input) {
-		// Remove comments
-		input = input.replaceAll("/\\*.*?\\*/", "");
+		startStep(input, new StyleSheet());
 		
-		StyleSheet styleSheet = new StyleSheet();
-		int i = 0;
-		int len = input.length();
-		
-		while (i < len) {
-			i = skipWhitespace(input, i);
-			if (i >= len) {
+		while (!endOfInput()) {
+			skipWhitespace();
+			if (endOfInput())
 				break;
-			}
 			
-			// Read selector (continue until "{")
-			int start = i;
-			while (i < len && input.charAt(i) != '{') {
-				i++;
-			}
-			if (i >= len) {
+			// Read selector
+			Selector selector = parseSelector();
+			if (selector == null)
 				break;
-			}
 			
-			Selector selector = Selector.parse(input.substring(start, i).trim());
-			i++;
-			
-			// Read properties (continue until "}")
-			while (i < len && input.charAt(i) != '}') {
-				i = skipWhitespace(input, i);
-				if (i >= len || input.charAt(i) == '}') {
+			// Read properties
+			while (!endOfInput() && getChar() != '}') {
+				skipWhitespace();
+				if (endOfInput() || getChar() == '}') {
 					break;
 				}
 				
-				// Read property name (continue until ":")
-				start = i;
-				while (i < len && input.charAt(i) != ':') {
-					i++;
-				}
-				if (i >= len || input.charAt(i) == '}') {
+				// Read property name
+				String propertyName = parsePropertyName();
+				if (propertyName == null)
 					break;
-				}
-				
-				String propertyName = input.substring(start, i).trim();
 				StyledPropertyKey<?> propertyKey = StyledPropertyKey.parse(propertyName);
-				i++;
+				moveCursor();
 				
-				// Read property value (continue until ";" or "}")
-				start = i;
-				while (i < len && input.charAt(i) != ';' && input.charAt(i) != '}') {
-					i++;
-				}
-				String value = input.substring(start, i).trim();
+				// Read property value
+				parsePropertyValue(selector, propertyName, propertyKey);
 				
-				if (selector != null) {
-					if (propertyName.equals("transition")) {
-						// Parse transition property
-						for (String transitionValue : value.split(",")) {
-							String[] parts = transitionValue.trim().split(" ", 2);
-							
-							if (parts.length == 2) {
-								propertyKey = StyledPropertyKey.parse(parts[0]);
-								AnimationCurve animationCurve = AnimationCurve.parse(parts[1]);
-								
-								if (propertyKey != null && animationCurve != null) {
-									styleSheet.addTransition(selector, propertyKey, animationCurve);
-								}
-							}
-						}
-					} else if (propertyKey != null) {
-						// Parse normal property
-						styleSheet.parseRule(selector, propertyKey, value);
-					}
-				}
-				
-				// Skip "}"
-				if (i < len && input.charAt(i) == ';') {
-					i++;
-				}
+				skipIfChar(';');
 			}
 			
 			// Skip "}"
-			if (i < len && input.charAt(i) == '}') {
-				i++;
-			}
+			skipIfChar('}');
 		}
 		
-		return succeed(styleSheet);
+		return succeed();
 	}
 	
-	private static int skipWhitespace(String input, int i) {
-		int len = input.length();
-		while (i < len && Character.isWhitespace(input.charAt(i))) {
-			i++;
+	private Selector parseSelector() {
+		int start = getCursor();
+		skipUntilChar('{');
+		if (endOfInput()) {
+			return null;
 		}
-		return i;
+		
+		if (selectorParser.parse(getInput().substring(start, getCursor()).trim())) {
+			moveCursor();
+			return selectorParser.getResult();
+		} else {
+			return null;
+		}
+	}
+	
+	private String parsePropertyName() {
+		int start = getCursor();
+		skipUntilChar(':');
+		if (endOfInput() || getChar() == '}') {
+			return null;
+		}
+		return getInput().substring(start, getCursor()).trim();
+	}
+	
+	private void parsePropertyValue(Selector selector, String propertyName, StyledPropertyKey<?> propertyKey) {
+		int start = getCursor();
+		skipUntilAnyChar(';', '}');
+		String value = getInput().substring(start, getCursor()).trim();
+		
+		if (selector != null) {
+			if (propertyName.equalsIgnoreCase("transition")) {
+				parseTransitionProperty(value, selector);
+			} else if (propertyKey != null) {
+				// Parse normal property
+				intermediate.parseRule(selector, propertyKey, value);
+			}
+		}
+	}
+	
+	private void parseTransitionProperty(String value, Selector selector) {
+		StyledPropertyKey<?> propertyKey;
+		for (String transitionValue : value.split(",")) {
+			String[] parts = transitionValue.trim().split(" ", 2);
+			
+			if (parts.length == 2) {
+				propertyKey = StyledPropertyKey.parse(parts[0]);
+				
+				if (animationCurveParser.parse(parts[1])) {
+				    AnimationCurve animationCurve = animationCurveParser.getResult();
+					
+					if (propertyKey != null && animationCurve != null) {
+						intermediate.addTransition(selector, propertyKey, animationCurve);
+					}
+				}
+			}
+		}
+	}
+	
+	@Override
+	protected void setInput(String input) {
+		super.setInput(input.replaceAll("/\\*.*?\\*/", ""));
 	}
 	
 }

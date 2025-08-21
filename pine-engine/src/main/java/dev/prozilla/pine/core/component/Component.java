@@ -8,6 +8,9 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityProvider;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.scene.SceneProvider;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  * Contains a partition of the data of an entity.
@@ -35,6 +38,24 @@ public abstract class Component implements Printable, Destructible, EntityProvid
 		if (entity != null) {
 			entity.removeComponent(this);
 		}
+	}
+	
+	public void setEntity(Entity entity) {
+		if (Objects.equals(this.entity, entity)) {
+			return;
+		}
+		
+		if (entity != null && !entity.components.contains(this)) {
+			throw new IllegalArgumentException("component is not attached to entity");
+		}
+		
+		Entity oldEntity = this.entity;
+		this.entity = entity;
+		onEntityChange(oldEntity, entity);
+	}
+	
+	protected void onEntityChange(Entity oldEntity, Entity newEntity) {
+	
 	}
 	
 	/**
@@ -77,7 +98,7 @@ public abstract class Component implements Printable, Destructible, EntityProvid
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return String.format("%s: %s", getName(), getEntity().getName());
 	}
 }

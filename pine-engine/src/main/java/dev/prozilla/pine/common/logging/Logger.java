@@ -5,6 +5,11 @@ import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
 import dev.prozilla.pine.common.system.Ansi;
 import dev.prozilla.pine.common.system.PathUtils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.StringJoiner;
+
 /**
  * Represents the main access points for logging.
  * Manages different log levels, each with their own log handler, and formats logs.
@@ -15,6 +20,7 @@ public class Logger implements LogHandler {
 	protected boolean enabled;
 	protected String prefix;
 	protected boolean enableAnsi;
+	protected boolean enableTimestamps;
 	
 	// Handlers
 	protected LogHandler outputLogHandler;
@@ -88,12 +94,38 @@ public class Logger implements LogHandler {
 		errorLogHandler.log(applyFormat(Ansi.red(message)));
 	}
 	
-	public void logPath(String text, String filePath) {
-		logf("%s: %s", text, formatPath(filePath));
+	public void logPath(String filePath) {
+		log(formatPath(filePath));
+	}
+	
+	public void logPath(String label, String filePath) {
+		logf("%s: %s", label, formatPath(filePath));
 	}
 	
 	public void logHeader(String header) {
 		log(Logger.formatHeader(header));
+	}
+	
+	public void logCollection(Collection<?> collection) {
+		logCollection(collection, "Collection");
+	}
+	
+	public void logCollection(Collection<?> list, String label) {
+		logf("%s: %s", label, formatCollection(list));
+	}
+	
+	/**
+	 * Logs the current time.
+	 */
+	public void timestamp(String label) {
+		logf("%s: %s ", label, createTimestamp());
+	}
+	
+	/**
+	 * Logs the current time.
+	 */
+	public void timestamp() {
+		log(createTimestamp());
 	}
 	
 	@Override
@@ -201,12 +233,23 @@ public class Logger implements LogHandler {
 			text = prefix + text;
 		}
 		
+		if (enableTimestamps) {
+			text = formatBadge(createTimestamp()) + text;
+		}
+		
 		// Strip ANSI, if ANSI is disabled
 		if (!enableAnsi) {
 			text = Ansi.strip(text);
 		}
 		
 		return text;
+	}
+	
+	/**
+	 * Creates a timestamp.
+	 */
+	protected String createTimestamp() {
+		return LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME);
 	}
 	
 	protected boolean isOutputActive() {
@@ -282,6 +325,20 @@ public class Logger implements LogHandler {
 	
 	public static String formatHeader(String header) {
 		return String.format("--- %s ---", header);
+	}
+	
+	public static String formatCollection(Collection<?> collection) {
+		if (collection.isEmpty()) {
+			return "[]";
+		} else if (collection.size() == 1) {
+			return String.format("[%s]", collection.iterator().next());
+		} else {
+			StringJoiner stringJoiner = new StringJoiner(",\n");
+			for (Object object : collection) {
+				stringJoiner.add("\t" + object.toString());
+			}
+			return String.format("[%n%s%n]", stringJoiner);
+		}
 	}
 	
 }

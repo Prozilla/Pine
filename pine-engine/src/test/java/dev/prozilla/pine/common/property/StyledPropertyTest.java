@@ -27,6 +27,15 @@ public class StyledPropertyTest {
 		SelectorParser selectorParser = new SelectorParser();
 		TestUtils.testParser("div.class#id:not(:hover)", new SelectorCombo(new TypeSelector("div"), new ClassSelector("class"), new IdSelector("id"), new NotSelector(new ModifierSelector("hover"))), selectorParser);
 		TestUtils.testParser("*", Selector.UNIVERSAL, selectorParser);
+		TestUtils.testParser("div > p", new ChildSelector(new TypeSelector("div"), new TypeSelector("p")), selectorParser);
+	}
+	
+	@Test
+	void testSelectorParserFailure() {
+		SelectorParser selectorParser = new SelectorParser();
+		TestUtils.testParserFailure(":", "Invalid modifier", selectorParser);
+		TestUtils.testParserFailure(".", "Invalid class", selectorParser);
+		TestUtils.testParserFailure("#", "Invalid id", selectorParser);
 	}
 	
 	@Test
@@ -36,17 +45,17 @@ public class StyledPropertyTest {
 		expected.addRule(new IdSelector("id"), StyledPropertyKey.COLOR, Color.decode("#000"));
 		
 		CSSParser cssParser = new CSSParser();
-		String input = "* { color: #fff } #id { color: #000 }";
 		
-		TestUtils.testParser(input, expected, cssParser);
+		TestUtils.testParser("* { color: #fff } #id { color: #000 }", expected, cssParser);
+		TestUtils.testParser("* { COLOR: #FFF } #id { COLOR: #000 }", expected, cssParser);
 	}
 	
 	@Test
 	void testStyleSheetParseToString() {
 		CSSParser cssParser = new CSSParser();
 		String[] inputStrings = new String[] {
-			":hover { color: rgba(0.25, 0.75, 0.5, 1.0); }",
-			"* { color: rgba(1.0, 1.0, 1.0, 1.0); } #id { color: rgba(0.0, 0.0, 0.0, 1.0); }"
+			":hover { color: rgb(0.25, 0.75, 0.5); }",
+			"* { color: rgb(1.0, 1.0, 1.0); } #id { color: rgb(0.0, 0.0, 0.0); }"
 		};
 	
 		for (String input : inputStrings) {

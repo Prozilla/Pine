@@ -13,6 +13,11 @@ public class CameraPrefab extends Prefab {
 	protected Color backgroundColor;
 	
 	public CameraPrefab() {
+		this(null);
+	}
+	
+	public CameraPrefab(Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
 		setName("Camera");
 	}
 	
@@ -22,6 +27,8 @@ public class CameraPrefab extends Prefab {
 	
 	@Override
 	protected void apply(Entity entity) {
+		super.apply(entity);
+		
 		CameraData cameraData = entity.addComponent(new CameraData());
 		
 		if (backgroundColor != null) {

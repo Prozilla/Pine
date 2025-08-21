@@ -6,8 +6,10 @@ import dev.prozilla.pine.common.exception.InvalidObjectException;
 import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.util.ArrayUtils;
 import org.gradle.internal.impldep.javax.annotation.Nonnull;
+import org.jetbrains.annotations.Contract;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Static utility methods for throwing exceptions if certain conditions are not met at runtime.
@@ -18,9 +20,14 @@ public final class Checks {
 	
 	// Objects
 	
+	public static <O> O isNotNull(O object) throws InvalidObjectException {
+		return isNotNull(object, null);
+	}
+	
+	@Contract("null, _ -> fail")
 	public static <O> O isNotNull(O object, String name) throws InvalidObjectException {
 		if (object == null) {
-			throw new InvalidObjectException(name + " must not be null");
+			throw new InvalidObjectException(Objects.requireNonNullElse(name, "object") + " must not be null");
 		}
 		return object;
 	}

@@ -26,7 +26,7 @@ public class ImageNode extends Component {
 		
 		this.image = image;
 		
-		regionOffset = new Vector2i(0, 0);
+		regionOffset = new Vector2i();
 		regionSize = new Vector2i(image.getWidth(), image.getHeight());
 	}
 	
@@ -49,4 +49,5 @@ public class ImageNode extends Component {
 		regionSize.x = regWidth;
 		regionSize.y = regHeight;
 	}
+	
 }

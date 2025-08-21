@@ -29,7 +29,6 @@ public class TextInputInputHandler extends InputSystem {
 			return;
 		}
 		
-		int min = 0;
 		int max = textNode.text.length();
 		
 		if (input.getKeyDown(Key.LEFT_ARROW)) {
@@ -37,11 +36,11 @@ public class TextInputInputHandler extends InputSystem {
 		} else if (input.getKeyDown(Key.RIGHT_ARROW)) {
 			textInputNode.cursorPosition++;
 		} else if (input.getKeyDown(Key.UP_ARROW) || input.getKeyDown(Key.HOME)) {
-			textInputNode.cursorPosition = min;
+			textInputNode.cursorPosition = 0;
 		} else if (input.getKeyDown(Key.DOWN_ARROW) || input.getKeyDown(Key.END)) {
 			textInputNode.cursorPosition = max;
 		} else if (input.getKeyDown(Key.BACKSPACE)) {
-			if (textInputNode.cursorPosition > min) {
+			if (textInputNode.cursorPosition > 0) {
 				textInputNode.cursorPosition--;
 				textNode.changeText((stringBuilder) ->
 					stringBuilder.deleteCharAt(textInputNode.cursorPosition).toString()
@@ -55,7 +54,7 @@ public class TextInputInputHandler extends InputSystem {
 			}
 		}
 		
-		textInputNode.cursorPosition = Math.clamp(textInputNode.cursorPosition, min, textNode.text.length());
+		textInputNode.updateCursor();
 	}
 	
 }

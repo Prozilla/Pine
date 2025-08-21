@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.lifecycle;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -10,6 +12,14 @@ public interface Destructible {
 	 * Destroys this object.
 	 */
 	void destroy();
+	
+	static void destroy(Destructible... destructibles) {
+		for (Destructible destructible : destructibles) {
+			if (destructible != null) {
+				destructible.destroy();
+			}
+		}
+	}
 	
 	/**
 	 * Destroys the destructible and returns {@code null}.
@@ -35,6 +45,7 @@ public interface Destructible {
 	 * @return {@code null}
 	 * @param <D> The type of destructible
 	 */
+	@Contract("_ -> null")
 	static <D extends Destructible> D destroy(D destructible) {
 		if (destructible != null) {
 			destructible.destroy();
