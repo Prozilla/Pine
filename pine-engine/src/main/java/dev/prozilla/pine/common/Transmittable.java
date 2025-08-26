@@ -8,8 +8,20 @@ public interface Transmittable<T> {
 	
 	/**
 	 * Transmits this object's data to a given target object.
-	 * @param target the target object to which data will be transmitted
+	 * @param target The target object to transmit data to
 	 */
 	void transmit(T target);
-
+	
+	/**
+	 * Transmits the data of a source to a given target object, if neither object is {@code null}.
+	 * @param source The source to read data from
+	 * @param target The target to transmit data to
+	 * @param <T> The type of target object
+	 */
+	static <T> void transmit(Transmittable<T> source, T target) {
+		if (source != null && target != null) {
+			source.transmit(target);
+		}
+	}
+	
 }
