@@ -58,6 +58,13 @@ public class Vector2i extends VectorInt<Vector2i> {
 	}
 	
 	@Override
+	public Vector2i subtract(Vector2i vector) {
+		x -= vector.x;
+		y -= vector.y;
+		return this;
+	}
+	
+	@Override
 	public Vector2i scale(float scalar) {
 		x = Math.round(x * scalar);
 		y = Math.round(y * scalar);
@@ -78,6 +85,10 @@ public class Vector2i extends VectorInt<Vector2i> {
 	public void toBuffer(IntBuffer buffer) {
 		buffer.put(x).put(y);
 		buffer.flip();
+	}
+	
+	public Direction toDirection() {
+		return Direction.fromIntVector(this);
 	}
 	
 	@Override

@@ -63,6 +63,14 @@ public class Vector3i extends VectorInt<Vector3i> {
 	}
 	
 	@Override
+	public Vector3i subtract(Vector3i vector) {
+		x -= vector.x;
+		y -= vector.y;
+		z -= vector.z;
+		return this;
+	}
+	
+	@Override
 	public Vector3i scale(float scalar) {
 		x = Math.round(x * scalar);
 		y = Math.round(y * scalar);

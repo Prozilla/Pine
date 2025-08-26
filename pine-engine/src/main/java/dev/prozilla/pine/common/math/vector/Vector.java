@@ -45,9 +45,7 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 	 * Subtracts another vector from this vector.
 	 * @return Self
 	 */
-	public V subtract(V vector) {
-		return add(vector.negate());
-	}
+	abstract public V subtract(V vector);
 	
 	/**
 	 * Scales this vector by a scalar.
@@ -69,7 +67,7 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 	 * @return Self
 	 */
 	public V lerp(V vector, float alpha) {
-		return scale(1f - alpha).add(vector.scale(alpha));
+		return scale(1f - alpha).add(vector.clone().scale(alpha));
 	}
 	
 	@Override

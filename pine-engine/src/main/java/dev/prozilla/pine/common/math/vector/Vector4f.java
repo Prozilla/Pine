@@ -68,6 +68,15 @@ public class Vector4f extends VectorFloat<Vector4f> {
 	}
 	
 	@Override
+	public Vector4f subtract(Vector4f vector) {
+		x -= vector.x;
+		y -= vector.y;
+		z -= vector.z;
+		w -= vector.w;
+		return this;
+	}
+	
+	@Override
 	public Vector4f scale(float scalar) {
 		x *= scalar;
 		y *= scalar;
