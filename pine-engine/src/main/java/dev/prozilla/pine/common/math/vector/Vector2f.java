@@ -82,6 +82,11 @@ public class Vector2f extends VectorFloat<Vector2f> {
 	}
 	
 	@Override
+	public boolean isZero() {
+		return x == 0 && y == 0;
+	}
+	
+	@Override
 	public void toBuffer(FloatBuffer buffer) {
 		buffer.put(x).put(y);
 		buffer.flip();

@@ -89,6 +89,11 @@ public class Vector3i extends VectorInt<Vector3i> {
 	}
 	
 	@Override
+	public boolean isZero() {
+		return x == 0 && y == 0 && z == 0;
+	}
+	
+	@Override
 	public void toBuffer(IntBuffer buffer) {
 		buffer.put(x).put(y).put(z);
 		buffer.flip();

@@ -70,6 +70,8 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 		return scale(1f - alpha).add(vector.clone().scale(alpha));
 	}
 	
+	public abstract boolean isZero();
+	
 	@Override
 	public boolean equals(Object object) {
 		if (this == object) {

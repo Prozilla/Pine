@@ -89,6 +89,11 @@ public class Vector3f extends VectorFloat<Vector3f> {
 	}
 	
 	@Override
+	public boolean isZero() {
+		return x == 0 && y == 0 && z == 0;
+	}
+	
+	@Override
 	public void toBuffer(FloatBuffer buffer) {
 		buffer.put(x).put(y).put(z);
 		buffer.flip();
