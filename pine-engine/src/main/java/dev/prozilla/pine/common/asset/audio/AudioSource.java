@@ -1,15 +1,18 @@
 package dev.prozilla.pine.common.asset.audio;
 
+import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
+import dev.prozilla.pine.common.util.checks.Checks;
 
 import java.nio.ShortBuffer;
+import java.util.Objects;
 
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.AL11.AL_SAMPLE_OFFSET;
 
-public class AudioSource implements Initializable, Destructible, Asset, AudioSourceContext {
+public class AudioSource implements Initializable, Destructible, Asset, AudioSourceContext, Cloneable<AudioSource> {
 	
 	private final ShortBuffer rawAudioBuffer;
 	private final int channels;
@@ -25,9 +28,13 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	
 	private final String path;
 	
+	public AudioSource(ShortBuffer buffer, int channels, int sampleRate) {
+		this(null, buffer, channels, sampleRate);
+	}
+	
 	public AudioSource(String path, ShortBuffer buffer, int channels, int sampleRate) {
 		this.path = path;
-		this.rawAudioBuffer = buffer;
+		this.rawAudioBuffer = Checks.isNotNull(buffer, "buffer");
 		this.channels = channels;
 		this.sampleRate = sampleRate;
 		
@@ -62,7 +69,6 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 		// Send audio data to OpenAL via a buffer
 		bufferPointer = alGenBuffers();
 		alBufferData(bufferPointer, format, rawAudioBuffer, sampleRate);
-//		free(rawAudioBuffer);
 		
 		// Create a source
 		sourcePointer = alGenSources();
@@ -100,7 +106,7 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	
 	@Override
 	public void play() {
-		if (isPlaying) {
+		if (isPlaying()) {
 			return;
 		}
 		
@@ -114,7 +120,7 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	
 	@Override
 	public void pause() {
-		if (!isPlaying) {
+		if (!isPlaying()) {
 			return;
 		}
 		
@@ -124,7 +130,19 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	
 	@Override
 	public boolean isPlaying() {
+		if (isPlaying) {
+			isPlaying = getState() == AL_PLAYING;
+		}
 		return isPlaying;
+	}
+	
+	public int getState() {
+		return getAttribute(AL_SOURCE_STATE);
+	}
+	
+	public int getAttribute(int attribute) throws IllegalStateException {
+		requireInitialized();
+		return alGetSourcei(sourcePointer, attribute);
 	}
 	
 	@Override
@@ -209,6 +227,21 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 		if (!initialized) {
 			throw new IllegalStateException("Audio source has not been initialized yet");
 		}
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		return object == this || (object instanceof AudioSource audioSource && equals(audioSource));
+	}
+	
+	@Override
+	public boolean equals(AudioSource audioSource) {
+		return audioSource != null && Objects.equals(audioSource.rawAudioBuffer, rawAudioBuffer) && audioSource.channels == channels && audioSource.sampleRate == sampleRate;
+	}
+	
+	@Override
+	public AudioSource clone() {
+		return new AudioSource(path, rawAudioBuffer, channels, sampleRate);
 	}
 	
 }

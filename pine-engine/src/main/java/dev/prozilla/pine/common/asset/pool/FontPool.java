@@ -7,7 +7,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
-public final class FontPool extends AssetPool<Font> {
+public final class FontPool extends AssetPool<Font> implements MultiAssetLoader<Font> {
 	
 	private int size;
 	

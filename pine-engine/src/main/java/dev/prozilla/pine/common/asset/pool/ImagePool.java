@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static org.lwjgl.stb.STBImage.*;
 
-public final class ImagePool extends AssetPool<Image> {
+public final class ImagePool extends AssetPool<Image> implements MultiAssetLoader<Image> {
 	
 	@Override
 	public Image load(String path) {

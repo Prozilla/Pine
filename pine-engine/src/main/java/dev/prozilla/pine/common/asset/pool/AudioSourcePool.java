@@ -14,7 +14,7 @@ import java.nio.ShortBuffer;
 import static org.lwjgl.stb.STBVorbis.stb_vorbis_decode_filename;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
-public final class AudioSourcePool extends AssetPool<AudioSource> {
+public final class AudioSourcePool extends AssetPool<AudioSource> implements MultiAssetLoader<AudioSource> {
 	
 	@Override
 	public AudioSource load(String path) {
