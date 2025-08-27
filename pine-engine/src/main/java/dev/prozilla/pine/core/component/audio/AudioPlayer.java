@@ -17,6 +17,7 @@ public class AudioPlayer extends Component implements AudioSourceContext {
 	
 	public final static float DEFAULT_VOLUME = 1f;
 	public final static float DEFAULT_PITCH = 1f;
+	public final static float DEFAULT_GAIN = 1f;
 	
 	public AudioPlayer(String sourcePath) {
 		this(sourcePath, DEFAULT_VOLUME);
@@ -79,6 +80,12 @@ public class AudioPlayer extends Component implements AudioSourceContext {
 	public void setPitch(float pitch) {
 		source.init();
 		source.setPitch(pitch);
+	}
+	
+	@Override
+	public void setGain(float gain) {
+		source.init();
+		source.setGain(gain);
 	}
 	
 	@Override

@@ -21,6 +21,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 	public boolean autoplay;
 	private VariableProperty<Float> volume;
 	private VariableProperty<Float> pitch;
+	private VariableProperty<Float> gain;
 	
 	private boolean isMuted;
 	
@@ -62,6 +63,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 		source.init();
 		source.setVolume(isMuted ? 0 : getVolume());
 		source.setPitch(getPitch());
+		source.setGain(getGain());
 		source.play();
 	}
 	
@@ -126,7 +128,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 	}
 	
 	public void setGlobalPitch(float pitch) {
-		if (pitch == AudioPlayer.DEFAULT_VOLUME) {
+		if (pitch == AudioPlayer.DEFAULT_PITCH) {
 			setGlobalPitch(null);
 		} else {
 			setGlobalPitch(new FixedProperty<>(pitch));
@@ -163,6 +165,46 @@ public class AudioEffectPlayer extends Component implements Initializable {
 	
 	private float getPitch() {
 		return VariableProperty.getValue(pitch, AudioPlayer.DEFAULT_PITCH);
+	}
+	
+	public void setGlobalGain(float gain) {
+		if (gain == AudioPlayer.DEFAULT_GAIN) {
+			setGlobalGain(null);
+		} else {
+			setGlobalGain(new FixedProperty<>(gain));
+		}
+	}
+	
+	public void setGlobalGain(VariableProperty<Float> gain) {
+		if (Objects.equals(this.gain, gain)) {
+			return;
+		}
+		
+		setGain(gain);
+		for (AudioSource source : sources) {
+			source.init();
+			source.setGain(getGain());
+		}
+	}
+	
+	public void setGain(float gain) {
+		if (gain == AudioPlayer.DEFAULT_GAIN) {
+			setGain(null);
+		} else {
+			setGain(new FixedProperty<>(gain));
+		}
+	}
+	
+	public void setGain(VariableProperty<Float> gain) {
+		if (Objects.equals(this.gain, gain)) {
+			return;
+		}
+		
+		this.gain = gain;
+	}
+	
+	private float getGain() {
+		return VariableProperty.getValue(gain, AudioPlayer.DEFAULT_GAIN);
 	}
 	
 	public void setMaxSources(int maxSources) {

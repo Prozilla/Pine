@@ -156,6 +156,11 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	}
 	
 	@Override
+	public void setGain(float gain) {
+		setAttribute(AL_GAIN, gain);
+	}
+	
+	@Override
 	public void setLoop(boolean loop) throws IllegalStateException {
 		setAttribute(AL_LOOPING, loop);
 	}

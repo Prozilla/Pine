@@ -36,6 +36,8 @@ public interface AudioSourceContext extends Destructible {
 	
 	void setPitch(float pitch);
 	
+	void setGain(float gain);
+	
 	void setLoop(boolean loop);
 	
 }

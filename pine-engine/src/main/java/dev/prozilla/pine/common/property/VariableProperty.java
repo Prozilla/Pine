@@ -53,7 +53,7 @@ public abstract class VariableProperty<T> {
 	 */
 	public static <T> T getValue(VariableProperty<T> property, T defaultValue) {
 		if (property == null) {
-			return null;
+			return defaultValue;
 		}
 		
 		T value = property.getValue();
