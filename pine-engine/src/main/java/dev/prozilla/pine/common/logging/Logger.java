@@ -5,6 +5,9 @@ import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
 import dev.prozilla.pine.common.system.Ansi;
 import dev.prozilla.pine.common.system.PathUtils;
 
+import java.util.Collection;
+import java.util.StringJoiner;
+
 /**
  * Represents the main access points for logging.
  * Manages different log levels, each with their own log handler, and formats logs.
@@ -94,6 +97,14 @@ public class Logger implements LogHandler {
 	
 	public void logHeader(String header) {
 		log(Logger.formatHeader(header));
+	}
+	
+	public void logCollection(Collection<?> collection) {
+		logCollection(collection, "Collection");
+	}
+	
+	public void logCollection(Collection<?> list, String label) {
+		logf("%s: %s", label, formatCollection(list));
 	}
 	
 	@Override
@@ -282,6 +293,20 @@ public class Logger implements LogHandler {
 	
 	public static String formatHeader(String header) {
 		return String.format("--- %s ---", header);
+	}
+	
+	public static String formatCollection(Collection<?> collection) {
+		if (collection.isEmpty()) {
+			return "[]";
+		} else if (collection.size() == 1) {
+			return String.format("[%s]", collection.iterator().next());
+		} else {
+			StringJoiner stringJoiner = new StringJoiner(",\n");
+			for (Object object : collection) {
+				stringJoiner.add("\t" + object.toString());
+			}
+			return String.format("[%n%s%n]", stringJoiner);
+		}
 	}
 	
 }
