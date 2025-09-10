@@ -2,6 +2,8 @@ package dev.prozilla.pine.common.util;
 
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.exception.ParsingException;
+import dev.prozilla.pine.common.property.ParsedProperty;
+import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
 
 /**
@@ -63,6 +65,10 @@ public abstract class Parser<T> implements Printable {
 		this.errorMessage = Checks.isNotNull(errorMessage, "errorMessage");
 		result = null;
 		return false;
+	}
+	
+	public ParsedProperty<T> parseProperty(VariableProperty<String> inputProperty) {
+		return new ParsedProperty<>(inputProperty, this);
 	}
 	
 	@Override
