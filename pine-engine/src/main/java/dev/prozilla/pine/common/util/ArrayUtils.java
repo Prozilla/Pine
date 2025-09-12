@@ -50,10 +50,21 @@ public final class ArrayUtils {
 	 * @param <E> Type of the array elements
 	 */
 	public static <E> E findByString(E[] array, String string) {
+		return findByString(array, string, false);
+	}
+	
+	public static <E> E findByString(E[] array, String string, boolean ignoreCase) {
 		for (E element : array) {
-			if (element.toString().equals(string)) {
-				return element;
+			if (ignoreCase) {
+				if (element.toString().equalsIgnoreCase(string)) {
+					return element;
+				}
+			} else {
+				if (element.toString().equals(string)) {
+					return element;
+				}
 			}
+			
 		}
 		
 		return null;

@@ -103,9 +103,8 @@ public enum Easing implements EasingFunction {
 		return string;
 	}
 	
-	// TO DO: Implement parsing of other easing functions
 	public static Easing parse(String input) {
-		return ArrayUtils.findByString(Easing.values(), input);
+		return ArrayUtils.findByString(Easing.values(), input, true);
 	}
 	
 }

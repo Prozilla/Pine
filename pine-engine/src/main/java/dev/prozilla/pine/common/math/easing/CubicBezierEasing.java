@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.math.easing;
 
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.math.MathUtils;
+import dev.prozilla.pine.common.math.vector.Vector4f;
 
 /**
  * A cubic Bézier easing function.
@@ -9,6 +10,10 @@ import dev.prozilla.pine.common.math.MathUtils;
 public class CubicBezierEasing implements EasingFunction, Cloneable<CubicBezierEasing> {
 
 	protected final float x1, y1, x2, y2;
+	
+	public CubicBezierEasing(Vector4f vector4f) {
+		this(vector4f.x, vector4f.y, vector4f.z, vector4f.w);
+	}
 	
 	/**
 	 * @param x1 X coordinate of first control point

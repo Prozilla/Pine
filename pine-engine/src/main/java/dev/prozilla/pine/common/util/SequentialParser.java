@@ -116,6 +116,9 @@ public abstract class SequentialParser<T> extends Parser<T> {
 		while (!endOfInput() && predicate.test(getChar())) {
 			moveCursor();
 		}
+		if (start >= cursor) {
+			return "";
+		}
 		return getInput().substring(start, cursor);
 	}
 	
