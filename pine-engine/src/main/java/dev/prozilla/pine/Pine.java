@@ -1,9 +1,9 @@
 package dev.prozilla.pine;
 
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.system.Platform;
 import dev.prozilla.pine.core.Application;
 import org.lwjgl.Version;
-import org.lwjgl.system.Platform;
 
 import java.util.StringJoiner;
 
@@ -34,15 +34,19 @@ public final class Pine {
 	
 	/**
 	 * Returns the name of the platform Pine is running on.
-	 * @return The name of the platform
+	 * @return The name of the platform, or {@code null} if the platform is not supported.
 	 */
 	public static String getPlatformName() {
-		return getPlatform().getName();
+		Platform platform = getPlatform();
+		if (platform == null) {
+			return null;
+		}
+		return platform.getName();
 	}
 	
 	/**
 	 * Returns the platform Pine is running on.
-	 * @return The platform
+	 * @return The platform, or {@code null} if the platform is not supported.
 	 */
 	public static Platform getPlatform() {
 		return Platform.get();
@@ -50,7 +54,7 @@ public final class Pine {
 	
 	/**
 	 * Returns the architecture Pine is running on.
-	 * @return The architecture
+	 * @return The architecture, or {@code null} if the architecture is not supported.
 	 */
 	public static Platform.Architecture getArchitecture() {
 		return Platform.getArchitecture();
@@ -115,8 +119,7 @@ public final class Pine {
 		
 		stringJoiner.add(Logger.formatHeader("Pine Info"));
 		stringJoiner.add("Pine version: " + getVersion());
-		stringJoiner.add("Platform: " + getPlatformName());
-		stringJoiner.add("Architecture: " + getArchitecture());
+		stringJoiner.add("Platform: " + Platform.getDescriptor());
 		stringJoiner.add("Java version: " + getJavaVersion());
 		stringJoiner.add("LWJGL version: " + getLWJGLVersion());
 		if (Application.initializedOpenGL) {
