@@ -9,6 +9,7 @@ import dev.prozilla.pine.common.logging.AppLogger;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.opengl.GLUtils;
 import dev.prozilla.pine.common.property.SystemProperty;
+import dev.prozilla.pine.common.system.Platform;
 import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.core.audio.AudioDevice;
 import dev.prozilla.pine.core.mod.ModManager;
@@ -682,6 +683,11 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			return null;
 		}
 		return AssetPools.fonts.load(config.defaultFontPath.getValue());
+	}
+	
+	public String getPersistentDataPath() {
+		String subDirectory = String.format("Pine/%s", config.window.title.getValue());
+		return Platform.getPersistentDataPath(subDirectory, true);
 	}
 	
 	/**

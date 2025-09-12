@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static dev.prozilla.pine.test.TestUtils.assertNonBlankString;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(TestLoggingExtension.class)
@@ -51,8 +51,7 @@ public class PineTest {
 	}
 	
 	void testPineString(String string, String label) {
-		assertNotNull(string);
-		assertFalse(string.isBlank());
+		assertNonBlankString(string);
 		if (ENABLE_LOGGING) {
 			TestLoggingExtension.log(label + ": " + string);
 		}

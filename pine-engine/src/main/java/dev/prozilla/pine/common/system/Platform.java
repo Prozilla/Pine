@@ -2,16 +2,50 @@ package dev.prozilla.pine.common.system;
 
 import dev.prozilla.pine.common.util.ArrayUtils;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * Represents the platforms supported by Pine.
  *
  * <p>This is a wrapper for {@link org.lwjgl.system.Platform}.</p>
  */
 public enum Platform {
-	FREEBSD(org.lwjgl.system.Platform.FREEBSD),
-	LINUX(org.lwjgl.system.Platform.LINUX),
-	MACOS(org.lwjgl.system.Platform.MACOSX),
-	WINDOWS(org.lwjgl.system.Platform.WINDOWS);
+	FREEBSD(org.lwjgl.system.Platform.FREEBSD) {
+		@Override
+		String getUserPath(String userHome, String separator) {
+			return LINUX.getUserPath(userHome, separator);
+		}
+	},
+	LINUX(org.lwjgl.system.Platform.LINUX) {
+		@Override
+		String getUserPath(String userHome, String separator) {
+			String xdgData = System.getenv("XDG_DATA_HOME");
+			if (xdgData == null) {
+				return String.format("%s%s.local%sshare", userHome, separator, separator);
+			} else {
+				return xdgData;
+			}
+		}
+	},
+	MACOS(org.lwjgl.system.Platform.MACOSX) {
+		@Override
+		String getUserPath(String userHome, String separator) {
+			return String.format("%s%sLibrary%sApplication Support", userHome, separator, separator);
+		}
+	},
+	WINDOWS(org.lwjgl.system.Platform.WINDOWS) {
+		@Override
+		String getUserPath(String userHome, String separator) {
+			String appData = System.getenv("APPDATA");
+			if (appData == null) {
+				return String.format("%s%sAppData%sRoaming", userHome, separator, separator);
+			}
+			return appData;
+		}
+	};
 	
 	private final org.lwjgl.system.Platform lwjglPlatform;
 	
@@ -43,6 +77,35 @@ public enum Platform {
 	 */
 	public boolean isCurrent() {
 		return this == current;
+	}
+	
+	abstract String getUserPath(String userHome, String separator);
+	
+	public static String getPersistentDataPath(String subDirectory) {
+		return getPersistentDataPath(subDirectory, false);
+	}
+	
+	public static String getPersistentDataPath(String subDirectory, boolean createDirectories) {
+		String userHome = System.getProperty("user.home");
+		String separator = File.separator;
+		
+		String userPath;
+		if (current != null) {
+			userPath = current.getUserPath(userHome, separator);
+		} else {
+			userPath = userHome;
+		}
+		
+		Path persistentDataPath = Paths.get(userPath, subDirectory);
+		if (createDirectories) {
+			try {
+				Files.createDirectories(persistentDataPath);
+			} catch (Exception e) {
+				throw new RuntimeException("Failed to create persistent data directory: " + persistentDataPath, e);
+			}
+		}
+		
+		return persistentDataPath.toAbsolutePath().toString();
 	}
 	
 	/**

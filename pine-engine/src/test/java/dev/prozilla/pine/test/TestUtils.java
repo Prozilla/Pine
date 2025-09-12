@@ -52,7 +52,7 @@ public class TestUtils {
 		String actualError = parser.getError();
 		assertNotNull(actualError);
 		if (expectedError != null) {
-			assertTrue(actualError.toLowerCase().contains(expectedError.toLowerCase()), String.format("Error message should contain '%s', but was '%s'", expectedError, actualError));
+			assertTrue(actualError.toLowerCase().contains(expectedError.toLowerCase()), String.format("error message of parser should contain '%s', but was '%s'", expectedError, actualError));
 		}
 	}
 	
@@ -71,6 +71,14 @@ public class TestUtils {
 		
 		String className = original.getClass().getSimpleName();
 		assertEquals(original, parser.getResult(), String.format("parsed result of string conversion of %s should equal original", className));
+	}
+	
+	/**
+	 * Asserts that the given string is not {@code null} or blank.
+	 */
+	public static void assertNonBlankString(String string) {
+		assertNotNull(string);
+		assertFalse(string.isBlank(), "string should not be blank");
 	}
 	
 }
