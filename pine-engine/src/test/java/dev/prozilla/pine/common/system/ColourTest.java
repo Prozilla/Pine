@@ -20,7 +20,8 @@ public class ColourTest {
 		assertEquals(Color.decode("#FFF"), Colour.decode("#FFF"));
 		assertEquals(Color.rebeccaPurple(), Colour.rebeccaPurple());
 		assertEquals(Color.hsl(30, 70, 50), Colour.hsl(30, 70, 50));
-		assertEquals(Color.parse("rgba(0.25, 0.75, 0.5, 1)"), Colour.parse("rgba(0.25, 0.75, 0.5, 1)"));
+		
+		assertEquals(new ColorParser().read("rgba(0.25, 0.75, 0.5, 1)"), new ColourParser().read("rgba(0.25, 0.75, 0.5, 1)"));
 	}
 	
 	@Test
