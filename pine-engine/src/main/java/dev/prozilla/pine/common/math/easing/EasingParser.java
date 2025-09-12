@@ -14,13 +14,19 @@ public class EasingParser extends SequentialParser<EasingFunction> {
 		
 		if (isMethodCall("cubic-bezier")) {
 			String arguments = readBetweenParentheses();
-			if (!vector4fParser.parse(arguments)) {
+			if (arguments.isBlank()) {
+				return fail("Missing arguments");
+			} else if (!vector4fParser.parse(arguments)) {
 				return fail(vector4fParser.getError());
 			}
 			Vector4f vector4f = vector4fParser.getResult();
 			return succeed(new CubicBezierEasing(vector4f));
 		} else if (isMethodCall("steps")) {
-			String[] arguments = readBetweenParentheses().split("\\s*,\\s*");
+			String argumentsString = readBetweenParentheses();
+			if (argumentsString.isBlank()) {
+				return fail("Missing arguments");
+			}
+			String[] arguments = argumentsString.split("\\s*,\\s*");
 			try {
 				int stepCount = Integer.parseInt(arguments[0]);
 				if (arguments.length >= 2) {
@@ -35,7 +41,7 @@ public class EasingParser extends SequentialParser<EasingFunction> {
 					return succeed(new StepEasing(stepCount));
 				}
 			} catch (NumberFormatException e) {
-				return fail(e.getMessage());
+				return fail("Invalid argument: " + arguments[0]);
 			}
 		} else {
 			Easing easing = ArrayUtils.findByString(Easing.values(), input, true);

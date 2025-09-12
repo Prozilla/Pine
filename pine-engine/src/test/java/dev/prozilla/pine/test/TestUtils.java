@@ -39,6 +39,10 @@ public class TestUtils {
 		assertEquals(expected, parser.getResult(), String.format("parsed result of string representation of %s should be equal", className));
 	}
 	
+	public static <O> void testParserFailure(String input, Parser<O> parser) {
+		testParserFailure(input, null, parser);
+	}
+	
 	public static <O> void testParserFailure(String input, String expectedError, Parser<O> parser) {
 		if (parser.parse(input)) {
 			fail("Parser should fail, but succeeded with result: " + parser.getResult());
@@ -47,7 +51,9 @@ public class TestUtils {
 		
 		String actualError = parser.getError();
 		assertNotNull(actualError);
-		assertTrue(actualError.toLowerCase().contains(expectedError.toLowerCase()));
+		if (expectedError != null) {
+			assertTrue(actualError.toLowerCase().contains(expectedError.toLowerCase()), String.format("Error message should contain '%s', but was '%s'", expectedError, actualError));
+		}
 	}
 	
 	/**

@@ -82,7 +82,7 @@ public class CSSParser extends SequentialParser<StyleSheet> {
 		String value = getInput().substring(start, getCursor()).trim();
 		
 		if (selector != null) {
-			if (propertyName.equals("transition")) {
+			if (propertyName.equalsIgnoreCase("transition")) {
 				parseTransitionProperty(value, selector);
 			} else if (propertyKey != null) {
 				// Parse normal property

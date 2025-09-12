@@ -44,9 +44,9 @@ public class StyledPropertyTest {
 		expected.addRule(new IdSelector("id"), StyledPropertyKey.COLOR, Color.decode("#000"));
 		
 		CSSParser cssParser = new CSSParser();
-		String input = "* { color: #fff } #id { color: #000 }";
 		
-		TestUtils.testParser(input, expected, cssParser);
+		TestUtils.testParser("* { color: #fff } #id { color: #000 }", expected, cssParser);
+		TestUtils.testParser("* { COLOR: #FFF } #id { COLOR: #000 }", expected, cssParser);
 	}
 	
 	@Test
