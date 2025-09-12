@@ -84,6 +84,28 @@ public abstract class SequentialParser<T> extends Parser<T> {
 		return input;
 	}
 	
+	protected boolean isMethodCall(String methodName) {
+		int oldCursor = cursor;
+		skipWhitespace();
+		boolean isMethodCall = readWhile((character) -> !Character.isWhitespace(character) && character != '(').equalsIgnoreCase(methodName);
+		setCursor(oldCursor);
+		return isMethodCall;
+	}
+	
+	protected String readBetweenParentheses() {
+		return readBetweenCharacters('(', ')');
+	}
+	
+	protected String readBetweenSquareBrackets() {
+		return readBetweenCharacters('[', ']');
+	}
+	
+	protected String readBetweenCharacters(char before, char after) {
+		skipUntilChar(before);
+		moveCursor();
+		return readWhile((character) -> character != after);
+	}
+	
 	/**
 	 * Returns the sequence of characters constructed by validating the predicate and moving the cursor by one each time it is true.
 	 * @param predicate The predicate
