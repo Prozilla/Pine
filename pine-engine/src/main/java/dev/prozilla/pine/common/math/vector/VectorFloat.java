@@ -28,4 +28,5 @@ public abstract class VectorFloat<V extends VectorFloat<V>> extends Vector<V> {
 	 * @param buffer The buffer to store the vector data in
 	 */
 	abstract public void toBuffer(FloatBuffer buffer);
+	
 }

@@ -72,7 +72,7 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 	 * @param event The event to invoke
 	 */
 	protected void invoke(E event) {
-		if (shouldInvoke()) {
+		if (!shouldInvoke()) {
 			return;
 		}
 		

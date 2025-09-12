@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Represents a unique entity in the world with a list of components.
  */
-public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> implements Printable, EntityContext, ComponentsContext, ApplicationProvider, SceneProvider {
+public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> implements Destructible, Printable, EntityContext, ComponentsContext, ApplicationProvider, SceneProvider {
 	
 	public final int id;
 	private final String name;
@@ -85,23 +85,27 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	 */
 	@Override
 	public void destroy() {
-		if (application.isRunning() && !application.isLoading()) {
-			destroyChildren();
-			destroyComponents();
-			
-			// Remove child from parent
-			if (transform.parent != null) {
-				transform.parent.getEntity().removeChild(this);
-			}
-			
-			// Unregister entity from world
-			if (isRegistered()) {
-				world.removeEntity(this);
-			}
-			
-			invoke(EntityEventType.DESTROY, this);
-			super.destroy();
+		if (!application.isRunning() || application.isLoading()) {
+			return;
 		}
+		
+		destroyChildren();
+		destroyComponents();
+		
+		// Remove child from parent
+		if (transform.parent != null) {
+			transform.parent.getEntity().removeChild(this);
+		}
+		
+		// Unregister entity from world
+		if (isRegistered()) {
+			world.removeEntity(this);
+		}
+		
+		invoke(EntityEventType.DESTROY, this);
+		
+		// Destroy event dispatcher afterward, to make sure events are received
+		super.destroy();
 	}
 	
 	public void destroyChildren() {

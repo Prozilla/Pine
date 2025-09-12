@@ -21,4 +21,18 @@ public interface Cloneable<O extends Cloneable<O>> {
 	 */
 	O clone();
 	
+	/**
+	 * Clones the cloneable, if it is not {@code null}.
+	 * @param cloneable The cloneable, or {@code null}
+	 * @return The clone, or {@code null}
+	 * @param <C> The type of cloneable
+	 */
+	static <C extends Cloneable<C>> C clone(C cloneable) {
+		if (cloneable == null) {
+			return null;
+		}
+		
+		return cloneable.clone();
+	}
+	
 }

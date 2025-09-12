@@ -1,9 +1,10 @@
 package dev.prozilla.pine.common.asset.audio;
 
 import dev.prozilla.pine.common.ContextOf;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 
 @ContextOf(AudioSource.class)
-public interface AudioSourceContext {
+public interface AudioSourceContext extends Destructible {
 	
 	default void togglePause() {
 		if (isPlaying()) {
@@ -34,6 +35,8 @@ public interface AudioSourceContext {
 	void setVolume(float volume);
 	
 	void setPitch(float pitch);
+	
+	void setGain(float gain);
 	
 	void setLoop(boolean loop);
 	

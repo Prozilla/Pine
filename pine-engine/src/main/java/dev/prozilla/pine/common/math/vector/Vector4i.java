@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 
 import java.nio.IntBuffer;
+import java.util.Objects;
 
 /**
  * 4-dimensional vector with integer precision. GLSL equivalent to <code>ivec4</code>.
@@ -67,6 +68,15 @@ public class Vector4i extends VectorInt<Vector4i> {
 	}
 	
 	@Override
+	public Vector4i subtract(Vector4i vector) {
+		x -= vector.x;
+		y -= vector.y;
+		z -= vector.z;
+		w -= vector.w;
+		return this;
+	}
+	
+	@Override
 	public Vector4i scale(float scalar) {
 		x = Math.round(x * scalar);
 		y = Math.round(y * scalar);
@@ -86,14 +96,24 @@ public class Vector4i extends VectorInt<Vector4i> {
 	}
 	
 	@Override
+	public boolean isZero() {
+		return x == 0 && y == 0 && z == 0 && w == 0;
+	}
+	
+	@Override
 	public void toBuffer(IntBuffer buffer) {
 		buffer.put(x).put(y).put(z).put(w);
 		buffer.flip();
 	}
 	
 	@Override
+	public int hashCode() {
+		return Objects.hash(x, y, z, w);
+	}
+	
+	@Override
 	public boolean equals(Vector4i vector) {
-		return vector.x == x && vector.y == y && vector.z == z && vector.w == w;
+		return vector != null && vector.x == x && vector.y == y && vector.z == z && vector.w == w;
 	}
 	
 	@Override
@@ -110,7 +130,7 @@ public class Vector4i extends VectorInt<Vector4i> {
 	}
 	
 	/**
-	 * @deprecated Replaced by {@link Parser} as of 2.1.0
+	 * @deprecated Replaced by {@link Parser} as of 2.0.2
 	 */
 	@Deprecated
 	public static Vector4i parse(String input) throws InvalidStringException {

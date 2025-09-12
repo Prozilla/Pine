@@ -25,7 +25,7 @@ public class Vector2iTest {
 	
 	@Test
 	void testClone() {
-		TestUtils.testClone(mockVector2i());
+		TestUtils.testCloneable(mockVector2i());
 	}
 	
 	@Test

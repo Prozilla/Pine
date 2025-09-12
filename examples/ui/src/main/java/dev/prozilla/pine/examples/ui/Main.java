@@ -13,7 +13,7 @@ public class Main {
 		applicationBuilder.setTargetFps(120);
 		applicationBuilder.getRenderConfig().snapPixels.setValue(true);
 		
-		applicationBuilder.buildAndRun();
+		applicationBuilder.build().run();
 	}
 	
 }

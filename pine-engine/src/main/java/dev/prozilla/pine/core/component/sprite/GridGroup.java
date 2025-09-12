@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.component.sprite;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityEventType;
@@ -11,7 +12,6 @@ import dev.prozilla.pine.core.system.standard.sprite.TileMover;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * A component that groups 2D tiles together and aligns them in a grid pattern.
@@ -55,7 +55,7 @@ public class GridGroup extends Component {
 	 * @throws IllegalStateException If there is already a tile in this grid with the same coordinate
 	 */
 	public TileRenderer addTile(TileRenderer tile) throws NullPointerException, IllegalStateException {
-		Objects.requireNonNull(tile, "tile must not be null");
+		Checks.isNotNull(tile, "tile");
 		
 		if (coordinateToTile.containsKey(tile.getCoordinate())) {
 			throw new IllegalStateException("multiple tiles cannot be placed on the same coordinate in one grid");

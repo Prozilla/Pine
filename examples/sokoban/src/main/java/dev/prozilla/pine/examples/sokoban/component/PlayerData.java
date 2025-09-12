@@ -3,6 +3,7 @@ package dev.prozilla.pine.examples.sokoban.component;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.audio.AudioEffectPlayer;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
@@ -57,7 +58,7 @@ public class PlayerData extends Component {
 		history = new History();
 	}
 	
-	public void moveInDirection(Direction direction, TileRenderer tileRenderer) {
+	public void moveInDirection(Direction direction, TileRenderer tileRenderer, AudioEffectPlayer audioEffectPlayer) {
 		if (timeUntilMoveCompletes > 0) {
 			return;
 		}
@@ -84,6 +85,7 @@ public class PlayerData extends Component {
 			if (canMove && targetTile.getEntity().hasTag(EntityTag.CRATE)) {
 				pushingCrateTile = targetTile;
 				pushingCrateSprite = targetTile.getComponent(SpriteRenderer.class);
+				audioEffectPlayer.play(0);
 			}
 		} else {
 			canMove = false;
@@ -91,6 +93,11 @@ public class PlayerData extends Component {
 		
 		// Reset timer
 		timeUntilMoveCompletes = canMove ? TIME_TO_MOVE : 0;
+		
+		// Play audio
+		if (canMove) {
+//			audioEffectPlayer.playRandom(1, 9);
+		}
 	}
 	
 }

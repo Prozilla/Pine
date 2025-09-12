@@ -30,7 +30,6 @@ public class BackgroundInitializer extends InitSystem {
 		
 		// Set sprite properties
 		spriteRenderer.setRegion(0, 0, BackgroundData.WIDTH, BackgroundData.HEIGHT);
-//		spriteRenderer.scale = 1.0001f; // Fix lines appearing between sprites
 		
 		// Set initial position
 		transform.setPosition(FlappyBird.WIDTH / -2f + BackgroundData.WIDTH * backgroundData.index, FlappyBird.HEIGHT / -2f);

@@ -90,6 +90,7 @@ public class ObservableProperty<T> extends MutableProperty<T> implements Destruc
 	@Override
 	public void destroy() {
 		observers.clear();
+		logger = null;
 	}
 	
 }

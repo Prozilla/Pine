@@ -2,8 +2,7 @@ package dev.prozilla.pine.common.property.animated.transitioned;
 
 import dev.prozilla.pine.common.property.animated.AnimatedProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
-
-import java.util.Objects;
+import dev.prozilla.pine.common.util.checks.Checks;
 
 public abstract class TransitionedProperty<T> extends AnimatedProperty<T> {
 	
@@ -13,7 +12,7 @@ public abstract class TransitionedProperty<T> extends AnimatedProperty<T> {
 	}
 	
 	public void transitionTo(T targetValue) {
-		Objects.requireNonNull(targetValue, "target must not be null");
+		Checks.isNotNull(targetValue, "targetValue");
 		
 		if (end.equals(targetValue)) {
 			return;

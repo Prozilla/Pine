@@ -32,7 +32,7 @@ public class DimensionTest {
 	
 	@Test
 	void testClone() {
-		TestUtils.testClone(new Dimension(50, Unit.VIEWPORT_WIDTH));
+		TestUtils.testCloneable(new Dimension(50, Unit.VIEWPORT_WIDTH));
 	}
 	
 	@Test

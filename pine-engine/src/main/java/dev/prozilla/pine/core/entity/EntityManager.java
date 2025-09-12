@@ -1,12 +1,12 @@
 package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.ECSManager;
 import dev.prozilla.pine.core.scene.World;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Manages entities in the world.
@@ -38,10 +38,10 @@ public class EntityManager extends ECSManager {
 	 * @throws IllegalStateException If the entity is already registered.
 	 */
 	public void addEntity(Entity entity) throws IllegalStateException {
-		Objects.requireNonNull(entity, "Entity must not be null.");
+		Checks.isNotNull(entity, "entity");
 		
 		if (entities.contains(entity)) {
-			throw new IllegalStateException("Entity has already been added.");
+			throw new IllegalStateException("entity has already been added");
 		}
 		
 		entities.add(entity);
@@ -55,10 +55,10 @@ public class EntityManager extends ECSManager {
 	 * @throws IllegalStateException If the entity has not been registered yet.
 	 */
 	public void removeEntity(Entity entity) throws IllegalStateException {
-		Objects.requireNonNull(entity, "Entity must not be null.");
+		Checks.isNotNull(entity, "entity");
 		
 		if (!entities.contains(entity)) {
-			throw new IllegalStateException("Entity has not been added yet.");
+			throw new IllegalStateException("entity has not been added yet");
 		}
 		
 		entities.remove(entity);

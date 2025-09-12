@@ -1,3 +1,5 @@
+import org.codehaus.groovy.runtime.GStringImpl
+
 import java.time.Year
 import java.util.regex.Pattern
 
@@ -15,7 +17,7 @@ repositories {
 	}
 }
 
-version = "2.0.1"
+version = "2.0.3"
 
 jar {
 	archiveBaseName = "pine-engine"
@@ -31,7 +33,7 @@ jar {
 
 // Extra properties
 ext {
-	lwjglVersion = "3.3.4"
+	lwjglVersion = "3.3.6"
 	groupId = "dev.prozilla"
 	artifactId = "pine"
 	githubUsername = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
@@ -41,7 +43,7 @@ ext {
 // Determine platform
 switch (org.gradle.internal.os.OperatingSystem.current()) {
 	case org.gradle.internal.os.OperatingSystem.LINUX:
-		project.ext.lwjglNatives = "natives-linux"
+		project.ext.lwjglNatives = "natives-linux" as GStringImpl
 		def osArch = System.getProperty("os.arch")
 		if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
 			project.ext.lwjglNatives += osArch.contains("64") || osArch.startsWith("armv8") ? "-arm64" : "-arm32"
@@ -53,9 +55,9 @@ switch (org.gradle.internal.os.OperatingSystem.current()) {
 		break
 	case org.gradle.internal.os.OperatingSystem.WINDOWS:
 		def osArch = System.getProperty("os.arch")
-		project.ext.lwjglNatives = osArch.contains("64")
+		project.ext.lwjglNatives = (osArch.contains("64")
 				? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
-				: "natives-windows-x86"
+				: "natives-windows-x86") as GStringImpl
 		break
 }
 
@@ -90,6 +92,15 @@ tasks.register("runBuildTool", JavaExec) {
 	mainClass = "dev.prozilla.pine.tools.BuildTool"
 	classpath = sourceSets.main.runtimeClasspath
 	args = []
+}
+
+java {
+	withSourcesJar()
+	withJavadocJar()
+}
+
+tasks.named("sourcesJar", Jar) {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 // Publishing to GitHub Packages and creating release
@@ -145,6 +156,11 @@ githubRelease {
 	body = getChangelogEntry()
 	targetCommitish = "main"
 	overwrite = true
+	releaseAssets = [
+		tasks.named("jar").get().archiveFile.get().asFile,
+		tasks.named("sourcesJar").get().archiveFile.get().asFile,
+		tasks.named("javadocJar").get().archiveFile.get().asFile
+	]
 }
 
 tasks.named("publish") {
@@ -159,9 +175,10 @@ tasks.withType(Javadoc).configureEach {
 	options.encoding = "UTF-8"
 	options.windowTitle = "Pine ${project.version}"
 	options.docTitle = "Pine API Docs"
-	options.header = "Pine API documentation."
+	options.header = "Pine API documentation"
 	options.bottom = "Copyright © ${Year.now().value} Prozilla"
 	options.links("https://javadoc.lwjgl.org/")
+	options.addStringOption("-add-stylesheet", "${projectDir}/src/main/javadoc/style.css")
 }
 
 // Unit testing

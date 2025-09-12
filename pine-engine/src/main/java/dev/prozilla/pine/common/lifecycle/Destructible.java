@@ -12,6 +12,37 @@ public interface Destructible {
 	void destroy();
 	
 	/**
+	 * Destroys the destructible and returns {@code null}.
+	 *
+	 * <p>
+	 *     Example usage:
+	 *     <pre>
+	 *         {@code
+	 *         Entity entity = world.addEntity(prefab);
+	 *
+	 *         // Then, in some method that might get called repeatedly
+	 *         entity = Destructible.destroy(entity);
+	 *
+	 *         // Which is the equivalent of this:
+	 *         if (entity != null) {
+	 *             entity.destroy();
+	 *             entity = null;
+	 *         }
+	 *         }
+	 *     </pre>
+	 * </p>
+	 * @param destructible The destructible to destroy or {@code null}
+	 * @return {@code null}
+	 * @param <D> The type of destructible
+	 */
+	static <D extends Destructible> D destroy(D destructible) {
+		if (destructible != null) {
+			destructible.destroy();
+		}
+		return null;
+	}
+	
+	/**
 	 * Destroys all objects in a collection and clears the collection.
 	 * This method can also be used for objects that remove themselves from the collection during their destruction process,
 	 * as it will clone and clear the original collection before iterating over it.

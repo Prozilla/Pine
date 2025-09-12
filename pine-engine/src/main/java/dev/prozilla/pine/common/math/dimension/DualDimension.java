@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.math.dimension;
 
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.Node;
 
 import java.util.Objects;
@@ -96,8 +97,8 @@ public class DualDimension implements Printable, Cloneable<DualDimension> {
 	}
 	
 	public void set(DimensionBase x, DimensionBase y) {
-		Objects.requireNonNull(x, "Dimension must not be null.");
-		Objects.requireNonNull(y, "Dimension must not be null.");
+		Checks.isNotNull(x, "x");
+		Checks.isNotNull(y, "y");
 		
 		if (!x.equals(this.x)) {
 			this.x = x;

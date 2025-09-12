@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.shape;
 
+import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.system.Color;
@@ -54,21 +55,13 @@ public class ShapePrefab<S extends Shape> extends Prefab {
 		this.color = color;
 	}
 	
-	protected final ShapeRenderer<S> createRenderer(S shape, TextureBase texture) {
-		return createRenderer(shape, texture, null);
-	}
-	
 	protected ShapeRenderer<S> createRenderer(S shape, TextureBase texture, Color color) {
 		return new ShapeRenderer<>(shape, texture, color);
 	}
 	
 	@Override
 	protected void apply(Entity entity) {
-		if (color == null) {
-			entity.addComponent(createRenderer(shape, texture));
-		} else {
-			entity.addComponent(createRenderer(shape, texture, color.clone()));
-		}
+		entity.addComponent(createRenderer(shape, texture, Cloneable.clone(color)));
 	}
 	
 }

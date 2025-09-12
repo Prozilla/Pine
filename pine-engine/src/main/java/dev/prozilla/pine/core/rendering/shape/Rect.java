@@ -1,6 +1,5 @@
 package dev.prozilla.pine.core.rendering.shape;
 
-import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -10,7 +9,7 @@ import java.util.Objects;
 /**
  * Generates a rectangular shape.
  */
-public class Rect extends Shape implements Cloneable<Rect> {
+public class Rect extends Shape {
 	
 	protected Vector2f position;
 	protected Vector2f size;
@@ -169,6 +168,15 @@ public class Rect extends Shape implements Cloneable<Rect> {
 	}
 	
 	@Override
+	public boolean equals(Object object) {
+		return object == this || (object instanceof Rect rect && equals(rect));
+	}
+	
+	@Override
+	public boolean equals(Shape shape) {
+		return shape == this || (shape instanceof Rect rect && equals(rect));
+	}
+	
 	public boolean equals(Rect rect) {
 		return rect != null && Objects.equals(rect.position, position) && Objects.equals(rect.size, size);
 	}

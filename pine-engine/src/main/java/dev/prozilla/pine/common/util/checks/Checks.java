@@ -8,7 +8,6 @@ import dev.prozilla.pine.common.util.ArrayUtils;
 import org.gradle.internal.impldep.javax.annotation.Nonnull;
 
 import java.util.Collection;
-import java.util.Objects;
 
 /**
  * Static utility methods for throwing exceptions if certain conditions are not met at runtime.
@@ -48,8 +47,8 @@ public final class Checks {
 	 * @throws InvalidArrayException If <code>arrayA</code> and <code>arrayB</code> are not disjunct.
 	 */
 	public static <E> void areDisjunct(E[] arrayA, E[] arrayB, String message) throws InvalidArrayException {
-		Objects.requireNonNull(arrayA, "array must not be null");
-		Objects.requireNonNull(arrayB, "array must not be null");
+		Checks.isNotNull(arrayA, "arrayA");
+		Checks.isNotNull(arrayB, "arrayB");
 		
 		if (ArrayUtils.overlaps(arrayA, arrayB)) {
 			throw new InvalidArrayException(message != null ? message : "arrays must be disjunct");
@@ -76,8 +75,7 @@ public final class Checks {
 	 * @throws InvalidArrayException If <code>array</code> is empty.
 	 */
 	public static <E> E[] isNotEmpty(E[] array, String message) throws InvalidArrayException {
-		Objects.requireNonNull(array, "array must not be null");
-		
+		Checks.isNotNull(array, "array");
 		return hasMinLength(array, 1, message != null ? message : "length of array must be greater than 0");
 	}
 	
@@ -103,7 +101,7 @@ public final class Checks {
 	 * @throws InvalidArrayException If length of <code>array</code> is less than the minimum length.
 	 */
 	public static <E> E[] hasMinLength(E[] array, int minLength, String message) throws InvalidArrayException {
-		Objects.requireNonNull(array, "array must not be null");
+		Checks.isNotNull(array, "array");
 		
 		if (array.length < minLength) {
 			throw new InvalidArrayException(message != null ? message : "length of array must be greater than or equal to " + minLength);
@@ -134,7 +132,7 @@ public final class Checks {
 	 * @throws InvalidArrayException If length of <code>array</code> is greater than the maximum length.
 	 */
 	public static <E> E[] hasMaxLength(E[] array, int maxLength, String message) throws InvalidArrayException {
-		Objects.requireNonNull(array, "array must not be null");
+		Checks.isNotNull(array, "array");
 		
 		if (array.length > maxLength) {
 			throw new InvalidArrayException(message != null ? message : "length of array must be less than or equal to " + maxLength);
@@ -165,7 +163,7 @@ public final class Checks {
 	 * @throws InvalidArrayException If <code>array</code> matches the required length.
 	 */
 	public static <E> E[] hasLength(E[] array, int length, String message) throws InvalidArrayException {
-		Objects.requireNonNull(array, "array must not be null");
+		Checks.isNotNull(array, "array");
 		
 		if (array.length != length) {
 			throw new InvalidArrayException(message != null ? message : "length of array must be " + length);

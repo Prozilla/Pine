@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 
 import java.nio.IntBuffer;
+import java.util.Objects;
 
 /**
  * 2-dimensional vector with integer precision. GLSL equivalent to <code>ivec2</code>.
@@ -57,6 +58,13 @@ public class Vector2i extends VectorInt<Vector2i> {
 	}
 	
 	@Override
+	public Vector2i subtract(Vector2i vector) {
+		x -= vector.x;
+		y -= vector.y;
+		return this;
+	}
+	
+	@Override
 	public Vector2i scale(float scalar) {
 		x = Math.round(x * scalar);
 		y = Math.round(y * scalar);
@@ -74,14 +82,28 @@ public class Vector2i extends VectorInt<Vector2i> {
 	}
 	
 	@Override
+	public boolean isZero() {
+		return x == 0 && y == 0;
+	}
+	
+	@Override
 	public void toBuffer(IntBuffer buffer) {
 		buffer.put(x).put(y);
 		buffer.flip();
 	}
 	
+	public Direction toDirection() {
+		return Direction.fromIntVector(this);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(x, y);
+	}
+	
 	@Override
 	public boolean equals(Vector2i vector) {
-		return vector.x == x && vector.y == y;
+		return vector != null && vector.x == x && vector.y == y;
 	}
 	
 	@Override
@@ -98,7 +120,7 @@ public class Vector2i extends VectorInt<Vector2i> {
 	}
 	
 	/**
-	 * @deprecated Replaced by {@link Parser} as of 2.1.0
+	 * @deprecated Replaced by {@link Parser} as of 2.0.2
 	 */
 	@Deprecated
 	public static Vector2i parse(String input) throws InvalidStringException {

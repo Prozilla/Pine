@@ -26,4 +26,5 @@ public interface Printable {
 	default void print(Logger logger) {
 		logger.log(this);
 	}
+	
 }

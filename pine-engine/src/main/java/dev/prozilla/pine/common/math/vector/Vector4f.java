@@ -1,32 +1,10 @@
-/*
- * The MIT License (MIT)
- *
- * Copyright © 2015-2017, Heiko Brumme
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 package dev.prozilla.pine.common.math.vector;
 
 import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 
 import java.nio.FloatBuffer;
+import java.util.Objects;
 
 /**
  * 4-dimensional vector with floating point precision. GLSL equivalent to <code>vec4</code>.
@@ -90,6 +68,15 @@ public class Vector4f extends VectorFloat<Vector4f> {
 	}
 	
 	@Override
+	public Vector4f subtract(Vector4f vector) {
+		x -= vector.x;
+		y -= vector.y;
+		z -= vector.z;
+		w -= vector.w;
+		return this;
+	}
+	
+	@Override
 	public Vector4f scale(float scalar) {
 		x *= scalar;
 		y *= scalar;
@@ -109,14 +96,24 @@ public class Vector4f extends VectorFloat<Vector4f> {
 	}
 	
 	@Override
+	public boolean isZero() {
+		return x == 0 && y == 0 && z == 0 && w == 0;
+	}
+	
+	@Override
 	public void toBuffer(FloatBuffer buffer) {
 		buffer.put(x).put(y).put(z).put(w);
 		buffer.flip();
 	}
 	
 	@Override
+	public int hashCode() {
+		return Objects.hash(x, y, z, w);
+	}
+	
+	@Override
 	public boolean equals(Vector4f vector) {
-		return vector.x == x && vector.y == y && vector.z == z && vector.w == w;
+		return vector != null && vector.x == x && vector.y == y && vector.z == z && vector.w == w;
 	}
 	
 	@Override
@@ -133,7 +130,7 @@ public class Vector4f extends VectorFloat<Vector4f> {
 	}
 	
 	/**
-	 * @deprecated Replaced by {@link Parser} as of 2.1.0
+	 * @deprecated Replaced by {@link Parser} as of 2.0.2
 	 */
 	@Deprecated
 	public static Vector4f parse(String input) throws InvalidStringException {

@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.math.vector;
 
 import dev.prozilla.pine.common.util.ArrayUtils;
+import dev.prozilla.pine.common.util.checks.Checks;
 
 /**
  * Represents a 2-dimensional direction.
@@ -121,6 +122,46 @@ public enum Direction {
 	
 	public static Direction parse(String input) {
 		return ArrayUtils.findByString(Direction.values(), input);
+	}
+	
+	public static Direction fromIntVector(Vector2i vector) {
+		Checks.isNotNull(vector, "vector");
+		
+		if (vector.x != 0 && vector.y != 0) {
+			return null;
+		}
+		
+		if (vector.x < 0) {
+			return Direction.LEFT;
+		} else if (vector.x > 0) {
+			return Direction.RIGHT;
+		} else if (vector.y < 0) {
+			return Direction.DOWN;
+		} else if (vector.y > 0 ){
+			return Direction.UP;
+		} else {
+			return null;
+		}
+	}
+	
+	public static Direction fromFloatVector(Vector2f vector) {
+		Checks.isNotNull(vector, "vector");
+		
+		if (vector.x != 0 && vector.y != 0) {
+			return null;
+		}
+		
+		if (vector.x < 0) {
+			return Direction.LEFT;
+		} else if (vector.x > 0) {
+			return Direction.RIGHT;
+		} else if (vector.y < 0) {
+			return Direction.DOWN;
+		} else if (vector.y > 0 ){
+			return Direction.UP;
+		} else {
+			return null;
+		}
 	}
 	
 }

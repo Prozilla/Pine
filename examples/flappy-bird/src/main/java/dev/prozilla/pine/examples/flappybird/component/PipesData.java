@@ -6,18 +6,20 @@ import dev.prozilla.pine.examples.flappybird.scene.GameScene;
 
 public class PipesData extends Component {
 	
-	public final Entity bottomPipePrefab;
-	public final Entity topPipePrefab;
+	public final Entity bottomPipe;
+	public final Entity topPipe;
 	public boolean passed;
 	
 	public GameScene gameScene;
 	
 	// Constants
 	public static final float SPEED = 200f;
+	public static final int MIN_GAP = 75;
+	public static final int MAX_GAP = 150;
 	
-	public PipesData(Entity bottomPipePrefab, Entity topPipePrefab) {
-		this.bottomPipePrefab = bottomPipePrefab;
-		this.topPipePrefab = topPipePrefab;
+	public PipesData(Entity bottomPipe, Entity topPipe) {
+		this.bottomPipe = bottomPipe;
+		this.topPipe = topPipe;
 	}
 	
 }

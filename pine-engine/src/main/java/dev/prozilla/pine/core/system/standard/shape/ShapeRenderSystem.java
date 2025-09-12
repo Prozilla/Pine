@@ -6,7 +6,7 @@ import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderSystem;
 
-public class ShapeRenderSystem extends RenderSystem {
+public final class ShapeRenderSystem extends RenderSystem {
 	
 	public ShapeRenderSystem() {
 		super(ShapeRenderer.class);
@@ -15,7 +15,7 @@ public class ShapeRenderSystem extends RenderSystem {
 	@Override
 	protected void process(EntityChunk chunk, Renderer renderer) {
 		Transform transform = chunk.getTransform();
-		ShapeRenderer shapeRenderer = chunk.getComponent(ShapeRenderer.class);
+		ShapeRenderer<?> shapeRenderer = chunk.getComponent(ShapeRenderer.class);
 		
 		if (shapeRenderer.shape == null) {
 			return;

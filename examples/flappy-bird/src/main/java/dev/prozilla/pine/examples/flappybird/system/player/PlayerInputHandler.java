@@ -1,6 +1,7 @@
 package dev.prozilla.pine.examples.flappybird.system.player;
 
 import dev.prozilla.pine.core.component.Transform;
+import dev.prozilla.pine.core.component.audio.AudioEffectPlayer;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.state.input.Input;
@@ -16,17 +17,19 @@ import dev.prozilla.pine.examples.flappybird.component.PlayerData;
 public class PlayerInputHandler extends InputSystem {
 	
 	public PlayerInputHandler() {
-		super(Transform.class, SpriteRenderer.class, PlayerData.class);
+		super(Transform.class, SpriteRenderer.class, PlayerData.class, AudioEffectPlayer.class);
 	}
 	
 	@Override
 	public void process(EntityChunk chunk, Input input, float deltaTime) {
 		PlayerData playerData = chunk.getComponent(PlayerData.class);
+		AudioEffectPlayer audioEffectPlayer = chunk.getComponent(AudioEffectPlayer.class);
 		
 		if (!playerData.gameScene.gameOver) {
 			// Jump
 			if (input.getKeyDown(Key.SPACE) || input.getMouseButtonDown(MouseButton.LEFT) || input.getGamepad().getButtonDown(GamepadButton.A)) {
 				playerData.velocity = playerData.jumpVelocity.getValue();
+				audioEffectPlayer.playRandom();
 			}
 			// Pause
 			if (input.getKeyDown(Key.ESCAPE)) {

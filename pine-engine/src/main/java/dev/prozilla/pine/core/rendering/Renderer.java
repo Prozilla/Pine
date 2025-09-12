@@ -46,7 +46,7 @@ public class Renderer implements Initializable, Destructible {
 	// Vertex buffer
 	private FloatBuffer vertices;
 	private int numVertices;
-	private boolean drawing;
+	private boolean isRendering;
 	private TextureBase activeTexture;
 	
 	// Render stats
@@ -185,7 +185,7 @@ public class Renderer implements Initializable, Destructible {
 	 * Begin rendering.
 	 */
 	public void begin() throws IllegalStateException {
-		if (drawing) {
+		if (isRendering) {
 			throw new IllegalStateException("Renderer is already drawing!");
 		}
 		
@@ -193,7 +193,7 @@ public class Renderer implements Initializable, Destructible {
 			fbo.bind();
 		}
 		
-		drawing = true;
+		isRendering = true;
 		numVertices = 0;
 		renderedVertices = 0;
 		totalVertices = 0;
@@ -203,10 +203,10 @@ public class Renderer implements Initializable, Destructible {
 	 * End rendering.
 	 */
 	public void end() throws IllegalStateException {
-		if (!drawing) {
+		if (!isRendering) {
 			throw new IllegalStateException("Renderer isn't drawing!");
 		}
-		drawing = false;
+		isRendering = false;
 		flush();
 		
 		if (fbo != null) {
@@ -662,6 +662,7 @@ public class Renderer implements Initializable, Destructible {
 	 */
 	public void drawTextureRegion(TextureBase texture, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float z,
 	                              float s1, float t1, float s2, float t2, Color c) {
+		requireRendering();
 		totalVertices += 6;
 		
 		// Discard draw call if object is outside the viewport bounds
@@ -979,7 +980,7 @@ public class Renderer implements Initializable, Destructible {
 		
 		// Initialize variables */
 		numVertices = 0;
-		drawing = false;
+		isRendering = false;
 		
 		// Load shaders
 		Shader vertexShader, fragmentShader;
@@ -1063,8 +1064,22 @@ public class Renderer implements Initializable, Destructible {
 		return this.viewHeight;
 	}
 	
+	private void requireRendering() throws IllegalStateException {
+		if (!isRendering) {
+			throw new IllegalStateException("rendering is not allowed in the current state");
+		}
+	}
+	
+	/**
+	 * @deprecated Replaced by {@link #isRendering} as of 2.1.0
+	 */
+	@Deprecated
 	public boolean isDrawing() {
-		return drawing;
+		return isRendering;
+	}
+	
+	public boolean isRendering() {
+		return isRendering;
 	}
 	
 	public FrameBufferObject getFbo() {
@@ -1080,7 +1095,7 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	/**
-	 * Generates a new {@link Vector2f} that represents the center of the viewport.
+	 * Creates a new {@link Vector2f} that represents the center of the viewport.
 	 */
 	public Vector2f getViewportCenter() {
 		return new Vector2f(viewWidth / 2f, viewHeight / 2f);

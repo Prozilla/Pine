@@ -86,6 +86,7 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 	
 	@Override
 	public void transmit(Color target) {
+		Checks.isNotNull(target, "target");
 		target.set(getRed(), getGreen(), getBlue(), getAlpha());
 	}
 	

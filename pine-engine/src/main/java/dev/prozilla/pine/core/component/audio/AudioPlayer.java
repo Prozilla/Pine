@@ -3,9 +3,8 @@ package dev.prozilla.pine.core.component.audio;
 import dev.prozilla.pine.common.asset.audio.AudioSource;
 import dev.prozilla.pine.common.asset.audio.AudioSourceContext;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
-
-import java.util.Objects;
 
 public class AudioPlayer extends Component implements AudioSourceContext {
 	
@@ -17,17 +16,23 @@ public class AudioPlayer extends Component implements AudioSourceContext {
 	private boolean isMuted;
 	
 	public final static float DEFAULT_VOLUME = 1f;
+	public final static float DEFAULT_PITCH = 1f;
+	public final static float DEFAULT_GAIN = 1f;
 	
 	public AudioPlayer(String sourcePath) {
-		this(AssetPools.audioSources.load(sourcePath));
+		this(sourcePath, DEFAULT_VOLUME);
 	}
 	
 	public AudioPlayer(AudioSource source) {
 		this(source, DEFAULT_VOLUME);
 	}
 	
+	public AudioPlayer(String sourcePath, float volume) {
+		this(AssetPools.audioSources.load(sourcePath), volume);
+	}
+	
 	public AudioPlayer(AudioSource source, float volume) {
-		this.source = Objects.requireNonNull(source, "source must not be null");
+		this.source = Checks.isNotNull(source, "source");
 		this.volume = DEFAULT_VOLUME;
 		
 		setVolume(volume);
@@ -38,31 +43,26 @@ public class AudioPlayer extends Component implements AudioSourceContext {
 	
 	@Override
 	public void rewind() {
-		requireSource();
 		source.rewind();
 	}
 	
 	@Override
 	public void play() {
-		requireSource();
 		source.play();
 	}
 	
 	@Override
 	public void pause() {
-		requireSource();
 		source.pause();
 	}
 	
-	private void requireSource() {
-		if (source == null) {
-			throw new IllegalStateException("source must not be null");
-		}
+	public void setSource(AudioSource source) {
+		this.source = Checks.isNotNull(source, "source");
 	}
 	
 	@Override
 	public boolean isPlaying() {
-		return source != null && source.isPlaying();
+		return source.isPlaying();
 	}
 	
 	@Override
@@ -72,23 +72,26 @@ public class AudioPlayer extends Component implements AudioSourceContext {
 		}
 		
 		this.volume = volume;
-		if (source != null) {
-			source.setVolume(volume);
-		}
+		source.init();
+		source.setVolume(volume);
 	}
 	
 	@Override
 	public void setPitch(float pitch) {
-		if (source != null) {
-			source.setPitch(pitch);
-		}
+		source.init();
+		source.setPitch(pitch);
+	}
+	
+	@Override
+	public void setGain(float gain) {
+		source.init();
+		source.setGain(gain);
 	}
 	
 	@Override
 	public void setLoop(boolean loop) {
-		if (source != null) {
-			source.setLoop(loop);
-		}
+		source.init();
+		source.setLoop(loop);
 	}
 	
 	public void toggleMute() {
@@ -100,11 +103,13 @@ public class AudioPlayer extends Component implements AudioSourceContext {
 	}
 	
 	public void mute() {
+		source.init();
 		source.setVolume(0);
 		isMuted = true;
 	}
 	
 	public void unmute() {
+		source.init();
 		source.setVolume(volume);
 		isMuted = false;
 	}
@@ -112,4 +117,11 @@ public class AudioPlayer extends Component implements AudioSourceContext {
 	public boolean isMuted() {
 		return isMuted;
 	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		source.destroy();
+	}
+	
 }

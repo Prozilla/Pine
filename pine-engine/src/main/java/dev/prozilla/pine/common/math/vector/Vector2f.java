@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 
 import java.nio.FloatBuffer;
+import java.util.Objects;
 
 /**
  * 2-dimensional vector with floating point precision. GLSL equivalent to <code>vec2</code>.
@@ -57,6 +58,13 @@ public class Vector2f extends VectorFloat<Vector2f> {
 	}
 	
 	@Override
+	public Vector2f subtract(Vector2f vector) {
+		x -= vector.x;
+		y -= vector.y;
+		return this;
+	}
+	
+	@Override
 	public Vector2f scale(float scalar) {
 		x *= scalar;
 		y *= scalar;
@@ -74,14 +82,28 @@ public class Vector2f extends VectorFloat<Vector2f> {
 	}
 	
 	@Override
+	public boolean isZero() {
+		return x == 0 && y == 0;
+	}
+	
+	@Override
 	public void toBuffer(FloatBuffer buffer) {
 		buffer.put(x).put(y);
 		buffer.flip();
 	}
 	
+	public Direction toDirection() {
+		return Direction.fromFloatVector(this);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(x, y);
+	}
+	
 	@Override
 	public boolean equals(Vector2f vector) {
-		return vector.x == x && vector.y == y;
+		return vector != null && vector.x == x && vector.y == y;
 	}
 	
 	@Override
@@ -98,7 +120,7 @@ public class Vector2f extends VectorFloat<Vector2f> {
 	}
 	
 	/**
-	 * @deprecated Replaced by {@link Parser} as of 2.1.0
+	 * @deprecated Replaced by {@link Parser} as of 2.0.2
 	 */
 	@Deprecated
 	public static Vector2f parse(String input) throws InvalidStringException {

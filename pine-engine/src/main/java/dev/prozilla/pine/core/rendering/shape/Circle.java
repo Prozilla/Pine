@@ -196,4 +196,23 @@ public class Circle extends Shape {
 		isDirty = true;
 	}
 	
+	@Override
+	public boolean equals(Object object) {
+		return object == this || (object instanceof Circle circle && equals(circle));
+	}
+	
+	@Override
+	public boolean equals(Shape shape) {
+		return shape == this || (shape instanceof Circle circle && equals(circle));
+	}
+	
+	public boolean equals(Circle circle) {
+		return circle != null && circle.position.equals(position) && circle.radius == radius && circle.edges == edges;
+	}
+	
+	@Override
+	public Shape clone() {
+		return new Circle(position, radius, edges);
+	}
+	
 }

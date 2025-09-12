@@ -4,7 +4,6 @@ import dev.prozilla.pine.common.math.easing.Easing;
 import dev.prozilla.pine.common.math.easing.EasingFunction;
 import dev.prozilla.pine.common.util.checks.Checks;
 
-import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
@@ -41,8 +40,8 @@ public class AnimationCurve {
 	 */
 	public AnimationCurve(float duration, EasingFunction easingFunction, AnimationDirection direction) {
 		this.duration = Checks.isPositive(duration, true, "duration must be strictly positive");
-		this.easingFunction = Objects.requireNonNull(easingFunction);
-		this.direction = Objects.requireNonNull(direction);
+		this.easingFunction = Checks.isNotNull(easingFunction, "easingFunction");
+		this.direction = Checks.isNotNull(direction, "direction");
 	}
 	
 	/**
@@ -79,7 +78,7 @@ public class AnimationCurve {
 	}
 	
 	/**
-	 * @deprecated Replaced by {@link AnimationCurveParser} as of 2.0.1
+	 * @deprecated Replaced by {@link AnimationCurveParser} as of 2.0.2
 	 */
 	@Deprecated
 	public static AnimationCurve parse(String input) {
