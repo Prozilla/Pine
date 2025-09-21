@@ -342,7 +342,7 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	
 	@Override
 	protected void invoke(Event<EntityEventType, Entity> event) {
-		if (!shouldInvoke()) {
+		if (!shouldInvoke(event.getType())) {
 			return;
 		}
 		
@@ -356,7 +356,7 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	}
 	
 	@Override
-	protected boolean shouldPropagate() {
+	protected boolean shouldPropagate(EntityEventType eventType) {
 		return transform.parent != null;
 	}
 	
