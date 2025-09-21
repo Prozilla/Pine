@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
+import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.config.WindowConfig;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -29,10 +30,12 @@ public class Window implements Initializable, Destructible {
 	private GLFWWindowSizeCallback windowSizeCallback;
 	protected boolean isInitialized;
 	
+	private final Renderer renderer;
 	private final WindowConfig config;
 	private final Logger logger;
 	
 	public Window(Application application) {
+		renderer = application.getRenderer();
 		config = application.getConfig().window;
 		logger = application.logger;
 		
@@ -89,7 +92,7 @@ public class Window implements Initializable, Destructible {
 		glfwSetWindowSizeCallback(id, windowSizeCallback = new GLFWWindowSizeCallback() {
 			@Override
 			public void invoke(long window, int width, int height) {
-				setSize(width, height);
+				updateSize(width, height);
 			}
 		});
 		
@@ -133,9 +136,10 @@ public class Window implements Initializable, Destructible {
 		return glfwWindowShouldClose(id);
 	}
 	
-	private void setSize(int width, int height) {
-		setWidth(width);
-		setHeight(height);
+	private void updateSize(int width, int height) {
+		this.width = width;
+		this.height = height;
+		renderer.resize();
 	}
 	
 	/**
@@ -145,16 +149,8 @@ public class Window implements Initializable, Destructible {
 		glViewport(0, 0, width, height);
 	}
 	
-	private void setWidth(int width) {
-		this.width = width;
-	}
-	
 	public int getWidth() {
 		return width;
-	}
-	
-	private void setHeight(int height) {
-		this.height = height;
 	}
 	
 	public int getHeight() {

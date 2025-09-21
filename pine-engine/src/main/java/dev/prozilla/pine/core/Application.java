@@ -298,7 +298,6 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			
 			// Render application
 			try {
-				resize();
 				render(renderer);
 			} catch (Exception e) {
 				logger.error("Failed to render application", e);
@@ -409,7 +408,6 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	
 	public void renderPreview() {
 		try {
-			resize();
 			render(renderer);
 		} catch (Exception e) {
 			logger.trace(e);
@@ -707,15 +705,6 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	
 	public String getPersistentDataPath() {
 		return persistentDataPathProperty.getValue();
-	}
-	
-	/**
-	 * Resizes the application window.
-	 */
-	public void resize() {
-		if (window.getWidth() != renderer.getHeight() || window.getHeight() != renderer.getHeight()) {
-			renderer.resize();
-		}
 	}
 	
 	public boolean isPreview() {
