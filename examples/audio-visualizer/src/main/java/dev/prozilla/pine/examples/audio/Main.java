@@ -15,6 +15,7 @@ public class Main {
 		ApplicationBuilder applicationBuilder = new ApplicationBuilder();
 		
 		applicationBuilder.setTitle(TITLE);
+		applicationBuilder.setCompanyName("Pine");
 		applicationBuilder.setWindowSize(WIDTH, HEIGHT);
 		applicationBuilder.setInitialScene(new AudioVisualizerScene());
 		applicationBuilder.setTargetFps(FPS);

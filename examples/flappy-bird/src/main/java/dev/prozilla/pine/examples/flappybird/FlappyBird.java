@@ -22,6 +22,7 @@ public class FlappyBird {
 		ApplicationBuilder flappyBird = new ApplicationBuilder();
 		
 		flappyBird.setTitle(TITLE);
+		flappyBird.setCompanyName("Pine");
 		flappyBird.setWindowSize(WIDTH, HEIGHT);
 		flappyBird.setInitialScene(menuScene);
 		flappyBird.setIcons("flappybird/icon.png");

@@ -9,6 +9,7 @@ public class Main {
 		ApplicationBuilder applicationBuilder = new ApplicationBuilder();
 		
 		applicationBuilder.setTitle("Sokoban");
+		applicationBuilder.setCompanyName("Pine");
 		applicationBuilder.setWindowSize(900, 600);
 		applicationBuilder.setInitialScene(new GameScene());
 		applicationBuilder.setIcons("images/crates/crate_03.png");

@@ -91,6 +91,10 @@ public class Logger implements LogHandler {
 		errorLogHandler.log(applyFormat(Ansi.red(message)));
 	}
 	
+	public void logPath(String filePath) {
+		log(formatPath(filePath));
+	}
+	
 	public void logPath(String text, String filePath) {
 		logf("%s: %s", text, formatPath(filePath));
 	}

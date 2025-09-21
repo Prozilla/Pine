@@ -8,6 +8,7 @@ import dev.prozilla.pine.common.lifecycle.*;
 import dev.prozilla.pine.common.logging.AppLogger;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.opengl.GLUtils;
+import dev.prozilla.pine.common.property.LazyProperty;
 import dev.prozilla.pine.common.property.SystemProperty;
 import dev.prozilla.pine.common.system.Platform;
 import dev.prozilla.pine.common.util.BooleanUtils;
@@ -21,9 +22,11 @@ import dev.prozilla.pine.core.state.input.Input;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 import static java.lang.Thread.sleep;
 import static org.lwjgl.glfw.GLFW.glfwInit;
@@ -42,6 +45,22 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	protected boolean shouldStop;
 	protected final ApplicationMode mode;
 	private static final SystemProperty devModeProperty = new SystemProperty("dev-mode");
+	
+	protected final LazyProperty<String> persistentDataPathProperty = new LazyProperty<>() {
+		@Override
+		protected String fetch() {
+			StringJoiner stringJoiner = new StringJoiner(File.separator);
+			if (config.companyName.exists()) {
+				stringJoiner.add(config.companyName.getValue());
+			}
+			if (config.appName.exists()) {
+				stringJoiner.add(config.appName.getValue());
+			}
+			value = Platform.getPersistentDataPath(stringJoiner.toString(), config.autoCreateDirectories.getValue());
+			return value;
+		}
+		
+	};
 	
 	// Scene
 	protected Scene currentScene;
@@ -126,6 +145,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		config.window.title.setValue(title);
 		config.window.width.setValue(width);
 		config.window.height.setValue(height);
+		config.appName.setValue(title);
 		
 		timer = mode.createTimer();
 		tracker = new Tracker(this);
@@ -686,8 +706,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	}
 	
 	public String getPersistentDataPath() {
-		String subDirectory = String.format("Pine/%s", config.window.title.getValue());
-		return Platform.getPersistentDataPath(subDirectory, true);
+		return persistentDataPathProperty.getValue();
 	}
 	
 	/**

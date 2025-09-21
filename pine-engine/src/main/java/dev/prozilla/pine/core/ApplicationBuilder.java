@@ -137,6 +137,11 @@ public class ApplicationBuilder {
 		return this;
 	}
 	
+	public ApplicationBuilder setCompanyName(String companyName) {
+		config.companyName.setValue(companyName);
+		return this;
+	}
+	
 	public ApplicationBuilder setFullscreen(boolean fullscreen) {
 		config.window.fullscreen.setValue(fullscreen);
 		return this;
@@ -197,6 +202,7 @@ public class ApplicationBuilder {
 		
 		// Configuration
 		application.getConfig().copyFrom(this.config);
+		application.getConfig().appName.setValue(title);
 		
 		return application;
 	}

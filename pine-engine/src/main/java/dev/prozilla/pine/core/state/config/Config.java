@@ -19,6 +19,9 @@ public class Config {
 	public static final ConfigKey<Integer> FPS = new ConfigKey<>("fps", Integer.class);
 	public static final ConfigKey<Boolean> ENABLE_DEPTH_RECALCULATION = new ConfigKey<>("enableDepthRecalculation", Boolean.class);
 	public static final ConfigKey<String> DEFAULT_FONT_PATH = new ConfigKey<>("defaultFontPath", String.class);
+	public static final ConfigKey<String> COMPANY_NAME = new ConfigKey<>("companyName", String.class);
+	public static final ConfigKey<String> APP_NAME = new ConfigKey<>("appName", String.class);
+	public static final ConfigKey<Boolean> AUTO_CREATE_DIRECTORIES = new ConfigKey<>("autoCreateDirectories", Boolean.class);
 	
 	// Predefines options
 	/** Target frames per second. When set to <code>0</code>, fps is uncapped. Defaults to <code>120</code>. */
@@ -27,6 +30,9 @@ public class Config {
 	public final ConfigOption<Boolean> enableDepthRecalculation = new ConfigOption<>(true, Objects::nonNull);
 	/** Default font used to render text elements. Defaults to <code>null</code>. */
 	public final ConfigOption<String> defaultFontPath = new ConfigOption<>(null);
+	public final ConfigOption<String> companyName = new ConfigOption<>(null);
+	public final ConfigOption<String> appName = new ConfigOption<>("Untitled", Objects::nonNull);
+	public final ConfigOption<Boolean> autoCreateDirectories = new ConfigOption<>(true, Objects::nonNull);
 	/** Options related to rendering. */
 	public final RenderConfig rendering = new RenderConfig();
 	/** Options related to logging. */
@@ -53,6 +59,9 @@ public class Config {
 		addOption(FPS, fps);
 		addOption(ENABLE_DEPTH_RECALCULATION, enableDepthRecalculation);
 		addOption(DEFAULT_FONT_PATH, defaultFontPath);
+		addOption(COMPANY_NAME, companyName);
+		addOption(APP_NAME, appName);
+		addOption(AUTO_CREATE_DIRECTORIES, autoCreateDirectories);
 		
 		addOption(RenderConfig.FALLBACK_RENDER_COLOR, rendering.fallbackRenderColor);
 		addOption(RenderConfig.ENABLE_BLEND, rendering.enableBlend);

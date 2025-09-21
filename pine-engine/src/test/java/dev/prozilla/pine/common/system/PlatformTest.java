@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.io.File;
-
 import static dev.prozilla.pine.test.TestUtils.assertNonBlankString;
 
 @ExtendWith(TestLoggingExtension.class)
@@ -41,8 +39,8 @@ public class PlatformTest {
 	
 	@Test
 	void testUserPath() {
-		String userHome = System.getProperty("user.home");
-		String separator = File.separator;
+		String userHome = "/home/";
+		String separator = "/";
 		for (Platform platform : Platform.values()) {
 			assertNonBlankString(platform.getUserPath(userHome, separator));
 		}

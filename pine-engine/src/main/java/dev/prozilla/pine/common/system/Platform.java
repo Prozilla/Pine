@@ -39,11 +39,11 @@ public enum Platform {
 	WINDOWS(org.lwjgl.system.Platform.WINDOWS) {
 		@Override
 		String getUserPath(String userHome, String separator) {
-			String appData = System.getenv("APPDATA");
-			if (appData == null) {
-				return String.format("%s%sAppData%sRoaming", userHome, separator, separator);
+			String userDirectory = System.getenv("USERPROFILE");
+			if (userDirectory == null) {
+				userDirectory = userHome;
 			}
-			return appData;
+			return String.format("%s%sAppData%sLocalLow", userDirectory, separator, separator);
 		}
 	};
 	
