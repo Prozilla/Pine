@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.property;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.Objects;
 import java.util.Random;
 
@@ -40,6 +42,7 @@ public abstract class VariableProperty<T> {
 	 * @return The value
 	 * @param <T> The type of value
 	 */
+	@Contract("null -> null")
 	public static <T> T getValue(VariableProperty<T> property) {
 		return getValue(property, null);
 	}
@@ -51,6 +54,7 @@ public abstract class VariableProperty<T> {
 	 * @return The value
 	 * @param <T> The type of value
 	 */
+	@Contract("null, _ -> param2")
 	public static <T> T getValue(VariableProperty<T> property, T defaultValue) {
 		if (property == null) {
 			return defaultValue;

@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.property;
 
 import dev.prozilla.pine.common.util.Parser;
 import dev.prozilla.pine.common.util.checks.Checks;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A property whose value is determined using the value of a string property and a parser.
@@ -26,7 +27,7 @@ public class ParsedProperty<T> extends VariableProperty<T> {
 		return parser.getResult();
 	}
 	
-	public Parser<T> getParser() {
+	public @NotNull Parser<T> getParser() {
 		return parser;
 	}
 	

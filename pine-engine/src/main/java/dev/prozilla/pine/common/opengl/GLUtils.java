@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.opengl;
 
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.opengl.ARBImaging.GL_TABLE_TOO_LARGE;
@@ -19,7 +20,7 @@ public final class GLUtils {
 	 * @param errorCode The error code, as returned by {@link GL11#glGetError}
 	 * @return The error description.
 	 */
-	public static String getErrorString(int errorCode) {
+	public static @NotNull String getErrorString(int errorCode) {
 		return switch (errorCode) {
 			case GL_NO_ERROR -> "No error";
 			case GL_INVALID_ENUM -> "Enum argument out of range";

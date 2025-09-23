@@ -11,6 +11,7 @@ import dev.prozilla.pine.common.property.observable.ObservableProperty;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.ColorParser;
 import dev.prozilla.pine.common.system.ResourceUtils;
+import org.jetbrains.annotations.Contract;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,6 +81,7 @@ public class FileDeserializer<Data> extends ObservableProperty<Data> {
 	 * @return The new property.
 	 * @param <T> The type of value of the property
 	 */
+	@Contract("_ -> new")
 	public <T> DeserializedProperty<T> createProperty(DeserializedProperty.ValueFactory<Data, T> valueFactory) {
 		return createProperty(valueFactory, null);
 	}
@@ -91,6 +93,7 @@ public class FileDeserializer<Data> extends ObservableProperty<Data> {
 	 * @return The new property.
 	 * @param <T> The type of value of the property
 	 */
+	@Contract("_, _ -> new")
 	public <T> DeserializedProperty<T> createProperty(DeserializedProperty.ValueFactory<Data, T> valueFactory, T fallbackValue) {
 		return new DeserializedProperty<>(this, valueFactory, fallbackValue);
 	}

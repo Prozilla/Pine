@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.core.component.ui.Node;
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ public class Style<T> {
 		this.defaultValue = defaultValue;
 	}
 	
+	@Contract("_, _, _, _ -> new")
 	public <P extends StyledProperty<T>> P toProperty(StyledPropertyKey<T> name, Node node, AdaptivePropertyBase<T> fallbackValue, StyledPropertyFactory<T, P> factory) {
 		return factory.create(name, node, rules, Objects.requireNonNullElse(defaultValue,  fallbackValue), transitionRules);
 	}
@@ -51,6 +53,7 @@ public class Style<T> {
 	@FunctionalInterface
 	public interface StyledPropertyFactory<T, P extends StyledProperty<T>> {
 		
+		@Contract("_, _, _, _, _ -> new")
 		P create(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, AdaptivePropertyBase<T> defaultValue, List<StyleRule<AnimationCurve>> transitionRules);
 		
 	}

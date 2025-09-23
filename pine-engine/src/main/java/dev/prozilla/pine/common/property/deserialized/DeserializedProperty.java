@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.deserialized;
 
 import dev.prozilla.pine.common.property.observable.ObservableProperty;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Represents a property whose value is retrieved from a deserialized file.
@@ -42,6 +43,7 @@ public class DeserializedProperty<T> extends ObservableProperty<T> {
 	 * @param <Data> The type of data
 	 * @param <V> The type of value
 	 */
+	@Contract("null, _, _ -> param3")
 	protected static <Data, V> V createValue(Data data, ValueFactory<Data, V> valueFactory, V fallbackValue) {
 		if (data == null) {
 			return fallbackValue;

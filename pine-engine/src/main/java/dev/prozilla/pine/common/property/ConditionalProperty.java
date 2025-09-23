@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.property;
 
+import org.jetbrains.annotations.Contract;
+
 /**
  * A property whose value is determined by a boolean property and a corresponding property for each boolean state.
  *
@@ -50,6 +52,7 @@ public class ConditionalProperty<T> extends VariableProperty<T> {
 	 * Returns the inverse of this conditional property.
 	 * @return The inverse of this conditional property
 	 */
+	@Contract("-> new")
 	public ConditionalProperty<T> invert() {
 		return new ConditionalProperty<>(condition, propertyFalse, propertyTrue);
 	}
