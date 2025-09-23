@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.style.selector;
 
 import dev.prozilla.pine.core.component.ui.Node;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A selector that negates another selector.
@@ -24,7 +25,7 @@ public class NotSelector extends Selector {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return String.format(":not(%s)", selector);
 	}
 	

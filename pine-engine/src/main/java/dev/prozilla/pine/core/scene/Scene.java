@@ -11,6 +11,7 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.camera.CameraPrefab;
 import dev.prozilla.pine.core.rendering.Renderer;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Responsible for loading objects into the world.
@@ -220,7 +221,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return String.format("%s (%s)", name, id);
 	}
 }

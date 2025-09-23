@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.entity;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.Transform;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -148,7 +149,7 @@ public class EntityChunk implements Printable {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		String entityName = entity.getName();
 		int componentCount = componentTypes.length;
 		String[] componentNames = new String[componentCount];

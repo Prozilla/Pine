@@ -18,4 +18,9 @@ public class StringUtils {
 		return -1;
 	}
 	
+	public static boolean containsOnce(String string, String query) {
+		int index = string.indexOf(query);
+		return index >= 0 && index == string.lastIndexOf(query);
+	}
+	
 }

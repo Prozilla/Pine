@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.mod;
 
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.lifecycle.Destructible;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a modification (mod) loaded by the {@link ModManager}.
@@ -26,7 +27,7 @@ public class ModEntry implements Printable, Destructible {
 	 * @return The string representation of this mod based on its metadata or <code>"Unknown mod"</code> if the metadata is missing.
 	 */
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		if (metadata == null) {
 			return "Unknown mod";
 		} else {

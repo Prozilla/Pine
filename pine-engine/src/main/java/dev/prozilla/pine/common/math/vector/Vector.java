@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.exception.InvalidArrayException;
 import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.util.checks.Checks;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Array;
 import java.util.function.Function;
@@ -99,7 +100,7 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 	 * Converts this vector to a string representation.
 	 */
 	@Override
-	abstract public String toString();
+	abstract public @NotNull String toString();
 	
 	protected static <T> T[] parseToNumbers(String input, Function<String, T> parser, Class<T> type) throws InvalidStringException {
 		Checks.isNotNull(input, "input");

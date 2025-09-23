@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.util.checks;
 
 import dev.prozilla.pine.common.exception.InvalidObjectException;
+import org.jetbrains.annotations.Contract;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -75,6 +76,7 @@ public abstract class ChecksBase<T, C extends ChecksBase<T, C>> {
 		return self();
 	}
 	
+	@Contract("-> this")
 	protected abstract C self();
 	
 	protected abstract String getDefaultName();

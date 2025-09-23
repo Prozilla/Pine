@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.math.vector;
 
 import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.property.selection.WrapMode;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.IntBuffer;
 import java.util.Objects;
@@ -125,7 +126,7 @@ public class Vector4i extends VectorInt<Vector4i> {
 	 * Converts this vector to a string representation in the format "(x,y,z,w)".
 	 */
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return String.format("(%s,%s,%s,%s)", x, y, z, w);
 	}
 	

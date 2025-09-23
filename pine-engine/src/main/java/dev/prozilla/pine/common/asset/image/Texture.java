@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 
@@ -173,7 +174,7 @@ public class Texture implements TextureBase, Printable, Cloneable<Texture> {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return String.format("Texture #%s (%sx%s)", id, width, height);
 	}
 }

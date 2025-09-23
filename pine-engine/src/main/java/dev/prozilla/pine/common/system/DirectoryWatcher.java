@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.event.Event;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.core.Application;
+import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +51,7 @@ public class DirectoryWatcher extends EventDispatcher<DirectoryWatcher.EventType
 		}
 	}
 	
+	@Contract("_, _ -> new")
 	@Override
 	protected Event<EventType, String> createEvent(EventType eventType, String target) {
 		return new Event<>(eventType, target);

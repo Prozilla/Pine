@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.util;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.Random;
 
 public final class ArrayUtils {
@@ -13,6 +15,7 @@ public final class ArrayUtils {
 	 * @return True if any of the elements in <code>arrayA</code> also appear in <code>arrayB</code>.
 	 * @param <E> Type of the array elements
 	 */
+	@Contract("_, null -> false; null, _ -> false")
 	public static <E> boolean overlaps(E[] arrayA, E[] arrayB) {
 		if (arrayA == null || arrayB == null || arrayA.length == 0 || arrayB.length == 0) {
 			return false;

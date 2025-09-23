@@ -3,6 +3,7 @@ package dev.prozilla.pine.common.math.dimension;
 import dev.prozilla.pine.common.exception.InvalidArrayException;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.Node;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
 
@@ -89,7 +90,7 @@ public class Dimension extends DimensionBase {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		if (unit == Unit.AUTO) {
 			return Unit.toString(unit);
 		} else {
@@ -283,7 +284,7 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		public String toString() {
+		public @NotNull String toString() {
 			return String.format("max(%s, %s)", dimensionA, dimensionB);
 		}
 	}
@@ -308,7 +309,7 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		public String toString() {
+		public @NotNull String toString() {
 			return String.format("min(%s, %s)", dimensionA, dimensionB);
 		}
 	}
@@ -356,7 +357,7 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		public String toString() {
+		public @NotNull String toString() {
 			return String.format("(%s ? %s : %s)", predicate, dimensionA, dimensionB);
 		}
 	}
@@ -381,7 +382,7 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		public String toString() {
+		public @NotNull String toString() {
 			return String.format("(%s + %s)", dimensionA, dimensionB);
 		}
 	}
@@ -406,7 +407,7 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		public String toString() {
+		public @NotNull String toString() {
 			return String.format("(%s - %s)", dimensionA, dimensionB);
 		}
 	}
@@ -431,7 +432,7 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		public String toString() {
+		public @NotNull String toString() {
 			return String.format("(%s * %s)", dimensionA, dimensionB);
 		}
 	}
@@ -485,7 +486,7 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		public String toString() {
+		public @NotNull String toString() {
 			return String.format("clamp(%s, %s, %s)", dimensionMin, dimension, dimensionMax);
 		}
 	}
@@ -530,7 +531,7 @@ public class Dimension extends DimensionBase {
 		}
 		
 		@Override
-		public String toString() {
+		public @NotNull String toString() {
 			return String.format("mix(%s, %s, %s)", dimensionA, dimensionB, factor);
 		}
 	}

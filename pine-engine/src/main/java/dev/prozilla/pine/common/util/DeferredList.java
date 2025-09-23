@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.util;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -128,7 +129,7 @@ public class DeferredList<E> extends ArrayList<E> implements Destructible {
 	}
 	
 	@Override
-	public Iterator<E> iterator() {
+	public @NotNull Iterator<E> iterator() {
 		Iterator<E> iterator = super.iterator();
 		startIteration();
 		return new Iterator<>() {

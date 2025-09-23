@@ -1,16 +1,19 @@
 package dev.prozilla.pine.common.system;
 
 import dev.prozilla.pine.common.Cloneable;
+import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.property.deserialized.FileDeserializer;
 import dev.prozilla.pine.common.property.deserialized.HotFileDeserializer;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a directory from the file system.
  *
  * <p>Can be used to watch a directory for file changes.</p>
  */
-public class Directory implements Destructible, Cloneable<Directory> {
+public class Directory implements Destructible, Cloneable<Directory>, Printable {
 	
 	private final String path;
 	private DirectoryWatcher watcher;
@@ -53,6 +56,7 @@ public class Directory implements Destructible, Cloneable<Directory> {
 	 * @return The new file deserializer with hot reloading.
 	 * @param <Data> The type to deserialize the file to
 	 */
+	@Contract("_, _ -> new")
 	public <Data> HotFileDeserializer<Data> createHotFileDeserializer(String relativePath, Class<Data> dataType) {
 		return new HotFileDeserializer<>(getWatcher(), resolvePath(relativePath), dataType);
 	}
@@ -61,6 +65,7 @@ public class Directory implements Destructible, Cloneable<Directory> {
 	 * Creates a new watcher for this directory or returns the existing one if there already is one.
 	 * @return The directory watcher.
 	 */
+	@Contract("-> !null")
 	public DirectoryWatcher getWatcher() {
 		if (watcher == null) {
 			watcher = new DirectoryWatcher(path);
@@ -98,7 +103,7 @@ public class Directory implements Destructible, Cloneable<Directory> {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return path;
 	}
 	

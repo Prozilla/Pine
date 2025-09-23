@@ -86,6 +86,9 @@ dependencies {
 
 	// JUnit Jupiter API
 	testImplementation "org.junit.jupiter:junit-jupiter:5.10.0"
+
+    // Annotations
+    compileOnly "org.jetbrains:annotations:26.0.2"
 }
 
 tasks.register("runBuildTool", JavaExec) {

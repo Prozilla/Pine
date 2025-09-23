@@ -8,6 +8,7 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityProvider;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.scene.SceneProvider;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Contains a partition of the data of an entity.
@@ -77,7 +78,7 @@ public abstract class Component implements Printable, Destructible, EntityProvid
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return String.format("%s: %s", getName(), getEntity().getName());
 	}
 }

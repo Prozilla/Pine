@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.util;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -29,6 +31,7 @@ public abstract class SequentialParser<T> extends Parser<T> {
 		
 	}
 	
+	@Contract("-> true")
 	protected boolean succeed() {
 		return succeed(intermediate);
 	}

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static dev.prozilla.pine.test.TestUtils.assertNonBlankString;
+import static dev.prozilla.pine.test.TestUtils.*;
 
 @ExtendWith(TestLoggingExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -18,6 +18,7 @@ public class PlatformTest {
 	void testPersistentDataPath() {
 		String persistentDataPath = Platform.getPersistentDataPath("test");
 		assertNonBlankString(persistentDataPath);
+		assertEndsWith(persistentDataPath, "test");
 		if (ENABLE_LOGGING) {
 			TestLoggingExtension.log("Persistent data path: " + persistentDataPath);
 		}
@@ -50,6 +51,7 @@ public class PlatformTest {
 	void testDescriptor() {
 		String descriptor = Platform.getDescriptor();
 		assertNonBlankString(descriptor);
+		assertContainsOnce(descriptor, "/");
 		if (ENABLE_LOGGING) {
 			TestLoggingExtension.log("Platform descriptor: " + descriptor);
 		}

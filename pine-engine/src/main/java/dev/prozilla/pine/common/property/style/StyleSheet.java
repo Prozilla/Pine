@@ -15,6 +15,7 @@ import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.Node;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -175,7 +176,7 @@ public class StyleSheet implements Printable, Asset {
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		Map<String, StringJoiner> selectorToProperties = new HashMap<>();
 		
 		for (Map.Entry<StyledPropertyKey<?>, Style<?>> styleEntry : styles.entrySet()) {

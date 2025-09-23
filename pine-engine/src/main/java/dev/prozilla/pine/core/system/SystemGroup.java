@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.Container;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.scene.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -122,7 +123,7 @@ public class SystemGroup<S extends SystemBase> implements Container<S> {
 	}
 	
 	@Override
-	public Iterator<S> iterator() {
+	public @NotNull Iterator<S> iterator() {
 		return systems.iterator();
 	}
 	

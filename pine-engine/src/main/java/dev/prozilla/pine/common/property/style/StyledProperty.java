@@ -9,6 +9,7 @@ import dev.prozilla.pine.common.property.animated.transitioned.TransitionedPrope
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.NodeEventType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -164,7 +165,7 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		StringJoiner stringJoiner = new StringJoiner(" ");
 		
 		for (StyleRule<T> rule : rules) {

@@ -16,6 +16,7 @@ import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.scene.SceneProvider;
 import dev.prozilla.pine.core.scene.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -453,7 +454,7 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		String className = getClass().getSimpleName();
 		int componentCount = components.size();
 		String[] componentNames = new String[componentCount];

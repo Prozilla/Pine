@@ -2,6 +2,7 @@ package dev.prozilla.pine.test;
 
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.util.Parser;
+import dev.prozilla.pine.common.util.StringUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -79,6 +80,21 @@ public class TestUtils {
 	public static void assertNonBlankString(String string) {
 		assertNotNull(string);
 		assertFalse(string.isBlank(), "string should not be blank");
+	}
+	
+	public static void assertEndsWith(String string, String suffix) {
+		assertNotNull(string);
+		assertTrue(string.endsWith(suffix), String.format("string should end with '%s', but was: %s", suffix, string));
+	}
+	
+	public static void assertContains(String string, String substring) {
+		assertNotNull(string);
+		assertTrue(string.contains(substring), String.format("string should contain '%s', but was: %s", substring, string));
+	}
+	
+	public static void assertContainsOnce(String string, String substring) {
+		assertNotNull(string);
+		assertTrue(StringUtils.containsOnce(string, substring), String.format("string should contain '%s' once, but was: %s", substring, string));
 	}
 	
 }

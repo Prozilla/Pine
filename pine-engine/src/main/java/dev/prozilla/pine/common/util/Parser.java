@@ -5,6 +5,8 @@ import dev.prozilla.pine.common.exception.ParsingException;
 import dev.prozilla.pine.common.property.ParsedProperty;
 import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Abstract class for a stateful parser.
@@ -51,28 +53,32 @@ public abstract class Parser<T> implements Printable {
 	 */
 	public abstract boolean parse(String input);
 	
+	@Contract("null -> fail; _ -> true")
 	protected boolean succeed(T result) {
 		this.result = Checks.isNotNull(result, "result");
 		errorMessage = null;
 		return true;
 	}
 	
+	@Contract("-> false")
 	protected boolean fail() {
 		return fail("Failed to parse input");
 	}
 	
+	@Contract("null -> fail; _ -> false")
 	protected boolean fail(String errorMessage) {
 		this.errorMessage = Checks.isNotNull(errorMessage, "errorMessage");
 		result = null;
 		return false;
 	}
 	
+	@Contract("_ -> new")
 	public ParsedProperty<T> parseProperty(VariableProperty<String> inputProperty) {
 		return new ParsedProperty<>(inputProperty, this);
 	}
 	
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		StringBuilder stringBuilder = new StringBuilder("Parser: ");
 		
 		if (result != null) {

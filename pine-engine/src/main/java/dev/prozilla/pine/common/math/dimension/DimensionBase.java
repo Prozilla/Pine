@@ -3,6 +3,7 @@ package dev.prozilla.pine.common.math.dimension;
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.core.component.ui.Node;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Base class for dimensions of UI elements.
@@ -72,5 +73,5 @@ public abstract class DimensionBase implements Printable, Cloneable<DimensionBas
 	/**
 	 * Returns the string representation of this dimension.
 	 */
-	abstract public String toString();
+	abstract public @NotNull String toString();
 }

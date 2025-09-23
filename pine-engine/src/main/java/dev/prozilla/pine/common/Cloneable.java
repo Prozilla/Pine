@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common;
 
+import org.jetbrains.annotations.Contract;
+
 /**
  * Abstract interface for cloneable objects.
  * A cloneable object should have a <code>clone()</code> method that returns a new instance
@@ -13,12 +15,14 @@ public interface Cloneable<O extends Cloneable<O>> {
 	 * @param other Other object
 	 * @return <code>true</code> if both objects are equal.
 	 */
+	@Contract("null -> false")
 	boolean equals(O other);
 	
 	/**
 	 * Returns a new object that is equal to this object.
 	 * @return Clone of this object
 	 */
+	@Contract("-> new")
 	O clone();
 	
 	/**
@@ -27,6 +31,7 @@ public interface Cloneable<O extends Cloneable<O>> {
 	 * @return The clone, or {@code null}
 	 * @param <C> The type of cloneable
 	 */
+	@Contract("null -> null; !null -> new")
 	static <C extends Cloneable<C>> C clone(C cloneable) {
 		if (cloneable == null) {
 			return null;
