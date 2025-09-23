@@ -63,4 +63,8 @@ public interface ApplicationProvider extends ApplicationContext {
 		return getApplication().getAudioDevice();
 	}
 	
+	static void stopApplication(ApplicationProvider applicationProvider) {
+		applicationProvider.getApplication().stop();
+	}
+	
 }

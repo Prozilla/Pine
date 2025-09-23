@@ -11,7 +11,9 @@ public class AnimationCurveParser extends Parser<AnimationCurve> {
 		
 		float duration;
 		try {
-			if (parts[0].endsWith("s")) {
+			if (parts[0].endsWith("ms")) {
+				duration = Float.parseFloat(parts[0].substring(0, parts[0].length() - 2)) / 1000f;
+			} else if (parts[0].endsWith("s")) {
 				duration = Float.parseFloat(parts[0].substring(0, parts[0].length() - 1));
 			} else {
 				return fail();

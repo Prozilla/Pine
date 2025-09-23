@@ -36,40 +36,40 @@ public class StyleSheet implements Printable, Asset {
 		this.styles = new HashMap<>();
 	}
 	
-	public <T> void parseRule(Selector selector, StyledPropertyKey<T> propertyName, String input) {
+	public <T> void parseRule(Selector selector, StyledPropertyKey<T> key, String input) {
 		T value = null;
 		
 		try {
-			value = propertyName.parseValue(input);
+			value = key.parseValue(input);
 		} catch (Exception ignored) {}
 		
 		if (value != null) {
-			addRule(selector, propertyName, value);
+			addRule(selector, key, value);
 		}
 	}
 	
-	public <T> void addRule(Selector selector, StyledPropertyKey<T> propertyName, T value) {
-		addRule(propertyName, new StyleRule<>(selector, value));
+	public <T> void addRule(Selector selector, StyledPropertyKey<T> key, T value) {
+		addRule(key, new StyleRule<>(selector, value));
 	}
 	
-	protected <T> void addRule(StyledPropertyKey<T> propertyName, StyleRule<T> rule) {
-		Style<T> style = getStyle(propertyName, true);
+	protected <T> void addRule(StyledPropertyKey<T> key, StyleRule<T> rule) {
+		Style<T> style = getStyle(key, true);
 		style.addRule(rule);
 	}
 	
-	public void addTransition(Selector selector, StyledPropertyKey<?> propertyName, AnimationCurve value) {
-		addTransition(propertyName, new StyleRule<>(selector, value));
+	public void addTransition(Selector selector, StyledPropertyKey<?> key, AnimationCurve value) {
+		addTransition(key, new StyleRule<>(selector, value));
 	}
 	
-	protected void addTransition(StyledPropertyKey<?> propertyName, StyleRule<AnimationCurve> transitionRule) {
-		Style<?> style = getStyle(propertyName, true);
+	protected void addTransition(StyledPropertyKey<?> key, StyleRule<AnimationCurve> transitionRule) {
+		Style<?> style = getStyle(key, true);
 		style.addTransitionRule(transitionRule);
 	}
 	
-	public <T> void setDefaultValue(StyledPropertyKey<T> propertyName, AdaptiveProperty<T> defaultValue) {
+	public <T> void setDefaultValue(StyledPropertyKey<T> key, AdaptiveProperty<T> defaultValue) {
 		Checks.isNotNull(defaultValue, "defaultValue");
 		
-		Style<T> style = getStyle(propertyName, true);
+		Style<T> style = getStyle(key, true);
 		style.setDefaultValue(defaultValue);
 	}
 	
