@@ -16,6 +16,7 @@ import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.config.RenderConfig;
+import org.jetbrains.annotations.Contract;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -937,26 +938,10 @@ public class Renderer implements Initializable, Destructible {
 		MemoryUtil.memFree(vertices);
 		
 		// Dispose of shader program
-		if (vao != null) {
-			vao.destroy();
-		}
-		if (vbo != null) {
-			vbo.destroy();
-		}
-		if (program != null) {
-			program.destroy();
-		}
-		if (fbo != null) {
-			fbo.destroy();
-		}
+		Destructible.destroy(vao, vbo, program, fbo);
 		
 		// Dispose of fonts
-		if (defaultFont != null) {
-			defaultFont.destroy();
-		}
-		if (debugFont != null) {
-			debugFont.destroy();
-		}
+		Destructible.destroy(defaultFont, debugFont);
 	}
 	
 	/**
@@ -983,9 +968,8 @@ public class Renderer implements Initializable, Destructible {
 		isRendering = false;
 		
 		// Load shaders
-		Shader vertexShader, fragmentShader;
-		vertexShader = AssetPools.shaders.load(GL_VERTEX_SHADER, VERTEX_SHADER_PATH);
-		fragmentShader = AssetPools.shaders.load(GL_FRAGMENT_SHADER, FRAGMENT_SHADER_PATH);
+		Shader vertexShader = AssetPools.shaders.load(GL_VERTEX_SHADER, VERTEX_SHADER_PATH);
+		Shader fragmentShader = AssetPools.shaders.load(GL_FRAGMENT_SHADER, FRAGMENT_SHADER_PATH);
 		
 		// Create shader program
 		program = new ShaderProgram();
@@ -1049,11 +1033,11 @@ public class Renderer implements Initializable, Destructible {
 	 * Specifies the vertex pointers.
 	 */
 	private void specifyVertexAttributes() {
-		program.setVertexAttribute("vPosition", 3, STRIDE_LENGTH * Float.BYTES, 0);
-		program.setVertexAttribute("vColor", 4, STRIDE_LENGTH * Float.BYTES, 3 * Float.BYTES);
-		program.setVertexAttribute("vTexCoords", 2, STRIDE_LENGTH * Float.BYTES, 7 * Float.BYTES);
-		program.setVertexAttribute("vTexId", 1, STRIDE_LENGTH * Float.BYTES, 9 * Float.BYTES);
-		program.setVertexAttribute("vIsArrayTexture", 1, STRIDE_LENGTH * Float.BYTES, 10 * Float.BYTES);
+		program.setVertexAttributes(
+			new CharSequence[]{"vPosition", "vColor", "vTexCoords", "vTexId", "vIsArrayTexture"},
+			new int[]{3, 4, 2, 1, 1},
+			STRIDE_LENGTH
+		);
 	}
 	
 	public int getWidth() {
@@ -1097,6 +1081,7 @@ public class Renderer implements Initializable, Destructible {
 	/**
 	 * Creates a new {@link Vector2f} that represents the center of the viewport.
 	 */
+	@Contract("-> new")
 	public Vector2f getViewportCenter() {
 		return new Vector2f(viewWidth / 2f, viewHeight / 2f);
 	}

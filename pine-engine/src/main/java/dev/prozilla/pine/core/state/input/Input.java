@@ -8,6 +8,7 @@ import dev.prozilla.pine.common.event.SimpleEventDispatcher;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.lwjgl.GLFWUtils;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -263,21 +264,7 @@ public class Input implements Initializable, Destructible {
 	 */
 	@Override
 	public void destroy() {
-		if (keyCallback != null) {
-			keyCallback.free();
-		}
-		if (charCallback != null) {
-			charCallback.free();
-		}
-		if (scrollCallback != null) {
-			scrollCallback.free();
-		}
-		if (cursorPosCallback != null) {
-			cursorPosCallback.free();
-		}
-		if (mouseButtonCallback != null) {
-			mouseButtonCallback.free();
-		}
+		GLFWUtils.freeNativeResources(keyCallback, charCallback, scrollCallback, cursorPosCallback, mouseButtonCallback);
 		for (Gamepad gamepad : gamepads) {
 			if (gamepad != null) {
 				gamepad.destroy();

@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.opengl;
+package dev.prozilla.pine.common.lwjgl;
 
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;

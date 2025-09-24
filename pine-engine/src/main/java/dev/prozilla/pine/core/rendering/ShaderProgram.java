@@ -54,10 +54,34 @@ public class ShaderProgram implements Destructible {
 	 */
 	public void link() {
 		glLinkProgram(id);
-		
 		checkStatus();
 	}
 	
+	/**
+	 * Sets multiple vertex attributes.
+	 * @param names The names of each attribute
+	 * @param sizes The amount of floats used for each attribute
+	 * @param stride The amount of floats used per vertex
+	 */
+	public void setVertexAttributes(CharSequence[] names, int[] sizes, int stride) {
+		if (names.length != sizes.length) {
+			throw new IllegalArgumentException("arrays of names and sizes must have an equal length");
+		}
+		
+		int offset = 0;
+		for (int i = 0; i < names.length; i++) {
+			setVertexAttribute(names[i], sizes[i], stride * Float.BYTES, offset);
+			offset += sizes[i] * Float.BYTES;
+		}
+	}
+	
+	/**
+	 * Enables a vertex attribute and sets its pointer.
+	 * @param name The name of the attribute
+	 * @param size The size of the attribute, in bytes
+	 * @param stride The amount of bytes used per vertex
+	 * @param offset The offset from the first component, in bytes
+	 */
 	public void setVertexAttribute(CharSequence name, int size, int stride, int offset) {
 		int location = requireAttributeLocation(name);
 		enableVertexAttribute(location);

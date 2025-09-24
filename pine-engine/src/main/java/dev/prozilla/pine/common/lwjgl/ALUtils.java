@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.openal;
+package dev.prozilla.pine.common.lwjgl;
 
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.openal.ALC10;

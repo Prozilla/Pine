@@ -3,7 +3,7 @@ package dev.prozilla.pine.core.audio;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.openal.ALUtils;
+import dev.prozilla.pine.common.lwjgl.ALUtils;
 import dev.prozilla.pine.core.Application;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
