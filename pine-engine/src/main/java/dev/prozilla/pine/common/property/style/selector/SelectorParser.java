@@ -60,7 +60,7 @@ public class SelectorParser extends SequentialParser<Selector> {
 				String typeName = readWhile(SelectorParser::isValidNameChar);
 				parts.add(new TypeSelector(typeName));
 			} else {
-				// Skip unknown or invalid characters
+				// Skip meaningless characters
 				moveCursor();
 			}
 		}

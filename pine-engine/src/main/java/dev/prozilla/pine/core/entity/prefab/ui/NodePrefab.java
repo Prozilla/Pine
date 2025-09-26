@@ -51,6 +51,7 @@ public class NodePrefab extends Prefab {
 	public int tabIndex;
 	public boolean autoFocus;
 	
+	protected String htmlTag;
 	protected Set<String> classes;
 	
 	protected StyleSheet styleSheet;
@@ -266,6 +267,10 @@ public class NodePrefab extends Prefab {
 		}
 	}
 	
+	public void setHTMLTag(String htmlTag) {
+		this.htmlTag = htmlTag;
+	}
+	
 	protected <T> void setDefaultPropertyValue(StyledPropertyKey<T> propertyName, AdaptiveProperty<T> value) {
 		if (styleSheet == null) {
 			return;
@@ -282,6 +287,7 @@ public class NodePrefab extends Prefab {
 		node.passThrough = passThrough;
 		node.tabIndex = tabIndex;
 		node.autoFocus = autoFocus;
+		node.htmlTag = htmlTag;
 		
 		if (padding != null) {
 			node.padding = padding.clone();

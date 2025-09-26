@@ -10,6 +10,8 @@ import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.scene.SceneProvider;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Contains a partition of the data of an entity.
  */
@@ -36,6 +38,23 @@ public abstract class Component implements Printable, Destructible, EntityProvid
 		if (entity != null) {
 			entity.removeComponent(this);
 		}
+	}
+	
+	public void setEntity(Entity entity) {
+		if (Objects.equals(this.entity, entity)) {
+			return;
+		}
+		
+		if (entity != null && !entity.components.contains(this)) {
+			throw new IllegalArgumentException("component is not attached to entity");
+		}
+		
+		onEntityChange(this.entity, entity);
+		this.entity = entity;
+	}
+	
+	protected void onEntityChange(Entity oldEntity, Entity newEntity) {
+	
 	}
 	
 	/**

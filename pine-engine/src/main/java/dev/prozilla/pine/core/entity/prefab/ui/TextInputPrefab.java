@@ -21,6 +21,7 @@ public class TextInputPrefab extends TextPrefab {
 		super(value);
 		setAutoFocus(true);
 		setSize(new DualDimension(64, 24));
+		setHTMLTag("input");
 	}
 	
 	public void setType(TextInputNode.Type type) {

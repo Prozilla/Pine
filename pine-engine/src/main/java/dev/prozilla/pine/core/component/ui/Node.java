@@ -1,8 +1,10 @@
 package dev.prozilla.pine.core.component.ui;
 
 import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.event.Event;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventDispatcherProvider;
+import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
@@ -11,8 +13,12 @@ import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.EntityEventType;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -55,10 +61,15 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public Vector4f borderImageSlice;
 	public boolean borderImageSliceFill;
 	
+	public String htmlTag;
 	public final Set<String> classes;
 	public final Set<String> modifiers;
 	
+	// Hierarchy
 	public NodeRoot root;
+	public Node parent;
+	public final List<Node> children;
+	private EventListener<Event<EntityEventType, Entity>> entityEventListener;
 	
 	private final NodeEventDispatcher eventDispatcher;
 	
@@ -91,6 +102,22 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		modifiers = new HashSet<>();
 		
 		eventDispatcher = new NodeEventDispatcher();
+		children = new ArrayList<>();
+	}
+	
+	@Override
+	protected void onEntityChange(Entity oldEntity, Entity newEntity) {
+		if (entityEventListener != null && oldEntity != null) {
+			oldEntity.removeListener(EntityEventType.CHILDREN_UPDATE, entityEventListener);
+		}
+		if (entity != null) {
+			entityEventListener = entity.addListener(EntityEventType.CHILDREN_UPDATE, (event) -> {
+				children.clear();
+				children.addAll(entity.getComponentsInChildren(Node.class));
+			});
+		} else {
+			entityEventListener = null;
+		}
 	}
 	
 	@Override
