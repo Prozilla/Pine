@@ -342,6 +342,11 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	}
 	
 	@Override
+	public void invoke(EntityEventType entityEventType) {
+		super.invoke(entityEventType, this);
+	}
+	
+	@Override
 	protected void invoke(Event<EntityEventType, Entity> event) {
 		if (!shouldInvoke(event.getType())) {
 			return;

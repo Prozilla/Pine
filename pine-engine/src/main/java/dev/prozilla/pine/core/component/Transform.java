@@ -3,9 +3,11 @@ package dev.prozilla.pine.core.component;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.EntityEventType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Transform extends Component {
 	
@@ -148,12 +150,18 @@ public class Transform extends Component {
 	}
 	
 	public void setParent(Transform parent) {
+		if (Objects.equals(parent, this.parent)) {
+			return;
+		}
+		
 		this.parent = parent;
 		
 		if (parent != null) {
 			// Temporarily borrow depth index from parent until depth is recalculated
 			depthIndex = parent.depthIndex;
 		}
+		
+		entity.invoke(EntityEventType.PARENT_UPDATE);
 	}
 	
 	public int getChildCount() {

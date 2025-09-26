@@ -9,4 +9,5 @@ public enum EntityEventType {
 	DESCENDANT_REMOVE,
 	COMPONENTS_UPDATE,
 	DESTROY,
+	PARENT_UPDATE,
 }

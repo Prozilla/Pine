@@ -1,10 +1,12 @@
 package dev.prozilla.pine.common.property.animated;
 
-import dev.prozilla.pine.common.math.easing.Easing;
 import dev.prozilla.pine.common.math.easing.EasingFunction;
+import dev.prozilla.pine.common.math.easing.EasingParser;
 import dev.prozilla.pine.common.util.Parser;
 
 public class AnimationCurveParser extends Parser<AnimationCurve> {
+	
+	private static final EasingParser easingParser = new EasingParser();
 	
 	public boolean parse(String input) {
 		String[] parts = input.split(" ");
@@ -26,7 +28,8 @@ public class AnimationCurveParser extends Parser<AnimationCurve> {
 			return succeed(new AnimationCurve(duration));
 		}
 		
-		EasingFunction easingFunction = Easing.parse(parts[1]);
+		easingParser.parse(parts[1]);
+		EasingFunction easingFunction = easingParser.getResult();
 		if (easingFunction == null) {
 			return fail("Invalid easing function name");
 		}

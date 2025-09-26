@@ -49,8 +49,9 @@ public abstract class Component implements Printable, Destructible, EntityProvid
 			throw new IllegalArgumentException("component is not attached to entity");
 		}
 		
-		onEntityChange(this.entity, entity);
+		Entity oldEntity = this.entity;
 		this.entity = entity;
+		onEntityChange(oldEntity, entity);
 	}
 	
 	protected void onEntityChange(Entity oldEntity, Entity newEntity) {

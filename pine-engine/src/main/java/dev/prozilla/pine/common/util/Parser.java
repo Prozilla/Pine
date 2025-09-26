@@ -17,6 +17,9 @@ public abstract class Parser<T> implements Printable {
 	private T result;
 	private String errorMessage;
 	
+	public static final String GENERIC_ERROR = "Failed to parse input";
+	public static final String UNEXPECTED_END_OF_INPUT_ERROR = "Unexpected end of input";
+	
 	/**
 	 * Parses an input string and throws an exception if the parsing fails.
 	 * @param input The input string to parse
@@ -62,7 +65,7 @@ public abstract class Parser<T> implements Printable {
 	
 	@Contract("-> false")
 	protected boolean fail() {
-		return fail("Failed to parse input");
+		return fail(GENERIC_ERROR);
 	}
 	
 	@Contract("null -> fail; _ -> false")

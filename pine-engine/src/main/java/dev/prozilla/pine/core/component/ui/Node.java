@@ -4,7 +4,6 @@ import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.event.Event;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventDispatcherProvider;
-import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
@@ -69,7 +68,6 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public NodeRoot root;
 	public Node parent;
 	public final List<Node> children;
-	private EventListener<Event<EntityEventType, Entity>> entityEventListener;
 	
 	private final NodeEventDispatcher eventDispatcher;
 	
@@ -107,22 +105,30 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	@Override
 	protected void onEntityChange(Entity oldEntity, Entity newEntity) {
-		if (entityEventListener != null && oldEntity != null) {
-			oldEntity.removeListener(EntityEventType.CHILDREN_UPDATE, entityEventListener);
+		if (oldEntity != null) {
+			oldEntity.removeListener(EntityEventType.PARENT_UPDATE, this::handleParentChange);
+			oldEntity.removeListener(EntityEventType.CHILDREN_UPDATE, this::handleChildrenChange);
 		}
 		if (entity != null) {
-			entityEventListener = entity.addListener(EntityEventType.CHILDREN_UPDATE, (event) -> {
-				children.clear();
-				children.addAll(entity.getComponentsInChildren(Node.class));
-			});
-		} else {
-			entityEventListener = null;
+			entity.addListener(EntityEventType.PARENT_UPDATE, this::handleParentChange);
+			entity.addListener(EntityEventType.CHILDREN_UPDATE, this::handleChildrenChange);
 		}
 	}
 	
-	@Override
-	public String getName() {
-		return "RectTransform";
+	public void updateHierarchy() {
+		handleParentChange(null);
+		handleChildrenChange(null);
+	}
+	
+	private void handleParentChange(Event<EntityEventType, Entity> event) {
+		parent = entity.getComponentInParent(Node.class, false);
+		invokeSelectorChangeEvent();
+	}
+	
+	private void handleChildrenChange(Event<EntityEventType, Entity> event) {
+		children.clear();
+		children.addAll(entity.getComponentsInChildren(Node.class));
+		invokeSelectorChangeEvent();
 	}
 	
 	/**
@@ -269,13 +275,13 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	public void addClass(String className) {
 		if (classes.add(className)) {
-			invoke(NodeEventType.SELECTOR_CHANGE, this);
+			invokeSelectorChangeEvent();
 		}
 	}
 	
 	public void removeClass(String className) {
 		if (classes.remove(className)) {
-			invoke(NodeEventType.SELECTOR_CHANGE, this);
+			invokeSelectorChangeEvent();
 		}
 	}
 	
@@ -293,14 +299,18 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	public void addModifier(String modifier) {
 		if (modifiers.add(modifier)) {
-			invoke(NodeEventType.SELECTOR_CHANGE, this);
+			invokeSelectorChangeEvent();
 		}
 	}
 	
 	public void removeModifier(String modifier) {
 		if (modifiers.remove(modifier)) {
-			invoke(NodeEventType.SELECTOR_CHANGE, this);
+			invokeSelectorChangeEvent();
 		}
+	}
+	
+	private void invokeSelectorChangeEvent() {
+		invoke(NodeEventType.SELECTOR_CHANGE, this);
 	}
 	
 	public void click() {
@@ -315,4 +325,5 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		Node focusedNode = getRoot().getFocusedNode();
 		return focusedNode != null && focusedNode.equals(this);
 	}
+	
 }
