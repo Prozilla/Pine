@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.system.PathUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
+import org.jetbrains.annotations.Contract;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,6 +21,9 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 	
 	private final Map<String, T> pool;
 	protected final AssetPoolEventDispatcher<T> eventDispatcher;
+	
+	public static final String UNKNOWN_ERROR = "Unknown error";
+	public static final String NOT_FOUND_ERROR = "File not found";
 	
 	public AssetPool() {
 		pool = new HashMap<>();
@@ -90,6 +94,7 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 	 * @param reason The reason of the failure
 	 * @return {@code null}
 	 */
+	@Contract("_, _, _ -> null")
 	protected T fail(String path, String reason, Exception exception) {
 		eventDispatcher.invoke(AssetPoolEventType.FAILED, this, path, reason, exception);
 		return null;

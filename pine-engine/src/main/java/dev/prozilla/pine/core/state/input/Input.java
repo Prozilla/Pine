@@ -68,6 +68,7 @@ public class Input implements Initializable, Destructible {
 	private GLFWScrollCallback scrollCallback;
 	private GLFWCursorPosCallback cursorPosCallback;
 	private GLFWMouseButtonCallback mouseButtonCallback;
+	private GLFWJoystickCallback joystickCallback;
 	
 	private final Application application;
 	private final Window window;
@@ -186,14 +187,17 @@ public class Input implements Initializable, Destructible {
 			}
 		});
 		
-		glfwSetJoystickCallback((gamepadId, event) -> {
-			if (event == GLFW_CONNECTED) {
-				gamepads[gamepadId] = new Gamepad(gamepadId);
-				gamepadEvents.invoke(GamepadEventType.CONNECT, gamepadId);
-			} else if (event == GLFW_DISCONNECTED) {
-				gamepads[gamepadId].destroy();
-				gamepads[gamepadId] = null;
-				gamepadEvents.invoke(GamepadEventType.DISCONNECT, gamepadId);
+		glfwSetJoystickCallback(joystickCallback = new GLFWJoystickCallback() {
+			@Override
+			public void invoke(int gamepadId, int event) {
+				if (event == GLFW_CONNECTED) {
+					gamepads[gamepadId] = new Gamepad(gamepadId);
+					gamepadEvents.invoke(GamepadEventType.CONNECT, gamepadId);
+				} else if (event == GLFW_DISCONNECTED) {
+					gamepads[gamepadId].destroy();
+					gamepads[gamepadId] = null;
+					gamepadEvents.invoke(GamepadEventType.DISCONNECT, gamepadId);
+				}
 			}
 		});
 		
@@ -264,7 +268,7 @@ public class Input implements Initializable, Destructible {
 	 */
 	@Override
 	public void destroy() {
-		GLFWUtils.freeNativeResources(keyCallback, charCallback, scrollCallback, cursorPosCallback, mouseButtonCallback);
+		GLFWUtils.freeNativeResources(keyCallback, charCallback, scrollCallback, cursorPosCallback, mouseButtonCallback, joystickCallback);
 		for (Gamepad gamepad : gamepads) {
 			if (gamepad != null) {
 				gamepad.destroy();

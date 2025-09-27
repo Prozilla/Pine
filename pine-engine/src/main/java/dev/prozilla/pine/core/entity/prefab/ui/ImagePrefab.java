@@ -36,6 +36,10 @@ public class ImagePrefab extends NodePrefab {
 		setHTMLTag("img");
 	}
 	
+	public void setImage(TextureBase image) {
+		this.image = image;
+	}
+	
 	public void setRegion(int x, int y, int width, int height) {
 		cropToRegion = true;
 		regionX = x;

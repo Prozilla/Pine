@@ -33,7 +33,6 @@ import java.util.Set;
 @Components({ Node.class, Transform.class })
 public class NodePrefab extends Prefab {
 	
-	protected DualDimension position;
 	protected DualDimension size;
 	protected DualDimension padding;
 	protected DualDimension margin;
@@ -57,7 +56,6 @@ public class NodePrefab extends Prefab {
 	protected StyleSheet styleSheet;
 	
 	public NodePrefab() {
-		position = new DualDimension();
 		size = new DualDimension();
 		absolutePosition = false;
 		passThrough = false;
