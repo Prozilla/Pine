@@ -29,20 +29,16 @@ import java.nio.IntBuffer;
 import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
-import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
-import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 
 /**
  * Handles the rendering process.
  */
 public class Renderer implements Initializable, Destructible {
 	
-	private VertexArrayObject vao;
-	private VertexBufferObject vbo;
+	private VertexArrayObject vertexArrayObject;
+	private VertexBufferObject vertexBufferObject;
 	private ShaderProgram program;
-	private FrameBufferObject fbo;
+	private FrameBufferObject frameBufferObject;
 	
 	// Vertex buffer
 	private FloatBuffer vertices;
@@ -127,8 +123,8 @@ public class Renderer implements Initializable, Destructible {
 	
 	public void initPreview(int width, int height) {
 		try {
-			fbo = new FrameBufferObject(width, height);
-			fbo.init();
+			frameBufferObject = new FrameBufferObject(width, height);
+			frameBufferObject.init();
 		} catch (Exception e) {
 			logger.error("Failed to create frame buffer", e);
 		}
@@ -190,8 +186,8 @@ public class Renderer implements Initializable, Destructible {
 			throw new IllegalStateException("Renderer is already drawing!");
 		}
 		
-		if (fbo != null) {
-			fbo.bind();
+		if (frameBufferObject != null) {
+			frameBufferObject.bind();
 		}
 		
 		isRendering = true;
@@ -210,8 +206,8 @@ public class Renderer implements Initializable, Destructible {
 		isRendering = false;
 		flush();
 		
-		if (fbo != null) {
-			fbo.unbind();
+		if (frameBufferObject != null) {
+			frameBufferObject.unbind();
 		}
 		
 		tracker.setVertices(renderedVertices, totalVertices);
@@ -227,10 +223,10 @@ public class Renderer implements Initializable, Destructible {
 		
 		vertices.flip();
 		
-		if (vao != null) {
-			vao.bind();
+		if (vertexArrayObject != null) {
+			vertexArrayObject.bind();
 		} else {
-			vbo.bind(GL_ARRAY_BUFFER);
+			vertexBufferObject.bind(VertexBufferObject.Target.ARRAY_BUFFER);
 			specifyVertexAttributes();
 		}
 		program.use();
@@ -241,8 +237,8 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		// Upload the new vertex data
-		vbo.bind(GL_ARRAY_BUFFER);
-		vbo.uploadSubData(GL_ARRAY_BUFFER, 0, vertices);
+		vertexBufferObject.bind(VertexBufferObject.Target.ARRAY_BUFFER);
+		vertexBufferObject.uploadSubData(VertexBufferObject.Target.ARRAY_BUFFER, 0, vertices);
 		
 		// Draw batch
 		glDrawArrays(GL_TRIANGLES, 0, numVertices);
@@ -938,7 +934,7 @@ public class Renderer implements Initializable, Destructible {
 		MemoryUtil.memFree(vertices);
 		
 		// Dispose of shader program
-		Destructible.destroy(vao, vbo, program, fbo);
+		Destructible.destroy(vertexArrayObject, vertexBufferObject, program, frameBufferObject);
 		
 		// Dispose of fonts
 		Destructible.destroy(defaultFont, debugFont);
@@ -949,27 +945,27 @@ public class Renderer implements Initializable, Destructible {
 	 */
 	private void setupShaderProgram() {
 		// Generate Vertex Array Object
-		vao = new VertexArrayObject();
-		vao.bind();
+		vertexArrayObject = new VertexArrayObject();
+		vertexArrayObject.bind();
 		
 		// Generate Vertex Buffer Object
-		vbo = new VertexBufferObject();
-		vbo.bind(GL_ARRAY_BUFFER);
+		vertexBufferObject = new VertexBufferObject();
+		vertexBufferObject.bind(VertexBufferObject.Target.ARRAY_BUFFER);
 		
 		// Create FloatBuffer
 		vertices = MemoryUtil.memAllocFloat(VERTEX_BUFFER_SIZE * STRIDE_LENGTH);
 		
 		// Upload null data to allocate storage for the VBO
 		long size = (long) vertices.capacity() * Float.BYTES;
-		vbo.uploadData(GL_ARRAY_BUFFER, size, GL_DYNAMIC_DRAW);
+		vertexBufferObject.uploadData(VertexBufferObject.Target.ARRAY_BUFFER, size, VertexBufferObject.Usage.DYNAMIC_DRAW);
 		
 		// Initialize variables */
 		numVertices = 0;
 		isRendering = false;
 		
 		// Load shaders
-		Shader vertexShader = AssetPools.shaders.load(GL_VERTEX_SHADER, VERTEX_SHADER_PATH);
-		Shader fragmentShader = AssetPools.shaders.load(GL_FRAGMENT_SHADER, FRAGMENT_SHADER_PATH);
+		Shader vertexShader = AssetPools.shaders.loadVertexShader(VERTEX_SHADER_PATH);
+		Shader fragmentShader = AssetPools.shaders.loadFragmentShader(FRAGMENT_SHADER_PATH);
 		
 		// Create shader program
 		program = new ShaderProgram();
@@ -1002,7 +998,7 @@ public class Renderer implements Initializable, Destructible {
 	public void resize() {
 		int width, height;
 		
-		if (fbo == null) {
+		if (frameBufferObject == null) {
 			// Get width and height of frame buffer
 			long window = glfwGetCurrentContext();
 			try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -1013,8 +1009,8 @@ public class Renderer implements Initializable, Destructible {
 				height = heightBuffer.get();
 			}
 		} else {
-			width = fbo.getWidth();
-			height = fbo.getHeight();
+			width = frameBufferObject.getWidth();
+			height = frameBufferObject.getHeight();
 		}
 		
 		if (width == viewWidth && height == viewHeight) {
@@ -1066,8 +1062,8 @@ public class Renderer implements Initializable, Destructible {
 		return isRendering;
 	}
 	
-	public FrameBufferObject getFbo() {
-		return fbo;
+	public FrameBufferObject getFrameBufferObject() {
+		return frameBufferObject;
 	}
 	
 	public RenderConfig getConfig() {
