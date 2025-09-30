@@ -10,6 +10,7 @@ import dev.prozilla.pine.core.entity.EntityProvider;
  * Provides access to a {@link TileRenderer} component.
  */
 @ProviderOf(TileRenderer.class)
+@FunctionalInterface
 public interface TileProvider extends EntityProvider {
 	
 	/**

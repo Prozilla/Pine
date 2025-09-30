@@ -7,6 +7,7 @@ import dev.prozilla.pine.core.component.Transform;
  * Interface with utility methods for finding certain entities in the current context.
  */
 @ProviderOf(Entity.class)
+@FunctionalInterface
 public interface EntityProvider extends EntityContext {
 	
 	Entity getEntity();
@@ -57,4 +58,5 @@ public interface EntityProvider extends EntityContext {
 		}
 		return getTransform().getParentWithTag(tag);
 	}
+	
 }

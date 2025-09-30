@@ -14,6 +14,7 @@ import dev.prozilla.pine.core.state.input.Input;
  * Provides access to the application and all its helper classes.
  */
 @ProviderOf(Application.class)
+@FunctionalInterface
 public interface ApplicationProvider extends ApplicationContext {
 	
 	Application getApplication();
