@@ -205,6 +205,14 @@ public abstract class SequentialParser<T> extends Parser<T> {
 		return !endOfInput() && getChar() == character;
 	}
 	
+	protected String getRemainingInput() {
+		if (endOfInput()) {
+			return "";
+		} else {
+			return input.substring(cursor);
+		}
+	}
+	
 	/**
 	 * Returns the character the cursor is pointing to.
 	 * @return The character the cursor is pointing to.
@@ -218,6 +226,10 @@ public abstract class SequentialParser<T> extends Parser<T> {
 	 */
 	protected void resetCursor() {
 		cursor = 0;
+	}
+	
+	protected void moveCursorToEnd() {
+		cursor = input.length();
 	}
 	
 	/**

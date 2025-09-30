@@ -33,6 +33,11 @@ public class ImagePrefab extends NodePrefab {
 		
 		setName("Image");
 		addClass("image");
+		setHTMLTag("img");
+	}
+	
+	public void setImage(TextureBase image) {
+		this.image = image;
 	}
 	
 	public void setRegion(int x, int y, int width, int height) {

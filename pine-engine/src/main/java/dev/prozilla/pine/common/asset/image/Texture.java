@@ -177,4 +177,5 @@ public class Texture implements TextureBase, Printable, Cloneable<Texture> {
 	public @NotNull String toString() {
 		return String.format("Texture #%s (%sx%s)", id, width, height);
 	}
+	
 }

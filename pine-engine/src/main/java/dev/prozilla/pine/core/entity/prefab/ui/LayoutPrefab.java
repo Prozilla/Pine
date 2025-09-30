@@ -28,6 +28,7 @@ public class LayoutPrefab extends NodePrefab {
 		
 		setName("Container");
 		addClass("container");
+		setHTMLTag("div");
 	}
 	
 	public void setDirection(Direction direction) {

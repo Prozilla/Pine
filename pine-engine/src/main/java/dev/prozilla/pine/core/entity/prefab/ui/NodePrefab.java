@@ -33,7 +33,6 @@ import java.util.Set;
 @Components({ Node.class, Transform.class })
 public class NodePrefab extends Prefab {
 	
-	protected DualDimension position;
 	protected DualDimension size;
 	protected DualDimension padding;
 	protected DualDimension margin;
@@ -51,12 +50,12 @@ public class NodePrefab extends Prefab {
 	public int tabIndex;
 	public boolean autoFocus;
 	
+	protected String htmlTag;
 	protected Set<String> classes;
 	
 	protected StyleSheet styleSheet;
 	
 	public NodePrefab() {
-		position = new DualDimension();
 		size = new DualDimension();
 		absolutePosition = false;
 		passThrough = false;
@@ -266,6 +265,10 @@ public class NodePrefab extends Prefab {
 		}
 	}
 	
+	public void setHTMLTag(String htmlTag) {
+		this.htmlTag = htmlTag;
+	}
+	
 	protected <T> void setDefaultPropertyValue(StyledPropertyKey<T> propertyName, AdaptiveProperty<T> value) {
 		if (styleSheet == null) {
 			return;
@@ -282,6 +285,7 @@ public class NodePrefab extends Prefab {
 		node.passThrough = passThrough;
 		node.tabIndex = tabIndex;
 		node.autoFocus = autoFocus;
+		node.htmlTag = htmlTag;
 		
 		if (padding != null) {
 			node.padding = padding.clone();

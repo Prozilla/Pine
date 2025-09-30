@@ -37,8 +37,8 @@ public class ComponentManager extends ECSManager {
 		}
 		
 		components.add(component);
-		component.entity = entity;
 		entity.components.add(component);
+		component.setEntity(entity);
 		
 		getTracker().addComponent();
 	}

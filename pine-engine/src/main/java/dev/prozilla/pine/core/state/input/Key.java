@@ -166,4 +166,5 @@ public enum Key implements IntEnum {
 	public static boolean isValid(int value) {
 		return EnumUtils.hasIntValue(values(), value);
 	}
+	
 }

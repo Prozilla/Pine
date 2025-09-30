@@ -40,7 +40,7 @@ public class TextureArrayLayer implements TextureBase, Cloneable<TextureArrayLay
 		
 		// Check if both textures are part of the same texture array
 		TextureArray otherTextureArray = other.getArray();
-		return otherTextureArray != null && textureArray.equals(otherTextureArray);
+		return textureArray.equals(otherTextureArray);
 	}
 	
 	@Override

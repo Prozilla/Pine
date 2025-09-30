@@ -70,17 +70,17 @@ public class ShaderProgram implements Destructible {
 		
 		int offset = 0;
 		for (int i = 0; i < names.length; i++) {
-			setVertexAttribute(names[i], sizes[i], stride * Float.BYTES, offset);
-			offset += sizes[i] * Float.BYTES;
+			setVertexAttribute(names[i], sizes[i], stride, offset);
+			offset += sizes[i];
 		}
 	}
 	
 	/**
 	 * Enables a vertex attribute and sets its pointer.
 	 * @param name The name of the attribute
-	 * @param size The size of the attribute, in bytes
-	 * @param stride The amount of bytes used per vertex
-	 * @param offset The offset from the first component, in bytes
+	 * @param size The amount of floats used for the attribute
+	 * @param stride The amount of floats used per vertex
+	 * @param offset The offset from the first component
 	 */
 	public void setVertexAttribute(CharSequence name, int size, int stride, int offset) {
 		int location = requireAttributeLocation(name);
@@ -107,14 +107,12 @@ public class ShaderProgram implements Destructible {
 	/**
 	 * Sets the vertex attribute pointer.
 	 * @param location Location of the vertex attribute
-	 * @param size     Number of values per vertex
-	 * @param stride   Offset between consecutive generic vertex attributes in
-	 *                 bytes
-	 * @param offset   Offset of the first component of the first generic vertex
-	 *                 attribute in bytes
+	 * @param size Number of values per vertex
+	 * @param stride Offset between consecutive generic vertex attributes in bytes
+	 * @param offset Offset of the first component of the first generic vertex attribute in bytes
 	 */
 	public void pointVertexAttribute(int location, int size, int stride, int offset) {
-		glVertexAttribPointer(location, size, GL_FLOAT, false, stride, offset);
+		glVertexAttribPointer(location, size, GL_FLOAT, false, stride * Float.BYTES, (long)offset * Float.BYTES);
 	}
 	
 	public int requireAttributeLocation(CharSequence name) throws RuntimeException {

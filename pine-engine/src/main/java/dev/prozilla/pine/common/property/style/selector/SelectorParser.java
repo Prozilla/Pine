@@ -33,6 +33,17 @@ public class SelectorParser extends SequentialParser<Selector> {
 					return fail("Invalid id selector");
 				}
 				parts.add(new IdSelector(id));
+			} else if (c == '>') {
+				moveCursor();
+				Selector parentSelector = createSelector(parts);
+				parts.clear();
+				if (parseRecursively(getRemainingInput())) {
+					Selector childSelector = getResult();
+					parts.add(new ChildSelector(parentSelector, childSelector));
+					moveCursorToEnd();
+				} else {
+					return fail(getError());
+				}
 			} else if (c == ':') {
 				if (getInput().startsWith(":not(", getCursor())) {
 					moveCursor(5);
@@ -45,7 +56,7 @@ public class SelectorParser extends SequentialParser<Selector> {
 						parts.add(new NotSelector(getResult()));
 						setCursor(end + 1);
 					} else {
-						fail(getError());
+						return fail(getError());
 					}
 				} else {
 					moveCursor(); // skip ':'
@@ -60,17 +71,26 @@ public class SelectorParser extends SequentialParser<Selector> {
 				String typeName = readWhile(SelectorParser::isValidNameChar);
 				parts.add(new TypeSelector(typeName));
 			} else {
-				// Skip unknown or invalid characters
+				// Skip meaningless characters
 				moveCursor();
 			}
 		}
 		
-		if (parts.isEmpty()) {
-			return fail("Empty selector");
-		} else if (parts.size() == 1) {
-			return succeed(parts.getFirst());
+		Selector result = createSelector(parts);
+		if (result == null) {
+			return fail(UNEXPECTED_END_OF_INPUT_ERROR);
 		} else {
-			return succeed(new SelectorCombo(parts.toArray(new Selector[0])));
+			return succeed(result);
+		}
+	}
+	
+	private static Selector createSelector(List<Selector> parts) {
+		if (parts.isEmpty()) {
+			return null;
+		} else if (parts.size() == 1) {
+			return parts.getFirst();
+		} else {
+			return new SelectorCombo(parts.toArray(new Selector[0]));
 		}
 	}
 	

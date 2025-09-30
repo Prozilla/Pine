@@ -16,7 +16,7 @@ public class TypeSelector extends Selector {
 	
 	@Override
 	public boolean matches(Node node) {
-		return node.getEntity().getName().toLowerCase().equals(type);
+		return type.equals(node.htmlTag);
 	}
 	
 	@Override

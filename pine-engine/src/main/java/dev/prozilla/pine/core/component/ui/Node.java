@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.component.ui;
 
 import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.event.Event;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventDispatcherProvider;
 import dev.prozilla.pine.common.math.dimension.Dimension;
@@ -11,8 +12,12 @@ import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.EntityEventType;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -55,10 +60,14 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public Vector4f borderImageSlice;
 	public boolean borderImageSliceFill;
 	
+	public String htmlTag;
 	public final Set<String> classes;
 	public final Set<String> modifiers;
 	
+	// Hierarchy
 	public NodeRoot root;
+	public Node parent;
+	public final List<Node> children;
 	
 	private final NodeEventDispatcher eventDispatcher;
 	
@@ -91,11 +100,35 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		modifiers = new HashSet<>();
 		
 		eventDispatcher = new NodeEventDispatcher();
+		children = new ArrayList<>();
 	}
 	
 	@Override
-	public String getName() {
-		return "RectTransform";
+	protected void onEntityChange(Entity oldEntity, Entity newEntity) {
+		if (oldEntity != null) {
+			oldEntity.removeListener(EntityEventType.PARENT_UPDATE, this::handleParentChange);
+			oldEntity.removeListener(EntityEventType.CHILDREN_UPDATE, this::handleChildrenChange);
+		}
+		if (entity != null) {
+			entity.addListener(EntityEventType.PARENT_UPDATE, this::handleParentChange);
+			entity.addListener(EntityEventType.CHILDREN_UPDATE, this::handleChildrenChange);
+		}
+	}
+	
+	public void updateHierarchy() {
+		handleParentChange(null);
+		handleChildrenChange(null);
+	}
+	
+	private void handleParentChange(Event<EntityEventType, Entity> event) {
+		parent = entity.getComponentInParent(Node.class, false);
+		invokeSelectorChangeEvent();
+	}
+	
+	private void handleChildrenChange(Event<EntityEventType, Entity> event) {
+		children.clear();
+		children.addAll(entity.getComponentsInChildren(Node.class));
+		invokeSelectorChangeEvent();
 	}
 	
 	/**
@@ -242,13 +275,13 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	public void addClass(String className) {
 		if (classes.add(className)) {
-			invoke(NodeEventType.SELECTOR_CHANGE, this);
+			invokeSelectorChangeEvent();
 		}
 	}
 	
 	public void removeClass(String className) {
 		if (classes.remove(className)) {
-			invoke(NodeEventType.SELECTOR_CHANGE, this);
+			invokeSelectorChangeEvent();
 		}
 	}
 	
@@ -266,14 +299,18 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	public void addModifier(String modifier) {
 		if (modifiers.add(modifier)) {
-			invoke(NodeEventType.SELECTOR_CHANGE, this);
+			invokeSelectorChangeEvent();
 		}
 	}
 	
 	public void removeModifier(String modifier) {
 		if (modifiers.remove(modifier)) {
-			invoke(NodeEventType.SELECTOR_CHANGE, this);
+			invokeSelectorChangeEvent();
 		}
+	}
+	
+	private void invokeSelectorChangeEvent() {
+		invoke(NodeEventType.SELECTOR_CHANGE, this);
 	}
 	
 	public void click() {
@@ -288,4 +325,5 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		Node focusedNode = getRoot().getFocusedNode();
 		return focusedNode != null && focusedNode.equals(this);
 	}
+	
 }

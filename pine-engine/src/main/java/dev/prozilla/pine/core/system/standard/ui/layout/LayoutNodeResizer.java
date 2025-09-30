@@ -64,8 +64,8 @@ public final class LayoutNodeResizer extends UpdateSystem {
 				gap = 0;
 			}
 			
-			int totalChildWidth = 0;
-			int totalChildHeight = 0;
+			float totalChildWidth = 0;
+			float totalChildHeight = 0;
 			
 			for (Node childNode : layoutNode.childNodes) {
 				if (childNode.absolutePosition) {

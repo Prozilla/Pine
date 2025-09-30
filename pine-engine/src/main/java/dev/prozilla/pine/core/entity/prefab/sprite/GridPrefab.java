@@ -19,6 +19,10 @@ public class GridPrefab extends Prefab {
 		setName("Grid");
 	}
 	
+	public void setSize(int size) {
+		this.size = size;
+	}
+	
 	@Override
 	protected void apply(Entity entity) {
 		entity.addComponent(new GridGroup(size));

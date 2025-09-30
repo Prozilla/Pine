@@ -29,6 +29,8 @@ public abstract class Selector implements Printable {
 	
 	public abstract boolean equals(Selector other);
 	
+	public abstract @NotNull String toString();
+	
 	/**
 	 * Matches all elements.
 	 */
