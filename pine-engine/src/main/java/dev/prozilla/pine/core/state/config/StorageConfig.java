@@ -13,8 +13,8 @@ public class StorageConfig {
 	public static final ConfigKey<Boolean> SAVE_ON_WRITE = new ConfigKey<>("saveOnWrite", Boolean.class);
 	
 	// Predefines options
-	public final ConfigOption<Boolean> enableLocalStorage = new ConfigOption<>(true, Objects::nonNull);
-	public final ConfigOption<Boolean> loadOnRead = new ConfigOption<>(true, Objects::nonNull);
-	public final ConfigOption<Boolean> saveOnWrite = new ConfigOption<>(true, Objects::nonNull);
+	public final ConfigOption<Boolean> enableLocalStorage = new ConfigOption<>(false, Objects::nonNull);
+	public final ConfigOption<Boolean> loadOnRead = new ConfigOption<>(false, Objects::nonNull);
+	public final ConfigOption<Boolean> saveOnWrite = new ConfigOption<>(false, Objects::nonNull);
 	
 }

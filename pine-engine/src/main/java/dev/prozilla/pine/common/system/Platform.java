@@ -2,7 +2,6 @@ package dev.prozilla.pine.common.system;
 
 import dev.prozilla.pine.common.util.ArrayUtils;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,16 +23,16 @@ public enum Platform {
 		String getUserPath(String userHome, String separator) {
 			String xdgData = System.getenv("XDG_DATA_HOME");
 			if (xdgData == null) {
-				return String.format("%s%s.local%sshare", userHome, separator, separator);
+				return String.format("%s.local%sshare", userHome, separator);
 			} else {
-				return xdgData;
+				return PathUtils.replaceFileSeparator(xdgData, separator);
 			}
 		}
 	},
 	MACOS(org.lwjgl.system.Platform.MACOSX) {
 		@Override
 		String getUserPath(String userHome, String separator) {
-			return String.format("%s%sLibrary%sApplication Support", userHome, separator, separator);
+			return String.format("%sLibrary%sApplication Support", userHome, separator);
 		}
 	},
 	WINDOWS(org.lwjgl.system.Platform.WINDOWS) {
@@ -43,7 +42,7 @@ public enum Platform {
 			if (userDirectory == null) {
 				userDirectory = userHome;
 			}
-			return String.format("%s%sAppData%sLocalLow", userDirectory, separator, separator);
+			return String.format("%sAppData%sLocalLow", PathUtils.addTrailingSlash(PathUtils.replaceFileSeparator(userDirectory, separator)), separator);
 		}
 	};
 	
@@ -86,12 +85,11 @@ public enum Platform {
 	}
 	
 	public static String getPersistentDataPath(String subDirectory, boolean createDirectories) {
-		String userHome = System.getProperty("user.home");
-		String separator = File.separator;
+		String userHome = PathUtils.addTrailingSlash(PathUtils.replaceFileSeparator(System.getProperty("user.home")));
 		
 		String userPath;
 		if (current != null) {
-			userPath = current.getUserPath(userHome, separator);
+			userPath = PathUtils.addTrailingSlash(current.getUserPath(userHome, "/"));
 		} else {
 			userPath = userHome;
 		}
@@ -105,7 +103,7 @@ public enum Platform {
 			}
 		}
 		
-		return persistentDataPath.toAbsolutePath().toString();
+		return PathUtils.addTrailingSlash(PathUtils.replaceFileSeparator(persistentDataPath.toAbsolutePath().toString()));
 	}
 	
 	/**

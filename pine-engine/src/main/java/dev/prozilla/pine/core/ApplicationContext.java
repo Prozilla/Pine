@@ -9,6 +9,7 @@ import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.input.Input;
+import dev.prozilla.pine.core.storage.LocalStorage;
 
 @ContextOf(Application.class)
 public interface ApplicationContext {
@@ -30,5 +31,7 @@ public interface ApplicationContext {
 	Logger getLogger();
 	
 	AudioDevice getAudioDevice();
+	
+	LocalStorage getLocalStorage();
 	
 }

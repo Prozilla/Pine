@@ -162,6 +162,11 @@ public class ApplicationBuilder {
 		return this;
 	}
 	
+	public ApplicationBuilder setEnableLocalStorage(boolean enableLocalStorage) {
+		config.storage.enableLocalStorage.setValue(enableLocalStorage);
+		return this;
+	}
+	
 	public Config getConfig() {
 		return config;
 	}

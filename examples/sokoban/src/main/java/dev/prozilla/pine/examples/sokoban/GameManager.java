@@ -39,8 +39,6 @@ public class GameManager extends ApplicationManager {
 			music.setLoop(true);
 			music.play();
 		}
-		
-		getLogger().logPath(application.getPersistentDataPath());
 	}
 	
 	@Override
@@ -49,4 +47,5 @@ public class GameManager extends ApplicationManager {
 			application.reloadScene();
 		}
 	}
+	
 }

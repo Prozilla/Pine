@@ -2,9 +2,11 @@ package dev.prozilla.pine.common.system;
 
 import dev.prozilla.pine.common.util.checks.Checks;
 
+import java.io.File;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
 
 /**
  * Utility class for handling path strings.
@@ -152,6 +154,14 @@ public final class PathUtils {
 			return "";
 		}
 		return path.substring(lastIndexOf + 1).toLowerCase();
+	}
+	
+	public static String replaceFileSeparator(String path) {
+		return replaceFileSeparator(path, "/");
+	}
+	
+	public static String replaceFileSeparator(String path, String separator) {
+		return path.replaceAll(Pattern.quote(File.separator), separator);
 	}
 	
 }

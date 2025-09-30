@@ -18,7 +18,7 @@ public class PlatformTest {
 	void testPersistentDataPath() {
 		String persistentDataPath = Platform.getPersistentDataPath("test");
 		assertNonBlankString(persistentDataPath);
-		assertEndsWith(persistentDataPath, "test");
+		assertEndsWith(persistentDataPath, "/test/");
 		if (ENABLE_LOGGING) {
 			TestLoggingExtension.log("Persistent data path: " + persistentDataPath);
 		}

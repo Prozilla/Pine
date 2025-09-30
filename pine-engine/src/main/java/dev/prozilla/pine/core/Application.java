@@ -10,6 +10,7 @@ import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.lwjgl.GLUtils;
 import dev.prozilla.pine.common.property.LazyProperty;
 import dev.prozilla.pine.common.property.SystemProperty;
+import dev.prozilla.pine.common.system.PathUtils;
 import dev.prozilla.pine.common.system.Platform;
 import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.core.audio.AudioDevice;
@@ -19,11 +20,10 @@ import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.*;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.input.Input;
-import dev.prozilla.pine.core.storage.Storage;
+import dev.prozilla.pine.core.storage.LocalStorage;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -50,7 +50,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	protected final LazyProperty<String> persistentDataPathProperty = new LazyProperty<>() {
 		@Override
 		protected String fetch() {
-			StringJoiner stringJoiner = new StringJoiner(File.separator);
+			StringJoiner stringJoiner = new StringJoiner("/");
 			if (config.companyName.exists()) {
 				stringJoiner.add(config.companyName.getValue());
 			}
@@ -58,7 +58,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 				stringJoiner.add(config.appName.getValue());
 			}
 			value = Platform.getPersistentDataPath(stringJoiner.toString(), config.autoCreateDirectories.getValue());
-			return value;
+			return PathUtils.addTrailingSlash(value);
 		}
 		
 	};
@@ -78,7 +78,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	protected final Tracker tracker;
 	protected final ModManager modManager;
 	protected final StateMachine<Application, ApplicationState> stateMachine;
-	protected final Storage localStorage;
+	protected final LocalStorage localStorage;
 	
 	protected ApplicationManager applicationManager;
 	
@@ -156,7 +156,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		window = mode.createWindow(this);
 		input = mode.createInput(this);
 		modManager = new ModManager(this);
-		localStorage = new Storage(this);
+		localStorage = new LocalStorage(this);
 		
 		shouldStop = false;
 		this.mode = mode;
@@ -767,6 +767,11 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	@Override
 	public AudioDevice getAudioDevice() {
 		return audioDevice;
+	}
+	
+	@Override
+	public LocalStorage getLocalStorage() {
+		return localStorage;
 	}
 	
 	/**

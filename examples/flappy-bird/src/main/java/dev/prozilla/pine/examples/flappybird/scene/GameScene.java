@@ -7,6 +7,7 @@ import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
 import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadButton;
+import dev.prozilla.pine.core.storage.LocalStorage;
 import dev.prozilla.pine.examples.flappybird.EntityTag;
 import dev.prozilla.pine.examples.flappybird.FlappyBird;
 import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
@@ -130,5 +131,11 @@ public class GameScene extends SceneBase {
 	public void endGame() {
 		gameOver = true;
 		player.getComponent(PlayerData.class).resetVelocity();
+		
+		LocalStorage localStorage = getLocalStorage();
+		if (!localStorage.hasItem("highscore") || localStorage.getInt("highscore") < playerScore) {
+			localStorage.setItem("highscore", playerScore);
+			getLogger().log(localStorage.getInt("highscore"));
+		}
 	}
 }
