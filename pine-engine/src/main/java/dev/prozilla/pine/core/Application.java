@@ -19,6 +19,7 @@ import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.*;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.input.Input;
+import dev.prozilla.pine.core.storage.Storage;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
@@ -77,6 +78,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	protected final Tracker tracker;
 	protected final ModManager modManager;
 	protected final StateMachine<Application, ApplicationState> stateMachine;
+	protected final Storage localStorage;
 	
 	protected ApplicationManager applicationManager;
 	
@@ -154,6 +156,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		window = mode.createWindow(this);
 		input = mode.createInput(this);
 		modManager = new ModManager(this);
+		localStorage = new Storage(this);
 		
 		shouldStop = false;
 		this.mode = mode;
@@ -236,6 +239,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		currentScene.init();
 		loadIcons();
 		modManager.init();
+		localStorage.init();
 		
 		stateMachine.changeState(ApplicationState.LOADING);
 	}
@@ -469,6 +473,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		if (isStandalone()) {
 			input.destroy();
 			modManager.destroy();
+			localStorage.destroy();
 			
 			// Reset resources
 			AssetPools.clear();

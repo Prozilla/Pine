@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common;
 
+import dev.prozilla.pine.common.util.ObjectUtils;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -32,12 +33,8 @@ public interface Cloneable<O extends Cloneable<O>> {
 	 * @param <C> The type of cloneable
 	 */
 	@Contract("null -> null; !null -> new")
-	static <C extends Cloneable<C>> C clone(C cloneable) {
-		if (cloneable == null) {
-			return null;
-		}
-		
-		return cloneable.clone();
+	static <C extends Cloneable<C>> C createClone(C cloneable) {
+		return ObjectUtils.preserveNull(cloneable, Cloneable::clone);
 	}
 	
 }

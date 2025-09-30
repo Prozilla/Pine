@@ -1,6 +1,13 @@
 package dev.prozilla.pine.common.util;
 
+import org.jetbrains.annotations.Contract;
+
 public class StringUtils {
+	
+	@Contract("null -> null; !null -> !null")
+	public static String toString(Object object) {
+		return ObjectUtils.preserveNull(object, Object::toString);
+	}
 	
 	public static int findClosingParenthesis(String input, int openIndex) {
 		int depth = 0;

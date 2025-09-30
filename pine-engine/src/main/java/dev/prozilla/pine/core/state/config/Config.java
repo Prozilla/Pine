@@ -39,6 +39,8 @@ public class Config {
 	public final LogConfig logging = new LogConfig();
 	/** Options related to the application window. */
 	public final WindowConfig window = new WindowConfig();
+	/** Options related to storage. */
+	public final StorageConfig storage = new StorageConfig();
 	
 	private final Logger logger;
 	
@@ -85,6 +87,10 @@ public class Config {
 		addOption(WindowConfig.SHOW_DECORATIONS, window.showDecorations);
 		addOption(WindowConfig.FULLSCREEN, window.fullscreen);
 		addOption(WindowConfig.ENABLE_VSYNC, window.enableVSync);
+		
+		addOption(StorageConfig.ENABLE_LOCAL_STORAGE, storage.enableLocalStorage);
+		addOption(StorageConfig.LOAD_ON_READ, storage.loadOnRead);
+		addOption(StorageConfig.SAVE_ON_WRITE, storage.saveOnWrite);
 	}
 	
 	/**
