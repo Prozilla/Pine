@@ -53,10 +53,10 @@ public class LocalStorage extends Storage {
 		boolean changed = false;
 		for (String key : properties.stringPropertyNames()) {
 			String value = properties.getProperty(key);
-			if (!Objects.equals(entries.get(key), value)) {
+			if (!Objects.equals(items.get(key), value)) {
 				changed = true;
 			}
-			entries.put(key, value);
+			items.put(key, value);
 		}
 		if (changed && shouldSave()) {
 			save();
@@ -73,7 +73,7 @@ public class LocalStorage extends Storage {
 		getLogger().logPath("Saving local storage", path);
 		File file = new File(path);
 		
-		if (entries.isEmpty()) {
+		if (items.isEmpty()) {
 			// Delete the file if the store is empty
 			if (file.exists()) {
 				file.delete();
@@ -82,7 +82,7 @@ public class LocalStorage extends Storage {
 		}
 		
 		Properties properties = new Properties();
-		for (Map.Entry<String, String> entry : entries.entrySet()) {
+		for (Map.Entry<String, String> entry : items.entrySet()) {
 			properties.setProperty(entry.getKey(), entry.getValue());
 		}
 		

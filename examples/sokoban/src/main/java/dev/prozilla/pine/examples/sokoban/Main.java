@@ -16,6 +16,7 @@ public class Main {
 		applicationBuilder.setTargetFps(120);
 		applicationBuilder.setApplicationManagerFactory(GameManager::new);
 		applicationBuilder.getRenderConfig().snapPixels.setValue(true);
+		applicationBuilder.setEnableLocalStorage(true);
 		
 		if (!Application.isDevMode()) {
 			applicationBuilder.setFullscreen(true);

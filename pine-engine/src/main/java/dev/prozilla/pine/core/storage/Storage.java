@@ -9,6 +9,7 @@ import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DimensionParser;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.dimension.DualDimensionParser;
+import dev.prozilla.pine.common.math.vector.*;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.ColorParser;
 import dev.prozilla.pine.common.util.BooleanUtils;
@@ -26,8 +27,8 @@ import java.util.*;
  */
 public abstract class Storage implements Initializable, Destructible, Transceivable<Storage>, Printable {
 
-	/** The entries in this storage. */
-	protected final Map<String, String> entries;
+	/** The items in this store. */
+	protected final Map<String, String> items;
 	protected final Application application;
 	protected final StorageConfig config;
 	protected boolean isInitialized;
@@ -38,12 +39,12 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	public Storage(Application application) {
 		this.application = application;
 		config = application.getConfig().storage;
-		entries = new HashMap<>();
+		items = new HashMap<>();
 		isInitialized = false;
 	}
 	
 	/**
-	 * Loads entries into this store.
+	 * Loads items into this store.
 	 */
 	@Override
 	public void init() {
@@ -56,13 +57,13 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	}
 	
 	/**
-	 * Saves the entries from this store and clears the memory.
+	 * Saves the items from this store and clears the memory.
 	 */
 	@Override
 	public void destroy() {
 		save();
 		
-		// We do this to make sure we don't save after removing all entries,
+		// We do this to make sure we don't save after removing all items,
 		// Since saving is not allowed if the store has not been initialized yet
 		// This also has the added benefit of forcing the store to reload if it's used after being destroyed
 		isInitialized = false;
@@ -71,17 +72,17 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	}
 	
 	/**
-	 * Overwrites the entries in this store with the entries from another store.
-	 * @param source The store to read the entries from
+	 * Overwrites the items in this store with the items from another store.
+	 * @param source The store to read the items from
 	 */
 	public void overwrite(Storage source) {
-		entries.clear();
+		items.clear();
 		receive(source);
 	}
 	
 	/**
-	 * Copies the entries of this store to another store.
-	 * @param target The store to copy the entries to
+	 * Copies the items of this store to another store.
+	 * @param target The store to copy the items to
 	 */
 	@Override
 	public void transmit(Storage target) {
@@ -89,7 +90,7 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 		if (shouldLoad()) {
 			load();
 		}
-		target.setItems(entries.entrySet());
+		target.setItems(items.entrySet());
 	}
 	
 	@Override
@@ -98,21 +99,81 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	}
 	
 	/**
-	 * Checks if this store has an entry with a given key.
-	 * @param key The key of the entry
-	 * @return {@code true} if an entry exists in this store with the given key.
+	 * Checks if this store has an item with a given key.
+	 * @param key The key of the item
+	 * @return {@code true} if an item exists in this store with the given key.
 	 */
 	public boolean hasItem(String key) {
 		if (shouldLoad()) {
 			load();
 		}
-		return entries.containsKey(key);
+		return items.containsKey(key);
 	}
 	
 	/**
-	 * Returns the value of an entry in this store with a given key by parsing it.
-	 * @param key The key of the entry
-	 * @return The parsed value of the entry, or {@code null} if the entry does not exist or the parsing failed.
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
+	 * @return The parsed value of the item, or {@code null} if the item does not exist or the parsing failed.
+	 * @see Vector2f.Parser
+	 */
+	public Vector2f getVector2f(String key) {
+		return getItem(key, new Vector2f.Parser());
+	}
+	
+	/**
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
+	 * @return The parsed value of the item, or {@code null} if the item does not exist or the parsing failed.
+	 * @see Vector2i.Parser
+	 */
+	public Vector2i getVector2i(String key) {
+		return getItem(key, new Vector2i.Parser());
+	}
+	
+	/**
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
+	 * @return The parsed value of the item, or {@code null} if the item does not exist or the parsing failed.
+	 * @see Vector3f.Parser
+	 */
+	public Vector3f getVector3f(String key) {
+		return getItem(key, new Vector3f.Parser());
+	}
+	
+	/**
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
+	 * @return The parsed value of the item, or {@code null} if the item does not exist or the parsing failed.
+	 * @see Vector3i.Parser
+	 */
+	public Vector3i getVector3i(String key) {
+		return getItem(key, new Vector3i.Parser());
+	}
+	
+	/**
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
+	 * @return The parsed value of the item, or {@code null} if the item does not exist or the parsing failed.
+	 * @see Vector4f.Parser
+	 */
+	public Vector4f getVector4f(String key) {
+		return getItem(key, new Vector4f.Parser());
+	}
+	
+	/**
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
+	 * @return The parsed value of the item, or {@code null} if the item does not exist or the parsing failed.
+	 * @see Vector4i.Parser
+	 */
+	public Vector4i getVector4i(String key) {
+		return getItem(key, new Vector4i.Parser());
+	}
+	
+	/**
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
+	 * @return The parsed value of the item, or {@code null} if the item does not exist or the parsing failed.
 	 * @see DimensionParser
 	 */
 	public DimensionBase getDimension(String key) {
@@ -120,9 +181,9 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	}
 	
 	/**
-	 * Returns the value of an entry in this store with a given key by parsing it.
-	 * @param key The key of the entry
-	 * @return The parsed value of the entry, or {@code null} if the entry does not exist or the parsing failed.
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
+	 * @return The parsed value of the item, or {@code null} if the item does not exist or the parsing failed.
 	 * @see DualDimensionParser
 	 */
 	public DualDimension getDualDimension(String key) {
@@ -130,9 +191,9 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	}
 	
 	/**
-	 * Returns the value of an entry in this store with a given key by parsing it.
-	 * @param key The key of the entry
-	 * @return The parsed value of the entry, or {@code null} if the entry does not exist or the parsing failed.
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
+	 * @return The parsed value of the item, or {@code null} if the item does not exist or the parsing failed.
 	 * @see ColorParser
 	 */
 	public Color getColor(String key) {
@@ -140,10 +201,10 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	}
 	
 	/**
-	 * Returns the value of an entry in this store with a given key by parsing it.
-	 * @param key The key of the entry
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
 	 * @param parser The parser to use
-	 * @return The parsed value of the entry, or {@code null} if the entry does not exist or the parsing failed.
+	 * @return The parsed value of the item, or {@code null} if the item does not exist or the parsing failed.
 	 */
 	public <T> T getItem(String key, Parser<T> parser) {
 		Checks.isNotNull(parser, "parser");
@@ -156,9 +217,9 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	}
 	
 	/**
-	 * Returns the value of an entry in this store with a given key by parsing it.
-	 * @param key The key of the entry
-	 * @return The parsed value of the entry, or {@code 0} if the entry does not exist.
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
+	 * @return The parsed value of the item, or {@code 0} if the item does not exist.
 	 * @see Integer#parseInt(String)
 	 * @throws NumberFormatException If the parsing failed.
 	 */
@@ -171,9 +232,9 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	}
 	
 	/**
-	 * Returns the value of an entry in this store with a given key by parsing it.
-	 * @param key The key of the entry
-	 * @return The parsed value of the entry, or {@code false} if the entry does not exist.
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
+	 * @return The parsed value of the item, or {@code false} if the item does not exist.
 	 * @see Boolean#parseBoolean(String) 
 	 */
 	public boolean getBoolean(String key) {
@@ -181,19 +242,19 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	}
 	
 	/**
-	 * Returns the value of an entry in this store with a given key.
-	 * @param key The key of the entry
-	 * @return The value of the entry, or {@code null} if the entry does not exist.
+	 * Returns the value of the item in this store with a given key.
+	 * @param key The key of the item
+	 * @return The value of the item, or {@code null} if the item does not exist.
 	 */
 	public String getItem(String key) {
 		if (shouldLoad()) {
 			load();
 		}
-		return entries.get(key);
+		return items.get(key);
 	}
 	
 	/**
-	 * Sets the values of multiple entries.
+	 * Sets the values of multiple items.
 	 * @param items The key and value pairs
 	 */
 	public <O> void setItems(Map<String, O> items) {
@@ -201,7 +262,7 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	}
 	
 	/**
-	 * Sets the values of multiple entries.
+	 * Sets the values of multiple items.
 	 * @param items The key and value pairs
 	 */
 	protected <O> void setItems(Set<Map.Entry<String, O>> items) {
@@ -212,10 +273,10 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 		for (Map.Entry<String, O> item : items) {
 			String key = item.getKey();
 			String value = StringUtils.toString(item.getValue());
-			if (!Objects.equals(entries.get(key), value)) {
+			if (!Objects.equals(this.items.get(key), value)) {
 				changed = true;
 			}
-			entries.put(key, value);
+			this.items.put(key, value);
 		}
 		if (changed && shouldSave()) {
 			save();
@@ -223,8 +284,8 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	}
 	
 	/**
-	 * Sets the value of an entry with a given key to the string representation of an object.
-	 * @param key The key of the entry
+	 * Sets the value of the item with a given key to the string representation of an object.
+	 * @param key The key of the item
 	 * @param value The new value
 	 * @see StringUtils#toString(Object)
 	 */
@@ -233,73 +294,86 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	}
 	
 	/**
-	 * Sets the value of an entry with a given key.
-	 * @param key The key of the entry
+	 * Sets the value of the item with a given key.
+	 * @param key The key of the item
 	 * @param value The new value
 	 */
 	public void setItem(String key, String value) {
-		if (Objects.equals(entries.get(key), value)) {
+		if (Objects.equals(items.get(key), value)) {
 			return;
 		}
-		entries.put(key, value);
+		items.put(key, value);
 		if (shouldSave()) {
 			save();
 		}
 	}
 	
 	/**
-	 * Removes an entry with a given key.
-	 * @param key The key of the entry
+	 * Removes the item with a given key.
+	 * @param key The key of the item
 	 */
 	public void removeItem(String key) {
-		if (entries.remove(key) != null && shouldSave()) {
+		if (items.remove(key) != null && shouldSave()) {
 			save();
 		}
 	}
 	
 	/**
-	 * Removes all entries from this store.
+	 * Removes all items from this store.
+	 */
+	public void removeAll() {
+		if (shouldLoad()) {
+			load();
+		}
+		if (items.isEmpty()) {
+			return;
+		}
+		clear();
+	}
+	
+	/**
+	 * Removes all items from this store that are currently in memory.
 	 */
 	public void clear() {
-		entries.clear();
+		items.clear();
 		if (shouldSave()) {
 			save();
 		}
 	}
 	
 	/**
-	 * Returns the amount of entries in this store.
-	 * @return The amount of entries in this store.
+	 * Returns the amount of items in this store.
+	 * @return The amount of items in this store.
 	 */
 	public int size() {
 		if (shouldLoad()) {
 			load();
 		}
-		return entries.size();
+		return items.size();
 	}
 	
 	/**
-	 * Returns the entries in this store.
-	 * @return The entries in this store.
+	 * Returns the items in this store.
+	 * @return The items in this store.
 	 */
-	public Set<Map.Entry<String, String>> entries() {
-		return entries.entrySet();
+	public Set<Map.Entry<String, String>> items() {
+		return items.entrySet();
 	}
 	
 	/**
-	 * Returns the keys of the entries in this store.
-	 * @return The keys of the entries in this store.
+	 * Returns the keys of the items in this store.
+	 * @return The keys in this store.
 	 */
 	public Set<String> keys() {
-		return entries.keySet();
+		return items.keySet();
 	}
 	
 	/**
-	 * Returns the values of the entries in this store.
-	 * @return The values of the entries in this store.
+	 * Returns the values of the items in this store.
+	 * @return The values in this store.
 	 */
 	public Collection<String> values() {
-		return entries.values();
+		return items.values();
 	}
 	
 	protected boolean shouldLoad() {
@@ -311,12 +385,12 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	}
 	
 	/**
-	 * Loads entries into this store.
+	 * Loads items into this store.
 	 */
 	protected abstract void load();
 	
 	/**
-	 * Saves entries from this store.
+	 * Saves the items from this store.
 	 */
 	protected abstract void save();
 	
@@ -331,7 +405,7 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	
 	@Override
 	public @NotNull String toString() {
-		return entries.toString();
+		return items.toString();
 	}
 	
 }

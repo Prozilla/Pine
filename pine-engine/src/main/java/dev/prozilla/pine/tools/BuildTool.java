@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.logging.handler.StandardErrorLogHandler;
 import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
 import dev.prozilla.pine.common.system.Ansi;
 import dev.prozilla.pine.common.system.FileSystem;
+import dev.prozilla.pine.common.system.Platform;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
 
@@ -112,7 +113,7 @@ public class BuildTool {
 	private static Path downloadAndExtractJRE(BuildConfig config, Path buildDir) throws IOException {
 		logger.log(String.format("Downloading and preparing JRE... (version: %S)", config.getJreVersion()));
 		
-		String os = System.getProperty("os.name").toLowerCase().contains("win") ? "windows" : "linux";
+		String os = Platform.get().getIdentifier();
 		String jreUrl = "https://api.adoptium.net/v3/binary/latest/%s/ga/%s/x64/jdk/hotspot/normal/adoptium".formatted(config.getJreVersion(), os);
 		
 		Path tempZip = Files.createTempFile("jre", ".zip");
