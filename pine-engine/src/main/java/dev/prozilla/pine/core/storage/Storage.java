@@ -16,6 +16,7 @@ import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.common.util.Parser;
 import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
+import dev.prozilla.pine.common.util.parser.ParseFunction;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.config.StorageConfig;
 import org.jetbrains.annotations.NotNull;
@@ -214,6 +215,21 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 		}
 		parser.parse(value);
 		return parser.getResult();
+	}
+	
+	/**
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
+	 * @param parseFunction The parsing function to use
+	 * @return The parsed value of the item, or {@code null} if the item does not exist or the parsing failed.
+	 */
+	public <T> T getItem(String key, ParseFunction<T> parseFunction) {
+		Checks.isNotNull(parseFunction, "parseFunction");
+		String value = getItem(key);
+		if (value == null) {
+			return null;
+		}
+		return parseFunction.parse(value);
 	}
 	
 	/**
