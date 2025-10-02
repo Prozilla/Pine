@@ -2,7 +2,7 @@ package dev.prozilla.pine.core.component.particle;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.property.FixedProperty;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.core.entity.prefab.particle.ParticlePrefab;
 
 /**
@@ -10,24 +10,24 @@ import dev.prozilla.pine.core.entity.prefab.particle.ParticlePrefab;
  */
 public class ParticleFlowEmitter extends ParticleEmitter {
 	
-	public VariableProperty<Float> spawnDelay;
+	public Property<Float> spawnDelay;
 	public float timeUntilSpawn;
 	public boolean isSpawning;
 	public Vector2f origin;
 	public boolean applyTimeScale;
 	
-	public static final VariableProperty<Float> DEFAULT_SPAWN_DELAY = new FixedProperty<>(1f);
+	public static final Property<Float> DEFAULT_SPAWN_DELAY = new FixedProperty<>(1f);
 	public static final boolean APPLY_TIME_SCALE_DEFAULT = true;
 	
 	public ParticleFlowEmitter(ParticlePrefab particlePrefab) {
 		this(particlePrefab, DEFAULT_SPAWN_DELAY);
 	}
 	
-	public ParticleFlowEmitter(ParticlePrefab particlePrefab, VariableProperty<Float> spawnDelay) {
+	public ParticleFlowEmitter(ParticlePrefab particlePrefab, Property<Float> spawnDelay) {
 		this(particlePrefab, spawnDelay, DEFAULT_COUNT);
 	}
 	
-	public ParticleFlowEmitter(ParticlePrefab particlePrefab, VariableProperty<Float> spawnDelay, VariableProperty<Integer> count) {
+	public ParticleFlowEmitter(ParticlePrefab particlePrefab, Property<Float> spawnDelay, Property<Integer> count) {
 		super(particlePrefab, count);
 		this.spawnDelay = spawnDelay;
 		timeUntilSpawn = 0;

@@ -1,6 +1,5 @@
 package dev.prozilla.pine.examples.sokoban.entity.ui;
 
-import dev.prozilla.pine.common.property.SuppliedProperty;
 import dev.prozilla.pine.core.entity.prefab.ui.ImagePrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
@@ -16,7 +15,7 @@ public class GoalCounterPrefab extends LayoutPrefab {
 		
 		TextPrefab textPrefab = new TextPrefab("0/0");
 		textPrefab.setFont(GameManager.instance.font);
-		textPrefab.setText(new SuppliedProperty<>(() -> GameManager.instance.completedCrates + "/" + GameManager.instance.totalCrates));
+		textPrefab.setText(() -> GameManager.instance.completedCrates + "/" + GameManager.instance.totalCrates);
 		
 		ImagePrefab imagePrefab = new ImagePrefab("images/crates/crate_02.png");
 		imagePrefab.addClass("goal-counter-image");

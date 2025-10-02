@@ -1,12 +1,12 @@
 package dev.prozilla.pine.common.property.adaptive;
 
 import dev.prozilla.pine.common.math.vector.GridAlignment;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 
 public final class AdaptiveGridAlignmentProperty extends AdaptiveProperty<GridAlignment> {
 	
-	public AdaptiveGridAlignmentProperty(VariableProperty<GridAlignment> variableProperty) {
-		super(variableProperty);
+	public AdaptiveGridAlignmentProperty(Property<GridAlignment> property) {
+		super(property);
 	}
 	
 	public AdaptiveGridAlignmentProperty(GridAlignment fixedValue) {
@@ -29,7 +29,7 @@ public final class AdaptiveGridAlignmentProperty extends AdaptiveProperty<GridAl
 	 * Converts any grid alignment property into an adaptive property.
 	 * @param property The property to adapt
 	 */
-	public static AdaptiveGridAlignmentProperty adapt(VariableProperty<GridAlignment> property) {
+	public static AdaptiveGridAlignmentProperty adapt(Property<GridAlignment> property) {
 		return new AdaptiveGridAlignmentProperty(property);
 	}
 	

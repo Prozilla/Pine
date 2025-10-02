@@ -6,13 +6,13 @@ import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
-import dev.prozilla.pine.common.property.SuppliedProperty;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextButtonPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
+import dev.prozilla.pine.core.storage.LocalStorage;
 import dev.prozilla.pine.examples.flappybird.FlappyBird;
 
 public class MenuPrefab extends NodeRootPrefab {
@@ -60,13 +60,8 @@ public class MenuPrefab extends NodeRootPrefab {
 		// High score
 		TextPrefab textPrefab = new TextPrefab("Highscore: 0", Color.black());
 		textPrefab.setFont(font);
-		textPrefab.setText(new SuppliedProperty<>(() -> {
-			if (entity.getLocalStorage().hasItem("highscore")) {
-				return "Highscore: " + entity.getLocalStorage().getItem("highscore");
-			} else {
-				return "Highscore: 0";
-			}
-		}));
+		LocalStorage localStorage = entity.getLocalStorage();
+		textPrefab.setText(localStorage.stringProperty("highscore").replaceNull("0").prepend("Highscore: "));
 		layout.addChild(textPrefab);
 	}
 }

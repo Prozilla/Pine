@@ -1,18 +1,18 @@
 package dev.prozilla.pine.common.property.adaptive;
 
 import dev.prozilla.pine.common.Animatable;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.animated.AnimatedProperty;
 
 /**
- * Base class for an optimized property that can either have a fixed value or be dynamically changed by a {@link VariableProperty}.
+ * Base class for an optimized property that can either have a fixed value or be dynamically changed by a {@link Property}.
  *
  * <p>
- *     This class provides a more efficient alternative to using {@link VariableProperty} exclusively,
+ *     This class provides a more efficient alternative to using {@link Property} exclusively,
  *     allowing for fixed values when dynamic behavior is unnecessary.
  * </p>
  * <ul>
- *     <li>If a {@link VariableProperty} is provided, the property updates dynamically.</li>
+ *     <li>If a {@link Property} is provided, the property updates dynamically.</li>
  *     <li>If an {@link AnimatedProperty} is provided, the property will be updated each frame by the animation.</li>
  *     <li>If neither is provided, the property remains fixed.</li>
  * </ul>
@@ -20,19 +20,19 @@ import dev.prozilla.pine.common.property.animated.AnimatedProperty;
  *     Certain implementations store fixed values as primitives to optimize performance and avoid unnecessary (un)boxing.
  * </p>
  */
-public abstract class AdaptivePropertyBase<T> extends VariableProperty<T> implements Animatable {
+public abstract class AdaptivePropertyBase<T> implements Property<T>, Animatable {
 
-	protected final VariableProperty<T> variableProperty;
+	protected final Property<T> property;
 	protected final AnimatedProperty<T> animatedProperty;
 	
 	/**
 	 * Creates a new property with a dynamic value if {@code variableProperty} is not {@code null}, or a fixed value.
-	 * @param variableProperty Variable property that determines the value of this property
+	 * @param property Variable property that determines the value of this property
 	 */
-	public AdaptivePropertyBase(VariableProperty<T> variableProperty) {
-		this.variableProperty = variableProperty;
+	public AdaptivePropertyBase(Property<T> property) {
+		this.property = property;
 		
-		if (variableProperty instanceof AnimatedProperty<T> animatedProperty) {
+		if (property instanceof AnimatedProperty<T> animatedProperty) {
 			this.animatedProperty = animatedProperty;
 		} else {
 			this.animatedProperty = null;
@@ -63,7 +63,7 @@ public abstract class AdaptivePropertyBase<T> extends VariableProperty<T> implem
 	 * Checks whether this property has a dynamic value.
 	 */
 	public boolean isDynamic() {
-		return variableProperty != null;
+		return property != null;
 	}
 	
 	/**

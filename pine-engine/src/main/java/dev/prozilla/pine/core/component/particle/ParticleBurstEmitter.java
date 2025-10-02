@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.component.particle;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.particle.ParticlePrefab;
 
@@ -14,7 +14,7 @@ public class ParticleBurstEmitter extends ParticleEmitter {
 		this(particlePrefab, DEFAULT_COUNT);
 	}
 	
-	public ParticleBurstEmitter(ParticlePrefab particlePrefab, VariableProperty<Integer> count) {
+	public ParticleBurstEmitter(ParticlePrefab particlePrefab, Property<Integer> count) {
 		super(particlePrefab, count);
 	}
 	

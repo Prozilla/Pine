@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.math.dimension.DualDimension;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveDualDimensionProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
@@ -27,7 +27,7 @@ public final class StyledDualDimensionProperty extends StyledProperty<DualDimens
 	}
 	
 	@Override
-	protected AdaptiveProperty<DualDimension> createAdaptiveProperty(VariableProperty<DualDimension> property) {
+	protected AdaptiveProperty<DualDimension> createAdaptiveProperty(Property<DualDimension> property) {
 		return AdaptiveDualDimensionProperty.adapt(property);
 	}
 	

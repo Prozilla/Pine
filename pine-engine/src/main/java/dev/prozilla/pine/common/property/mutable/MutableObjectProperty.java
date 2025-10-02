@@ -1,18 +1,18 @@
-package dev.prozilla.pine.common.property;
+package dev.prozilla.pine.common.property.mutable;
 
 import java.util.Objects;
 
 /**
  * A property whose value can be changed using a setter.
  */
-public class MutableProperty<T> extends VariableProperty<T> {
+public class MutableObjectProperty<T> implements MutableProperty<T> {
 	
 	private T value;
 	
 	/**
 	 * Creates a mutable property without an initial value.
 	 */
-	public MutableProperty() {
+	public MutableObjectProperty() {
 		this(null);
 	}
 	
@@ -20,15 +20,11 @@ public class MutableProperty<T> extends VariableProperty<T> {
 	 * Creates a mutable property with an initial value.
 	 * @param initialValue The initial value
 	 */
-	public MutableProperty(T initialValue) {
+	public MutableObjectProperty(T initialValue) {
 		value = initialValue;
 	}
 	
-	/**
-	 * Sets the value of this property.
-	 * @param value The new value
-	 * @return {@code true} if the value was changed.
-	 */
+	@Override
 	public boolean setValue(T value) {
 		if (Objects.equals(this.value, value)) {
 			return false;

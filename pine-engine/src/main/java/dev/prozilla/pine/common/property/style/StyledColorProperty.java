@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.property.ColorProperty;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
@@ -33,7 +33,7 @@ public final class StyledColorProperty extends StyledProperty<Color> implements 
 	}
 	
 	@Override
-	protected AdaptiveProperty<Color> createAdaptiveProperty(VariableProperty<Color> property) {
+	protected AdaptiveProperty<Color> createAdaptiveProperty(Property<Color> property) {
 		return AdaptiveColorProperty.adapt(property);
 	}
 	

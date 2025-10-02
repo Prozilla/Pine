@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.property.style;
 
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveDistributionProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
@@ -27,7 +27,7 @@ public final class StyledDistributionProperty extends StyledProperty<LayoutNode.
 	}
 	
 	@Override
-	protected AdaptiveProperty<LayoutNode.Distribution> createAdaptiveProperty(VariableProperty<LayoutNode.Distribution> property) {
+	protected AdaptiveProperty<LayoutNode.Distribution> createAdaptiveProperty(Property<LayoutNode.Distribution> property) {
 		return AdaptiveDistributionProperty.adapt(property);
 	}
 	

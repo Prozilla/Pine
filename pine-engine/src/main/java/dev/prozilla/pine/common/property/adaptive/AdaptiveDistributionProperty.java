@@ -1,12 +1,12 @@
 package dev.prozilla.pine.common.property.adaptive;
 
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 
 public final class AdaptiveDistributionProperty extends AdaptiveProperty<LayoutNode.Distribution> {
 	
-	public AdaptiveDistributionProperty(VariableProperty<LayoutNode.Distribution> variableProperty) {
-		super(variableProperty);
+	public AdaptiveDistributionProperty(Property<LayoutNode.Distribution> property) {
+		super(property);
 	}
 	
 	public AdaptiveDistributionProperty(LayoutNode.Distribution fixedValue) {
@@ -29,7 +29,7 @@ public final class AdaptiveDistributionProperty extends AdaptiveProperty<LayoutN
 	 * Converts any distribution property into an adaptive property.
 	 * @param property The property to adapt
 	 */
-	public static AdaptiveDistributionProperty adapt(VariableProperty<LayoutNode.Distribution> property) {
+	public static AdaptiveDistributionProperty adapt(Property<LayoutNode.Distribution> property) {
 		return new AdaptiveDistributionProperty(property);
 	}
 	

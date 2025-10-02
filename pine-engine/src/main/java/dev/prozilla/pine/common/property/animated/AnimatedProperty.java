@@ -1,11 +1,11 @@
 package dev.prozilla.pine.common.property.animated;
 
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 
 /**
  * A property with a value that changes over time.
  */
-public abstract class AnimatedProperty<T> extends VariableProperty<T> {
+public abstract class AnimatedProperty<T> implements Property<T> {
 
 	protected T start;
 	protected T end;

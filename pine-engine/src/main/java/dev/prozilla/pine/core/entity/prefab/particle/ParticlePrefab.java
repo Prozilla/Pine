@@ -5,8 +5,8 @@ import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.easing.EasingFunction;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.property.FixedProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.VariableColorProperty;
-import dev.prozilla.pine.common.property.VariableProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.variable.VariableAnimatedColorProperty;
 import dev.prozilla.pine.common.property.animated.variable.VariableAnimatedFloatProperty;
@@ -18,10 +18,10 @@ import dev.prozilla.pine.core.entity.prefab.sprite.SpritePrefab;
 
 public class ParticlePrefab extends SpritePrefab {
 	
-	protected VariableProperty<Color> color;
-	protected VariableProperty<Float> lifetime;
-	protected VariableProperty<Vector2f> velocity;
-	protected VariableProperty<Float> scale;
+	protected Property<Color> color;
+	protected Property<Float> lifetime;
+	protected Property<Vector2f> velocity;
+	protected Property<Float> scale;
 	protected boolean applyTimeScale;
 	
 	protected VariableAnimatedFloatProperty scaleAnimation;
@@ -29,9 +29,9 @@ public class ParticlePrefab extends SpritePrefab {
 	
 	protected int frameCount;
 	protected boolean animateSprite;
-	protected VariableProperty<Integer> initialFrame;
+	protected Property<Integer> initialFrame;
 	
-	public static final VariableProperty<Float> DEFAULT_LIFETIME = new FixedProperty<>(5f);
+	public static final Property<Float> DEFAULT_LIFETIME = new FixedProperty<>(5f);
 	
 	public ParticlePrefab(String texturePath) {
 		this(AssetPools.textures.load(texturePath));
@@ -41,11 +41,11 @@ public class ParticlePrefab extends SpritePrefab {
 		this(texture, DEFAULT_LIFETIME);
 	}
 	
-	public ParticlePrefab(String texturePath, VariableProperty<Float> lifetime) {
+	public ParticlePrefab(String texturePath, Property<Float> lifetime) {
 		this(AssetPools.textures.load(texturePath), lifetime);
 	}
 	
-	public ParticlePrefab(TextureBase texture, VariableProperty<Float> lifetime) {
+	public ParticlePrefab(TextureBase texture, Property<Float> lifetime) {
 		super(texture);
 		this.lifetime = lifetime;
 		frameCount = ParticleRenderer.DEFAULT_FRAME_COUNT;
@@ -58,7 +58,7 @@ public class ParticlePrefab extends SpritePrefab {
 		setColor(new FixedProperty<>(color));
 	}
 	
-	public void setColor(VariableProperty<Color> color) {
+	public void setColor(Property<Color> color) {
 		this.color = color;
 		colorAnimation = null;
 	}
@@ -73,14 +73,14 @@ public class ParticlePrefab extends SpritePrefab {
 	/**
 	 * Adds a linear animation for the alpha value of the particle's color.
 	 */
-	public void setColorAlphaAnimation(Color base, VariableProperty<Float> alphaStart, VariableProperty<Float> alphaEnd) {
+	public void setColorAlphaAnimation(Color base, Property<Float> alphaStart, Property<Float> alphaEnd) {
 		setColorAlphaAnimation(base, alphaStart, alphaEnd, AnimationCurve.DEFAULT_EASING_FUNCTION);
 	}
 	
 	/**
 	 * Adds an animation for the alpha value of the particle's color.
 	 */
-	public void setColorAlphaAnimation(Color base, VariableProperty<Float> alphaStart, VariableProperty<Float> alphaEnd, EasingFunction easingFunction) {
+	public void setColorAlphaAnimation(Color base, Property<Float> alphaStart, Property<Float> alphaEnd, EasingFunction easingFunction) {
 		VariableColorProperty start = new VariableColorProperty(base);
 		VariableColorProperty end = new VariableColorProperty(base);
 		start.setAlpha(alphaStart);
@@ -92,14 +92,14 @@ public class ParticlePrefab extends SpritePrefab {
 	/**
 	 * Adds a linear animation for the color of the particle.
 	 */
-	public void setColorAnimation(VariableProperty<Color> start, VariableProperty<Color> end) {
+	public void setColorAnimation(Property<Color> start, Property<Color> end) {
 		setColorAnimation(start, end, AnimationCurve.DEFAULT_EASING_FUNCTION);
 	}
 	
 	/**
 	 * Adds an animation for the color of the particle.
 	 */
-	public void setColorAnimation(VariableProperty<Color> start, VariableProperty<Color> end, EasingFunction easingFunction) {
+	public void setColorAnimation(Property<Color> start, Property<Color> end, EasingFunction easingFunction) {
 		colorAnimation = new VariableAnimatedColorProperty(start, end, new AnimationCurve(1, easingFunction));
 		color = null;
 	}
@@ -109,7 +109,7 @@ public class ParticlePrefab extends SpritePrefab {
 		setScale(new FixedProperty<>(scale.length()));
 	}
 	
-	public void setScale(VariableProperty<Float> scale) {
+	public void setScale(Property<Float> scale) {
 		this.scale = scale;
 		scaleAnimation = null;
 	}
@@ -117,23 +117,23 @@ public class ParticlePrefab extends SpritePrefab {
 	/**
 	 * Adds a linear animation for the scale of the particle.
 	 */
-	public void setScaleAnimation(VariableProperty<Float> start, VariableProperty<Float> end) {
+	public void setScaleAnimation(Property<Float> start, Property<Float> end) {
 		setScaleAnimation(start, end, AnimationCurve.DEFAULT_EASING_FUNCTION);
 	}
 	
 	/**
 	 * Adds an animation for the scale of the particle.
 	 */
-	public void setScaleAnimation(VariableProperty<Float> start, VariableProperty<Float> end, EasingFunction easingFunction) {
+	public void setScaleAnimation(Property<Float> start, Property<Float> end, EasingFunction easingFunction) {
 		scaleAnimation = new VariableAnimatedFloatProperty(start, end, new AnimationCurve(1, easingFunction));
 		scale = null;
 	}
 	
-	public void setLifetime(VariableProperty<Float> lifetime) {
+	public void setLifetime(Property<Float> lifetime) {
 		this.lifetime = lifetime;
 	}
 	
-	public void setVelocity(VariableProperty<Vector2f> velocity) {
+	public void setVelocity(Property<Vector2f> velocity) {
 		this.velocity = velocity;
 	}
 	
@@ -141,7 +141,7 @@ public class ParticlePrefab extends SpritePrefab {
 		this.frameCount = frameCount;
 	}
 	
-	public void setFrame(VariableProperty<Integer> frame) {
+	public void setFrame(Property<Integer> frame) {
 		setAnimateSprite(false);
 		setInitialFrame(frame);
 	}
@@ -150,7 +150,7 @@ public class ParticlePrefab extends SpritePrefab {
 		this.animateSprite = animateSprite;
 	}
 	
-	public void setInitialFrame(VariableProperty<Integer> initialFrame) {
+	public void setInitialFrame(Property<Integer> initialFrame) {
 		this.initialFrame = initialFrame;
 	}
 	

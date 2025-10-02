@@ -10,6 +10,10 @@ import dev.prozilla.pine.common.math.dimension.DimensionParser;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.dimension.DualDimensionParser;
 import dev.prozilla.pine.common.math.vector.*;
+import dev.prozilla.pine.common.property.storage.StoredBooleanProperty;
+import dev.prozilla.pine.common.property.storage.StoredFloatProperty;
+import dev.prozilla.pine.common.property.storage.StoredIntProperty;
+import dev.prozilla.pine.common.property.storage.StoredStringProperty;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.ColorParser;
 import dev.prozilla.pine.common.util.BooleanUtils;
@@ -19,6 +23,7 @@ import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.common.util.parser.ParseFunction;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.config.StorageConfig;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -250,6 +255,21 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	/**
 	 * Returns the value of the item in this store with a given key by parsing it.
 	 * @param key The key of the item
+	 * @return The parsed value of the item, or {@code 0} if the item does not exist.
+	 * @see Float#parseFloat(String)
+	 * @throws NumberFormatException If the parsing failed.
+	 */
+	public float getFloat(String key) throws NumberFormatException {
+		String value = getItem(key);
+		if (value == null) {
+			return 0;
+		}
+		return Float.parseFloat(value);
+	}
+	
+	/**
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
 	 * @return The parsed value of the item, or {@code false} if the item does not exist.
 	 * @see Boolean#parseBoolean(String) 
 	 */
@@ -305,8 +325,8 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	 * @param value The new value
 	 * @see StringUtils#toString(Object)
 	 */
-	public void setItem(String key, Object value) {
-		setItem(key, StringUtils.toString(value));
+	public boolean setItem(String key, Object value) {
+		return setItem(key, StringUtils.toString(value));
 	}
 	
 	/**
@@ -314,14 +334,15 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	 * @param key The key of the item
 	 * @param value The new value
 	 */
-	public void setItem(String key, String value) {
+	public boolean setItem(String key, String value) {
 		if (Objects.equals(items.get(key), value)) {
-			return;
+			return false;
 		}
 		items.put(key, value);
 		if (shouldSave()) {
 			save();
 		}
+		return true;
 	}
 	
 	/**
@@ -409,6 +430,26 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	 * Saves the items from this store.
 	 */
 	protected abstract void save();
+	
+	@Contract("_ -> new")
+	public StoredStringProperty stringProperty(String key) {
+		return new StoredStringProperty(this, key);
+	}
+	
+	@Contract("_ -> new")
+	public StoredIntProperty intProperty(String key) {
+		return new StoredIntProperty(this, key);
+	}
+	
+	@Contract("_ -> new")
+	public StoredFloatProperty floatProperty(String key) {
+		return new StoredFloatProperty(this, key);
+	}
+	
+	@Contract("_ -> new")
+	public StoredBooleanProperty booleanProperty(String key) {
+		return new StoredBooleanProperty(this, key);
+	}
 	
 	@Override
 	public void print() {

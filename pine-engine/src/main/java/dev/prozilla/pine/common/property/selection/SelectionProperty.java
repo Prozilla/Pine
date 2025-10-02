@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.property.selection;
 
-import dev.prozilla.pine.common.property.observable.ObservableProperty;
+import dev.prozilla.pine.common.property.observable.ObservableObjectProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
 
 import java.util.Collections;
@@ -11,7 +11,7 @@ import java.util.List;
  * @param <I> The type of selectable items.
  * @param <S> The type of the selection.
  */
-public abstract class SelectionProperty<I, S> extends ObservableProperty<S> {
+public abstract class SelectionProperty<I, S> extends ObservableObjectProperty<S> {
 	
 	protected final List<I> items;
 	protected WrapMode wrapMode;

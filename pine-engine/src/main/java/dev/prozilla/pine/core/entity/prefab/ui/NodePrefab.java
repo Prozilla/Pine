@@ -7,7 +7,7 @@ import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.math.vector.Vector4f;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveDualDimensionProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
@@ -100,7 +100,7 @@ public class NodePrefab extends Prefab {
 	/**
 	 * Sets the size of this node.
 	 */
-	public void setSize(VariableProperty<DualDimension> size) {
+	public void setSize(Property<DualDimension> size) {
 		setDefaultPropertyValue(StyledPropertyKey.SIZE, AdaptiveDualDimensionProperty.adapt(size));
 		this.size = size.getValue();
 	}
@@ -126,7 +126,7 @@ public class NodePrefab extends Prefab {
 	/**
 	 * Sets the padding around the content of this node.
 	 */
-	public void setPadding(VariableProperty<DualDimension> padding) {
+	public void setPadding(Property<DualDimension> padding) {
 		setDefaultPropertyValue(StyledPropertyKey.PADDING, AdaptiveDualDimensionProperty.adapt(padding));
 		this.padding = padding.getValue();
 	}
@@ -143,7 +143,7 @@ public class NodePrefab extends Prefab {
 		}
 	}
 	
-	public void setMargin(VariableProperty<DualDimension> margin) {
+	public void setMargin(Property<DualDimension> margin) {
 		setDefaultPropertyValue(StyledPropertyKey.MARGIN, AdaptiveDualDimensionProperty.adapt(margin));
 		this.margin = margin.getValue();
 	}
@@ -162,7 +162,7 @@ public class NodePrefab extends Prefab {
 	/**
 	 * Sets the foreground color of this node.
 	 */
-	public void setColor(VariableProperty<Color> color) {
+	public void setColor(Property<Color> color) {
 		setDefaultPropertyValue(StyledPropertyKey.COLOR, AdaptiveColorProperty.adapt(color));
 		this.color = color.getValue();
 	}
@@ -181,7 +181,7 @@ public class NodePrefab extends Prefab {
 	/**
 	 * Sets the background color of this node.
 	 */
-	public void setBackgroundColor(VariableProperty<Color> color) {
+	public void setBackgroundColor(Property<Color> color) {
 		setDefaultPropertyValue(StyledPropertyKey.BACKGROUND_COLOR, AdaptiveColorProperty.adapt(color));
 		backgroundColor = color.getValue();
 	}

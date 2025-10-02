@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.Animatable;
 import dev.prozilla.pine.common.Printable;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedProperty;
@@ -21,7 +21,7 @@ import java.util.StringJoiner;
  *
  * <p>If a transition rule applies to this property, it will start a transition whenever its value changes.</p>
  */
-public abstract class StyledProperty<T> extends VariableProperty<T> implements Animatable, Printable {
+public abstract class StyledProperty<T> implements Property<T>, Animatable, Printable {
 	
 	protected final StyledPropertyKey<T> name;
 	protected final Node node;
@@ -122,7 +122,7 @@ public abstract class StyledProperty<T> extends VariableProperty<T> implements A
 	
 	abstract protected AdaptivePropertyBase<T> createAdaptiveProperty(T value);
 	
-	abstract protected AdaptivePropertyBase<T> createAdaptiveProperty(VariableProperty<T> property);
+	abstract protected AdaptivePropertyBase<T> createAdaptiveProperty(Property<T> property);
 	
 	abstract protected TransitionedProperty<T> createTransitionedProperty(T initialValue, AnimationCurve curve);
 	

@@ -7,7 +7,7 @@ import dev.prozilla.pine.common.math.dimension.DimensionParser;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.dimension.DualDimensionParser;
 import dev.prozilla.pine.common.math.vector.*;
-import dev.prozilla.pine.common.property.observable.ObservableProperty;
+import dev.prozilla.pine.common.property.observable.ObservableObjectProperty;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.ColorParser;
 import dev.prozilla.pine.common.system.ResourceUtils;
@@ -20,7 +20,7 @@ import java.io.InputStream;
  * Deserializes data from a given JSON file.
  * @param <Data> The data type to deserialize the file to
  */
-public class FileDeserializer<Data> extends ObservableProperty<Data> {
+public class FileDeserializer<Data> extends ObservableObjectProperty<Data> {
 	
 	protected final String path;
 	private final Class<Data> dataType;

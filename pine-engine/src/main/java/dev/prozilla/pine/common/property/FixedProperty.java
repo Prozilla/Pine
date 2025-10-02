@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * A property with a value that never changes.
  */
-public class FixedProperty<T> extends VariableProperty<T> implements Cloneable<FixedProperty<T>> {
+public class FixedProperty<T> implements Property<T>, Cloneable<FixedProperty<T>> {
 	
 	protected final T value;
 	

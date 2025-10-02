@@ -1,11 +1,11 @@
 package dev.prozilla.pine.common.property.adaptive;
 
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 
 public final class AdaptiveStringProperty extends AdaptiveProperty<String> {
 	
-	public AdaptiveStringProperty(VariableProperty<String> variableProperty) {
-		super(variableProperty);
+	public AdaptiveStringProperty(Property<String> property) {
+		super(property);
 	}
 	
 	public AdaptiveStringProperty(String fixedValue) {
@@ -28,7 +28,7 @@ public final class AdaptiveStringProperty extends AdaptiveProperty<String> {
 	 * Converts any string property into an adaptive property.
 	 * @param property The property to adapt
 	 */
-	public static AdaptiveStringProperty adapt(VariableProperty<String> property) {
+	public static AdaptiveStringProperty adapt(Property<String> property) {
 		return new AdaptiveStringProperty(property);
 	}
 	

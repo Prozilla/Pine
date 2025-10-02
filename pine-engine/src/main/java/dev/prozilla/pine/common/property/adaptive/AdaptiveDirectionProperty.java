@@ -1,12 +1,12 @@
 package dev.prozilla.pine.common.property.adaptive;
 
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 
 public final class AdaptiveDirectionProperty extends AdaptiveProperty<Direction> {
 	
-	public AdaptiveDirectionProperty(VariableProperty<Direction> variableProperty) {
-		super(variableProperty);
+	public AdaptiveDirectionProperty(Property<Direction> property) {
+		super(property);
 	}
 	
 	public AdaptiveDirectionProperty(Direction fixedValue) {
@@ -29,7 +29,7 @@ public final class AdaptiveDirectionProperty extends AdaptiveProperty<Direction>
 	 * Converts any direction property into an adaptive property.
 	 * @param property The property to adapt
 	 */
-	public static AdaptiveDirectionProperty adapt(VariableProperty<Direction> property) {
+	public static AdaptiveDirectionProperty adapt(Property<Direction> property) {
 		return new AdaptiveDirectionProperty(property);
 	}
 	

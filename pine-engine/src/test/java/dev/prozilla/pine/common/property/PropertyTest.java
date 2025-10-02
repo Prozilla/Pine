@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith({TestPerformanceExtension.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class VariablePropertyTest {
+public class PropertyTest {
 	
 	private static final int ITERATIONS = 10_000_000;
 	private static final float ANIMATION_DURATION = 10f;
@@ -24,12 +24,12 @@ public class VariablePropertyTest {
 	
 	/** Array of properties to avoid garbage collection */
 	@SuppressWarnings("unchecked")
-	private static final VariableProperty<Float>[] properties = new VariableProperty[3];
+	private static final Property<Float>[] properties = new Property[3];
 	
 	@Test
 	@Tag("performance")
 	void testFixedFloatPerformance() {
-		VariableProperty<Float> property = new FixedProperty<>(5f);
+		Property<Float> property = new FixedProperty<>(5f);
 		properties[0] = property;
 		
 		float value = simulateFloatPropertyUsage(property);
@@ -40,7 +40,7 @@ public class VariablePropertyTest {
 	@Test
 	@Tag("performance")
 	void testDynamicFloatPerformance() {
-		VariableProperty<Float> property = new RandomFloatProperty(0f, 10f);
+		Property<Float> property = new RandomFloatProperty(0f, 10f);
 		properties[1] = property;
 		
 		float value = simulateFloatPropertyUsage(property);
@@ -51,7 +51,7 @@ public class VariablePropertyTest {
 	@Test
 	@Tag("performance")
 	void testAnimatedFloatPerformance() {
-		VariableProperty<Float> property = new AnimatedFloatProperty(0f, 10f, new AnimationCurve(ANIMATION_DURATION, Easing.EASE_IN_OUT_QUAD));
+		Property<Float> property = new AnimatedFloatProperty(0f, 10f, new AnimationCurve(ANIMATION_DURATION, Easing.EASE_IN_OUT_QUAD));
 		properties[2] = property;
 		
 		float value = simulateFloatPropertyUsage(property);
@@ -59,7 +59,7 @@ public class VariablePropertyTest {
 		assertEquals(10f, value, "value of AnimatedFloatProperty must be the end value after the animation has finished");
 	}
 	
-	private float simulateFloatPropertyUsage(VariableProperty<Float> property) {
+	private float simulateFloatPropertyUsage(Property<Float> property) {
 		AnimatedFloatProperty animatedProperty = property instanceof  AnimatedFloatProperty animatedFloatProperty ? animatedFloatProperty : null;
 		
 		if (animatedProperty != null) {

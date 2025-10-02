@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.math.vector.GridAlignment;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveGridAlignmentProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
@@ -27,7 +27,7 @@ public final class StyledGridAlignmentProperty extends StyledProperty<GridAlignm
 	}
 	
 	@Override
-	protected AdaptiveProperty<GridAlignment> createAdaptiveProperty(VariableProperty<GridAlignment> property) {
+	protected AdaptiveProperty<GridAlignment> createAdaptiveProperty(Property<GridAlignment> property) {
 		return AdaptiveGridAlignmentProperty.adapt(property);
 	}
 	

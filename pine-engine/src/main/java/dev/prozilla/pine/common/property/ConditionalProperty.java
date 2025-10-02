@@ -7,17 +7,17 @@ import org.jetbrains.annotations.Contract;
  *
  * <p>The boolean property determines which property is used to retrieve the value from.</p>
  */
-public class ConditionalProperty<T> extends VariableProperty<T> {
+public class ConditionalProperty<T> implements Property<T> {
 
-	protected final VariableProperty<Boolean> condition;
-	protected final VariableProperty<T> propertyTrue;
-	protected final VariableProperty<T> propertyFalse;
+	protected final Property<Boolean> condition;
+	protected final Property<T> propertyTrue;
+	protected final Property<T> propertyFalse;
 	
-	public ConditionalProperty(VariableProperty<Boolean> condition, T valueTrue, T valueFalse) {
+	public ConditionalProperty(Property<Boolean> condition, T valueTrue, T valueFalse) {
 		this(condition, new FixedProperty<>(valueTrue), new FixedProperty<>(valueFalse));
 	}
 	
-	public ConditionalProperty(VariableProperty<Boolean> condition, VariableProperty<T> propertyTrue, VariableProperty<T> propertyFalse) {
+	public ConditionalProperty(Property<Boolean> condition, Property<T> propertyTrue, Property<T> propertyFalse) {
 		this.condition = condition;
 		this.propertyTrue = propertyTrue;
 		this.propertyFalse = propertyFalse;

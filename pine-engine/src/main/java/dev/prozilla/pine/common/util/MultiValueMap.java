@@ -54,6 +54,15 @@ public class MultiValueMap<K, V> extends HashMap<K, List<V>> {
 		return values;
 	}
 	
+	public V removeValue(K key, V value) {
+		List<V> values = get(key);
+		if (values == null) {
+			return null;
+		}
+		values.remove(value);
+		return value;
+	}
+	
 	public List<V> set(K key) {
 		return super.put(key, new ArrayList<>());
 	}

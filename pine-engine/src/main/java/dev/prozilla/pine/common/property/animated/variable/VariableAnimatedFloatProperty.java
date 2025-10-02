@@ -1,17 +1,17 @@
 package dev.prozilla.pine.common.property.animated.variable;
 
 import dev.prozilla.pine.common.property.FixedProperty;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.animated.AnimatedFloatProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 
 public class VariableAnimatedFloatProperty extends VariableAnimatedProperty<Float> {
 	
-	public VariableAnimatedFloatProperty(VariableProperty<Float> startProperty, VariableProperty<Float> endProperty, AnimationCurve curve) {
+	public VariableAnimatedFloatProperty(Property<Float> startProperty, Property<Float> endProperty, AnimationCurve curve) {
 		this(startProperty, endProperty, new FixedProperty<>(curve));
 	}
 	
-	public VariableAnimatedFloatProperty(VariableProperty<Float> startProperty, VariableProperty<Float> endProperty, VariableProperty<AnimationCurve> curveProperty) {
+	public VariableAnimatedFloatProperty(Property<Float> startProperty, Property<Float> endProperty, Property<AnimationCurve> curveProperty) {
 		super(startProperty, endProperty, curveProperty);
 	}
 	

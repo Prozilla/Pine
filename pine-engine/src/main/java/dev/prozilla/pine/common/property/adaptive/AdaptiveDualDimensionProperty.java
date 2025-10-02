@@ -1,12 +1,12 @@
 package dev.prozilla.pine.common.property.adaptive;
 
 import dev.prozilla.pine.common.math.dimension.DualDimension;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 
 public final class AdaptiveDualDimensionProperty extends AdaptiveProperty<DualDimension> {
 	
-	public AdaptiveDualDimensionProperty(VariableProperty<DualDimension> variableProperty) {
-		super(variableProperty);
+	public AdaptiveDualDimensionProperty(Property<DualDimension> property) {
+		super(property);
 	}
 	
 	public AdaptiveDualDimensionProperty(DualDimension fixedValue) {
@@ -29,7 +29,7 @@ public final class AdaptiveDualDimensionProperty extends AdaptiveProperty<DualDi
 	 * Converts any dual dimension property into an adaptive property.
 	 * @param property The property to adapt
 	 */
-	public static AdaptiveDualDimensionProperty adapt(VariableProperty<DualDimension> property) {
+	public static AdaptiveDualDimensionProperty adapt(Property<DualDimension> property) {
 		return new AdaptiveDualDimensionProperty(property);
 	}
 	

@@ -1,18 +1,18 @@
 package dev.prozilla.pine.common.property.animated.variable;
 
 import dev.prozilla.pine.common.property.FixedProperty;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.animated.AnimatedColorProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.system.Color;
 
 public class VariableAnimatedColorProperty extends VariableAnimatedProperty<Color> {
 	
-	public VariableAnimatedColorProperty(VariableProperty<Color> startProperty, VariableProperty<Color> endProperty, AnimationCurve curve) {
+	public VariableAnimatedColorProperty(Property<Color> startProperty, Property<Color> endProperty, AnimationCurve curve) {
 		this(startProperty, endProperty, new FixedProperty<>(curve));
 	}
 	
-	public VariableAnimatedColorProperty(VariableProperty<Color> startProperty, VariableProperty<Color> endProperty, VariableProperty<AnimationCurve> curveProperty) {
+	public VariableAnimatedColorProperty(Property<Color> startProperty, Property<Color> endProperty, Property<AnimationCurve> curveProperty) {
 		super(startProperty, endProperty, curveProperty);
 	}
 	

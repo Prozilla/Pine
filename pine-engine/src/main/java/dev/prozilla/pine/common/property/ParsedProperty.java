@@ -7,12 +7,12 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A property whose value is determined using the value of a string property and a parser.
  */
-public class ParsedProperty<T> extends VariableProperty<T> {
+public class ParsedProperty<T> implements Property<T> {
 	
-	private final VariableProperty<String> inputProperty;
+	private final Property<String> inputProperty;
 	private final Parser<T> parser;
 	
-	public ParsedProperty(VariableProperty<String> inputProperty, Parser<T> parser) {
+	public ParsedProperty(Property<String> inputProperty, Parser<T> parser) {
 		this.inputProperty = Checks.isNotNull(inputProperty, "inputProperty");
 		this.parser = Checks.isNotNull(parser, "parser");
 	}

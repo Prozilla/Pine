@@ -1,12 +1,12 @@
 package dev.prozilla.pine.common.property.adaptive;
 
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 
 public final class AdaptiveEdgeAlignmentProperty extends AdaptiveProperty<EdgeAlignment> {
 	
-	public AdaptiveEdgeAlignmentProperty(VariableProperty<EdgeAlignment> variableProperty) {
-		super(variableProperty);
+	public AdaptiveEdgeAlignmentProperty(Property<EdgeAlignment> property) {
+		super(property);
 	}
 	
 	public AdaptiveEdgeAlignmentProperty(EdgeAlignment fixedValue) {
@@ -29,7 +29,7 @@ public final class AdaptiveEdgeAlignmentProperty extends AdaptiveProperty<EdgeAl
 	 * Converts any edge alignment property into an adaptive property.
 	 * @param property The property to adapt
 	 */
-	public static AdaptiveEdgeAlignmentProperty adapt(VariableProperty<EdgeAlignment> property) {
+	public static AdaptiveEdgeAlignmentProperty adapt(Property<EdgeAlignment> property) {
 		return new AdaptiveEdgeAlignmentProperty(property);
 	}
 	

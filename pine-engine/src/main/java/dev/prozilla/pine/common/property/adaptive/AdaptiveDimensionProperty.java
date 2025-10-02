@@ -1,12 +1,12 @@
 package dev.prozilla.pine.common.property.adaptive;
 
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 
 public final class AdaptiveDimensionProperty extends AdaptiveProperty<DimensionBase> {
 	
-	public AdaptiveDimensionProperty(VariableProperty<DimensionBase> variableProperty) {
-		super(variableProperty);
+	public AdaptiveDimensionProperty(Property<DimensionBase> property) {
+		super(property);
 	}
 	
 	public AdaptiveDimensionProperty(DimensionBase fixedValue) {
@@ -29,7 +29,7 @@ public final class AdaptiveDimensionProperty extends AdaptiveProperty<DimensionB
 	 * Converts any dimension property into an adaptive property.
 	 * @param property The property to adapt
 	 */
-	public static AdaptiveDimensionProperty adapt(VariableProperty<DimensionBase> property) {
+	public static AdaptiveDimensionProperty adapt(Property<DimensionBase> property) {
 		return new AdaptiveDimensionProperty(property);
 	}
 	

@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveDimensionProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
@@ -27,7 +27,7 @@ public final class StyledDimensionProperty extends StyledProperty<DimensionBase>
 	}
 	
 	@Override
-	protected AdaptiveProperty<DimensionBase> createAdaptiveProperty(VariableProperty<DimensionBase> property) {
+	protected AdaptiveProperty<DimensionBase> createAdaptiveProperty(Property<DimensionBase> property) {
 		return AdaptiveDimensionProperty.adapt(property);
 	}
 	

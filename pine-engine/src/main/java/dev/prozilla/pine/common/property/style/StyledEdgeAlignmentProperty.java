@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveEdgeAlignmentProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
@@ -27,7 +27,7 @@ public final class StyledEdgeAlignmentProperty extends StyledProperty<EdgeAlignm
 	}
 	
 	@Override
-	protected AdaptiveProperty<EdgeAlignment> createAdaptiveProperty(VariableProperty<EdgeAlignment> property) {
+	protected AdaptiveProperty<EdgeAlignment> createAdaptiveProperty(Property<EdgeAlignment> property) {
 		return AdaptiveEdgeAlignmentProperty.adapt(property);
 	}
 	

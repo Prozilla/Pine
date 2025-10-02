@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.property;
 
+import dev.prozilla.pine.common.property.mutable.MutableObjectProperty;
 import dev.prozilla.pine.test.TestLoggingExtension;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ public class ConditionalPropertyTest {
 	
 	@Test
 	void testValue() {
-		MutableProperty<Boolean> condition = mockCondition();
+		MutableObjectProperty<Boolean> condition = mockCondition();
 		
 		ConditionalProperty<Integer> property = new ConditionalProperty<>(condition, 10, 20);
 		
@@ -29,8 +30,8 @@ public class ConditionalPropertyTest {
 		assertFalse(property.isFalse());
 	}
 	
-	MutableProperty<Boolean> mockCondition() {
-		return new MutableProperty<>(false);
+	MutableObjectProperty<Boolean> mockCondition() {
+		return new MutableObjectProperty<>(false);
 	}
 	
 }

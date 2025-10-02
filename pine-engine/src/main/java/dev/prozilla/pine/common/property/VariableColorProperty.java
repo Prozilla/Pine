@@ -2,41 +2,41 @@ package dev.prozilla.pine.common.property;
 
 import dev.prozilla.pine.common.system.Color;
 
-public class VariableColorProperty extends VariableProperty<Color> implements ColorProperty {
+public class VariableColorProperty implements ColorProperty {
 	
-	protected VariableProperty<Float> red;
-	protected VariableProperty<Float> green;
-	protected VariableProperty<Float> blue;
-	protected VariableProperty<Float> alpha;
+	protected Property<Float> red;
+	protected Property<Float> green;
+	protected Property<Float> blue;
+	protected Property<Float> alpha;
 	
 	public VariableColorProperty(Color color) {
 		this(new FixedProperty<>(color.getRed()), new FixedProperty<>(color.getGreen()), new FixedProperty<>(color.getBlue()), new FixedProperty<>(color.getAlpha()));
 	}
 	
-	public VariableColorProperty(VariableProperty<Float> red, VariableProperty<Float> green, VariableProperty<Float> blue) {
+	public VariableColorProperty(Property<Float> red, Property<Float> green, Property<Float> blue) {
 		this(red, green, blue, new FixedProperty<>(1f));
 	}
 	
-	public VariableColorProperty(VariableProperty<Float> red, VariableProperty<Float> green, VariableProperty<Float> blue, VariableProperty<Float> alpha) {
+	public VariableColorProperty(Property<Float> red, Property<Float> green, Property<Float> blue, Property<Float> alpha) {
 		this.red = red;
 		this.green = green;
 		this.blue = blue;
 		this.alpha = alpha;
 	}
 	
-	public void setRed(VariableProperty<Float> red) {
+	public void setRed(Property<Float> red) {
 		this.red = red;
 	}
 	
-	public void setGreen(VariableProperty<Float> green) {
+	public void setGreen(Property<Float> green) {
 		this.green = green;
 	}
 	
-	public void setBlue(VariableProperty<Float> blue) {
+	public void setBlue(Property<Float> blue) {
 		this.blue = blue;
 	}
 	
-	public void setAlpha(VariableProperty<Float> alpha) {
+	public void setAlpha(Property<Float> alpha) {
 		this.alpha = alpha;
 	}
 	

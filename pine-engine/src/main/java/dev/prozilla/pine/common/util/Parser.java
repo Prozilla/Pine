@@ -3,7 +3,7 @@ package dev.prozilla.pine.common.util;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.exception.ParsingException;
 import dev.prozilla.pine.common.property.ParsedProperty;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.util.checks.Checks;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -76,7 +76,7 @@ public abstract class Parser<T> implements Printable {
 	}
 	
 	@Contract("_ -> new")
-	public ParsedProperty<T> parseProperty(VariableProperty<String> inputProperty) {
+	public ParsedProperty<T> parseProperty(Property<String> inputProperty) {
 		return new ParsedProperty<>(inputProperty, this);
 	}
 	

@@ -2,12 +2,21 @@ package dev.prozilla.pine.common.property;
 
 import dev.prozilla.pine.common.Transmittable;
 import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.common.util.checks.Checks;
 import org.jetbrains.annotations.Contract;
+
+import java.util.Objects;
 
 /**
  * Utility methods for color properties.
  */
-public interface ColorProperty extends Transmittable<Color> {
+@FunctionalInterface
+public interface ColorProperty extends Property<Color>, Transmittable<Color> {
+	
+	@Override
+	default void transmit(Color target) {
+		getValue().transmit(target);
+	}
 	
 	/**
 	 * @return A new color with the value of this property.
@@ -17,6 +26,17 @@ public interface ColorProperty extends Transmittable<Color> {
 		Color output = new Color();
 		transmit(output);
 		return output;
+	}
+	
+	@Override
+	default ColorProperty replaceNull(Color defaultValue) {
+		Checks.isNotNull(defaultValue, "defaultValue");
+		return () -> Objects.requireNonNullElse(getValue(), defaultValue);
+	}
+	
+	@Contract("_ -> new")
+	static ColorProperty fromProperty(Property<Color> property) {
+		return property::getValue;
 	}
 	
 }

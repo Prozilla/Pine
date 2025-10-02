@@ -4,6 +4,8 @@ import org.jetbrains.annotations.Contract;
 
 public class StringUtils {
 	
+	private StringUtils() {}
+	
 	@Contract("null -> null; !null -> !null")
 	public static String toString(Object object) {
 		return ObjectUtils.preserveNull(object, Object::toString);

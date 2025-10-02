@@ -1,13 +1,13 @@
 package dev.prozilla.pine.common.property.adaptive;
 
 import dev.prozilla.pine.common.property.ColorProperty;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.system.Color;
 
 public final class AdaptiveColorProperty extends AdaptiveProperty<Color> implements ColorProperty {
 	
-	public AdaptiveColorProperty(VariableProperty<Color> variableProperty) {
-		super(variableProperty);
+	public AdaptiveColorProperty(Property<Color> property) {
+		super(property);
 	}
 	
 	public AdaptiveColorProperty(Color fixedValue) {
@@ -36,7 +36,7 @@ public final class AdaptiveColorProperty extends AdaptiveProperty<Color> impleme
 	 * Converts any color property into an adaptive property.
 	 * @param property The property to adapt
 	 */
-	public static AdaptiveColorProperty adapt(VariableProperty<Color> property) {
+	public static AdaptiveColorProperty adapt(Property<Color> property) {
 		return new AdaptiveColorProperty(property);
 	}
 	

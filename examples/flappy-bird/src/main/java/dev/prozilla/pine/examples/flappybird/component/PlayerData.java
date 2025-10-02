@@ -1,7 +1,7 @@
 package dev.prozilla.pine.examples.flappybird.component;
 
 import dev.prozilla.pine.common.property.deserialized.FileDeserializer;
-import dev.prozilla.pine.common.property.observable.ObservableProperty;
+import dev.prozilla.pine.common.property.observable.ObservableObjectProperty;
 import dev.prozilla.pine.core.component.deserialization.DeserializedData;
 import dev.prozilla.pine.examples.flappybird.FlappyBird;
 import dev.prozilla.pine.examples.flappybird.scene.GameScene;
@@ -12,11 +12,11 @@ public class PlayerData extends DeserializedData<PlayerData.Data> {
 	public float age;
 	public float velocity;
 	
-	public ObservableProperty<Float> jumpVelocity;
-	public ObservableProperty<Float> speed;
-	public ObservableProperty<Float> animationSpeed;
-	public ObservableProperty<Float> rotationFactor;
-	public ObservableProperty<Float> rotationSpeed;
+	public ObservableObjectProperty<Float> jumpVelocity;
+	public ObservableObjectProperty<Float> speed;
+	public ObservableObjectProperty<Float> animationSpeed;
+	public ObservableObjectProperty<Float> rotationFactor;
+	public ObservableObjectProperty<Float> rotationSpeed;
 	
 	public GameScene gameScene;
 	

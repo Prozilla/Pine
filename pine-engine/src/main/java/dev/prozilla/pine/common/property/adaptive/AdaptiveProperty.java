@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.property.adaptive;
 
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 
 /**
  * A generic optimized property that can either have a fixed or dynamic value.
@@ -11,10 +11,10 @@ public abstract class AdaptiveProperty<T> extends AdaptivePropertyBase<T> {
 	
 	/**
 	 * Creates a new property with a dynamic value.
-	 * @param variableProperty Variable property that determines the value of this property
+	 * @param property Variable property that determines the value of this property
 	 */
-	public AdaptiveProperty(VariableProperty<T> variableProperty) {
-		super(variableProperty);
+	public AdaptiveProperty(Property<T> property) {
+		super(property);
 		this.fixedValue = null;
 	}
 	
@@ -28,7 +28,7 @@ public abstract class AdaptiveProperty<T> extends AdaptivePropertyBase<T> {
 	
 	@Override
 	public T getValue() {
-		return variableProperty != null ? variableProperty.getValue() : fixedValue;
+		return property != null ? property.getValue() : fixedValue;
 	}
 	
 }

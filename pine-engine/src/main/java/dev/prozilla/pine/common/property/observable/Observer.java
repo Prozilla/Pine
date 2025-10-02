@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property.observable;
 
 /**
- * @see ObservableProperty
+ * @see ObservableObjectProperty
  * @param <T> The type of value to observe
  */
 @FunctionalInterface

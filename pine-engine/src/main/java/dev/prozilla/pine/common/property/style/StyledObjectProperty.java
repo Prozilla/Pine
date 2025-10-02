@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.property.style;
 
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveObjectProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
@@ -25,7 +25,7 @@ public final class StyledObjectProperty extends StyledProperty<Object> {
 	}
 	
 	@Override
-	protected AdaptiveProperty<Object> createAdaptiveProperty(VariableProperty<Object> property) {
+	protected AdaptiveProperty<Object> createAdaptiveProperty(Property<Object> property) {
 		return AdaptiveObjectProperty.adapt(property);
 	}
 	

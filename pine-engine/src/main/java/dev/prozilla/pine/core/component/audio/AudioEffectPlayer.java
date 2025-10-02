@@ -4,7 +4,7 @@ import dev.prozilla.pine.common.asset.audio.AudioSource;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.property.FixedProperty;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.ArrayList;
@@ -19,9 +19,9 @@ public class AudioEffectPlayer extends Component implements Initializable {
 	public int maxSources;
 	
 	public boolean autoplay;
-	private VariableProperty<Float> volume;
-	private VariableProperty<Float> pitch;
-	private VariableProperty<Float> gain;
+	private Property<Float> volume;
+	private Property<Float> pitch;
+	private Property<Float> gain;
 	
 	private boolean isMuted;
 	
@@ -95,7 +95,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 		}
 	}
 	
-	public void setGlobalVolume(VariableProperty<Float> volume) {
+	public void setGlobalVolume(Property<Float> volume) {
 		if (Objects.equals(this.volume, volume)) {
 			return;
 		}
@@ -115,7 +115,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 		}
 	}
 	
-	public void setVolume(VariableProperty<Float> volume) {
+	public void setVolume(Property<Float> volume) {
 		if (Objects.equals(this.volume, volume)) {
 			return;
 		}
@@ -124,7 +124,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 	}
 	
 	private float getVolume() {
-		return VariableProperty.getValue(volume, AudioPlayer.DEFAULT_VOLUME);
+		return Property.getPropertyValue(volume, AudioPlayer.DEFAULT_VOLUME);
 	}
 	
 	public void setGlobalPitch(float pitch) {
@@ -135,7 +135,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 		}
 	}
 	
-	public void setGlobalPitch(VariableProperty<Float> pitch) {
+	public void setGlobalPitch(Property<Float> pitch) {
 		if (Objects.equals(this.pitch, pitch)) {
 			return;
 		}
@@ -155,7 +155,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 		}
 	}
 	
-	public void setPitch(VariableProperty<Float> pitch) {
+	public void setPitch(Property<Float> pitch) {
 		if (Objects.equals(this.pitch, pitch)) {
 			return;
 		}
@@ -164,7 +164,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 	}
 	
 	private float getPitch() {
-		return VariableProperty.getValue(pitch, AudioPlayer.DEFAULT_PITCH);
+		return Property.getPropertyValue(pitch, AudioPlayer.DEFAULT_PITCH);
 	}
 	
 	public void setGlobalGain(float gain) {
@@ -175,7 +175,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 		}
 	}
 	
-	public void setGlobalGain(VariableProperty<Float> gain) {
+	public void setGlobalGain(Property<Float> gain) {
 		if (Objects.equals(this.gain, gain)) {
 			return;
 		}
@@ -195,7 +195,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 		}
 	}
 	
-	public void setGain(VariableProperty<Float> gain) {
+	public void setGain(Property<Float> gain) {
 		if (Objects.equals(this.gain, gain)) {
 			return;
 		}
@@ -204,7 +204,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 	}
 	
 	private float getGain() {
-		return VariableProperty.getValue(gain, AudioPlayer.DEFAULT_GAIN);
+		return Property.getPropertyValue(gain, AudioPlayer.DEFAULT_GAIN);
 	}
 	
 	public void setMaxSources(int maxSources) {

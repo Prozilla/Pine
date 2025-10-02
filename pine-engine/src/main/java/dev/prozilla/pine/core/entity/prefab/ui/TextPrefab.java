@@ -2,7 +2,7 @@ package dev.prozilla.pine.core.entity.prefab.ui;
 
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.text.Font;
-import dev.prozilla.pine.common.property.VariableProperty;
+import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveStringProperty;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
@@ -39,7 +39,7 @@ public class TextPrefab extends NodePrefab {
 		setHTMLTag("p");
 	}
 	
-	public void setText(VariableProperty<String> textProperty) {
+	public void setText(Property<String> textProperty) {
 		this.textProperty = AdaptiveStringProperty.adapt(textProperty);
 	}
 	

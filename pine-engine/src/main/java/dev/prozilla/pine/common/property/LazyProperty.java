@@ -6,7 +6,7 @@ package dev.prozilla.pine.common.property;
  * <p>This type of property is optimized, because the value will only be fetched once in most cases.
  * This is especially useful for values that are expensive to fetch.</p>
  */
-public abstract class LazyProperty<T> extends VariableProperty<T> {
+public abstract class LazyProperty<T> implements Property<T> {
 	
 	protected T value;
 	
