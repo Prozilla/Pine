@@ -3,8 +3,8 @@ package dev.prozilla.pine.core.component.audio;
 import dev.prozilla.pine.common.asset.audio.AudioSource;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.math.MathUtils;
-import dev.prozilla.pine.common.property.FixedProperty;
 import dev.prozilla.pine.common.property.Property;
+import dev.prozilla.pine.common.property.fixed.FixedObjectProperty;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 		if (volume == AudioPlayer.DEFAULT_VOLUME) {
 			setGlobalVolume(null);
 		} else {
-			setGlobalVolume(new FixedProperty<>(volume));
+			setGlobalVolume(new FixedObjectProperty<>(volume));
 		}
 	}
 	
@@ -111,7 +111,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 		if (volume == AudioPlayer.DEFAULT_VOLUME) {
 			setVolume(null);
 		} else {
-			setVolume(new FixedProperty<>(volume));
+			setVolume(new FixedObjectProperty<>(volume));
 		}
 	}
 	
@@ -131,7 +131,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 		if (pitch == AudioPlayer.DEFAULT_PITCH) {
 			setGlobalPitch(null);
 		} else {
-			setGlobalPitch(new FixedProperty<>(pitch));
+			setGlobalPitch(new FixedObjectProperty<>(pitch));
 		}
 	}
 	
@@ -151,7 +151,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 		if (pitch == AudioPlayer.DEFAULT_PITCH) {
 			setPitch(null);
 		} else {
-			setPitch(new FixedProperty<>(pitch));
+			setPitch(new FixedObjectProperty<>(pitch));
 		}
 	}
 	
@@ -171,7 +171,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 		if (gain == AudioPlayer.DEFAULT_GAIN) {
 			setGlobalGain(null);
 		} else {
-			setGlobalGain(new FixedProperty<>(gain));
+			setGlobalGain(new FixedObjectProperty<>(gain));
 		}
 	}
 	
@@ -191,7 +191,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 		if (gain == AudioPlayer.DEFAULT_GAIN) {
 			setGain(null);
 		} else {
-			setGain(new FixedProperty<>(gain));
+			setGain(new FixedObjectProperty<>(gain));
 		}
 	}
 	

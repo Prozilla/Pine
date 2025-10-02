@@ -3,6 +3,7 @@ package dev.prozilla.pine.common.property;
 import dev.prozilla.pine.common.math.easing.Easing;
 import dev.prozilla.pine.common.property.animated.AnimatedFloatProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
+import dev.prozilla.pine.common.property.fixed.FixedObjectProperty;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
 import dev.prozilla.pine.test.TestPerformanceExtension;
 import org.junit.jupiter.api.MethodOrderer;
@@ -29,7 +30,7 @@ public class PropertyTest {
 	@Test
 	@Tag("performance")
 	void testFixedFloatPerformance() {
-		Property<Float> property = new FixedProperty<>(5f);
+		Property<Float> property = new FixedObjectProperty<>(5f);
 		properties[0] = property;
 		
 		float value = simulateFloatPropertyUsage(property);

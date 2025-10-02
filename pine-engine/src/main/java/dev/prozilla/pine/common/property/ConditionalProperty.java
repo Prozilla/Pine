@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.property;
 
+import dev.prozilla.pine.common.property.fixed.FixedObjectProperty;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -14,7 +15,7 @@ public class ConditionalProperty<T> implements Property<T> {
 	protected final Property<T> propertyFalse;
 	
 	public ConditionalProperty(Property<Boolean> condition, T valueTrue, T valueFalse) {
-		this(condition, new FixedProperty<>(valueTrue), new FixedProperty<>(valueFalse));
+		this(condition, new FixedObjectProperty<>(valueTrue), new FixedObjectProperty<>(valueFalse));
 	}
 	
 	public ConditionalProperty(Property<Boolean> condition, Property<T> propertyTrue, Property<T> propertyFalse) {

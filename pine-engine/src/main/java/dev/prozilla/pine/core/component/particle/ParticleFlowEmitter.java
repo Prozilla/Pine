@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.component.particle;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
-import dev.prozilla.pine.common.property.FixedProperty;
 import dev.prozilla.pine.common.property.Property;
+import dev.prozilla.pine.common.property.fixed.FixedObjectProperty;
 import dev.prozilla.pine.core.entity.prefab.particle.ParticlePrefab;
 
 /**
@@ -16,7 +16,7 @@ public class ParticleFlowEmitter extends ParticleEmitter {
 	public Vector2f origin;
 	public boolean applyTimeScale;
 	
-	public static final Property<Float> DEFAULT_SPAWN_DELAY = new FixedProperty<>(1f);
+	public static final Property<Float> DEFAULT_SPAWN_DELAY = new FixedObjectProperty<>(1f);
 	public static final boolean APPLY_TIME_SCALE_DEFAULT = true;
 	
 	public ParticleFlowEmitter(ParticlePrefab particlePrefab) {

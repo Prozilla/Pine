@@ -4,12 +4,12 @@ import dev.prozilla.pine.common.asset.image.TextureBase;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.easing.EasingFunction;
 import dev.prozilla.pine.common.math.vector.Vector2f;
-import dev.prozilla.pine.common.property.FixedProperty;
 import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.VariableColorProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.variable.VariableAnimatedColorProperty;
 import dev.prozilla.pine.common.property.animated.variable.VariableAnimatedFloatProperty;
+import dev.prozilla.pine.common.property.fixed.FixedObjectProperty;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.particle.ParticleRenderer;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
@@ -31,7 +31,7 @@ public class ParticlePrefab extends SpritePrefab {
 	protected boolean animateSprite;
 	protected Property<Integer> initialFrame;
 	
-	public static final Property<Float> DEFAULT_LIFETIME = new FixedProperty<>(5f);
+	public static final Property<Float> DEFAULT_LIFETIME = new FixedObjectProperty<>(5f);
 	
 	public ParticlePrefab(String texturePath) {
 		this(AssetPools.textures.load(texturePath));
@@ -55,7 +55,7 @@ public class ParticlePrefab extends SpritePrefab {
 	
 	@Override
 	public void setColor(Color color) {
-		setColor(new FixedProperty<>(color));
+		setColor(new FixedObjectProperty<>(color));
 	}
 	
 	public void setColor(Property<Color> color) {
@@ -67,7 +67,7 @@ public class ParticlePrefab extends SpritePrefab {
 	 * Adds an animation for the alpha value of the particle's color, going from <code>1f</code> to <code>0f</code>.
 	 */
 	public void setColorAlphaAnimation(Color base, EasingFunction easingFunction) {
-		setColorAlphaAnimation(base, new FixedProperty<>(1f), new FixedProperty<>(0f), easingFunction);
+		setColorAlphaAnimation(base, new FixedObjectProperty<>(1f), new FixedObjectProperty<>(0f), easingFunction);
 	}
 	
 	/**
@@ -106,7 +106,7 @@ public class ParticlePrefab extends SpritePrefab {
 	
 	@Override
 	public void setScale(Vector2f scale) {
-		setScale(new FixedProperty<>(scale.length()));
+		setScale(new FixedObjectProperty<>(scale.length()));
 	}
 	
 	public void setScale(Property<Float> scale) {

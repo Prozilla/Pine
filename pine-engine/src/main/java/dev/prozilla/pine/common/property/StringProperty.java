@@ -3,8 +3,6 @@ package dev.prozilla.pine.common.property;
 import dev.prozilla.pine.common.util.checks.Checks;
 import org.jetbrains.annotations.Contract;
 
-import java.util.Objects;
-
 @FunctionalInterface
 public interface StringProperty extends Property<String> {
 	
@@ -31,7 +29,7 @@ public interface StringProperty extends Property<String> {
 	@Override
 	default StringProperty replaceNull(String defaultValue) {
 		Checks.isNotNull(defaultValue, "defaultValue");
-		return () -> Objects.requireNonNullElse(getValue(), defaultValue);
+		return () -> getValueOr(defaultValue);
 	}
 	
 	/**
@@ -42,6 +40,10 @@ public interface StringProperty extends Property<String> {
 	@Override
 	default StringProperty toStringProperty() {
 		return this;
+	}
+	
+	static StringProperty fromProperty(StringProperty property) {
+		return property;
 	}
 	
 	@Contract("_ -> new")

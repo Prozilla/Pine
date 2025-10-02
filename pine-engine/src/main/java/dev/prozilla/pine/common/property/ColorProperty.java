@@ -34,6 +34,10 @@ public interface ColorProperty extends Property<Color>, Transmittable<Color> {
 		return () -> Objects.requireNonNullElse(getValue(), defaultValue);
 	}
 	
+	static ColorProperty fromProperty(ColorProperty property) {
+		return property;
+	}
+	
 	@Contract("_ -> new")
 	static ColorProperty fromProperty(Property<Color> property) {
 		return property::getValue;

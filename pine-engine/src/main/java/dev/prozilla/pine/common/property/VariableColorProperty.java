@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.property;
 
+import dev.prozilla.pine.common.property.fixed.FixedObjectProperty;
 import dev.prozilla.pine.common.system.Color;
 
 public class VariableColorProperty implements ColorProperty {
@@ -10,11 +11,11 @@ public class VariableColorProperty implements ColorProperty {
 	protected Property<Float> alpha;
 	
 	public VariableColorProperty(Color color) {
-		this(new FixedProperty<>(color.getRed()), new FixedProperty<>(color.getGreen()), new FixedProperty<>(color.getBlue()), new FixedProperty<>(color.getAlpha()));
+		this(new FixedObjectProperty<>(color.getRed()), new FixedObjectProperty<>(color.getGreen()), new FixedObjectProperty<>(color.getBlue()), new FixedObjectProperty<>(color.getAlpha()));
 	}
 	
 	public VariableColorProperty(Property<Float> red, Property<Float> green, Property<Float> blue) {
-		this(red, green, blue, new FixedProperty<>(1f));
+		this(red, green, blue, new FixedObjectProperty<>(1f));
 	}
 	
 	public VariableColorProperty(Property<Float> red, Property<Float> green, Property<Float> blue, Property<Float> alpha) {

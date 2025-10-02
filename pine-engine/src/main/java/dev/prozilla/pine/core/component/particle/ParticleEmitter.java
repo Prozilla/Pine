@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.component.particle;
 
-import dev.prozilla.pine.common.property.FixedProperty;
 import dev.prozilla.pine.common.property.Property;
+import dev.prozilla.pine.common.property.fixed.FixedObjectProperty;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.prefab.particle.ParticlePrefab;
 
@@ -19,7 +19,7 @@ public abstract class ParticleEmitter extends Component {
 	 */
 	public Property<Integer> count;
 	
-	public static final Property<Integer> DEFAULT_COUNT = new FixedProperty<>(5);
+	public static final Property<Integer> DEFAULT_COUNT = new FixedObjectProperty<>(5);
 	
 	public ParticleEmitter(ParticlePrefab particlePrefab, Property<Integer> count) {
 		this.particlePrefab = particlePrefab;
