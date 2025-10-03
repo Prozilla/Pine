@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property.observable;
 
 /**
- * @see ObservableObjectProperty
+ * @see ObservableIntProperty
  */
 @FunctionalInterface
 public interface IntObserver extends Observer<Integer> {

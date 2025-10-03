@@ -26,7 +26,7 @@ public class StoredStringProperty extends StoredProperty<String> implements Stri
 	 */
 	@Contract("-> this")
 	@Override
-	public StringProperty toStringProperty() {
+	public StoredStringProperty toStringProperty() {
 		return this;
 	}
 	

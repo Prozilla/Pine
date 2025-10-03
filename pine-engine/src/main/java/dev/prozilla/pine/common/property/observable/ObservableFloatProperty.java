@@ -2,6 +2,9 @@ package dev.prozilla.pine.common.property.observable;
 
 import dev.prozilla.pine.common.property.mutable.MutableFloatProperty;
 
+/**
+ * A property with a float value that can be observed.
+ */
 public interface ObservableFloatProperty extends ObservableProperty<Float>, MutableFloatProperty {
 	
 	@Override
@@ -20,10 +23,7 @@ public interface ObservableFloatProperty extends ObservableProperty<Float>, Muta
 	}
 	
 	/**
-	 * Adds an observer that is immediately called with the current value.
-	 *
-	 * <p>This is the equivalent of calling {@link #getValue()}, then doing something with that value, and then adding an observer which does the same thing each time the value changes.</p>
-	 * @param reader The observer
+	 * @see #read(Observer)
 	 */
 	default void read(FloatObserver reader) {
 		addObserver(reader);

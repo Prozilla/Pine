@@ -53,7 +53,7 @@ public class SimpleObservableIntProperty extends SimpleMutableIntProperty implem
 			try {
 				observer.observe(newValue);
 			} catch (Exception e) {
-				getLogger().error("Observer failed", e);
+				getLogger().error(OBSERVER_ERROR, e);
 			}
 		}
 	}

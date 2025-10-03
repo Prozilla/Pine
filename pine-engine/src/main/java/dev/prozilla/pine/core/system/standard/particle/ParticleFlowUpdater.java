@@ -26,7 +26,7 @@ public final class ParticleFlowUpdater extends UpdateSystem {
 		particleFlowEmitter.timeUntilSpawn -= deltaTime;
 		
 		if (particleFlowEmitter.timeUntilSpawn <= 0) {
-			int spawnCount = particleFlowEmitter.count.getValue();
+			int spawnCount = particleFlowEmitter.count.get();
 			
 			if (spawnCount <= 0) {
 				return;
@@ -37,7 +37,7 @@ public final class ParticleFlowUpdater extends UpdateSystem {
 				particleFlowEmitter.getEntity().addChild(particle);
 			}
 			
-			particleFlowEmitter.timeUntilSpawn = particleFlowEmitter.spawnDelay.getValue();
+			particleFlowEmitter.timeUntilSpawn = particleFlowEmitter.spawnDelay.get();
 		}
 	}
 }

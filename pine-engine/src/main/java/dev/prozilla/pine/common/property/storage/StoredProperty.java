@@ -1,12 +1,11 @@
 package dev.prozilla.pine.common.property.storage;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
-import dev.prozilla.pine.common.property.StringProperty;
-import dev.prozilla.pine.common.property.mutable.MutableProperty;
+import dev.prozilla.pine.common.property.mutable.MutableObjectProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.storage.Storage;
 
-public abstract class StoredProperty<T> implements MutableProperty<T>, Destructible {
+public abstract class StoredProperty<T> implements MutableObjectProperty<T>, Destructible {
 
 	protected final Storage storage;
 	protected final String key;
@@ -14,6 +13,28 @@ public abstract class StoredProperty<T> implements MutableProperty<T>, Destructi
 	public StoredProperty(Storage storage, String key) {
 		this.storage = Checks.isNotNull(storage, "storage");
 		this.key = Checks.isNotNull(key, "key");
+	}
+	
+	@Override
+	abstract public T getValue();
+	
+	@Override
+	public T getValueOr(T defaultValue) {
+		return MutableObjectProperty.super.getValueOr(defaultValue);
+	}
+	
+	@Override
+	public boolean exists() {
+		return storage.getItem(key) != null;
+	}
+	
+	@Override
+	public boolean setNull() {
+		if (!exists()) {
+			return false;
+		}
+		storage.removeItem("key");
+		return true;
 	}
 	
 	public boolean setValue(String value) {
@@ -34,12 +55,12 @@ public abstract class StoredProperty<T> implements MutableProperty<T>, Destructi
 	}
 	
 	/**
-	 * Creates a stored string property with the same key as this property.
+	 * Returns a stored string property with the same key as this property.
 	 * @return A new stored string property.
 	 * @see Storage#stringProperty(String)
 	 */
 	@Override
-	public StringProperty toStringProperty() {
+	public StoredStringProperty toStringProperty() {
 		return storage.stringProperty(key);
 	}
 	

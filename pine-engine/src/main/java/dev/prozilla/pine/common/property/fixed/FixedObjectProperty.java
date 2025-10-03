@@ -4,9 +4,6 @@ import dev.prozilla.pine.common.Cloneable;
 
 import java.util.Objects;
 
-/**
- * A property with a value that never changes.
- */
 public class FixedObjectProperty<T> implements FixedProperty<T>, Cloneable<FixedObjectProperty<T>> {
 	
 	protected final T value;

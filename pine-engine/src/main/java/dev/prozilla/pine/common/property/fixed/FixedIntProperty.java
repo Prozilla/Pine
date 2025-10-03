@@ -12,13 +12,17 @@ public class FixedIntProperty implements FixedProperty<Integer>, IntProperty {
 	}
 	
 	@Override
-	public int get() {
+	public final int get() {
 		return value;
 	}
 	
 	@Override
-	public FixedBooleanProperty existsProperty() {
+	public FixedBooleanProperty existenceProperty() {
 		return BooleanProperty.TRUE;
 	}
 	
+	@Override
+	public FixedBooleanProperty isZeroProperty() {
+		return BooleanProperty.fromValue(get() == 0);
+	}
 }

@@ -1,11 +1,12 @@
 package dev.prozilla.pine.common.property.animated;
 
+import dev.prozilla.pine.common.lifecycle.Updatable;
 import dev.prozilla.pine.common.property.Property;
 
 /**
  * A property with a value that changes over time.
  */
-public abstract class AnimatedProperty<T> implements Property<T> {
+public abstract class AnimatedProperty<T> implements Property<T>, Updatable {
 
 	protected T start;
 	protected T end;
@@ -51,6 +52,7 @@ public abstract class AnimatedProperty<T> implements Property<T> {
 	 * Progresses the animation.
 	 * @param deltaTime How far to progress the animation, in seconds
 	 */
+	@Override
 	public void update(float deltaTime) {
 		time += deltaTime;
 	}

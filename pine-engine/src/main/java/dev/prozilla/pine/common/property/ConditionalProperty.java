@@ -10,15 +10,15 @@ import org.jetbrains.annotations.Contract;
  */
 public class ConditionalProperty<T> implements Property<T> {
 
-	protected final Property<Boolean> condition;
+	protected final BooleanProperty condition;
 	protected final Property<T> propertyTrue;
 	protected final Property<T> propertyFalse;
 	
-	public ConditionalProperty(Property<Boolean> condition, T valueTrue, T valueFalse) {
+	public ConditionalProperty(BooleanProperty condition, T valueTrue, T valueFalse) {
 		this(condition, new FixedObjectProperty<>(valueTrue), new FixedObjectProperty<>(valueFalse));
 	}
 	
-	public ConditionalProperty(Property<Boolean> condition, Property<T> propertyTrue, Property<T> propertyFalse) {
+	public ConditionalProperty(BooleanProperty condition, Property<T> propertyTrue, Property<T> propertyFalse) {
 		this.condition = condition;
 		this.propertyTrue = propertyTrue;
 		this.propertyFalse = propertyFalse;

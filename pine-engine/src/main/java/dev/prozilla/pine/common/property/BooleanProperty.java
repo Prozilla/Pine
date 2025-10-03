@@ -3,9 +3,13 @@ package dev.prozilla.pine.common.property;
 import dev.prozilla.pine.common.property.fixed.FixedBooleanProperty;
 import org.jetbrains.annotations.Contract;
 
+/**
+ * A property with a boolean value.
+ */
 @FunctionalInterface
-public interface BooleanProperty extends Property<Boolean> {
+public interface BooleanProperty extends NonNullProperty<Boolean> {
 	
+	/** A boolean property whose value is always {@code true}. */
 	FixedBooleanProperty TRUE = new FixedBooleanProperty() {
 		@Override
 		public boolean get() {
@@ -18,10 +22,11 @@ public interface BooleanProperty extends Property<Boolean> {
 		}
 		
 		@Override
-		public FixedBooleanProperty existsProperty() {
+		public FixedBooleanProperty existenceProperty() {
 			return this;
 		}
 	};
+	/** A boolean property whose value is always {@code false}. */
 	FixedBooleanProperty FALSE = new FixedBooleanProperty() {
 		@Override
 		public boolean get() {
@@ -34,7 +39,7 @@ public interface BooleanProperty extends Property<Boolean> {
 		}
 		
 		@Override
-		public FixedBooleanProperty existsProperty() {
+		public FixedBooleanProperty existenceProperty() {
 			return TRUE;
 		}
 	};
@@ -49,32 +54,35 @@ public interface BooleanProperty extends Property<Boolean> {
 		return get();
 	}
 	
+	/**
+	 * Returns the primitive value of this property.
+	 * @return The primitive value of this property.
+	 */
 	boolean get();
-	
-	@Contract("-> true")
-	@Override
-	default boolean exists() {
-		return true;
-	}
 	
 	default boolean has(boolean value) {
 		return get() == value;
 	}
 	
+	/**
+	 * Returns a boolean property whose value is the negation of the value of this property.
+	 * @return A boolean property that negates this property.
+	 */
 	default BooleanProperty not() {
 		return () -> !get();
 	}
 	
-	/**
-	 * Returns this property.
-	 * @return This property.
-	 */
 	@Contract("_ -> this")
 	@Override
 	default BooleanProperty replaceNull(Boolean defaultValue) {
 		return this;
 	}
 	
+	/**
+	 * Converts a boolean to a boolean property.
+	 * @param value The boolean value
+	 * @return The boolean property with the given value.
+	 */
 	static FixedBooleanProperty fromValue(boolean value) {
 		if (value) {
 			return TRUE;
@@ -90,6 +98,21 @@ public interface BooleanProperty extends Property<Boolean> {
 	@Contract("_ -> new")
 	static BooleanProperty fromProperty(Property<Boolean> property) {
 		return property::getValue;
+	}
+	
+	/**
+	 * Returns the value of a given property, or a default value if the property is {@code null}.
+	 * @param property The property or {@code null}
+	 * @param defaultValue The value to use in case the property is {@code null}.
+	 * @return The value
+	 */
+	@Contract("null, _ -> param2")
+	static boolean getPropertyValue(BooleanProperty property, boolean defaultValue) {
+		if (property == null) {
+			return defaultValue;
+		} else {
+			return property.get();
+		}
 	}
 	
 }

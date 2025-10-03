@@ -8,14 +8,14 @@ import org.jetbrains.annotations.Contract;
 import java.util.Objects;
 
 /**
- * Utility methods for color properties.
+ * A property with a color value.
  */
 @FunctionalInterface
 public interface ColorProperty extends Property<Color>, Transmittable<Color> {
 	
 	@Override
 	default void transmit(Color target) {
-		getValue().transmit(target);
+		Transmittable.transmit(getValue(), target);
 	}
 	
 	/**

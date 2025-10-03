@@ -53,7 +53,7 @@ public class SimpleObservableFloatProperty extends SimpleMutableFloatProperty im
 			try {
 				observer.observe(newValue);
 			} catch (Exception e) {
-				getLogger().error("Observer failed", e);
+				getLogger().error(OBSERVER_ERROR, e);
 			}
 		}
 	}
