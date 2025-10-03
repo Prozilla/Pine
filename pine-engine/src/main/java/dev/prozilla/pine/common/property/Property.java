@@ -71,7 +71,7 @@ public interface Property<T> {
 	 * Returns a boolean property whose value is {@code true} if the value of this property is not {@code null} and vice versa.
 	 * @return A boolean property whose value is {@code true} if the value of this property is not {@code null} and vice versa.
 	 */
-	default BooleanProperty existsProperty() {
+	default BooleanProperty existenceProperty() {
 		return this::exists;
 	}
 	

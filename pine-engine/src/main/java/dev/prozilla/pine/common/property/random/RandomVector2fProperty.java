@@ -1,8 +1,14 @@
 package dev.prozilla.pine.common.property.random;
 
+import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.property.BooleanProperty;
+import dev.prozilla.pine.common.property.fixed.FixedBooleanProperty;
+import dev.prozilla.pine.common.property.vector.Vector2fProperty;
+import dev.prozilla.pine.common.util.checks.Checks;
+import org.jetbrains.annotations.Contract;
 
-public class RandomVector2fProperty extends RandomProperty<Vector2f> {
+public class RandomVector2fProperty extends RandomObjectProperty<Vector2f> implements Vector2fProperty {
 	
 	public RandomVector2fProperty(float min, float max) {
 		this(min, max, min, max);
@@ -13,13 +19,33 @@ public class RandomVector2fProperty extends RandomProperty<Vector2f> {
 	}
 	
 	public RandomVector2fProperty(Vector2f min, Vector2f max) {
-		super(min, max);
+		super(Checks.isNotNull(min, "min"), Checks.isNotNull(max, "max"));
+	}
+	
+	@Contract("-> true")
+	@Override
+	public boolean exists() {
+		return true;
+	}
+	
+	@Override
+	public FixedBooleanProperty existenceProperty() {
+		return BooleanProperty.TRUE;
 	}
 	
 	@Override
 	public Vector2f getValue() {
-		float x = min.x + random.nextFloat() * (max.x - min.x);
-		float y = min.y + random.nextFloat() * (max.y - min.y);
-		return new Vector2f(x, y);
+		return new Vector2f(getX(), getY());
 	}
+	
+	@Override
+	public float getX() {
+		return MathUtils.remap(random.nextFloat(), min.x, max.x);
+	}
+	
+	@Override
+	public float getY() {
+		return MathUtils.remap(random.nextFloat(), min.y, max.y);
+	}
+	
 }

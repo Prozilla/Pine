@@ -2,6 +2,9 @@ package dev.prozilla.pine.common.property.observable;
 
 import dev.prozilla.pine.common.property.mutable.MutableIntProperty;
 
+/**
+ * A property with an integer value that can be observed.
+ */
 public interface ObservableIntProperty extends ObservableProperty<Integer>, MutableIntProperty {
 	
 	@Override
@@ -20,10 +23,7 @@ public interface ObservableIntProperty extends ObservableProperty<Integer>, Muta
 	}
 	
 	/**
-	 * Adds an observer that is immediately called with the current value.
-	 *
-	 * <p>This is the equivalent of calling {@link #getValue()}, then doing something with that value, and then adding an observer which does the same thing each time the value changes.</p>
-	 * @param reader The observer
+	 * @see #read(Observer)
 	 */
 	default void read(IntObserver reader) {
 		addObserver(reader);

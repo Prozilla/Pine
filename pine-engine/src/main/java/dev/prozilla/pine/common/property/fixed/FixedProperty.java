@@ -4,6 +4,9 @@ import dev.prozilla.pine.common.property.BooleanProperty;
 import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.util.StringUtils;
 
+/**
+ * A property with a value that never changes.
+ */
 public interface FixedProperty<T> extends Property<T> {
 	
 	@Override
@@ -12,7 +15,7 @@ public interface FixedProperty<T> extends Property<T> {
 	}
 	
 	@Override
-	default FixedBooleanProperty existsProperty() {
+	default FixedBooleanProperty existenceProperty() {
 		return BooleanProperty.fromValue(exists());
 	}
 	

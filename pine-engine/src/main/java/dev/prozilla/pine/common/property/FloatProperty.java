@@ -2,8 +2,11 @@ package dev.prozilla.pine.common.property;
 
 import org.jetbrains.annotations.Contract;
 
+/**
+ * A property with a float value.
+ */
 @FunctionalInterface
-public interface FloatProperty extends Property<Float> {
+public interface FloatProperty extends NonNullProperty<Float> {
 	
 	@Override
 	default Float getValue() {
@@ -15,22 +18,16 @@ public interface FloatProperty extends Property<Float> {
 		return get();
 	}
 	
+	/**
+	 * Returns the primitive value of this property.
+	 * @return The primitive value of this property.
+	 */
 	float get();
-	
-	@Contract("-> true")
-	@Override
-	default boolean exists() {
-		return true;
-	}
 	
 	default boolean has(float value) {
 		return get() == value;
 	}
 	
-	/**
-	 * Returns this property.
-	 * @return This property.
-	 */
 	@Contract("_ -> this")
 	@Override
 	default FloatProperty replaceNull(Float defaultValue) {
@@ -44,6 +41,21 @@ public interface FloatProperty extends Property<Float> {
 	@Contract("_ -> new")
 	static FloatProperty fromProperty(Property<Float> property) {
 		return property::getValue;
+	}
+	
+	/**
+	 * Returns the value of a given property, or a default value if the property is {@code null}.
+	 * @param property The property or {@code null}
+	 * @param defaultValue The value to use in case the property is {@code null}.
+	 * @return The value
+	 */
+	@Contract("null, _ -> param2")
+	static float getPropertyValue(FloatProperty property, float defaultValue) {
+		if (property == null) {
+			return defaultValue;
+		} else {
+			return property.get();
+		}
 	}
 	
 }

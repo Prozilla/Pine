@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.state.config;
 
-import dev.prozilla.pine.common.property.observable.ObservableObjectProperty;
+import dev.prozilla.pine.common.property.observable.SimpleObservableObjectProperty;
 
 import java.util.function.Predicate;
 
@@ -9,7 +9,7 @@ import java.util.function.Predicate;
  * @param <T> Type of the value of the option
  * @see Config
  */
-public class ConfigOption<T> extends ObservableObjectProperty<T> {
+public class ConfigOption<T> extends SimpleObservableObjectProperty<T> {
 	
 	private final T initialValue;
 	private final Predicate<T> validator;

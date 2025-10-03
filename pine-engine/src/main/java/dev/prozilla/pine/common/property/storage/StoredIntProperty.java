@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.storage;
 
 import dev.prozilla.pine.common.property.mutable.MutableIntProperty;
+import dev.prozilla.pine.common.util.parser.ParseFunction;
 import dev.prozilla.pine.core.storage.Storage;
 
 public class StoredIntProperty extends StoredProperty<Integer> implements MutableIntProperty {
@@ -12,6 +13,11 @@ public class StoredIntProperty extends StoredProperty<Integer> implements Mutabl
 	@Override
 	public boolean set(int value) {
 		return setValue(Integer.toString(value));
+	}
+	
+	@Override
+	public Integer getValue() {
+		return storage.getItem(key, ParseFunction::parseInt);
 	}
 	
 	@Override

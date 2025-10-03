@@ -2,7 +2,12 @@ package dev.prozilla.pine.common.property.observable;
 
 import dev.prozilla.pine.common.property.mutable.MutableProperty;
 
+/**
+ * A property that triggers observers whenever its value changes.
+ */
 public interface ObservableProperty<T> extends MutableProperty<T> {
+	
+	String OBSERVER_ERROR = "observer failed";
 	
 	/**
 	 * Adds an observer that is immediately called with the current value.

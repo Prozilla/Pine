@@ -1,13 +1,27 @@
 package dev.prozilla.pine.common.property.random;
 
-public class RandomFloatProperty extends RandomProperty<Float> {
+import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.property.FloatProperty;
+
+/**
+ * A property with a randomized integer value.
+ */
+public class RandomFloatProperty extends RandomProperty<Float> implements FloatProperty {
+	
+	protected final float min, max;
+	
+	public RandomFloatProperty(Vector2f bounds) {
+		this(bounds.x, bounds.y);
+	}
 	
 	public RandomFloatProperty(float min, float max) {
-		super(min, max);
+		this.min = min;
+		this.max = max;
 	}
 	
 	@Override
-	public Float getValue() {
+	public float get() {
 		return random.nextFloat(min, max);
 	}
+	
 }

@@ -12,12 +12,12 @@ public class FixedFloatProperty implements FixedProperty<Float>, FloatProperty {
 	}
 	
 	@Override
-	public float get() {
+	public final float get() {
 		return value;
 	}
 	
 	@Override
-	public FixedBooleanProperty existsProperty() {
+	public FixedBooleanProperty existenceProperty() {
 		return BooleanProperty.TRUE;
 	}
 	

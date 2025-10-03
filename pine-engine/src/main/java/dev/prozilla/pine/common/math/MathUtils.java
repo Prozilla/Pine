@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.math;
 
+import dev.prozilla.pine.common.math.vector.Vector2f;
+
 public final class MathUtils {
 	
 	private MathUtils() {}
@@ -38,8 +40,28 @@ public final class MathUtils {
 	}
 	
 	/**
+	 * Remaps a float value between {@code 0f} and {@code 1f}.
+	 * @param value The input value to remap
+	 * @return The remapped value in the range [a, b]
+	 */
+	public static float remap(float value, Vector2f bounds) {
+		return remap(value, bounds.x, bounds.y);
+	}
+	
+	/**
+	 * Remaps a float value between {@code 0f} and {@code 1f}.
+	 * @param value The input value to remap
+	 * @param a The lower bound of the target range
+	 * @param b The upper bound of the target range
+	 * @return The remapped value in the range [a, b]
+	 */
+	public static float remap(float value, float a, float b) {
+		return a + value * (b - a);
+	}
+	
+	/**
 	 * Remaps a float value from one range to another.
-	 * @param value The input float value to remap
+	 * @param value The input value to remap
 	 * @param x The lower bound of the original range
 	 * @param y The upper bound of the original range
 	 * @param a The lower bound of the target range

@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property.observable;
 
 /**
- * @see ObservableObjectProperty
+ * @see ObservableFloatProperty
  */
 @FunctionalInterface
 public interface FloatObserver extends Observer<Float> {

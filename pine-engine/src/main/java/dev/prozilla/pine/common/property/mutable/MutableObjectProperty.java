@@ -1,54 +1,26 @@
 package dev.prozilla.pine.common.property.mutable;
 
-import java.util.Objects;
-
 /**
- * A property whose value can be changed using a setter.
+ * A mutable property that supports null values.
  */
-public class MutableObjectProperty<T> implements MutableProperty<T> {
-	
-	private T value;
+public interface MutableObjectProperty<T> extends MutableProperty<T> {
 	
 	/**
-	 * Creates a mutable property without an initial value.
+	 * Takes the current value of this property and then sets it to {@code null}.
+	 * @return The current value of this property.
 	 */
-	public MutableObjectProperty() {
-		this(null);
-	}
-	
-	/**
-	 * Creates a mutable property with an initial value.
-	 * @param initialValue The initial value
-	 */
-	public MutableObjectProperty(T initialValue) {
-		value = initialValue;
-	}
-	
-	@Override
-	public boolean setValue(T value) {
-		if (Objects.equals(this.value, value)) {
-			return false;
-		}
-		
-		onValueChange(this.value, value);
-		this.value = value;
-		return true;
-	}
-	
-	/**
-	 * This method is called whenever the value of this property changes.
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 * @param oldValue The previous value
-	 * @param newValue The new value
-	 */
-	protected void onValueChange(T oldValue, T newValue) {
-	
-	}
-	
-	@Override
-	public T getValue() {
+	default T steal() {
+		T value = getValue();
+		setNull();
 		return value;
+	}
+	
+	/**
+	 * Sets the value of this property to {@code null}.
+	 * @return {@code false} if the value of this property was already {@code null}.
+	 */
+	default boolean setNull() {
+		return setValue(null);
 	}
 	
 }

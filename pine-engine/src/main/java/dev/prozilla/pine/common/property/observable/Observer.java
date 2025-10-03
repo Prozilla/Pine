@@ -1,7 +1,8 @@
 package dev.prozilla.pine.common.property.observable;
 
 /**
- * @see ObservableObjectProperty
+ * Defines a method that gets called whenever the value of a property changes.
+ * @see ObservableProperty
  * @param <T> The type of value to observe
  */
 @FunctionalInterface

@@ -9,10 +9,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ParsedProperty<T> implements Property<T> {
 	
-	private final Property<String> inputProperty;
+	private final StringProperty inputProperty;
 	private final Parser<T> parser;
 	
-	public ParsedProperty(Property<String> inputProperty, Parser<T> parser) {
+	public ParsedProperty(StringProperty inputProperty, Parser<T> parser) {
 		this.inputProperty = Checks.isNotNull(inputProperty, "inputProperty");
 		this.parser = Checks.isNotNull(parser, "parser");
 	}
@@ -23,8 +23,16 @@ public class ParsedProperty<T> implements Property<T> {
 	 */
 	@Override
 	public T getValue() {
-		parser.parse(inputProperty.getValue());
+		String input = inputProperty.getValue();
+		if (input == null) {
+			return null;
+		}
+		parser.parse(input);
 		return parser.getResult();
+	}
+	
+	public @NotNull StringProperty inputProperty() {
+		return inputProperty;
 	}
 	
 	public @NotNull Parser<T> getParser() {
