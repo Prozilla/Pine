@@ -5,6 +5,9 @@ import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.property.FloatProperty;
 import dev.prozilla.pine.common.property.fixed.FixedFloatProperty;
+import dev.prozilla.pine.common.property.FloatProperty;
+import dev.prozilla.pine.common.property.Property;
+import dev.prozilla.pine.common.property.fixed.FixedFloatProperty;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.ArrayList;
