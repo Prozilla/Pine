@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common;
 
+import dev.prozilla.pine.common.property.fixed.FixedIntProperty;
+
 public interface IntEnum {
 	
 	/**
@@ -7,5 +9,9 @@ public interface IntEnum {
 	 * @return The integer value.
 	 */
 	int getValue();
+	
+	default FixedIntProperty toProperty() {
+		return new FixedIntProperty(getValue());
+	}
 	
 }

@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Contract;
 /**
  * A property whose value is never {@code null}.
  */
+@FunctionalInterface
 public interface NonNullProperty<T> extends Property<T> {
 	
 	/**

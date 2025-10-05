@@ -12,7 +12,7 @@ public interface MutableProperty<T> extends Property<T> {
 	 * @param value The new value
 	 * @return The previous value.
 	 */
-	default T replaceValue(T value) {
+	default T swapValue(T value) {
 		T previousValue = getValue();
 		setValue(value);
 		return previousValue;

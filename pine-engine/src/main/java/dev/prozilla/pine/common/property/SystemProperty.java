@@ -7,7 +7,7 @@ import dev.prozilla.pine.common.util.checks.Checks;
  *
  * <p>Unless {@link #fetch} is explicitly called, the value will only be read once and cached for later uses.</p>
  */
-public class SystemProperty extends LazyProperty<String> {
+public class SystemProperty extends LazyProperty<String> implements StringProperty {
 	
 	private final String key;
 	

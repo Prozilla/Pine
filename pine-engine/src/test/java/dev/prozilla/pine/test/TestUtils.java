@@ -97,4 +97,9 @@ public class TestUtils {
 		assertTrue(StringUtils.containsOnce(string, substring), String.format("string should contain '%s' once, but was: %s", substring, string));
 	}
 	
+	public static void assertInstanceOf(Object object, Class<?> type) {
+		assertNotNull(object);
+		assertTrue(type.isInstance(object), String.format("object should be instance of %s, but was: %s", type.getSimpleName(), object.getClass().getSimpleName()));
+	}
+	
 }

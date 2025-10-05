@@ -4,6 +4,10 @@ import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.property.Property;
 import org.jetbrains.annotations.Contract;
 
+/**
+ * A property with a {@link Vector3f} value.
+ */
+@FunctionalInterface
 public interface Vector3fProperty extends Vector3fPropertyBase<Vector3f> {
 	
 	@Override

@@ -17,7 +17,7 @@ public interface MutableIntProperty extends MutableProperty<Integer>, IntPropert
 	 * @param value The new value
 	 * @return The previous value.
 	 */
-	default int replaceValue(int value) {
+	default int swap(int value) {
 		int previousValue = get();
 		set(value);
 		return previousValue;

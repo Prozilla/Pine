@@ -17,7 +17,7 @@ public interface MutableFloatProperty extends MutableProperty<Float>, FloatPrope
 	 * @param value The new value
 	 * @return The previous value.
 	 */
-	default float replaceValue(float value) {
+	default float swap(float value) {
 		float previousValue = get();
 		set(value);
 		return previousValue;

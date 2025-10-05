@@ -7,6 +7,7 @@ import dev.prozilla.pine.common.util.StringUtils;
 /**
  * A property with a value that never changes.
  */
+@FunctionalInterface
 public interface FixedProperty<T> extends Property<T> {
 	
 	@Override

@@ -17,7 +17,7 @@ public interface MutableBooleanProperty extends MutableProperty<Boolean>, Boolea
 	 * @param value The new value
 	 * @return The previous value.
 	 */
-	default boolean replaceValue(boolean value) {
+	default boolean swap(boolean value) {
 		boolean previousValue = get();
 		set(value);
 		return previousValue;

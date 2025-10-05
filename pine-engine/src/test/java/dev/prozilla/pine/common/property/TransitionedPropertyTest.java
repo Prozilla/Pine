@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ExtendWith({ TestLoggingExtension.class})
+@ExtendWith({TestLoggingExtension.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TransitionedPropertyTest {
 	

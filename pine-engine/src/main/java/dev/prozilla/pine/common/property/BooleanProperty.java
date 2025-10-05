@@ -72,6 +72,51 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 		return () -> !get();
 	}
 	
+	default BooleanProperty and(FixedBooleanProperty booleanProperty) {
+		if (booleanProperty.get()) {
+			return this;
+		} else {
+			return BooleanProperty.FALSE;
+		}
+	}
+	
+	default BooleanProperty and(BooleanProperty booleanProperty) {
+		return () -> get() && booleanProperty.get();
+	}
+	
+	default BooleanProperty or(FixedBooleanProperty booleanProperty) {
+		if (!booleanProperty.get()) {
+			return this;
+		} else {
+			return BooleanProperty.TRUE;
+		}
+	}
+	
+	default BooleanProperty or(BooleanProperty booleanProperty) {
+		return () -> get() || booleanProperty.get();
+	}
+	
+	default BooleanProperty xor(FixedBooleanProperty booleanProperty) {
+		if (booleanProperty.get()) {
+			return not();
+		} else {
+			return this;
+		}
+	}
+	
+	default BooleanProperty xor(BooleanProperty booleanProperty) {
+		return () -> get() ^ booleanProperty.get();
+	}
+	
+	/**
+	 * Returns a conditional property using this boolean property as the condition.
+	 * @return The conditional property.
+	 * @param <T> The type of property
+	 */
+	default <T> Property<T> ifElse(Property<T> propertyTrue, Property<T> propertyFalse) {
+		return new ConditionalProperty<>(this, propertyTrue, propertyFalse);
+	}
+	
 	@Contract("_ -> this")
 	@Override
 	default BooleanProperty replaceNull(Boolean defaultValue) {

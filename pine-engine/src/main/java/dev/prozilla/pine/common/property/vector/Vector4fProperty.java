@@ -4,6 +4,10 @@ import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.property.Property;
 import org.jetbrains.annotations.Contract;
 
+/**
+ * A property with a {@link Vector4f} value.
+ */
+@FunctionalInterface
 public interface Vector4fProperty extends Vector4fPropertyBase<Vector4f> {
 	
 	@Override
