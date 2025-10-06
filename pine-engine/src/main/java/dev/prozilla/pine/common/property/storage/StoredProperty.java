@@ -19,11 +19,6 @@ public abstract class StoredProperty<T> implements MutableObjectProperty<T>, Des
 	abstract public T getValue();
 	
 	@Override
-	public T getValueOr(T defaultValue) {
-		return MutableObjectProperty.super.getValueOr(defaultValue);
-	}
-	
-	@Override
 	public boolean isNotNull() {
 		return storage.getItem(key) != null;
 	}

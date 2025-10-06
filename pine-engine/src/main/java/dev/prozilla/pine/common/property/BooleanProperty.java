@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.property;
 
 import dev.prozilla.pine.common.property.fixed.FixedBooleanProperty;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A property with a boolean value.
@@ -45,12 +46,18 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 	};
 	
 	@Override
-	default Boolean getValue() {
-		return get();
+	default Boolean getValueOr(Boolean defaultValue) {
+		return getValue();
 	}
 	
 	@Override
-	default Boolean getValueOr(Boolean defaultValue) {
+	@NotNull
+	default Boolean getValueOrThrow() {
+		return getValue();
+	}
+	
+	@Override
+	default Boolean getValue() {
 		return get();
 	}
 	

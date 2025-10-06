@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A property with an integer value.
@@ -9,12 +10,18 @@ import org.jetbrains.annotations.Contract;
 public interface IntProperty extends NonNullProperty<Integer> {
 	
 	@Override
-	default Integer getValue() {
-		return get();
+	default Integer getValueOr(Integer defaultValue) {
+		return getValue();
 	}
 	
 	@Override
-	default Integer getValueOr(Integer defaultValue) {
+	@NotNull
+	default Integer getValueOrThrow() {
+		return getValue();
+	}
+	
+	@Override
+	default Integer getValue() {
 		return get();
 	}
 	

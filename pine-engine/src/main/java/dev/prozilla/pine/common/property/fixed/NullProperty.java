@@ -40,6 +40,12 @@ public class NullProperty<T> implements FixedProperty<T> {
 		return false;
 	}
 	
+	@Contract("-> this")
+	@Override
+	public NullProperty<T> snapshot() {
+		return this;
+	}
+	
 	public FixedColorProperty replaceNull(Color defaultValue) {
 		return new FixedColorProperty(defaultValue);
 	}

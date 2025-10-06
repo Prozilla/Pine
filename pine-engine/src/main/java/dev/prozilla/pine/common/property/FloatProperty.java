@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A property with a float value.
@@ -9,12 +10,18 @@ import org.jetbrains.annotations.Contract;
 public interface FloatProperty extends NonNullProperty<Float> {
 	
 	@Override
-	default Float getValue() {
-		return get();
+	default Float getValueOr(Float defaultValue) {
+		return getValue();
 	}
 	
 	@Override
-	default Float getValueOr(Float defaultValue) {
+	@NotNull
+	default Float getValueOrThrow() {
+		return getValue();
+	}
+	
+	@Override
+	default Float getValue() {
 		return get();
 	}
 	

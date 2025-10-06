@@ -3,6 +3,7 @@ package dev.prozilla.pine.common.property.fixed;
 import dev.prozilla.pine.common.property.BooleanProperty;
 import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.util.StringUtils;
+import org.jetbrains.annotations.Contract;
 
 /**
  * A property with a value that never changes.
@@ -18,6 +19,16 @@ public interface FixedProperty<T> extends Property<T> {
 	@Override
 	default FixedBooleanProperty isNotNullProperty() {
 		return BooleanProperty.fromValue(isNotNull());
+	}
+	
+	/**
+	 * Returns this property, because its value is always the same, so it is effectively the same as a snapshot.
+	 * @return This property.
+	 */
+	@Contract("-> this")
+	@Override
+	default FixedProperty<T> snapshot() {
+		return this;
 	}
 	
 	@Override

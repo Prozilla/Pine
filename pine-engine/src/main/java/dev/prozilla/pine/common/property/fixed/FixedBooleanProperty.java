@@ -43,13 +43,15 @@ public abstract class FixedBooleanProperty implements BooleanProperty, FixedProp
 		return get() ? propertyTrue : propertyFalse;
 	}
 	
-	/**
-	 * Returns a boolean property whose value is always {@code true};
-	 * @return {@link BooleanProperty#TRUE}
-	 */
 	@Override
 	public FixedBooleanProperty isNotNullProperty() {
-		return BooleanProperty.super.isNotNullProperty();
+		return BooleanProperty.TRUE;
+	}
+	
+	@Contract("-> this")
+	@Override
+	public FixedBooleanProperty snapshot() {
+		return this;
 	}
 	
 	@Contract("_ -> this")

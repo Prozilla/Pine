@@ -22,6 +22,12 @@ public class FixedIntProperty implements IntProperty, FixedProperty<Integer> {
 		return BooleanProperty.TRUE;
 	}
 	
+	@Contract("-> this")
+	@Override
+	public FixedIntProperty snapshot() {
+		return this;
+	}
+	
 	@Override
 	public FixedBooleanProperty isZeroProperty() {
 		return BooleanProperty.fromValue(get() == 0);

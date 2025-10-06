@@ -30,7 +30,7 @@ public interface NonNullProperty<T> extends Property<T> {
 	}
 	
 	/**
-	 * Returns a boolean property whose value is always {@code true};
+	 * Returns a boolean property whose value is always {@code true}.
 	 * @return {@link BooleanProperty#TRUE}
 	 */
 	@Override

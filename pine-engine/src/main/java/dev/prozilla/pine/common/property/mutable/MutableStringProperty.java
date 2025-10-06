@@ -13,7 +13,7 @@ public interface MutableStringProperty extends StringProperty, MutableObjectProp
 	 * Appends the given string to the value of this property.
 	 * @param string The string to append.
 	 */
-	default void appendString(String string) {
+	default void appendValue(String string) {
 		setValue(getValue() + string);
 	}
 	
@@ -21,7 +21,7 @@ public interface MutableStringProperty extends StringProperty, MutableObjectProp
 	 * Prepends the given string to the value of this property.
 	 * @param string The string to prepend.
 	 */
-	default void prependString(String string) {
+	default void prependValue(String string) {
 		setValue(string + getValue());
 	}
 	
@@ -39,7 +39,7 @@ public interface MutableStringProperty extends StringProperty, MutableObjectProp
 		setValue(StringUtils.toLowerCase(getValue()));
 	}
 	
-	default void trim() {
+	default void trimValue() {
 		setValue(StringUtils.trim(getValue()));
 	}
 	

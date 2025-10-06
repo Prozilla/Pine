@@ -1,8 +1,12 @@
 package dev.prozilla.pine.common.property;
 
+import dev.prozilla.pine.common.exception.InvalidObjectException;
+import dev.prozilla.pine.common.property.fixed.FixedObjectProperty;
+import dev.prozilla.pine.common.property.fixed.FixedProperty;
 import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -47,6 +51,15 @@ public interface Property<T> {
 	}
 	
 	/**
+	 * Returns the value of this property, if it is not {@code null}, otherwise throws an exception.
+	 * @return The value of this property
+	 * @throws InvalidObjectException If the value of this property is {@code null}.
+	 */
+	default @NotNull T getValueOrThrow() throws InvalidObjectException {
+		return Checks.isNotNull(getValue(), "value");
+	}
+	
+	/**
 	 * Returns a property whose value is the value of this property, or {@code defaultValue} if the value of this property is {@code null}.
 	 * @return A property whose value is never {@code null}.
 	 */
@@ -73,6 +86,14 @@ public interface Property<T> {
 	 */
 	default BooleanProperty isNotNullProperty() {
 		return this::isNotNull;
+	}
+	
+	/**
+	 * Returns a fixed property whose value is the current value of this property, at the time of calling this method.
+	 * @return A fixed property with the current value of this property.
+	 */
+	default FixedProperty<T> snapshot() {
+		return new FixedObjectProperty<>(getValue());
 	}
 	
 	/**

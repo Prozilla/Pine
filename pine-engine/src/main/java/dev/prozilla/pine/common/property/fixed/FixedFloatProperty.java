@@ -22,6 +22,12 @@ public class FixedFloatProperty implements FloatProperty, FixedProperty<Float> {
 		return BooleanProperty.TRUE;
 	}
 	
+	@Contract("-> this")
+	@Override
+	public FixedFloatProperty snapshot() {
+		return this;
+	}
+	
 	@Contract("_ -> this")
 	@Override
 	public FixedFloatProperty replaceNull(Float defaultValue) {

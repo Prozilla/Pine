@@ -32,6 +32,12 @@ public class FixedStringProperty extends FixedObjectProperty<String> implements 
 		return this;
 	}
 	
+	@Contract("-> this")
+	@Override
+	public FixedStringProperty snapshot() {
+		return this;
+	}
+	
 	@Contract("-> new")
 	@Override
 	public FixedIntProperty lengthProperty() {
