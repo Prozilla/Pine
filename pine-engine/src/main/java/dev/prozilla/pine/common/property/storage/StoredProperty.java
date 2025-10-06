@@ -24,13 +24,13 @@ public abstract class StoredProperty<T> implements MutableObjectProperty<T>, Des
 	}
 	
 	@Override
-	public boolean exists() {
+	public boolean isNotNull() {
 		return storage.getItem(key) != null;
 	}
 	
 	@Override
 	public boolean setNull() {
-		if (!exists()) {
+		if (!isNotNull()) {
 			return false;
 		}
 		storage.removeItem("key");

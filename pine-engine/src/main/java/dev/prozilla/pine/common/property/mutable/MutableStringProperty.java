@@ -1,19 +1,46 @@
 package dev.prozilla.pine.common.property.mutable;
 
 import dev.prozilla.pine.common.property.StringProperty;
+import dev.prozilla.pine.common.util.StringUtils;
 import org.jetbrains.annotations.Contract;
 
 /**
  * A property with a string value that can be changed.
  */
-public interface MutableStringProperty extends MutableObjectProperty<String>, StringProperty {
+public interface MutableStringProperty extends StringProperty, MutableObjectProperty<String> {
 	
+	/**
+	 * Appends the given string to the value of this property.
+	 * @param string The string to append.
+	 */
 	default void appendString(String string) {
 		setValue(getValue() + string);
 	}
 	
+	/**
+	 * Prepends the given string to the value of this property.
+	 * @param string The string to prepend.
+	 */
 	default void prependString(String string) {
 		setValue(string + getValue());
+	}
+	
+	/**
+	 * Converts the value of this property to upper case.
+	 */
+	default void toUpperCase() {
+		setValue(StringUtils.toUpperCase(getValue()));
+	}
+	
+	/**
+	 * Converts the value of this property to lower case.
+	 */
+	default void toLowerCase() {
+		setValue(StringUtils.toLowerCase(getValue()));
+	}
+	
+	default void trim() {
+		setValue(StringUtils.trim(getValue()));
 	}
 	
 	/**

@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.property.BooleanProperty;
 /**
  * A property with a boolean value that can be changed.
  */
-public interface MutableBooleanProperty extends MutableProperty<Boolean>, BooleanProperty {
+public interface MutableBooleanProperty extends BooleanProperty, MutableProperty<Boolean> {
 	
 	@Override
 	default boolean setValue(Boolean value) {

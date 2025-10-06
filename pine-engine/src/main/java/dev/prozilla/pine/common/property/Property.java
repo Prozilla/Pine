@@ -23,7 +23,7 @@ public interface Property<T> {
 	 * Checks if this property has any value.
 	 * @return {@code true} if the value of this property is not {@code null}.
 	 */
-	default boolean exists() {
+	default boolean isNotNull() {
 		return getValue() != null;
 	}
 	
@@ -71,8 +71,8 @@ public interface Property<T> {
 	 * Returns a boolean property whose value is {@code true} if the value of this property is not {@code null} and vice versa.
 	 * @return A boolean property whose value is {@code true} if the value of this property is not {@code null} and vice versa.
 	 */
-	default BooleanProperty existenceProperty() {
-		return this::exists;
+	default BooleanProperty isNotNullProperty() {
+		return this::isNotNull;
 	}
 	
 	/**

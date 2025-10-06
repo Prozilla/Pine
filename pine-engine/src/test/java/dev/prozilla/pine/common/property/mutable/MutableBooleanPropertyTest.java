@@ -23,7 +23,7 @@ public class MutableBooleanPropertyTest {
 		assertInstanceOf(booleanPropertyA.or(booleanPropertyB), BooleanProperty.class);
 		assertInstanceOf(booleanPropertyA.xor(booleanPropertyB), BooleanProperty.class);
 		assertInstanceOf(booleanPropertyA.not(), BooleanProperty.class);
-		assertEquals(BooleanProperty.TRUE, booleanPropertyA.existenceProperty());
+		assertEquals(BooleanProperty.TRUE, booleanPropertyA.isNotNullProperty());
 		assertEquals(booleanPropertyA, BooleanProperty.TRUE.ifElse(booleanPropertyA, booleanPropertyB));
 		assertEquals(booleanPropertyB, BooleanProperty.FALSE.ifElse(booleanPropertyA, booleanPropertyB));
 		assertEquals(BooleanProperty.FALSE, BooleanProperty.TRUE.not());

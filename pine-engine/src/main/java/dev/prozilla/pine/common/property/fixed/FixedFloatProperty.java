@@ -2,8 +2,9 @@ package dev.prozilla.pine.common.property.fixed;
 
 import dev.prozilla.pine.common.property.BooleanProperty;
 import dev.prozilla.pine.common.property.FloatProperty;
+import org.jetbrains.annotations.Contract;
 
-public class FixedFloatProperty implements FixedProperty<Float>, FloatProperty {
+public class FixedFloatProperty implements FloatProperty, FixedProperty<Float> {
 	
 	protected final float value;
 	
@@ -17,8 +18,14 @@ public class FixedFloatProperty implements FixedProperty<Float>, FloatProperty {
 	}
 	
 	@Override
-	public FixedBooleanProperty existenceProperty() {
+	public FixedBooleanProperty isNotNullProperty() {
 		return BooleanProperty.TRUE;
+	}
+	
+	@Contract("_ -> this")
+	@Override
+	public FixedFloatProperty replaceNull(Float defaultValue) {
+		return this;
 	}
 	
 }

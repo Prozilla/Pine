@@ -24,12 +24,12 @@ public class RandomVector2fProperty extends RandomObjectProperty<Vector2f> imple
 	
 	@Contract("-> true")
 	@Override
-	public boolean exists() {
+	public boolean isNotNull() {
 		return true;
 	}
 	
 	@Override
-	public FixedBooleanProperty existenceProperty() {
+	public FixedBooleanProperty isNotNullProperty() {
 		return BooleanProperty.TRUE;
 	}
 	

@@ -22,7 +22,7 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 		}
 		
 		@Override
-		public FixedBooleanProperty existenceProperty() {
+		public FixedBooleanProperty isNotNullProperty() {
 			return this;
 		}
 	};
@@ -39,7 +39,7 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 		}
 		
 		@Override
-		public FixedBooleanProperty existenceProperty() {
+		public FixedBooleanProperty isNotNullProperty() {
 			return TRUE;
 		}
 	};
@@ -72,6 +72,11 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 		return () -> !get();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is the AND operator applied to the value of this property and another property.
+	 * @param booleanProperty The other boolean property
+	 * @return A boolean property representing the AND operator.
+	 */
 	default BooleanProperty and(FixedBooleanProperty booleanProperty) {
 		if (booleanProperty.get()) {
 			return this;
@@ -80,10 +85,20 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 		}
 	}
 	
+	/**
+	 * Returns a boolean property whose value is the AND operator applied to the value of this property and another property.
+	 * @param booleanProperty The other boolean property
+	 * @return A boolean property representing the AND operator.
+	 */
 	default BooleanProperty and(BooleanProperty booleanProperty) {
 		return () -> get() && booleanProperty.get();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is the OR operator applied to the value of this property and another property.
+	 * @param booleanProperty The other boolean property
+	 * @return A boolean property representing the OR operator.
+	 */
 	default BooleanProperty or(FixedBooleanProperty booleanProperty) {
 		if (!booleanProperty.get()) {
 			return this;
@@ -92,10 +107,20 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 		}
 	}
 	
+	/**
+	 * Returns a boolean property whose value is the OR operator applied to the value of this property and another property.
+	 * @param booleanProperty The other boolean property
+	 * @return A boolean property representing the OR operator
+	 */
 	default BooleanProperty or(BooleanProperty booleanProperty) {
 		return () -> get() || booleanProperty.get();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is the XOR operator applied to the value of this property and another property.
+	 * @param booleanProperty The other boolean property
+	 * @return A boolean property representing the XOR operator
+	 */
 	default BooleanProperty xor(FixedBooleanProperty booleanProperty) {
 		if (booleanProperty.get()) {
 			return not();
@@ -104,6 +129,11 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 		}
 	}
 	
+	/**
+	 * Returns a boolean property whose value is the XOR operator applied to the value of this property and another property.
+	 * @param booleanProperty The other boolean property
+	 * @return A boolean property representing the XOR operator
+	 */
 	default BooleanProperty xor(BooleanProperty booleanProperty) {
 		return () -> get() ^ booleanProperty.get();
 	}

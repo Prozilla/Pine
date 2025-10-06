@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.property.mutable.MutableBooleanProperty;
 /**
  * A property with a boolean value that can be observed.
  */
-public interface ObservableBooleanProperty extends ObservableProperty<Boolean>, MutableBooleanProperty {
+public interface ObservableBooleanProperty extends MutableBooleanProperty, ObservableProperty<Boolean> {
 	
 	@Override
 	default void read(Observer<Boolean> reader) {

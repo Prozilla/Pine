@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Contract;
 /**
  * A property with a string value that can be observed.
  */
-public interface ObservableStringProperty extends ObservableObjectProperty<String>, MutableStringProperty {
+public interface ObservableStringProperty extends MutableStringProperty, ObservableObjectProperty<String> {
 	
 	/**
 	 * Returns this property.

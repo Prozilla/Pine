@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.property.FloatProperty;
 /**
  * A property with a float value that can be changed.
  */
-public interface MutableFloatProperty extends MutableProperty<Float>, FloatProperty {
+public interface MutableFloatProperty extends FloatProperty, MutableProperty<Float> {
 	
 	@Override
 	default boolean setValue(Float value) {

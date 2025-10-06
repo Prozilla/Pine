@@ -91,6 +91,22 @@ public interface StringProperty extends Property<String> {
 		return () -> StringUtils.lengthOf(getValue());
 	}
 	
+	/**
+	 * Returns a string property whose value is the value of this property converted to upper case.
+	 * @return A string property whose value is the value of this property converted to upper case.
+	 */
+	default StringProperty toUpperCaseProperty() {
+		return () -> StringUtils.toUpperCase(getValue());
+	}
+	
+	/**
+	 * Returns a string property whose value is the value of this property converted to lower case.
+	 * @return A string property whose value is the value of this property converted to lower case.
+	 */
+	default StringProperty toLowerCaseProperty() {
+		return () -> StringUtils.toLowerCase(getValue());
+	}
+	
 	static StringProperty fromProperty(StringProperty property) {
 		return property;
 	}

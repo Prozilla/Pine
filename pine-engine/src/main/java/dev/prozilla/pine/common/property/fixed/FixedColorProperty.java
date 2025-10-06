@@ -9,4 +9,13 @@ public class FixedColorProperty extends FixedObjectProperty<Color> implements Co
 		super(value);
 	}
 	
+	@Override
+	public FixedColorProperty replaceNull(Color defaultValue) {
+		if (isNotNull()) {
+			return this;
+		} else {
+			return new FixedColorProperty(defaultValue);
+		}
+	}
+	
 }

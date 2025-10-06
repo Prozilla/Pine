@@ -2,8 +2,9 @@ package dev.prozilla.pine.common.property.fixed;
 
 import dev.prozilla.pine.common.property.BooleanProperty;
 import dev.prozilla.pine.common.property.Property;
+import org.jetbrains.annotations.Contract;
 
-public abstract class FixedBooleanProperty implements FixedProperty<Boolean>, BooleanProperty {
+public abstract class FixedBooleanProperty implements BooleanProperty, FixedProperty<Boolean> {
 	
 	protected FixedBooleanProperty() {}
 	
@@ -47,8 +48,14 @@ public abstract class FixedBooleanProperty implements FixedProperty<Boolean>, Bo
 	 * @return {@link BooleanProperty#TRUE}
 	 */
 	@Override
-	public FixedBooleanProperty existenceProperty() {
-		return BooleanProperty.super.existenceProperty();
+	public FixedBooleanProperty isNotNullProperty() {
+		return BooleanProperty.super.isNotNullProperty();
+	}
+	
+	@Contract("_ -> this")
+	@Override
+	public FixedBooleanProperty replaceNull(Boolean defaultValue) {
+		return this;
 	}
 	
 }

@@ -6,9 +6,36 @@ public final class StringUtils {
 	
 	private StringUtils() {}
 	
+	/**
+	 * @see Object#toString()
+	 */
 	@Contract("null -> null; !null -> !null")
 	public static String toString(Object object) {
 		return ObjectUtils.preserveNull(object, Object::toString);
+	}
+	
+	/**
+	 * @see String#toUpperCase()
+	 */
+	@Contract("null -> null; !null -> !null")
+	public static String toUpperCase(String string) {
+		return ObjectUtils.preserveNull(string, String::toUpperCase);
+	}
+	
+	/**
+	 * @see String#toLowerCase()
+	 */
+	@Contract("null -> null; !null -> !null")
+	public static String toLowerCase(String string) {
+		return ObjectUtils.preserveNull(string, String::toLowerCase);
+	}
+	
+	/**
+	 * @see String#trim() 
+	 */
+	@Contract("null -> null; !null -> !null")
+	public static String trim(String string) {
+		return ObjectUtils.preserveNull(string, String::trim);
 	}
 	
 	public static int lengthOf(String string) {

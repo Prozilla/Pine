@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.property.IntProperty;
 /**
  * A property with an integer value that can be changed.
  */
-public interface MutableIntProperty extends MutableProperty<Integer>, IntProperty {
+public interface MutableIntProperty extends IntProperty, MutableProperty<Integer> {
 	
 	@Override
 	default boolean setValue(Integer value) {

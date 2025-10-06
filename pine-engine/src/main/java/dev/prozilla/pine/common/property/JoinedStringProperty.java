@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+/**
+ * A decorator for string properties which joins strings.
+ */
 public class JoinedStringProperty implements StringProperty, CollectionProvider<StringProperty> {
 	
 	private final String separator;

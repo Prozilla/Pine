@@ -2,8 +2,9 @@ package dev.prozilla.pine.common.property.fixed;
 
 import dev.prozilla.pine.common.property.BooleanProperty;
 import dev.prozilla.pine.common.property.IntProperty;
+import org.jetbrains.annotations.Contract;
 
-public class FixedIntProperty implements FixedProperty<Integer>, IntProperty {
+public class FixedIntProperty implements IntProperty, FixedProperty<Integer> {
 	
 	protected final int value;
 	
@@ -17,7 +18,7 @@ public class FixedIntProperty implements FixedProperty<Integer>, IntProperty {
 	}
 	
 	@Override
-	public FixedBooleanProperty existenceProperty() {
+	public FixedBooleanProperty isNotNullProperty() {
 		return BooleanProperty.TRUE;
 	}
 	
@@ -25,4 +26,11 @@ public class FixedIntProperty implements FixedProperty<Integer>, IntProperty {
 	public FixedBooleanProperty isZeroProperty() {
 		return BooleanProperty.fromValue(get() == 0);
 	}
+	
+	@Contract("_ -> this")
+	@Override
+	public FixedIntProperty replaceNull(Integer defaultValue) {
+		return this;
+	}
+	
 }

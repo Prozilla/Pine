@@ -51,10 +51,10 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		@Override
 		protected String fetch() {
 			StringJoiner stringJoiner = new StringJoiner("/");
-			if (config.companyName.exists()) {
+			if (config.companyName.isNotNull()) {
 				stringJoiner.add(config.companyName.getValue());
 			}
-			if (config.appName.exists()) {
+			if (config.appName.isNotNull()) {
 				stringJoiner.add(config.appName.getValue());
 			}
 			value = Platform.getPersistentDataPath(stringJoiner.toString(), config.autoCreateDirectories.getValue());
@@ -669,7 +669,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * Loads the window icons.
 	 */
 	public void loadIcons() {
-		if (!config.window.icon.exists() || !mode.usesOpenGL) {
+		if (!config.window.icon.isNotNull() || !mode.usesOpenGL) {
 			return;
 		}
 		
@@ -702,7 +702,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * @return The default font of this application.
 	 */
 	public Font getDefaultFont() {
-		if (!config.defaultFontPath.exists()) {
+		if (!config.defaultFontPath.isNotNull()) {
 			return null;
 		}
 		return AssetPools.fonts.load(config.defaultFontPath.getValue());

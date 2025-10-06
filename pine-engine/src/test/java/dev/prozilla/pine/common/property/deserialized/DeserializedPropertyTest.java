@@ -21,7 +21,7 @@ public class DeserializedPropertyTest {
 		deserializer.setLogger(new MockLogger());
 		
 		DeserializedProperty<Color> property = deserializer.createProperty((data) -> data.color);
-		assertTrue(property.exists(), "DeserializedProperty should be initialized with a value");
+		assertTrue(property.isNotNull(), "DeserializedProperty should be initialized with a value");
 		assertEquals(Color.decode("#FF0000"), property.getValue(),
 			"DeserializedProperty should take value from the external file");
 		

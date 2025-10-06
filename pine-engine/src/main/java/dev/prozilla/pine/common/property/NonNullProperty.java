@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Contract;
 public interface NonNullProperty<T> extends Property<T> {
 	
 	/**
-	 * Returns this property.
+	 * Returns this property, whose value is never {@code null}.
 	 * @return This property.
 	 */
 	@Contract("_ -> this")
@@ -20,12 +20,12 @@ public interface NonNullProperty<T> extends Property<T> {
 	}
 	
 	/**
-	 * Returns {@code true}.
+	 * Returns {@code true}, because the value of this property is never {@code null}.
 	 * @return {@code true}
 	 */
 	@Contract("-> true")
 	@Override
-	default boolean exists() {
+	default boolean isNotNull() {
 		return true;
 	}
 	
@@ -34,7 +34,7 @@ public interface NonNullProperty<T> extends Property<T> {
 	 * @return {@link BooleanProperty#TRUE}
 	 */
 	@Override
-	default FixedBooleanProperty existenceProperty() {
+	default FixedBooleanProperty isNotNullProperty() {
 		return BooleanProperty.TRUE;
 	}
 	
