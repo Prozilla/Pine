@@ -24,7 +24,15 @@ public interface Property<T> {
 	T getValue();
 	
 	/**
-	 * Checks if this property has any value.
+	 * Checks if the value of this property is {@code null}.
+	 * @return {@code true} if the value of this property is {@code null}.
+	 */
+	default boolean isNull() {
+		return !isNotNull();
+	}
+	
+	/**
+	 * Checks if the value of this property is not {@code null}.
 	 * @return {@code true} if the value of this property is not {@code null}.
 	 */
 	default boolean isNotNull() {

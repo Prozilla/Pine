@@ -1,8 +1,15 @@
 package dev.prozilla.pine.examples.flappybird.component;
 
 import dev.prozilla.pine.common.property.deserialized.FileDeserializer;
+import dev.prozilla.pine.common.property.input.GamepadButtonProperty;
+import dev.prozilla.pine.common.property.input.InputBindings;
+import dev.prozilla.pine.common.property.input.KeyboardKeyProperty;
+import dev.prozilla.pine.common.property.input.MouseButtonProperty;
 import dev.prozilla.pine.common.property.observable.ObservableObjectProperty;
 import dev.prozilla.pine.core.component.deserialization.DeserializedData;
+import dev.prozilla.pine.core.state.input.Key;
+import dev.prozilla.pine.core.state.input.MouseButton;
+import dev.prozilla.pine.core.state.input.gamepad.GamepadButton;
 import dev.prozilla.pine.examples.flappybird.FlappyBird;
 import dev.prozilla.pine.examples.flappybird.scene.GameScene;
 
@@ -17,6 +24,12 @@ public class PlayerData extends DeserializedData<PlayerData.Data> {
 	public ObservableObjectProperty<Float> animationSpeed;
 	public ObservableObjectProperty<Float> rotationFactor;
 	public ObservableObjectProperty<Float> rotationSpeed;
+	
+	public final InputBindings jumpButton = new InputBindings(
+		new KeyboardKeyProperty(Key.SPACE),
+		new MouseButtonProperty(MouseButton.LEFT),
+		new GamepadButtonProperty(GamepadButton.A)
+	);
 	
 	public GameScene gameScene;
 	
