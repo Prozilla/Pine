@@ -3,10 +3,19 @@ package dev.prozilla.pine.common.util;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Random;
+import java.util.StringJoiner;
 
 public final class ArrayUtils {
 	
 	private ArrayUtils() {}
+	
+	public static <E> String toString(E[] array, String separator) {
+		StringJoiner stringJoiner = new StringJoiner(separator);
+		for (E element : array) {
+			stringJoiner.add(String.valueOf(element));
+		}
+		return stringJoiner.toString();
+	}
 	
 	/**
 	 * Checks if two arrays have any overlapping elements.

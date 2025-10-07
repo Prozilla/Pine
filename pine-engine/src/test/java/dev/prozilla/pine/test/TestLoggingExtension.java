@@ -40,7 +40,9 @@ public class TestLoggingExtension implements TestWatcher, BeforeTestExecutionCal
 	public void testFailed(ExtensionContext context, Throwable cause) {
 		String prefix = isLastTest(context) ? "    " : "│   ";
 		System.out.println(Ansi.white(prefix + "└── ") + Ansi.red("× failed"));
-		System.out.println(Ansi.white(prefix + "    └── ") + Ansi.red(cause.getMessage()));
+		if (cause.getMessage() != null) {
+			System.out.println(Ansi.white(prefix + "    └── ") + Ansi.red(cause.getMessage()));
+		}
 	}
 	
 	/**

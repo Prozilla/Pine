@@ -1,7 +1,10 @@
 package dev.prozilla.pine.common.property.input;
 
+import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadAxis;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadInput;
+
+import java.util.Arrays;
 
 public class GamepadAxesProperty extends AnalogInputProperty<GamepadAxis[]> implements GamepadInputProperty {
 	
@@ -36,9 +39,27 @@ public class GamepadAxesProperty extends AnalogInputProperty<GamepadAxis[]> impl
 	}
 	
 	@Override
-	public GamepadAxesProperty adaptValue(GamepadAxis[] value) {
+	public GamepadAxesProperty toGamepadAxesProperty(GamepadAxis[] value) {
 		setValue(value);
 		return this;
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		return object == this || (object instanceof GamepadAxesProperty gamepadAxesProperty && equals(gamepadAxesProperty));
+	}
+	
+	public boolean equals(GamepadAxesProperty gamepadAxesProperty) {
+		return gamepadAxesProperty != null && Arrays.equals(getValue(), gamepadAxesProperty.getValue());
+	}
+	
+	@Override
+	public String toString() {
+		if (isNull()) {
+			return "null";
+		} else {
+			return ArrayUtils.toString(getValue(), INPUT_ELEMENT_SEPARATOR);
+		}
 	}
 	
 }

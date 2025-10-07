@@ -1,8 +1,11 @@
 package dev.prozilla.pine.common.property.input;
 
 import dev.prozilla.pine.common.property.mutable.SimpleMutableObjectProperty;
+import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.MouseButton;
+
+import java.util.Objects;
 
 public class MouseButtonProperty extends SimpleMutableObjectProperty<MouseButton> implements InputProperty {
 	
@@ -31,9 +34,23 @@ public class MouseButtonProperty extends SimpleMutableObjectProperty<MouseButton
 	}
 	
 	@Override
-	public MouseButtonProperty adaptValue(MouseButton value) {
+	public MouseButtonProperty toMouseButtonProperty(MouseButton value) {
 		setValue(value);
 		return this;
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		return object == this || (object instanceof MouseButtonProperty mouseButtonProperty && equals(mouseButtonProperty));
+	}
+	
+	public boolean equals(MouseButtonProperty mouseButtonProperty) {
+		return mouseButtonProperty != null && Objects.equals(getValue(), mouseButtonProperty.getValue());
+	}
+	
+	@Override
+	public String toString() {
+		return StringUtils.toString(getValue());
 	}
 	
 }

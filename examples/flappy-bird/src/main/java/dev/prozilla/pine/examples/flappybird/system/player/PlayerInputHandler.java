@@ -5,7 +5,6 @@ import dev.prozilla.pine.core.component.audio.AudioEffectPlayer;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.state.input.Input;
-import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.system.input.InputSystem;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
 
@@ -30,7 +29,7 @@ public class PlayerInputHandler extends InputSystem {
 				audioEffectPlayer.playRandom();
 			}
 			// Pause
-			if (input.getKeyDown(Key.ESCAPE)) {
+			if (playerData.pauseButton.isDown(input)) {
 				application.togglePause();
 			}
 		}

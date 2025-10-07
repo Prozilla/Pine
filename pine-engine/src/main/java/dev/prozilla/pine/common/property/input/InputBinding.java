@@ -14,6 +14,38 @@ public class InputBinding implements InputProperty {
 
 	private InputProperty inputProperty;
 	
+	public InputBinding(Key defaultKey) {
+		this(new KeyboardKeyProperty(defaultKey));
+	}
+	
+	public InputBinding(Key... defaultKeys) {
+		this(new KeyboardKeysProperty(defaultKeys));
+	}
+	
+	public InputBinding(MouseButton defaultButton) {
+		this(new MouseButtonProperty(defaultButton));
+	}
+	
+	public InputBinding(MouseButton... defaultButtons) {
+		this(new MouseButtonsProperty(defaultButtons));
+	}
+	
+	public InputBinding(GamepadButton defaultButton) {
+		this(new GamepadButtonProperty(defaultButton));
+	}
+	
+	public InputBinding(GamepadButton... defaultButtons) {
+		this(new GamepadButtonsProperty(defaultButtons));
+	}
+	
+	public InputBinding(GamepadAxis defaultAxis) {
+		this(new GamepadAxisProperty(defaultAxis));
+	}
+	
+	public InputBinding(GamepadAxis... defaultAxes) {
+		this(new GamepadAxesProperty(defaultAxes));
+	}
+	
 	public InputBinding(InputProperty inputProperty) {
 		this.inputProperty = Checks.isNotNull(inputProperty, "inputProperty");
 	}
@@ -28,36 +60,58 @@ public class InputBinding implements InputProperty {
 		return inputProperty.isDown(input);
 	}
 	
-	public void setBinding(Key... value) {
-		inputProperty = inputProperty.adaptValue(value);
+	public InputProperty getBinding() {
+		return inputProperty;
 	}
 	
 	public void setBinding(Key value) {
-		inputProperty = inputProperty.adaptValue(value);
+		inputProperty = inputProperty.toKeyboardKeyProperty(value);
 	}
 	
-	public void setBinding(MouseButton... value) {
-		inputProperty = inputProperty.adaptValue(value);
+	public void setBinding(Key... value) {
+		inputProperty = inputProperty.toKeyboardKeysProperty(value);
 	}
 	
 	public void setBinding(MouseButton value) {
-		inputProperty = inputProperty.adaptValue(value);
+		inputProperty = inputProperty.toMouseButtonProperty(value);
 	}
 	
-	public void setBinding(GamepadButton... value) {
-		inputProperty = inputProperty.adaptValue(value);
+	public void setBinding(MouseButton... value) {
+		inputProperty = inputProperty.toMouseButtonsProperty(value);
 	}
 	
 	public void setBinding(GamepadButton value) {
-		inputProperty = inputProperty.adaptValue(value);
+		inputProperty = inputProperty.toGamepadButtonProperty(value);
 	}
 	
-	public void setBinding(GamepadAxis... value) {
-		inputProperty = inputProperty.adaptValue(value);
+	public void setBinding(GamepadButton... value) {
+		inputProperty = inputProperty.toGamepadButtonsProperty(value);
 	}
 	
 	public void setBinding(GamepadAxis value) {
-		inputProperty = inputProperty.adaptValue(value);
+		inputProperty = inputProperty.toGamepadAxisProperty(value);
+	}
+	
+	public void setBinding(GamepadAxis... value) {
+		inputProperty = inputProperty.toGamepadAxesProperty(value);
+	}
+	
+	public void unbind() {
+		inputProperty = InputProperty.FALLBACK;
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		return object == this || (object instanceof InputBinding inputBinding && equals(inputBinding));
+	}
+	
+	public boolean equals(InputBinding inputBinding) {
+		return inputBinding != null && inputProperty.equals(inputBinding.inputProperty);
+	}
+	
+	@Override
+	public String toString() {
+		return inputProperty.toString();
 	}
 	
 }

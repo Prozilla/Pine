@@ -1,8 +1,11 @@
 package dev.prozilla.pine.common.property.input;
 
 import dev.prozilla.pine.common.property.mutable.SimpleMutableObjectProperty;
+import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
+
+import java.util.Arrays;
 
 public class KeyboardKeysProperty extends SimpleMutableObjectProperty<Key[]> implements InputProperty {
 	
@@ -39,9 +42,27 @@ public class KeyboardKeysProperty extends SimpleMutableObjectProperty<Key[]> imp
 	}
 	
 	@Override
-	public KeyboardKeysProperty adaptValue(Key[] value) {
+	public KeyboardKeysProperty toKeyboardKeysProperty(Key[] value) {
 		setValue(value);
 		return this;
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		return object == this || (object instanceof KeyboardKeysProperty keyboardKeysProperty && equals(keyboardKeysProperty));
+	}
+	
+	public boolean equals(KeyboardKeysProperty keyboardKeysProperty) {
+		return keyboardKeysProperty != null && Arrays.equals(getValue(), keyboardKeysProperty.getValue());
+	}
+	
+	@Override
+	public String toString() {
+		if (isNull()) {
+			return "null";
+		} else {
+			return ArrayUtils.toString(getValue(), INPUT_ELEMENT_SEPARATOR);
+		}
 	}
 	
 }

@@ -1,10 +1,7 @@
 package dev.prozilla.pine.examples.flappybird.component;
 
 import dev.prozilla.pine.common.property.deserialized.FileDeserializer;
-import dev.prozilla.pine.common.property.input.GamepadButtonProperty;
-import dev.prozilla.pine.common.property.input.InputBindings;
-import dev.prozilla.pine.common.property.input.KeyboardKeyProperty;
-import dev.prozilla.pine.common.property.input.MouseButtonProperty;
+import dev.prozilla.pine.common.property.input.*;
 import dev.prozilla.pine.common.property.observable.ObservableObjectProperty;
 import dev.prozilla.pine.core.component.deserialization.DeserializedData;
 import dev.prozilla.pine.core.state.input.Key;
@@ -30,6 +27,7 @@ public class PlayerData extends DeserializedData<PlayerData.Data> {
 		new MouseButtonProperty(MouseButton.LEFT),
 		new GamepadButtonProperty(GamepadButton.A)
 	);
+	public final InputBinding pauseButton = new InputBinding(Key.ESCAPE);
 	
 	public GameScene gameScene;
 	
