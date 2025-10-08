@@ -65,7 +65,7 @@ public class LocalStorage extends Storage {
 	
 	@Override
 	public void save() {
-		if (BooleanUtils.isNotTrue(config.enableLocalStorage.getValue())) {
+		if (BooleanUtils.isNotTrue(config.enableLocalStorage.getValue()) || !isInitialized) {
 			return;
 		}
 		

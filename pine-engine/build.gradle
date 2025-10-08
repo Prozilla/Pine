@@ -59,6 +59,9 @@ switch (org.gradle.internal.os.OperatingSystem.current()) {
 				? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
 				: "natives-windows-x86") as GStringImpl
 		break
+    case org.gradle.internal.os.OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = "natives-macos" as GStringImpl
+        break
 }
 
 dependencies {

@@ -1,5 +1,7 @@
 package dev.prozilla.pine.examples.flappybird.system.obstacle;
 
+import dev.prozilla.pine.common.property.random.RandomFloatProperty;
+import dev.prozilla.pine.common.property.random.RandomIntProperty;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 import dev.prozilla.pine.examples.flappybird.FlappyBird;
@@ -8,14 +10,13 @@ import dev.prozilla.pine.examples.flappybird.component.PipeData;
 import dev.prozilla.pine.examples.flappybird.component.PipesData;
 import dev.prozilla.pine.examples.flappybird.scene.GameScene;
 
-import java.util.Random;
-
 /**
  * Initializes pipe pairs by randomizing their heights and gaps.
  */
 public class PipesInitializer extends InitSystem {
 	
-	private static final Random random = new Random();
+	private static final RandomFloatProperty heightProperty = new RandomFloatProperty(FlappyBird.HEIGHT / -4f + GroundData.HEIGHT - GroundData.ELEVATION + PipeData.RIM_HEIGHT, FlappyBird.HEIGHT / 4f);
+	private static final RandomIntProperty gapProperty = new RandomIntProperty(PipesData.MIN_GAP, PipesData.MAX_GAP);
 	
 	public PipesInitializer() {
 		super(PipesData.class);
@@ -29,8 +30,8 @@ public class PipesInitializer extends InitSystem {
 		pipesData.gameScene = (GameScene)scene;
 		
 		// Randomize height and gap
-		int height = Math.round(random.nextFloat(FlappyBird.HEIGHT / -4f + GroundData.HEIGHT - GroundData.ELEVATION + PipeData.RIM_HEIGHT, FlappyBird.HEIGHT / 4f));
-		int gap = random.nextInt(PipesData.MIN_GAP, PipesData.MAX_GAP);
+		int height = Math.round(heightProperty.get());
+		int gap = gapProperty.get();
 		
 		// Position pipes
 		pipesData.topPipe.transform.position.y = height + gap / 2f;

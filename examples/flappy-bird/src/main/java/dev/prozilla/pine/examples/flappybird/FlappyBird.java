@@ -31,6 +31,7 @@ public class FlappyBird {
 		
 		if (!Application.isDevMode()) {
 			flappyBird.setFullscreen(true);
+			flappyBird.setTargetFps(0);
 		}
 		
 		return flappyBird;

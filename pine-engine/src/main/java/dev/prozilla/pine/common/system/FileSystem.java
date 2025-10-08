@@ -125,4 +125,8 @@ public final class FileSystem {
 		Files.delete(zip);
 	}
 	
+	public static void zip(Path folder) throws IOException {
+	
+	}
+	
 }

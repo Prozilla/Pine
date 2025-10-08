@@ -293,6 +293,9 @@ public class BuildTool {
 		
 		FileSystem.deleteDirectory(launch4jDir);
 		Files.writeString(buildDir.resolve("version.txt"), config.getVersion());
+		
+		// Create zip
+		
 	}
 	
 	public static class BuildConfig {

@@ -67,7 +67,9 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	 */
 	@Override
 	public void destroy() {
-		save();
+		if (isInitialized) {
+			save();
+		}
 		
 		// We do this to make sure we don't save after removing all items,
 		// Since saving is not allowed if the store has not been initialized yet

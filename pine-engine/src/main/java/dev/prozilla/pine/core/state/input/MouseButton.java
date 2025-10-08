@@ -11,23 +11,30 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public enum MouseButton implements IntEnum {
 	
-	LEFT(GLFW_MOUSE_BUTTON_1),
-	RIGHT(GLFW_MOUSE_BUTTON_2),
-	MIDDLE(GLFW_MOUSE_BUTTON_3),
-	EXTRA_0(GLFW_MOUSE_BUTTON_4),
-	EXTRA_1(GLFW_MOUSE_BUTTON_5),
-	EXTRA_2(GLFW_MOUSE_BUTTON_6),
-	EXTRA_3(GLFW_MOUSE_BUTTON_7),
-	EXTRA_4(GLFW_MOUSE_BUTTON_8);
+	LEFT(GLFW_MOUSE_BUTTON_1, "Left Mouse Button"),
+	RIGHT(GLFW_MOUSE_BUTTON_2, "Right Mouse Button"),
+	MIDDLE(GLFW_MOUSE_BUTTON_3, "Middle Mouse Button"),
+	EXTRA_0(GLFW_MOUSE_BUTTON_4, "X1 Mouse Button"),
+	EXTRA_1(GLFW_MOUSE_BUTTON_5, "X2 Mouse Button"),
+	EXTRA_2(GLFW_MOUSE_BUTTON_6, "X3 Mouse Button"),
+	EXTRA_3(GLFW_MOUSE_BUTTON_7, "X4 Mouse Button"),
+	EXTRA_4(GLFW_MOUSE_BUTTON_8, "X5 Mouse Button");
 	
 	private final int value;
+	private final String string;
 	
-	MouseButton(int value) {
+	MouseButton(int value, String string) {
 		this.value = value;
+		this.string = string;
 	}
 	
 	public int getValue() {
 		return value;
+	}
+	
+	@Override
+	public String toString() {
+		return string;
 	}
 	
 	/**
