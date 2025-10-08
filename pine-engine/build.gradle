@@ -43,7 +43,7 @@ ext {
 // Determine platform
 switch (org.gradle.internal.os.OperatingSystem.current()) {
 	case org.gradle.internal.os.OperatingSystem.LINUX:
-		project.ext.lwjglNatives = "natives-linux"
+		project.ext.lwjglNatives = "natives-linux" as GStringImpl
 		def osArch = System.getProperty("os.arch")
 		if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
 			project.ext.lwjglNatives += osArch.contains("64") || osArch.startsWith("armv8") ? "-arm64" : "-arm32"
@@ -57,10 +57,10 @@ switch (org.gradle.internal.os.OperatingSystem.current()) {
 		def osArch = System.getProperty("os.arch")
 		project.ext.lwjglNatives = (osArch.contains("64")
 				? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
-				: "natives-windows-x86")
+				: "natives-windows-x86") as GStringImpl
 		break
     case org.gradle.internal.os.OperatingSystem.MAC_OS:
-        project.ext.lwjglNatives = "natives-macos"
+        project.ext.lwjglNatives = "natives-macos" as GStringImpl
         break
 }
 
