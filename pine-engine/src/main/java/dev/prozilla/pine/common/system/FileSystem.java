@@ -131,7 +131,6 @@ public final class FileSystem {
         Path p = Files.createFile(folder.resolve(gameName +".zip"));
         try (ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(p))) {
             Files.walk(folder)
-                    .filter(f -> !Files.isDirectory(f))
                     .forEach(f -> {
                         ZipEntry entry = new ZipEntry(folder.relativize(f).toString());
                         try {
