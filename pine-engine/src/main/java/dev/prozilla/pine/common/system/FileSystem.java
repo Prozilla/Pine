@@ -9,7 +9,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Utility class for manipulating files and directories.
@@ -125,8 +127,24 @@ public final class FileSystem {
 		Files.delete(zip);
 	}
 	
-	public static void zip(Path folder) throws IOException {
-	
-	}
-	
+	public static void zip(Path folder, String gameName) throws IOException {
+        Path p = Files.createFile(folder.resolve(gameName +".zip"));
+        try (ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(p))) {
+            Files.walk(folder)
+                    .filter(f -> !Files.isDirectory(f))
+                    .forEach(f -> {
+                        ZipEntry entry = new ZipEntry(folder.relativize(f).toString());
+                        try {
+                            zos.putNextEntry(entry);
+                            Files.copy(f, zos);
+                            zos.closeEntry();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
