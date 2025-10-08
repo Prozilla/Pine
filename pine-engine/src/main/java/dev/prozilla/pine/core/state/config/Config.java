@@ -87,6 +87,7 @@ public class Config {
 		addOption(WindowConfig.SHOW_DECORATIONS, window.showDecorations);
 		addOption(WindowConfig.FULLSCREEN, window.fullscreen);
 		addOption(WindowConfig.ENABLE_VSYNC, window.enableVSync);
+		addOption(WindowConfig.ENABLE_TOGGLE_FULLSCREEN, window.enableToggleFullscreen);
 		
 		addOption(StorageConfig.ENABLE_LOCAL_STORAGE, storage.enableLocalStorage);
 		addOption(StorageConfig.LOAD_ON_READ, storage.loadOnRead);

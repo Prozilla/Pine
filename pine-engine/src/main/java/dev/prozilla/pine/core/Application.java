@@ -352,6 +352,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	@Override
 	public void input(float deltaTime) {
 		input.input();
+		window.input(input);
 		modManager.beforeInput(deltaTime);
 		if (applicationManager != null) {
 			applicationManager.onInput(deltaTime);

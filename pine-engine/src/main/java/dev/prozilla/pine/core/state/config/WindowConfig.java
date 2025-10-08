@@ -12,6 +12,7 @@ public class WindowConfig {
 	public static final ConfigKey<Boolean> SHOW_DECORATIONS = new ConfigKey<>("showDecorations", Boolean.class);
 	public static final ConfigKey<Boolean> FULLSCREEN = new ConfigKey<>("fullscreen", Boolean.class);
 	public static final ConfigKey<Boolean> ENABLE_VSYNC = new ConfigKey<>("enableVSync", Boolean.class);
+	public static final ConfigKey<Boolean> ENABLE_TOGGLE_FULLSCREEN = new ConfigKey<>("enableToggleFullscreen", Boolean.class);
 	
 	// Predefines options
 	/** Width of the window. Defaults to <code>900</code>. */
@@ -27,5 +28,6 @@ public class WindowConfig {
 	public final ConfigOption<Boolean> fullscreen = new ConfigOption<>(false, Objects::nonNull);
 	/** Defaults to <code>true</code>. */
 	public final ConfigOption<Boolean> enableVSync = new ConfigOption<>(true, Objects::nonNull);
+	public final ConfigOption<Boolean> enableToggleFullscreen = new ConfigOption<>(true, Objects::nonNull);
 	
 }

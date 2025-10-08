@@ -8,6 +8,8 @@ import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.config.WindowConfig;
+import dev.prozilla.pine.core.state.input.Input;
+import dev.prozilla.pine.core.state.input.Key;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
@@ -51,17 +53,36 @@ public class Window implements Initializable, Destructible {
 		setDefaultHints();
 		setVisible(true);
 		
-		long monitor = NULL;
-		
 		// Read config options
-		config.showDecorations.read(this::setDecorated);
-		config.title.read((title) -> {
-			if (isInitialized) {
-				glfwSetWindowTitle(id, title);
-			}
-		});
+		if (!isInitialized) {
+			config.showDecorations.read(this::setDecorated);
+			config.title.read((title) -> {
+				if (isInitialized) {
+					glfwSetWindowTitle(id, title);
+				}
+			});
+			config.fullscreen.addObserver((fullscreen) -> {
+				long monitor = glfwGetPrimaryMonitor();
+				GLFWVidMode videoMode = glfwGetVideoMode(monitor);
+				if (fullscreen && videoMode != null) {
+					glfwSetWindowMonitor(id, monitor, 0, 0,
+						videoMode.width(), videoMode.height(), videoMode.refreshRate());
+				} else {
+					width = config.width.getValue();
+					height = config.height.getValue();
+					if (videoMode != null) {
+						int x = (videoMode.width() - width) / 2;
+						int y = (videoMode.height() - height) / 2;
+						glfwSetWindowMonitor(id, NULL, x, y, width, height, 0);
+					} else {
+						glfwSetWindowMonitor(id, NULL, 0, 0, width, height, 0);
+					}
+				}
+			});
+		}
 		
 		// Prepare fullscreen window
+		long monitor = NULL;
 		if (config.fullscreen.getValue()) {
 			monitor = glfwGetPrimaryMonitor();
 			GLFWVidMode videoMode = glfwGetVideoMode(monitor);
@@ -109,6 +130,16 @@ public class Window implements Initializable, Destructible {
 		
 		glfwSwapBuffers(id);
 		glfwPollEvents();
+	}
+	
+	public void input(Input input) {
+		if (!isInitialized) {
+			return;
+		}
+		
+		if (config.enableToggleFullscreen.getValue() && (input.getKey(Key.L_ALT) || input.getKey(Key.R_ALT)) && input.getKeyDown(Key.ENTER)) {
+			config.fullscreen.setValue(!config.fullscreen.getValue());
+		}
 	}
 	
 	/**

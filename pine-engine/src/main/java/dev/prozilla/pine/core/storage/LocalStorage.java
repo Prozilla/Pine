@@ -70,16 +70,18 @@ public class LocalStorage extends Storage {
 		}
 		
 		String path = getPath();
-		getLogger().logPath("Saving local storage", path);
 		File file = new File(path);
 		
 		if (items.isEmpty()) {
 			// Delete the file if the store is empty
 			if (file.exists()) {
+				getLogger().logPath("Deleting local storage", path);
 				file.delete();
 			}
 			return;
 		}
+		
+		getLogger().logPath("Saving local storage", path);
 		
 		Properties properties = new Properties();
 		for (Map.Entry<String, String> entry : items.entrySet()) {
