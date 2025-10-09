@@ -294,8 +294,9 @@ public class BuildTool {
 		FileSystem.deleteDirectory(launch4jDir);
 		Files.writeString(buildDir.resolve("version.txt"), config.getVersion());
 		
-		// Create zip
-		
+		if (config.shouldIncludeZip()) {
+			FileSystem.zip(buildDir, config.getZipFileName());
+		}
 	}
 	
 	public static class BuildConfig {
@@ -309,6 +310,7 @@ public class BuildTool {
 		public String iconPath;
 		public boolean debug = false;
 		public String resourcesPath;
+		public boolean includeZip = true;
 		
 		public String getMainClass() {
 			return Objects.requireNonNullElse(mainClass, "Main");
@@ -346,8 +348,20 @@ public class BuildTool {
 			return Objects.requireNonNullElse(resourcesPath, "src/main/resources");
 		}
 	
+		public boolean shouldIncludeZip() {
+			return includeZip;
+		}
+		
 		public String getOutputFileName() {
-			return String.format("%s.exe", getGameName().replaceAll("\\s+", ""));
+			return getFileName("exe");
+		}
+		
+		public String getZipFileName() {
+			return getFileName("zip");
+		}
+		
+		public String getFileName(String extension) {
+			return String.format("%s.%s", getGameName().replaceAll("\\s+", ""), extension);
 		}
 	}
 }
