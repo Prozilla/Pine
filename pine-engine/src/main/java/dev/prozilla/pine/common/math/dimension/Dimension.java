@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.math.dimension;
 
 import dev.prozilla.pine.common.exception.InvalidArrayException;
+import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.Node;
 import org.jetbrains.annotations.NotNull;
@@ -94,7 +95,7 @@ public class Dimension extends DimensionBase {
 		if (unit == Unit.AUTO) {
 			return Unit.toString(unit);
 		} else {
-			return value + Unit.toString(unit);
+			return MathUtils.floatToString(value) + Unit.toString(unit);
 		}
 	}
 	

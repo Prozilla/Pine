@@ -64,6 +64,24 @@ public enum WrapMode {
 		}
 	};
 	
+	public <E> void resizeList(List<E> list, int targetSize) {
+		int originalSize = list.size();
+		if (targetSize < originalSize) {
+			for (int i = 0; i < (originalSize - targetSize); i++) {
+				list.removeLast();
+			}
+		} else if (targetSize > originalSize) {
+			for (int i = originalSize; i < targetSize; i++) {
+				int transformedIndex = transform(i, 0, originalSize - 1);
+				if (transformedIndex >= 0) {
+					list.add(list.get(transformedIndex));
+				} else {
+					list.add(null);
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Applies this wrap mode to an index for a list and returns the corresponding element.
 	 * <p>The transformation is based on the list's index range ({@code 0} to {@code list.size() - 1}).</p>

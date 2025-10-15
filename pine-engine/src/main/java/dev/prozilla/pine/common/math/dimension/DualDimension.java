@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.math.dimension;
 
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.Node;
 import org.jetbrains.annotations.NotNull;
@@ -107,6 +108,10 @@ public class DualDimension implements Printable, Cloneable<DualDimension> {
 		if (!y.equals(this.y)) {
 			this.y = y;
 		}
+	}
+	
+	public Vector2f compute(Node element) {
+		return new Vector2f(computeX(element), computeY(element));
 	}
 	
 	/**

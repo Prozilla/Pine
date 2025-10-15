@@ -28,11 +28,16 @@ public final class LayoutNodeResizer extends UpdateSystem {
 		float newHeight = 0;
 		float currentGap = layoutNode.getGap();
 		
+		if (parentNode.getEntity().hasTag("BuildMenu")) {
+//			Logger.system.log("Size: " + parentNode.size.compute(parentNode));
+		}
+		
 		if (parentNode.size != null) {
 			newWidth = parentNode.size.computeX(parentNode);
 			newHeight = parentNode.size.computeY(parentNode);
 		}
 		
+		// TO DO: separate x and y calculations
 		if (newWidth != 0 && newHeight != 0) {
 			newWidth -= parentNode.getPaddingX() * 2;
 			newHeight -= parentNode.getPaddingY() * 2;
@@ -127,5 +132,10 @@ public final class LayoutNodeResizer extends UpdateSystem {
 		parentNode.currentOuterSize.y = parentNode.currentInnerSize.y + parentNode.getMarginY() * 2;
 		
 		layoutNode.currentGap = currentGap;
+		
+		if (parentNode.getEntity().hasTag("BuildMenu")) {
+//			Logger.system.log("Inner size: " + parentNode.currentInnerSize);
+//			Logger.system.log("Outer size: " + parentNode.currentOuterSize);
+		}
 	}
 }

@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.asset.image.Image;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -178,6 +179,10 @@ public class Window implements Initializable, Destructible {
 	 */
 	public void refreshSize() {
 		glViewport(0, 0, width, height);
+	}
+	
+	public Vector2i getSize() {
+		return new Vector2i(width, height);
 	}
 	
 	public int getWidth() {

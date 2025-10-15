@@ -44,6 +44,10 @@ public class DimensionParser extends Parser<DimensionBase> {
 		
 		// If input string starts with non-digit, parse it as a dimension function
 		if (splitIndex == 0) {
+			if (input.equals("auto")) {
+				return succeed(Dimension.auto());
+			}
+			
 			List<String> args = new ArrayList<>(List.of(input.split("\\s*[(,)]\\s*")));
 			String functionName = args.removeFirst();
 			

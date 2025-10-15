@@ -309,7 +309,11 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 	
 	@Override
 	public @NotNull String toString() {
-		return String.format("rgba(%s, %s, %s, %s)", red, green, blue, alpha);
+		if (alpha != 1) {
+			return String.format("rgba(%s, %s, %s, %s)", red, green, blue, alpha);
+		} else {
+			return String.format("rgb(%s, %s, %s)", red, green, blue);
+		}
 	}
 	
 	public static Color hsl(int hue, int saturation, int lightness) {

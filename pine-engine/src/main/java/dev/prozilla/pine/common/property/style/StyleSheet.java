@@ -3,6 +3,7 @@ package dev.prozilla.pine.common.property.style;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.Direction;
@@ -189,6 +190,16 @@ public class StyleSheet implements Printable, Asset {
 	
 	@Override
 	public @NotNull String toString() {
+		return toFormattedString(false);
+	}
+	
+	@Override
+	public void print(Logger logger) {
+		logger.log(toFormattedString(true));
+	}
+	
+	public @NotNull String toFormattedString(boolean newLines) {
+		String delimiter = newLines ? "\n" : " ";
 		Map<String, StringJoiner> selectorToProperties = new HashMap<>();
 		
 		for (Map.Entry<StyledPropertyKey<?>, Style<?>> styleEntry : styles.entrySet()) {
@@ -199,8 +210,12 @@ public class StyleSheet implements Printable, Asset {
 				String selector = rule.selector().toString();
 				String property = String.format("%s: %s;", propertyName.toString(), rule.value().toString());
 				
+				if (newLines) {
+					property = "\t" + property;
+				}
+				
 				selectorToProperties
-					.computeIfAbsent(selector, k -> new StringJoiner(" "))
+					.computeIfAbsent(selector, k -> new StringJoiner(delimiter))
 					.add(property);
 			}
 			
@@ -208,16 +223,19 @@ public class StyleSheet implements Printable, Asset {
 				String selector = transitionRule.selector().toString();
 				String property = String.format("transition: %s %s;", propertyName.toString(), transitionRule.value().toString());
 				
+				if (newLines) {
+					property = "\t" + property;
+				}
+				
 				selectorToProperties
-					.computeIfAbsent(selector, k -> new StringJoiner(" "))
+					.computeIfAbsent(selector, k -> new StringJoiner(delimiter))
 					.add(property);
 			}
 		}
 		
-		StringJoiner result = new StringJoiner(" ");
+		StringJoiner result = new StringJoiner(delimiter);
 		for (Map.Entry<String, StringJoiner> entry : selectorToProperties.entrySet()) {
-			result.add(entry.getKey());
-			result.add("{");
+			result.add(entry.getKey() + " {");
 			result.add(entry.getValue().toString());
 			result.add("}");
 		}
