@@ -86,6 +86,14 @@ public enum Direction {
 		this.string = string;
 	}
 	
+	public boolean isVertical() {
+		return x == 0;
+	}
+	
+	public boolean isHorizontal() {
+		return y == 0;
+	}
+	
 	/**
 	 * @return The opposite direction.
 	 */
