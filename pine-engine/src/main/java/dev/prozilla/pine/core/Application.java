@@ -776,6 +776,19 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	}
 	
 	/**
+	 * Returns the current time if the application is still running, or the timestamp of the last frame.
+	 *
+	 * <p>This is the time elapsed since GLFW was initialized.</p>
+	 * @return The current time in seconds.
+	 */
+	public double getTime() {
+		if (isState(ApplicationState.STOPPED)) {
+			return timer.getTime();
+		}
+		return timer.getCurrentTime();
+	}
+	
+	/**
 	 * Throws an exception if OpenGL has not been initialized yet.
 	 * @throws IllegalStateException If OpenGL has not been initialized yet.
 	 */

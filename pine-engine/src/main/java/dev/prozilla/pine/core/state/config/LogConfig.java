@@ -21,6 +21,7 @@ public class LogConfig {
 	public static final ConfigKey<Boolean> ENABLE_ANSI = new ConfigKey<>("enableAnsi", Boolean.class);
 	public static final ConfigKey<Boolean> ENABLE_APPLICATION_STATE_LOGS = new ConfigKey<>("enableApplicationStateLogs", Boolean.class);
 	public static final ConfigKey<Boolean> ENABLE_ASSET_POOL_LOGS = new ConfigKey<>("enableAssetPoolLogs", Boolean.class);
+	public static final ConfigKey<Boolean> ENABLE_TIMESTAMPS = new ConfigKey<>("enableTimestamps", Boolean.class);
 	
 	// Predefines options
 	/** Defaults to <code>true</code>. */
@@ -37,5 +38,6 @@ public class LogConfig {
 	public final ConfigOption<Boolean> enableApplicationStateLogs = new ConfigOption<>(true, Objects::nonNull);
 	/** Enables logging of asset pool events. Defaults to <code>true</code>. */
 	public final ConfigOption<Boolean> enableAssetPoolLogs = new ConfigOption<>(true, Objects::nonNull);
+	public final ConfigOption<Boolean> enableTimestamps = new ConfigOption<>(false, Objects::nonNull);
 	
 }

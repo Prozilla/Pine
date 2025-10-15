@@ -5,6 +5,8 @@ import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
 import dev.prozilla.pine.common.system.Ansi;
 import dev.prozilla.pine.common.system.PathUtils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.StringJoiner;
 
@@ -18,6 +20,7 @@ public class Logger implements LogHandler {
 	protected boolean enabled;
 	protected String prefix;
 	protected boolean enableAnsi;
+	protected boolean enableTimestamps;
 	
 	// Handlers
 	protected LogHandler outputLogHandler;
@@ -95,8 +98,8 @@ public class Logger implements LogHandler {
 		log(formatPath(filePath));
 	}
 	
-	public void logPath(String text, String filePath) {
-		logf("%s: %s", text, formatPath(filePath));
+	public void logPath(String label, String filePath) {
+		logf("%s: %s", label, formatPath(filePath));
 	}
 	
 	public void logHeader(String header) {
@@ -109,6 +112,20 @@ public class Logger implements LogHandler {
 	
 	public void logCollection(Collection<?> list, String label) {
 		logf("%s: %s", label, formatCollection(list));
+	}
+	
+	/**
+	 * Logs the current time.
+	 */
+	public void timestamp(String label) {
+		logf("%s: %s ", label, createTimestamp());
+	}
+	
+	/**
+	 * Logs the current time.
+	 */
+	public void timestamp() {
+		log(createTimestamp());
 	}
 	
 	@Override
@@ -216,12 +233,23 @@ public class Logger implements LogHandler {
 			text = prefix + text;
 		}
 		
+		if (enableTimestamps) {
+			text = formatBadge(createTimestamp()) + text;
+		}
+		
 		// Strip ANSI, if ANSI is disabled
 		if (!enableAnsi) {
 			text = Ansi.strip(text);
 		}
 		
 		return text;
+	}
+	
+	/**
+	 * Creates a timestamp.
+	 */
+	protected String createTimestamp() {
+		return LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME);
 	}
 	
 	protected boolean isOutputActive() {

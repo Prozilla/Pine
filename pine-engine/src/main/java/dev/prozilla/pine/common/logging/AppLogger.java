@@ -10,6 +10,7 @@ import dev.prozilla.pine.common.asset.pool.AssetPoolEventType;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.event.EventListener;
+import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.core.Application;
@@ -19,7 +20,7 @@ import dev.prozilla.pine.core.state.config.LogConfig;
  * Logger for the core application.
  * Automatically reads the application's config and updates the logging accordingly.
  */
-public class AppLogger extends Logger {
+public class AppLogger extends Logger implements Initializable {
 	
 	private final Application application;
 	
@@ -40,8 +41,21 @@ public class AppLogger extends Logger {
 	}
 	
 	/**
+	 * Creates a timestamp using {@link Application#getTime()}.
+	 */
+	@Override
+	protected String createTimestamp() {
+		double time = application.getTime();
+		int minutes = (int) (time / 60) % 60;
+		int seconds = (int) time % 60;
+		int milliseconds = (int) ((time * 1000) % 1000);
+		return String.format("%02d:%02d:%03d", minutes, seconds, milliseconds);
+	}
+	
+	/**
 	 * Initializes this logger by reading the application's configuration and creating listeners.
 	 */
+	@Override
 	public void init() {
 		LogConfig config = application.getConfig().logging;
 		
@@ -50,6 +64,7 @@ public class AppLogger extends Logger {
 		config.outputHandler.read((outputLogHandler) -> this.outputLogHandler = outputLogHandler);
 		config.errorHandler.read((errorLogHandler) -> this.errorLogHandler = errorLogHandler);
 		config.enableAnsi.read((enableAnsi) -> this.enableAnsi = enableAnsi);
+		config.enableTimestamps.read((enableTimestamps) -> this.enableTimestamps = enableTimestamps);
 		
 		config.enableAssetPoolLogs.read((enableAssetPoolLogs) -> {
 			if (enableAssetPoolLogs) {
