@@ -1,6 +1,7 @@
 package dev.prozilla.pine.examples.flappybird.scene;
 
 import dev.prozilla.pine.common.system.Directory;
+import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
@@ -18,6 +19,7 @@ import dev.prozilla.pine.examples.flappybird.system.canvas.ScoreTextUpdater;
 import dev.prozilla.pine.examples.flappybird.system.ground.GroundInitializer;
 import dev.prozilla.pine.examples.flappybird.system.ground.GroundMover;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipeInitializer;
+import dev.prozilla.pine.examples.flappybird.system.obstacle.PipesDebugRenderer;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipesInitializer;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipesMover;
 import dev.prozilla.pine.examples.flappybird.system.player.PlayerInitializer;
@@ -72,9 +74,9 @@ public class GameScene extends SceneBase {
 		world.addSystem(new GroundInitializer());
 		world.addSystem(new GroundMover());
 		
-//		if (Application.isDevMode()) {
-//			world.addSystem(new PipesDebugRenderer());
-//		}
+		if (Application.isDevMode()) {
+			world.addSystem(new PipesDebugRenderer());
+		}
 		
 		// Create empty parent for obstacles
 		obstacles = world.addEntity(new Entity(world));
