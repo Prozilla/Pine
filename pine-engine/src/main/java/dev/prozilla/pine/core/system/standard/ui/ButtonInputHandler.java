@@ -23,7 +23,7 @@ public final class ButtonInputHandler extends InputSystem {
 		buttonNode.isHovering = node.cursorHit;
 
 		if (node.cursorHit) {
-			input.setCursorType(CursorType.HAND);
+			input.setCursorType(CursorType.POINTER);
 
 			if (buttonNode.clickCallback != null && input.getMouseButtonDown(MouseButton.LEFT)) {
 				buttonNode.click();

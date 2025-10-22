@@ -8,17 +8,32 @@ import java.security.InvalidParameterException;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
- * Mappings for GLFW integer values for cursor types.
+ * Mappings for GLFW integer values for standard cursor shapes.
  * See: <a href="https://www.glfw.org/docs/3.3/group__shapes.html">GLFW: Standard cursor shapes</a>
  */
 public enum CursorType implements IntEnum {
-
+	
+	/** Regular arrow cursor. */
 	DEFAULT(GLFW_ARROW_CURSOR),
-	HAND(GLFW_HAND_CURSOR),
+	/**
+	 * @deprecated Replaced by {@link #POINTER}.
+	 */
+	@Deprecated
+	HAND(GLFW_POINTING_HAND_CURSOR),
+	/** Pointing hand cursor. */
+	POINTER(GLFW_POINTING_HAND_CURSOR),
+	/** Vertical I-beam cursor used for text input. */
 	TEXT(GLFW_IBEAM_CURSOR),
+	/** Crosshair cursor shape. */
 	CROSSHAIR(GLFW_CROSSHAIR_CURSOR),
+	/** Horizontal resize/move arrow. */
 	RESIZE_HORIZONTAL(GLFW_HRESIZE_CURSOR),
-	RESIZE_VERTICAL(GLFW_VRESIZE_CURSOR);
+	/** Vertical resize/move arrow. */
+	RESIZE_VERTICAL(GLFW_VRESIZE_CURSOR),
+	/** Omnidirectional resize/move arrow. */
+	RESIZE_ALL(GLFW_RESIZE_ALL_CURSOR),
+	/** Operation-not-allowed cursor. */
+	NOT_ALLOWED(GLFW_NOT_ALLOWED_CURSOR);
 
 	private final int value;
 	
