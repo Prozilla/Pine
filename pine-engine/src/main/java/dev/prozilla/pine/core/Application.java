@@ -23,13 +23,13 @@ import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.storage.LocalStorage;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLCapabilities;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import static java.lang.Thread.sleep;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.opengl.GL11.*;
@@ -41,8 +41,8 @@ import static org.lwjgl.opengl.GL43.GL_DEBUG_OUTPUT;
 public class Application implements Initializable, InputHandler, Updatable, Renderable, Destructible, ApplicationContext, StateProvider<Application, ApplicationState> {
 	
 	// State
-	/** True if OpenGL has been initialized */
-	public static boolean initializedOpenGL = false;
+	/** The capabilities of the OpenGL context, or {@code null} if OpenGL has not been initialized yet. */
+	public static GLCapabilities glCapabilities = null;
 	protected boolean shouldStop;
 	protected final ApplicationMode mode;
 	private static final SystemProperty devModeProperty = new SystemProperty("dev-mode");
@@ -220,9 +220,10 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		
 		// Initialize OpenGL
 		if (mode.usesOpenGL) {
-			GL.createCapabilities();
-			glEnable(GL_DEBUG_OUTPUT);
-			initializedOpenGL = true;
+			glCapabilities = GL.createCapabilities();
+			if (glCapabilities.OpenGL43) {
+				glEnable(GL_DEBUG_OUTPUT);
+			}
 			logger.log("Initialized OpenGL (Initialization: 3/4)");
 		} else {
 			logger.log("Skipping initialization of OpenGL (Initialization: 3/4)");
@@ -334,7 +335,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 					double timeout = startTime + targetTime - endTime;
 					
 					if (timeout > 0) {
-						sleep((long)(timeout * 1000));
+						Thread.sleep((long)(timeout * 1000));
 					}
 				} catch (InterruptedException e) {
 					throw new RuntimeException(e);
@@ -661,7 +662,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		config.window.icon.setValue(icons);
 		
 		// Reload icons if they were changed after initialization
-		if (initializedOpenGL) {
+		if (isOpenGLInitialized()) {
 			loadIcons();
 		}
 	}
@@ -793,9 +794,13 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * @throws IllegalStateException If OpenGL has not been initialized yet.
 	 */
 	public static void requireOpenGL() throws IllegalStateException {
-		if (!initializedOpenGL) {
+		if (!isOpenGLInitialized()) {
 			throw new IllegalStateException("OpenGL has not been initialized yet");
 		}
+	}
+	
+	public static boolean isOpenGLInitialized() {
+		return glCapabilities != null;
 	}
 	
 	/**

@@ -33,6 +33,10 @@ public class AudioDevice implements Initializable, Destructible {
 	
 	@Override
 	public void init() {
+		if (isInitialized) {
+			return;
+		}
+		
 		//Initialization
 		String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
 		device = alcOpenDevice(defaultDeviceName);
@@ -70,14 +74,15 @@ public class AudioDevice implements Initializable, Destructible {
 	
 	@Override
 	public void destroy() {
-		if (context != 0L) {
+		if (context != MemoryUtil.NULL) {
 			alcDestroyContext(context);
-			context = 0L;
+			context = MemoryUtil.NULL;
 		}
-		if (device != 0L) {
+		if (device != MemoryUtil.NULL) {
 			alcCloseDevice(device);
-			device = 0L;
+			device = MemoryUtil.NULL;
 		}
+		isInitialized = false;
 	}
 	
 	/**

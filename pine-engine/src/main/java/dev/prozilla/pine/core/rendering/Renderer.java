@@ -944,6 +944,10 @@ public class Renderer implements Initializable, Destructible {
 	 * Initializes the default shader program.
 	 */
 	private void setupShaderProgram() {
+		if (vertexArrayObject != null || vertexBufferObject != null) {
+			throw new IllegalStateException("shader program has already been set up");
+		}
+		
 		// Generate Vertex Array Object
 		vertexArrayObject = new VertexArrayObject();
 		vertexArrayObject.bind();

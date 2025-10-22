@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
+import dev.prozilla.pine.common.lwjgl.GLUtils;
 
 import static org.lwjgl.opengl.GL30.*;
 
@@ -43,5 +44,13 @@ public class VertexArrayObject implements Destructible {
     public int getId() {
         return id;
     }
-
+	
+	public boolean isBound() {
+		return id == getBoundId();
+	}
+	
+	public static int getBoundId() {
+		return GLUtils.getInt(GL_VERTEX_ARRAY_BINDING);
+	}
+	
 }

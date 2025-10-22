@@ -122,7 +122,7 @@ public final class Pine {
 		stringJoiner.add("Platform: " + Platform.getDescriptor());
 		stringJoiner.add("Java version: " + getJavaVersion());
 		stringJoiner.add("LWJGL version: " + getLWJGLVersion());
-		if (Application.initializedOpenGL) {
+		if (Application.isOpenGLInitialized()) {
 			stringJoiner.add("OpenGL version: " + getGLVersion());
 			stringJoiner.add("OpenGL renderer: " + getGLRenderer());
 		}

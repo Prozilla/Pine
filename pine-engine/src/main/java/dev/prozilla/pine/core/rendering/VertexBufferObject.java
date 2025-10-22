@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.IntEnum;
 import dev.prozilla.pine.common.lifecycle.Destructible;
+import dev.prozilla.pine.common.lwjgl.GLUtils;
 import dev.prozilla.pine.common.util.EnumUtils;
 
 import java.nio.FloatBuffer;
@@ -117,6 +118,14 @@ public class VertexBufferObject implements Destructible {
     public int getId() {
         return id;
     }
+	
+	public boolean isBound() {
+		return id == getBoundId();
+	}
+	
+	public static int getBoundId() {
+		return GLUtils.getInt(GL_VERTEX_ARRAY_BUFFER_BINDING);
+	}
 	
 	public enum Target implements IntEnum {
 		ARRAY_BUFFER(GL_ARRAY_BUFFER),
