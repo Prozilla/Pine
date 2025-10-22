@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
+import dev.prozilla.pine.common.lwjgl.GLUtils;
 import dev.prozilla.pine.common.math.matrix.Matrix2f;
 import dev.prozilla.pine.common.math.matrix.Matrix3f;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
@@ -313,6 +314,10 @@ public class ShaderProgram implements Destructible {
 	@Override
 	public void destroy() {
 		glDeleteProgram(id);
+	}
+	
+	public static int getMaxVertexAttributes() {
+		return GLUtils.getInt(GL_MAX_VERTEX_ATTRIBS);
 	}
 	
 }
