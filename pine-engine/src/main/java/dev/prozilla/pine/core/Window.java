@@ -52,10 +52,10 @@ public class Window implements Initializable, Destructible {
 	public void init() throws RuntimeException {
 		// Set window hints
 		setDefaultHints();
-		setHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		setHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-		setHint(GLFW_OPENGL_FORWARD_COMPAT, true);
-		setHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		setHint(WindowHint.GL_VERSION_MAJOR, 4);
+		setHint(WindowHint.GL_VERSION_MINOR, 1);
+		setHint(WindowHint.GL_FORWARD_COMPATIBLE, true);
+		setHint(WindowHint.GL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		setVisible(true);
 		
 		// Read config options
