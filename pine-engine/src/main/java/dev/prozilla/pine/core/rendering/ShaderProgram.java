@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.rendering;
 
+import dev.prozilla.pine.common.exception.GLException;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lwjgl.GLUtils;
 import dev.prozilla.pine.common.math.matrix.Matrix2f;
@@ -300,11 +301,12 @@ public class ShaderProgram implements Destructible {
 	
 	/**
 	 * Checks if the program was linked successfully.
+	 * @throws GLException If the program failed to link.
 	 */
-	public void checkStatus() throws RuntimeException {
+	public void checkStatus() throws GLException {
 		int status = glGetProgrami(id, GL_LINK_STATUS);
 		if (status != GL_TRUE) {
-			throw new RuntimeException(glGetProgramInfoLog(id));
+			throw new GLException(glGetProgramInfoLog(id));
 		}
 	}
 	

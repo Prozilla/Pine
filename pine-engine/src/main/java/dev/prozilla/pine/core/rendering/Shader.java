@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.IntEnum;
 import dev.prozilla.pine.common.asset.Asset;
+import dev.prozilla.pine.common.exception.GLException;
 import dev.prozilla.pine.common.util.EnumUtils;
 
 import static org.lwjgl.opengl.GL20.*;
@@ -52,11 +53,12 @@ public class Shader implements Asset {
 	
 	/**
 	 * Checks if the shader was compiled successfully.
+	 * @throws GLException If the shader failed to compile.
 	 */
-	private void checkStatus() throws RuntimeException {
+	private void checkStatus() throws GLException {
 		int status = glGetShaderi(id, GL_COMPILE_STATUS);
 		if (status != GL_TRUE) {
-			throw new RuntimeException(glGetShaderInfoLog(id));
+			throw new GLException(glGetShaderInfoLog(id));
 		}
 	}
 	

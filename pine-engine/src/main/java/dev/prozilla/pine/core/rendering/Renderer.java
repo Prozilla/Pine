@@ -1,6 +1,8 @@
 package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.pool.AssetPoolEvent;
+import dev.prozilla.pine.common.asset.pool.AssetPoolEventType;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.lifecycle.Destructible;
@@ -968,8 +970,10 @@ public class Renderer implements Initializable, Destructible {
 		isRendering = false;
 		
 		// Load shaders
+		AssetPools.shaders.addListener(AssetPoolEventType.FAILED, this::handleShaderLoadingError);
 		Shader vertexShader = AssetPools.shaders.loadVertexShader(VERTEX_SHADER_PATH);
 		Shader fragmentShader = AssetPools.shaders.loadFragmentShader(FRAGMENT_SHADER_PATH);
+		AssetPools.shaders.removeListener(AssetPoolEventType.FAILED, this::handleShaderLoadingError);
 		
 		// Create shader program
 		program = new ShaderProgram();
@@ -994,6 +998,15 @@ public class Renderer implements Initializable, Destructible {
 		program.setUniform("uView", new Matrix4f());
 		
 		resize();
+	}
+	
+	private void handleShaderLoadingError(AssetPoolEvent<Shader> event) {
+		String message = String.format("Failed to load shader: %s", event.getPath());
+		String error = event.getError();
+		if (error != null) {
+			message += System.lineSeparator() + error;
+		}
+		logger.error(message, event.getException());
 	}
 	
 	/**

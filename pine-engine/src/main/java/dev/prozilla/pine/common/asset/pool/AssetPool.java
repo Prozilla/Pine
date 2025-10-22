@@ -50,10 +50,12 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 		eventDispatcher.invoke(AssetPoolEventType.LOADING, this, path);
 		
 		// Create asset
-		T asset = null;
+		T asset;
 		try {
 			asset = createAsset(path);
-		} catch (Exception ignored) {}
+		} catch (Exception exception) {
+			return fail(path, "Failed to load asset", exception);
+		}
 		
 		// Verify asset
 		if (asset == null) {
