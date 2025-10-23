@@ -38,6 +38,7 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 	 * Creates an RGB-Color from a java.awt.Color instance.
 	 * @param color Color instance
 	 */
+	@Deprecated
 	public Color(java.awt.Color color) {
 		this(color.getRed(), color.getGreen(), color.getBlue());
 	}

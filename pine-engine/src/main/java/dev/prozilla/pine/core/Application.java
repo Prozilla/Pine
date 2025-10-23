@@ -7,6 +7,7 @@ import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.lifecycle.*;
 import dev.prozilla.pine.common.logging.AppLogger;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.lwjgl.GLFWUtils;
 import dev.prozilla.pine.common.lwjgl.GLUtils;
 import dev.prozilla.pine.common.property.LazyProperty;
 import dev.prozilla.pine.common.property.SystemProperty;
@@ -491,7 +492,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			
 			// Terminate GLFW and release error callback
 			glfwTerminate();
-			errorCallback.free();
+			errorCallback = GLFWUtils.free(errorCallback);
 		} else {
 			if (currentScene.initialized) {
 				currentScene.destroy();

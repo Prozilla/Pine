@@ -137,6 +137,7 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	private void createFont() {
+		System.setProperty("java.awt.headless", "true");
 		try {
 			defaultFont = new Font(getClass().getResourceAsStream(FONT_PATH), 16);
 		} catch (FontFormatException | IOException e) {

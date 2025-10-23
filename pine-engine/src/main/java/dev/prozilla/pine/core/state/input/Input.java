@@ -268,7 +268,7 @@ public class Input implements Initializable, Destructible {
 	 */
 	@Override
 	public void destroy() {
-		GLFWUtils.freeNativeResources(keyCallback, charCallback, scrollCallback, cursorPosCallback, mouseButtonCallback, joystickCallback);
+		GLFWUtils.free(keyCallback, charCallback, scrollCallback, cursorPosCallback, mouseButtonCallback, joystickCallback);
 		for (Gamepad gamepad : gamepads) {
 			if (gamepad != null) {
 				gamepad.destroy();
