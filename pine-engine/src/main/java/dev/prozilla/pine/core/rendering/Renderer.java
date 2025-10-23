@@ -23,7 +23,6 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
-import java.awt.*;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -137,14 +136,13 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	private void createFont() {
-		System.setProperty("java.awt.headless", "true");
 		try {
 			defaultFont = new Font(getClass().getResourceAsStream(FONT_PATH), 16);
-		} catch (FontFormatException | IOException e) {
+		} catch (IOException e) {
 			logger.error("Failed to create font", e);
-			defaultFont = new Font();
+			defaultFont = new Font(12);
 		}
-		debugFont = new Font(12, false);
+		debugFont = new Font(12);
 	}
 	
 	private void reset() {

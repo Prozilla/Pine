@@ -3,7 +3,6 @@ package dev.prozilla.pine.common.asset.pool;
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.system.PathUtils;
 
-import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -31,7 +30,7 @@ public final class FontPool extends AssetPool<Font> implements MultiAssetLoader<
 		try (InputStream stream = FontPool.class.getResourceAsStream(path)) {
 			font = new Font(stream, size);
 			font.path = path;
-		} catch (FontFormatException | IOException e) {
+		} catch (IOException e) {
 			return fail(path, null, e);
 		}
 		
