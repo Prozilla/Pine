@@ -53,6 +53,8 @@ public class GameScene extends SceneBase {
 	protected void load() {
 		super.load();
 		
+		getInput().hideCursor();
+		
 		dataDirectory = new Directory("data");
 		
 		// Create prefabs for entities
@@ -131,6 +133,7 @@ public class GameScene extends SceneBase {
 	}
 	
 	public void endGame() {
+		getInput().showCursor();
 		gameOver = true;
 		player.getComponent(PlayerData.class).resetVelocity();
 		

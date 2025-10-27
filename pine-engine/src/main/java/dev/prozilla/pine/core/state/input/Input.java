@@ -75,10 +75,11 @@ public class Input implements Initializable, Destructible {
 	private final Logger logger;
 	
 	// Constants
-	private static final int CURSOR_TYPE_DEFAULT = CursorType.DEFAULT.getValue();
-	private static final boolean IGNORE_CURSOR_BLOCK_DEFAULT = false;
-	private static final boolean STOP_PROPAGATION_DEFAULT = false;
-	private static final int DEFAULT_GAMEPAD_ID = 0;
+	public static final int CURSOR_TYPE_DEFAULT = CursorType.DEFAULT.getValue();
+	public static final int CURSOR_MODE_DEFAULT = CursorMode.NORMAL.getValue();
+	public static final boolean IGNORE_CURSOR_BLOCK_DEFAULT = false;
+	public static final boolean STOP_PROPAGATION_DEFAULT = false;
+	public static final int DEFAULT_GAMEPAD_ID = 0;
 	
 	@FunctionalInterface
 	public interface TextListener {
@@ -707,6 +708,38 @@ public class Input implements Initializable, Destructible {
 	}
 	
 	/**
+	 * Sets the cursor mode to {@link CursorMode#NORMAL}.
+	 */
+	public void showCursor() {
+		setCursorMode(CursorMode.NORMAL);
+	}
+	
+	/**
+	 * Sets the cursor mode to {@link CursorMode#HIDDEN}.
+	 */
+	public void hideCursor() {
+		setCursorMode(CursorMode.HIDDEN);
+	}
+	
+	/**
+	 * Sets the cursor mode to {@link CursorMode#DISABLED}.
+	 */
+	public void disableCursor() {
+		setCursorMode(CursorMode.DISABLED);
+	}
+	
+	/**
+	 * Changes the cursor mode.
+	 *
+	 * <p>When {@code null} is passed, the cursor mode is set to normal.</p>
+	 * @param cursorMode The cursor mode to use
+	 */
+	public void setCursorMode(CursorMode cursorMode) {
+		int value = cursorMode != null ? cursorMode.getValue() : CURSOR_MODE_DEFAULT;
+		setInputMode(GLFW_CURSOR, value);
+	}
+	
+	/**
 	 * Prevents the cursor from sending input to remaining entities in the current frame.
 	 * @param entity Entity that is blocking the cursor
 	 */
@@ -750,5 +783,9 @@ public class Input implements Initializable, Destructible {
 	}
 	
 	//endregion Mouse
+	
+	private void setInputMode(int mode, int value) {
+		glfwSetInputMode(window.getId(), mode, value);
+	}
 	
 }
