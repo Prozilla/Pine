@@ -30,6 +30,10 @@ public enum CursorType implements IntEnum {
 	RESIZE_HORIZONTAL(GLFW_HRESIZE_CURSOR),
 	/** Vertical resize/move arrow. */
 	RESIZE_VERTICAL(GLFW_VRESIZE_CURSOR),
+	/** Top-left to bottom-right diagonal resize/move arrow. */
+	RESIZE_TOP_LEFT_BOTTOM_RIGHT(GLFW_RESIZE_NWSE_CURSOR),
+	/** Top-right to bottom-left diagonal resize/move arrow. */
+	RESIZE_TOP_RIGHT_BOTTOM_LEFT(GLFW_RESIZE_NESW_CURSOR),
 	/** Omnidirectional resize/move arrow. */
 	RESIZE_ALL(GLFW_RESIZE_ALL_CURSOR),
 	/** Operation-not-allowed cursor. */

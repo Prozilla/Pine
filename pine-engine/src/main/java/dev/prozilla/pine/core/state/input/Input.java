@@ -256,7 +256,7 @@ public class Input implements Initializable, Destructible {
 		}
 		
 		if (cursorHandle != previousCursorHandle) {
-			glfwSetCursor(application.getWindow().getId(), cursorHandle);
+			glfwSetCursor(window.getId(), cursorHandle);
 			previousCursorHandle = cursorHandle;
 		}
 		

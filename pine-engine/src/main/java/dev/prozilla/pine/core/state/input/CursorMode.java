@@ -14,7 +14,9 @@ public enum CursorMode implements IntEnum {
 	/** Makes the cursor invisible when it is hovering over the content area of the window. */
 	HIDDEN(GLFW_CURSOR_HIDDEN),
 	/** Makes the cursor invisible and locks its position, but still provides virtual cursor movement. */
-	DISABLED(GLFW_CURSOR_DISABLED);
+	DISABLED(GLFW_CURSOR_DISABLED),
+	/** Makes the cursor visible and confined to the content area of the window. */
+	CAPTURED(GLFW_CURSOR_CAPTURED);
 
 	private final int value;
 	
