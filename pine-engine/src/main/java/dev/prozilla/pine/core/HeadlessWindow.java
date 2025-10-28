@@ -14,11 +14,6 @@ public class HeadlessWindow extends Window {
 	}
 	
 	@Override
-	public void refreshSize() {
-	
-	}
-	
-	@Override
 	public void setIcons(Image[] images) {
 	
 	}

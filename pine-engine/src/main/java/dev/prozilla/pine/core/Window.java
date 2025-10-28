@@ -16,7 +16,6 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
@@ -176,13 +175,6 @@ public class Window implements Initializable, Destructible {
 		this.width = width;
 		this.height = height;
 		renderer.resize();
-	}
-	
-	/**
-	 * Sets the size of the rendering viewport to match the window.
-	 */
-	public void refreshSize() {
-		glViewport(0, 0, width, height);
 	}
 	
 	public Vector2i getSize() {

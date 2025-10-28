@@ -1033,6 +1033,8 @@ public class Renderer implements Initializable, Destructible {
 			return;
 		}
 		
+		glViewport(0, 0, width, height);
+		
 		// Set projection matrix to an orthographic projection
 		Matrix4f projection = Matrix4f.orthographic(0f, width, 0f, height, -1f, 1f);
 		program.setUniform("uProjection", projection);

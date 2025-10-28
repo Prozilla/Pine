@@ -399,7 +399,6 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			return;
 		}
 		
-		window.refreshSize();
 		renderer.clear();
 		renderer.begin();
 		modManager.beforeRender();
