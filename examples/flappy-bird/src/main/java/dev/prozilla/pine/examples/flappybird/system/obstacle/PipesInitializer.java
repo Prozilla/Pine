@@ -1,5 +1,7 @@
 package dev.prozilla.pine.examples.flappybird.system.obstacle;
 
+import dev.prozilla.pine.common.property.random.LocalRandomFloatProperty;
+import dev.prozilla.pine.common.property.random.LocalRandomIntProperty;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
 import dev.prozilla.pine.common.property.random.RandomIntProperty;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -15,8 +17,8 @@ import dev.prozilla.pine.examples.flappybird.scene.GameScene;
  */
 public class PipesInitializer extends InitSystem {
 	
-	private static final RandomFloatProperty heightProperty = new RandomFloatProperty(FlappyBird.HEIGHT / -4f + GroundData.HEIGHT - GroundData.ELEVATION + PipeData.RIM_HEIGHT, FlappyBird.HEIGHT / 4f);
-	private static final RandomIntProperty gapProperty = new RandomIntProperty(PipesData.MIN_GAP, PipesData.MAX_GAP);
+	public static final RandomFloatProperty heightProperty = new LocalRandomFloatProperty(FlappyBird.HEIGHT / -4f + GroundData.HEIGHT - GroundData.ELEVATION + PipeData.RIM_HEIGHT, FlappyBird.HEIGHT / 4f);
+	public static final RandomIntProperty gapProperty = new LocalRandomIntProperty(PipesData.MIN_GAP, PipesData.MAX_GAP);
 	
 	public PipesInitializer() {
 		super(PipesData.class);

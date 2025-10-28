@@ -40,12 +40,12 @@ public class RandomVector2fProperty extends RandomObjectProperty<Vector2f> imple
 	
 	@Override
 	public float getX() {
-		return MathUtils.remap(random.nextFloat(), min.x, max.x);
+		return MathUtils.remap(getRandom().nextFloat(), min.x, max.x);
 	}
 	
 	@Override
 	public float getY() {
-		return MathUtils.remap(random.nextFloat(), min.y, max.y);
+		return MathUtils.remap(getRandom().nextFloat(), min.y, max.y);
 	}
 	
 }

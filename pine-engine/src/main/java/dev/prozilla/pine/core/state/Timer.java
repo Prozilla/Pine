@@ -167,7 +167,18 @@ public class Timer implements Initializable {
 	}
 	
 	public RandomInterval startRandomInterval(Callback callback, float minDelay, float maxDelay, boolean applyTimeScale) {
-		RandomInterval randomInterval = new RandomInterval(this, callback, minDelay, maxDelay, applyTimeScale);
+		return startRandomInterval(new RandomInterval(this, callback, minDelay, maxDelay, applyTimeScale));
+	}
+	
+	public RandomInterval startRandomInterval(Callback callback, RandomFloatProperty delayProperty) {
+		return startRandomInterval(callback, delayProperty, false);
+	}
+	
+	public RandomInterval startRandomInterval(Callback callback, RandomFloatProperty delayProperty, boolean applyTimeScale) {
+		return startRandomInterval(new RandomInterval(this, callback, delayProperty, applyTimeScale));
+	}
+	
+	protected RandomInterval startRandomInterval(RandomInterval randomInterval) {
 		timedActions.add(randomInterval);
 		return randomInterval;
 	}

@@ -21,7 +21,7 @@ public class RandomFloatProperty extends RandomProperty<Float> implements FloatP
 	
 	@Override
 	public float get() {
-		return random.nextFloat(min, max);
+		return getRandom().nextFloat(min, max);
 	}
 	
 }

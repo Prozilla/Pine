@@ -9,7 +9,7 @@ public class RandomBooleanProperty extends RandomProperty<Boolean> implements Bo
 	
 	@Override
 	public boolean get() {
-		return random.nextBoolean();
+		return getRandom().nextBoolean();
 	}
 	
 }

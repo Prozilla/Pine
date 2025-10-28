@@ -1,6 +1,8 @@
 package dev.prozilla.pine.examples.flappybird.scene;
 
-import dev.prozilla.pine.common.property.random.RandomProperty;
+import dev.prozilla.pine.common.lifecycle.Destructible;
+import dev.prozilla.pine.common.property.random.LocalRandomFloatProperty;
+import dev.prozilla.pine.common.property.random.RandomFloatProperty;
 import dev.prozilla.pine.common.system.Directory;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.ui.TextNode;
@@ -33,6 +35,7 @@ public class GameScene extends SceneBase {
 	public boolean gameOver;
 	public int playerScore;
 	
+	private final RandomFloatProperty obstacleSpawnDelay = new LocalRandomFloatProperty(MIN_OBSTACLE_TIME, MAX_OBSTACLE_TIME);
 	private Timer.Interval obstacleSpawnInterval;
 	
 	// Prefabs
@@ -53,8 +56,6 @@ public class GameScene extends SceneBase {
 	@Override
 	protected void load() {
 		super.load();
-		
-		RandomProperty.setSeed(1);
 		
 		getInput().hideCursor();
 		
@@ -105,7 +106,8 @@ public class GameScene extends SceneBase {
 		playerScore = 0;
 		
 		// Start spawning obstacles
-		obstacleSpawnInterval = getTimer().startRandomInterval(this::spawnObstacle, MIN_OBSTACLE_TIME, MAX_OBSTACLE_TIME, true);
+		setSeed(1);
+		obstacleSpawnInterval = getTimer().startRandomInterval(this::spawnObstacle, obstacleSpawnDelay, true);
 	}
 	
 	@Override
@@ -131,6 +133,13 @@ public class GameScene extends SceneBase {
 		}
 	}
 	
+	@Override
+	public void destroy() throws IllegalStateException {
+		super.destroy();
+		
+		obstacleSpawnInterval = Destructible.destroy(obstacleSpawnInterval);
+	}
+	
 	public void spawnObstacle() {
 		obstacles.addChild(pipesPrefab.instantiate(world));
 	}
@@ -146,4 +155,11 @@ public class GameScene extends SceneBase {
 			getLogger().log(localStorage.getInt("highscore"));
 		}
 	}
+	
+	public void setSeed(long seed) {
+		obstacleSpawnDelay.setSeed(seed);
+		PipesInitializer.gapProperty.setSeed(seed);
+		PipesInitializer.heightProperty.setSeed(seed);
+	}
+	
 }

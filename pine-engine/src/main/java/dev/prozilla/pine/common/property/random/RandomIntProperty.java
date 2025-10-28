@@ -21,7 +21,7 @@ public class RandomIntProperty extends RandomProperty<Integer> implements IntPro
 	
 	@Override
 	public int get() {
-		return random.nextInt(min, max);
+		return getRandom().nextInt(min, max);
 	}
 	
 }
