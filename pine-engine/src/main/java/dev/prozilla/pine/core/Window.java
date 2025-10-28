@@ -117,7 +117,7 @@ public class Window implements Initializable, Destructible {
 		glfwSetWindowSizeCallback(id, windowSizeCallback = new GLFWWindowSizeCallback() {
 			@Override
 			public void invoke(long window, int width, int height) {
-				updateSize(width, height);
+				updateSize();
 			}
 		});
 		
@@ -171,10 +171,10 @@ public class Window implements Initializable, Destructible {
 		return glfwWindowShouldClose(id);
 	}
 	
-	private void updateSize(int width, int height) {
-		this.width = width;
-		this.height = height;
+	private void updateSize() {
 		renderer.resize();
+		this.width = renderer.getViewportWidth();
+		this.height = renderer.getViewportHeight();
 	}
 	
 	public Vector2i getSize() {
