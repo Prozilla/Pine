@@ -1,5 +1,6 @@
 package dev.prozilla.pine.examples.flappybird.scene;
 
+import dev.prozilla.pine.common.property.random.RandomProperty;
 import dev.prozilla.pine.common.system.Directory;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.ui.TextNode;
@@ -52,6 +53,8 @@ public class GameScene extends SceneBase {
 	@Override
 	protected void load() {
 		super.load();
+		
+		RandomProperty.setSeed(1);
 		
 		getInput().hideCursor();
 		
