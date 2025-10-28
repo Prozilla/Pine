@@ -54,8 +54,8 @@ public class StyledPropertyTest {
 	void testStyleSheetParseToString() {
 		CSSParser cssParser = new CSSParser();
 		String[] inputStrings = new String[] {
-			":hover { color: rgba(0.25, 0.75, 0.5, 1.0); }",
-			"* { color: rgba(1.0, 1.0, 1.0, 1.0); } #id { color: rgba(0.0, 0.0, 0.0, 1.0); }"
+			":hover { color: rgb(0.25, 0.75, 0.5); }",
+			"* { color: rgb(1.0, 1.0, 1.0); } #id { color: rgb(0.0, 0.0, 0.0); }"
 		};
 	
 		for (String input : inputStrings) {
