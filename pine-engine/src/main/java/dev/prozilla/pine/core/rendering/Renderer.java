@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -1015,10 +1016,11 @@ public class Renderer implements Initializable, Destructible {
 		
 		if (frameBufferObject == null) {
 			// Get width and height of frame buffer
+			long window = glfwGetCurrentContext();
 			try (MemoryStack stack = MemoryStack.stackPush()) {
 				IntBuffer widthBuffer = stack.mallocInt(1);
 				IntBuffer heightBuffer = stack.mallocInt(1);
-				glfwGetFramebufferSize(application.getWindow().getId(), widthBuffer, heightBuffer);
+				glfwGetFramebufferSize(window, widthBuffer, heightBuffer);
 				width = widthBuffer.get();
 				height = heightBuffer.get();
 			}
@@ -1096,14 +1098,6 @@ public class Renderer implements Initializable, Destructible {
 	@Contract("-> new")
 	public Vector2f getViewportCenter() {
 		return new Vector2f(viewWidth / 2f, viewHeight / 2f);
-	}
-	
-	public int getViewportWidth() {
-		return viewWidth;
-	}
-	
-	public int getViewportHeight() {
-		return viewHeight;
 	}
 	
 }
