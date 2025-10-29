@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.property.vector;
 
+import dev.prozilla.pine.common.Transmittable;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.property.Property;
 import org.jetbrains.annotations.Contract;
@@ -8,7 +9,13 @@ import org.jetbrains.annotations.Contract;
  * A property with a {@link Vector4f} value.
  */
 @FunctionalInterface
-public interface Vector4fProperty extends Vector4fPropertyBase<Vector4f> {
+public interface Vector4fProperty extends Vector4fPropertyBase<Vector4f>, Transmittable<Vector4f> {
+	
+	@Override
+	default void transmit(Vector4f target) {
+		Vector4f value = getValue();
+		target.set(value.x, value.y, value.z, value.w);
+	}
 	
 	@Override
 	default float getX() {

@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core;
 
+import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.asset.image.Image;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
@@ -11,9 +12,12 @@ import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.config.WindowConfig;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
+
+import java.util.StringJoiner;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -21,7 +25,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 /**
  * Represents a GLFW window object.
  */
-public class Window implements Initializable, Destructible {
+public class Window implements Initializable, Destructible, Printable {
 	
 	/** Handle of the window */
 	private long id;
@@ -296,6 +300,29 @@ public class Window implements Initializable, Destructible {
 		if (!isInitialized) {
 			throw new IllegalStateException("window has not been initialized yet");
 		}
+	}
+	
+	public float getPixelRatioX() {
+		return renderer.getWidth() / (float)width;
+	}
+	
+	public float getPixelRatioY() {
+		return renderer.getHeight() / (float)height;
+	}
+	
+	@Override
+	public @NotNull String toString() {
+		StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
+		
+		stringJoiner.add(Logger.formatHeader("Window Info"));
+		stringJoiner.add("Title: " + config.title.getValue());
+		stringJoiner.add(String.format("Window: %sx%s", width, height));
+		stringJoiner.add(String.format("Viewport: %sx%s", renderer.getWidth(), renderer.getHeight()));
+		stringJoiner.add(String.format("Pixel ratio: %s, %s", getPixelRatioX(), getPixelRatioY()));
+		stringJoiner.add("Fullscreen: " + config.fullscreen.getValue());
+		stringJoiner.add("Show decorations: " + config.showDecorations.getValue());
+		
+		return stringJoiner.toString();
 	}
 	
 }
