@@ -214,6 +214,11 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	}
 	
 	@Override
+	public Entity getChild(int i) {
+		return transform.getChild(i);
+	}
+	
+	@Override
 	public boolean isDescendantOf(Transform parent) {
 		return transform.isDescendantOf(parent);
 	}
@@ -359,6 +364,17 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 			case CHILD_REMOVE -> invoke(EntityEventType.DESCENDANT_REMOVE, event.getTarget());
 			case CHILDREN_UPDATE -> invoke(EntityEventType.DESCENDANT_UPDATE, event.getTarget());
 		}
+	}
+	
+	@Override
+	protected boolean shouldInvoke(EntityEventType entityEventType) {
+		boolean shouldInvoke = switch (entityEventType) {
+			case CHILD_ADD -> super.shouldInvoke(EntityEventType.DESCENDANT_ADD);
+			case CHILD_REMOVE -> super.shouldInvoke(EntityEventType.DESCENDANT_REMOVE);
+			case CHILDREN_UPDATE -> super.shouldInvoke(EntityEventType.DESCENDANT_UPDATE);
+			default -> false;
+		};
+		return shouldInvoke || super.shouldInvoke(entityEventType);
 	}
 	
 	@Override

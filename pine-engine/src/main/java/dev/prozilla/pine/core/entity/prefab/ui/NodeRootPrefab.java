@@ -18,6 +18,8 @@ public class NodeRootPrefab extends Prefab {
 	
 	@Override
 	protected void apply(Entity entity) {
+		super.apply(entity);
+		
 		entity.addComponent(new NodeRoot());
 	}
 	

@@ -36,6 +36,14 @@ public interface EntityProvider extends EntityContext {
 	}
 	
 	@Override
+	default Entity getChild(int i) {
+		if (getTransform() == null) {
+			return null;
+		}
+		return getTransform().getChild(i);
+	}
+	
+	@Override
 	default boolean isDescendantOf(Transform parent) {
 		if (getTransform() == null) {
 			return false;

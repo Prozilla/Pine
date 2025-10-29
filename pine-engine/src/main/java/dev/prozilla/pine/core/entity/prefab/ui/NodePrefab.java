@@ -279,6 +279,8 @@ public class NodePrefab extends Prefab {
 	
 	@Override
 	protected void apply(Entity entity) {
+		super.apply(entity);
+		
 		Node node = entity.addComponent(new Node());
 		node.size = size.clone();
 		node.absolutePosition = absolutePosition;

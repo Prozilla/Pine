@@ -72,15 +72,20 @@ public class TextNode extends Component {
 		return true;
 	}
 	
-	public void setText(String text) {
+	public boolean clearText() {
+		return setText("");
+	}
+	
+	public boolean setText(String text) {
 		Checks.isNotNull(text, "text");
 		
 		if (this.text.equals(text)) {
-			return;
+			return false;
 		}
 		
 		this.text = text;
 		calculateSize();
+		return true;
 	}
 	
 	/**
@@ -95,4 +100,5 @@ public class TextNode extends Component {
 			size = renderer.getTextSize(font, text);
 		}
 	}
+	
 }

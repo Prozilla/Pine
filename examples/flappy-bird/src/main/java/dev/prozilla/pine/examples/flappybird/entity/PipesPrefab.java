@@ -15,6 +15,8 @@ public class PipesPrefab extends Prefab {
 	
 	@Override
 	protected void apply(Entity entity) {
+		super.apply(entity);
+		
 		PipePrefab pipePrefab = new PipePrefab();
 		
 		// Add pipes

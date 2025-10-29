@@ -39,6 +39,8 @@ public class QuadPrefab extends Prefab {
 	
 	@Override
 	protected void apply(Entity entity) {
+		super.apply(entity);
+		
 		QuadRenderer quadRenderer = color != null ? new QuadRenderer(size.clone(), color.clone()) : new QuadRenderer(size.clone());
 		entity.addComponent(quadRenderer);
 	}

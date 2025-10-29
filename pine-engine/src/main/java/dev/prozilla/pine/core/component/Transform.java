@@ -66,6 +66,14 @@ public class Transform extends Component {
 	}
 	
 	@Override
+	public Entity getChild(int i) {
+		if (i < 0 || i >= children.size()) {
+			return null;
+		}
+		return children.get(i).getEntity();
+	}
+	
+	@Override
 	public boolean isDescendantOf(Transform parent) {
 		Checks.isNotNull(parent, "parent");
 		return this.parent != null && (this.parent.equals(parent) || this.parent.isDescendantOf(parent));

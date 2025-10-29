@@ -13,7 +13,7 @@ import java.util.List;
  * Abstract class representing a prefab for creating entities with predefined components and values.
  */
 @Components({ Transform.class })
-public abstract class Prefab {
+public class Prefab {
 	
 	protected String name;
 	protected String tag;
@@ -77,10 +77,6 @@ public abstract class Prefab {
 			entity = new Entity(world, x, y);
 		}
 		
-		if (tag != null) {
-			entity.tag = tag;
-		}
-		
 		try {
 			apply(entity);
 		} catch (RuntimeException e) {
@@ -96,16 +92,20 @@ public abstract class Prefab {
 			entity.setActive(false);
 		}
 		
-		for (Prefab child : children) {
-			entity.addChild(child);
-		}
-		
 		return entity;
 	}
 	
 	/**
 	 * Adds this prefab's predefined components to a given entity and copies values from this prefab.
 	 */
-	protected abstract void apply(Entity entity);
+	protected void apply(Entity entity) {
+		if (tag != null) {
+			entity.tag = tag;
+		}
+		
+		for (Prefab child : children) {
+			entity.addChild(child);
+		}
+	}
 	
 }

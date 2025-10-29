@@ -7,10 +7,17 @@ import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.component.camera.CameraData;
+import dev.prozilla.pine.core.component.ui.NodeRoot;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.EntityEventType;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.camera.CameraPrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.dev.DevConsolePrefab;
 import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.state.input.Key;
+import dev.prozilla.pine.core.system.standard.ui.dev.DevConsoleInputHandler;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -29,6 +36,9 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	protected CameraData cameraData;
 	/** Prefab that will be used during scene loading to create a camera entity. */
 	protected Prefab cameraPrefab;
+	protected LayoutPrefab devConsolePrefab;
+	protected Entity devConsole;
+	protected NodeRoot devConsoleRoot;
 	
 	// Scene state
 	public boolean loaded;
@@ -51,6 +61,8 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	public Scene(String name) {
 		this.id = generateId();
 		this.name = (name != null) ? name : "Scene #" + this.id;
+		
+		devConsolePrefab = new DevConsolePrefab();
 		
 		reset();
 	}
@@ -129,6 +141,10 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	public void input(float deltaTime) throws IllegalStateException {
 		checkStatus();
 		world.input(deltaTime);
+		
+		if (getInput().getKeyDown(Key.F12)) {
+			toggleDevConsole();
+		}
 	}
 	
 	/**
@@ -224,4 +240,34 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	public @NotNull String toString() {
 		return String.format("%s (%s)", name, id);
 	}
+
+	public void toggleDevConsole() {
+		toggleDevConsole(devConsole == null || !devConsole.isActive());
+	}
+	
+	public void toggleDevConsole(boolean active) {
+		if (!Application.isDevMode()) {
+			return;
+		}
+		
+		if (active) {
+			if (devConsole == null) {
+				world.addSystem(new DevConsoleInputHandler());
+				
+				if (devConsoleRoot == null) {
+					devConsoleRoot = world.addEntity(new NodeRootPrefab()).getComponent(NodeRoot.class);
+				}
+				
+				devConsoleRoot.getEntity().addListener(EntityEventType.DESCENDANT_ADD, (event) -> {
+					logger.logCollection(event.getTarget().transform.children);
+				});
+				
+				devConsole = devConsoleRoot.getEntity().addChild(devConsolePrefab);
+			}
+			devConsole.setActive(true);
+		} else if (devConsole != null) {
+			devConsole.setActive(false);
+		}
+	}
+	
 }

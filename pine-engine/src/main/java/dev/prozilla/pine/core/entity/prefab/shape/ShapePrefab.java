@@ -61,6 +61,8 @@ public class ShapePrefab<S extends Shape> extends Prefab {
 	
 	@Override
 	protected void apply(Entity entity) {
+		super.apply(entity);
+		
 		entity.addComponent(createRenderer(shape, texture, Cloneable.createClone(color)));
 	}
 	

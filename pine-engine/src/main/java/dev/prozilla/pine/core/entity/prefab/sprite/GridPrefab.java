@@ -25,6 +25,8 @@ public class GridPrefab extends Prefab {
 	
 	@Override
 	protected void apply(Entity entity) {
+		super.apply(entity);
+		
 		entity.addComponent(new GridGroup(size));
 	}
 }

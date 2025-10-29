@@ -8,6 +8,7 @@ public class TextInputNode extends Component {
 	public int cursorPosition;
 	public Input.TextListener textListener;
 	public Type type;
+	public TextNode textNode;
 	
 	public enum Type {
 		TEXT,
@@ -26,4 +27,23 @@ public class TextInputNode extends Component {
 			getInput().removeTextListener(textListener);
 		}
 	}
+	
+	public String getText() {
+		return textNode.text;
+	}
+	
+	public void clearText() {
+		setText("");
+	}
+	
+	public void setText(String text) {
+		if (textNode != null && textNode.setText(text)) {
+			updateCursor();
+		}
+	}
+	
+	public void updateCursor() {
+		cursorPosition = Math.clamp(cursorPosition, 0, textNode.text.length());
+	}
+	
 }

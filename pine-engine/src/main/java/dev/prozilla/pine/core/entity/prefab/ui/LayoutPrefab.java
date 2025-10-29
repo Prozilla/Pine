@@ -26,7 +26,7 @@ public class LayoutPrefab extends NodePrefab {
 	public LayoutPrefab() {
 		arrangeChildren = true;
 		
-		setName("Container");
+		setName("Layout");
 		addClass("container");
 		setHTMLTag("div");
 	}
