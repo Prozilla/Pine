@@ -312,7 +312,7 @@ public class Window implements Initializable, Destructible, Printable {
 	
 	@Override
 	public @NotNull String toString() {
-		StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
+		StringJoiner stringJoiner = new StringJoiner("\n");
 		
 		stringJoiner.add(Logger.formatHeader("Window Info"));
 		stringJoiner.add("Title: " + config.title.getValue());

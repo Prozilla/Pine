@@ -16,10 +16,12 @@ public abstract class SelectionProperty<I, S> extends SimpleObservableObjectProp
 	protected final List<I> items;
 	protected WrapMode wrapMode;
 	
+	public static final WrapMode DEFAULT_WRAP_MODE = WrapMode.REPEAT;
+	
 	public SelectionProperty(List<I> items) {
 		super(null);
 		this.items = Checks.isNotNull(items, "items");
-		wrapMode = WrapMode.REPEAT;
+		wrapMode = DEFAULT_WRAP_MODE;
 	}
 	
 	/**

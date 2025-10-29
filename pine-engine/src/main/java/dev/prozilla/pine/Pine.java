@@ -115,7 +115,7 @@ public final class Pine {
 	 * Prints all system and library information.
 	 */
 	public static void print(Logger logger) {
-		StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
+		StringJoiner stringJoiner = new StringJoiner("\n");
 		
 		stringJoiner.add(Logger.formatHeader("Pine Info"));
 		stringJoiner.add("Pine version: " + getVersion());
