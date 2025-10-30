@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.util;
 
 import org.jetbrains.annotations.Contract;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.StringJoiner;
 
@@ -100,6 +101,44 @@ public final class ArrayUtils {
 			array[i] = array[j];
 			array[j] = temp;
 		}
+	}
+	
+	/**
+	 * Creates a copy of an array without the first element.
+	 * @param array The original array
+	 * @return The copy of the array
+	 */
+	public static <E> E[] removeFirst(E[] array) {
+		return removeFirst(1, array);
+	}
+	
+	/**
+	 * Creates a copy of an array without the first element(s).
+	 * @param count The amount of elements to exclude in the copy
+	 * @param array The original array
+	 * @return The copy of the array
+	 */
+	public static <E> E[] removeFirst(int count, E[] array) {
+		return Arrays.copyOfRange(array, count, array.length);
+	}
+	
+	/**
+	 * Creates a copy of an array without the last element.
+	 * @param array The original array
+	 * @return The copy of the array
+	 */
+	public static <E> E[] removeLast(E[] array) {
+		return removeLast(1, array);
+	}
+	
+	/**
+	 * Creates a copy of an array without the last element(s).
+	 * @param count The amount of elements to exclude in the copy
+	 * @param array The original array
+	 * @return The copy of the array
+	 */
+	public static <E> E[] removeLast(int count, E[] array) {
+		return Arrays.copyOfRange(array, 0, array.length - count);
 	}
 	
 }

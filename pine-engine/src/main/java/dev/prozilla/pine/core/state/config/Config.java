@@ -129,6 +129,15 @@ public class Config {
 		return options.containsKey(key);
 	}
 	
+	public String getOption(String key) {
+		for (ConfigKey<?> candidateKey : options.keySet()) {
+			if (candidateKey.key().equalsIgnoreCase(key)) {
+				return String.valueOf(getOption(candidateKey));
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Returns the value of an option.
 	 * @param key Key of the config option
@@ -140,6 +149,16 @@ public class Config {
 		ConfigOption<T> option = (ConfigOption<T>)options.get(key);
 		
 		return option.getValue();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> void setOption(String key, T value) {
+		for (ConfigKey<?> candidateKey : options.keySet()) {
+			if (candidateKey.key().equalsIgnoreCase(key) && candidateKey.type().isInstance(value)) {
+				setOption((ConfigKey<T>)candidateKey, value);
+				return;
+			}
+		}
 	}
 	
 	/**

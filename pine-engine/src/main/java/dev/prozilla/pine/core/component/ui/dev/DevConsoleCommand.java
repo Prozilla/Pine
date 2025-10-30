@@ -6,7 +6,7 @@ public abstract class DevConsoleCommand {
 	
 	public static final DevConsoleCommand HELP = new DevConsoleCommand("help") {
 		@Override
-		String execute(String[] args, DevConsoleData env) {
+		public String execute(String[] args, DevConsoleData env) {
 			for (DevConsoleCommand command : env.commands) {
 				env.addLog(command.name);
 			}
@@ -18,6 +18,6 @@ public abstract class DevConsoleCommand {
 		this.name = name;
 	}
 	
-	abstract String execute(String[] args, DevConsoleData env);
+	public abstract String execute(String[] args, DevConsoleData env);
 	
 }

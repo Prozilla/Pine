@@ -15,9 +15,8 @@ public class PrintableCommand extends DevConsoleCommand {
 	}
 	
 	@Override
-	String execute(String[] args, DevConsoleData env) {
-		supplier.get().print(env.getLogger());
-		return null;
+	public String execute(String[] args, DevConsoleData env) {
+		return String.valueOf(supplier.get());
 	}
 	
 }

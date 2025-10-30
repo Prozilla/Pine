@@ -38,6 +38,7 @@ public class DevConsoleData extends Component {
 		commands = new ArrayList<>();
 		
 		addCommand(DevConsoleCommand.HELP);
+		addCommand(new ConfigCommand());
 		addCommand(new EnvironmentCommand("exit", ApplicationProvider::stopApplication));
 		addCommand(new PrintableCommand("window", this::getWindow));
 		addCommand(new LoggingCommand("assetpools", AssetPools::printInfo));
@@ -70,7 +71,7 @@ public class DevConsoleData extends Component {
 			}
 		}
 
-		return null;
+		return String.format("Command not found: %s", args[0]);
 	}
 	
 }

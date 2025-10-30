@@ -14,7 +14,7 @@ public class EnvironmentCommand extends DevConsoleCommand {
 	}
 	
 	@Override
-	String execute(String[] args, DevConsoleData env) {
+	public String execute(String[] args, DevConsoleData env) {
 		consumer.accept(env);
 		return null;
 	}
