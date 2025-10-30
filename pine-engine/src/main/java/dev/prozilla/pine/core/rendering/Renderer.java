@@ -323,7 +323,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @return Total width of the text
 	 */
 	public int getDebugTextWidth(CharSequence text) {
-		return debugFont.getWidth(text);
+		return (int)debugFont.getWidth(text);
 	}
 	
 	/**
@@ -332,7 +332,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @return Total width of the text
 	 */
 	public int getDebugTextHeight(CharSequence text) {
-		return debugFont.getHeight(text);
+		return (int)debugFont.getHeight(text);
 	}
 	
 	/**
@@ -374,7 +374,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @return Total width of the text
 	 */
 	public int getTextWidth(Font font, CharSequence text) {
-		return font.getWidth(text);
+		return (int)font.getWidth(text);
 	}
 	
 	public int getTextHeight(CharSequence text) {
@@ -387,7 +387,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @return Total width of the text
 	 */
 	public int getTextHeight(Font font, CharSequence text) {
-		return font.getHeight(text);
+		return (int)font.getHeight(text);
 	}
 	
 	//endregion Calculations
