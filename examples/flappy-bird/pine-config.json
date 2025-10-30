@@ -5,5 +5,5 @@
   "version": "1.0.0.0",
   "jreVersion": "21",
   "jar": "build/libs/flappy-bird-1.0.0.0-all.jar",
-  "debug": true
+  "debug": false
 }

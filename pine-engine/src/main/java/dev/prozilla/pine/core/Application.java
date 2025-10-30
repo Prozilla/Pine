@@ -821,4 +821,8 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		return BooleanUtils.isTrue(devModeProperty.fetch());
 	}
 	
+	public static void setDevMode(boolean enabled) {
+		devModeProperty.setValue(String.valueOf(enabled));
+	}
+	
 }
