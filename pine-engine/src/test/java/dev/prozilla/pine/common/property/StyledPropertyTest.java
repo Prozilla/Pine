@@ -41,8 +41,8 @@ public class StyledPropertyTest {
 	@Test
 	void testStyleSheetParser() {
 		StyleSheet expected = new StyleSheet();
-		expected.addRule(Selector.UNIVERSAL, StyledPropertyKey.COLOR, Color.decode("#fff"));
-		expected.addRule(new IdSelector("id"), StyledPropertyKey.COLOR, Color.decode("#000"));
+		expected.addRule(Selector.UNIVERSAL, StyledPropertyKey.COLOR, Color.hex("#fff"));
+		expected.addRule(new IdSelector("id"), StyledPropertyKey.COLOR, Color.hex("#000"));
 		
 		CSSParser cssParser = new CSSParser();
 		

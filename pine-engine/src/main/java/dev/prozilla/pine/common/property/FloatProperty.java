@@ -57,7 +57,7 @@ public interface FloatProperty extends NonNullProperty<Float> {
 	 * @return The value
 	 */
 	@Contract("null, _ -> param2")
-	static float getPropertyValue(FloatProperty property, float defaultValue) {
+	static float getValueOf(FloatProperty property, float defaultValue) {
 		if (property == null) {
 			return defaultValue;
 		} else {

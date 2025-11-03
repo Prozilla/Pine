@@ -119,6 +119,6 @@ public class GameScene extends Scene {
 		cameraData.getTransform().setPosition((width * TILE_SIZE) / 2f, (height * TILE_SIZE) / 2f);
 		
 		cameraData.zoomIn(-0.1f);
-		cameraData.setBackgroundColor(Color.decode("#596A6C"));
+		cameraData.setBackgroundColor(Color.hex("#596A6C"));
 	}
 }

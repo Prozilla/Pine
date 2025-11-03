@@ -12,9 +12,7 @@ public class ColourParser extends Parser<Colour> {
 	
 	@Override
 	public boolean parse(String input) {
-		boolean succeeded = colorParser.parse(input);
-		
-		if (succeeded) {
+		if (colorParser.parse(input)) {
 			return succeed(colorParser.getResult().toColour());
 		} else {
 			return fail(colorParser.getError());

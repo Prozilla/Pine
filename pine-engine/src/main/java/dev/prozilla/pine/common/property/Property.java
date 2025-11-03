@@ -111,8 +111,8 @@ public interface Property<T> {
 	 * @param <T> The type of value
 	 */
 	@Contract("null -> null")
-	static <T> T getPropertyValue(Property<T> property) {
-		return getPropertyValue(property, null);
+	static <T> T getValueOf(Property<T> property) {
+		return getValueOf(property, null);
 	}
 	
 	/**
@@ -123,7 +123,7 @@ public interface Property<T> {
 	 * @param <T> The type of value
 	 */
 	@Contract("null, _ -> param2")
-	static <T> T getPropertyValue(Property<T> property, T defaultValue) {
+	static <T> T getValueOf(Property<T> property, T defaultValue) {
 		if (property == null) {
 			return defaultValue;
 		}

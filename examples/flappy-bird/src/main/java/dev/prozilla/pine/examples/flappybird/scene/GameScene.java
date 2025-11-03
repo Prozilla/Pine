@@ -57,7 +57,7 @@ public class GameScene extends SceneBase {
 	@Override
 	protected void load() {
 		super.load();
-		cameraData.setBackgroundColor(Color.decode("#4DC1CB"));
+		cameraData.setBackgroundColor(Color.hex("#4DC1CB"));
 		
 		getInput().hideCursor();
 		

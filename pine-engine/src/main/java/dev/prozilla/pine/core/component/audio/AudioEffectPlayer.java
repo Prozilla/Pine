@@ -124,7 +124,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 	}
 	
 	private float getVolume() {
-		return FloatProperty.getPropertyValue(volume, AudioPlayer.DEFAULT_VOLUME);
+		return FloatProperty.getValueOf(volume, AudioPlayer.DEFAULT_VOLUME);
 	}
 	
 	public void setGlobalPitch(float pitch) {
@@ -164,7 +164,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 	}
 	
 	private float getPitch() {
-		return FloatProperty.getPropertyValue(pitch, AudioPlayer.DEFAULT_PITCH);
+		return FloatProperty.getValueOf(pitch, AudioPlayer.DEFAULT_PITCH);
 	}
 	
 	public void setGlobalGain(float gain) {
@@ -204,7 +204,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 	}
 	
 	private float getGain() {
-		return FloatProperty.getPropertyValue(gain, AudioPlayer.DEFAULT_GAIN);
+		return FloatProperty.getValueOf(gain, AudioPlayer.DEFAULT_GAIN);
 	}
 	
 	public void setMaxSources(int maxSources) {
