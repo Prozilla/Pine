@@ -4,7 +4,8 @@ import dev.prozilla.pine.common.asset.image.Texture;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL30.*;
 
 /**
@@ -34,8 +35,7 @@ public class FrameBufferObject implements Initializable, Destructible {
 		
 		// Create texture to use as color attachment
 		texture = new Texture(width, height);
-		texture.setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		texture.setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		texture.setFilter(Texture.Filter.LINEAR);
 		
 		// Attach texture to frame buffer
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getId(), 0);
@@ -83,4 +83,5 @@ public class FrameBufferObject implements Initializable, Destructible {
 	public int getHeight() {
 		return height;
 	}
+	
 }

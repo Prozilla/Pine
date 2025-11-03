@@ -1,5 +1,7 @@
 package dev.prozilla.pine.examples.flappybird.entity;
 
+import dev.prozilla.pine.common.asset.image.Texture;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.sprite.SpritePrefab;
 import dev.prozilla.pine.core.scene.World;
@@ -10,7 +12,7 @@ public class GroundPrefab extends SpritePrefab {
 	protected int index;
 	
 	public GroundPrefab() {
-		super("flappybird/base.png");
+		super(AssetPools.textures.load("flappybird/base.png", Texture.Wrap.MIRRORED_REPEAT));
 		setName("Ground");
 		
 		index = 0;

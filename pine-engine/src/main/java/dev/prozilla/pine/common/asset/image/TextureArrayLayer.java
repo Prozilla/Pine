@@ -8,7 +8,7 @@ import java.util.Objects;
  * Represents a layer of a texture array.
  * @see TextureArray
  */
-public class TextureArrayLayer implements TextureBase, Cloneable<TextureArrayLayer> {
+public class TextureArrayLayer implements TextureAsset, Cloneable<TextureArrayLayer> {
 
 	/** The path of the image of this texture */
 	private final String path;
@@ -33,7 +33,12 @@ public class TextureArrayLayer implements TextureBase, Cloneable<TextureArrayLay
 	}
 	
 	@Override
-	public boolean hasEqualLocation(TextureBase other) {
+	public void setParameter(int name, int value) {
+		textureArray.setParameter(name, value);
+	}
+	
+	@Override
+	public boolean hasEqualLocation(TextureAsset other) {
 		if (!other.isInArray()) {
 			return false;
 		}
@@ -98,7 +103,7 @@ public class TextureArrayLayer implements TextureBase, Cloneable<TextureArrayLay
 	 */
 	@Override
 	public void destroy() {
-		TextureBase.super.destroy();
+		TextureAsset.super.destroy();
 		textureArray.destroy();
 	}
 }

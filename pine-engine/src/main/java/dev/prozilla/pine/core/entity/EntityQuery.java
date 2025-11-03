@@ -43,7 +43,7 @@ public class EntityQuery implements Destructible {
 		Checks.isNotEmpty(includedComponentTypes, "length of includedComponentTypes must be greater than 0");
 		
 		if (excludedComponentTypes != null) {
-			Checks.areDisjunct(excludedComponentTypes, includedComponentTypes, "excludedComponentTypes and includedComponentTypes must be disjunct");
+			Checks.areDisjoint(excludedComponentTypes, includedComponentTypes, "excludedComponentTypes and includedComponentTypes must be disjoint");
 		}
 		
 		entityChunks = new DeferredList<>();

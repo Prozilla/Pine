@@ -9,7 +9,6 @@ import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.component.ui.NodeRoot;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.EntityEventType;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.camera.CameraPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
@@ -257,10 +256,6 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 				if (devConsoleRoot == null) {
 					devConsoleRoot = world.addEntity(new NodeRootPrefab()).getComponent(NodeRoot.class);
 				}
-				
-				devConsoleRoot.getEntity().addListener(EntityEventType.DESCENDANT_ADD, (event) -> {
-					logger.logCollection(event.getTarget().transform.children);
-				});
 				
 				devConsole = devConsoleRoot.getEntity().addChild(devConsolePrefab);
 			}

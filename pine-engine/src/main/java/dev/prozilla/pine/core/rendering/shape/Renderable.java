@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.rendering.shape;
 
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.Renderer;
 
@@ -34,7 +34,7 @@ public interface Renderable {
 	 * @param texture The texture to draw with
 	 * @param depth The depth of the entity
 	 */
-	default void draw(Renderer renderer, TextureBase texture, float depth) {
+	default void draw(Renderer renderer, TextureAsset texture, float depth) {
 		draw(renderer, texture, renderer.getFallbackColor(), depth);
 	}
 	
@@ -45,6 +45,6 @@ public interface Renderable {
 	 * @param color The color to draw with
 	 * @param depth The depth of the entity
 	 */
-	void draw(Renderer renderer, TextureBase texture, Color color, float depth);
+	void draw(Renderer renderer, TextureAsset texture, Color color, float depth);
 	
 }

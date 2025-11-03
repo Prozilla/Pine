@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.system.standard.ui.image;
 
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.ImageNode;
@@ -40,7 +40,7 @@ public final class ImageRenderer extends RenderSystem {
 			x, y, width, height, z, color);
 	}
 	
-	public static void renderImage(Renderer renderer, TextureBase texture, float regX, float regY, float regWidth, float regHeight, float x, float y, float width, float height, float z, Color color) {
+	public static void renderImage(Renderer renderer, TextureAsset texture, float regX, float regY, float regWidth, float regHeight, float x, float y, float width, float height, float z, Color color) {
 		float x2 = x + width;
 		float y2 = y + height;
 		

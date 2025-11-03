@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.shape;
 
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.shape.RectRenderer;
 import dev.prozilla.pine.core.component.shape.ShapeRenderer;
@@ -20,7 +20,7 @@ public class RectPrefab extends ShapePrefab<Rect> {
 		super(shape, texturePath);
 	}
 	
-	public RectPrefab(Rect shape, TextureBase texture) {
+	public RectPrefab(Rect shape, TextureAsset texture) {
 		super(shape, texture);
 	}
 	
@@ -28,12 +28,12 @@ public class RectPrefab extends ShapePrefab<Rect> {
 		super(shape, texturePath, color);
 	}
 	
-	public RectPrefab(Rect shape, TextureBase texture, Color color) {
+	public RectPrefab(Rect shape, TextureAsset texture, Color color) {
 		super(shape, texture, color);
 	}
 	
 	@Override
-	protected ShapeRenderer<Rect> createRenderer(Rect shape, TextureBase texture, Color color) {
+	protected ShapeRenderer<Rect> createRenderer(Rect shape, TextureAsset texture, Color color) {
 		return new RectRenderer(shape, texture, color);
 	}
 	

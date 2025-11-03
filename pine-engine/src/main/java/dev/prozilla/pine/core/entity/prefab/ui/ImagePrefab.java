@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.ImageNode;
@@ -14,7 +14,7 @@ import dev.prozilla.pine.core.entity.prefab.Components;
 @Components({ ImageNode.class, Node.class, Transform.class })
 public class ImagePrefab extends NodePrefab {
 	
-	protected TextureBase image;
+	protected TextureAsset image;
 	
 	protected boolean cropToRegion;
 	protected int regionX;
@@ -26,7 +26,7 @@ public class ImagePrefab extends NodePrefab {
 		this(AssetPools.textures.load(imagePath));
 	}
 	
-	public ImagePrefab(TextureBase image) {
+	public ImagePrefab(TextureAsset image) {
 		this.image = image;
 		
 		cropToRegion = false;
@@ -36,7 +36,7 @@ public class ImagePrefab extends NodePrefab {
 		setHTMLTag("img");
 	}
 	
-	public void setImage(TextureBase image) {
+	public void setImage(TextureAsset image) {
 		this.image = image;
 	}
 	

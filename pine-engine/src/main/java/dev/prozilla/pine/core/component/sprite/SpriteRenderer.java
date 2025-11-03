@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.component.sprite;
 
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
@@ -11,7 +11,7 @@ import dev.prozilla.pine.core.component.Component;
 public class SpriteRenderer extends Component {
 	
 	// Visual properties
-	public TextureBase texture;
+	public TextureAsset texture;
 	public final Color color;
 	
 	// Transformations
@@ -27,11 +27,11 @@ public class SpriteRenderer extends Component {
 	public Vector2f regionOffset;
 	public Vector2f regionSize;
 	
-	public SpriteRenderer(TextureBase texture) {
+	public SpriteRenderer(TextureAsset texture) {
 		this(texture, Color.white());
 	}
 	
-	public SpriteRenderer(TextureBase texture, Color color) {
+	public SpriteRenderer(TextureAsset texture, Color color) {
 		this.texture = texture;
 		this.color = color;
 		

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
@@ -37,7 +37,7 @@ public class NodePrefab extends Prefab {
 	protected DualDimension padding;
 	protected DualDimension margin;
 	protected Dimension border;
-	protected TextureBase borderImage;
+	protected TextureAsset borderImage;
 	protected Vector4f borderImageSlice;
 	protected boolean borderImageSliceFill;
 	protected Color color;
@@ -226,7 +226,7 @@ public class NodePrefab extends Prefab {
 		setBorderImage(AssetPools.textures.load(borderImagePath), slice, fill);
 	}
 	
-	public void setBorderImage(TextureBase borderImage, Vector4f slice, boolean fill) {
+	public void setBorderImage(TextureAsset borderImage, Vector4f slice, boolean fill) {
 		this.borderImage = Checks.isNotNull(borderImage, "borderImage");
 		borderImageSlice = Checks.isNotNull(slice, "slice");
 		borderImageSliceFill = fill;

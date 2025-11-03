@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.particle;
 
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.easing.EasingFunction;
 import dev.prozilla.pine.common.math.vector.Vector2f;
@@ -41,7 +41,7 @@ public class ParticlePrefab extends SpritePrefab {
 		this(AssetPools.textures.load(texturePath));
 	}
 	
-	public ParticlePrefab(TextureBase texture) {
+	public ParticlePrefab(TextureAsset texture) {
 		this(texture, DEFAULT_LIFETIME);
 	}
 	
@@ -49,7 +49,7 @@ public class ParticlePrefab extends SpritePrefab {
 		this(AssetPools.textures.load(texturePath), lifetime);
 	}
 	
-	public ParticlePrefab(TextureBase texture, FloatProperty lifetime) {
+	public ParticlePrefab(TextureAsset texture, FloatProperty lifetime) {
 		super(texture);
 		this.lifetime = lifetime;
 		frameCount = ParticleRenderer.DEFAULT_FRAME_COUNT;

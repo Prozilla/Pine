@@ -1,5 +1,7 @@
 package dev.prozilla.pine.examples.flappybird.entity;
 
+import dev.prozilla.pine.common.asset.image.Texture;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.sprite.SpritePrefab;
@@ -11,7 +13,7 @@ public class BackgroundPrefab extends SpritePrefab {
 	protected int index;
 	
 	public BackgroundPrefab() {
-		super("flappybird/background.png");
+		super(AssetPools.textures.load("flappybird/background.png", Texture.Wrap.MIRRORED_REPEAT));
 		setName("Background");
 		setScale(new Vector2f(1.01f, 1.01f));
 		

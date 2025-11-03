@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.rendering.shape;
 
 import dev.prozilla.pine.common.Cloneable;
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.ListUtils;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -77,10 +77,10 @@ public abstract class Shape implements Renderable, Cloneable<Shape> {
 	
 	/**
 	 * Draws this shape using its vertex and UV arrays.
-	 * @see Renderer#drawTriangles(TextureBase, float[], float, float[], Color)
+	 * @see Renderer#drawTriangles(TextureAsset, float[], float, float[], Color)
 	 */
 	@Override
-	public void draw(Renderer renderer, TextureBase texture, Color color, float depth) {
+	public void draw(Renderer renderer, TextureAsset texture, Color color, float depth) {
 		if (isDirty) {
 			generate();
 		}

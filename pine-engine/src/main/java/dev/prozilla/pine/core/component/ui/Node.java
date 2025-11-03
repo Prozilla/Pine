@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.component.ui;
 
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.event.Event;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventDispatcherProvider;
@@ -56,7 +56,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	// Border style
 	public Dimension border;
-	public TextureBase borderImage;
+	public TextureAsset borderImage;
 	public Vector4f borderImageSlice;
 	public boolean borderImageSliceFill;
 	

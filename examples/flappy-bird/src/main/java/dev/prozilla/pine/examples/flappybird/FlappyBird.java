@@ -1,5 +1,7 @@
 package dev.prozilla.pine.examples.flappybird;
 
+import dev.prozilla.pine.common.asset.image.Texture;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationBuilder;
 import dev.prozilla.pine.core.scene.Scene;
@@ -33,6 +35,8 @@ public class FlappyBird {
 			flappyBird.setFullscreen(true);
 			flappyBird.setTargetFps(0);
 		}
+		
+		AssetPools.textures.setDefaultTextureFilter(Texture.Filter.NEAREST);
 		
 		return flappyBird;
 	}

@@ -29,6 +29,13 @@ public interface EventDispatcherContext<EventType extends Enum<EventType>, Targe
 	}
 	
 	/**
+	 * Equivalent of {@link #invoke(Enum, Object)}.
+	 */
+	default void dispatchEvent(EventType eventType, Target target) {
+		invoke(eventType, target);
+	}
+	
+	/**
 	 * Adds a listener that only listens to events of a given type with the given target.
 	 * @param eventType The type of event to listen to
 	 * @param target The target of the event

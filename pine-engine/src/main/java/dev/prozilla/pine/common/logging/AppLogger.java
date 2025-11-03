@@ -3,7 +3,7 @@ package dev.prozilla.pine.common.logging;
 import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.asset.audio.AudioSource;
 import dev.prozilla.pine.common.asset.image.Image;
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPool;
 import dev.prozilla.pine.common.asset.pool.AssetPoolEvent;
 import dev.prozilla.pine.common.asset.pool.AssetPoolEventType;
@@ -25,7 +25,7 @@ public class AppLogger extends Logger implements Initializable {
 	private final Application application;
 	
 	protected final EventListener<AssetPoolEvent<Image>> onImageLoad;
-	protected final EventListener<AssetPoolEvent<TextureBase>> onTextureLoad;
+	protected final EventListener<AssetPoolEvent<TextureAsset>> onTextureLoad;
 	protected final EventListener<AssetPoolEvent<Font>> onFontLoad;
 	protected final EventListener<AssetPoolEvent<StyleSheet>> onStyleSheetLoad;
 	protected final EventListener<AssetPoolEvent<AudioSource>> onAudioSourceLoad;

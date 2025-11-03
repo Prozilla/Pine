@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.rendering;
 
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.Application;
@@ -72,7 +72,7 @@ public class HeadlessRenderer extends Renderer {
 	}
 	
 	@Override
-	public void drawTextureRegion(TextureBase texture, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float z, float s1, float t1, float s2, float t2, Color c) {
+	public void drawTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float z, float s1, float t1, float s2, float t2, Color c) {
 	
 	}
 	

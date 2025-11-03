@@ -1,7 +1,9 @@
 package dev.prozilla.pine.common.system;
 
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.util.ArrayUtils;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,13 +16,18 @@ import java.nio.file.Paths;
 public enum Platform {
 	FREEBSD(org.lwjgl.system.Platform.FREEBSD) {
 		@Override
-		String getUserPath(String userHome, String separator) {
+		public String getUserPath(String userHome, String separator) {
 			return LINUX.getUserPath(userHome, separator);
+		}
+		
+		@Override
+		public void openDirectory(String directory) {
+			LINUX.openDirectory(directory);
 		}
 	},
 	LINUX(org.lwjgl.system.Platform.LINUX) {
 		@Override
-		String getUserPath(String userHome, String separator) {
+		public String getUserPath(String userHome, String separator) {
 			String xdgData = System.getenv("XDG_DATA_HOME");
 			if (xdgData == null) {
 				return String.format("%s.local%sshare", userHome, separator);
@@ -28,21 +35,44 @@ public enum Platform {
 				return PathUtils.replaceFileSeparator(xdgData, separator);
 			}
 		}
+		
+		@Override
+		public void openDirectory(String directory) {
+			try {
+				Runtime.getRuntime().exec(new String[]{ "open", directory });
+			} catch (IOException e) {
+				Logger.system.error("Failed to open directory: " + directory, e);
+			}
+		}
 	},
 	MACOS(org.lwjgl.system.Platform.MACOSX) {
 		@Override
-		String getUserPath(String userHome, String separator) {
+		public String getUserPath(String userHome, String separator) {
 			return String.format("%sLibrary%sApplication Support", userHome, separator);
+		}
+		
+		@Override
+		public void openDirectory(String directory) {
+			LINUX.openDirectory(directory);
 		}
 	},
 	WINDOWS(org.lwjgl.system.Platform.WINDOWS) {
 		@Override
-		String getUserPath(String userHome, String separator) {
+		public String getUserPath(String userHome, String separator) {
 			String userDirectory = System.getenv("USERPROFILE");
 			if (userDirectory == null) {
 				userDirectory = userHome;
 			}
 			return String.format("%sAppData%sLocalLow", PathUtils.addTrailingSlash(PathUtils.replaceFileSeparator(userDirectory, separator)), separator);
+		}
+		
+		@Override
+		public void openDirectory(String directory) {
+			try {
+				Runtime.getRuntime().exec(new String[]{"explorer",  directory});
+			} catch (IOException e) {
+				Logger.system.error("Failed to open directory: " + directory, e);
+			}
 		}
 	};
 	
@@ -78,7 +108,9 @@ public enum Platform {
 		return this == current;
 	}
 	
-	abstract String getUserPath(String userHome, String separator);
+	public abstract String getUserPath(String userHome, String separator);
+	
+	public void openDirectory(String directory) {}
 	
 	public static String getPersistentDataPath(String subDirectory) {
 		return getPersistentDataPath(subDirectory, false);

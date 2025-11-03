@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.particle;
 
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.property.FloatProperty;
 import dev.prozilla.pine.core.component.particle.ParticleFlowEmitter;
@@ -15,7 +15,7 @@ public class ParticleFlowEmitterPrefab extends ParticleEmitterPrefab {
 		this(AssetPools.textures.load(texturePath));
 	}
 	
-	public ParticleFlowEmitterPrefab(TextureBase texture) {
+	public ParticleFlowEmitterPrefab(TextureAsset texture) {
 		this(new ParticlePrefab(texture, ParticlePrefab.DEFAULT_LIFETIME));
 	}
 	

@@ -13,6 +13,13 @@ public abstract class DevConsoleCommand {
 			return null;
 		}
 	};
+	public static final DevConsoleCommand CLEAR = new DevConsoleCommand("clear") {
+		@Override
+		public String execute(String[] args, DevConsoleData env) {
+			env.clearLogs();
+			return null;
+		}
+	};
 	
 	public DevConsoleCommand(String name) {
 		this.name = name;

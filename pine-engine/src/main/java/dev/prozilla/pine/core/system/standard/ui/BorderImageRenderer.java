@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.system.standard.ui;
 
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
@@ -30,7 +30,7 @@ public final class BorderImageRenderer extends RenderSystem {
 		renderBorderImage(renderer, node.borderImage, node, node.borderImageSlice, node.borderImageSliceFill, z);
 	}
 	
-	public static void renderBorderImage(Renderer renderer, TextureBase texture, Node node, Vector4f slice, boolean fill, float z) {
+	public static void renderBorderImage(Renderer renderer, TextureAsset texture, Node node, Vector4f slice, boolean fill, float z) {
 		float borderWidth = node.getBorderWidth();
 		
 		float nodeX = node.currentPosition.x;

@@ -6,35 +6,69 @@ import dev.prozilla.pine.common.logging.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class TexturePool extends AssetPool<TextureBase> implements MultiAssetLoader<TextureBase> {
+public final class TexturePool extends AssetPool<TextureAsset> implements MultiAssetLoader<TextureAsset> {
 	
 	private final ImagePool imagePool;
+	
+	// Texture arrays
 	private TextureArrayPolicy textureArrayPolicy;
 	private final List<TextureArray> textureArrays;
+	
+	// Texture parameters
+	private Texture.Wrap textureWrap;
+	private Texture.Filter textureFilter;
+	
+	// Global defaults
+	private TextureArrayPolicy defaultTextureArrayPolicy;
+	private Texture.Wrap defaultTextureWrap;
+	private Texture.Filter defaultTextureFilter;
 	
 	private static final TextureArrayPolicy DEFAULT_TEXTURE_ARRAY_POLICY = TextureArrayPolicy.SOMETIMES;
 	
 	public TexturePool(ImagePool imagePool) {
 		this.imagePool = imagePool;
-		textureArrayPolicy = DEFAULT_TEXTURE_ARRAY_POLICY;
 		textureArrays = new ArrayList<>();
+		
+		defaultTextureArrayPolicy = DEFAULT_TEXTURE_ARRAY_POLICY;
+		defaultTextureWrap = Texture.DEFAULT_WRAP;
+		defaultTextureFilter = Texture.DEFAULT_FILTER;
+		
+		textureArrayPolicy = defaultTextureArrayPolicy;
+		textureWrap = defaultTextureWrap;
+		textureFilter = defaultTextureFilter;
+	}
+	
+	public TextureAsset load(String path, Texture.Wrap wrap) {
+		textureWrap = wrap;
+		return load(path);
+	}
+	
+	public TextureAsset load(String path, Texture.Filter filter) {
+		textureFilter = filter;
+		return load(path);
+	}
+	
+	public TextureAsset load(String path, Texture.Wrap wrap, Texture.Filter filter) {
+		textureWrap = wrap;
+		textureFilter = filter;
+		return load(path);
 	}
 	
 	@Override
-	public TextureBase load(String path) {
+	public TextureAsset load(String path) {
 		return super.load(path);
 	}
 	
-	public TextureBase loadInTextureArray(String path) {
+	public TextureAsset loadInTextureArray(String path) {
 		textureArrayPolicy = TextureArrayPolicy.ALWAYS;
 		return load(path);
 	}
 	
 	@Override
-	protected TextureBase createAsset(String path) {
+	protected TextureAsset createAsset(String path) {
 		Image image = imagePool.load(path);
 		
-		TextureBase texture = null;
+		TextureAsset texture = null;
 		
 		// Look for available texture array to load texture into
 		if (textureArrayPolicy.canUseArray()) {
@@ -61,7 +95,7 @@ public final class TexturePool extends AssetPool<TextureBase> implements MultiAs
 		
 		// Fall back to standard texture
 		if (texture == null) {
-			texture = new Texture(image);
+			texture = new Texture(image, textureWrap, textureFilter);
 		}
 		return texture;
 	}
@@ -69,7 +103,9 @@ public final class TexturePool extends AssetPool<TextureBase> implements MultiAs
 	@Override
 	protected void prepareNext() {
 		super.prepareNext();
-		textureArrayPolicy = DEFAULT_TEXTURE_ARRAY_POLICY;
+		textureArrayPolicy = defaultTextureArrayPolicy;
+		textureWrap = defaultTextureWrap;
+		textureFilter = defaultTextureFilter;
 	}
 	
 	@Override
@@ -116,7 +152,7 @@ public final class TexturePool extends AssetPool<TextureBase> implements MultiAs
 	 * @param layers The amount of textures to fit into the texture array
 	 */
 	public TextureArray createTextureArray(int width, int height, int layers) {
-		TextureArray textureArray = new TextureArray(width, height, layers);
+		TextureArray textureArray = new TextureArray(width, height, layers, textureWrap, textureFilter);
 		textureArrays.add(textureArray);
 		return textureArray;
 	}
@@ -130,6 +166,18 @@ public final class TexturePool extends AssetPool<TextureBase> implements MultiAs
 		for (TextureArray textureArray : textureArraysToDestroy) {
 			textureArray.destroy();
 		}
+	}
+	
+	public void setDefaultTextureArrayPolicy(TextureArrayPolicy defaultTextureArrayPolicy) {
+		this.defaultTextureArrayPolicy = defaultTextureArrayPolicy;
+	}
+	
+	public void setDefaultTextureWrap(Texture.Wrap defaultTextureWrap) {
+		this.defaultTextureWrap = defaultTextureWrap;
+	}
+	
+	public void setDefaultTextureFilter(Texture.Filter defaultTextureFilter) {
+		this.defaultTextureFilter = defaultTextureFilter;
 	}
 	
 	/**
