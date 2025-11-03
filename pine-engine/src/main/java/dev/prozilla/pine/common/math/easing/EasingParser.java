@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.math.easing;
 
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.util.ArrayUtils;
-import dev.prozilla.pine.common.util.SequentialParser;
+import dev.prozilla.pine.common.util.parser.SequentialParser;
 
 public class EasingParser extends SequentialParser<EasingFunction> {
 	

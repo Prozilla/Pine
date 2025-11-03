@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.util;
+package dev.prozilla.pine.common.util.parser;
 
 import org.jetbrains.annotations.Contract;
 

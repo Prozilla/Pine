@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.util;
 
+import dev.prozilla.pine.common.util.parser.SequentialParser;
 import dev.prozilla.pine.test.TestLoggingExtension;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;

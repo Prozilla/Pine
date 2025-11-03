@@ -157,7 +157,7 @@ public class Vector4i extends VectorInt<Vector4i> {
 		return temp;
 	}
 	
-	public static class Parser extends dev.prozilla.pine.common.util.Parser<Vector4i> {
+	public static class Parser extends dev.prozilla.pine.common.util.parser.Parser<Vector4i> {
 		
 		@Override
 		public boolean parse(String input) {

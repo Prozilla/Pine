@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.property.animated;
 
 import dev.prozilla.pine.common.math.easing.EasingFunction;
 import dev.prozilla.pine.common.math.easing.EasingParser;
-import dev.prozilla.pine.common.util.Parser;
+import dev.prozilla.pine.common.util.parser.Parser;
 
 public class AnimationCurveParser extends Parser<AnimationCurve> {
 	

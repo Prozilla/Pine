@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.system;
 
-import dev.prozilla.pine.common.util.Parser;
+import dev.prozilla.pine.common.util.parser.Parser;
 
 public class ColourParser extends Parser<Colour> {
 	

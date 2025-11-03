@@ -1,9 +1,9 @@
 package dev.prozilla.pine.common.property.fixed;
 
 import dev.prozilla.pine.common.property.StringProperty;
-import dev.prozilla.pine.common.util.Parser;
 import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
+import dev.prozilla.pine.common.util.parser.Parser;
 import org.jetbrains.annotations.Contract;
 
 public class FixedStringProperty extends FixedObjectProperty<String> implements StringProperty, FixedProperty<String> {

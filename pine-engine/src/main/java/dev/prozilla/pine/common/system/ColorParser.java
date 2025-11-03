@@ -2,8 +2,8 @@ package dev.prozilla.pine.common.system;
 
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.math.vector.Vector4f;
-import dev.prozilla.pine.common.util.Parser;
 import dev.prozilla.pine.common.util.StringUtils;
+import dev.prozilla.pine.common.util.parser.Parser;
 
 import java.util.HashMap;
 import java.util.Map;
