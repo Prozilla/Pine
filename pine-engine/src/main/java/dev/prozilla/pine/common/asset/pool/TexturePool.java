@@ -152,7 +152,7 @@ public final class TexturePool extends AssetPool<TextureAsset> implements MultiA
 	 * @param layers The amount of textures to fit into the texture array
 	 */
 	public TextureArray createTextureArray(int width, int height, int layers) {
-		TextureArray textureArray = new TextureArray(width, height, layers, textureWrap, textureFilter);
+		TextureArray textureArray = new TextureArray(width, height, layers, defaultTextureWrap, defaultTextureFilter);
 		textureArrays.add(textureArray);
 		return textureArray;
 	}
