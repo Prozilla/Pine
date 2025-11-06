@@ -17,12 +17,21 @@ public class MultiTileRenderer extends Component implements TileProvider {
 	public TileRenderer anchorTile;
 	public List<PhantomTile> phantomTiles;
 	
+	public MultiTileRenderer(Vector2i dimensions, TileRenderer anchorTile) {
+		this(dimensions);
+		init(anchorTile);
+	}
+	
 	public MultiTileRenderer(Vector2i dimensions) {
 		this.dimensions = dimensions;
 		phantomTiles = new ArrayList<>();
 	}
 	
 	public void init(TileRenderer anchorTile) {
+		if (this.anchorTile != null) {
+			return;
+		}
+		
 		this.anchorTile = anchorTile;
 		
 		for (int x = 0; x < dimensions.x; x++) {
@@ -58,6 +67,16 @@ public class MultiTileRenderer extends Component implements TileProvider {
 				grid.coordinateToTile.remove(phantomTile.coordinate);
 			}
 		}
+	}
+	
+	@Override
+	public boolean isHovering() {
+		for (PhantomTile phantomTile : phantomTiles) {
+			if (phantomTile.isHovering()) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	@Override
