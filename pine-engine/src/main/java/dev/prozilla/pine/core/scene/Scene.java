@@ -36,6 +36,8 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	protected CameraData cameraData;
 	/** Prefab that will be used during scene loading to create a camera entity. */
 	protected Prefab cameraPrefab;
+	
+	// Developer console
 	protected LayoutPrefab devConsolePrefab;
 	protected Entity devConsole;
 	protected NodeRoot devConsoleRoot;
@@ -177,6 +179,8 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		// Remove all references
 		world = null;
 		cameraData = null;
+		devConsoleRoot = null;
+		devConsole = null;
 	}
 	
 	/**
