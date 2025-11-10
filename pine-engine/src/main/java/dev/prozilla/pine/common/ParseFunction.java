@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common;
 
-import dev.prozilla.pine.common.util.Parser;
+import dev.prozilla.pine.common.util.parser.Parser;
 
 /**
  * @deprecated Replaced by {@link Parser} as of 2.0.2

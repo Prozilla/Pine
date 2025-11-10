@@ -35,30 +35,30 @@ public final class Checks {
 	// Arrays
 	
 	/**
-	 * Checks that the given arrays are disjunct and throws an {@link InvalidArrayException} if it is not.
+	 * Checks that the given arrays are disjoint and throws an {@link InvalidArrayException} if it is not.
 	 * @param arrayA The first array
 	 * @param arrayB The second array
 	 * @param <E> Type of the array elements
-	 * @throws InvalidArrayException If <code>arrayA</code> and <code>arrayB</code> are not disjunct.
+	 * @throws InvalidArrayException If <code>arrayA</code> and <code>arrayB</code> are not disjoint.
 	 */
-	public static <E> void areDisjunct(E[] arrayA, E[] arrayB) throws InvalidArrayException {
-		areDisjunct(arrayA, arrayB, null);
+	public static <E> void areDisjoint(E[] arrayA, E[] arrayB) throws InvalidArrayException {
+		areDisjoint(arrayA, arrayB, null);
 	}
 	
 	/**
-	 * Checks that the given arrays are disjunct and throws a customized {@link InvalidArrayException} if it is not.
+	 * Checks that the given arrays are disjoint and throws a customized {@link InvalidArrayException} if it is not.
 	 * @param arrayA The first array
 	 * @param arrayB The second array
 	 * @param message The message to be used in the event that an {@link InvalidArrayException} is thrown
 	 * @param <E> Type of the array elements
-	 * @throws InvalidArrayException If <code>arrayA</code> and <code>arrayB</code> are not disjunct.
+	 * @throws InvalidArrayException If <code>arrayA</code> and <code>arrayB</code> are not disjoint.
 	 */
-	public static <E> void areDisjunct(E[] arrayA, E[] arrayB, String message) throws InvalidArrayException {
+	public static <E> void areDisjoint(E[] arrayA, E[] arrayB, String message) throws InvalidArrayException {
 		Checks.isNotNull(arrayA, "arrayA");
 		Checks.isNotNull(arrayB, "arrayB");
 		
 		if (ArrayUtils.overlaps(arrayA, arrayB)) {
-			throw new InvalidArrayException(message != null ? message : "arrays must be disjunct");
+			throw new InvalidArrayException(message != null ? message : "arrays must be disjoint");
 		}
 	}
 	

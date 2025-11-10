@@ -33,7 +33,7 @@ public interface Cloneable<O extends Cloneable<O>> {
 	 * @param <C> The type of cloneable
 	 */
 	@Contract("null -> null; !null -> new")
-	static <C extends Cloneable<C>> C createClone(C cloneable) {
+	static <C extends Cloneable<C>> C cloneOf(C cloneable) {
 		return ObjectUtils.preserveNull(cloneable, Cloneable::clone);
 	}
 	

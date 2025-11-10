@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.shape;
 
 import dev.prozilla.pine.common.Cloneable;
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.shape.ShapeRenderer;
@@ -12,22 +12,22 @@ import dev.prozilla.pine.core.rendering.shape.Shape;
 public class ShapePrefab<S extends Shape> extends Prefab {
 	
 	protected S shape;
-	protected TextureBase texture;
+	protected TextureAsset texture;
 	protected Color color;
 	
 	public ShapePrefab(S shape) {
-		this(shape, (TextureBase)null);
+		this(shape, (TextureAsset)null);
 	}
 	
 	public ShapePrefab(S shape, Color color) {
-		this(shape, (TextureBase)null, color);
+		this(shape, (TextureAsset)null, color);
 	}
 	
 	public ShapePrefab(S shape, String texturePath) {
 		this(shape, AssetPools.textures.load(texturePath), null);
 	}
 	
-	public ShapePrefab(S shape, TextureBase texture) {
+	public ShapePrefab(S shape, TextureAsset texture) {
 		this(shape, texture, null);
 	}
 	
@@ -35,7 +35,7 @@ public class ShapePrefab<S extends Shape> extends Prefab {
 		this(shape, AssetPools.textures.load(texturePath), color);
 	}
 	
-	public ShapePrefab(S shape, TextureBase texture, Color color) {
+	public ShapePrefab(S shape, TextureAsset texture, Color color) {
 		setName("Shape");
 		
 		this.shape = shape;
@@ -47,7 +47,7 @@ public class ShapePrefab<S extends Shape> extends Prefab {
 		this.shape = shape;
 	}
 	
-	public void setTexture(TextureBase texture) {
+	public void setTexture(TextureAsset texture) {
 		this.texture = texture;
 	}
 	
@@ -55,7 +55,7 @@ public class ShapePrefab<S extends Shape> extends Prefab {
 		this.color = color;
 	}
 	
-	protected ShapeRenderer<S> createRenderer(S shape, TextureBase texture, Color color) {
+	protected ShapeRenderer<S> createRenderer(S shape, TextureAsset texture, Color color) {
 		return new ShapeRenderer<>(shape, texture, color);
 	}
 	
@@ -63,7 +63,7 @@ public class ShapePrefab<S extends Shape> extends Prefab {
 	protected void apply(Entity entity) {
 		super.apply(entity);
 		
-		entity.addComponent(createRenderer(shape, texture, Cloneable.createClone(color)));
+		entity.addComponent(createRenderer(shape, texture, Cloneable.cloneOf(color)));
 	}
 	
 }

@@ -30,7 +30,7 @@ public class FileDeserializerTest {
 		assertTrue(data.bool);
 		assertEquals(new Vector2i(1, 2), data.vector2i);
 		assertEquals(new Vector4f(3, 2, 3, 2), data.vector4f);
-		assertEquals(Color.decode("#FF0000"), data.color);
+		assertEquals(Color.hex("#FF0000"), data.color);
 		
 		assertEquals(data, deserializer.getValue(),
 			"value of FileDeserializer should be set whenever deserialize() is called");

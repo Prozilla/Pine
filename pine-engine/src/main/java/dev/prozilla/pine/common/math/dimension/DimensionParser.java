@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.math.dimension;
 
-import dev.prozilla.pine.common.util.Parser;
+import dev.prozilla.pine.common.util.parser.Parser;
 
 import java.util.ArrayList;
 import java.util.List;

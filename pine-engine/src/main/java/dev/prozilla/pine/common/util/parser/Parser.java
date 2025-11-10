@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.util;
+package dev.prozilla.pine.common.util.parser;
 
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.exception.ParsingException;

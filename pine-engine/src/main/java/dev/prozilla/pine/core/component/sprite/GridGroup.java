@@ -187,4 +187,54 @@ public class GridGroup extends Component {
 	public Vector2f coordinateToPosition(int x, int y) {
 		return new Vector2f(x * size, y * size);
 	}
+	
+	/**
+	 * Returns an array of coordinates of a subgrid defined by the given dimensions, with a given offset.
+	 * @param dimensions The dimensions of the subgrid
+	 * @param offset The offset of the subgrid
+	 * @return The coordinates of the subgrid
+	 * @see #subgrid(Vector2i)
+	 */
+	public static Vector2i[] subgrid(Vector2i dimensions, Vector2i offset) {
+		Vector2i[] coordinates = subgrid(dimensions);
+		for (Vector2i coordinate : coordinates) {
+			coordinate.add(offset);
+		}
+		return coordinates;
+	}
+	
+	/**
+	 * Returns an array of coordinates of a subgrid defined by the given dimensions.
+	 * @param dimensions The dimensions of the subgrid
+	 * @return The coordinates of the subgrid
+	 * @see #subgrid(int, int)
+	 */
+	public static Vector2i[] subgrid(Vector2i dimensions) {
+		return subgrid(dimensions.x, dimensions.y);
+	}
+	
+	/**
+	 * Returns an array of coordinates of a subgrid defined by the given dimensions.
+	 *
+	 * <p>The x-coordinates go from {@code 0} to {@code width - 1} and the y-coordinates go from {@code 0} to {@code height - 1}.</p>
+	 *
+	 * <p>The array is sorted first based on the x-coordinate, then the y-coordinate.</p>
+	 * @param width The width of the subgrid
+	 * @param height The height of the subgrid
+	 * @return The coordinates of the subgrid
+	 */
+	public static Vector2i[] subgrid(int width, int height) {
+		Vector2i[] coordinates = new Vector2i[width * height];
+		
+		int i = 0;
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				coordinates[i] = new Vector2i(x, y);
+				i++;
+			}
+		}
+		
+		return coordinates;
+	}
+	
 }

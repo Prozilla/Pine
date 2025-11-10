@@ -65,7 +65,7 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	 * @return The value
 	 */
 	@Contract("null, _ -> param2")
-	static int getPropertyValue(IntProperty property, int defaultValue) {
+	static int getValueOf(IntProperty property, int defaultValue) {
 		if (property == null) {
 			return defaultValue;
 		} else {

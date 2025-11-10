@@ -2,8 +2,8 @@ package dev.prozilla.pine.common.system;
 
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.math.vector.Vector4f;
-import dev.prozilla.pine.common.util.Parser;
 import dev.prozilla.pine.common.util.StringUtils;
+import dev.prozilla.pine.common.util.parser.Parser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,7 +72,7 @@ public class ColorParser extends Parser<Color> {
 		
 		if (input.startsWith("#")) {
 			try {
-				return succeed(Color.decode(input));
+				return succeed(Color.hex(input));
 			} catch (NumberFormatException e) {
 				return fail("Invalid HEX value");
 			}

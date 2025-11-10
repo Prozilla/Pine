@@ -4,7 +4,7 @@ import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.AnimationCurveParser;
 import dev.prozilla.pine.common.property.style.selector.Selector;
 import dev.prozilla.pine.common.property.style.selector.SelectorParser;
-import dev.prozilla.pine.common.util.SequentialParser;
+import dev.prozilla.pine.common.util.parser.SequentialParser;
 
 public class CSSParser extends SequentialParser<StyleSheet> {
 	

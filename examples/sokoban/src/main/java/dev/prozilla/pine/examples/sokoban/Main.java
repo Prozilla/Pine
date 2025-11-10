@@ -1,5 +1,7 @@
 package dev.prozilla.pine.examples.sokoban;
 
+import dev.prozilla.pine.common.asset.image.Texture;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationBuilder;
 
@@ -21,6 +23,9 @@ public class Main {
 		if (!Application.isDevMode()) {
 			applicationBuilder.setFullscreen(true);
 		}
+		
+		AssetPools.textures.setDefaultTextureFilter(Texture.Filter.NEAREST);
+		AssetPools.textures.setDefaultTextureWrap(Texture.Wrap.MIRROR_CLAMP_TO_EDGE);
 		
 		applicationBuilder.build().run();
 	}

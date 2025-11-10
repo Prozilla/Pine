@@ -358,13 +358,22 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 	 * @param input String that represents a color as a 24-bit or 32-bit integer
 	 * @throws NumberFormatException If the string cannot be decoded.
 	 * @return Color
+	 * @deprecated Replaced by {@link #hex(String)}.
 	 */
+	@Deprecated
 	public static Color decode(String input) throws NumberFormatException {
-		if (input.length() == 4) {
-			input = input.replaceAll("[a-zA-Z0-9]", "$0$0");
+		return hex(input);
+	}
+	
+	public static Color hex(String hex) throws NumberFormatException {
+		if (!hex.startsWith("#")) {
+			hex = "#" + hex;
+		}
+		if (hex.length() == 4) {
+			hex = hex.replaceAll("[a-zA-Z0-9]", "$0$0");
 		}
 		
-		int i = Integer.decode(input);
+		int i = Integer.decode(hex);
 		
 		if ((i >>> 24) != 0) {
 			return new Color((i >> 24) & 0xFF, (i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);

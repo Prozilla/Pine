@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.sprite;
 
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.system.Color;
@@ -17,7 +17,7 @@ import dev.prozilla.pine.core.entity.prefab.Prefab;
 @Components({ SpriteRenderer.class, Transform.class })
 public class SpritePrefab extends Prefab {
 	
-	protected TextureBase texture;
+	protected TextureAsset texture;
 	protected Color color;
 	protected Vector2f scale;
 	
@@ -29,7 +29,7 @@ public class SpritePrefab extends Prefab {
 		this(AssetPools.textures.load(texturePath));
 	}
 	
-	public SpritePrefab(TextureBase texture) {
+	public SpritePrefab(TextureAsset texture) {
 		this.texture = Checks.isNotNull(texture, "texture");
 		
 		color = null;

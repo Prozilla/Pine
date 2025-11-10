@@ -25,6 +25,26 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 	}
 	
 	@Override
+	public final EventListener<E> on(EventType eventType, EventListener<E> listener) {
+		return EventDispatcherContext.super.on(eventType, listener);
+	}
+	
+	@Override
+	public final void off(EventType eventType, EventListener<E> listener) {
+		EventDispatcherContext.super.off(eventType, listener);
+	}
+	
+	@Override
+	public final EventListener<E> once(EventType eventType, EventListener<E> listener) {
+		return EventDispatcherContext.super.once(eventType, listener);
+	}
+	
+	@Override
+	public final void dispatchEvent(EventType eventType, Target target) {
+		EventDispatcherContext.super.dispatchEvent(eventType, target);
+	}
+	
+	@Override
 	public EventListener<E> addListener(EventType eventType, EventListener<E> listener) {
 		Checks.isNotNull(eventType, "eventType");
 		Checks.isNotNull(listener, "listener");

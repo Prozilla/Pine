@@ -11,7 +11,5 @@ public class MenuScene extends SceneBase {
 		getInput().showCursor();
 		
 		world.addEntity(new MenuPrefab(font));
-		
-		getWindow().print();
 	}
 }

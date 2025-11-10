@@ -1,8 +1,8 @@
 package dev.prozilla.pine.test;
 
 import dev.prozilla.pine.common.Cloneable;
-import dev.prozilla.pine.common.util.Parser;
 import dev.prozilla.pine.common.util.StringUtils;
+import dev.prozilla.pine.common.util.parser.Parser;
 
 import static org.junit.jupiter.api.Assertions.*;
 

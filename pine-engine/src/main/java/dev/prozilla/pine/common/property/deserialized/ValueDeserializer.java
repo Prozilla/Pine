@@ -3,7 +3,7 @@ package dev.prozilla.pine.common.property.deserialized;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import dev.prozilla.pine.common.util.Parser;
+import dev.prozilla.pine.common.util.parser.Parser;
 
 import java.io.IOException;
 

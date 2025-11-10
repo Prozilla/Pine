@@ -173,7 +173,7 @@ public class Vector2f extends VectorFloat<Vector2f> {
 		return temp;
 	}
 	
-	public static class Parser extends dev.prozilla.pine.common.util.Parser<Vector2f> {
+	public static class Parser extends dev.prozilla.pine.common.util.parser.Parser<Vector2f> {
 		
 		@Override
 		public boolean parse(String input) {

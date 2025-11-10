@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property.style.selector;
 
-import dev.prozilla.pine.common.util.SequentialParser;
 import dev.prozilla.pine.common.util.StringUtils;
+import dev.prozilla.pine.common.util.parser.SequentialParser;
 
 import java.util.ArrayList;
 import java.util.List;

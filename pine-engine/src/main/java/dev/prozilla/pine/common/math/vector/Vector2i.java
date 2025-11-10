@@ -173,7 +173,7 @@ public class Vector2i extends VectorInt<Vector2i> {
 		return temp;
 	}
 	
-	public static class Parser extends dev.prozilla.pine.common.util.Parser<Vector2i> {
+	public static class Parser extends dev.prozilla.pine.common.util.parser.Parser<Vector2i> {
 		
 		@Override
 		public boolean parse(String input) {

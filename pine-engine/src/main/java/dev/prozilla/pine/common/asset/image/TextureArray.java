@@ -12,7 +12,8 @@ import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.glTexSubImage3D;
-import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL30.GL_TEXTURE_2D_ARRAY;
 import static org.lwjgl.opengl.GL42.glTexStorage3D;
 
@@ -20,7 +21,7 @@ import static org.lwjgl.opengl.GL42.glTexStorage3D;
  * Represents a <a href="https://www.khronos.org/opengl/wiki/Array_Texture">OpenGL Array Texture</a>.
  * An Array Texture contains multiple images of the same size.
  */
-public class TextureArray implements Cloneable<TextureArray>, Destructible {
+public class TextureArray implements Cloneable<TextureArray>, Destructible, TextureBase {
 	
 	/** The handle of the texture array */
 	private final int id;
@@ -40,6 +41,10 @@ public class TextureArray implements Cloneable<TextureArray>, Destructible {
 	}
 	
 	public TextureArray(int width, int height, int layers) {
+		this(width, height, layers, Texture.DEFAULT_WRAP, Texture.DEFAULT_FILTER);
+	}
+	
+	public TextureArray(int width, int height, int layers, Texture.Wrap wrap, Texture.Filter filter) {
 		this.width = width;
 		this.height = height;
 		this.layers = layers;
@@ -51,33 +56,37 @@ public class TextureArray implements Cloneable<TextureArray>, Destructible {
 		imageToLayer = new HashMap<>();
 		nextLayer = 0;
 		
-		init();
+		init(wrap, filter);
 	}
 	
-	private void init() {
+	private void init(Texture.Wrap wrap, Texture.Filter filter) {
 		bind();
 		
 		glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, width, height, layers);
 		
-		setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		
-		setParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		setParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		if (wrap != null) {
+			setWrap(wrap);
+		}
+		if (filter != null) {
+			setFilter(filter);
+		}
 		
 		unbind();
 	}
 	
+	@Override
 	public void bind() {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, id);
 	}
 	
+	@Override
 	public void unbind() {
 		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 	}
 	
-	private void setParameter(int name, int value) {
+	@Override
+	public void setParameter(int name, int value) {
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, name, value);
 	}
 	
@@ -135,14 +144,17 @@ public class TextureArray implements Cloneable<TextureArray>, Destructible {
 		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, nextLayer, width, height, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 	}
 	
+	@Override
 	public int getId() {
 		return id;
 	}
-	
+
+	@Override
 	public int getWidth() {
 		return width;
 	}
 	
+	@Override
 	public int getHeight() {
 		return height;
 	}

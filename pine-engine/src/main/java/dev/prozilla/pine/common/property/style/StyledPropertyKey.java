@@ -10,8 +10,8 @@ import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.ColorParser;
 import dev.prozilla.pine.common.util.ArrayUtils;
-import dev.prozilla.pine.common.util.EnumParser;
-import dev.prozilla.pine.common.util.Parser;
+import dev.prozilla.pine.common.util.parser.EnumParser;
+import dev.prozilla.pine.common.util.parser.Parser;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 
 import java.util.Objects;

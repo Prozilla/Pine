@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.rendering;
 
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPoolEvent;
 import dev.prozilla.pine.common.asset.pool.AssetPoolEventType;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
@@ -45,7 +45,7 @@ public class Renderer implements Initializable, Destructible {
 	private FloatBuffer vertices;
 	private int numVertices;
 	private boolean isRendering;
-	private TextureBase activeTexture;
+	private TextureAsset activeTexture;
 	
 	// Render stats
 	private int renderedVertices;
@@ -449,11 +449,11 @@ public class Renderer implements Initializable, Destructible {
 		drawTextureRegion(null, x, y, x2, y2, z, 0, 0, 0, 0, c);
 	}
 	
-	public void drawRotatedTexture(TextureBase texture, float x, float y, float z, float r) {
+	public void drawRotatedTexture(TextureAsset texture, float x, float y, float z, float r) {
 		drawRotatedTexture(texture, x, y, z, fallbackColor, r);
 	}
 	
-	public void drawRotatedTexture(TextureBase texture, float x, float y, float z, Color c, float r) {
+	public void drawRotatedTexture(TextureAsset texture, float x, float y, float z, Color c, float r) {
 		if (r == 0) {
 			drawTexture(texture, x, y, z, c);
 			return;
@@ -478,7 +478,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @param x       X position of the texture
 	 * @param y       Y position of the texture
 	 */
-	public void drawTexture(TextureBase texture, float x, float y, float z) {
+	public void drawTexture(TextureAsset texture, float x, float y, float z) {
 		drawTexture(texture, x, y, z, fallbackColor);
 	}
 	
@@ -490,7 +490,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @param y       Y position of the texture
 	 * @param c       The color to use
 	 */
-	public void drawTexture(TextureBase texture, float x, float y, float z, Color c) {
+	public void drawTexture(TextureAsset texture, float x, float y, float z, Color c) {
 		// Vertex positions
 		float x2 = x + texture.getWidth() * renderScale.x;
 		float y2 = y + texture.getHeight() * renderScale.y;
@@ -504,11 +504,11 @@ public class Renderer implements Initializable, Destructible {
 		drawTextureRegion(texture, x, y, x2, y2, z, s1, t1, s2, t2, c);
 	}
 	
-	public void drawRotatedTextureRegion(TextureBase texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, float r) {
+	public void drawRotatedTextureRegion(TextureAsset texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, float r) {
 		drawRotatedTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, fallbackColor, r);
 	}
 	
-	public void drawRotatedTextureRegion(TextureBase texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c, float r) {
+	public void drawRotatedTextureRegion(TextureAsset texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c, float r) {
 		if (r == 0) {
 			drawTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, c);
 			return;
@@ -534,11 +534,11 @@ public class Renderer implements Initializable, Destructible {
 		drawRotatedTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, c, r);
 	}
 	
-	public void drawRotatedTextureRegion(TextureBase texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, float r) {
+	public void drawRotatedTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, float r) {
 		drawRotatedTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, fallbackColor, r);
 	}
 	
-	public void drawRotatedTextureRegion(TextureBase texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, Color c, float r) {
+	public void drawRotatedTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, Color c, float r) {
 		if (r == 0) {
 			drawTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, c);
 			return;
@@ -590,7 +590,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @param regWidth  Width of the texture region
 	 * @param regHeight Height of the texture region
 	 */
-	public void drawTextureRegion(TextureBase texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight) {
+	public void drawTextureRegion(TextureAsset texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight) {
 		drawTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, fallbackColor);
 	}
 	
@@ -605,7 +605,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @param regHeight Height of the texture region
 	 * @param c         The color to use
 	 */
-	public void drawTextureRegion(TextureBase texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c) {
+	public void drawTextureRegion(TextureAsset texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c) {
 		// Vertex positions
 		float x2 = x + regWidth * renderScale.x;
 		float y2 = y + regHeight * renderScale.y;
@@ -635,7 +635,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @param s2 Top right s coordinate
 	 * @param t2 Top right t coordinate
 	 */
-	public void drawTextureRegion(TextureBase texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2) {
+	public void drawTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2) {
 		drawTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, fallbackColor);
 	}
 	
@@ -651,14 +651,14 @@ public class Renderer implements Initializable, Destructible {
 	 * @param t2 Top right t coordinate
 	 * @param c  The color to use
 	 */
-	public void drawTextureRegion(TextureBase texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, Color c) {
+	public void drawTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, Color c) {
 		drawTextureRegion(texture, x1, y1, x1, y2, x2, y2, x2, y1, z, s1, t1, s2, t2, c);
 	}
 	
 	/**
 	 * Draws a texture region on specified coordinates.
 	 */
-	public void drawTextureRegion(TextureBase texture, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float z,
+	public void drawTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float z,
 	                              float s1, float t1, float s2, float t2, Color c) {
 		requireRendering();
 		totalVertices += 6;
@@ -749,7 +749,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @param uvArray A flat float array containing the corresponding u and v texture coordinates. Must be the same length as {@code vertices}.
 	 * @throws IllegalArgumentException if the length of {@code vertices} does not match {@code uvArray}
 	 */
-	public void drawTriangles(TextureBase texture, float[] vertices, float z, float[] uvArray, Color c) {
+	public void drawTriangles(TextureAsset texture, float[] vertices, float z, float[] uvArray, Color c) {
 		if (vertices.length != uvArray.length) {
 			throw new IllegalArgumentException("Length of vertex array must match length of UV array");
 		}
@@ -801,8 +801,8 @@ public class Renderer implements Initializable, Destructible {
 	 * @param u3 The u texture coordinate for the third vertex
 	 * @param v3 The v texture coordinate for the third vertex
 	 */
-	public void drawTriangle(TextureBase texture, float x1, float y1, float x2, float y2, float x3, float y3, float z,
-	                              float u1, float v1, float u2, float v2, float u3, float v3, Color c) {
+	public void drawTriangle(TextureAsset texture, float x1, float y1, float x2, float y2, float x3, float y3, float z,
+	                         float u1, float v1, float u2, float v2, float u3, float v3, Color c) {
 		totalVertices += 3;
 		
 		// Discard draw call if object is outside the viewport bounds
@@ -876,7 +876,7 @@ public class Renderer implements Initializable, Destructible {
 		replaceActiveTexture(texture);
 	}
 	
-	private void replaceActiveTexture(TextureBase newTexture) {
+	private void replaceActiveTexture(TextureAsset newTexture) {
 		if (newTexture != null && (activeTexture == null || !activeTexture.hasEqualLocation(newTexture))) {
 			if (activeTexture != null) {
 				activeTexture.unbind();

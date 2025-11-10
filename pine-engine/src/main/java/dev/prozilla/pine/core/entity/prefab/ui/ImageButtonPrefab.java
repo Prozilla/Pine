@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.ButtonNode;
@@ -21,7 +21,7 @@ public class ImageButtonPrefab extends ImagePrefab {
 		this(AssetPools.textures.load(imagePath));
 	}
 	
-	public ImageButtonPrefab(TextureBase image) {
+	public ImageButtonPrefab(TextureAsset image) {
 		super(image);
 		setName("ImageButton");
 		addClass("button");

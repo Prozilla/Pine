@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property;
 
-import dev.prozilla.pine.common.util.Parser;
 import dev.prozilla.pine.common.util.checks.Checks;
+import dev.prozilla.pine.common.util.parser.Parser;
 import org.jetbrains.annotations.NotNull;
 
 /**

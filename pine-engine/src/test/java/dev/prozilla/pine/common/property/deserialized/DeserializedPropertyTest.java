@@ -22,7 +22,7 @@ public class DeserializedPropertyTest {
 		
 		DeserializedProperty<Color> property = deserializer.createProperty((data) -> data.color);
 		assertTrue(property.isNotNull(), "DeserializedProperty should be initialized with a value");
-		assertEquals(Color.decode("#FF0000"), property.getValue(),
+		assertEquals(Color.hex("#FF0000"), property.getValue(),
 			"DeserializedProperty should take value from the external file");
 		
 		Data newData = new Data();

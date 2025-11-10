@@ -1,4 +1,6 @@
-package dev.prozilla.pine.common.util;
+package dev.prozilla.pine.common.util.parser;
+
+import dev.prozilla.pine.common.util.ArrayUtils;
 
 public class EnumParser<E extends Enum<E>> extends Parser<E> {
 	

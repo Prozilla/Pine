@@ -78,7 +78,7 @@ public abstract class SystemBase {
 		}
 		
 		if (excludedComponentTypes != null && includedComponentTypes != null) {
-			Checks.areDisjunct(excludedComponentTypes, includedComponentTypes, "excludedComponentTypes and includedComponentTypes must be disjunct");
+			Checks.areDisjoint(excludedComponentTypes, includedComponentTypes, "excludedComponentTypes and includedComponentTypes must be disjoint");
 		}
 		
 		excludedComponentTypes = componentTypes;

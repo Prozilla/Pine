@@ -189,7 +189,7 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 	 * @return The value
 	 */
 	@Contract("null, _ -> param2")
-	static boolean getPropertyValue(BooleanProperty property, boolean defaultValue) {
+	static boolean getValueOf(BooleanProperty property, boolean defaultValue) {
 		if (property == null) {
 			return defaultValue;
 		} else {

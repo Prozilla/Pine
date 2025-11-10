@@ -118,7 +118,7 @@ public class Font implements Asset {
 				// Scale to pixel height
 				float scale = stbtt_ScaleForPixelHeight(fontInfo, fontSize);
 				fontHeight = (ascent.get(0) - descent.get(0) + lineGap.get(0)) * scale;
-				fontDescent = (descent.get(0) * 2f + ascent.get(0)) * scale;
+				fontDescent = descent.get(0) * scale;
 				
 				// Measure each character’s quad size
 				FloatBuffer xPos = stack.floats(0.0f);
@@ -165,7 +165,8 @@ public class Font implements Asset {
 		float regionY = (1f - quad.t1()) * bitmapHeight;
 		float regionWidth  = (quad.s1() - quad.s0()) * bitmapWidth;
 		float regionHeight = (quad.t1() - quad.t0()) * bitmapHeight;
-		float y = quad.y0();
+		
+		float y = quad.y1();
 		float height = quad.y1() - quad.y0();
 		float advance = endX - startX;
 		

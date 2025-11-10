@@ -1,8 +1,10 @@
 package dev.prozilla.pine.common.asset.image;
 
 import dev.prozilla.pine.common.Cloneable;
+import dev.prozilla.pine.common.IntEnum;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.util.EnumUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import org.jetbrains.annotations.NotNull;
@@ -10,11 +12,13 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL14.GL_MIRRORED_REPEAT;
+import static org.lwjgl.opengl.GL44.GL_MIRROR_CLAMP_TO_EDGE;
 
 /**
  * Represents an OpenGL texture.
  */
-public class Texture implements TextureBase, Printable, Cloneable<Texture> {
+public class Texture implements TextureAsset, Printable, Cloneable<Texture> {
 	
 	/** The handle of this texture */
 	private final int id;
@@ -24,22 +28,43 @@ public class Texture implements TextureBase, Printable, Cloneable<Texture> {
 	private final int height;
 	/** The path of the image of this texture */
 	private final String path;
+
+	public static final Wrap DEFAULT_WRAP = Wrap.CLAMP_TO_BORDER;
+	public static final Filter DEFAULT_FILTER = Filter.LINEAR;
 	
 	/**
 	 * Creates an empty texture.
 	 */
 	public Texture(int width, int height) {
-		this(null, width, height, null);
+		this(width, height, DEFAULT_WRAP, DEFAULT_FILTER);
+	}
+	
+	/**
+	 * Creates an empty texture.
+	 */
+	public Texture(int width, int height, Wrap wrap, Filter filter) {
+		this(null, width, height, null, wrap, filter);
 	}
 	
 	/**
 	 * Creates a texture based on an image.
 	 */
 	public Texture(Image image) {
-		this(image.getPath(), image.getWidth(), image.getHeight(), image.getPixels());
+		this(image, DEFAULT_WRAP, DEFAULT_FILTER);
+	}
+	
+	/**
+	 * Creates a texture based on an image.
+	 */
+	public Texture(Image image, Wrap wrap, Filter filter) {
+		this(image.getPath(), image.getWidth(), image.getHeight(), image.getPixels(), wrap, filter);
 	}
 	
 	public Texture(String path, int width, int height, ByteBuffer pixels) {
+		this(path, width, height, pixels, DEFAULT_WRAP, DEFAULT_FILTER);
+	}
+	
+	public Texture(String path, int width, int height, ByteBuffer pixels, Wrap wrap, Filter filter) {
 		this.path = path;
 		this.width = width;
 		this.height = height;
@@ -51,19 +76,18 @@ public class Texture implements TextureBase, Printable, Cloneable<Texture> {
 		
 		id = glGenTextures();
 		
-		init(pixels);
+		init(pixels, wrap, filter);
 	}
 	
-	private void init(ByteBuffer pixels) {
+	private void init(ByteBuffer pixels, Wrap wrap, Filter filter) {
 		bind();
 		
-		// Clamp image in both directions
-		setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		
-		// Set texture scaling parameters to pixelate
-		setParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		setParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		if (wrap != null) {
+			setWrap(wrap);
+		}
+		if (filter != null) {
+			setFilter(filter);
+		}
 		
 		uploadData(GL_RGBA8, width, height, GL_RGBA, pixels);
 		
@@ -81,6 +105,7 @@ public class Texture implements TextureBase, Printable, Cloneable<Texture> {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	
+	@Override
 	public void setParameter(int name, int value) {
 		glTexParameteri(GL_TEXTURE_2D, name, value);
 	}
@@ -110,7 +135,7 @@ public class Texture implements TextureBase, Printable, Cloneable<Texture> {
 	
 	@Override
 	public void destroy() {
-		TextureBase.super.destroy();
+		TextureAsset.super.destroy();
 		glDeleteTextures(id);
 	}
 	
@@ -135,7 +160,7 @@ public class Texture implements TextureBase, Printable, Cloneable<Texture> {
 	}
 	
 	@Override
-	public boolean hasEqualLocation(TextureBase other) {
+	public boolean hasEqualLocation(TextureAsset other) {
 		return equals(other);
 	}
 	
@@ -156,16 +181,16 @@ public class Texture implements TextureBase, Printable, Cloneable<Texture> {
 	
 	@Override
 	public boolean equals(Texture texture) {
-		return equals((TextureBase)texture);
+		return equals((TextureAsset)texture);
 	}
 	
-	public boolean equals(TextureBase other) {
+	public boolean equals(TextureAsset other) {
 		return other != null && !other.isInArray() && other.getId() == id;
 	}
 	
 	@Override
 	public boolean equals(Object other) {
-		return other == this || (other instanceof TextureBase textureBase && equals(textureBase));
+		return other == this || (other instanceof TextureAsset textureAsset && equals(textureAsset));
 	}
 	
 	@Override
@@ -176,6 +201,49 @@ public class Texture implements TextureBase, Printable, Cloneable<Texture> {
 	@Override
 	public @NotNull String toString() {
 		return String.format("Texture #%s (%sx%s)", id, width, height);
+	}
+	
+	public enum Filter implements IntEnum {
+		NEAREST(GL_NEAREST),
+		LINEAR(GL_LINEAR);
+		
+		private final int value;
+		
+		Filter(int value) {
+			this.value = value;
+		}
+		
+		public int getValue() {
+			return value;
+		}
+		
+		public static boolean isValid(int value) {
+			return EnumUtils.hasIntValue(values(), value);
+		}
+		
+	}
+	
+	public enum Wrap implements IntEnum {
+		CLAMP_TO_EDGE(GL_CLAMP_TO_EDGE),
+		CLAMP_TO_BORDER(GL_CLAMP_TO_BORDER),
+		MIRRORED_REPEAT( GL_MIRRORED_REPEAT),
+		REPEAT( GL_REPEAT),
+		MIRROR_CLAMP_TO_EDGE(GL_MIRROR_CLAMP_TO_EDGE);
+		
+		private final int value;
+		
+		Wrap(int value) {
+			this.value = value;
+		}
+		
+		public int getValue() {
+			return value;
+		}
+		
+		public static boolean isValid(int value) {
+			return EnumUtils.hasIntValue(values(), value);
+		}
+		
 	}
 	
 }

@@ -1,9 +1,10 @@
 package dev.prozilla.pine.core.entity.prefab.sprite;
 
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Transform;
+import dev.prozilla.pine.core.component.sprite.MultiTileRenderer;
 import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.Entity;
@@ -20,11 +21,13 @@ public class TilePrefab extends SpritePrefab {
 	protected Vector2i coordinate;
 	protected int size;
 	
+	protected Vector2i dimensions;
+	
 	public TilePrefab(String texturePath) {
 		this(texturePath, new Vector2i());
 	}
 	
-	public TilePrefab(TextureBase texture) {
+	public TilePrefab(TextureAsset texture) {
 		this(texture, new Vector2i());
 	}
 	
@@ -32,7 +35,7 @@ public class TilePrefab extends SpritePrefab {
 		this(AssetPools.textures.load(texturePath), coordinate);
 	}
 	
-	public TilePrefab(TextureBase texture, Vector2i coordinate) {
+	public TilePrefab(TextureAsset texture, Vector2i coordinate) {
 		super(texture);
 		
 		this.coordinate = coordinate;
@@ -53,6 +56,15 @@ public class TilePrefab extends SpritePrefab {
 		this.coordinate = coordinate;
 	}
 	
+	/**
+	 * Converts this tile prefab to a multi-tile prefab with the given dimensions.
+	 * @param dimensions The dimensions of the multi-tile
+	 * @see MultiTileRenderer
+	 */
+	public void setDimensions(Vector2i dimensions) {
+		this.dimensions = dimensions;
+	}
+	
 	public Entity instantiate(World world, int x, int y) {
 		return instantiate(world, new Vector2i(x, y));
 	}
@@ -67,6 +79,10 @@ public class TilePrefab extends SpritePrefab {
 		super.apply(entity);
 		
 		TileRenderer tileRenderer = entity.addComponent(new TileRenderer(coordinate.clone(), size));
+		
+		if (dimensions != null) {
+			entity.addComponent(new MultiTileRenderer(dimensions, tileRenderer));
+		}
 		
 		TileMover.updateTilePosition(entity.transform, tileRenderer);
 	}

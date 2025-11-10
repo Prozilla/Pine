@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.component.ui;
 
 import dev.prozilla.pine.common.asset.image.Texture;
-import dev.prozilla.pine.common.asset.image.TextureBase;
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -12,7 +12,7 @@ import dev.prozilla.pine.core.component.Component;
  */
 public class ImageNode extends Component {
 	
-	public TextureBase image;
+	public TextureAsset image;
 	
 	public Vector2i regionOffset;
 	public Vector2i regionSize;
@@ -21,7 +21,7 @@ public class ImageNode extends Component {
 		this(AssetPools.textures.load(imagePath));
 	}
 	
-	public ImageNode(TextureBase image) {
+	public ImageNode(TextureAsset image) {
 		Checks.isNotNull(image, "image");
 		
 		this.image = image;
