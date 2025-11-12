@@ -1,7 +1,6 @@
 package dev.prozilla.pine.common.math.vector;
 
 import dev.prozilla.pine.common.util.ArrayUtils;
-import dev.prozilla.pine.common.util.checks.Checks;
 
 /**
  * Represents a 2-dimensional direction.
@@ -133,42 +132,21 @@ public enum Direction {
 	}
 	
 	public static Direction fromIntVector(Vector2i vector) {
-		Checks.isNotNull(vector, "vector");
-		
-		if (vector.x != 0 && vector.y != 0) {
-			return null;
-		}
-		
-		if (vector.x < 0) {
-			return Direction.LEFT;
-		} else if (vector.x > 0) {
-			return Direction.RIGHT;
-		} else if (vector.y < 0) {
-			return Direction.DOWN;
-		} else if (vector.y > 0 ){
-			return Direction.UP;
-		} else {
-			return null;
-		}
+		return vector != null ? fromFloatVector(vector.x, vector.y) : null;
 	}
 	
 	public static Direction fromFloatVector(Vector2f vector) {
-		Checks.isNotNull(vector, "vector");
-		
-		if (vector.x != 0 && vector.y != 0) {
+		return vector != null ? fromFloatVector(vector.x, vector.y) : null;
+	}
+	
+	public static Direction fromFloatVector(float x, float y) {
+		float absX = Math.abs(x);
+		if (absX == Math.abs(y)) {
 			return null;
-		}
-		
-		if (vector.x < 0) {
-			return Direction.LEFT;
-		} else if (vector.x > 0) {
-			return Direction.RIGHT;
-		} else if (vector.y < 0) {
-			return Direction.DOWN;
-		} else if (vector.y > 0 ){
-			return Direction.UP;
+		} else if (y < absX && y > -absX) {
+			return x > 0 ? Direction.RIGHT : Direction.LEFT;
 		} else {
-			return null;
+			return y > 0 ? Direction.UP : Direction.DOWN;
 		}
 	}
 	

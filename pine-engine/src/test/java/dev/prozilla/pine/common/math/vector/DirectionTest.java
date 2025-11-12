@@ -74,7 +74,15 @@ public class DirectionTest {
 			assertEquals(direction, actual);
 		}
 		
+		assertEquals(Direction.RIGHT, Direction.fromIntVector(new Vector2i(2, 1)));
+		assertEquals(Direction.LEFT, Direction.fromIntVector(new Vector2i(-2, 1)));
+		assertEquals(Direction.UP, Direction.fromIntVector(new Vector2i(1, 2)));
+		assertEquals(Direction.DOWN, Direction.fromIntVector(new Vector2i(1, -2)));
+		
 		assertNull(Direction.fromIntVector(new Vector2i(1, 1)));
+		assertNull(Direction.fromIntVector(new Vector2i(-1, 1)));
+		assertNull(Direction.fromIntVector(new Vector2i(1, -1)));
+		assertNull(Direction.fromIntVector(new Vector2i(-1, -1)));
 		assertNull(Direction.fromIntVector(new Vector2i(0, 0)));
 	}
 	
@@ -86,7 +94,15 @@ public class DirectionTest {
 			assertEquals(direction, actual);
 		}
 		
+		assertEquals(Direction.RIGHT, Direction.fromFloatVector(new Vector2f(2, 1)));
+		assertEquals(Direction.LEFT, Direction.fromFloatVector(new Vector2f(-2, 1)));
+		assertEquals(Direction.UP, Direction.fromFloatVector(new Vector2f(1, 2)));
+		assertEquals(Direction.DOWN, Direction.fromFloatVector(new Vector2f(1, -2)));
+		
 		assertNull(Direction.fromFloatVector(new Vector2f(1, 1)));
+		assertNull(Direction.fromFloatVector(new Vector2f(-1, 1)));
+		assertNull(Direction.fromFloatVector(new Vector2f(1, -1)));
+		assertNull(Direction.fromFloatVector(new Vector2f(-1, -1)));
 		assertNull(Direction.fromFloatVector(new Vector2f(0, 0)));
 	}
 	
