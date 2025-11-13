@@ -28,12 +28,18 @@ import java.util.Objects;
 public class BuildTool {
 	
 	// Files and folders
-	private static final String BUILD_PATH = "build/pine";
-	private static final String LAUNCH4J_TEMP_PATH = "launch4j";
-	private static final String CONFIG_NAME = "pine-config.json";
+	/** Output directory for the build tool. */
+	public static final String BUILD_PATH = "build/pine";
+	/** Temporary directory for the build tool. */
+	public static final String TEMP_PATH = "build/tmp/pine";
+	public static final String LAUNCH4J_TEMP_PATH = "launch4j";
+	public static final String NSIS_TEMP_PATH = "nsis";
+	public static final String CONFIG_NAME = "pine-config.json";
 	
 	// Debugging
 	private static final boolean DEBUG_LAUNCH4J = true;
+	private static final boolean DEBUG_NSIS = true;
+	private static final boolean FINALIZE_ONLY = false;
 	
 	private static final Logger logger = new Logger(new StandardOutputLogHandler(), new StandardOutputLogHandler())
 		.setPrefix(Logger.formatBadge("build", Ansi.GREEN));
@@ -70,18 +76,25 @@ public class BuildTool {
 		
 		// Prepare build directory
 		Path buildDir = Files.createDirectories(projectDir.resolve(BUILD_PATH));
-		prepareBuildDir(buildDir);
+		if (!FINALIZE_ONLY) {
+			prepareBuildDir(buildDir);
+		}
 		Path launch4jDir = Files.createDirectories(buildDir.resolve(LAUNCH4J_TEMP_PATH));
+		Path tempDir = Files.createDirectories(projectDir.resolve(TEMP_PATH));
+
+		if (!FINALIZE_ONLY) {
+			buildShadowJar(projectDir);
+			Path jrePath = downloadAndExtractJRE(config, buildDir);
+			bundleResources(config, projectDir, buildDir);
+			bundleMods(buildDir);
+			
+			Path launch4jConfigPath = generateLaunch4jConfig(config, projectDir, buildDir, jrePath, launch4jDir, tempDir);
+			runLaunch4j(launch4jConfigPath, launch4jDir);
+		} else {
+			logger.log("Skipping main build steps");
+		}
 		
-		buildShadowJar(projectDir);
-		Path jrePath = downloadAndExtractJRE(config, buildDir);
-		bundleResources(config, projectDir, buildDir);
-		bundleMods(buildDir);
-		
-		Path launch4jConfigPath = generateLaunch4jConfig(config, projectDir, buildDir, jrePath, launch4jDir);
-		runLaunch4j(launch4jConfigPath, launch4jDir);
-		
-		finalizeBuild(config, buildDir, launch4jDir);
+		finalizeBuild(config, buildDir, launch4jDir, tempDir);
 		logger.logPath(Ansi.green("Build completed in"), buildDir.toAbsolutePath().toString());
 	}
 	
@@ -143,7 +156,7 @@ public class BuildTool {
 		return jreOutputDir;
 	}
 	
-	private static Path generateLaunch4jConfig(BuildConfig config, Path projectDir, Path buildDir, Path jrePath, Path launch4jDir) throws IOException {
+	private static Path generateLaunch4jConfig(BuildConfig config, Path projectDir, Path buildDir, Path jrePath, Path launch4jDir, Path tempDir) throws IOException {
 		logger.log("Generating Launch4j configuration...");
 		
 		Path jar = projectDir.resolve(config.getJar()).normalize();
@@ -152,11 +165,13 @@ public class BuildTool {
 		}
 		
 		Path icon = buildDir.resolve(config.getIconPath()).normalize();
+		if (!Files.exists(icon)) {
+			logger.logPath("File not found", icon.toString());
+			icon = null;
+		}
 		
 		String fileName = config.getOutputFileName();
 		Path output = buildDir.resolve(fileName).toAbsolutePath();
-		
-		String copyright = String.format("Copyright (c) %s %s", Year.now(), config.getDeveloper());
 		
 		String launch4jConfig = """
 			<launch4jConfig>
@@ -194,13 +209,13 @@ public class BuildTool {
 		    output,
 			config.getJreVersion(),
 			buildDir.relativize(jrePath),
-			Files.exists(icon) ? String.format("<icon>%s</icon>", icon) : "",
+			icon != null ? String.format("<icon>%s</icon>", icon) : "",
 			config.getDeveloper(),
 			config.getGameName(),
 			config.getGameName(),
 			config.getVersion(),
 			config.getVersion(),
-		    copyright,
+		    config.getCopyright(),
 			config.getVersion(),
 			config.getVersion(),
 			config.getGameName(),
@@ -210,8 +225,6 @@ public class BuildTool {
 		
 		Path launch4jConfigPath = launch4jDir.resolve("config.xml");
 		Files.writeString(launch4jConfigPath, launch4jConfig);
-		
-		Path tempDir = Files.createDirectories(buildDir.resolve("../tmp/pine"));
 		Files.writeString(tempDir.resolve("launch4j-config.xml"), launch4jConfig);
 		
 		return launch4jConfigPath;
@@ -288,14 +301,179 @@ public class BuildTool {
 		}
 	}
 	
-	private static void finalizeBuild(BuildConfig config, Path buildDir, Path launch4jDir) throws IOException {
+	private static void finalizeBuild(BuildConfig config, Path buildDir, Path launch4jDir, Path tempDir) throws IOException, URISyntaxException {
 		logger.log("Finalizing build...");
 		
 		FileSystem.deleteDirectory(launch4jDir);
 		Files.writeString(buildDir.resolve("version.txt"), config.getVersion());
 		
-		if (config.shouldIncludeZip()) {
+		if (config.shouldIncludeZip() && (!FINALIZE_ONLY || !Files.exists(buildDir.resolve(config.getZipFileName())))) {
+			logger.log("Creating ZIP...");
 			FileSystem.zip(buildDir, config.getZipFileName());
+		}
+		
+		if (config.shouldIncludeInstaller()) {
+			Path nsisDir = Files.createDirectories(buildDir.resolve(NSIS_TEMP_PATH));
+			Path nsisScriptPath = generateNSISScript(config, buildDir, nsisDir, tempDir);
+			runNSIS(nsisScriptPath, nsisDir);
+			FileSystem.deleteDirectory(nsisDir);
+		}
+	}
+	
+	private static Path generateNSISScript(BuildConfig config, Path buildDir, Path nsisDir, Path tempDir) throws IOException {
+		logger.log("Generating NSIS configuration...");
+		
+		String nsisScript = """
+		!include MUI2.nsh
+		
+		!define APP_NAME "%s"
+		!define APP_VERSION "%s"
+		!define ZIP_FILE "%s"
+		!define EXE_FILE "%s"
+		!define PUBLISHER "%s"
+		!define ICON "%s"
+
+		;--------------------------------
+		; Compilation arguments
+		!define INSTALLER_ZIP_FILE "%s"
+		!define INSTALLER_ICON "%s"
+		!define INSTALLER_WORKING_DIR "%s"
+		!define INSTALLER_OUTFILE "%s"
+		
+		;--------------------------------
+		; Installer info
+		
+		OutFile "%s"
+		InstallDir "$PROGRAMFILES\\${APP_NAME}"
+		Name "${APP_NAME}"
+		RequestExecutionLevel admin
+		ManifestDPIAware true
+		
+		;--------------------------------
+		; MUI configuration
+		
+		!define MUI_ICON "${INSTALLER_ICON}"
+		!define MUI_UNICON "${INSTALLER_ICON}"
+		
+		;--------------------------------
+		; Pages
+		
+		!insertmacro MUI_PAGE_WELCOME
+		!insertmacro MUI_PAGE_COMPONENTS
+		!insertmacro MUI_PAGE_DIRECTORY
+		!insertmacro MUI_PAGE_INSTFILES
+		!insertmacro MUI_PAGE_FINISH
+		!insertmacro MUI_UNPAGE_CONFIRM
+		!insertmacro MUI_UNPAGE_INSTFILES
+		!insertmacro MUI_LANGUAGE "English"
+		
+		;--------------------------------
+		; Sections
+
+		Section "Install" SecMain
+			SectionIn RO
+			SetOutPath "$INSTDIR"
+		
+			File /r /x "${INSTALLER_WORKING_DIR}" /x "${INSTALLER_OUTFILE}" /x "${ZIP_FILE}" "..\\*.*"
+		
+			WriteUninstaller "$INSTDIR\\Uninstall.exe"
+		
+			WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "DisplayName" "${APP_NAME}"
+			WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "UninstallString" "$INSTDIR\\Uninstall.exe"
+			WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "DisplayVersion" "${APP_VERSION}"
+			WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "Publisher" "${PUBLISHER}"
+			WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "DisplayIcon" "$INSTDIR\\${ICON}"
+		SectionEnd
+		
+		Section "Start Menu Shortcut" SecStartMenu
+			CreateDirectory "$SMPROGRAMS\\${APP_NAME}"
+			CreateShortCut "$SMPROGRAMS\\${APP_NAME}\\${APP_NAME}.lnk" "$INSTDIR\\${EXE_FILE}"
+			CreateShortCut "$SMPROGRAMS\\${APP_NAME}\\Uninstall ${APP_NAME}.lnk" "$INSTDIR\\Uninstall.exe"
+		SectionEnd
+		
+		Section "Desktop Shortcut" SecDesktop
+			CreateShortCut "$DESKTOP\\${APP_NAME}.lnk" "$INSTDIR\\${EXE_FILE}"
+		SectionEnd
+		
+		Section "Uninstall"
+			Delete "$DESKTOP\\${APP_NAME}.lnk"
+			RMDir /r "$INSTDIR"
+			RMDir /r "$SMPROGRAMS\\${APP_NAME}"
+			DeleteRegKey HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}"
+		SectionEnd
+		
+		;--------------------------------
+		; Component descriptions
+		
+		!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
+		    !insertmacro MUI_DESCRIPTION_TEXT ${SecStartMenu} "Create a Start Menu shortcut"
+		    !insertmacro MUI_DESCRIPTION_TEXT ${SecDesktop} "Create a Desktop shortcut"
+		!insertmacro MUI_FUNCTION_DESCRIPTION_END
+		""".formatted(
+			config.getGameName(),
+			config.getVersion(),
+			Path.of(config.getZipFileName()),
+			config.getOutputFileName(),
+			config.getDeveloper(),
+			Path.of(config.getIconPath()),
+			nsisDir.relativize(buildDir.resolve(config.getZipFileName())),
+			nsisDir.relativize(buildDir.resolve(config.getIconPath())),
+			NSIS_TEMP_PATH,
+			config.getInstallerName(),
+			nsisDir.relativize(buildDir.resolve(config.getInstallerName()))
+		);
+		
+		Path nsisScriptPath = nsisDir.resolve("installer.nsi");
+		Files.writeString(nsisScriptPath, nsisScript);
+		Files.writeString(tempDir.resolve("nsis-installer.nsi"), nsisScript);
+		
+		return nsisScriptPath;
+	}
+	
+	private static void runNSIS(Path scriptPath, Path nsisDir) throws URISyntaxException, IOException {
+		logger.log("Creating installer with NSIS...");
+		
+		URL resource = Objects.requireNonNull(BuildTool.class.getResource("/tools/nsis"), "NSIS is missing");
+		Path sourceDir = Paths.get(resource.toURI());
+		FileSystem.copyDirectory(sourceDir.toFile(), nsisDir.toFile());
+		
+		Path nsisExecutable = nsisDir.resolve("makensis.exe");
+		nsisExecutable.toFile().setExecutable(true);
+		
+		// TODO: make abstract
+		
+		// Run makensis.exe with the config file
+		ProcessBuilder processBuilder = new ProcessBuilder()
+			.command(
+				nsisExecutable.toAbsolutePath().toString(),
+				scriptPath.toAbsolutePath().toString()
+			)
+			.directory(nsisDir.toFile())
+			.redirectErrorStream(true);
+		
+		Process process = processBuilder.start();
+		
+		// Read NSIS output
+		Logger nsisLogger = new Logger(new StandardOutputLogHandler(), new StandardErrorLogHandler())
+			.setPrefix(Logger.formatBadge("NSIS", Ansi.PURPLE));
+		
+		if (DEBUG_NSIS) {
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+				String line;
+				while ((line = reader.readLine()) != null) {
+					nsisLogger.log(line.replaceAll("^nsis: ", ""));
+				}
+			}
+		}
+		
+		// Check exit code
+		try {
+			if (process.waitFor() != 0) {
+				throw new RuntimeException("Failed to create installer.");
+			}
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -311,6 +489,7 @@ public class BuildTool {
 		public boolean debug = false;
 		public String resourcesPath;
 		public boolean includeZip = true;
+		public boolean includeInstaller = true;
 		
 		public String getMainClass() {
 			return Objects.requireNonNullElse(mainClass, "Main");
@@ -349,7 +528,7 @@ public class BuildTool {
 		}
 	
 		public boolean shouldIncludeZip() {
-			return includeZip;
+			return includeZip || shouldIncludeInstaller();
 		}
 		
 		public String getOutputFileName() {
@@ -360,9 +539,26 @@ public class BuildTool {
 			return getFileName("zip");
 		}
 		
-		public String getFileName(String extension) {
-			return String.format("%s.%s", getGameName().replaceAll("\\s+", ""), extension);
+		public String getInstallerName() {
+			return getFileName("-installer", "exe");
 		}
+		
+		public String getFileName(String extension) {
+			return getFileName("", extension);
+		}
+		
+		public String getFileName(String suffix, String extension) {
+			return String.format("%s%s.%s", getGameName().replaceAll("\\s+", ""), suffix, extension);
+		}
+		
+		public boolean shouldIncludeInstaller() {
+			return includeInstaller && Platform.get() == Platform.WINDOWS;
+		}
+		
+		public String getCopyright() {
+			return String.format("Copyright (c) %s %s", Year.now(), getDeveloper());
+		}
+		
 	}
 }
 
