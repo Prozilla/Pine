@@ -256,52 +256,25 @@ public class BuildTool {
 		}
 	}
 	
-	private static void runLaunch4j(Path configPath, Path launch4jDir) throws IOException, URISyntaxException {
+	private static void runLaunch4j(Path configPath, Path launch4jDir) {
 		logger.log("Creating executable with Launch4j...");
 		
-		URL resource = Objects.requireNonNull(BuildTool.class.getResource("/tools/launch4j"), "Launch4J is missing");
-		Path sourceDir = Paths.get(resource.toURI());
-		FileSystem.copyDirectory(sourceDir.toFile(), launch4jDir.toFile());
-		
-		Path launch4jcExecutable = launch4jDir.resolve("launch4jc.exe");
-		launch4jcExecutable.toFile().setExecutable(true);
-		
-		// Run launch4jc.exe with the config file
-		ProcessBuilder processBuilder = new ProcessBuilder()
-			.command(
-			    launch4jcExecutable.toAbsolutePath().toString(),
-			    configPath.toString(),
-			    DEBUG_LAUNCH4J ? "--l4j-debug-all" : ""
-			)
-			.directory(launch4jDir.toFile())
-			.redirectErrorStream(true);
-		
-		Process process = processBuilder.start();
-		
-		// Read Launch4J output
-		Logger launch4jLogger = new Logger(new StandardOutputLogHandler(), new StandardErrorLogHandler())
-			.setPrefix(Logger.formatBadge("Launch4j", Ansi.PURPLE));
-		if (DEBUG_LAUNCH4J) {
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-				String line;
-				while ((line = reader.readLine()) != null) {
-					launch4jLogger.log(line.replaceAll("^launch4j: ", ""));
-				}
-			}
-		}
-		
-		// Check exit code
 		try {
-			if (process.waitFor() != 0) {
-				throw new RuntimeException("Failed to create executable.");
-			}
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-			throw new RuntimeException(e);
+			runCommand(
+				"/tools/launch4j",
+				"launch4jc.exe",
+				launch4jDir,
+				"Launch4j",
+				DEBUG_LAUNCH4J,
+				configPath.toString(),
+				DEBUG_LAUNCH4J ? "--l4j-debug-all" : ""
+			);
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to create executable", e);
 		}
 	}
 	
-	private static void finalizeBuild(BuildConfig config, Path buildDir, Path launch4jDir, Path tempDir) throws IOException, URISyntaxException {
+	private static void finalizeBuild(BuildConfig config, Path buildDir, Path launch4jDir, Path tempDir) throws IOException {
 		logger.log("Finalizing build...");
 		
 		FileSystem.deleteDirectory(launch4jDir);
@@ -430,46 +403,64 @@ public class BuildTool {
 		return nsisScriptPath;
 	}
 	
-	private static void runNSIS(Path scriptPath, Path nsisDir) throws URISyntaxException, IOException {
+	private static void runNSIS(Path scriptPath, Path nsisDir) {
 		logger.log("Creating installer with NSIS...");
 		
-		URL resource = Objects.requireNonNull(BuildTool.class.getResource("/tools/nsis"), "NSIS is missing");
-		Path sourceDir = Paths.get(resource.toURI());
-		FileSystem.copyDirectory(sourceDir.toFile(), nsisDir.toFile());
-		
-		Path nsisExecutable = nsisDir.resolve("makensis.exe");
-		nsisExecutable.toFile().setExecutable(true);
-		
-		// TODO: make abstract
-		
-		// Run makensis.exe with the config file
-		ProcessBuilder processBuilder = new ProcessBuilder()
-			.command(
-				nsisExecutable.toAbsolutePath().toString(),
+		try {
+			runCommand(
+				"/tools/nsis",
+				"makensis.exe",
+				nsisDir,
+				"NSIS",
+				DEBUG_NSIS,
 				scriptPath.toAbsolutePath().toString()
-			)
-			.directory(nsisDir.toFile())
-			.redirectErrorStream(true);
+			);
+		} catch (Exception e) {
+			logger.error("Failed to create installer", e);
+		}
+	}
+	
+	private static void runCommand(String executableDir, String executableName, Path workingDir, String label, boolean debug, String... arguments) throws URISyntaxException, IOException {
+		URL resource = Objects.requireNonNull(BuildTool.class.getResource(executableDir), label + " is missing");
+		Path sourceDir = Paths.get(resource.toURI());
+		FileSystem.copyDirectory(sourceDir.toFile(), workingDir.toFile());
 		
+		Path executable = workingDir.resolve(executableName);
+		if (!executable.toFile().setExecutable(true)) {
+			logger.error("Failed to make file executable");
+		}
+		
+		// Create command with arguments
+		String[] command = new String[arguments.length + 1];
+		command[0] = executable.toAbsolutePath().toString();
+		System.arraycopy(arguments, 0, command, 1, arguments.length);
+		
+		// Run executable
+		ProcessBuilder processBuilder = new ProcessBuilder()
+			.command(command)
+			.directory(workingDir.toFile())
+			.redirectErrorStream(true);
+
 		Process process = processBuilder.start();
 		
-		// Read NSIS output
-		Logger nsisLogger = new Logger(new StandardOutputLogHandler(), new StandardErrorLogHandler())
-			.setPrefix(Logger.formatBadge("NSIS", Ansi.PURPLE));
+		// Read output
+		Logger processLogger = new Logger(new StandardOutputLogHandler(), new StandardErrorLogHandler())
+			.setPrefix(Logger.formatBadge(label, Ansi.PURPLE));
 		
-		if (DEBUG_NSIS) {
+		if (debug) {
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
 				String line;
 				while ((line = reader.readLine()) != null) {
-					nsisLogger.log(line.replaceAll("^nsis: ", ""));
+					processLogger.log(line.replaceAll(String.format("^%s: ", label.toLowerCase()), ""));
 				}
 			}
 		}
 		
 		// Check exit code
 		try {
-			if (process.waitFor() != 0) {
-				throw new RuntimeException("Failed to create installer.");
+			int code = process.waitFor();
+			if (code != 0) {
+				throw new RuntimeException("Process exited with code " + code);
 			}
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
