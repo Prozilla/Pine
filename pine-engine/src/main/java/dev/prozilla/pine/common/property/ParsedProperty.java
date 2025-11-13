@@ -31,6 +31,19 @@ public class ParsedProperty<T> implements Property<T> {
 		return parser.getResult();
 	}
 	
+	/**
+	 * Returns the input property.
+	 * @return The input property.
+	 */
+	@Override
+	public StringProperty toStringProperty() {
+		return inputProperty;
+	}
+	
+	/**
+	 * Returns the input property.
+	 * @return The input property.
+	 */
 	public @NotNull StringProperty inputProperty() {
 		return inputProperty;
 	}
