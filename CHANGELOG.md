@@ -1,5 +1,7 @@
 # Changelog
 
+## v2.1.0
+
 ## v2.0.3
 
 From this version on, all releases will come with a sources and javadoc jar.
