@@ -688,6 +688,17 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		return AssetPools.fonts.load(config.defaultFontPath.getValue());
 	}
 	
+	/**
+	 * Resizes the application window.
+	 * @deprecated Replaced by {@link Renderer#resize()} as of 2.1.0
+	 */
+	@Deprecated
+	public void resize() {
+		if (window.getWidth() != renderer.getHeight() || window.getHeight() != renderer.getHeight()) {
+			renderer.resize();
+		}
+	}
+	
 	public String getPersistentDataPath() {
 		return persistentDataPathProperty.getValue();
 	}

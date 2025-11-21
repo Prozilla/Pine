@@ -2,6 +2,77 @@
 
 ## v2.1.0
 
+### New Features
+
+- Custom font rendering using stb_truetype
+- Added support for different shader types
+- Added timestamps to application logs
+- Added EasingParser to parse basic easing functions with
+- Added CSS child selector
+- Added Platform and Architecture enums that wrap around the corresponding enums from LWJGL
+- Added persistent data path
+- Added a functional interface to parse strings, which can be used in some places instead of/inside a stateful Parser object
+- Added an abstract sequential parser
+- Added audio effects that can have randomized properties
+- Added a dev console with commands which can be activated in dev mode
+- Added ability to toggle between fullscreen mode and windowed mode
+- Added ability to lock and hide cursor by changing the cursor mode
+- Added LocalStorage and SessionStorage using key-value stores
+
+### Changes
+
+- Added gain setter and state getter to audio sources
+- Added more utility methods for destructibles, printables and transmittables
+- Added more utility methods related to OpenGL and GLFW
+- Updated CSS parsing
+  - Added support for `auto`
+  - Made parsing case-insensitive
+  - Added support for `ms` in animation durations
+  - Added support for type selector based on the HTML tags of nodes
+- Added methods to convert vectors to directions
+- Added method to check if a vector is the zero vector
+- Added method to resize a list based on a wrap mode
+- Added formatted printing for stylesheets
+- Added utility method to get value of nullable property with an optional default value
+- Added utility method to generate a list of coordinates representing a subgrid of a grid
+- Added utility method to get the closest edge of a tile based on a given position 
+- Prefabs can now have children
+- Marked most interfaces with a single method as functional interfaces
+- Added string representation of keys and mouse buttons
+
+### Fixes
+
+- Made asset pools return `null` when loading fails
+- Fixed unnecessary event objects being created
+- Fixed vector subtraction
+- Fixed multi-tile hovering state
+- Fixed resizing of the window and renderer 
+- Fixed layout node size calculation
+- Fixed cursor causing errors when text is programmatically removed from text input node
+- Fixed node root not allowing nested children to be focusable
+- Improved support for macOS and other platforms using older OpenGL versions
+
+### Documentation
+
+- Added JetBrains annotations (`@Contract` & `@NotNull`)
+
+### Build Tool
+
+- Added option to automatically create zip of build
+
+### Mods
+
+- Added an example mod that activates dev mode
+
+### Examples
+
+- Flappy Bird:
+  - Added highscore
+  - Added sound effects
+- Sokoban:
+  - Added support for multiple players (on the same device)
+  - Added sound effects
+
 ## v2.0.3
 
 From this version on, all releases will come with a sources and javadoc jar.

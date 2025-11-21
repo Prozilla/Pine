@@ -9,6 +9,9 @@ public class Colour extends Color {
 		super();
 	}
 	
+	/**
+	 * @deprecated Since 2.1.0
+	 */
 	@Deprecated
 	public Colour(java.awt.Color color) {
 		super(color);
