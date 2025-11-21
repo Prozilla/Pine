@@ -69,6 +69,9 @@
 - Flappy Bird:
   - Added highscore
   - Added sound effects
+  - Added ground with parallax effect
+  - Fixed pipe collision detection
+  - Fixed black lines appearing in background
 - Sokoban:
   - Added support for multiple players (on the same device)
   - Added sound effects

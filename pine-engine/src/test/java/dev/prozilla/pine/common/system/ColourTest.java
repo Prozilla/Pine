@@ -17,7 +17,7 @@ public class ColourTest {
 	void testEqualsColor() {
 		assertEquals(new Color(0.25f, 0.5f, 0.75f, 1f), new Colour(0.25f, 0.5f, 0.75f, 1f));
 		assertEquals(new Color(0.25f, 0.5f, 0.75f), new Colour(0.25f, 0.5f, 0.75f));
-		assertEquals(Color.decode("#FFF"), Colour.decode("#FFF"));
+		assertEquals(Color.hex("#FFF"), Colour.hex("#FFF"));
 		assertEquals(Color.rebeccaPurple(), Colour.rebeccaPurple());
 		assertEquals(Color.hsl(30, 70, 50), Colour.hsl(30, 70, 50));
 		

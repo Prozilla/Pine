@@ -93,11 +93,6 @@ public class PlayerData extends Component {
 		
 		// Reset timer
 		timeUntilMoveCompletes = canMove ? TIME_TO_MOVE : 0;
-		
-		// Play audio
-		if (canMove) {
-//			audioEffectPlayer.playRandom(1, 9);
-		}
 	}
 	
 }
