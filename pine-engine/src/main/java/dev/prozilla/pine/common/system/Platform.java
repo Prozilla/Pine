@@ -14,13 +14,13 @@ import java.nio.file.Paths;
 public enum Platform {
 	FREEBSD(org.lwjgl.system.Platform.FREEBSD) {
 		@Override
-		String getUserPath(String userHome, String separator) {
+		public String getUserPath(String userHome, String separator) {
 			return LINUX.getUserPath(userHome, separator);
 		}
 	},
 	LINUX(org.lwjgl.system.Platform.LINUX) {
 		@Override
-		String getUserPath(String userHome, String separator) {
+		public String getUserPath(String userHome, String separator) {
 			String xdgData = System.getenv("XDG_DATA_HOME");
 			if (xdgData == null) {
 				return String.format("%s.local%sshare", userHome, separator);
@@ -31,13 +31,13 @@ public enum Platform {
 	},
 	MACOS(org.lwjgl.system.Platform.MACOSX) {
 		@Override
-		String getUserPath(String userHome, String separator) {
+		public String getUserPath(String userHome, String separator) {
 			return String.format("%sLibrary%sApplication Support", userHome, separator);
 		}
 	},
 	WINDOWS(org.lwjgl.system.Platform.WINDOWS) {
 		@Override
-		String getUserPath(String userHome, String separator) {
+		public String getUserPath(String userHome, String separator) {
 			String userDirectory = System.getenv("USERPROFILE");
 			if (userDirectory == null) {
 				userDirectory = userHome;
@@ -78,7 +78,7 @@ public enum Platform {
 		return this == current;
 	}
 	
-	abstract String getUserPath(String userHome, String separator);
+	public abstract String getUserPath(String userHome, String separator);
 	
 	public static String getPersistentDataPath(String subDirectory) {
 		return getPersistentDataPath(subDirectory, false);

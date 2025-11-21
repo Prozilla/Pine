@@ -2,6 +2,10 @@ package dev.prozilla.pine.common.math.easing;
 
 import dev.prozilla.pine.common.math.MathUtils;
 
+/**
+ * A mathematical function that maps values between {@code 0f} and {@code 1f}.
+ */
+@FunctionalInterface
 public interface EasingFunction {
 	
 	/**
@@ -10,7 +14,7 @@ public interface EasingFunction {
 	 * @return The eased and remapped output value.
 	 */
 	default float get(float t, float start, float end) {
-		return MathUtils.remap(get(t), 0f, 1f, start, end);
+		return MathUtils.remap(get(t), start, end);
 	}
 	
 	/**

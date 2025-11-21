@@ -2,8 +2,14 @@ package dev.prozilla.pine.common.util;
 
 import org.jetbrains.annotations.Contract;
 
-public class StringUtils {
+public final class StringUtils {
 	
+	private StringUtils() {}
+	
+	/**
+	 * Returns the string representation of an object, or {@code null} if the object is {@code null}.
+	 * @see Object#toString()
+	 */
 	@Contract("null -> null; !null -> !null")
 	public static String toString(Object object) {
 		return ObjectUtils.preserveNull(object, Object::toString);

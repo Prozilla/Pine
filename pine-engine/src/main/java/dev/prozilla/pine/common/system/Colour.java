@@ -54,9 +54,18 @@ public class Colour extends Color {
 	
 	/**
 	 * @see Color#decode
+	 * @deprecated Replaced by {@link #hex} as of 2.1.0
 	 */
+	@Deprecated
 	public static Colour decode(String input) throws NumberFormatException {
 		return Color.decode(input).toColour();
+	}
+	
+	/**
+	 * @see Color#hex
+	 */
+	public static Colour hex(String hex) throws NumberFormatException {
+		return Color.hex(hex).toColour();
 	}
 	
 	public static Colour white() {

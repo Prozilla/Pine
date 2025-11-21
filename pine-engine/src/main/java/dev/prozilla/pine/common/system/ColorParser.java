@@ -72,7 +72,7 @@ public class ColorParser extends Parser<Color> {
 		
 		if (input.startsWith("#")) {
 			try {
-				return succeed(Color.decode(input));
+				return succeed(Color.hex(input));
 			} catch (NumberFormatException e) {
 				return fail("Invalid HEX value");
 			}

@@ -38,6 +38,7 @@ public class DevConsoleData extends Component {
 		commands = new ArrayList<>();
 		
 		addCommand(DevConsoleCommand.HELP);
+		addCommand(DevConsoleCommand.CLEAR);
 		addCommand(new ConfigCommand());
 		addCommand(new EnvironmentCommand("exit", ApplicationProvider::stopApplication));
 		addCommand(new PrintableCommand("window", this::getWindow));
@@ -52,6 +53,10 @@ public class DevConsoleData extends Component {
 	public void addLog(String text) {
 		logPrefab.setText(text);
 		logsNode.getEntity().addChild(logPrefab);
+	}
+	
+	public void clearLogs() {
+		logsNode.getEntity().destroyChildren();
 	}
 	
 	public String handleInput(String input) {
