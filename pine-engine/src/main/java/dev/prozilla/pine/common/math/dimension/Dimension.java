@@ -141,27 +141,6 @@ public class Dimension extends DimensionBase {
 		return new Dimension(value, unit);
 	}
 	
-	public static boolean isValid(String input) {
-		try {
-			parse(input);
-			return true;
-		} catch (RuntimeException e) {
-			return false;
-		}
-	}
-	
-	/**
-	 * Parses a string into a dimension instance.
-	 * @param input Input string
-	 * @return New dimension with based on input string
-	 * @throws IllegalArgumentException When <code>input</code> is not a valid dimension string
-	 * @deprecated Replaced by {@link DimensionParser} as of 1.2.0
-	 */
-	@Deprecated
-	public static DimensionBase parse(String input) throws IllegalArgumentException {
-		return new DimensionParser().read(input);
-	}
-	
 	/**
 	 * Creates a dimension with value <code>0</code>.
 	 */

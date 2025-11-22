@@ -156,14 +156,6 @@ public class DualDimension implements Printable, Cloneable<DualDimension> {
 	}
 	
 	/**
-	 * @deprecated Replaced by {@link DualDimensionParser} as of 1.2.0
-	 */
-	@Deprecated
-	public static DualDimension parse(String input) {
-		return new DualDimensionParser().read(input);
-	}
-	
-	/**
 	 * Creates a pair of dimensions with all values set to <code>0</code>.
 	 */
 	public static DualDimension zero() {

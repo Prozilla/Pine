@@ -1,6 +1,5 @@
 package dev.prozilla.pine.common.math.vector;
 
-import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 import org.jetbrains.annotations.NotNull;
 
@@ -121,14 +120,6 @@ public class Vector3f extends VectorFloat<Vector3f> {
 	@Override
 	public @NotNull String toString() {
 		return String.format("(%s,%s,%s)", x, y, z);
-	}
-	
-	/**
-	 * @deprecated Replaced by {@link Parser} as of 2.0.2
-	 */
-	@Deprecated
-	public static Vector3f parse(String input) throws InvalidStringException {
-		return new Parser().read(input);
 	}
 	
 	/**

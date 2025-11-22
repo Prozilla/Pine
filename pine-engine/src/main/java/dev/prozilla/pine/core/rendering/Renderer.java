@@ -1068,14 +1068,6 @@ public class Renderer implements Initializable, Destructible {
 		}
 	}
 	
-	/**
-	 * @deprecated Replaced by {@link #isRendering} as of 2.1.0
-	 */
-	@Deprecated
-	public boolean isDrawing() {
-		return isRendering;
-	}
-	
 	public boolean isRendering() {
 		return isRendering;
 	}

@@ -9,14 +9,6 @@ public class Colour extends Color {
 		super();
 	}
 	
-	/**
-	 * @deprecated Since 2.1.0
-	 */
-	@Deprecated
-	public Colour(java.awt.Color color) {
-		super(color);
-	}
-	
 	public Colour(float red, float green, float blue) {
 		super(red, green, blue);
 	}
@@ -50,15 +42,6 @@ public class Colour extends Color {
 	 */
 	public static Colour hsl(float hue, float saturation, float lightness) {
 		return Color.hsl(hue, saturation, lightness).toColour();
-	}
-	
-	/**
-	 * @see Color#decode
-	 * @deprecated Replaced by {@link #hex} as of 2.1.0
-	 */
-	@Deprecated
-	public static Colour decode(String input) throws NumberFormatException {
-		return Color.decode(input).toColour();
 	}
 	
 	/**

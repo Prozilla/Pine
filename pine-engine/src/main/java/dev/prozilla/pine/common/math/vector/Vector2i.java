@@ -1,6 +1,5 @@
 package dev.prozilla.pine.common.math.vector;
 
-import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 import org.jetbrains.annotations.NotNull;
 
@@ -118,14 +117,6 @@ public class Vector2i extends VectorInt<Vector2i> {
 	@Override
 	public @NotNull String toString() {
 		return String.format("(%s,%s)", x, y);
-	}
-	
-	/**
-	 * @deprecated Replaced by {@link Parser} as of 2.0.2
-	 */
-	@Deprecated
-	public static Vector2i parse(String input) throws InvalidStringException {
-		return new Parser().read(input);
 	}
 	
 	/**

@@ -212,14 +212,4 @@ public class ApplicationBuilder {
 		return application;
 	}
 	
-	/**
-	 * Creates a new application and runs it.
-	 * @deprecated Deprecated in favor of chaining {@link #build()} and {@link Application#run()} as of 2.1.0
-	 */
-	@Deprecated
-	public Application buildAndRun() {
-		Application application = build();
-		application.run();
-		return application;
-	}
 }

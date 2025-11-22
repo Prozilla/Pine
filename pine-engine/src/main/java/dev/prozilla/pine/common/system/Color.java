@@ -35,16 +35,6 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 	}
 	
 	/**
-	 * Creates an RGB-Color from a java.awt.Color instance.
-	 * @param color Color instance
-	 * @deprecated Since 2.1.0
-	 */
-	@Deprecated
-	public Color(java.awt.Color color) {
-		this(color.getRed(), color.getGreen(), color.getBlue());
-	}
-	
-	/**
 	 * Creates an RGB-Color with an alpha value of 1.
 	 * @param red The red component. Range from 0f to 1f.
 	 * @param green The green component. Range from 0f to 1f.
@@ -353,19 +343,6 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 		return p;
 	}
 	
-	/**
-	 * Decodes a <code>String</code> into a <code>Color</code>.
-	 * Supports octal and hexadecimal number representations of opaque and transparent colors.
-	 * @param input String that represents a color as a 24-bit or 32-bit integer
-	 * @throws NumberFormatException If the string cannot be decoded.
-	 * @return Color
-	 * @deprecated Replaced by {@link #hex(String)} as of 2.1.0
-	 */
-	@Deprecated
-	public static Color decode(String input) throws NumberFormatException {
-		return hex(input);
-	}
-	
 	public static Color hex(String hex) throws NumberFormatException {
 		if (!hex.startsWith("#")) {
 			hex = "#" + hex;
@@ -381,14 +358,6 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 		} else {
 			return new Color((i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
 		}
-	}
-	
-	/**
-	 * @deprecated Replaced by {@link ColorParser} as of 1.2.0
-	 */
-	@Deprecated
-	public static Color parse(String input) {
-		return new ColorParser().read(input);
 	}
 	
 	public static Color white() {

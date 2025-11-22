@@ -243,14 +243,6 @@ public class StyleSheet implements Printable, Asset {
 		return result.toString();
 	}
 	
-	/**
-	 * @deprecated Replaced by {@link CSSParser} as of 1.2.0
-	 */
-	@Deprecated
-	public static StyleSheet parse(String css) {
-		return new CSSParser().read(css);
-	}
-	
 	@Override
 	public boolean equals(Object object) {
 		return object == this || (object instanceof StyleSheet styleSheet && equals(styleSheet));

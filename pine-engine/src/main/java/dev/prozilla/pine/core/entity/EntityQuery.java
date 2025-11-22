@@ -63,26 +63,6 @@ public class EntityQuery implements Destructible {
 	}
 	
 	/**
-	 * Prepares this entity query for an iteration.
-	 * @throws IllegalStateException If this entity query is already being iterated.
-	 * @deprecated Replaced by {@link DeferredList#endIteration()} as of 2.0.3
-	 */
-	@Deprecated
-	public void startIteration() {
-		entityChunks.startIteration();
-	}
-	
-	/**
-	 * Marks the ongoing iteration of this entity query as done.
-	 * @throws IllegalStateException If this entity query is not being iterated.
-	 * @deprecated Replaced by {@link DeferredList#endIteration()} as of 2.0.3
-	 */
-	@Deprecated
-	public void endIteration() {
-		entityChunks.endIteration();
-	}
-	
-	/**
 	 * Checks if an entity matches this query and if it does, adds the entity to the array of matches.
 	 * @return True if the entity matches this query
 	 */
