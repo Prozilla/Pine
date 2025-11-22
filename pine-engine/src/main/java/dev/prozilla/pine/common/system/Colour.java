@@ -9,6 +9,9 @@ public class Colour extends Color {
 		super();
 	}
 	
+	/**
+	 * @deprecated Since 2.1.0
+	 */
 	@Deprecated
 	public Colour(java.awt.Color color) {
 		super(color);
@@ -51,7 +54,7 @@ public class Colour extends Color {
 	
 	/**
 	 * @see Color#decode
-	 * @deprecated Replaced by {@link #hex}.
+	 * @deprecated Replaced by {@link #hex} as of 2.1.0
 	 */
 	@Deprecated
 	public static Colour decode(String input) throws NumberFormatException {

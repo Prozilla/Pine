@@ -37,6 +37,7 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 	/**
 	 * Creates an RGB-Color from a java.awt.Color instance.
 	 * @param color Color instance
+	 * @deprecated Since 2.1.0
 	 */
 	@Deprecated
 	public Color(java.awt.Color color) {
@@ -358,7 +359,7 @@ public class Color implements Printable, Cloneable<Color>, Transceivable<Color> 
 	 * @param input String that represents a color as a 24-bit or 32-bit integer
 	 * @throws NumberFormatException If the string cannot be decoded.
 	 * @return Color
-	 * @deprecated Replaced by {@link #hex(String)}.
+	 * @deprecated Replaced by {@link #hex(String)} as of 2.1.0
 	 */
 	@Deprecated
 	public static Color decode(String input) throws NumberFormatException {

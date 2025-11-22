@@ -103,6 +103,9 @@ public enum Easing implements EasingFunction {
 		return string;
 	}
 	
+	/**
+	 * @deprecated Replaced by {@link EasingParser} as of 2.1.0
+	 */
 	@Deprecated
 	public static Easing parse(String input) {
 		return ArrayUtils.findByString(Easing.values(), input, true);

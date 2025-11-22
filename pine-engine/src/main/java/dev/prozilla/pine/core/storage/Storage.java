@@ -294,18 +294,20 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	/**
 	 * Sets the values of multiple items.
 	 * @param items The key and value pairs
+	 * @return {@code true} if an item was changed.
 	 */
-	public <O> void setItems(Map<String, O> items) {
-		setItems(items.entrySet());
+	public <O> boolean setItems(Map<String, O> items) {
+		return setItems(items.entrySet());
 	}
 	
 	/**
 	 * Sets the values of multiple items.
 	 * @param items The key and value pairs
+	 * @return {@code true} if an item was changed.
 	 */
-	protected <O> void setItems(Set<Map.Entry<String, O>> items) {
+	protected <O> boolean setItems(Set<Map.Entry<String, O>> items) {
 		if (items == null) {
-			return;
+			return false;
 		}
 		boolean changed = false;
 		for (Map.Entry<String, O> item : items) {
@@ -319,12 +321,14 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 		if (changed && shouldSave()) {
 			save();
 		}
+		return changed;
 	}
 	
 	/**
 	 * Sets the value of the item with a given key to the string representation of an object.
 	 * @param key The key of the item
 	 * @param value The new value
+	 * @return {@code true} if the item was changed.
 	 * @see StringUtils#toString(Object)
 	 */
 	public boolean setItem(String key, Object value) {
@@ -335,6 +339,7 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	 * Sets the value of the item with a given key.
 	 * @param key The key of the item
 	 * @param value The new value
+	 * @return {@code true} if the item was changed.
 	 */
 	public boolean setItem(String key, String value) {
 		if (Objects.equals(items.get(key), value)) {
@@ -350,11 +355,16 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	/**
 	 * Removes the item with a given key.
 	 * @param key The key of the item
+	 * @return {@code false} if there was no item with the given key.
 	 */
-	public void removeItem(String key) {
-		if (items.remove(key) != null && shouldSave()) {
-			save();
+	public boolean removeItem(String key) {
+		if (items.remove(key) != null) {
+			if (shouldSave()) {
+				save();
+			}
+			return true;
 		}
+		return false;
 	}
 	
 	/**

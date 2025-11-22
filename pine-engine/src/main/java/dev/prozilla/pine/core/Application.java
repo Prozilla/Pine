@@ -118,6 +118,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	public Application(String title, int width, int height, Scene scene) {
 		this(title, width, height, scene, DEFAULT_TARGET_FPS);
 	}
+	
 	/**
 	 * Creates an application.
 	 * @param title Title of the application
@@ -619,7 +620,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * Checks whether this application hasn't been stopped yet.
 	 */
 	public boolean isRunning() {
-		return !stateMachine.isAnyState(ApplicationState.STOPPED);
+		return !stateMachine.isState(ApplicationState.STOPPED);
 	}
 	
 	public boolean isLoading() {

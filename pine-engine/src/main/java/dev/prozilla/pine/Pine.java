@@ -18,9 +18,9 @@ public final class Pine {
 	/** Current major version of Pine. */
 	public static final int VERSION_MAJOR = 2;
 	/** Current minor version of Pine. */
-	public static final int VERSION_MINOR = 0;
+	public static final int VERSION_MINOR = 1;
 	/** Current patch version of Pine. */
-	public static final int VERSION_PATCH = 3;
+	public static final int VERSION_PATCH = 0;
 	
 	private Pine() {}
 	

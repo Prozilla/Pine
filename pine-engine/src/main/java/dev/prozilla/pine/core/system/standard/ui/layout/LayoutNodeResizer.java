@@ -28,10 +28,6 @@ public final class LayoutNodeResizer extends UpdateSystem {
 		float innerWidth = 0, innerHeight = 0;
 		float currentGap = layoutNode.getGap();
 		
-//		if (parentNode.getEntity().hasTag("BuildMenu")) {
-//			Logger.system.log("Size: " + parentNode.size.compute(parentNode));
-//		}
-		
 		// Check if the node has a defined size;
 		if (parentNode.size != null) {
 			innerWidth = parentNode.size.computeX(parentNode);
@@ -149,11 +145,6 @@ public final class LayoutNodeResizer extends UpdateSystem {
 		parentNode.currentOuterSize.y = parentNode.currentInnerSize.y + parentNode.getMarginY() * 2;
 		
 		layoutNode.currentGap = currentGap;
-		
-//		if (parentNode.getEntity().hasTag("BuildMenu")) {
-//			Logger.system.log("Inner size: " + parentNode.currentInnerSize);
-//			Logger.system.log("Outer size: " + parentNode.currentOuterSize);
-//		}
 	}
 	
 	private static float calculateSpaceBetweenGap2(LayoutNode layoutNode, Node parentNode, float currentGap) {

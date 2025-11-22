@@ -17,7 +17,7 @@ repositories {
 	}
 }
 
-version = "2.0.3"
+version = "2.1.0"
 
 jar {
 	archiveBaseName = "pine-engine"
@@ -175,6 +175,12 @@ githubRelease {
 
 tasks.named("publish") {
 	dependsOn("githubRelease")
+}
+
+tasks.named("githubRelease") {
+	dependsOn("jar")
+	dependsOn("sourcesJar")
+	dependsOn("javadocJar")
 }
 
 // Javadoc generation

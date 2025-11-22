@@ -16,7 +16,7 @@ public enum CursorType implements IntEnum {
 	/** Regular arrow cursor. */
 	DEFAULT(GLFW_ARROW_CURSOR),
 	/**
-	 * @deprecated Replaced by {@link #POINTER}.
+	 * @deprecated Replaced by {@link #POINTER} as of 2.1.0
 	 */
 	@Deprecated
 	HAND(GLFW_POINTING_HAND_CURSOR),

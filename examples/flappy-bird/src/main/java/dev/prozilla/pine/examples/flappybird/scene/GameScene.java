@@ -82,9 +82,9 @@ public class GameScene extends SceneBase {
 		world.addSystem(new GroundInitializer());
 		world.addSystem(new GroundMover());
 		
-		if (Application.isDevMode()) {
-			world.addSystem(new PipesDebugRenderer());
-		}
+//		if (Application.isDevMode()) {
+//			world.addSystem(new PipesDebugRenderer());
+//		}
 		
 		// Create empty parent for obstacles
 		obstacles = world.addEntity(new Entity(world));

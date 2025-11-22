@@ -7,6 +7,7 @@ public final class StringUtils {
 	private StringUtils() {}
 	
 	/**
+	 * Returns the string representation of an object, or {@code null} if the object is {@code null}.
 	 * @see Object#toString()
 	 */
 	@Contract("null -> null; !null -> !null")
@@ -31,7 +32,7 @@ public final class StringUtils {
 	}
 	
 	/**
-	 * @see String#trim() 
+	 * @see String#trim()
 	 */
 	@Contract("null -> null; !null -> !null")
 	public static String trim(String string) {
