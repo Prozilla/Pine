@@ -67,6 +67,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	// Scene
 	protected Scene currentScene;
 	private final Map<Integer, Scene> scenes;
+	private int contextId;
 	
 	// Helpers
 	protected final Config config;
@@ -239,6 +240,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		if (applicationManager != null) {
 			applicationManager.onInit(window.getId());
 		}
+		contextId = 0;
 		currentScene.init();
 		loadIcons();
 		modManager.init();
@@ -590,6 +592,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		// Make sure game is resumed when new scene is loaded
 		resume();
 		stateMachine.changeState(ApplicationState.RUNNING);
+		contextId++;
 	}
 	
 	/**
@@ -606,6 +609,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			currentScene.reset();
 		}
 		currentScene = null;
+		contextId++;
 	}
 	
 	public Scene getCurrentScene() {
@@ -725,6 +729,14 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	
 	public ApplicationMode getMode() {
 		return mode;
+	}
+	
+	/**
+	 * Returns an integer that is incremented whenever a scene is loaded/unloaded.
+	 * @return The current context ID.
+	 */
+	public int getContextId() {
+		return contextId;
 	}
 	
 	@Override

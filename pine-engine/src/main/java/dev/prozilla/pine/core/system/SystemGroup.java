@@ -80,6 +80,7 @@ public class SystemGroup<S extends SystemBase> implements Container<S> {
 			return;
 		}
 		
+		int contextId = world.application.getContextId();
 		for (S system : systems) {
 			try {
 				if (system.shouldRun()) {
@@ -87,7 +88,7 @@ public class SystemGroup<S extends SystemBase> implements Container<S> {
 				}
 				
 				// Abort if the world was unloaded
-				if (!world.isActive()) {
+				if (contextId != world.application.getContextId()) {
 					break;
 				}
 			} catch (RuntimeException e) {
