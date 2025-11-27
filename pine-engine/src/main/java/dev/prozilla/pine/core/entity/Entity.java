@@ -243,6 +243,15 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	
 	/**
 	 * Toggles the active state of this entity.
+	 * @return {@code true} if the entity is now active.
+	 */
+	public boolean toggleActive() {
+		this.isActive = !this.isActive;
+		return this.isActive;
+	}
+	
+	/**
+	 * Sets the active state of this entity.
 	 */
 	public void setActive(boolean active) {
 		if (this.isActive == active) {
