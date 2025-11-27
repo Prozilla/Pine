@@ -25,4 +25,9 @@ public interface MutableFloatProperty extends FloatProperty, MutableProperty<Flo
 	
 	boolean set(float value);
 	
+	@Override
+	default FloatProperty viewProperty() {
+		return this::get;
+	}
+	
 }

@@ -25,4 +25,8 @@ public interface MutableProperty<T> extends Property<T> {
 	 */
 	boolean setValue(T value);
 	
+	default Property<T> viewProperty() {
+		return this;
+	}
+	
 }

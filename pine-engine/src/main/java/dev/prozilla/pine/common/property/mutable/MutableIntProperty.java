@@ -25,4 +25,9 @@ public interface MutableIntProperty extends IntProperty, MutableProperty<Integer
 	
 	boolean set(int value);
 	
+	@Override
+	default IntProperty viewProperty() {
+		return this::get;
+	}
+	
 }

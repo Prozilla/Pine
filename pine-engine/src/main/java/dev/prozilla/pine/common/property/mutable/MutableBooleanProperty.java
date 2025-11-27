@@ -32,4 +32,9 @@ public interface MutableBooleanProperty extends BooleanProperty, MutableProperty
 	
 	boolean set(boolean value);
 	
+	@Override
+	default BooleanProperty viewProperty() {
+		return this::get;
+	}
+	
 }

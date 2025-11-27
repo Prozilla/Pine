@@ -44,6 +44,20 @@ public class MutableBooleanPropertyTest {
 		assertFalse(booleanProperty.get());
 	}
 	
+	@Test
+	void testView() {
+		MutableBooleanProperty booleanProperty = mockProperty(true);
+		BooleanProperty view = booleanProperty.viewProperty();
+		assertTrue(view.get(), "view of boolean property should inherit value");
+		if (view instanceof MutableBooleanProperty mutableView) {
+			mutableView.set(false);
+		}
+		assertTrue(booleanProperty.get(), "boolean property should not be mutable via view");
+		assertTrue(view.get(), "view of boolean property should not be mutable");
+		booleanProperty.set(false);
+		assertFalse(view.get(), "view of boolean property should inherit value");
+	}
+	
 	MutableBooleanProperty mockProperty(boolean initialValue) {
 		return new SimpleMutableBooleanProperty(initialValue);
 	}
