@@ -46,7 +46,7 @@ public class ConditionalProperty<T> implements Property<T> {
 	 * @return {@code true} if the condition is {@code true}.
 	 */
 	public boolean isTrue() {
-		return condition.getValue();
+		return condition.get();
 	}
 	
 	/**
