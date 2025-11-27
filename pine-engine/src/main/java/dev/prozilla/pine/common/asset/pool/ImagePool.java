@@ -81,4 +81,16 @@ public final class ImagePool extends AssetPool<Image> implements MultiAssetLoade
 			});
 	}
 	
+	public int getImageWidth(String path) {
+		return load(path).getWidth();
+	}
+	
+	public int getImageHeight(String path) {
+		return load(path).getHeight();
+	}
+	
+	public int getImageChannels(String path) {
+		return load(path).getChannels();
+	}
+	
 }
