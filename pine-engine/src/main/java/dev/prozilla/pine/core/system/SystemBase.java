@@ -159,7 +159,7 @@ public abstract class SystemBase {
 		} catch (Exception e) {
 			logger.error("Failed to iterate over entities in system: " + getClass().getSimpleName(), e);
 		} finally {
-			if (scene.isActive()) {
+			if (scene.isActive() && query.entityChunks.isIterating()) { // TO DO: don't check if iterating, but check if scene was exited (because scene will still be active if reloaded)
 				query.entityChunks.endIteration();
 			}
 		}

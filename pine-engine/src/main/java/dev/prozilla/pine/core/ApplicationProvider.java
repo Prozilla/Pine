@@ -74,4 +74,12 @@ public interface ApplicationProvider extends ApplicationContext {
 		applicationProvider.getApplication().stop();
 	}
 	
+	static void reloadScene(ApplicationProvider applicationProvider) {
+		applicationProvider.getApplication().reloadScene();
+	}
+	
+	static void nextScene(ApplicationProvider applicationProvider) {
+		applicationProvider.getApplication().nextScene();
+	}
+	
 }
