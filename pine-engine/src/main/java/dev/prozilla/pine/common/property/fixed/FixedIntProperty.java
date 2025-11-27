@@ -39,4 +39,9 @@ public class FixedIntProperty implements IntProperty, FixedProperty<Integer> {
 		return this;
 	}
 	
+	@Override
+	public FixedBooleanProperty hasProperty(int value) {
+		return BooleanProperty.fromValue(has(value));
+	}
+	
 }

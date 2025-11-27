@@ -22,6 +22,11 @@ public interface FixedProperty<T> extends Property<T> {
 		return BooleanProperty.fromValue(isNotNull());
 	}
 	
+	@Override
+	default FixedBooleanProperty hasValueProperty(T value) {
+		return BooleanProperty.fromValue(hasValue(value));
+	}
+	
 	/**
 	 * Returns this property, because its value is always the same, so it is effectively the same as a snapshot.
 	 * @return This property.

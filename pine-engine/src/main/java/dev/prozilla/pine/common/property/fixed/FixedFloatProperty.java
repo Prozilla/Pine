@@ -34,4 +34,9 @@ public class FixedFloatProperty implements FloatProperty, FixedProperty<Float> {
 		return this;
 	}
 	
+	@Override
+	public FixedBooleanProperty hasProperty(float value) {
+		return BooleanProperty.fromValue(has(value));
+	}
+	
 }

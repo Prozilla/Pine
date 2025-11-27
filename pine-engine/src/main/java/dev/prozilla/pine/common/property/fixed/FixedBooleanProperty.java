@@ -60,4 +60,9 @@ public abstract class FixedBooleanProperty implements BooleanProperty, FixedProp
 		return this;
 	}
 	
+	@Override
+	public FixedBooleanProperty hasProperty(boolean value) {
+		return BooleanProperty.fromValue(has(value));
+	}
+	
 }

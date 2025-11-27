@@ -161,6 +161,15 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 	}
 	
 	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is equal to {@code value}.
+	 * @return A boolean property whose value is {@code true} if the value of this property is equal to {@code value}.
+	 * @see #has(boolean)
+	 */
+	default BooleanProperty hasProperty(boolean value) {
+		return () -> has(value);
+	}
+	
+	/**
 	 * Converts a boolean to a boolean property.
 	 * @param value The boolean value
 	 * @return The boolean property with the given value.

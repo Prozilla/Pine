@@ -98,9 +98,19 @@ public interface Property<T> extends Functor<T> {
 	/**
 	 * Returns a boolean property whose value is {@code true} if the value of this property is not {@code null} and vice versa.
 	 * @return A boolean property whose value is {@code true} if the value of this property is not {@code null} and vice versa.
+	 * @see #isNotNull()
 	 */
 	default BooleanProperty isNotNullProperty() {
 		return this::isNotNull;
+	}
+	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is equal to {@code value}.
+	 * @return A boolean property whose value is {@code true} if the value of this property is equal to {@code value}.
+	 * @see #hasValue(Object) 
+	 */
+	default BooleanProperty hasValueProperty(T value) {
+		return () -> hasValue(value);
 	}
 	
 	/**

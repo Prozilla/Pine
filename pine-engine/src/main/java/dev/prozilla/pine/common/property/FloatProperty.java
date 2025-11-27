@@ -41,6 +41,24 @@ public interface FloatProperty extends NonNullProperty<Float> {
 		return this;
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is {@code 0}.
+	 * @return A boolean property based on whether the value of this property is {@code 0}.
+	 * @see #hasProperty(float) 
+	 */
+	default BooleanProperty isZeroProperty() {
+		return hasProperty(0);
+	}
+	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is equal to {@code value}.
+	 * @return A boolean property whose value is {@code true} if the value of this property is equal to {@code value}.
+	 * @see #has(float)
+	 */
+	default BooleanProperty hasProperty(float value) {
+		return () -> has(value);
+	}
+	
 	static FloatProperty fromProperty(FloatProperty property) {
 		return property;
 	}

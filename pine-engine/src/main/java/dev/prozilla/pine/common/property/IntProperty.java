@@ -44,9 +44,19 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	/**
 	 * Returns a boolean property whose value is {@code true} if the value of this property is {@code 0}.
 	 * @return A boolean property based on whether the value of this property is {@code 0}.
+	 * @see #hasProperty(int)
 	 */
 	default BooleanProperty isZeroProperty() {
-		return () -> get() == 0;
+		return hasProperty(0);
+	}
+	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is equal to {@code value}.
+	 * @return A boolean property whose value is {@code true} if the value of this property is equal to {@code value}.
+	 * @see #has(int)
+	 */
+	default BooleanProperty hasProperty(int value) {
+		return () -> has(value);
 	}
 	
 	static IntProperty fromProperty(IntProperty property) {
