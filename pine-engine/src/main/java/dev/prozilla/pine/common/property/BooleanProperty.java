@@ -52,7 +52,7 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 	
 	@Override
 	@NotNull
-	default Boolean getValueOrThrow() {
+	default Boolean requireValue() {
 		return getValue();
 	}
 	

@@ -1,13 +1,14 @@
 package dev.prozilla.pine.common.util.parser;
 
 import dev.prozilla.pine.common.util.BooleanUtils;
+import dev.prozilla.pine.common.util.function.Mapper;
 
 /**
  * A function that parses an input string.
  * @param <T> The type of result
  */
 @FunctionalInterface
-public interface ParseFunction<T> {
+public interface ParseFunction<T> extends Mapper<String, T> {
 	
 	/**
 	 * Parses an input string.
@@ -15,6 +16,11 @@ public interface ParseFunction<T> {
 	 * @return The parsed value, or {@code null} if the parsing failed.
 	 */
 	T parse(String input);
+	
+	@Override
+	default T map(String in) {
+		return parse(in);
+	}
 	
 	static Integer parseInt(String input) {
 		try {

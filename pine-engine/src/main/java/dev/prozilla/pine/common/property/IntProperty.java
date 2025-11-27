@@ -16,7 +16,7 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	
 	@Override
 	@NotNull
-	default Integer getValueOrThrow() {
+	default Integer requireValue() {
 		return getValue();
 	}
 	

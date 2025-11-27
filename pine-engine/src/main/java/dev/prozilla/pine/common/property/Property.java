@@ -5,6 +5,8 @@ import dev.prozilla.pine.common.property.fixed.FixedObjectProperty;
 import dev.prozilla.pine.common.property.fixed.FixedProperty;
 import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
+import dev.prozilla.pine.common.util.function.Functor;
+import dev.prozilla.pine.common.util.function.Mapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +17,7 @@ import java.util.Objects;
  * @param <T> The type of property
  */
 @FunctionalInterface
-public interface Property<T> {
+public interface Property<T> extends Functor<T> {
 	
 	/**
 	 * Returns the value of this property.
@@ -63,7 +65,7 @@ public interface Property<T> {
 	 * @return The value of this property
 	 * @throws InvalidObjectException If the value of this property is {@code null}.
 	 */
-	default @NotNull T getValueOrThrow() throws InvalidObjectException {
+	default @NotNull T requireValue() throws InvalidObjectException {
 		return Checks.isNotNull(getValue(), "value");
 	}
 	
@@ -75,6 +77,11 @@ public interface Property<T> {
 	default Property<T> replaceNull(T defaultValue) {
 		Checks.isNotNull(defaultValue, "defaultValue");
 		return () -> getValueOr(defaultValue);
+	}
+	
+	@Override
+	default <S> Property<S> map(Mapper<T, S> mapper) {
+		return () -> mapper.map(getValue());
 	}
 	
 	/**

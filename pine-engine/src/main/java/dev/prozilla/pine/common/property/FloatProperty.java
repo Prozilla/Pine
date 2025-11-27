@@ -16,7 +16,7 @@ public interface FloatProperty extends NonNullProperty<Float> {
 	
 	@Override
 	@NotNull
-	default Float getValueOrThrow() {
+	default Float requireValue() {
 		return getValue();
 	}
 	

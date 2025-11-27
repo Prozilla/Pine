@@ -1,10 +1,10 @@
 package dev.prozilla.pine.core.state;
 
-import dev.prozilla.pine.common.Callback;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.lifecycle.Updatable;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
+import dev.prozilla.pine.common.util.function.Callback;
 
 import java.util.ArrayList;
 import java.util.List;

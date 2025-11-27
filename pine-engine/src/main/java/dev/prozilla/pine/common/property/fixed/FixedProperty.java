@@ -3,6 +3,7 @@ package dev.prozilla.pine.common.property.fixed;
 import dev.prozilla.pine.common.property.BooleanProperty;
 import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.util.StringUtils;
+import dev.prozilla.pine.common.util.function.Mapper;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -38,6 +39,11 @@ public interface FixedProperty<T> extends Property<T> {
 		} else {
 			return new FixedObjectProperty<>(defaultValue);
 		}
+	}
+	
+	@Override
+	default <S> FixedProperty<S> map(Mapper<T, S> mapper) {
+		return new FixedObjectProperty<>(mapper.map(getValue()));
 	}
 	
 	/**

@@ -15,7 +15,7 @@ public interface ColorProperty extends Property<Color>, Transmittable<Color> {
 	
 	@Override
 	default void transmit(Color target) {
-		Transmittable.transmit(getValue(), target);
+		Transmittable.transmitBetween(getValue(), target);
 	}
 	
 	/**

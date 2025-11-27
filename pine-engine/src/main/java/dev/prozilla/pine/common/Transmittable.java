@@ -18,10 +18,11 @@ public interface Transmittable<T> {
 	 * @param target The target to transmit data to
 	 * @param <T> The type of target object
 	 */
-	static <T> void transmit(Transmittable<T> source, T target) {
+	static <T> T transmitBetween(Transmittable<T> source, T target) {
 		if (source != null && target != null) {
 			source.transmit(target);
 		}
+		return target;
 	}
 	
 }

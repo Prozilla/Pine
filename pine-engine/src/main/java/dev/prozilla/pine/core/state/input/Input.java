@@ -1,6 +1,5 @@
 package dev.prozilla.pine.core.state.input;
 
-import dev.prozilla.pine.common.Callback;
 import dev.prozilla.pine.common.asset.image.Image;
 import dev.prozilla.pine.common.event.Event;
 import dev.prozilla.pine.common.event.EventListener;
@@ -12,6 +11,7 @@ import dev.prozilla.pine.common.lwjgl.GLFWUtils;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.util.checks.Checks;
+import dev.prozilla.pine.common.util.function.Callback;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.Window;
 import dev.prozilla.pine.core.component.camera.CameraData;
