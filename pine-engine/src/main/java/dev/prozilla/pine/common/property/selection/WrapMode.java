@@ -83,6 +83,24 @@ public enum WrapMode {
 	}
 	
 	/**
+	 * Returns the element of a list that succeeds another element.
+	 * @return The successor of the given element.
+	 * @param <E> The type of elements in the list
+	 */
+	public <E> E getSuccessor(E element, List<E> list) {
+		return getElement(list.indexOf(element) + 1, list);
+	}
+	
+	/**
+	 * Returns the element of a list that precedes another element.
+	 * @return The predecessor of the given element.
+	 * @param <E> The type of elements in the list
+	 */
+	public <E> E getPredecessor(E element, List<E> list) {
+		return getElement(Math.min(list.indexOf(element) - 1, -1), list);
+	}
+	
+	/**
 	 * Applies this wrap mode to an index for a list and returns the corresponding element.
 	 * <p>The transformation is based on the list's index range ({@code 0} to {@code list.size() - 1}).</p>
 	 *

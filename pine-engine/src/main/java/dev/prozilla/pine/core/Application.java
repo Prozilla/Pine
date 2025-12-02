@@ -168,7 +168,6 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		// Prepare scene
 		if (scene == null) {
 			scene = new Scene();
-			scene.setApplication(this);
 		}
 		scenes = new ArrayList<>();
 		addScene(scene);
@@ -489,7 +488,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			if (applicationManager != null) {
 				applicationManager.onDestroy();
 			}
-			if (currentScene.initialized) {
+			if (currentScene != null && currentScene.initialized) {
 				currentScene.destroy();
 			}
 			
@@ -533,22 +532,23 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * Reloads the current scene.
 	 */
 	public void reloadScene() {
+		Scene scene = currentScene;
 		unloadScene();
-		loadScene(currentScene);
+		loadScene(scene);
 	}
 	
 	/**
 	 * Loads the next scene.
 	 */
 	public void nextScene() {
-		loadScene((scenes.indexOf(currentScene) + 1) % scenes.size());
+		loadScene(WrapMode.REPEAT.getSuccessor(currentScene, scenes));
 	}
 	
 	/**
 	 * Loads the previous scene.
 	 */
 	public void previousScene() {
-		loadScene((scenes.indexOf(currentScene) + scenes.size() - 1) % scenes.size());
+		loadScene(WrapMode.REPEAT.getPredecessor(currentScene, scenes));
 	}
 	
 	public void loadScene(int index) {
@@ -563,13 +563,16 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			unloadScene();
 		}
 		
-		logger.log("Loading scene: " + scene.getId());
+		if (scene != null) {
+			logger.log("Loading scene: " + scene.name);
+		}
 		
 		currentScene = scene;
 		stateMachine.changeState(ApplicationState.LOADING);
 		
 		if (currentScene != null && !currentScene.initialized) {
 			try {
+				currentScene.setApplication(this);
 				currentScene.init();
 			} catch (IllegalStateException e) {
 				logger.error("Failed to initialize scene", e);
@@ -590,7 +593,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			return;
 		}
 		
-		logger.log("Unloading scene: " + currentScene.getId());
+		logger.log("Unloading scene: " + currentScene.name);
 		stateMachine.changeState(ApplicationState.LOADING);
 		
 		if (currentScene.loaded) {
