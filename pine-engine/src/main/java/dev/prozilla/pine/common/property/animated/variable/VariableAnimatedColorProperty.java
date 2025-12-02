@@ -6,7 +6,7 @@ import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.fixed.FixedObjectProperty;
 import dev.prozilla.pine.common.system.Color;
 
-public class VariableAnimatedColorProperty extends VariableAnimatedProperty<Color> {
+public class VariableAnimatedColorProperty extends VariableAnimatedProperty<Color, Property<Color>> {
 	
 	public VariableAnimatedColorProperty(Property<Color> startProperty, Property<Color> endProperty, AnimationCurve curve) {
 		this(startProperty, endProperty, new FixedObjectProperty<>(curve));

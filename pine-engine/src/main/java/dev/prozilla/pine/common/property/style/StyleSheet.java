@@ -9,7 +9,10 @@ import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
-import dev.prozilla.pine.common.property.adaptive.*;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveIntProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveObjectProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.style.selector.Selector;
 import dev.prozilla.pine.common.system.Color;
@@ -29,7 +32,7 @@ import java.util.StringJoiner;
  */
 public class StyleSheet implements Printable, Asset {
 	
-	private final Map<StyledPropertyKey<?>, Style<?>> styles;
+	private final Map<StyledPropertyKey<?>, Style<?, ?>> styles;
 	
 	public String path;
 	
@@ -54,7 +57,7 @@ public class StyleSheet implements Printable, Asset {
 	}
 	
 	protected <T> void addRule(StyledPropertyKey<T> key, StyleRule<T> rule) {
-		Style<T> style = getStyle(key, true);
+		Style<T, ?> style = getStyle(key, true);
 		style.addRule(rule);
 	}
 	
@@ -63,14 +66,14 @@ public class StyleSheet implements Printable, Asset {
 	}
 	
 	protected void addTransition(StyledPropertyKey<?> key, StyleRule<AnimationCurve> transitionRule) {
-		Style<?> style = getStyle(key, true);
+		Style<?, ?> style = getStyle(key, true);
 		style.addTransitionRule(transitionRule);
 	}
 	
-	public <T> void setDefaultValue(StyledPropertyKey<T> key, AdaptiveProperty<T> defaultValue) {
+	public <T, A extends AdaptiveProperty<T, ?>> void setDefaultValue(StyledPropertyKey<T> key, A defaultValue) {
 		Checks.isNotNull(defaultValue, "defaultValue");
 		
-		Style<T> style = getStyle(key, true);
+		Style<T, A> style = getStyle(key, true, defaultValue.getClass());
 		style.setDefaultValue(defaultValue);
 	}
 	
@@ -125,50 +128,55 @@ public class StyleSheet implements Printable, Asset {
 	}
 	
 	protected StyledColorProperty createStyledColorProperty(StyledPropertyKey<Color> key, Node node, Color fallbackValue) {
-		return createStyledProperty(key, node, new AdaptiveColorProperty(fallbackValue),  (Style.StyledPropertyFactory<Color, StyledColorProperty>)StyledColorProperty::new);
+		return createStyledProperty(key, node, new AdaptiveColorProperty(fallbackValue),  (Style.StyledPropertyFactory<Color, AdaptiveObjectProperty<Color>, StyledColorProperty>)StyledColorProperty::new);
 	}
 	
 	protected StyledDimensionProperty createStyledDimensionProperty(StyledPropertyKey<DimensionBase> key, Node node, DimensionBase fallbackValue) {
-		return createStyledProperty(key, node, new AdaptiveDimensionProperty(fallbackValue),  (Style.StyledPropertyFactory<DimensionBase, StyledDimensionProperty>)StyledDimensionProperty::new);
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<DimensionBase, AdaptiveObjectProperty<DimensionBase>, StyledDimensionProperty>)StyledDimensionProperty::new);
 	}
 	
 	protected StyledDualDimensionProperty createStyledDualDimensionProperty(StyledPropertyKey<DualDimension> key, Node node, DualDimension fallbackValue) {
-		return createStyledProperty(key, node, new AdaptiveDualDimensionProperty(fallbackValue),  (Style.StyledPropertyFactory<DualDimension, StyledDualDimensionProperty>)StyledDualDimensionProperty::new);
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<DualDimension, AdaptiveObjectProperty<DualDimension>, StyledDualDimensionProperty>)StyledDualDimensionProperty::new);
 	}
 	
 	protected StyledGridAlignmentProperty createStyledGridAlignmentProperty(StyledPropertyKey<GridAlignment> key, Node node, GridAlignment fallbackValue) {
-		return createStyledProperty(key, node, new AdaptiveGridAlignmentProperty(fallbackValue),  (Style.StyledPropertyFactory<GridAlignment, StyledGridAlignmentProperty>)StyledGridAlignmentProperty::new);
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<GridAlignment, AdaptiveObjectProperty<GridAlignment>, StyledGridAlignmentProperty>)StyledGridAlignmentProperty::new);
 	}
 	
 	protected StyledIntProperty createStyledIntProperty(StyledPropertyKey<Integer> key, Node node, int fallbackValue) {
-		return createStyledProperty(key, node, new AdaptiveIntProperty(fallbackValue),  (Style.StyledPropertyFactory<Integer, StyledIntProperty>)StyledIntProperty::new);
+		return createStyledProperty(key, node, new AdaptiveIntProperty(fallbackValue),  (Style.StyledPropertyFactory<Integer, AdaptiveIntProperty, StyledIntProperty>)StyledIntProperty::new);
 	}
 	
 	protected StyledDirectionProperty createStyledDirectionProperty(StyledPropertyKey<Direction> key, Node node, Direction fallbackValue) {
-		return createStyledProperty(key, node, new AdaptiveDirectionProperty(fallbackValue),  (Style.StyledPropertyFactory<Direction, StyledDirectionProperty>)StyledDirectionProperty::new);
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<Direction, AdaptiveObjectProperty<Direction>, StyledDirectionProperty>)StyledDirectionProperty::new);
 	}
 	
 	protected StyledEdgeAlignmentProperty createStyledEdgeAlignmentProperty(StyledPropertyKey<EdgeAlignment> key, Node node, EdgeAlignment fallbackValue) {
-		return createStyledProperty(key, node, new AdaptiveEdgeAlignmentProperty(fallbackValue),  (Style.StyledPropertyFactory<EdgeAlignment, StyledEdgeAlignmentProperty>)StyledEdgeAlignmentProperty::new);
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<EdgeAlignment, AdaptiveObjectProperty<EdgeAlignment>, StyledEdgeAlignmentProperty>)StyledEdgeAlignmentProperty::new);
 	}
 	
 	protected StyledDistributionProperty createStyledDistributionProperty(StyledPropertyKey<LayoutNode.Distribution> key, Node node, LayoutNode.Distribution fallbackValue) {
-		return createStyledProperty(key, node, new AdaptiveDistributionProperty(fallbackValue),  (Style.StyledPropertyFactory<LayoutNode.Distribution, StyledDistributionProperty>)StyledDistributionProperty::new);
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<LayoutNode.Distribution, AdaptiveObjectProperty<LayoutNode.Distribution>, StyledDistributionProperty>)StyledDistributionProperty::new);
 	}
 	
 	@Contract("_, _, _, _ -> new")
-	protected  <T, P extends StyledProperty<T>> P createStyledProperty(StyledPropertyKey<T> name, Node node, AdaptivePropertyBase<T> fallbackValue, Style.StyledPropertyFactory<T, P> factory) {
-		Style<T> style = getStyle(name, false);
+	protected  <T, A extends AdaptiveProperty<T, ?>, P extends StyledProperty<T, ?, A, ?>> P createStyledProperty(StyledPropertyKey<T> name, Node node, A fallbackValue, Style.StyledPropertyFactory<T, A, P> factory) {
+		Style<T, A> style = getStyle(name, false, fallbackValue.getClass());
 		return style != null ? style.toProperty(name, node, fallbackValue, factory) : null;
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <T> Style<T> getStyle(StyledPropertyKey<T> propertyName, boolean createIfMissing) {
-		return (Style<T>)getGenericStyle(propertyName, createIfMissing);
+	protected <T, A extends AdaptiveProperty<T, ?>> Style<T, A> getStyle(StyledPropertyKey<T> propertyName, boolean createIfMissing, Class<A> adaptiveType) {
+		return (Style<T, A>)getGenericStyle(propertyName, createIfMissing);
 	}
 	
-	protected Style<?> getGenericStyle(StyledPropertyKey<?> propertyName, boolean createIfMissing) {
-		Style<?> style = styles.get(propertyName);
+	@SuppressWarnings("unchecked")
+	protected <T> Style<T, ?> getStyle(StyledPropertyKey<T> propertyName, boolean createIfMissing) {
+		return (Style<T, ?>)getGenericStyle(propertyName, createIfMissing);
+	}
+	
+	protected Style<?, ?> getGenericStyle(StyledPropertyKey<?> propertyName, boolean createIfMissing) {
+		Style<?, ?> style = styles.get(propertyName);
 		
 		if (style == null && createIfMissing) {
 			style = new Style<>();
@@ -202,9 +210,9 @@ public class StyleSheet implements Printable, Asset {
 		String delimiter = newLines ? "\n" : " ";
 		Map<String, StringJoiner> selectorToProperties = new HashMap<>();
 		
-		for (Map.Entry<StyledPropertyKey<?>, Style<?>> styleEntry : styles.entrySet()) {
+		for (Map.Entry<StyledPropertyKey<?>, Style<?, ?>> styleEntry : styles.entrySet()) {
 			StyledPropertyKey<?> propertyName = styleEntry.getKey();
-			Style<?> style = styleEntry.getValue();
+			Style<?, ?> style = styleEntry.getValue();
 			
 			for (StyleRule<?> rule : style.getRules()) {
 				String selector = rule.selector().toString();

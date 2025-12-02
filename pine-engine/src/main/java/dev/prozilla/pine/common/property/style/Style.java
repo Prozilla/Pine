@@ -1,7 +1,6 @@
 package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
-import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.core.component.ui.Node;
 import org.jetbrains.annotations.Contract;
@@ -14,11 +13,11 @@ import java.util.Objects;
  * Represents a collection of rules for a single style property of a node.
  * @param <T> The type of the property
  */
-public class Style<T> {
+public class Style<T, A extends AdaptiveProperty<T, ?>> {
 	
 	private final List<StyleRule<T>> rules;
 	private final List<StyleRule<AnimationCurve>> transitionRules;
-	private AdaptiveProperty<T> defaultValue;
+	private A defaultValue;
 	
 	public Style() {
 		this.rules = new ArrayList<>();
@@ -41,29 +40,29 @@ public class Style<T> {
 		transitionRules.add(transitionRule);
 	}
 	
-	public void setDefaultValue(AdaptiveProperty<T> defaultValue) {
+	public void setDefaultValue(A defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 	
 	@Contract("_, _, _, _ -> new")
-	public <P extends StyledProperty<T>> P toProperty(StyledPropertyKey<T> name, Node node, AdaptivePropertyBase<T> fallbackValue, StyledPropertyFactory<T, P> factory) {
+	public <P extends StyledProperty<T, ?, A, ?>> P toProperty(StyledPropertyKey<T> name, Node node, A fallbackValue, StyledPropertyFactory<T, A, P> factory) {
 		return factory.create(name, node, rules, Objects.requireNonNullElse(defaultValue,  fallbackValue), transitionRules);
 	}
 	
 	@FunctionalInterface
-	public interface StyledPropertyFactory<T, P extends StyledProperty<T>> {
+	public interface StyledPropertyFactory<T, A extends AdaptiveProperty<T, ?>, P extends StyledProperty<T, ?, A, ?>> {
 		
 		@Contract("_, _, _, _, _ -> new")
-		P create(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, AdaptivePropertyBase<T> defaultValue, List<StyleRule<AnimationCurve>> transitionRules);
+		P create(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, A defaultValue, List<StyleRule<AnimationCurve>> transitionRules);
 		
 	}
 	
 	@Override
 	public boolean equals(Object object) {
-		return object == this || (object instanceof Style<?> otherStyle && equals(otherStyle));
+		return object == this || (object instanceof Style<?, ?> otherStyle && equals(otherStyle));
 	}
 	
-	public boolean equals(Style<?> style) {
+	public boolean equals(Style<?, ?> style) {
 		return style != null && rules.equals(style.rules) && transitionRules.equals(style.transitionRules) && Objects.equals(defaultValue, style.defaultValue);
 	}
 	

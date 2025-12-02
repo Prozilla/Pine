@@ -22,7 +22,7 @@ public abstract class NodeStyleBase extends Component {
 	
 	abstract void applyStyleSheet(StyleSheet styleSheet);
 	
-	protected void changeProperty(StyledProperty<?> oldProperty, StyledProperty<?> newProperty) {
+	protected void changeProperty(StyledProperty<?, ?, ?, ?> oldProperty, StyledProperty<?, ?, ?, ?> newProperty) {
 		animationData.replaceProperty(oldProperty, newProperty);
 		if (newProperty != null) {
 			newProperty.invalidate();

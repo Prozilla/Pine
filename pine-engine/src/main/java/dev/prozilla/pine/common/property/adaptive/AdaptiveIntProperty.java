@@ -1,21 +1,21 @@
 package dev.prozilla.pine.common.property.adaptive;
 
-import dev.prozilla.pine.common.property.Property;
+import dev.prozilla.pine.common.property.IntProperty;
 
 /**
  * An optimized adaptive property, that uses a primitive int value.
  */
-public final class AdaptiveIntProperty extends AdaptivePropertyBase<Integer> {
+public final class AdaptiveIntProperty extends AdaptiveProperty<Integer, IntProperty> implements IntProperty {
 	
-	private final int fixedPrimitiveValue;
+	private final int fixedValue;
 	
 	/**
 	 * Creates a new property with a dynamic value.
 	 * @param property Variable property that determines the value of this property
 	 */
-	public AdaptiveIntProperty(Property<Integer> property) {
+	public AdaptiveIntProperty(IntProperty property) {
 		super(property);
-		this.fixedPrimitiveValue = 0;
+		this.fixedValue = 0;
 	}
 	
 	/**
@@ -23,18 +23,14 @@ public final class AdaptiveIntProperty extends AdaptivePropertyBase<Integer> {
 	 */
 	public AdaptiveIntProperty(int fixedValue) {
 		super(null);
-		this.fixedPrimitiveValue = fixedValue;
+		this.fixedValue = fixedValue;
 	}
 	
 	@Override
-	public Integer getValue() {
-		return isDynamic() ? property.getValue() : fixedPrimitiveValue;
+	public int get() {
+		return isDynamic() ? property.get() : fixedValue;
 	}
-	
-	public int getPrimitiveValue() {
-		return isDynamic() ? property.getValue() : fixedPrimitiveValue;
-	}
-	
+
 	/**
 	 * Converts an integer into an adaptive property.
 	 * @param value The value of the property
@@ -51,7 +47,7 @@ public final class AdaptiveIntProperty extends AdaptivePropertyBase<Integer> {
 	 * Converts any integer property into an adaptive property.
 	 * @param property The property to adapt
 	 */
-	public static AdaptiveIntProperty adapt(Property<Integer> property) {
+	public static AdaptiveIntProperty adapt(IntProperty property) {
 		return new AdaptiveIntProperty(property);
 	}
 	

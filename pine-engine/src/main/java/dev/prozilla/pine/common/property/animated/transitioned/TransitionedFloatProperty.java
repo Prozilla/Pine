@@ -1,22 +1,22 @@
 package dev.prozilla.pine.common.property.animated.transitioned;
 
-import dev.prozilla.pine.common.property.animated.AnimatedIntProperty;
+import dev.prozilla.pine.common.property.animated.AnimatedFloatProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.util.checks.Checks;
 
-public class TransitionedIntProperty extends AnimatedIntProperty implements TransitionedProperty<Integer> {
+public class TransitionedFloatProperty extends AnimatedFloatProperty implements TransitionedProperty<Float> {
 	
-	public TransitionedIntProperty(int initialValue, AnimationCurve curve) {
+	public TransitionedFloatProperty(float initialValue, AnimationCurve curve) {
 		super(initialValue, initialValue, curve);
 		transitionTo(initialValue);
 	}
 	
 	@Override
-	public void transitionToValue(Integer targetValue) {
+	public void transitionToValue(Float targetValue) {
 		transitionTo(targetValue);
 	}
 	
-	public void transitionTo(int targetValue) {
+	public void transitionTo(float targetValue) {
 		Checks.isNotNull(targetValue, "targetValue");
 		
 		if (end == targetValue) {
@@ -29,7 +29,7 @@ public class TransitionedIntProperty extends AnimatedIntProperty implements Tran
 		restart();
 	}
 	
-	protected int computeStart() {
+	protected float computeStart() {
 		return get();
 	}
 	

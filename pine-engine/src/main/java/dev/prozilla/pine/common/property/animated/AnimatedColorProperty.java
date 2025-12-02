@@ -4,7 +4,7 @@ import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.property.ColorProperty;
 import dev.prozilla.pine.common.system.Color;
 
-public class AnimatedColorProperty extends AnimatedProperty<Color> implements ColorProperty {
+public class AnimatedColorProperty extends AnimatedObjectProperty<Color> implements ColorProperty {
 	
 	public AnimatedColorProperty(Color start, Color end, AnimationCurve curve) {
 		super(start, end, curve);
@@ -29,7 +29,7 @@ public class AnimatedColorProperty extends AnimatedProperty<Color> implements Co
 	/**
 	 * A color property with an animated alpha value.
 	 */
-	public static class AnimatedAlpha extends AnimatedProperty<Color> implements ColorProperty {
+	public static class AnimatedAlpha extends AnimatedObjectProperty<Color> implements ColorProperty {
 		
 		protected final float alphaStart;
 		protected final float alphaEnd;
