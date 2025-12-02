@@ -10,8 +10,7 @@ import dev.prozilla.pine.test.TestPerformanceExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(TestPerformanceExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -20,6 +19,7 @@ public class ApplicationTest {
 	private static final int FRAMES = 60_000;
 	private static final float FPS = 60;
 	
+	// Smoke test
 	@Test
 	void testLifecycle() {
 		Application application = mockApplication();
@@ -57,6 +57,19 @@ public class ApplicationTest {
 		}
 		
 		application.destroy();
+	}
+	
+	@Test
+	void testContextId() {
+		Application application = mockApplication();
+		application.addScene(new Scene());
+		int contextId1 = application.getContextId();
+		application.nextScene();
+		int contextId2 = application.getContextId();
+		assertTrue(contextId2 > contextId1, "contextId should increase when next scene is loaded");
+		application.unloadScene();
+		int contextId3 = application.getContextId();
+		assertEquals(contextId2 + 1, contextId3, "contextId should increase by 1 when scene is unloaded");
 	}
 	
 	Application mockApplication() {

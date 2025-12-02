@@ -11,6 +11,7 @@ import dev.prozilla.pine.common.lwjgl.GLFWUtils;
 import dev.prozilla.pine.common.lwjgl.GLUtils;
 import dev.prozilla.pine.common.property.LazyProperty;
 import dev.prozilla.pine.common.property.SystemProperty;
+import dev.prozilla.pine.common.property.selection.WrapMode;
 import dev.prozilla.pine.common.system.PathUtils;
 import dev.prozilla.pine.common.system.Platform;
 import dev.prozilla.pine.common.util.BooleanUtils;
@@ -26,8 +27,8 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -66,7 +67,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	
 	// Scene
 	protected Scene currentScene;
-	private final Map<Integer, Scene> scenes;
+	private final List<Scene> scenes;
 	private int contextId;
 	
 	// Helpers
@@ -169,7 +170,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			scene = new Scene();
 			scene.setApplication(this);
 		}
-		scenes = new HashMap<>();
+		scenes = new ArrayList<>();
 		addScene(scene);
 		currentScene = scene;
 	}
@@ -516,72 +517,58 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		logger.text("App mode: " + mode);
 	}
 	
-	/**
-	 * Adds a scene and returns its ID.
-	 * @param scene Scene
-	 * @return Scene ID
-	 */
-	public int addScene(Scene scene) {
-		int id = scene.getId();
-		scenes.put(id, scene);
+	public void addScene(Scene scene) {
+		scenes.add(scene);
 		scene.setApplication(this);
-		return id;
+	}
+	
+	public void removeScene(Scene scene) {
+		if (scene.loaded) {
+			scene.destroy();
+		}
+		scenes.remove(scene);
 	}
 	
 	/**
 	 * Reloads the current scene.
 	 */
 	public void reloadScene() {
-		int id = currentScene.getId();
 		unloadScene();
-		loadScene(id);
-	}
-	
-	/**
-	 * Loads a scene by reference.
-	 * @param scene Reference to the scene
-	 */
-	public void loadScene(Scene scene) {
-		if (!scenes.containsKey(scene.getId())) {
-			addScene(scene);
-		}
-		loadScene(scene.getId());
+		loadScene(currentScene);
 	}
 	
 	/**
 	 * Loads the next scene.
 	 */
 	public void nextScene() {
-		loadScene((currentScene.getId() + 1) % scenes.size());
+		loadScene((scenes.indexOf(currentScene) + 1) % scenes.size());
 	}
 	
 	/**
 	 * Loads the previous scene.
 	 */
 	public void previousScene() {
-		loadScene((currentScene.getId() + scenes.size() - 1) % scenes.size());
+		loadScene((scenes.indexOf(currentScene) + scenes.size() - 1) % scenes.size());
 	}
 	
-	/**
-	 * Loads a scene by ID.
-	 * @param id Scene ID
-	 */
-	public void loadScene(int id) {
+	public void loadScene(int index) {
+		loadScene(WrapMode.CLIP.getElement(index, scenes));
+	}
+	
+	public void loadScene(Scene scene) {
 		// Check if scene is already loaded
-		if (currentScene != null) {
-			if (currentScene.getId() == id) {
-				return;
-			} else {
-				unloadScene();
-			}
+		if (Objects.equals(currentScene, scene)) {
+			return;
+		} else if (currentScene != null) {
+			unloadScene();
 		}
 		
-		logger.log("Loading scene: " + id);
+		logger.log("Loading scene: " + scene.getId());
 		
-		currentScene = scenes.get(id);
+		currentScene = scene;
 		stateMachine.changeState(ApplicationState.LOADING);
 		
-		if (!currentScene.initialized) {
+		if (currentScene != null && !currentScene.initialized) {
 			try {
 				currentScene.init();
 			} catch (IllegalStateException e) {
@@ -599,14 +586,15 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * Unloads the current scene.
 	 */
 	public void unloadScene() {
+		if (currentScene == null) {
+			return;
+		}
+		
 		logger.log("Unloading scene: " + currentScene.getId());
 		stateMachine.changeState(ApplicationState.LOADING);
 		
-		if (currentScene != null) {
-			if (currentScene.loaded) {
-				currentScene.destroy();
-			}
-			currentScene.reset();
+		if (currentScene.loaded) {
+			currentScene.destroy();
 		}
 		currentScene = null;
 		contextId++;
