@@ -124,13 +124,19 @@ public class BuildTool {
 	}
 	
 	private static Path downloadAndExtractJRE(BuildConfig config, Path buildDir) throws IOException {
+		Path jreOutputDir = buildDir.resolve("jre/");
+		
+		if (!config.shouldIncludeJre()) {
+			FileSystem.deleteDirectoryIfExists(jreOutputDir);
+			return null;
+		}
+		
 		logger.log(String.format("Downloading and preparing JRE... (version: %S)", config.getJreVersion()));
 		
 		String os = Platform.get().getIdentifier();
 		String jreUrl = "https://api.adoptium.net/v3/binary/latest/%s/ga/%s/x64/jdk/hotspot/normal/adoptium".formatted(config.getJreVersion(), os);
 		
 		Path tempZip = Files.createTempFile("jre", ".zip");
-		Path jreOutputDir = buildDir.resolve("jre/");
 		
 		if (Files.isDirectory(jreOutputDir)) {
 			logger.log(Ansi.green("JRE output directory already exists, skipping download"));
@@ -143,6 +149,7 @@ public class BuildTool {
 			FileSystem.download(jreUrl, tempZip);
 		} catch (URISyntaxException e) {
 			logger.error("Failed to download JRE", e);
+			return null;
 		}
 		
 		// Extract JRE
@@ -184,7 +191,7 @@ public class BuildTool {
 				<outfile>%s</outfile>
 				<jre>
 					<minVersion>%s</minVersion>
-					<path>%s</path>
+					%s
 					<requiresJdk>false</requiresJdk>
 					<requires64Bit>true</requires64Bit>
 				</jre>
@@ -208,7 +215,7 @@ public class BuildTool {
 			config.getMainClass(),
 		    output,
 			config.getJreVersion(),
-			buildDir.relativize(jrePath),
+			jrePath != null ? String.format("<path>%s</path>", jrePath) : "",
 			icon != null ? String.format("<icon>%s</icon>", icon) : "",
 			config.getDeveloper(),
 			config.getGameName(),
@@ -245,9 +252,7 @@ public class BuildTool {
 		Path targetDir = buildDir.resolve("mods/");
 		Path modsDir = buildDir.resolve("resources/mods/");
 		
-		if (Files.exists(targetDir)) {
-			FileSystem.deleteDirectory(targetDir);
-		}
+		FileSystem.deleteDirectoryIfExists(targetDir);
 		
 		if (Files.exists(modsDir)) {
 			Files.move(modsDir, targetDir);
@@ -296,6 +301,8 @@ public class BuildTool {
 	private static Path generateNSISScript(BuildConfig config, Path buildDir, Path nsisDir, Path tempDir) throws IOException {
 		logger.log("Generating NSIS configuration...");
 		
+		boolean hasIcon = Files.exists(buildDir.resolve(config.getIconPath()));
+		
 		String nsisScript = """
 		!include MUI2.nsh
 		
@@ -304,12 +311,12 @@ public class BuildTool {
 		!define ZIP_FILE "%s"
 		!define EXE_FILE "%s"
 		!define PUBLISHER "%s"
-		!define ICON "%s"
+		%s
 
 		;--------------------------------
 		; Compilation arguments
 		!define INSTALLER_ZIP_FILE "%s"
-		!define INSTALLER_ICON "%s"
+		%s
 		!define INSTALLER_WORKING_DIR "%s"
 		!define INSTALLER_OUTFILE "%s"
 		
@@ -325,8 +332,10 @@ public class BuildTool {
 		;--------------------------------
 		; MUI configuration
 		
-		!define MUI_ICON "${INSTALLER_ICON}"
-		!define MUI_UNICON "${INSTALLER_ICON}"
+		!ifdef INSTALLER_ICON
+			!define MUI_ICON "${INSTALLER_ICON}"
+			!define MUI_UNICON "${INSTALLER_ICON}"
+		!endif
 		
 		;--------------------------------
 		; Pages
@@ -355,7 +364,9 @@ public class BuildTool {
 			WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "UninstallString" "$INSTDIR\\Uninstall.exe"
 			WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "DisplayVersion" "${APP_VERSION}"
 			WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "Publisher" "${PUBLISHER}"
-			WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "DisplayIcon" "$INSTDIR\\${ICON}"
+			!ifdef ICON
+				WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "DisplayIcon" "$INSTDIR\\${ICON}"
+			!endif
 		SectionEnd
 		
 		Section "Start Menu Shortcut" SecStartMenu
@@ -388,9 +399,9 @@ public class BuildTool {
 			Path.of(config.getZipFileName()),
 			config.getOutputFileName(),
 			config.getDeveloper(),
-			Path.of(config.getIconPath()),
+			hasIcon ? String.format("!define ICON \"%s\"", Path.of(config.getIconPath())) : "",
 			nsisDir.relativize(buildDir.resolve(config.getZipFileName())),
-			nsisDir.relativize(buildDir.resolve(config.getIconPath())),
+			hasIcon ? String.format("!define INSTALLER_ICON \"%s\"", nsisDir.relativize(buildDir.resolve(config.getIconPath()))) : "",
 			NSIS_TEMP_PATH,
 			config.getInstallerName(),
 			nsisDir.relativize(buildDir.resolve(config.getInstallerName()))
@@ -475,6 +486,7 @@ public class BuildTool {
 		public String developer;
 		public String version;
 		public String jreVersion;
+		public boolean includeJre = true;
 		public String jar;
 		public String iconPath;
 		public boolean debug = false;
@@ -500,6 +512,10 @@ public class BuildTool {
 		
 		public String getJreVersion() {
 			return Objects.requireNonNullElse(jreVersion, "19");
+		}
+		
+		public boolean shouldIncludeJre() {
+			return includeJre;
 		}
 		
 		public String getJar() {
