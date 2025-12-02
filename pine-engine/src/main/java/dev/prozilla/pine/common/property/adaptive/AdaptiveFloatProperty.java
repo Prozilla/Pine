@@ -1,21 +1,21 @@
 package dev.prozilla.pine.common.property.adaptive;
 
-import dev.prozilla.pine.common.property.Property;
+import dev.prozilla.pine.common.property.FloatProperty;
 
 /**
  * An optimized adaptive property, that uses a primitive float value.
  */
-public final class AdaptiveFloatProperty extends AdaptivePropertyBase<Float> {
+public final class AdaptiveFloatProperty extends AdaptiveProperty<Float, FloatProperty> implements FloatProperty {
 	
-	private final float fixedPrimitiveValue;
+	private final float fixedValue;
 	
 	/**
 	 * Creates a new property with a dynamic value.
 	 * @param property Variable property that determines the value of this property
 	 */
-	public AdaptiveFloatProperty(Property<Float> property) {
+	public AdaptiveFloatProperty(FloatProperty property) {
 		super(property);
-		this.fixedPrimitiveValue = 0f;
+		this.fixedValue = 0f;
 	}
 	
 	/**
@@ -23,16 +23,12 @@ public final class AdaptiveFloatProperty extends AdaptivePropertyBase<Float> {
 	 */
 	public AdaptiveFloatProperty(float fixedValue) {
 		super(null);
-		this.fixedPrimitiveValue = fixedValue;
+		this.fixedValue = fixedValue;
 	}
 	
 	@Override
-	public Float getValue() {
-		return isDynamic() ? property.getValue() : fixedPrimitiveValue;
-	}
-	
-	public float getPrimitiveValue() {
-		return isDynamic() ? property.getValue() : fixedPrimitiveValue;
+	public float get() {
+		return isDynamic() ? property.get() : fixedValue;
 	}
 	
 	/**
@@ -51,7 +47,7 @@ public final class AdaptiveFloatProperty extends AdaptivePropertyBase<Float> {
 	 * Converts any float property into an adaptive property.
 	 * @param property The property to adapt
 	 */
-	public static AdaptiveFloatProperty adapt(Property<Float> property) {
+	public static AdaptiveFloatProperty adapt(FloatProperty property) {
 		return new AdaptiveFloatProperty(property);
 	}
 	

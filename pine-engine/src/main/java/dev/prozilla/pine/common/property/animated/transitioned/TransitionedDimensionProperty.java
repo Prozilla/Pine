@@ -4,7 +4,7 @@ import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 
-public class TransitionedDimensionProperty extends TransitionedProperty<DimensionBase> {
+public class TransitionedDimensionProperty extends TransitionedObjectProperty<DimensionBase> {
 	
 	protected Dimension.Mix result;
 	
@@ -13,8 +13,8 @@ public class TransitionedDimensionProperty extends TransitionedProperty<Dimensio
 	}
 	
 	@Override
-	public void transitionTo(DimensionBase targetValue) {
-		super.transitionTo(targetValue);
+	public void transitionToValue(DimensionBase targetValue) {
+		super.transitionToValue(targetValue);
 		result = new Dimension.Mix(start, end, getFactor());
 	}
 	

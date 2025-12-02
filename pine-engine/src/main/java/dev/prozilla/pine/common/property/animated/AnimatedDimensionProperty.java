@@ -3,7 +3,7 @@ package dev.prozilla.pine.common.property.animated;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 
-public class AnimatedDimensionProperty extends AnimatedProperty<DimensionBase> {
+public class AnimatedDimensionProperty extends AnimatedObjectProperty<DimensionBase> {
 	
 	protected final Dimension.Mix mixedDimension;
 	

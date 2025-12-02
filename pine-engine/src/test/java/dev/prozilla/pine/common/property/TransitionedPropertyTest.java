@@ -21,7 +21,7 @@ public class TransitionedPropertyTest {
 		transitionedProperty.restart();
 		assertEquals(5, transitionedProperty.getValue(), "transition starts at start");
 		
-		transitionedProperty.transitionTo(15);
+		transitionedProperty.transitionToValue(15);
 		assertEquals(5, transitionedProperty.getValue(), "transition stays the same until time passes");
 		
 		transitionedProperty.update(0.5f);
@@ -33,7 +33,7 @@ public class TransitionedPropertyTest {
 		transitionedProperty.update(0.5f);
 		assertEquals(15, transitionedProperty.getValue(), "transition stays the same after target value has been reached until new target value is set");
 		
-		transitionedProperty.transitionTo(10);
+		transitionedProperty.transitionToValue(10);
 		transitionedProperty.update(1f);
 		assertEquals(10, transitionedProperty.getValue(), "transition reaches next target value after duration of animation curve");
 	}

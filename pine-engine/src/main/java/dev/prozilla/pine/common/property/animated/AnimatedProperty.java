@@ -1,51 +1,18 @@
 package dev.prozilla.pine.common.property.animated;
 
-import dev.prozilla.pine.common.lifecycle.Updatable;
-import dev.prozilla.pine.common.property.Property;
-
-/**
- * A property with a value that changes over time.
- */
-public abstract class AnimatedProperty<T> implements Property<T>, Updatable {
-
-	protected T start;
-	protected T end;
+public abstract class AnimatedProperty<T> implements AnimatedPropertyBase<T> {
+	
 	protected final AnimationCurve curve;
-
 	protected float time;
 	
-	/**
-	 * Creates a property with an animation.
-	 * @param start Value at the start of the animation
-	 * @param end Value at the end of the animation
-	 */
-	public AnimatedProperty(T start, T end, AnimationCurve curve) {
-		this.start = start;
-		this.end = end;
+	protected AnimatedProperty(AnimationCurve curve) {
 		this.curve = curve;
-		
 		restart();
 	}
 	
-	/**
-	 * Restarts the animation and returns the current value.
-	 */
-	public T getRestartedValue() {
-		restart();
-		return getValue();
-	}
-	
+	@Override
 	public void restart() {
 		time = 0;
-	}
-	
-	/**
-	 * Updates the animation and returns the current value.
-	 * @param deltaTime Delta time in seconds.
-	 */
-	public T getUpdatedValue(float deltaTime) {
-		update(deltaTime);
-		return getValue();
 	}
 	
 	/**
@@ -57,19 +24,24 @@ public abstract class AnimatedProperty<T> implements Property<T>, Updatable {
 		time += deltaTime;
 	}
 	
-	protected float getFactor() {
+	@Override
+	public float getFactor() {
 		return curve.evaluate(time);
 	}
 	
+	@Override
 	public boolean hasFinished() {
 		return time >= curve.duration;
 	}
 	
+	@Override
 	public void setDuration(float duration) {
 		curve.duration = duration;
 	}
 	
+	@Override
 	public AnimationCurve getCurve() {
 		return curve;
 	}
+	
 }

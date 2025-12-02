@@ -65,7 +65,7 @@ public class AdaptivePropertyTest {
 		float value = 0;
 		for (int i = 0; i < ITERATIONS; i++) {
 			property.updateAnimation( (1f + EPSILON) * ANIMATION_DURATION  / ITERATIONS);
-			value = property.getPrimitiveValue();
+			value = property.get();
 		}
 		
 		return value;

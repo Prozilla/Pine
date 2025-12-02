@@ -3,7 +3,7 @@ package dev.prozilla.pine.common.property.style;
 import dev.prozilla.pine.common.Animatable;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.property.Property;
-import dev.prozilla.pine.common.property.adaptive.AdaptivePropertyBase;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -21,19 +21,19 @@ import java.util.StringJoiner;
  *
  * <p>If a transition rule applies to this property, it will start a transition whenever its value changes.</p>
  */
-public abstract class StyledProperty<T> implements Property<T>, Animatable, Printable {
+public abstract class StyledProperty<T, P extends Property<T>, A extends AdaptiveProperty<T, P>, R extends TransitionedProperty<T>> implements Property<T>, Animatable, Printable {
 	
 	protected final StyledPropertyKey<T> name;
 	protected final Node node;
 	
 	protected final List<StyleRule<T>> rules;
 	private StyleRule<T> currentRule;
-	private AdaptivePropertyBase<T> adaptiveProperty;
-	private final AdaptivePropertyBase<T> fallbackProperty;
+	protected A adaptiveProperty;
+	private final A fallbackProperty;
 	
 	protected final List<StyleRule<AnimationCurve>> transitionRules;
 	private StyleRule<AnimationCurve> currentTransitionRule;
-	private TransitionedProperty<T> transitionedProperty;
+	private R transitionedProperty;
 	
 	/**
 	 * Creates a styled property without any transitions.
@@ -41,7 +41,7 @@ public abstract class StyledProperty<T> implements Property<T>, Animatable, Prin
 	 * @param rules The rules that determine the value of this property
 	 * @param defaultValue The initial value of this property. Also used when no rule is applied.
 	 */
-	public StyledProperty(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, AdaptivePropertyBase<T> defaultValue) {
+	public StyledProperty(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, A defaultValue) {
 		this(name, node, rules, defaultValue, null);
 	}
 	
@@ -52,7 +52,7 @@ public abstract class StyledProperty<T> implements Property<T>, Animatable, Prin
 	 * @param defaultValue The initial value of this property. Also used when no rule is applied.
 	 * @param transitionRules The rules that determine how the value of this property transitions when changed
 	 */
-	public StyledProperty(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, AdaptivePropertyBase<T> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
+	public StyledProperty(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, A defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
 		this.name = name;
 		this.node = Checks.isNotNull(node, "node");
 		this.rules = Objects.requireNonNullElse(rules, new ArrayList<>());
@@ -84,7 +84,7 @@ public abstract class StyledProperty<T> implements Property<T>, Animatable, Prin
 		T value = rule != null ? rule.value() : fallbackProperty.getValue();
 		
 		if (transitionedProperty != null) {
-			transitionedProperty.transitionTo(value);
+			transitionedProperty.transitionToValue(value);
 		} else {
 			setAdaptiveProperty(createAdaptiveProperty(value));
 		}
@@ -120,11 +120,11 @@ public abstract class StyledProperty<T> implements Property<T>, Animatable, Prin
 		}
 	}
 	
-	abstract protected AdaptivePropertyBase<T> createAdaptiveProperty(T value);
+	abstract protected A createAdaptiveProperty(T value);
 	
-	abstract protected AdaptivePropertyBase<T> createAdaptiveProperty(Property<T> property);
+	abstract protected A createAdaptiveProperty(Property<T> property);
 	
-	abstract protected TransitionedProperty<T> createTransitionedProperty(T initialValue, AnimationCurve curve);
+	abstract protected R createTransitionedProperty(T initialValue, AnimationCurve curve);
 	
 	public boolean supportsTransitions() {
 		return true;
@@ -141,7 +141,7 @@ public abstract class StyledProperty<T> implements Property<T>, Animatable, Prin
 		return bestMatch;
 	}
 	
-	protected void setAdaptiveProperty(AdaptivePropertyBase<T> adaptiveProperty) {
+	protected void setAdaptiveProperty(A adaptiveProperty) {
 		if (this.adaptiveProperty == adaptiveProperty) {
 			return;
 		}

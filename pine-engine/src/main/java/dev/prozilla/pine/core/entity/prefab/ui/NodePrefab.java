@@ -9,7 +9,7 @@ import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
-import dev.prozilla.pine.common.property.adaptive.AdaptiveDualDimensionProperty;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveObjectProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.property.style.StyledPropertyKey;
@@ -93,7 +93,7 @@ public class NodePrefab extends Prefab {
 		if (styleSheet == null) {
 			this.size = size;
 		} else {
-			setSize(AdaptiveDualDimensionProperty.adapt(size));
+			setSize(AdaptiveObjectProperty.adapt(size));
 		}
 	}
 	
@@ -101,7 +101,7 @@ public class NodePrefab extends Prefab {
 	 * Sets the size of this node.
 	 */
 	public void setSize(Property<DualDimension> size) {
-		setDefaultPropertyValue(StyledPropertyKey.SIZE, AdaptiveDualDimensionProperty.adapt(size));
+		setDefaultPropertyValue(StyledPropertyKey.SIZE, AdaptiveObjectProperty.adapt(size));
 		this.size = size.getValue();
 	}
 	
@@ -119,7 +119,7 @@ public class NodePrefab extends Prefab {
 		if (styleSheet == null) {
 			this.padding = padding;
 		} else {
-			setPadding(AdaptiveDualDimensionProperty.adapt(padding));
+			setPadding(AdaptiveObjectProperty.adapt(padding));
 		}
 	}
 	
@@ -127,7 +127,7 @@ public class NodePrefab extends Prefab {
 	 * Sets the padding around the content of this node.
 	 */
 	public void setPadding(Property<DualDimension> padding) {
-		setDefaultPropertyValue(StyledPropertyKey.PADDING, AdaptiveDualDimensionProperty.adapt(padding));
+		setDefaultPropertyValue(StyledPropertyKey.PADDING, AdaptiveObjectProperty.adapt(padding));
 		this.padding = padding.getValue();
 	}
 	
@@ -139,12 +139,12 @@ public class NodePrefab extends Prefab {
 		if (styleSheet == null) {
 			this.margin = margin;
 		} else {
-			setPadding(AdaptiveDualDimensionProperty.adapt(margin));
+			setPadding(AdaptiveObjectProperty.adapt(margin));
 		}
 	}
 	
 	public void setMargin(Property<DualDimension> margin) {
-		setDefaultPropertyValue(StyledPropertyKey.MARGIN, AdaptiveDualDimensionProperty.adapt(margin));
+		setDefaultPropertyValue(StyledPropertyKey.MARGIN, AdaptiveObjectProperty.adapt(margin));
 		this.margin = margin.getValue();
 	}
 	
@@ -269,7 +269,7 @@ public class NodePrefab extends Prefab {
 		this.htmlTag = htmlTag;
 	}
 	
-	protected <T> void setDefaultPropertyValue(StyledPropertyKey<T> propertyName, AdaptiveProperty<T> value) {
+	protected <T> void setDefaultPropertyValue(StyledPropertyKey<T> propertyName, AdaptiveProperty<T, ?> value) {
 		if (styleSheet == null) {
 			return;
 		}

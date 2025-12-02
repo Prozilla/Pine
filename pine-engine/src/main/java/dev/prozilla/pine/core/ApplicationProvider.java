@@ -82,4 +82,8 @@ public interface ApplicationProvider extends ApplicationContext {
 		applicationProvider.getApplication().nextScene();
 	}
 	
+	static void previousScene(ApplicationProvider applicationProvider) {
+		applicationProvider.getApplication().previousScene();
+	}
+	
 }

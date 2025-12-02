@@ -4,7 +4,7 @@ import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 
-public class TransitionedDualDimensionProperty extends TransitionedProperty<DualDimension> {
+public class TransitionedDualDimensionProperty extends TransitionedObjectProperty<DualDimension> {
 	
 	protected Dimension.Mix mixedDimensionX;
 	protected Dimension.Mix mixedDimensionY;
@@ -15,8 +15,8 @@ public class TransitionedDualDimensionProperty extends TransitionedProperty<Dual
 	}
 	
 	@Override
-	public void transitionTo(DualDimension targetValue) {
-		super.transitionTo(targetValue);
+	public void transitionToValue(DualDimension targetValue) {
+		super.transitionToValue(targetValue);
 		mixedDimensionX = new Dimension.Mix(start.x, end.x);
 		mixedDimensionY = new Dimension.Mix(start.y, end.y);
 		result = new DualDimension(mixedDimensionX, mixedDimensionY);
@@ -36,4 +36,5 @@ public class TransitionedDualDimensionProperty extends TransitionedProperty<Dual
 		mixedDimensionY.setFactor(factor);
 		return result;
 	}
+	
 }
