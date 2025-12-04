@@ -8,7 +8,7 @@ import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.Node;
-import dev.prozilla.pine.core.component.ui.NodeEventType;
+import dev.prozilla.pine.core.component.ui.NodeEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public abstract class StyledProperty<T, P extends Property<T>, A extends Adaptiv
 		fallbackProperty = this.adaptiveProperty;
 		
 		// Re-apply style when selector changes
-		node.addListener(NodeEventType.SELECTOR_CHANGE, (changedNode) -> this.invalidate());
+		node.addListener(NodeEvent.Type.SELECTOR_CHANGE, (changedNode) -> this.invalidate());
 	}
 	
 	public void addRule(StyleRule<T> rule) {

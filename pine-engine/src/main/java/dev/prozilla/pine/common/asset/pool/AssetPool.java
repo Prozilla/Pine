@@ -47,7 +47,7 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 			return pool.get(key);
 		}
 		
-		eventDispatcher.invoke(AssetPoolEventType.LOADING, this, path);
+		eventDispatcher.invoke(AssetPoolEvent.Type.LOADING, this, path);
 		
 		// Create asset
 		T asset;
@@ -62,7 +62,7 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 			return null;
 		}
 		
-		eventDispatcher.invoke(AssetPoolEventType.LOADED, this, path);
+		eventDispatcher.invoke(AssetPoolEvent.Type.LOADED, this, path);
 		pool.put(key, asset);
 		prepareNext();
 		return asset;
@@ -98,7 +98,7 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 	 */
 	@Contract("_, _, _ -> null")
 	protected T fail(String path, String reason, Exception exception) {
-		eventDispatcher.invoke(AssetPoolEventType.FAILED, this, path, reason, exception);
+		eventDispatcher.invoke(AssetPoolEvent.Type.FAILED, this, path, reason, exception);
 		return null;
 	}
 	
@@ -131,7 +131,7 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 		String key = createKey(normalize(path));
 		boolean removed = pool.remove(key) != null;
 		if (removed) {
-			eventDispatcher.invoke(AssetPoolEventType.REMOVED, this, path);
+			eventDispatcher.invoke(AssetPoolEvent.Type.REMOVED, this, path);
 		}
 		return removed;
 	}
@@ -178,12 +178,12 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 		logger.log(getClass().getSimpleName() + ": " + count());
 	}
 	
-	public final void addListener(AssetPoolEventType assetPoolEventType, EventListener<AssetPoolEvent<T>> listener) {
-		eventDispatcher.addListener(assetPoolEventType, listener);
+	public final void addListener(AssetPoolEvent.Type type, EventListener<AssetPoolEvent<T>> listener) {
+		eventDispatcher.addListener(type, listener);
 	}
 	
-	public final void removeListener(AssetPoolEventType assetPoolEventType, EventListener<AssetPoolEvent<T>> listener) {
-		eventDispatcher.removeListener(assetPoolEventType, listener);
+	public final void removeListener(AssetPoolEvent.Type type, EventListener<AssetPoolEvent<T>> listener) {
+		eventDispatcher.removeListener(type, listener);
 	}
 	
 }

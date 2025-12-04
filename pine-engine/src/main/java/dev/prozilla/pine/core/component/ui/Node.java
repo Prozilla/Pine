@@ -13,7 +13,6 @@ import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.EntityEventType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,7 +24,7 @@ import java.util.Set;
  *
  * <p>Nodes are similar to HTML elements and the <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Box_model">CSS box model</a>.</p>
  */
-public class Node extends Component implements EventDispatcherProvider<NodeEventType, Node, NodeEvent> {
+public class Node extends Component implements EventDispatcherProvider<NodeEvent.Type, Node, NodeEvent> {
 	
 	// Current state
 	public Vector2f currentPosition;
@@ -106,12 +105,12 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	@Override
 	protected void onEntityChange(Entity oldEntity, Entity newEntity) {
 		if (oldEntity != null) {
-			oldEntity.removeListener(EntityEventType.PARENT_UPDATE, this::handleParentChange);
-			oldEntity.removeListener(EntityEventType.CHILDREN_UPDATE, this::handleChildrenChange);
+			oldEntity.removeListener(Entity.EventType.PARENT_UPDATE, this::handleParentChange);
+			oldEntity.removeListener(Entity.EventType.CHILDREN_UPDATE, this::handleChildrenChange);
 		}
 		if (entity != null) {
-			entity.addListener(EntityEventType.PARENT_UPDATE, this::handleParentChange);
-			entity.addListener(EntityEventType.CHILDREN_UPDATE, this::handleChildrenChange);
+			entity.addListener(Entity.EventType.PARENT_UPDATE, this::handleParentChange);
+			entity.addListener(Entity.EventType.CHILDREN_UPDATE, this::handleChildrenChange);
 		}
 	}
 	
@@ -120,15 +119,15 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		handleChildrenChange(null);
 	}
 	
-	private void handleParentChange(Event<EntityEventType, Entity> event) {
+	private void handleParentChange(Event<Entity.EventType, Entity> event) {
 		parent = entity.getComponentInParent(Node.class, false);
-		invokeSelectorChangeEvent();
+		invalidateSelector();
 	}
 	
-	private void handleChildrenChange(Event<EntityEventType, Entity> event) {
+	private void handleChildrenChange(Event<Entity.EventType, Entity> event) {
 		children.clear();
 		children.addAll(entity.getComponentsInChildren(Node.class));
-		invokeSelectorChangeEvent();
+		invalidateSelector();
 	}
 	
 	/**
@@ -257,7 +256,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	}
 	
 	@Override
-	public EventDispatcher<NodeEventType, Node, NodeEvent> getEventDispatcher() {
+	public EventDispatcher<NodeEvent.Type, Node, NodeEvent> getEventDispatcher() {
 		return eventDispatcher;
 	}
 	
@@ -275,13 +274,13 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	public void addClass(String className) {
 		if (classes.add(className)) {
-			invokeSelectorChangeEvent();
+			invalidateSelector();
 		}
 	}
 	
 	public void removeClass(String className) {
 		if (classes.remove(className)) {
-			invokeSelectorChangeEvent();
+			invalidateSelector();
 		}
 	}
 	
@@ -299,31 +298,45 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	public void addModifier(String modifier) {
 		if (modifiers.add(modifier)) {
-			invokeSelectorChangeEvent();
+			invalidateSelector();
 		}
 	}
 	
 	public void removeModifier(String modifier) {
 		if (modifiers.remove(modifier)) {
-			invokeSelectorChangeEvent();
+			invalidateSelector();
 		}
 	}
 	
-	private void invokeSelectorChangeEvent() {
-		invoke(NodeEventType.SELECTOR_CHANGE, this);
+	private void invalidateSelector() {
+		invoke(NodeEvent.Type.SELECTOR_CHANGE);
 	}
 	
 	public void click() {
 		focus();
+		invoke(NodeEvent.Type.CLICK);
 	}
 	
 	public void focus() {
-		getRoot().focusNode(this);
+		if (getRoot().focusNode(this)) {
+			invoke(NodeEvent.Type.FOCUS);
+		}
 	}
 	
 	public boolean isFocused() {
 		Node focusedNode = getRoot().getFocusedNode();
 		return focusedNode != null && focusedNode.equals(this);
+	}
+	
+	public void invoke(NodeEvent.Type type) {
+		invoke(type, this);
+	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		
+		eventDispatcher.destroy();
 	}
 	
 }

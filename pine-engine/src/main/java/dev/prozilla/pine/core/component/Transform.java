@@ -3,7 +3,6 @@ package dev.prozilla.pine.core.component;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.EntityEventType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -169,7 +168,7 @@ public class Transform extends Component {
 			depthIndex = parent.depthIndex;
 		}
 		
-		entity.invoke(EntityEventType.PARENT_UPDATE);
+		entity.invoke(Entity.EventType.PARENT_UPDATE);
 	}
 	
 	public int getChildCount() {

@@ -5,7 +5,6 @@ import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.NodeRoot;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityChunk;
-import dev.prozilla.pine.core.entity.EntityEventType;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
 public final class NodeRootInitializer extends InitSystem {
@@ -19,8 +18,8 @@ public final class NodeRootInitializer extends InitSystem {
 		Entity entity = chunk.getEntity();
 		NodeRoot nodeRoot = chunk.getComponent(NodeRoot.class);
 		
-		entity.addListener(EntityEventType.DESCENDANT_ADD, (event) -> onChildAdd(nodeRoot, event.getTarget()));
-		entity.addListener(EntityEventType.DESCENDANT_REMOVE, (event) -> onChildRemove(nodeRoot, event.getTarget()));
+		entity.addListener(Entity.EventType.DESCENDANT_ADD, (event) -> onChildAdd(nodeRoot, event.getTarget()));
+		entity.addListener(Entity.EventType.DESCENDANT_REMOVE, (event) -> onChildRemove(nodeRoot, event.getTarget()));
 		
 		addChildren(nodeRoot, entity);
 	}

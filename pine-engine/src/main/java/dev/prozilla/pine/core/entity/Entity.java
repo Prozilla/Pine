@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Represents a unique entity in the world with a list of components.
  */
-public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> implements Destructible, Printable, EntityContext, ComponentsContext, ApplicationProvider, SceneProvider {
+public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> implements Destructible, Printable, EntityContext, ComponentsContext, ApplicationProvider, SceneProvider {
 	
 	public final int id;
 	private final String name;
@@ -39,6 +39,18 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	
 	/** Components of this entity */
 	public final List<Component> components;
+	
+	public enum EventType {
+		CHILDREN_UPDATE,
+		CHILD_ADD,
+		CHILD_REMOVE,
+		DESCENDANT_UPDATE,
+		DESCENDANT_ADD,
+		DESCENDANT_REMOVE,
+		COMPONENTS_UPDATE,
+		DESTROY,
+		PARENT_UPDATE,
+	}
 	
 	/**
 	 * Creates an entity at the position (0, 0)
@@ -103,7 +115,7 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 			world.removeEntity(this);
 		}
 		
-		invoke(EntityEventType.DESTROY, this);
+		invoke(EventType.DESTROY, this);
 		
 		// Destroy event dispatcher afterward, to make sure events are received
 		super.destroy();
@@ -153,8 +165,8 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 			world.addEntity(child);
 		}
 		
-		invoke(EntityEventType.CHILD_ADD, child);
-		invoke(EntityEventType.CHILDREN_UPDATE, this);
+		invoke(EventType.CHILD_ADD, child);
+		invoke(EventType.CHILDREN_UPDATE, this);
 		
 		return child;
 	}
@@ -183,8 +195,8 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 		
 		child.transform.parent = null;
 		
-		invoke(EntityEventType.CHILD_REMOVE, child);
-		invoke(EntityEventType.CHILDREN_UPDATE, this);
+		invoke(EventType.CHILD_REMOVE, child);
+		invoke(EventType.CHILDREN_UPDATE, this);
 	}
 	
 	/**
@@ -246,7 +258,7 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	 * @return {@code true} if the entity is now active.
 	 */
 	public boolean toggleActive() {
-		this.isActive = !this.isActive;
+		setActive(!isActive);
 		return this.isActive;
 	}
 	
@@ -281,7 +293,7 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	public <C extends Component> C addComponent(C component) {
 		Checks.isNotNull(component, "component");
 		world.addComponent(this, component);
-		invoke(EntityEventType.COMPONENTS_UPDATE, this);
+		invoke(EventType.COMPONENTS_UPDATE, this);
 		return component;
 	}
 	
@@ -296,7 +308,7 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 		}
 
 		world.removeComponent(this, component);
-		invoke(EntityEventType.COMPONENTS_UPDATE, this);
+		invoke(EventType.COMPONENTS_UPDATE, this);
 	}
 	
 	@Override
@@ -356,12 +368,12 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 	}
 	
 	@Override
-	public void invoke(EntityEventType entityEventType) {
-		super.invoke(entityEventType, this);
+	public void invoke(EventType eventType) {
+		super.invoke(eventType, this);
 	}
 	
 	@Override
-	protected void invoke(Event<EntityEventType, Entity> event) {
+	protected void invoke(Event<EventType, Entity> event) {
 		if (!shouldInvoke(event.getType())) {
 			return;
 		}
@@ -369,36 +381,36 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 		super.invoke(event);
 		
 		switch (event.getType()) {
-			case CHILD_ADD -> invoke(EntityEventType.DESCENDANT_ADD, event.getTarget());
-			case CHILD_REMOVE -> invoke(EntityEventType.DESCENDANT_REMOVE, event.getTarget());
-			case CHILDREN_UPDATE -> invoke(EntityEventType.DESCENDANT_UPDATE, event.getTarget());
+			case CHILD_ADD -> invoke(EventType.DESCENDANT_ADD, event.getTarget());
+			case CHILD_REMOVE -> invoke(EventType.DESCENDANT_REMOVE, event.getTarget());
+			case CHILDREN_UPDATE -> invoke(EventType.DESCENDANT_UPDATE, event.getTarget());
 		}
 	}
 	
 	@Override
-	protected boolean shouldInvoke(EntityEventType entityEventType) {
-		boolean shouldInvoke = switch (entityEventType) {
-			case CHILD_ADD -> super.shouldInvoke(EntityEventType.DESCENDANT_ADD);
-			case CHILD_REMOVE -> super.shouldInvoke(EntityEventType.DESCENDANT_REMOVE);
-			case CHILDREN_UPDATE -> super.shouldInvoke(EntityEventType.DESCENDANT_UPDATE);
+	protected boolean shouldInvoke(EventType eventType) {
+		boolean shouldInvoke = switch (eventType) {
+			case CHILD_ADD -> super.shouldInvoke(EventType.DESCENDANT_ADD);
+			case CHILD_REMOVE -> super.shouldInvoke(EventType.DESCENDANT_REMOVE);
+			case CHILDREN_UPDATE -> super.shouldInvoke(EventType.DESCENDANT_UPDATE);
 			default -> false;
 		};
-		return shouldInvoke || super.shouldInvoke(entityEventType);
+		return shouldInvoke || super.shouldInvoke(eventType);
 	}
 	
 	@Override
-	protected boolean shouldPropagate(EntityEventType eventType) {
+	protected boolean shouldPropagate(EventType eventType) {
 		return transform.parent != null;
 	}
 	
 	@Override
-	protected void propagate(Event<EntityEventType, Entity> event) {
+	protected void propagate(Event<EventType, Entity> event) {
 		if (transform.parent != null) {
 			Entity parent = transform.parent.getEntity();
 			switch (event.getType()) {
-				case DESCENDANT_ADD -> parent.invoke(EntityEventType.DESCENDANT_ADD, event.getTarget());
-				case DESCENDANT_REMOVE -> parent.invoke(EntityEventType.DESCENDANT_REMOVE, event.getTarget());
-				case DESCENDANT_UPDATE -> parent.invoke(EntityEventType.DESCENDANT_UPDATE, event.getTarget());
+				case DESCENDANT_ADD -> parent.invoke(EventType.DESCENDANT_ADD, event.getTarget());
+				case DESCENDANT_REMOVE -> parent.invoke(EventType.DESCENDANT_REMOVE, event.getTarget());
+				case DESCENDANT_UPDATE -> parent.invoke(EventType.DESCENDANT_UPDATE, event.getTarget());
 			}
 		}
 	}
@@ -504,4 +516,5 @@ public class Entity extends SimpleEventDispatcher<EntityEventType, Entity> imple
 			transform.getDepthIndex()
 		);
 	}
+	
 }

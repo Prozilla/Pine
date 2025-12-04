@@ -281,6 +281,9 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 	public void activateEntity(Entity entity) {
 		Checks.isNotNull(entity, "entity");
 		systemManager.activateEntity(entity);
+		for (Transform child : entity.transform.children) {
+			activateEntity(child.getEntity());
+		}
 	}
 	
 	/**

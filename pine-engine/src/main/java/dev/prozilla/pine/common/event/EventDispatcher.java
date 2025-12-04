@@ -74,6 +74,7 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 	@Override
 	public void invoke(EventType eventType, Target target) {
 		if (!shouldInvoke(eventType)) {
+			// If no one is listening, we pretend the event never happened
 			return;
 		}
 		invoke(createEvent(eventType, target));

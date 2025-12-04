@@ -2,7 +2,6 @@ package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPoolEvent;
-import dev.prozilla.pine.common.asset.pool.AssetPoolEventType;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.lifecycle.Destructible;
@@ -969,10 +968,10 @@ public class Renderer implements Initializable, Destructible {
 		isRendering = false;
 		
 		// Load shaders
-		AssetPools.shaders.addListener(AssetPoolEventType.FAILED, this::handleShaderLoadingError);
+		AssetPools.shaders.addListener(AssetPoolEvent.Type.FAILED, this::handleShaderLoadingError);
 		Shader vertexShader = AssetPools.shaders.loadVertexShader(VERTEX_SHADER_PATH);
 		Shader fragmentShader = AssetPools.shaders.loadFragmentShader(FRAGMENT_SHADER_PATH);
-		AssetPools.shaders.removeListener(AssetPoolEventType.FAILED, this::handleShaderLoadingError);
+		AssetPools.shaders.removeListener(AssetPoolEvent.Type.FAILED, this::handleShaderLoadingError);
 		
 		// Create shader program
 		program = new ShaderProgram();

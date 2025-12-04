@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.system.standard.ui.text;
 
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.core.component.ui.Node;
+import dev.prozilla.pine.core.component.ui.NodeEvent;
 import dev.prozilla.pine.core.component.ui.TextInputNode;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -34,6 +35,7 @@ public final class TextInputInitializer extends InitSystem {
 				
 				if (changed) {
 					textInputNode.cursorPosition++;
+					node.invoke(NodeEvent.Type.INPUT);
 				}
 			}
 		};

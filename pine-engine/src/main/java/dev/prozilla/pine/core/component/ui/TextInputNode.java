@@ -43,7 +43,11 @@ public class TextInputNode extends Component {
 	}
 	
 	public void updateCursor() {
-		cursorPosition = Math.clamp(cursorPosition, 0, textNode.text.length());
+		if (textNode == null || textNode.text == null) {
+			cursorPosition = 0;
+		} else {
+			cursorPosition = Math.clamp(cursorPosition, 0, textNode.text.length());
+		}
 	}
 	
 }

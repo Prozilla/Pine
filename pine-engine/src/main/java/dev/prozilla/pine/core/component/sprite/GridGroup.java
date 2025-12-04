@@ -5,7 +5,6 @@ import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.EntityEventType;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
 import dev.prozilla.pine.core.system.standard.sprite.TileMover;
@@ -76,7 +75,7 @@ public class GridGroup extends Component {
 			entity.addChild(tile.getEntity());
 		}
 		
-		tile.getEntity().addListener(EntityEventType.DESTROY, (entity) -> coordinateToTile.remove(tile.getCoordinate()));
+		tile.getEntity().addListener(Entity.EventType.DESTROY, (entity) -> coordinateToTile.remove(tile.getCoordinate()));
 		
 		return tile.getTile();
 	}

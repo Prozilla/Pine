@@ -34,19 +34,23 @@ public abstract class Parser<T> implements Printable {
 	}
 	
 	/**
-	 * Returns the result or {@code null}, if the parsing failed.
+	 * Returns the result or {@code null}, if the parsing failed and removes it.
 	 * @return The result
 	 */
 	public T getResult() {
+		T result = this.result;
+		this.result = null;
 		return result;
 	}
 	
 	/**
-	 * Returns the error message or {@code null}, if the parsing succeeded.
+	 * Returns the error message or {@code null}, if the parsing succeeded and removes it.
 	 * @return The error message
 	 */
 	public String getError() {
-		return errorMessage;
+		String error = errorMessage;
+		errorMessage = null;
+		return error;
 	}
 	
 	/**

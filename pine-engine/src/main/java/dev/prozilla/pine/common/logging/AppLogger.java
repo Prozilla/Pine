@@ -6,7 +6,6 @@ import dev.prozilla.pine.common.asset.image.Image;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPool;
 import dev.prozilla.pine.common.asset.pool.AssetPoolEvent;
-import dev.prozilla.pine.common.asset.pool.AssetPoolEventType;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.event.EventListener;
@@ -84,13 +83,13 @@ public class AppLogger extends Logger implements Initializable {
 	}
 	
 	private <T extends Asset> void addAssetPoolListener(AssetPool<T> assetPool, EventListener<AssetPoolEvent<T>> listener) {
-		assetPool.addListener(AssetPoolEventType.LOADING, listener);
-		assetPool.addListener(AssetPoolEventType.FAILED, listener);
+		assetPool.addListener(AssetPoolEvent.Type.LOADING, listener);
+		assetPool.addListener(AssetPoolEvent.Type.FAILED, listener);
 	}
 	
 	private <T extends Asset> void removeAssetPoolListener(AssetPool<T> assetPool, EventListener<AssetPoolEvent<T>> listener) {
-		assetPool.removeListener(AssetPoolEventType.LOADING, listener);
-		assetPool.removeListener(AssetPoolEventType.FAILED, listener);
+		assetPool.removeListener(AssetPoolEvent.Type.LOADING, listener);
+		assetPool.removeListener(AssetPoolEvent.Type.FAILED, listener);
 	}
 	
 	private <T extends Asset> EventListener<AssetPoolEvent<T>> createAssetPoolListener(String assetName) {

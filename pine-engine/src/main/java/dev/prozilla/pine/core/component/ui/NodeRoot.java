@@ -142,25 +142,28 @@ public class NodeRoot extends Component implements NodeContext {
 		focusNode(newFocusedNodeIndex);
 	}
 	
-	public void focusNode(Node node) {
-		focusNode(focusableNodes.indexOf(node));
+	public boolean focusNode(Node node) {
+		return focusNode(focusableNodes.indexOf(node));
 	}
 	
-	private void focusNode(int nodeIndex) {
+	private boolean focusNode(int nodeIndex) {
 		if (focusedNodeIndex == nodeIndex) {
-			return;
+			return true;
 		}
 		
 		if (focusedNode != null) {
 			focusedNode.removeModifier(Node.FOCUS_MODIFIER);
+			focusedNode.invoke(NodeEvent.Type.BLUR);
 		}
 		
 		focusedNodeIndex = nodeIndex;
 		if (focusedNodeIndex < 0 || focusedNodeIndex >= focusableNodes.size()) {
 			focusedNode = null;
+			return false;
 		} else {
 			focusedNode = focusableNodes.get(focusedNodeIndex);
 			focusedNode.addModifier(Node.FOCUS_MODIFIER);
+			return true;
 		}
 	}
 	
