@@ -5,7 +5,6 @@ import dev.prozilla.pine.common.property.random.LocalRandomFloatProperty;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.Directory;
-import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
@@ -15,6 +14,7 @@ import dev.prozilla.pine.core.state.input.gamepad.GamepadButton;
 import dev.prozilla.pine.core.storage.LocalStorage;
 import dev.prozilla.pine.examples.flappybird.EntityTag;
 import dev.prozilla.pine.examples.flappybird.FlappyBird;
+import dev.prozilla.pine.examples.flappybird.GameManager;
 import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
 import dev.prozilla.pine.examples.flappybird.entity.*;
@@ -23,7 +23,6 @@ import dev.prozilla.pine.examples.flappybird.system.canvas.ScoreTextUpdater;
 import dev.prozilla.pine.examples.flappybird.system.ground.GroundInitializer;
 import dev.prozilla.pine.examples.flappybird.system.ground.GroundMover;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipeInitializer;
-import dev.prozilla.pine.examples.flappybird.system.obstacle.PipesDebugRenderer;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipesInitializer;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipesMover;
 import dev.prozilla.pine.examples.flappybird.system.player.PlayerInitializer;
@@ -108,7 +107,7 @@ public class GameScene extends SceneBase {
 		playerScore = 0;
 		
 		// Start spawning obstacles
-		setSeed(1);
+		setSeed(GameManager.instance.seed);
 		obstacleSpawnInterval = getTimer().startRandomInterval(this::spawnObstacle, obstacleSpawnDelay, true);
 	}
 	
@@ -159,6 +158,7 @@ public class GameScene extends SceneBase {
 	}
 	
 	public void setSeed(long seed) {
+		logger.log("Setting seed to: " + seed);
 		obstacleSpawnDelay.setSeed(seed);
 		PipesInitializer.gapProperty.setSeed(seed);
 		PipesInitializer.heightProperty.setSeed(seed);

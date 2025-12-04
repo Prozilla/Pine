@@ -30,6 +30,7 @@ public class FlappyBird {
 		flappyBird.setIcons("flappybird/icon.png");
 		flappyBird.setTargetFps(120);
 		flappyBird.setEnableLocalStorage(true);
+		flappyBird.setApplicationManagerFactory(GameManager::new);
 		
 		if (!Application.isDevMode()) {
 			flappyBird.setFullscreen(true);
