@@ -13,7 +13,6 @@ import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadButton;
 import dev.prozilla.pine.core.storage.LocalStorage;
-import dev.prozilla.pine.core.system.standard.physics.collision.ColliderRenderSystem;
 import dev.prozilla.pine.examples.flappybird.EntityTag;
 import dev.prozilla.pine.examples.flappybird.FlappyBird;
 import dev.prozilla.pine.examples.flappybird.GameManager;
@@ -85,8 +84,7 @@ public class GameScene extends SceneBase {
 		world.addSystem(new GroundMover());
 		
 		if (Application.isDevMode()) {
-			world.addSystem(new ColliderRenderSystem());
-//			world.addSystem(new PipesDebugRenderer());
+//			world.addSystem(new ColliderRenderSystem());
 		}
 		
 		// Create empty parent for obstacles

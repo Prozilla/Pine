@@ -26,7 +26,8 @@ public class PlayerMover extends UpdateSystem {
 		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		
 		// Check if player hit floor or ceiling
-		if (transform.position.y <= GroundData.TOP_Y || transform.position.y + PlayerData.SPRITE_HEIGHT >= FlappyBird.HEIGHT / 2f) {
+		float groundY = GroundData.TOP_Y - playerData.collider.offset.y + playerData.collider.radius;
+		if (transform.position.y <= groundY || transform.position.y + PlayerData.HEIGHT >= FlappyBird.HEIGHT / 2f) {
 			playerData.gameScene.endGame();
 		}
 		
@@ -44,10 +45,14 @@ public class PlayerMover extends UpdateSystem {
 		transform.position.y += playerData.velocity * playerData.speed.getValue() * deltaTime;
 		playerData.velocity -= deltaTime / 2f;
 		
-		// Clamp position inside screen bounds
-		transform.position.y = MathUtils.clamp(transform.position.y, GroundData.TOP_Y, FlappyBird.HEIGHT / 2f);
+//		if (Application.isDevMode()) {
+//			transform.position.y = scene.getCameraData().screenToWorldPosition(application.getInput().getCursor()).y;
+//		}
 		
-		if (transform.position.y > GroundData.TOP_Y) {
+		// Clamp position inside screen bounds
+		transform.position.y = MathUtils.clamp(transform.position.y, groundY, FlappyBird.HEIGHT / 2f);
+		
+		if (transform.position.y > groundY) {
 			// Apply rotation based on velocity, unless player is dead
 			float targetRotation = playerData.gameScene.gameOver ? 180 : playerData.velocity * playerData.rotationFactor.getValue();
 			spriteRenderer.rotation = MathUtils.lerp(spriteRenderer.rotation, targetRotation, deltaTime * playerData.rotationSpeed.getValue());

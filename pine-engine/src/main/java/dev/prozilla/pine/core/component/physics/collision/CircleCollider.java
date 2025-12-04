@@ -30,14 +30,16 @@ public class CircleCollider extends Collider {
 	public boolean collidesWith(RectCollider other) {
 		float circleX = getOriginX();
 		float circleY = getOriginY();
-		float rectX = other.getCenterX();
-		float rectY = other.getCenterY();
 		
-		// Calculate delta
+		// Calculate the closest point on the rectangle to the circle's center
+		float rectX = MathUtils.clamp(circleX, other.getLeft(), other.getRight());
+		float rectY = MathUtils.clamp(circleY, other.getBottom(), other.getTop());
+		
+		// Calculate vector from center of circle to the closest point on rect
 		float deltaX = rectX - circleX;
 		float deltaY = rectY - circleY;
 		
-		// Normalize delta
+		// Normalize delta vector
 		float deltaLength = MathUtils.sqrt(MathUtils.square(deltaX) + MathUtils.square(deltaY));
 		deltaX /= deltaLength;
 		deltaY /=  deltaLength;

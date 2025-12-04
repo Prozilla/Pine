@@ -30,9 +30,6 @@ public class PipePrefab extends SpritePrefab {
 		super.apply(entity);
 		
 		RectCollider collider = entity.addComponent(new RectCollider(new Vector2f(PipeData.WIDTH, PipeData.HEIGHT)));
-		if (!top) {
-			collider.offset.y = PipeData.RIM_HEIGHT;
-		}
 		
 		entity.addComponent(new PipeData(top, collider));
 	}
