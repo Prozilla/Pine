@@ -142,16 +142,16 @@ public final class MathUtils {
 		return value == Math.round(value);
 	}
 	
-	public static int square(int x) {
-		return x * x;
+	public static int square(int value) {
+		return value * value;
 	}
 	
-	public static float square(float x) {
-		return x * x;
+	public static float square(float value) {
+		return value * value;
 	}
 	
-	public static float sqrt(float x) {
-		return (float)Math.sqrt(x);
+	public static float sqrt(float value) {
+		return (float)Math.sqrt(value);
 	}
 	
 }

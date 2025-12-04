@@ -3,9 +3,7 @@ package dev.prozilla.pine.examples.flappybird.system.obstacle;
 import dev.prozilla.pine.core.component.audio.AudioEffectPlayer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
-import dev.prozilla.pine.examples.flappybird.component.PipeData;
 import dev.prozilla.pine.examples.flappybird.component.PipesData;
-import dev.prozilla.pine.examples.flappybird.component.PlayerData;
 import dev.prozilla.pine.examples.flappybird.scene.GameScene;
 
 /**
@@ -33,8 +31,8 @@ public class PipesMover extends UpdateSystem {
 			pipesData.topPipe.transform.position.x = newX;
 			
 			// Check if player hit one of the pipes
-			if (gameScene.player.transform.position.x + PlayerData.WIDTH > newX && gameScene.player.transform.position.x < newX + PipeData.WIDTH
-			     && (gameScene.player.transform.position.y + PlayerData.HEIGHT > pipesData.topPipe.transform.position.y || gameScene.player.transform.position.y < pipesData.bottomPipe.transform.position.y + PipeData.HEIGHT)) {
+			if (gameScene.playerData.collider.collidesWith(pipesData.topPipeData.collider)
+				|| gameScene.playerData.collider.collidesWith(pipesData.bottomPipeData.collider)) {
 				audioEffectPlayer.playRandom();
 				gameScene.endGame();
 			} else {

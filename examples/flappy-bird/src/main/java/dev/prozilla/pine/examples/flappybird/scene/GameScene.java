@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.property.random.LocalRandomFloatProperty;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.Directory;
+import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
@@ -12,6 +13,7 @@ import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadButton;
 import dev.prozilla.pine.core.storage.LocalStorage;
+import dev.prozilla.pine.core.system.standard.physics.collision.ColliderRenderSystem;
 import dev.prozilla.pine.examples.flappybird.EntityTag;
 import dev.prozilla.pine.examples.flappybird.FlappyBird;
 import dev.prozilla.pine.examples.flappybird.GameManager;
@@ -44,6 +46,7 @@ public class GameScene extends SceneBase {
 	// Entities
 	private Entity obstacles;
 	public Entity player;
+	public PlayerData playerData;
 	public Entity gameOverText;
 	
 	// Data
@@ -81,9 +84,10 @@ public class GameScene extends SceneBase {
 		world.addSystem(new GroundInitializer());
 		world.addSystem(new GroundMover());
 		
-//		if (Application.isDevMode()) {
+		if (Application.isDevMode()) {
+			world.addSystem(new ColliderRenderSystem());
 //			world.addSystem(new PipesDebugRenderer());
-//		}
+		}
 		
 		// Create empty parent for obstacles
 		obstacles = world.addEntity(new Entity(world));
@@ -96,6 +100,7 @@ public class GameScene extends SceneBase {
 		
 		// Create player object
 		player = world.addEntity(playerPrefab);
+		playerData = player.getComponent(PlayerData.class);
 		
 		// Create user interface
 		Entity nodeRoot = world.addEntity(new NodeRootPrefab());
@@ -148,7 +153,7 @@ public class GameScene extends SceneBase {
 	public void endGame() {
 		getInput().showCursor();
 		gameOver = true;
-		player.getComponent(PlayerData.class).resetVelocity();
+		playerData.resetVelocity();
 		
 		LocalStorage localStorage = getLocalStorage();
 		if (!localStorage.hasItem("highscore") || localStorage.getInt("highscore") < playerScore) {

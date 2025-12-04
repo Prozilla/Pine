@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Represents a shape using vertex and UV arrays which respectively represent the vertex and texture coordinates of each triangle.
  */
-public abstract class Shape implements Renderable, Cloneable<Shape> {
+public abstract class Shape implements TexturedDrawable, Cloneable<Shape> {
 	
 	private float[] vertices;
 	private float[] uvArray;

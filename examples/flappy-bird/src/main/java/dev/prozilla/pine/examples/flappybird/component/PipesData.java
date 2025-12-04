@@ -10,6 +10,9 @@ public class PipesData extends Component {
 	public final Entity topPipe;
 	public boolean passed;
 	
+	public final PipeData bottomPipeData;
+	public final PipeData topPipeData;
+	
 	public GameScene gameScene;
 	
 	// Constants
@@ -19,7 +22,9 @@ public class PipesData extends Component {
 	
 	public PipesData(Entity bottomPipe, Entity topPipe) {
 		this.bottomPipe = bottomPipe;
+		bottomPipeData = bottomPipe.getComponent(PipeData.class);
 		this.topPipe = topPipe;
+		topPipeData = topPipe.getComponent(PipeData.class);
 	}
 	
 }

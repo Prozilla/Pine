@@ -20,10 +20,10 @@ public class PlayerPrefab extends SpritePrefab {
 	protected void apply(Entity entity) {
 		super.apply(entity);
 		
-		CircleCollider collider = entity.addComponent(new CircleCollider(PlayerData.RADIUS));
+		CircleCollider collider = entity.addComponent(new CircleCollider(PlayerData.COLLIDER_RADIUS, PlayerData.COLLIDER_OFFSET));
 		
 		entity.tag = EntityTag.PLAYER_TAG;
-		entity.addComponent(new PlayerData());
+		entity.addComponent(new PlayerData(collider));
 		
 		AudioEffectPlayer audioEffectPlayer = new AudioEffectPlayer(AssetPools.audioSources.loadAll("audio/swosh-05.ogg"));
 		audioEffectPlayer.setVolume(new RandomFloatProperty(0.15f, 0.35f));

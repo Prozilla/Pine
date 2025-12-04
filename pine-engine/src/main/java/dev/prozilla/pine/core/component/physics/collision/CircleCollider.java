@@ -2,6 +2,9 @@ package dev.prozilla.pine.core.component.physics.collision;
 
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.rendering.shape.Circle;
 
 public class CircleCollider extends Collider {
 	
@@ -51,6 +54,13 @@ public class CircleCollider extends Collider {
 	@Override
 	public boolean collidesWith(Collider other) {
 		return other.collidesWith(this);
+	}
+	
+	@Override
+	public void draw(Renderer renderer, Color color, float depth) {
+		Vector2f position = getScene().getCameraData().applyTransform(getOrigin());
+		Circle circle = new Circle(position, radius);
+		circle.draw(renderer, color, depth);
 	}
 	
 }

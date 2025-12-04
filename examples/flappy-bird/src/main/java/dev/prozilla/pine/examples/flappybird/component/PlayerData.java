@@ -1,9 +1,11 @@
 package dev.prozilla.pine.examples.flappybird.component;
 
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.property.deserialized.FileDeserializer;
 import dev.prozilla.pine.common.property.input.*;
 import dev.prozilla.pine.common.property.observable.ObservableObjectProperty;
 import dev.prozilla.pine.core.component.deserialization.DeserializedData;
+import dev.prozilla.pine.core.component.physics.collision.CircleCollider;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.MouseButton;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadButton;
@@ -30,6 +32,7 @@ public class PlayerData extends DeserializedData<PlayerData.Data> {
 	public final InputBinding pauseButton = new InputBinding(Key.ESCAPE);
 	
 	public GameScene gameScene;
+	public final CircleCollider collider;
 	
 	// Constants
 	public static final int SPRITE_WIDTH = 32;
@@ -38,7 +41,8 @@ public class PlayerData extends DeserializedData<PlayerData.Data> {
 	public static final float WIDTH = SPRITE_WIDTH * SCALE;
 	public static final float HEIGHT = SPRITE_HEIGHT * SCALE;
 	public static final float POSITION_X = FlappyBird.WIDTH / -4f;
-	public static final float RADIUS = 32 * SCALE;
+	public static final float COLLIDER_RADIUS = 14 * SCALE;
+	public static final Vector2f COLLIDER_OFFSET = new Vector2f(16, 20).scale(SCALE);
 	
 	public static class Data {
 		
@@ -48,6 +52,10 @@ public class PlayerData extends DeserializedData<PlayerData.Data> {
 		public Float rotationFactor;
 		public Float rotationSpeed;
 		
+	}
+	
+	public PlayerData(CircleCollider collider) {
+		this.collider = collider;
 	}
 	
 	@Override
