@@ -1,8 +1,9 @@
 {
-  "mainClass": "dev.prozilla.pine.examples.sokoban.Main",
-  "gameName": "Sokoban",
-  "developer": "Prozilla",
-  "version": "1.0.0.0",
-  "jreVersion": "21",
-  "jar": "build/libs/sokoban-1.0.0.0-all.jar"
+	"mainClass": "dev.prozilla.pine.examples.sokoban.Main",
+	"gameName": "Sokoban",
+	"developer": "Prozilla",
+	"version": "1.0.0.0",
+	"jreVersion": "21",
+	"jar": "build/libs/sokoban-1.0.0.0-all.jar",
+	"includeJre": false
 }

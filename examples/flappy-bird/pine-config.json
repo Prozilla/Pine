@@ -1,10 +1,11 @@
 {
-  "mainClass": "dev.prozilla.pine.examples.flappybird.FlappyBird",
-  "gameName": "Flappy Bird",
-  "developer": "Prozilla",
-  "version": "1.0.0.0",
-  "jreVersion": "21",
-  "jar": "build/libs/flappy-bird-1.0.0.0-all.jar",
-  "iconPath": "resources/flappybird/icon.ico",
-  "debug": false
+	"mainClass": "dev.prozilla.pine.examples.flappybird.FlappyBird",
+	"gameName": "Flappy Bird",
+	"developer": "Prozilla",
+	"version": "1.0.0.0",
+	"jreVersion": "21",
+	"jar": "build/libs/flappy-bird-1.0.0.0-all.jar",
+	"iconPath": "resources/flappybird/icon.ico",
+	"debug": false,
+	"includeJre": false
 }

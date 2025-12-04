@@ -21,14 +21,27 @@ public final class FileSystem {
 	private FileSystem() {}
 	
 	/**
-	 * Helper method for deleting non-empty directories.
+	 * Deletes a directory and its contents, if it exists.
+	 * @param directory The directory to delete
+	 * @return {@code true} if the directory was deleted.
+	 */
+	public static boolean deleteDirectoryIfExists(Path directory) {
+		boolean exists = Files.exists(directory);
+		if (exists) {
+			deleteDirectory(directory);
+		}
+		return exists;
+	}
+	
+	/**
+	 * Deletes a directory and its contents.
 	 * @param directory The directory to delete
 	 */
 	public static void deleteDirectory(Path directory) {
 		try (Stream<Path> pathStream = Files.walk(directory)) {
 			pathStream.sorted(Comparator.reverseOrder())
-			 .map(Path::toFile)
-			 .forEach(File::delete);
+				.map(Path::toFile)
+				.forEach(File::delete);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
