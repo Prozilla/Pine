@@ -38,6 +38,7 @@ public class PlayerData extends DeserializedData<PlayerData.Data> {
 	public static final float WIDTH = SPRITE_WIDTH * SCALE;
 	public static final float HEIGHT = SPRITE_HEIGHT * SCALE;
 	public static final float POSITION_X = FlappyBird.WIDTH / -4f;
+	public static final float RADIUS = 32 * SCALE;
 	
 	public static class Data {
 		

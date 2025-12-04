@@ -3,6 +3,7 @@ package dev.prozilla.pine.examples.flappybird.entity;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
 import dev.prozilla.pine.core.component.audio.AudioEffectPlayer;
+import dev.prozilla.pine.core.component.physics.collision.CircleCollider;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.sprite.SpritePrefab;
 import dev.prozilla.pine.examples.flappybird.EntityTag;
@@ -18,6 +19,8 @@ public class PlayerPrefab extends SpritePrefab {
 	@Override
 	protected void apply(Entity entity) {
 		super.apply(entity);
+		
+		CircleCollider collider = entity.addComponent(new CircleCollider(PlayerData.RADIUS));
 		
 		entity.tag = EntityTag.PLAYER_TAG;
 		entity.addComponent(new PlayerData());

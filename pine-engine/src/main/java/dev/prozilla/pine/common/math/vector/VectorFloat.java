@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.math.vector;
 
+import dev.prozilla.pine.common.math.MathUtils;
+
 import java.nio.FloatBuffer;
 
 /**
@@ -9,7 +11,7 @@ public abstract class VectorFloat<V extends VectorFloat<V>> extends Vector<V> {
 	
 	@Override
 	public float length() {
-		return (float)Math.sqrt(lengthSquared());
+		return MathUtils.sqrt(lengthSquared());
 	}
 	
 	/**

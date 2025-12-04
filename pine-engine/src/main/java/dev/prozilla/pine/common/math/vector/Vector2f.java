@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.math.vector;
 
+import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 import org.jetbrains.annotations.NotNull;
 
@@ -79,6 +80,14 @@ public class Vector2f extends VectorFloat<Vector2f> {
 	@Override
 	public float dot(Vector2f vector2f) {
 		return this.x * vector2f.x + this.y * vector2f.y;
+	}
+	
+	public float distance(Vector2f vector2f) {
+		return MathUtils.sqrt(distanceSquared(vector2f));
+	}
+	
+	public float distanceSquared(Vector2f vector2f) {
+		return distanceSquared(this.x, this.y, vector2f.x, vector2f.y);
 	}
 	
 	@Override
@@ -162,6 +171,14 @@ public class Vector2f extends VectorFloat<Vector2f> {
 		temp.x = x;
 		temp.y = y;
 		return temp;
+	}
+	
+	public static float distance(float x1, float y1, float x2, float y2) {
+		return MathUtils.sqrt(distanceSquared(x1, y1, x2, y2));
+	}
+	
+	public static float distanceSquared(float x1, float y1, float x2, float y2) {
+		return MathUtils.square(x2 - x1) + MathUtils.square(y2 - y1);
 	}
 	
 	public static class Parser extends dev.prozilla.pine.common.util.parser.Parser<Vector2f> {
