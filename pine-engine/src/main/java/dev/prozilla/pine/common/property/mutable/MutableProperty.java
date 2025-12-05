@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.mutable;
 
 import dev.prozilla.pine.common.property.Property;
+import dev.prozilla.pine.common.util.function.Mapper;
 
 /**
  * A property whose value can be changed.
@@ -16,6 +17,15 @@ public interface MutableProperty<T> extends Property<T> {
 		T previousValue = getValue();
 		setValue(value);
 		return previousValue;
+	}
+	
+	/**
+	 * Applies a mapper to the value of this property.
+	 * @param mapper The mapper to apply
+	 * @return {@code true} if the value was changed.
+	 */
+	default boolean modifyValue(Mapper<T, T> mapper) {
+		return setValue(mapper.map(getValue()));
 	}
 	
 	/**

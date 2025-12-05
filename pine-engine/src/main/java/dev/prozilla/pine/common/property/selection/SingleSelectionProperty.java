@@ -85,7 +85,7 @@ public class SingleSelectionProperty<T> extends SelectionProperty<T, T> {
 		}
 		
 		selectedIndex = -1;
-		return super.setValue(null);
+		return super.setNull();
 	}
 	
 	public T getSelectedItem() {

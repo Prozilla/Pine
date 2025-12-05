@@ -13,14 +13,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith({TestLoggingExtension.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class DeserializedPropertyTest {
+public class DeserializedObjectPropertyTest {
 
 	@Test
 	void test() {
 		FileDeserializer<Data> deserializer = new FileDeserializer<>("data/data.json", Data.class);
 		deserializer.setLogger(new MockLogger());
 		
-		DeserializedProperty<Color> property = deserializer.createProperty((data) -> data.color);
+		DeserializedObjectProperty<Color> property = deserializer.createProperty((data) -> data.color);
 		assertTrue(property.isNotNull(), "DeserializedProperty should be initialized with a value");
 		assertEquals(Color.hex("#FF0000"), property.getValue(),
 			"DeserializedProperty should take value from the external file");

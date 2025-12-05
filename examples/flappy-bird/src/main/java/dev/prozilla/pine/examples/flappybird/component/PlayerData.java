@@ -3,7 +3,7 @@ package dev.prozilla.pine.examples.flappybird.component;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.property.deserialized.FileDeserializer;
 import dev.prozilla.pine.common.property.input.*;
-import dev.prozilla.pine.common.property.observable.ObservableObjectProperty;
+import dev.prozilla.pine.common.property.observable.ObservableFloatProperty;
 import dev.prozilla.pine.core.component.deserialization.DeserializedData;
 import dev.prozilla.pine.core.component.physics.collision.CircleCollider;
 import dev.prozilla.pine.core.state.input.Key;
@@ -18,11 +18,11 @@ public class PlayerData extends DeserializedData<PlayerData.Data> {
 	public float age;
 	public float velocity;
 	
-	public ObservableObjectProperty<Float> jumpVelocity;
-	public ObservableObjectProperty<Float> speed;
-	public ObservableObjectProperty<Float> animationSpeed;
-	public ObservableObjectProperty<Float> rotationFactor;
-	public ObservableObjectProperty<Float> rotationSpeed;
+	public ObservableFloatProperty jumpVelocity;
+	public ObservableFloatProperty speed;
+	public ObservableFloatProperty animationSpeed;
+	public ObservableFloatProperty rotationFactor;
+	public ObservableFloatProperty rotationSpeed;
 	
 	public final InputBindings jumpButton = new InputBindings(
 		new KeyboardKeyProperty(Key.SPACE),
@@ -46,11 +46,11 @@ public class PlayerData extends DeserializedData<PlayerData.Data> {
 	
 	public static class Data {
 		
-		public Float jumpVelocity;
-		public Float speed;
-		public Float animationSpeed;
-		public Float rotationFactor;
-		public Float rotationSpeed;
+		public float jumpVelocity = 0.65f;
+		public float speed = 650f;
+		public float animationSpeed = 10f;
+		public float rotationFactor = 50f;
+		public float rotationSpeed = 10f;
 		
 	}
 	
@@ -62,11 +62,12 @@ public class PlayerData extends DeserializedData<PlayerData.Data> {
 	public void readData(FileDeserializer<Data> deserializer) {
 		super.readData(deserializer);
 		
-		jumpVelocity = deserializer.createProperty((data) -> data.jumpVelocity, 0.65f);
-		speed = deserializer.createProperty((data) -> data.speed, 650f);
-		animationSpeed = deserializer.createProperty((data) -> data.animationSpeed, 10f);
-		rotationFactor = deserializer.createProperty((data) -> data.rotationFactor, 50f);
-		rotationSpeed = deserializer.createProperty((data) -> data.rotationSpeed, 10f);
+		deserializer.setAlwaysCreateData(true);
+		jumpVelocity = deserializer.createFloatProperty((data) -> data.jumpVelocity);
+		speed = deserializer.createFloatProperty((data) -> data.speed);
+		animationSpeed = deserializer.createFloatProperty((data) -> data.animationSpeed);
+		rotationFactor = deserializer.createFloatProperty((data) -> data.rotationFactor);
+		rotationSpeed = deserializer.createFloatProperty((data) -> data.rotationSpeed);
 	}
 	
 	public void resetVelocity() {

@@ -24,7 +24,11 @@ public class HotFileDeserializer<Data> extends FileDeserializer<Data> {
 	private final EventListener<Event<DirectoryWatcher.EventType, String>> listener;
 	
 	public HotFileDeserializer(DirectoryWatcher directoryWatcher, String path, Class<Data> dataType) {
-		super(path, dataType);
+		this(directoryWatcher, path, dataType, ALWAYS_CREATE_DATA_DEFAULT);
+	}
+	
+	public HotFileDeserializer(DirectoryWatcher directoryWatcher, String path, Class<Data> dataType, boolean alwaysCreateData) {
+		super(path, dataType, alwaysCreateData);
 		filePath = getFilePath(path);
 		this.directoryWatcher = directoryWatcher;
 		
@@ -71,7 +75,11 @@ public class HotFileDeserializer<Data> extends FileDeserializer<Data> {
 			}
 		}
 		
-		return Paths.get(ResourceUtils.getResourcePath(path)).toAbsolutePath();
+		try {
+			return Paths.get(ResourceUtils.getResourcePath(path)).toAbsolutePath();
+		} catch (RuntimeException e) {
+			return null;
+		}
 	}
 
 }

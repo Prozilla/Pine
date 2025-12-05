@@ -37,12 +37,12 @@ public class PlayerMover extends UpdateSystem {
 		if (!playerData.gameScene.gameOver) {
 			// Update age and calculate frame
 			playerData.age += deltaTime;
-			playerData.animationFrame = Math.round((playerData.age * playerData.animationSpeed.getValue())) % 3;
+			playerData.animationFrame = Math.round((playerData.age * playerData.animationSpeed.get())) % 3;
 		}
 		
 		// Update velocity and move based on current velocity
 		playerData.velocity -= deltaTime / 2f;
-		transform.position.y += playerData.velocity * playerData.speed.getValue() * deltaTime;
+		transform.position.y += playerData.velocity * playerData.speed.get() * deltaTime;
 		playerData.velocity -= deltaTime / 2f;
 		
 //		if (Application.isDevMode()) {
@@ -54,8 +54,8 @@ public class PlayerMover extends UpdateSystem {
 		
 		if (transform.position.y > groundY) {
 			// Apply rotation based on velocity, unless player is dead
-			float targetRotation = playerData.gameScene.gameOver ? 180 : playerData.velocity * playerData.rotationFactor.getValue();
-			spriteRenderer.rotation = MathUtils.lerp(spriteRenderer.rotation, targetRotation, deltaTime * playerData.rotationSpeed.getValue());
+			float targetRotation = playerData.gameScene.gameOver ? 180 : playerData.velocity * playerData.rotationFactor.get();
+			spriteRenderer.rotation = MathUtils.lerp(spriteRenderer.rotation, targetRotation, deltaTime * playerData.rotationSpeed.get());
 		}
 	}
 }

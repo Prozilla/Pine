@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.property;
 
+import dev.prozilla.pine.common.util.function.FloatMapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +40,10 @@ public interface FloatProperty extends NonNullProperty<Float> {
 	@Override
 	default FloatProperty replaceNull(Float defaultValue) {
 		return this;
+	}
+	
+	default FloatProperty map(FloatMapper mapper) {
+		return () -> mapper.map(get());
 	}
 	
 	/**

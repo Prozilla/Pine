@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.property;
 
+import dev.prozilla.pine.common.util.function.IntMapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +40,10 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	@Override
 	default IntProperty replaceNull(Integer defaultValue) {
 		return this;
+	}
+	
+	default IntProperty map(IntMapper mapper) {
+		return () -> mapper.map(get());
 	}
 	
 	/**

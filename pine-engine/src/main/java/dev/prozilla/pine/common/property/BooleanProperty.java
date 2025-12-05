@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property;
 
 import dev.prozilla.pine.common.property.fixed.FixedBooleanProperty;
+import dev.prozilla.pine.common.util.function.BooleanMapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -158,6 +159,10 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 	@Override
 	default BooleanProperty replaceNull(Boolean defaultValue) {
 		return this;
+	}
+	
+	default BooleanProperty map(BooleanMapper mapper) {
+		return () -> mapper.map(get());
 	}
 	
 	/**

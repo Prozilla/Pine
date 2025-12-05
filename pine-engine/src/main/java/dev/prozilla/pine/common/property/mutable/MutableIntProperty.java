@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.mutable;
 
 import dev.prozilla.pine.common.property.IntProperty;
+import dev.prozilla.pine.common.util.function.IntMapper;
 
 /**
  * A property with an integer value that can be changed.
@@ -21,6 +22,15 @@ public interface MutableIntProperty extends IntProperty, MutableProperty<Integer
 		int previousValue = get();
 		set(value);
 		return previousValue;
+	}
+	
+	/**
+	 * Applies a mapper to the value of this property.
+	 * @param mapper The mapper to apply
+	 * @return {@code true} if the value was changed.
+	 */
+	default boolean modify(IntMapper mapper) {
+		return set(mapper.map(get()));
 	}
 	
 	boolean set(int value);

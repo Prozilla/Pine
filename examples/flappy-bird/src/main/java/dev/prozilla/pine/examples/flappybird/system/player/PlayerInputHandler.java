@@ -25,7 +25,7 @@ public class PlayerInputHandler extends InputSystem {
 		if (!playerData.gameScene.gameOver) {
 			// Jump
 			if (playerData.jumpButton.isDown(input)) {
-				playerData.velocity = playerData.jumpVelocity.getValue();
+				playerData.velocity = playerData.jumpVelocity.get();
 				audioEffectPlayer.playRandom();
 			}
 			// Pause

@@ -31,7 +31,7 @@ public class PlayerInitializer extends InitSystem {
 		// Set player properties
 		playerData.animationFrame = 0;
 		playerData.age = 0;
-		playerData.velocity = playerData.jumpVelocity.getValue();
+		playerData.velocity = playerData.jumpVelocity.get();
 		
 		transform.setPosition(PlayerData.POSITION_X, 0);
 		

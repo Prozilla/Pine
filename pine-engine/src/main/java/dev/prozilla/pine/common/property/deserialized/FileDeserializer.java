@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Contract;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Deserializes data from a given JSON file.
@@ -25,6 +26,9 @@ public class FileDeserializer<Data> extends SimpleObservableObjectProperty<Data>
 	protected final String path;
 	private final Class<Data> dataType;
 	private static final ObjectMapper mapper = new ObjectMapper();
+	protected boolean alwaysCreateData;
+	
+	public static final boolean ALWAYS_CREATE_DATA_DEFAULT = false;
 	
 	static {
 		addDeserializers(
@@ -42,10 +46,29 @@ public class FileDeserializer<Data> extends SimpleObservableObjectProperty<Data>
 	}
 	
 	public FileDeserializer(String path, Class<Data> dataType) {
+		this(path, dataType, ALWAYS_CREATE_DATA_DEFAULT);
+	}
+	
+	public FileDeserializer(String path, Class<Data> dataType, boolean alwaysCreateData) {
 		this.path = path;
 		this.dataType = dataType;
+		this.alwaysCreateData = alwaysCreateData;
 		
 		deserialize();
+	}
+	
+	public void setAlwaysCreateData(boolean alwaysCreateData) {
+		if (this.alwaysCreateData == alwaysCreateData) {
+			return;
+		}
+		
+		this.alwaysCreateData = alwaysCreateData;
+		
+		if (alwaysCreateData && isNull()) {
+			setValue(createFallbackData());
+		} else if (!alwaysCreateData && isNotNull()) {
+			deserialize();
+		}
 	}
 	
 	/**
@@ -53,18 +76,32 @@ public class FileDeserializer<Data> extends SimpleObservableObjectProperty<Data>
 	 * @return The deserialized data.
 	 */
 	public Data deserialize() {
+		Data data;
 		try (InputStream inputStream = createInputStream()) {
 			if (inputStream == null) {
-				return null;
+				data = createFallbackData();
+			} else {
+				data = mapper.readValue(inputStream, dataType);
 			}
-			Data data = mapper.readValue(inputStream, dataType);
-			setValue(data);
-			return data;
 		} catch (IOException e) {
 			getLogger().error("Failed to deserialize: " + path, e);
+			data = createFallbackData();
 		}
 		
-		return null;
+		setValue(data);
+		return data;
+	}
+	
+	protected Data createFallbackData() {
+		if (!alwaysCreateData) {
+			return null;
+		}
+		
+		try {
+			return dataType.getConstructor().newInstance();
+		} catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+			return null;
+		}
 	}
 	
 	/**
@@ -82,7 +119,7 @@ public class FileDeserializer<Data> extends SimpleObservableObjectProperty<Data>
 	 * @param <T> The type of value of the property
 	 */
 	@Contract("_ -> new")
-	public <T> DeserializedProperty<T> createProperty(DeserializedProperty.ValueFactory<Data, T> valueFactory) {
+	public <T> DeserializedObjectProperty<T> createProperty(DeserializedObjectProperty.ValueFactory<Data, T> valueFactory) {
 		return createProperty(valueFactory, null);
 	}
 	
@@ -94,8 +131,92 @@ public class FileDeserializer<Data> extends SimpleObservableObjectProperty<Data>
 	 * @param <T> The type of value of the property
 	 */
 	@Contract("_, _ -> new")
-	public <T> DeserializedProperty<T> createProperty(DeserializedProperty.ValueFactory<Data, T> valueFactory, T fallbackValue) {
-		return new DeserializedProperty<>(this, valueFactory, fallbackValue);
+	public <T> DeserializedObjectProperty<T> createProperty(DeserializedObjectProperty.ValueFactory<Data, T> valueFactory, T fallbackValue) {
+		return new DeserializedObjectProperty<>(this, valueFactory, fallbackValue);
+	}
+	
+	/**
+	 * Creates an int property whose value is retrieved from the deserialized data.
+	 * @param valueFactory The method used to retrieve the value from the deserialized file.
+	 * @return The new property.
+	 */
+	@Contract("_ -> new")
+	public DeserializedIntProperty createIntProperty(DeserializedIntProperty.ValueFactory<Data> valueFactory) {
+		return createIntProperty(valueFactory, 0);
+	}
+	
+	/**
+	 * Creates an int property whose value is retrieved from the deserialized data.
+	 * @param valueFactory The method used to retrieve the value from the deserialized file.
+	 * @param fallbackValue Fallback value to use in case the deserialized data is empty.
+	 * @return The new property.
+	 */
+	@Contract("_, _ -> new")
+	public DeserializedIntProperty createIntProperty(DeserializedIntProperty.ValueFactory<Data> valueFactory, int fallbackValue) {
+		return new DeserializedIntProperty(this, valueFactory, fallbackValue);
+	}
+	
+	/**
+	 * Creates a float property whose value is retrieved from the deserialized data.
+	 * @param valueFactory The method used to retrieve the value from the deserialized file.
+	 * @return The new property.
+	 */
+	@Contract("_ -> new")
+	public DeserializedFloatProperty createFloatProperty(DeserializedFloatProperty.ValueFactory<Data> valueFactory) {
+		return createFloatProperty(valueFactory, 0f);
+	}
+	
+	/**
+	 * Creates a float property whose value is retrieved from the deserialized data.
+	 * @param valueFactory The method used to retrieve the value from the deserialized file.
+	 * @param fallbackValue Fallback value to use in case the deserialized data is empty.
+	 * @return The new property.
+	 */
+	@Contract("_, _ -> new")
+	public DeserializedFloatProperty createFloatProperty(DeserializedFloatProperty.ValueFactory<Data> valueFactory, float fallbackValue) {
+		return new DeserializedFloatProperty(this, valueFactory, fallbackValue);
+	}
+	
+	/**
+	 * Creates a boolean property whose value is retrieved from the deserialized data.
+	 * @param valueFactory The method used to retrieve the value from the deserialized file.
+	 * @return The new property.
+	 */
+	@Contract("_ -> new")
+	public DeserializedBooleanProperty createBooleanProperty(DeserializedBooleanProperty.ValueFactory<Data> valueFactory) {
+		return createBooleanProperty(valueFactory, false);
+	}
+	
+	/**
+	 * Creates a boolean property whose value is retrieved from the deserialized data.
+	 * @param valueFactory The method used to retrieve the value from the deserialized file.
+	 * @param fallbackValue Fallback value to use in case the deserialized data is empty.
+	 * @return The new property.
+	 */
+	@Contract("_, _ -> new")
+	public DeserializedBooleanProperty createBooleanProperty(DeserializedBooleanProperty.ValueFactory<Data> valueFactory, boolean fallbackValue) {
+		return new DeserializedBooleanProperty(this, valueFactory, fallbackValue);
+	}
+	
+	/**
+	 * Creates a string property whose value is retrieved from the deserialized data.
+	 * @param valueFactory The method used to retrieve the value from the deserialized file.
+	 * @return The new property.
+	 */
+	@Contract("_ -> new")
+	public DeserializedStringProperty createStringProperty(DeserializedObjectProperty.ValueFactory<Data, String> valueFactory) {
+		return createStringProperty(valueFactory, null);
+	}
+	
+	/**
+	 * Creates a string property whose value is retrieved from the deserialized data.
+	 * @param valueFactory The method used to retrieve the value from the deserialized file.
+	 * @param fallbackValue Fallback value to use in case the deserialized data is empty or incomplete.
+	 * @return The new property.
+	 */
+	@Contract("_, _ -> new")
+	public DeserializedStringProperty createStringProperty(DeserializedObjectProperty.ValueFactory<Data, String> valueFactory, String fallbackValue) {
+		return new DeserializedStringProperty(this, valueFactory, fallbackValue);
 	}
 	
 	/**

@@ -4,9 +4,9 @@ import dev.prozilla.pine.common.property.observable.SimpleObservableObjectProper
 import org.jetbrains.annotations.Contract;
 
 /**
- * Represents a property whose value is retrieved from a deserialized file.
+ * A property whose value is retrieved from a deserialized file.
  */
-public class DeserializedProperty<T> extends SimpleObservableObjectProperty<T> {
+public class DeserializedObjectProperty<T> extends SimpleObservableObjectProperty<T> {
 	
 	/**
 	 * Factory method used to retrieve a value from a deserialized file.
@@ -25,11 +25,11 @@ public class DeserializedProperty<T> extends SimpleObservableObjectProperty<T> {
 		
 	}
 	
-	public <Data> DeserializedProperty(FileDeserializer<Data> source, ValueFactory<Data, T> valueFactory) {
+	public <Data> DeserializedObjectProperty(FileDeserializer<Data> source, ValueFactory<Data, T> valueFactory) {
 		this(source, valueFactory, null);
 	}
 	
-	public <Data> DeserializedProperty(FileDeserializer<Data> source, ValueFactory<Data, T> valueFactory, T fallbackValue) {
+	public <Data> DeserializedObjectProperty(FileDeserializer<Data> source, ValueFactory<Data, T> valueFactory, T fallbackValue) {
 		super(createValue(source.getValue(), valueFactory, fallbackValue));
 		source.addObserver((data) -> setValue(createValue(data, valueFactory, fallbackValue)));
 	}

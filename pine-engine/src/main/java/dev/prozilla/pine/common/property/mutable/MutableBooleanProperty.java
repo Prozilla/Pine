@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.mutable;
 
 import dev.prozilla.pine.common.property.BooleanProperty;
+import dev.prozilla.pine.common.util.function.BooleanMapper;
 
 /**
  * A property with a boolean value that can be changed.
@@ -21,6 +22,15 @@ public interface MutableBooleanProperty extends BooleanProperty, MutableProperty
 		boolean previousValue = get();
 		set(value);
 		return previousValue;
+	}
+	
+	/**
+	 * Applies a mapper to the value of this property.
+	 * @param mapper The mapper to apply
+	 * @return {@code true} if the value was changed.
+	 */
+	default boolean modify(BooleanMapper mapper) {
+		return set(mapper.map(get()));
 	}
 	
 	/**
