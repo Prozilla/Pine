@@ -17,7 +17,7 @@ public class Main {
 		applicationBuilder.setIcons("images/crates/crate_03.png");
 		applicationBuilder.setTargetFps(120);
 		applicationBuilder.setApplicationManagerFactory(GameManager::new);
-		applicationBuilder.getRenderConfig().snapPixels.setValue(true);
+		applicationBuilder.getRenderConfig().snapPixels.set(true);
 		applicationBuilder.setEnableLocalStorage(true);
 		
 		if (!Application.isDevMode()) {

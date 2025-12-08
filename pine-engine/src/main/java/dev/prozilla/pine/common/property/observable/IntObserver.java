@@ -8,7 +8,7 @@ public interface IntObserver extends Observer<Integer> {
 	
 	@Override
 	default void observe(Integer value) {
-		observe(value.intValue());
+		observe((int)value);
 	}
 	
 	/**

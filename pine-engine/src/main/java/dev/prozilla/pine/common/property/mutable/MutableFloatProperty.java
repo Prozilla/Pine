@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property.mutable;
 
 import dev.prozilla.pine.common.property.FloatProperty;
-import dev.prozilla.pine.common.util.function.FloatMapper;
+import dev.prozilla.pine.common.util.function.mapper.FloatMapper;
 
 /**
  * A property with a float value that can be changed.
@@ -33,6 +33,11 @@ public interface MutableFloatProperty extends FloatProperty, MutableProperty<Flo
 		return set(mapper.map(get()));
 	}
 	
+	/**
+	 * Sets the value of this property.
+	 * @param value The new value
+	 * @return {@code true} if the value was changed.
+	 */
 	boolean set(float value);
 	
 	@Override

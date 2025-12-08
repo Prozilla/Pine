@@ -76,8 +76,8 @@ public class Window implements Initializable, Destructible, Printable {
 					glfwSetWindowMonitor(id, monitor, 0, 0,
 						videoMode.width(), videoMode.height(), videoMode.refreshRate());
 				} else {
-					width = config.width.getValue();
-					height = config.height.getValue();
+					width = config.width.get();
+					height = config.height.get();
 					if (videoMode != null) {
 						int x = (videoMode.width() - width) / 2;
 						int y = (videoMode.height() - height) / 2;
@@ -91,7 +91,7 @@ public class Window implements Initializable, Destructible, Printable {
 		
 		// Prepare fullscreen window
 		long monitor = NULL;
-		if (config.fullscreen.getValue()) {
+		if (config.fullscreen.get()) {
 			monitor = glfwGetPrimaryMonitor();
 			GLFWVidMode videoMode = glfwGetVideoMode(monitor);
 			if (videoMode != null) {
@@ -99,8 +99,8 @@ public class Window implements Initializable, Destructible, Printable {
 				height = videoMode.height();
 			}
 		} else {
-			width = config.width.getValue();
-			height = config.height.getValue();
+			width = config.width.get();
+			height = config.height.get();
 		}
 		
 		// Create window
@@ -113,7 +113,7 @@ public class Window implements Initializable, Destructible, Printable {
 		glfwMakeContextCurrent(id);
 		
 		// Enable VSync
-		if (config.enableVSync.getValue()) {
+		if (config.enableVSync.get()) {
 			glfwSwapInterval(1);
 		}
 		
@@ -145,8 +145,8 @@ public class Window implements Initializable, Destructible, Printable {
 			return;
 		}
 		
-		if (config.enableToggleFullscreen.getValue() && (input.getKey(Key.L_ALT) || input.getKey(Key.R_ALT)) && input.getKeyDown(Key.ENTER)) {
-			config.fullscreen.setValue(!config.fullscreen.getValue());
+		if (config.enableToggleFullscreen.get() && (input.getKey(Key.L_ALT) || input.getKey(Key.R_ALT)) && input.getKeyDown(Key.ENTER)) {
+			config.fullscreen.toggle();
 		}
 	}
 	
@@ -319,8 +319,8 @@ public class Window implements Initializable, Destructible, Printable {
 		stringJoiner.add(String.format("Window: %sx%s", width, height));
 		stringJoiner.add(String.format("Viewport: %sx%s", renderer.getWidth(), renderer.getHeight()));
 		stringJoiner.add(String.format("Pixel ratio: %s, %s", getPixelRatioX(), getPixelRatioY()));
-		stringJoiner.add("Fullscreen: " + config.fullscreen.getValue());
-		stringJoiner.add("Show decorations: " + config.showDecorations.getValue());
+		stringJoiner.add("Fullscreen: " + config.fullscreen.get());
+		stringJoiner.add("Show decorations: " + config.showDecorations.get());
 		
 		return stringJoiner.toString();
 	}

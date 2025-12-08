@@ -1,5 +1,10 @@
 package dev.prozilla.pine.core.state.config;
 
+import dev.prozilla.pine.core.state.config.option.BooleanConfigOption;
+import dev.prozilla.pine.core.state.config.option.IntConfigOption;
+import dev.prozilla.pine.core.state.config.option.ObjectConfigOption;
+import dev.prozilla.pine.core.state.config.option.StringConfigOption;
+
 import java.util.Objects;
 
 public class WindowConfig {
@@ -16,18 +21,18 @@ public class WindowConfig {
 	
 	// Predefines options
 	/** Width of the window. Defaults to <code>900</code>. */
-	public final ConfigOption<Integer> width = new ConfigOption<>(900, (width) -> width != null && width > 0);
+	public final IntConfigOption width = new IntConfigOption(900, (width) -> width > 0);
 	/** Height of the window. Defaults to <code>600</code>. */
-	public final ConfigOption<Integer> height = new ConfigOption<>(600, (height) -> height != null && height > 0);
+	public final IntConfigOption height = new IntConfigOption(600, (height) -> height > 0);
 	/** Title of the window. Defaults to <code>"Untitled"</code>. */
-	public final ConfigOption<String> title = new ConfigOption<>("Untitled", Objects::nonNull);
-	public final ConfigOption<String[]> icon = new ConfigOption<>(null);
+	public final StringConfigOption title = new StringConfigOption("Untitled", Objects::nonNull);
+	public final ObjectConfigOption<String[]> icon = new ObjectConfigOption<>(null);
 	/** Whether the window will have window decorations such as a border, a close widget, etc. Defaults to <code>true</code>. */
-	public final ConfigOption<Boolean> showDecorations = new ConfigOption<>(true, Objects::nonNull);
+	public final BooleanConfigOption showDecorations = new BooleanConfigOption(true);
 	/** Defaults to <code>false</code>. */
-	public final ConfigOption<Boolean> fullscreen = new ConfigOption<>(false, Objects::nonNull);
+	public final BooleanConfigOption fullscreen = new BooleanConfigOption(false);
 	/** Defaults to <code>true</code>. */
-	public final ConfigOption<Boolean> enableVSync = new ConfigOption<>(true, Objects::nonNull);
-	public final ConfigOption<Boolean> enableToggleFullscreen = new ConfigOption<>(true, Objects::nonNull);
+	public final BooleanConfigOption enableVSync = new BooleanConfigOption(true);
+	public final BooleanConfigOption enableToggleFullscreen = new BooleanConfigOption(true);
 	
 }

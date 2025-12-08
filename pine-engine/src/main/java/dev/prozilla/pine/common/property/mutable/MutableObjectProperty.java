@@ -20,7 +20,7 @@ public interface MutableObjectProperty<T> extends MutableProperty<T> {
 	 * @return {@code false} if the value of this property was already {@code null}.
 	 */
 	default boolean setNull() {
-		return setValue((T)null);
+		return setValue(null);
 	}
 	
 }

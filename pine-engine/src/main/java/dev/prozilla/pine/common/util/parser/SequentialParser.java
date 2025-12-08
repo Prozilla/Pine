@@ -1,8 +1,8 @@
 package dev.prozilla.pine.common.util.parser;
 
+import dev.prozilla.pine.common.util.function.predicate.CharPredicate;
 import org.jetbrains.annotations.Contract;
 
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public abstract class SequentialParser<T> extends Parser<T> {
@@ -11,25 +11,6 @@ public abstract class SequentialParser<T> extends Parser<T> {
 	private int cursor;
 	
 	protected T intermediate;
-	
-	/**
-	 * Represents a predicate of one character.
-	 */
-	@FunctionalInterface
-	public interface CharPredicate extends Predicate<Character> {
-		
-		default boolean test(Character character) {
-			return test((char)character);
-		}
-		
-		/**
-		 * Evaluates this predicate on the given character.
-		 * @param character The input character
-		 * @return {@code true} if the input argument matches the predicate, otherwise {@code false}.
-		 */
-		boolean test(char character);
-		
-	}
 	
 	@Contract("-> true")
 	protected boolean succeed() {

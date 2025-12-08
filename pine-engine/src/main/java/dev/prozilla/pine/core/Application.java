@@ -59,7 +59,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			if (config.appName.isNotNull()) {
 				stringJoiner.add(config.appName.getValue());
 			}
-			value = Platform.getPersistentDataPath(stringJoiner.toString(), config.autoCreateDirectories.getValue());
+			value = Platform.getPersistentDataPath(stringJoiner.toString(), config.autoCreateDirectories.get());
 			return PathUtils.addTrailingSlash(value);
 		}
 		
@@ -147,10 +147,10 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		config = new Config(this);
 		stateMachine = new StateMachine<>(ApplicationState.INITIALIZING, this);
 		
-		config.fps.setValue(targetFps);
+		config.fps.set(targetFps);
 		config.window.title.setValue(title);
-		config.window.width.setValue(width);
-		config.window.height.setValue(height);
+		config.window.width.set(width);
+		config.window.height.set(height);
 		config.appName.setValue(title);
 		
 		timer = mode.createTimer();
@@ -204,7 +204,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		}
 		
 		logger.init();
-		if (config.logging.enableApplicationStateLogs.getValue()) {
+		if (config.logging.enableApplicationStateLogs.get()) {
 			logger.log("Initializing application");
 		}
 		
@@ -255,7 +255,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		}
 		
 		logger.init();
-		if (config.logging.enableApplicationStateLogs.getValue()) {
+		if (config.logging.enableApplicationStateLogs.get()) {
 			logger.log("Initializing preview");
 		}
 		
@@ -274,7 +274,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * Destroys the application after the application loop has been stopped.
 	 */
 	public void start() {
-		int fps = config.fps.getValue();
+		int fps = config.fps.get();
 		double targetTime = (fps == 0) ? 0.0 : 1.0 / fps;
 		
 		stateMachine.changeState(ApplicationState.RUNNING);
@@ -700,7 +700,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * @return The default font of this application.
 	 */
 	public Font getDefaultFont() {
-		if (!config.defaultFontPath.isNotNull()) {
+		if (config.defaultFontPath.isNull()) {
 			return null;
 		}
 		return AssetPools.fonts.load(config.defaultFontPath.getValue());

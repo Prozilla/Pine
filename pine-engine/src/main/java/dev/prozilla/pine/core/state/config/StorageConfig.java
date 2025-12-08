@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.state.config;
 
-import java.util.Objects;
+import dev.prozilla.pine.core.state.config.option.BooleanConfigOption;
 
 /**
  * Manages configuration options related to storage.
@@ -13,8 +13,8 @@ public class StorageConfig {
 	public static final ConfigKey<Boolean> SAVE_ON_WRITE = new ConfigKey<>("saveOnWrite", Boolean.class);
 	
 	// Predefines options
-	public final ConfigOption<Boolean> enableLocalStorage = new ConfigOption<>(false, Objects::nonNull);
-	public final ConfigOption<Boolean> loadOnRead = new ConfigOption<>(false, Objects::nonNull);
-	public final ConfigOption<Boolean> saveOnWrite = new ConfigOption<>(false, Objects::nonNull);
+	public final BooleanConfigOption enableLocalStorage = new BooleanConfigOption(false);
+	public final BooleanConfigOption loadOnRead = new BooleanConfigOption(false);
+	public final BooleanConfigOption saveOnWrite = new BooleanConfigOption(false);
 	
 }

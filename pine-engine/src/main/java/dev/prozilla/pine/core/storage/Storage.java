@@ -16,7 +16,6 @@ import dev.prozilla.pine.common.property.storage.StoredIntProperty;
 import dev.prozilla.pine.common.property.storage.StoredStringProperty;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.ColorParser;
-import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.common.util.parser.ParseFunction;
@@ -426,11 +425,11 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	}
 	
 	protected boolean shouldLoad() {
-		return !isInitialized || BooleanUtils.isTrue(config.loadOnRead.getValue());
+		return !isInitialized || config.loadOnRead.get();
 	}
 	
 	protected boolean shouldSave() {
-		return isInitialized && BooleanUtils.isTrue(config.saveOnWrite.getValue());
+		return isInitialized && config.saveOnWrite.get();
 	}
 	
 	/**

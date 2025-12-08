@@ -1,6 +1,6 @@
 package dev.prozilla.pine.common.property;
 
-import dev.prozilla.pine.common.util.function.IntMapper;
+import dev.prozilla.pine.common.util.function.mapper.IntMapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

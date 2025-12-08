@@ -143,17 +143,17 @@ public class ApplicationBuilder {
 	}
 	
 	public ApplicationBuilder setFullscreen(boolean fullscreen) {
-		config.window.fullscreen.setValue(fullscreen);
+		config.window.fullscreen.set(fullscreen);
 		return this;
 	}
 	
 	public ApplicationBuilder setShowWindowDecorations(boolean showWindowDecorations) {
-		config.window.showDecorations.setValue(showWindowDecorations);
+		config.window.showDecorations.set(showWindowDecorations);
 		return this;
 	}
 	
 	public ApplicationBuilder setEnableLogs(boolean enableLogs) {
-		config.logging.enableLogs.setValue(enableLogs);
+		config.logging.enableLogs.set(enableLogs);
 		return this;
 	}
 	
@@ -163,7 +163,7 @@ public class ApplicationBuilder {
 	}
 	
 	public ApplicationBuilder setEnableLocalStorage(boolean enableLocalStorage) {
-		config.storage.enableLocalStorage.setValue(enableLocalStorage);
+		config.storage.enableLocalStorage.set(enableLocalStorage);
 		return this;
 	}
 	

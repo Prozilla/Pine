@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.util.parser;
 
 import dev.prozilla.pine.common.util.BooleanUtils;
-import dev.prozilla.pine.common.util.function.Mapper;
+import dev.prozilla.pine.common.util.function.mapper.Mapper;
 
 /**
  * A function that parses an input string.

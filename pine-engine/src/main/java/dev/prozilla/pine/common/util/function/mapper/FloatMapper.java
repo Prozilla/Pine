@@ -1,10 +1,10 @@
-package dev.prozilla.pine.common.util.function;
+package dev.prozilla.pine.common.util.function.mapper;
 
 public interface FloatMapper extends Mapper<Float, Float> {
 	
 	@Override
 	default Float map(Float in) {
-		return map(in.floatValue());
+		return map((float)in);
 	}
 	
 	/**

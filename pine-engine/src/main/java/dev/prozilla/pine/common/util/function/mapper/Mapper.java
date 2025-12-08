@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.util.function;
+package dev.prozilla.pine.common.util.function.mapper;
 
 import dev.prozilla.pine.common.Transmittable;
 import dev.prozilla.pine.common.util.ObjectUtils;

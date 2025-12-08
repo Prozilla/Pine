@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.util.function;
 
+import dev.prozilla.pine.common.util.function.mapper.Mapper;
+
 /**
  * Represents a container that supports applying a function to its value while preserving its structure.
  * @param <T> The type of value

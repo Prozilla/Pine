@@ -2,6 +2,10 @@ package dev.prozilla.pine.core.state.config;
 
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.state.config.option.BooleanConfigOption;
+import dev.prozilla.pine.core.state.config.option.ConfigOption;
+import dev.prozilla.pine.core.state.config.option.IntConfigOption;
+import dev.prozilla.pine.core.state.config.option.StringConfigOption;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,14 +29,14 @@ public class Config {
 	
 	// Predefines options
 	/** Target frames per second. When set to <code>0</code>, fps is uncapped. Defaults to <code>120</code>. */
-	public final ConfigOption<Integer> fps = new ConfigOption<>(120, (fps) -> fps != null && fps >= 0);
+	public final IntConfigOption fps = new IntConfigOption(120, (fps) -> fps >= 0);
 	/** Determines whether depth values will be recalculated when new entities are added to the world. Defaults to <code>true</code>. */
-	public final ConfigOption<Boolean> enableDepthRecalculation = new ConfigOption<>(true, Objects::nonNull);
+	public final BooleanConfigOption enableDepthRecalculation = new BooleanConfigOption(true);
 	/** Default font used to render text elements. Defaults to <code>null</code>. */
-	public final ConfigOption<String> defaultFontPath = new ConfigOption<>(null);
-	public final ConfigOption<String> companyName = new ConfigOption<>(null);
-	public final ConfigOption<String> appName = new ConfigOption<>("Untitled", Objects::nonNull);
-	public final ConfigOption<Boolean> autoCreateDirectories = new ConfigOption<>(true, Objects::nonNull);
+	public final StringConfigOption defaultFontPath = new StringConfigOption(null);
+	public final StringConfigOption companyName = new StringConfigOption(null);
+	public final StringConfigOption appName = new StringConfigOption("Untitled", Objects::nonNull);
+	public final BooleanConfigOption autoCreateDirectories = new BooleanConfigOption(true);
 	/** Options related to rendering. */
 	public final RenderConfig rendering = new RenderConfig();
 	/** Options related to logging. */

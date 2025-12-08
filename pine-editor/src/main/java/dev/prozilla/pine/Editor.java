@@ -27,7 +27,7 @@ public class Editor extends Application {
 	public void init() {
 		super.init();
 		WindowConfig config = preview.getConfig().window;
-		preview.initPreview(input, config.width.getValue(), config.height.getValue());
+		preview.initPreview(input, config.width.get(), config.height.get());
 	}
 	
 	@Override

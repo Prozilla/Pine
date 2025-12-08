@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property;
 
 import dev.prozilla.pine.common.property.fixed.FixedBooleanProperty;
-import dev.prozilla.pine.common.util.function.BooleanMapper;
+import dev.prozilla.pine.common.util.function.mapper.BooleanMapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

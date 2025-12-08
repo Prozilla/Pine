@@ -8,7 +8,7 @@ public interface FloatObserver extends Observer<Float> {
 	
 	@Override
 	default void observe(Float value) {
-		observe(value.floatValue());
+		observe((float)value);
 	}
 	
 	/**

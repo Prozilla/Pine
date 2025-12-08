@@ -1,10 +1,10 @@
-package dev.prozilla.pine.common.util.function;
+package dev.prozilla.pine.common.util.function.mapper;
 
 public interface BooleanMapper extends Mapper<Boolean, Boolean> {
 	
 	@Override
 	default Boolean map(Boolean in) {
-		return map(in.booleanValue());
+		return map((boolean)in);
 	}
 	
 	/**

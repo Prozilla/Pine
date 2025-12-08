@@ -1,7 +1,6 @@
 package dev.prozilla.pine.core.storage;
 
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.core.Application;
 
 import java.io.*;
@@ -22,7 +21,7 @@ public class LocalStorage extends Storage {
 	
 	@Override
 	public void load() {
-		if (BooleanUtils.isNotTrue(config.enableLocalStorage.getValue())) {
+		if (!config.enableLocalStorage.get()) {
 			return;
 		}
 		
@@ -65,7 +64,7 @@ public class LocalStorage extends Storage {
 	
 	@Override
 	public void save() {
-		if (BooleanUtils.isNotTrue(config.enableLocalStorage.getValue()) || !isInitialized) {
+		if (!config.enableLocalStorage.get() || !isInitialized) {
 			return;
 		}
 		

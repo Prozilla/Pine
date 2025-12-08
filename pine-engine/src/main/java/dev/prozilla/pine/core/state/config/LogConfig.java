@@ -5,8 +5,9 @@ import dev.prozilla.pine.common.logging.handler.LogHandler;
 import dev.prozilla.pine.common.logging.handler.StandardErrorLogHandler;
 import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
 import dev.prozilla.pine.common.system.Ansi;
-
-import java.util.Objects;
+import dev.prozilla.pine.core.state.config.option.BooleanConfigOption;
+import dev.prozilla.pine.core.state.config.option.ObjectConfigOption;
+import dev.prozilla.pine.core.state.config.option.StringConfigOption;
 
 /**
  * Manages configuration options related to logging.
@@ -25,19 +26,19 @@ public class LogConfig {
 	
 	// Predefines options
 	/** Defaults to <code>true</code>. */
-	public final ConfigOption<Boolean> enableLogs = new ConfigOption<>(true, Objects::nonNull);
+	public final BooleanConfigOption enableLogs = new BooleanConfigOption(true);
 	/** Prefix to add to all logged strings. Defaults to a formatted badge with label <code>"app"</code>. */
-	public final ConfigOption<String> prefix = new ConfigOption<>(Logger.formatBadge("app", Ansi.CYAN));
+	public final StringConfigOption prefix = new StringConfigOption(Logger.formatBadge("app", Ansi.CYAN));
 	/** Log handler for the output log level. Defaults to {@link StandardOutputLogHandler}. */
-	public final ConfigOption<LogHandler> outputHandler = new ConfigOption<>(new StandardOutputLogHandler());
+	public final ObjectConfigOption<LogHandler> outputHandler = new ObjectConfigOption<>(new StandardOutputLogHandler());
 	/** Log handler for the error log level. Defaults to {@link StandardErrorLogHandler}. */
-	public final ConfigOption<LogHandler> errorHandler = new ConfigOption<>(new StandardErrorLogHandler());
+	public final ObjectConfigOption<LogHandler> errorHandler = new ObjectConfigOption<>(new StandardErrorLogHandler());
 	/** When set to <code>false</code>, all ANSI escape sequences will be stripped from logs. Defaults to <code>true</code>. */
-	public final ConfigOption<Boolean> enableAnsi = new ConfigOption<>(true, Objects::nonNull);
+	public final BooleanConfigOption enableAnsi = new BooleanConfigOption(true);
 	/** Enables logging of state changes of the application. Defaults to <code>true</code>. */
-	public final ConfigOption<Boolean> enableApplicationStateLogs = new ConfigOption<>(true, Objects::nonNull);
+	public final BooleanConfigOption enableApplicationStateLogs = new BooleanConfigOption(true);
 	/** Enables logging of asset pool events. Defaults to <code>true</code>. */
-	public final ConfigOption<Boolean> enableAssetPoolLogs = new ConfigOption<>(true, Objects::nonNull);
-	public final ConfigOption<Boolean> enableTimestamps = new ConfigOption<>(false, Objects::nonNull);
+	public final BooleanConfigOption enableAssetPoolLogs = new BooleanConfigOption(true);
+	public final BooleanConfigOption enableTimestamps = new BooleanConfigOption(false);
 	
 }

@@ -6,7 +6,7 @@ import dev.prozilla.pine.common.property.fixed.FixedProperty;
 import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.common.util.function.Functor;
-import dev.prozilla.pine.common.util.function.Mapper;
+import dev.prozilla.pine.common.util.function.mapper.Mapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

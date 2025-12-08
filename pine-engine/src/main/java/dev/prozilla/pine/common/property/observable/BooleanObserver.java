@@ -8,7 +8,7 @@ public interface BooleanObserver extends Observer<Boolean> {
 	
 	@Override
 	default void observe(Boolean value) {
-		observe(value.booleanValue());
+		observe((boolean)value);
 	}
 	
 	/**

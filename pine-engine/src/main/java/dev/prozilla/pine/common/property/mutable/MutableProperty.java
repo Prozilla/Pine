@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property.mutable;
 
 import dev.prozilla.pine.common.property.Property;
-import dev.prozilla.pine.common.util.function.Mapper;
+import dev.prozilla.pine.common.util.function.mapper.Mapper;
 
 /**
  * A property whose value can be changed.

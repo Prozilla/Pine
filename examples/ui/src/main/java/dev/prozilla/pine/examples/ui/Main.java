@@ -12,7 +12,7 @@ public class Main {
 		applicationBuilder.setCompanyName("Pine");
 		applicationBuilder.setWindowSize(900, 600);
 		applicationBuilder.setTargetFps(120);
-		applicationBuilder.getRenderConfig().snapPixels.setValue(true);
+		applicationBuilder.getRenderConfig().snapPixels.set(true);
 		
 		applicationBuilder.build().run();
 	}

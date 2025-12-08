@@ -1,6 +1,5 @@
 package dev.prozilla.pine.common.property.observable;
 
-import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.property.mutable.SimpleMutableIntProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -8,7 +7,7 @@ import dev.prozilla.pine.common.util.checks.Checks;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleObservableIntProperty extends SimpleMutableIntProperty implements ObservableIntProperty, Destructible {
+public class SimpleObservableIntProperty extends SimpleMutableIntProperty implements ObservableIntProperty, SimpleObservableProperty<Integer> {
 	
 	private final List<IntObserver> observers;
 	protected Logger logger;
@@ -35,9 +34,7 @@ public class SimpleObservableIntProperty extends SimpleMutableIntProperty implem
 		observers.remove(observer);
 	}
 	
-	/**
-	 * Sets the logger of this property, which is used to log errors thrown by observers.
-	 */
+	@Override
 	public void setLogger(Logger logger) {
 		this.logger = logger;
 	}

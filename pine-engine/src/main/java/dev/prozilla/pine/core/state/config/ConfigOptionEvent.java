@@ -1,8 +1,9 @@
 package dev.prozilla.pine.core.state.config;
 
 import dev.prozilla.pine.common.event.Event;
+import dev.prozilla.pine.core.state.config.option.ObjectConfigOption;
 
-public class ConfigOptionEvent<T> extends Event<ConfigOptionEvent.Type, ConfigOption<T>> {
+public class ConfigOptionEvent<T> extends Event<ConfigOptionEvent.Type, ObjectConfigOption<T>> {
 	
 	private final T value;
 	
@@ -11,7 +12,7 @@ public class ConfigOptionEvent<T> extends Event<ConfigOptionEvent.Type, ConfigOp
 		RESET
 	}
 	
-	public ConfigOptionEvent(Type type, ConfigOption<T> target, T value) {
+	public ConfigOptionEvent(Type type, ObjectConfigOption<T> target, T value) {
 		super(type, target);
 		this.value = value;
 	}
