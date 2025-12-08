@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveIntProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedIntProperty;
+import dev.prozilla.pine.common.util.ObjectUtils;
 import dev.prozilla.pine.core.component.ui.Node;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public final class StyledIntProperty extends StyledProperty<Integer, IntProperty
 	
 	@Override
 	protected AdaptiveIntProperty createAdaptiveProperty(Integer value) {
-		return AdaptiveIntProperty.adapt(value);
+		return AdaptiveIntProperty.adapt(ObjectUtils.unbox(value));
 	}
 	
 	@Override
@@ -35,7 +36,7 @@ public final class StyledIntProperty extends StyledProperty<Integer, IntProperty
 	
 	@Override
 	protected TransitionedIntProperty createTransitionedProperty(Integer initialValue, AnimationCurve curve) {
-		return new TransitionedIntProperty(initialValue, curve);
+		return new TransitionedIntProperty(ObjectUtils.unbox(initialValue), curve);
 	}
 	
 	@Override

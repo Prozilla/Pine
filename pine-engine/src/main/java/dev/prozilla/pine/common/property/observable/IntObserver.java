@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.property.observable;
 
+import dev.prozilla.pine.common.util.ObjectUtils;
+
 /**
  * @see ObservableIntProperty
  */
@@ -8,7 +10,7 @@ public interface IntObserver extends Observer<Integer> {
 	
 	@Override
 	default void observe(Integer value) {
-		observe((int)value);
+		observe(ObjectUtils.unbox(value));
 	}
 	
 	/**

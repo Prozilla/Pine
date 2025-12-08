@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.state.config.option;
 
 import dev.prozilla.pine.common.property.observable.SimpleObservableFloatProperty;
+import dev.prozilla.pine.common.util.ObjectUtils;
 import dev.prozilla.pine.common.util.function.predicate.FloatPredicate;
 
 public class FloatConfigOption extends SimpleObservableFloatProperty implements ConfigOption<Float> {
@@ -37,7 +38,7 @@ public class FloatConfigOption extends SimpleObservableFloatProperty implements 
 	 */
 	@Override
 	public boolean setValue(Float value) {
-		return set(value);
+		return set(ObjectUtils.unbox(value));
 	}
 	
 	@Override
@@ -51,7 +52,7 @@ public class FloatConfigOption extends SimpleObservableFloatProperty implements 
 	
 	@Override
 	public boolean isValidValue(Float value) {
-		return isValid(value);
+		return isValid(ObjectUtils.unbox(value));
 	}
 	
 	public boolean isValid(float value) {

@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.state.config.option;
 
 import dev.prozilla.pine.common.property.observable.SimpleObservableIntProperty;
+import dev.prozilla.pine.common.util.ObjectUtils;
 
 import java.util.function.IntPredicate;
 
@@ -38,7 +39,7 @@ public class IntConfigOption extends SimpleObservableIntProperty implements Conf
 	 */
 	@Override
 	public boolean setValue(Integer value) {
-		return set(value);
+		return set(ObjectUtils.unbox(value));
 	}
 	
 	@Override
@@ -52,7 +53,7 @@ public class IntConfigOption extends SimpleObservableIntProperty implements Conf
 	
 	@Override
 	public boolean isValidValue(Integer value) {
-		return isValid(value);
+		return isValid(ObjectUtils.unbox(value));
 	}
 	
 	public boolean isValid(int value) {

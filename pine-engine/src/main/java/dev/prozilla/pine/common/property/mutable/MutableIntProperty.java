@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.mutable;
 
 import dev.prozilla.pine.common.property.IntProperty;
+import dev.prozilla.pine.common.util.ObjectUtils;
 import dev.prozilla.pine.common.util.function.mapper.IntMapper;
 
 /**
@@ -10,7 +11,7 @@ public interface MutableIntProperty extends IntProperty, MutableProperty<Integer
 	
 	@Override
 	default boolean setValue(Integer value) {
-		return set(value);
+		return set(ObjectUtils.unbox(value));
 	}
 	
 	/**

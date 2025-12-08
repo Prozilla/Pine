@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.mutable;
 
 import dev.prozilla.pine.common.property.BooleanProperty;
+import dev.prozilla.pine.common.util.ObjectUtils;
 import dev.prozilla.pine.common.util.function.mapper.BooleanMapper;
 
 /**
@@ -10,7 +11,7 @@ public interface MutableBooleanProperty extends BooleanProperty, MutableProperty
 	
 	@Override
 	default boolean setValue(Boolean value) {
-		return set(value);
+		return set(ObjectUtils.unbox(value));
 	}
 	
 	/**

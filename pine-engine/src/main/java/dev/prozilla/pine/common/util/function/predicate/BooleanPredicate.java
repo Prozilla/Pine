@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.util.function.predicate;
 
+import dev.prozilla.pine.common.util.ObjectUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +14,7 @@ public interface BooleanPredicate extends Predicate<Boolean> {
 	
 	@Override
 	default boolean test(Boolean input) {
-		return test((boolean)input);
+		return test(ObjectUtils.unbox(input));
 	}
 	
 	/**

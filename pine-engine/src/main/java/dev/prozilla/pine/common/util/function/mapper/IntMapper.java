@@ -1,10 +1,12 @@
 package dev.prozilla.pine.common.util.function.mapper;
 
+import dev.prozilla.pine.common.util.ObjectUtils;
+
 public interface IntMapper extends Mapper<Integer, Integer> {
 	
 	@Override
 	default Integer map(Integer in) {
-		return map((int)in);
+		return map(ObjectUtils.unbox(in));
 	}
 	
 	/**

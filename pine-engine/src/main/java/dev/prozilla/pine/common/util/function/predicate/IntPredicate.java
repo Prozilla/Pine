@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.util.function.predicate;
 
+import dev.prozilla.pine.common.util.ObjectUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +14,7 @@ public interface IntPredicate extends Predicate<Integer>, java.util.function.Int
 	
 	@Override
 	default boolean test(Integer input) {
-		return test((int)input);
+		return test(ObjectUtils.unbox(input));
 	}
 	
 	/**

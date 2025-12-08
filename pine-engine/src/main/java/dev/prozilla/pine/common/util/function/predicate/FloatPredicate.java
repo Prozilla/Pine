@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.util.function.predicate;
 
+import dev.prozilla.pine.common.util.ObjectUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +14,7 @@ public interface FloatPredicate extends Predicate<Float> {
 	
 	@Override
 	default boolean test(Float input) {
-		return test((float)input);
+		return test(ObjectUtils.unbox(input));
 	}
 	
 	/**

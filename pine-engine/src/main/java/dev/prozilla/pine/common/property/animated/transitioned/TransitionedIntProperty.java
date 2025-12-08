@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.property.animated.transitioned;
 
 import dev.prozilla.pine.common.property.animated.AnimatedIntProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
+import dev.prozilla.pine.common.util.ObjectUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 
 public class TransitionedIntProperty extends AnimatedIntProperty implements TransitionedProperty<Integer> {
@@ -13,7 +14,7 @@ public class TransitionedIntProperty extends AnimatedIntProperty implements Tran
 	
 	@Override
 	public void transitionToValue(Integer targetValue) {
-		transitionTo(targetValue);
+		transitionTo(ObjectUtils.unbox(targetValue));
 	}
 	
 	public void transitionTo(int targetValue) {

@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.property.observable;
 
+import dev.prozilla.pine.common.util.ObjectUtils;
+
 /**
  * @see ObservableFloatProperty
  */
@@ -8,7 +10,7 @@ public interface FloatObserver extends Observer<Float> {
 	
 	@Override
 	default void observe(Float value) {
-		observe((float)value);
+		observe(ObjectUtils.unbox(value));
 	}
 	
 	/**
