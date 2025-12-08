@@ -14,7 +14,7 @@ public abstract class User implements Destructible, UserData {
 	}
 	
 	public User() {
-		eventDispatcher = new SimpleEventDispatcher();
+		eventDispatcher = new SimpleEventDispatcher<>();
 	}
 	
 	public abstract void sendMessage(String message);

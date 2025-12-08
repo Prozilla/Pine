@@ -154,7 +154,7 @@ public class GameScene extends SceneBase {
 		playerData.resetVelocity();
 		
 		LocalStorage localStorage = getLocalStorage();
-		if (!localStorage.hasItem("highscore") || localStorage.getInt("highscore") < playerScore) {
+		if (localStorage.getInt("highscore", 0) < playerScore) {
 			localStorage.setItem("highscore", playerScore);
 			getLogger().log(localStorage.getInt("highscore"));
 		}

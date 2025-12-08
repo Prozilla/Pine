@@ -112,10 +112,7 @@ public class Directory implements Destructible, Cloneable<Directory>, Printable 
 	 */
 	@Override
 	public void destroy() {
-		if (watcher != null) {
-			watcher.destroy();
-			watcher = null;
-		}
+		watcher = Destructible.destroy(watcher);
 	}
 	
 }

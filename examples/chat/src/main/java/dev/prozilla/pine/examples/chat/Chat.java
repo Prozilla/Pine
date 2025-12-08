@@ -2,6 +2,7 @@ package dev.prozilla.pine.examples.chat;
 
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.examples.chat.net.server.Server;
 import dev.prozilla.pine.examples.chat.net.user.Client;
 import dev.prozilla.pine.examples.chat.scene.MenuScene;
@@ -22,19 +23,23 @@ public class Chat extends Application {
 	private Client client;
 	private Thread clientThread;
 	
-	public final int connectScene;
-	public final int serverStartupScene;
+	public final Scene connectScene;
+	public final Scene serverStartupScene;
 	
 	public static final String FONT = "fonts/aoboshi-one/AoboshiOne-Regular.ttf";
-	public static final Color BACKGROUND_COLOR_A = Color.decode("#1c232b");
-	public static final Color BACKGROUND_COLOR_B = Color.decode("#0b0e11");
+	public static final Color BACKGROUND_COLOR_A = Color.hex("#1c232b");
+	public static final Color BACKGROUND_COLOR_B = Color.hex("#0b0e11");
 	public static final Color FOREGROUND_COLOR_A = Color.white();
 	
 	public Chat() {
 		super("Chat", 480, 270, new MenuScene());
 		
-		connectScene = addScene(new CreateClientScene());
-		serverStartupScene = addScene(new CreateServerScene());
+		config.rendering.snapPixels.set(true);
+		
+		connectScene = new CreateClientScene();
+		serverStartupScene = new CreateServerScene();
+		addScene(connectScene);
+		addScene(serverStartupScene);
 	}
 	
 	public void startClient(String host, int port, String username) {
@@ -43,7 +48,9 @@ public class Chat extends Application {
 			clientThread = new Thread(client);
 			clientThread.start();
 			
-			loadScene(addScene(new ClientScene(client)));
+			Scene clientScene = new ClientScene(client);
+			addScene(clientScene);
+			loadScene(clientScene);
 		} catch (IOException e) {
 			logger.error("Failed to start client", e);
 			destroy();
@@ -56,7 +63,9 @@ public class Chat extends Application {
 			serverThread = new Thread(server);
 			serverThread.start();
 			
-			loadScene(addScene(new ServerScene(server)));
+			Scene serverScene = new ServerScene(server);
+			addScene(serverScene);
+			loadScene(serverScene);
 		} catch (IOException e) {
 			logger.error("Failed to start server", e);
 			destroy();

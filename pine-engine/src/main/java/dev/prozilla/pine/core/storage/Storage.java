@@ -34,9 +34,10 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 
 	/** The items in this store. */
 	protected final Map<String, String> items;
+	protected boolean isInitialized;
+	
 	protected final Application application;
 	protected final StorageConfig config;
-	protected boolean isInitialized;
 	
 	/**
 	 * Creates a new key-value store.
@@ -243,29 +244,71 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	 * @param key The key of the item
 	 * @return The parsed value of the item, or {@code 0} if the item does not exist.
 	 * @see Integer#parseInt(String)
+	 */
+	public int getInt(String key) {
+		return getInt(key, 0);
+	}
+	
+	/**
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
+	 * @param fallbackValue The value to use if the item does not exist
+	 * @return The parsed value of the item, or {@code fallbackValue} if the item does not exist.
+	 * @see Integer#parseInt(String)
 	 * @throws NumberFormatException If the parsing failed.
 	 */
-	public int getInt(String key) throws NumberFormatException {
+	public int getInt(String key, int fallbackValue) {
 		String value = getItem(key);
 		if (value == null) {
-			return 0;
+			return fallbackValue;
 		}
-		return Integer.parseInt(value);
+		try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			return fallbackValue;
+		}
 	}
+	
 	
 	/**
 	 * Returns the value of the item in this store with a given key by parsing it.
 	 * @param key The key of the item
 	 * @return The parsed value of the item, or {@code 0} if the item does not exist.
 	 * @see Float#parseFloat(String)
-	 * @throws NumberFormatException If the parsing failed.
 	 */
-	public float getFloat(String key) throws NumberFormatException {
+	public float getFloat(String key) {
+		return getFloat(key, 0);
+	}
+	
+	/**
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
+	 * @param fallbackValue The value to use if the item does not exist
+	 * @return The parsed value of the item, or {@code fallbackValue} if the item does not exist.
+	 * @see Float#parseFloat(String)
+	 */
+	public float getFloat(String key, float fallbackValue) {
 		String value = getItem(key);
 		if (value == null) {
-			return 0;
+			return fallbackValue;
 		}
-		return Float.parseFloat(value);
+		try {
+			return Float.parseFloat(value);
+		} catch (NumberFormatException e) {
+			return fallbackValue;
+		}
+	}
+	
+	/**
+	 * Returns the value of the item in this store with a given key by parsing it.
+	 * @param key The key of the item
+	 * @param fallbackValue The value to use if the item does not exist
+	 * @return The parsed value of the item, or {@code fallbackValue} if the item does not exist.
+	 * @see Boolean#parseBoolean(String)
+	 */
+	public boolean getBoolean(String key, boolean fallbackValue) {
+		String value = getItem(key);
+		return value != null ? Boolean.parseBoolean(value) : fallbackValue;
 	}
 	
 	/**
@@ -276,6 +319,17 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	 */
 	public boolean getBoolean(String key) {
 		return Boolean.parseBoolean(getItem(key));
+	}
+	
+	/**
+	 * Returns the value of the item in this store with a given key.
+	 * @param key The key of the item
+	 * @param fallbackValue The value to use if the item does not exist
+	 * @return The value of the item, or {@code fallbackValue} if the item does not exist.
+	 */
+	public String getItem(String key, String fallbackValue) {
+		String value = getItem(key);
+		return value != null ? value : fallbackValue;
 	}
 	
 	/**
