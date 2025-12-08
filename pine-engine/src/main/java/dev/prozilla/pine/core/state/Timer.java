@@ -292,14 +292,14 @@ public class Timer implements Initializable {
 		}
 		
 		protected RandomInterval(Timer timer, Callback callback, RandomFloatProperty delayProperty, boolean applyTimeScale) {
-			super(timer, callback, delayProperty.getValue(), applyTimeScale);
+			super(timer, callback, delayProperty.get(), applyTimeScale);
 			this.delayProperty = delayProperty;
 		}
 		
 		@Override
 		protected void execute() {
 			super.execute();
-			delay = delayProperty.getValue();
+			delay = delayProperty.get();
 		}
 		
 	}

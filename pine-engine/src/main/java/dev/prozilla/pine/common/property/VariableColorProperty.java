@@ -48,9 +48,9 @@ public class VariableColorProperty implements ColorProperty {
 	
 	@Override
 	public void transmit(Color target) {
-		target.setRed(red.getValue());
-		target.setGreen(green.getValue());
-		target.setBlue(blue.getValue());
-		target.setAlpha(alpha.getValue());
+		target.setRed(red.get());
+		target.setGreen(green.get());
+		target.setBlue(blue.get());
+		target.setAlpha(alpha.get());
 	}
 }

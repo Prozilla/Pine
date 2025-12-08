@@ -43,7 +43,7 @@ public final class ParticleUpdater extends UpdateSystem {
 		
 		// Update scale based on animation
 		if (particleRenderer.scaleAnimation != null) {
-			spriteRenderer.scale.set(particleRenderer.scaleAnimation.getUpdatedValue(deltaTime));
+			spriteRenderer.scale.set(particleRenderer.scaleAnimation.getUpdated(deltaTime));
 		}
 		
 		// Update color based on animation
