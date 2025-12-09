@@ -25,7 +25,7 @@ public class LogConfig {
 	public static final ConfigKey<Boolean> ENABLE_TIMESTAMPS = new ConfigKey<>("enableTimestamps", Boolean.class);
 	
 	// Predefines options
-	/** Defaults to <code>true</code>. */
+	/** Enables logs. Defaults to <code>true</code>. */
 	public final BooleanConfigOption enableLogs = new BooleanConfigOption(true);
 	/** Prefix to add to all logged strings. Defaults to a formatted badge with label <code>"app"</code>. */
 	public final StringConfigOption prefix = new StringConfigOption(Logger.formatBadge("app", Ansi.CYAN));
@@ -39,6 +39,7 @@ public class LogConfig {
 	public final BooleanConfigOption enableApplicationStateLogs = new BooleanConfigOption(true);
 	/** Enables logging of asset pool events. Defaults to <code>true</code>. */
 	public final BooleanConfigOption enableAssetPoolLogs = new BooleanConfigOption(true);
+	/** Determines whether each log will be preceded by a timestamp. Defaults to {@code false}. */
 	public final BooleanConfigOption enableTimestamps = new BooleanConfigOption(false);
 	
 }

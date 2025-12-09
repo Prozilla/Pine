@@ -6,6 +6,8 @@ import dev.prozilla.pine.core.state.config.Config;
 
 /**
  * Represents an option of the application's configuration.
+ *
+ * <p>Every option has an initial value and a validator which restricts the values of the option.</p>
  * @param <T> The type of the value
  * @see Config
  */

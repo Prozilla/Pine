@@ -13,8 +13,11 @@ public class StorageConfig {
 	public static final ConfigKey<Boolean> SAVE_ON_WRITE = new ConfigKey<>("saveOnWrite", Boolean.class);
 	
 	// Predefines options
+	/** Determines whether the local storage can use a file to persist data across sessions. Defaults to {@code false}. */
 	public final BooleanConfigOption enableLocalStorage = new BooleanConfigOption(false);
+	/** Determines whether the local storage will be loaded every time it is read from. Defaults to {@code false}. */
 	public final BooleanConfigOption loadOnRead = new BooleanConfigOption(false);
+	/** Determines whether the local storage will be saved every time it is written to. Defaults to {@code false}. */
 	public final BooleanConfigOption saveOnWrite = new BooleanConfigOption(false);
 	
 }

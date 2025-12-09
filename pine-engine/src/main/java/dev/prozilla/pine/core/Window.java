@@ -165,7 +165,7 @@ public class Window implements Initializable, Destructible, Printable {
 	
 	/**
 	 * Determines whether the window should be closed.
-	 * @return True if the window should be closed
+	 * @return {@code true} if the window should be closed.
 	 */
 	public boolean shouldClose() {
 		if (!isInitialized) {
@@ -206,6 +206,14 @@ public class Window implements Initializable, Destructible, Printable {
 	}
 	
 	/**
+	 * Toggles the fullscreen mode of this window.
+	 * @param fullscreen Whether to enable or disable fullscreen mode
+	 */
+	public void setFullscreen(boolean fullscreen) {
+		config.fullscreen.set(fullscreen);
+	}
+	
+	/**
 	 * Updates the icons of this window.
 	 * Uses the first element of the images array as the default icon.
 	 * @param images Array of icon images
@@ -228,7 +236,7 @@ public class Window implements Initializable, Destructible, Printable {
 	}
 	
 	/**
-	 * Sets the opacity of the entire window
+	 * Sets the opacity of the entire window.
 	 * @param opacity The opacity, in the range of {@code 0f} and {@code 1f}
 	 */
 	public void setOpacity(float opacity) {
@@ -236,51 +244,111 @@ public class Window implements Initializable, Destructible, Printable {
 		glfwSetWindowOpacity(id, opacity);
 	}
 	
+	/**
+	 * Sets the value of the {@link WindowHint#DECORATED} window hint.
+	 * @param decorated The value to use
+	 */
 	public void setDecorated(boolean decorated) {
 		setHint(WindowHint.DECORATED, decorated);
 	}
 	
+	/**
+	 * Sets the value of the {@link WindowHint#VISIBLE} window hint.
+	 * @param visible The value to use
+	 */
 	public void setVisible(boolean visible) {
 		setHint(WindowHint.VISIBLE, visible);
 	}
 	
-	public void setEnableTransparentFramebuffer(boolean transparentFramebuffer) {
-		setHint(WindowHint.ENABLE_TRANSPARENT_FRAMEBUFFER, transparentFramebuffer);
+	/**
+	 * Sets the value of the {@link WindowHint#ENABLE_TRANSPARENT_FRAMEBUFFER} window hint.
+	 * @param enableTransparentFramebuffer The value to use
+	 */
+	public void setEnableTransparentFramebuffer(boolean enableTransparentFramebuffer) {
+		setHint(WindowHint.ENABLE_TRANSPARENT_FRAMEBUFFER, enableTransparentFramebuffer);
 	}
 	
+	/**
+	 * Sets the value of the {@link WindowHint#RESIZABLE} window hint.
+	 * @param resizable The value to use
+	 */
 	public void setResizable(boolean resizable) {
 		setHint(WindowHint.RESIZABLE, resizable);
 	}
 	
+	/**
+	 * Sets the value of the {@link WindowHint#FOCUSED} window hint.
+	 * @param focused The value to use
+	 */
 	public void setFocused(boolean focused) {
 		setHint(WindowHint.FOCUSED, focused);
 	}
 	
+	/**
+	 * Sets the value of the {@link WindowHint#FLOATING} window hint.
+	 * @param floating The value to use
+	 */
 	public void setFloating(boolean floating) {
 		setHint(WindowHint.FLOATING, floating);
 	}
 	
+	/**
+	 * Sets the value of the {@link WindowHint#MAXIMIZED} window hint.
+	 * @param maximized The value to use
+	 */
 	public void setMaximized(boolean maximized) {
 		setHint(WindowHint.MAXIMIZED, maximized);
 	}
 	
+	/**
+	 * Sets the value of the {@link WindowHint#CENTER_CURSOR} window hint.
+	 * @param centerCursor The value to use
+	 */
 	public void setCenterCursor(boolean centerCursor) {
 		setHint(WindowHint.CENTER_CURSOR, centerCursor);
 	}
 	
+	/**
+	 * Sets the value of the given window hint.
+	 * @param hint The window hint to set the value of
+	 * @param value The value to use
+	 * @see #setHint(int, int)
+	 */
 	public void setHint(WindowHint hint, boolean value) {
 		setHint(hint, BooleanUtils.toInt(value));
 	}
 	
+	/**
+	 * Sets the value of the given window hint.
+	 * @param hint The window hint to set the value of
+	 * @param value The value to use
+	 * @see #setHint(int, int)
+	 */
 	public void setHint(WindowHint hint, int value) {
 		Checks.isNotNull(hint, "hint");
 		setHint(hint.getValue(), value);
 	}
 	
+	/**
+	 * Sets the value of the given window hint.
+	 * @param hint The window hint to set the value of
+	 * @param value The value to use
+	 * @see #setHint(int, int)
+	 */
 	public void setHint(int hint, boolean value) {
 		setHint(hint, BooleanUtils.toInt(value));
 	}
 	
+	/**
+	 * Sets the value of the given window hint.
+	 *
+	 * <p>The window hints determine how the next window will be created.
+	 * Invalid values will only cause an error when the next window is created.</p>
+	 *
+	 * <p>Some hints will only have an effect on specific platforms and will be ignored on other platforms.</p>
+	 * @param hint The window hint to set the value of
+	 * @param value The value to use
+	 */
 	public void setHint(int hint, int value) {
 		if (!WindowHint.isValid(hint)) {
 			logger.log("Unknown window hint: " + hint);
@@ -288,6 +356,9 @@ public class Window implements Initializable, Destructible, Printable {
 		glfwWindowHint(hint, value);
 	}
 	
+	/**
+	 * Resets all window hints to their default values.
+	 */
 	public void setDefaultHints() {
 		glfwDefaultWindowHints();
 	}
