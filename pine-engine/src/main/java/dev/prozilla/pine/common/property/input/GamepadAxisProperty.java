@@ -29,9 +29,6 @@ public class GamepadAxisProperty extends AnalogInputProperty<GamepadAxis> implem
 	
 	@Override
 	public boolean isPressed(GamepadInput gamepad) {
-		if (isNull()) {
-			return false;
-		}
 		return gamepad.getAxis(getValue()) > getThreshold();
 	}
 	

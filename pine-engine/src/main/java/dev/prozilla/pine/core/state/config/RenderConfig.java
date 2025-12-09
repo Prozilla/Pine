@@ -23,15 +23,15 @@ public class RenderConfig {
 	// Predefines options
 	/** Used as the render color for objects when no color is passed to the renderer. Defaults to white. */
 	public final ObjectConfigOption<Color> fallbackRenderColor = new ObjectConfigOption<>(Color.white(), Objects::nonNull);
-	/** Defaults to <code>true</code>. */
+	/** Enables blending. Defaults to <code>true</code>. */
 	public final BooleanConfigOption enableBlend = new BooleanConfigOption(true);
-	/** Defaults to <code>true</code>. */
+	/** Enables depth testing. Defaults to <code>true</code>. */
 	public final BooleanConfigOption enableDepthTest = new BooleanConfigOption(true);
-	/** Defaults to <code>RenderMode.NORMAL</code>. */
+	/** Determines how vertices appear on the screen. Defaults to <code>RenderMode.NORMAL</code>. */
 	public final ObjectConfigOption<RenderMode> renderMode = new ObjectConfigOption<>(RenderMode.NORMAL, Objects::nonNull);
-	/** Enables snapping of pixels. Defaults to <code>false</code>. */
+	/** Enables snapping of pixels to whole numbers. Defaults to <code>false</code>. */
 	public final BooleanConfigOption snapPixels = new BooleanConfigOption(false);
-	/** Enables the snapping of text pixels. Defaults to <code>true</code>. */
+	/** Enables the snapping of pixels that make up text. Defaults to <code>true</code>. */
 	public final BooleanConfigOption snapText = new BooleanConfigOption(true);
 	
 }

@@ -19,17 +19,11 @@ public class GamepadButtonProperty extends SimpleMutableObjectProperty<GamepadBu
 	
 	@Override
 	public boolean isPressed(GamepadInput gamepad) {
-		if (isNull()) {
-			return false;
-		}
 		return gamepad.getButton(getValue());
 	}
 	
 	@Override
 	public boolean isDown(GamepadInput gamepad) {
-		if (isNull()) {
-			return false;
-		}
 		return gamepad.getButtonDown(getValue());
 	}
 	

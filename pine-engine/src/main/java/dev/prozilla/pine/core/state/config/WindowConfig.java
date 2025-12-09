@@ -26,13 +26,15 @@ public class WindowConfig {
 	public final IntConfigOption height = new IntConfigOption(600, (height) -> height > 0);
 	/** Title of the window. Defaults to <code>"Untitled"</code>. */
 	public final StringConfigOption title = new StringConfigOption("Untitled", Objects::nonNull);
+	/** Icon of the window. Defaults to <code>null</code>. */
 	public final ObjectConfigOption<String[]> icon = new ObjectConfigOption<>(null);
-	/** Whether the window will have window decorations such as a border, a close widget, etc. Defaults to <code>true</code>. */
+	/** Determines whether the window will have window decorations such as a border, a close widget, etc. Defaults to <code>true</code>. */
 	public final BooleanConfigOption showDecorations = new BooleanConfigOption(true);
-	/** Defaults to <code>false</code>. */
+	/** Determines whether the window is in fullscreen or windowed mode. Defaults to <code>false</code>. */
 	public final BooleanConfigOption fullscreen = new BooleanConfigOption(false);
-	/** Defaults to <code>true</code>. */
+	/** Enables vertical synchronization of the window. Defaults to <code>true</code>. */
 	public final BooleanConfigOption enableVSync = new BooleanConfigOption(true);
+	/** Enables toggling between fullscreen and windowed mode with a keyboard shortcut. Defaults to <code>true</code>. */
 	public final BooleanConfigOption enableToggleFullscreen = new BooleanConfigOption(true);
 	
 }

@@ -14,6 +14,7 @@ import java.util.Objects;
 
 /**
  * Manages configuration of the application.
+ * @see ConfigOption
  */
 public class Config {
 	
@@ -34,8 +35,11 @@ public class Config {
 	public final BooleanConfigOption enableDepthRecalculation = new BooleanConfigOption(true);
 	/** Default font used to render text elements. Defaults to <code>null</code>. */
 	public final StringConfigOption defaultFontPath = new StringConfigOption(null);
+	/** The name of the company behind the application. Defaults to {@code null}. */
 	public final StringConfigOption companyName = new StringConfigOption(null);
+	/** The name of the application. Defaults to {@code "Untitled"}. */
 	public final StringConfigOption appName = new StringConfigOption("Untitled", Objects::nonNull);
+	/** Enables the automatic creation of directories. Defaults to {@code true}. */
 	public final BooleanConfigOption autoCreateDirectories = new BooleanConfigOption(true);
 	/** Options related to rendering. */
 	public final RenderConfig rendering = new RenderConfig();
