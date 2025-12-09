@@ -147,6 +147,18 @@ public enum Platform {
 	}
 	
 	/**
+	 * Returns the ordinal of the current platform, or {@code -1} if the platform is not supported.
+	 * @return The ordinal of the current platform.
+	 */
+	public static int getOrdinal() {
+		if (current == null) {
+			return -1;
+		} else {
+			return current.ordinal();
+		}
+	}
+	
+	/**
 	 * Returns the architecture Pine is running on.
 	 * @return The current architecture, or {@code null} if the architecture is not supported.
 	 */

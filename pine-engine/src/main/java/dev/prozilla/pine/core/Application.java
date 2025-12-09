@@ -15,6 +15,7 @@ import dev.prozilla.pine.common.property.selection.WrapMode;
 import dev.prozilla.pine.common.system.PathUtils;
 import dev.prozilla.pine.common.system.Platform;
 import dev.prozilla.pine.common.util.BooleanUtils;
+import dev.prozilla.pine.common.util.function.Callback;
 import dev.prozilla.pine.core.audio.AudioDevice;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -728,6 +729,14 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 */
 	public int getContextId() {
 		return contextId;
+	}
+	
+	/**
+	 * Defers calling a function until the next frame.
+	 * @param callback The function to call in the next frame
+	 */
+	public Timer.Timeout defer(Callback callback) {
+		return timer.startTimeout(callback, 0);
 	}
 	
 	@Override

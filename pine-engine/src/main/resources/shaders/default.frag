@@ -6,6 +6,9 @@ in float fTexId;
 in float fIsArrayTexture;
 
 uniform sampler2D uTexture;
+#if PLATFORM != MACOS
+    uniform sampler2DArray uTextureArray;
+#endif
 
 out vec4 color;
 
@@ -15,7 +18,11 @@ void main() {
 
         if (fIsArrayTexture > 0.5) {
             // Use texture array
-            textureColor = vec4(1, 1, 1, 1);
+            #if PLATFORM == MACOS
+                textureColor = vec4(1, 0, 1, 1);
+            #else
+                textureColor = texture(uTextureArray, vec3(fTexCoords, round(fTexId)));
+            #endif
         } else {
             // Use texture
             textureColor = texture(uTexture, fTexCoords);

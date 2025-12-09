@@ -42,7 +42,9 @@ public enum WindowHint implements IntEnum {
 	/** Specifies whether the OpenGL context should be forward-compatible. */
 	GL_FORWARD_COMPATIBLE(GLFW_OPENGL_FORWARD_COMPAT),
 	/** Specifies which OpenGL profile to create the context for. */
-	GL_PROFILE(GLFW_OPENGL_PROFILE);
+	GL_PROFILE(GLFW_OPENGL_PROFILE),
+	/** Specifies whether to use full resolution framebuffers on retina displays. */
+	RETINA_FRAMEBUFFER(GLFW_COCOA_RETINA_FRAMEBUFFER);
 	
 	private final int value;
 	
