@@ -992,7 +992,6 @@ public class Renderer implements Initializable, Destructible {
 		
 		// Set uniforms
 		program.setUniform("uTexture", 0);
-		program.setUniform("uTextureArray", 0);
 		program.setUniform("uView", new Matrix4f());
 		
 		resize();

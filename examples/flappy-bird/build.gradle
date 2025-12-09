@@ -18,7 +18,8 @@ dependencies {
 tasks.register("start", JavaExec) {
 	mainClass = "dev.prozilla.pine.examples.flappybird.FlappyBird"
 	classpath = sourceSets.main.runtimeClasspath
-	systemProperty "dev-mode", "true"
+    jvmArgs "-XstartOnFirstThread"
+	systemProperty "dev-mode", "false"
 }
 
 tasks.register("editor", JavaExec) {

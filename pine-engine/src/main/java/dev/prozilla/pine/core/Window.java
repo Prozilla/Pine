@@ -59,6 +59,8 @@ public class Window implements Initializable, Destructible, Printable {
 		setHint(WindowHint.GL_VERSION_MINOR, 1);
 		setHint(WindowHint.GL_FORWARD_COMPATIBLE, true);
 		setHint(WindowHint.GL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        // glfwWindowHint(GLFW_COCOA_FRAME_NAME, GLFW_TRUE);
+        glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
 		setVisible(true);
 		
 		// Read config options
@@ -204,6 +206,10 @@ public class Window implements Initializable, Destructible, Printable {
 	public void setTitle(String title) {
 		config.title.setValue(title);
 	}
+
+    public void setFullscreen(boolean fullscreen) {
+        config.fullscreen.set(fullscreen);
+    }
 	
 	/**
 	 * Updates the icons of this window.

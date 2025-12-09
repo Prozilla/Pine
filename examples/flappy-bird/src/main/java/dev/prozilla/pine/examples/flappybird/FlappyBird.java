@@ -33,7 +33,7 @@ public class FlappyBird {
 		flappyBird.setApplicationManagerFactory(GameManager::new);
 		
 		if (!Application.isDevMode()) {
-			flappyBird.setFullscreen(true);
+			// flappyBird.setFullscreen(true);
 			flappyBird.setTargetFps(0);
 		}
 		

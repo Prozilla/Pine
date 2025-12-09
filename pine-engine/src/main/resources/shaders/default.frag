@@ -6,7 +6,6 @@ in float fTexId;
 in float fIsArrayTexture;
 
 uniform sampler2D uTexture;
-uniform sampler2DArray uTextureArray;
 
 out vec4 color;
 
@@ -16,7 +15,7 @@ void main() {
 
         if (fIsArrayTexture > 0.5) {
             // Use texture array
-            textureColor = texture(uTextureArray, vec3(fTexCoords, round(fTexId)));
+            textureColor = vec4(1, 1, 1, 1);
         } else {
             // Use texture
             textureColor = texture(uTexture, fTexCoords);

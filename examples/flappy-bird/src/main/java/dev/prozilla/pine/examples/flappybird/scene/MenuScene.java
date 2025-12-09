@@ -11,5 +11,9 @@ public class MenuScene extends SceneBase {
 		getInput().showCursor();
 		
 		world.addEntity(new MenuPrefab(font));
+
+        getTimer().startTimeout(() -> {
+            application.getWindow().setFullscreen(true);
+        }, 0);
 	}
 }
