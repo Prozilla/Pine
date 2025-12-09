@@ -19,9 +19,6 @@ public class MouseButtonProperty extends SimpleMutableObjectProperty<MouseButton
 	
 	@Override
 	public boolean isPressed(Input input) {
-		if (isNull()) {
-			return false;
-		}
 		return input.getMouseButton(getValue());
 	}
 	

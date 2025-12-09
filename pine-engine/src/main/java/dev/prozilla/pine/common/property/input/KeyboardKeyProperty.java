@@ -19,17 +19,11 @@ public class KeyboardKeyProperty extends SimpleMutableObjectProperty<Key> implem
 	
 	@Override
 	public boolean isPressed(Input input) {
-		if (isNull()) {
-			return false;
-		}
 		return input.getKey(getValue());
 	}
 	
 	@Override
 	public boolean isDown(Input input) {
-		if (isNull()) {
-			return false;
-		}
 		return input.getKeyDown(getValue());
 	}
 	

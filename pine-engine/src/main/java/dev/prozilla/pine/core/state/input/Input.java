@@ -22,7 +22,9 @@ import dev.prozilla.pine.core.state.input.gamepad.GamepadInput;
 import org.lwjgl.glfw.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -33,16 +35,18 @@ public class Input implements Initializable, Destructible {
 	
 	// Keyboard
 	/** Array of keys that are currently pressed. */
-	private final List<Integer> keysPressed;
+	private final Set<Integer> keysPressed;
 	/** Array of keys that are down in the current frame. */
-	private final List<Integer> keysDown;
-	private final List<Integer> previousKeysDown;
+	private final Set<Integer> keysDown;
+	/** Array of keys that are repeated in the current frame. */
+	private final Set<Integer> keysRepeated;
+	private final Set<Integer> previousKeysDown;
 	private final List<TextListener> textListeners;
 	
 	// Mouse
-	private final List<Integer> mouseButtonsPressed;
-	private final List<Integer> mouseButtonsDown;
-	private final List<Integer> previousMouseButtonsDown;
+	private final Set<Integer> mouseButtonsPressed;
+	private final Set<Integer> mouseButtonsDown;
+	private final Set<Integer> previousMouseButtonsDown;
 	
 	private final Vector2f scroll;
 	private final Vector2f currentScroll;
@@ -96,14 +100,15 @@ public class Input implements Initializable, Destructible {
 		window = application.getWindow();
 		logger = application.getLogger();
 		
-		keysPressed = new ArrayList<>();
-		keysDown = new ArrayList<>();
-		previousKeysDown = new ArrayList<>();
+		keysPressed = new HashSet<>();
+		keysDown = new HashSet<>();
+		keysRepeated = new HashSet<>();
+		previousKeysDown = new HashSet<>();
 		textListeners = new ArrayList<>();
 		
-		mouseButtonsPressed = new ArrayList<>();
-		mouseButtonsDown = new ArrayList<>();
-		previousMouseButtonsDown = new ArrayList<>();
+		mouseButtonsPressed = new HashSet<>();
+		mouseButtonsDown = new HashSet<>();
+		previousMouseButtonsDown = new HashSet<>();
 		
 		scroll = new Vector2f();
 		currentScroll = new Vector2f();
@@ -143,9 +148,11 @@ public class Input implements Initializable, Destructible {
 					keysPressed.add(key);
 					keysDown.add(key);
 				} else if (action == GLFW_RELEASE) {
-					keysPressed.remove((Integer)key);
+					Integer keyInt = key;
+					keysPressed.remove(keyInt);
+					keysRepeated.remove(keyInt);
 				} else if (action == GLFW_REPEAT) {
-					keysDown.add(key);
+					keysRepeated.add(key);
 				}
 			}
 		});
@@ -395,15 +402,26 @@ public class Input implements Initializable, Destructible {
 	 * @return True if the key is pressed.
 	 */
 	public boolean getKey(int key, boolean stopPropagation) {
-		boolean pressed = keysPressed.contains(key);
-		
-		if (pressed && stopPropagation) {
-			Integer keyInt = key;
-			keysPressed.remove(keyInt);
-			keysDown.remove(keyInt);
+		return handleKey(keysPressed, key, stopPropagation);
+	}
+	
+	public boolean getKeyRepeated(Key key) {
+		return getKeyRepeated(key, STOP_PROPAGATION_DEFAULT);
+	}
+	
+	public boolean getKeyRepeated(Key key, boolean stopPropagation) {
+		if (key == null) {
+			return false;
 		}
-		
-		return pressed;
+		return getKeyRepeated(key.getValue(), stopPropagation);
+	}
+	
+	public boolean getKeyRepeated(int key) {
+		return getKeyRepeated(key, STOP_PROPAGATION_DEFAULT);
+	}
+	
+	public boolean getKeyRepeated(int key, boolean stopPropagation) {
+		return handleKey(keysDown.contains(key) || keysRepeated.contains(key), key, stopPropagation);
 	}
 	
 	/**
@@ -451,15 +469,24 @@ public class Input implements Initializable, Destructible {
 	 * @return {@code true} if the key is down.
 	 */
 	public boolean getKeyDown(int key, boolean stopPropagation) {
-		boolean down = keysDown.contains(key);
-		
-		if (down && stopPropagation) {
-			Integer keyInt = key;
-			keysPressed.remove(keyInt);
-			keysDown.remove(keyInt);
+		return handleKey(keysDown, key, stopPropagation);
+	}
+	
+	private boolean handleKey(Set<Integer> activeKeys, int key, boolean stopPropagation) {
+		return handleKey(activeKeys.contains(key), key, stopPropagation);
+	}
+	
+	private boolean handleKey(boolean active, int key, boolean stopPropagation) {
+		if (active && stopPropagation) {
+			stopKeyPropagation(key);
 		}
-		
-		return down;
+		return active;
+	}
+	
+	private void stopKeyPropagation(Integer key) {
+		keysPressed.remove(key);
+		keysDown.remove(key);
+		keysRepeated.remove(key);
 	}
 	
 	public void addTextListener(TextListener listener) {
@@ -540,6 +567,9 @@ public class Input implements Initializable, Destructible {
 	 * @return True if the key is pressed.
 	 */
 	public boolean getMouseButton(MouseButton button, boolean stopPropagation) {
+		if (button == null) {
+			return false;
+		}
 		return getMouseButton(button.getValue(), stopPropagation);
 	}
 	

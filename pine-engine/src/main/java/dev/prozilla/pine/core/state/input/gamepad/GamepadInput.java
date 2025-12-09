@@ -10,6 +10,9 @@ public interface GamepadInput {
 	 * @return Value of the axis
 	 */
 	default float getAxis(GamepadAxis axis) {
+		if (axis == null) {
+			return 0;
+		}
 		return getAxis(axis.getValue());
 	}
 	
@@ -25,6 +28,9 @@ public interface GamepadInput {
 	 * @return {@code true} if the button is being pressed
 	 */
 	default boolean getButton(GamepadButton button) {
+		if (button == null) {
+			return false;
+		}
 		return getButton(button.getValue());
 	}
 	
@@ -36,6 +42,9 @@ public interface GamepadInput {
 	boolean getButton(int button);
 	
 	default boolean getButtonDown(GamepadButton button) {
+		if (button == null) {
+			return false;
+		}
 		return getButtonDown(button.getValue());
 	}
 	
