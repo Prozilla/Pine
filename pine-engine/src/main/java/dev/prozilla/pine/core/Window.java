@@ -65,6 +65,12 @@ public class Window implements Initializable, Destructible, Printable {
 		setHint(WindowHint.RETINA_FRAMEBUFFER, false);
 		setVisible(true);
 		
+		// On MacOS, windows can't be initialized in fullscreen mode
+		boolean deferredFullscreen = config.fullscreen.get() && Platform.get() == Platform.MACOS;
+		if (deferredFullscreen) {
+			config.fullscreen.set(false);
+		}
+		
 		// Read config options
 		if (!isInitialized) {
 			config.showDecorations.read(this::setDecorated);
@@ -91,11 +97,6 @@ public class Window implements Initializable, Destructible, Printable {
 					}
 				}
 			});
-		}
-		
-		boolean deferredFullscreen = config.fullscreen.get() && Platform.get() == Platform.MACOS;
-		if (deferredFullscreen) {
-			config.fullscreen.set(false);
 		}
 		
 		// Prepare fullscreen window
