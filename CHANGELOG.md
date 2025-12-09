@@ -1,5 +1,67 @@
 # Changelog
 
+## v3.0.0
+
+From this version on, experimental features of Pine will be annotated with `@Experimental`. Minor versions might contain breaking changes for these experimental features.
+
+### New Features
+
+- Added DeferredList, which supports mutations during iterations
+- Completely rewrote all properties
+  - Each type of property has its own interface (most of them are functional interfaces), to support different implementations
+  - Properties with primitive values for integers, floats and booleans
+  - Special properties for certain objects like strings, colors, vectors, etc.
+  - Properties can be derived from other properties
+  - All properties are functors
+- New input bindings system using properties
+- Added a JSON deserializer using properties with support for hot-reloading
+- Added basic 2D shape renderers
+- Added 2D shape modifiers
+- Added basic 2D colliders
+- Added application modes
+  - New headless mode which can be used for testing
+
+### Changes
+
+- Added texture wrap and filter options
+- Added configurable default settings for loading textures
+- Added utility methods that unbox boxed values with support for null values
+- Added more node-related events
+- Added support for drawing a single triangle or an array of triangles instead of a quad
+- Refactored configuration system using properties
+- Added `getKeyRepeated()` which also allows repeated key presses and made `getKeyDown()` ignore repeated key presses
+- Added support for fallback values when fetching storage items
+- Added properties based on storage items
+- Made all standard systems final
+- Made applications load scenes based on references instead of arbitrary ID's
+
+### Fixes
+
+- Fixed input node causing errors when removing text to the left of the cursor
+- Fixed dev console failing to open after loading a scene for the second time
+- Made initialization system also process the children of an activated entity
+- Fixed null values causing errors when checking for input
+- Fixed scenes causing errors when reloaded by a system
+
+### Documentation
+
+- Added custom `@Experimental` annotation
+
+### Build Tool
+
+- Added the option to exclude the JRE from the build to reduce build size
+- Added the option to create a Windows installer for builds using NSIS
+
+### Examples
+
+- Flappy Bird:
+  - Added simple settings and game over menus
+  - Added fixed seed
+  - Implemented colliders for obstacles
+  - Implemented deserializer for player data
+  - Implemented local storage for storing the player's highscore and seed
+  - Implemented new input bindings
+
 ## v2.1.0
 
 ### New Features

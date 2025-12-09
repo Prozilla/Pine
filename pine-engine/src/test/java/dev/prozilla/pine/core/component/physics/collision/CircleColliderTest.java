@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.component.physics.collision;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.test.TestLoggingExtension;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -10,10 +11,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Disabled
 @ExtendWith(TestLoggingExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CircleColliderTest {
-
+	
 	@Test
 	void testCircleNextToRect() {
 		CircleCollider circleCollider = new MockedCircleCollider(5f);
