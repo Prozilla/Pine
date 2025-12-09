@@ -16,9 +16,9 @@ import static org.lwjgl.opengl.GL11.glGetString;
 public final class Pine {
 	
 	/** Current major version of Pine. */
-	public static final int VERSION_MAJOR = 2;
+	public static final int VERSION_MAJOR = 3;
 	/** Current minor version of Pine. */
-	public static final int VERSION_MINOR = 1;
+	public static final int VERSION_MINOR = 0;
 	/** Current patch version of Pine. */
 	public static final int VERSION_PATCH = 0;
 	
