@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.component.physics.collision;
 
+import dev.prozilla.pine.Pine;
+import dev.prozilla.pine.common.Experimental;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.system.Color;
@@ -19,7 +21,9 @@ public class CircleCollider extends Collider {
 		this.radius = radius;
 	}
 	
+	@Experimental
 	public boolean collidesWith(CircleCollider other) {
+		Pine.useExperimentalFeature();
 		float x1 = getOriginX();
 		float y1 = getOriginY();
 		float x2 = other.getOriginX();
@@ -27,7 +31,9 @@ public class CircleCollider extends Collider {
 		return Vector2f.distance(x1, y1, x2, y2) <= radius + other.radius;
 	}
 	
+	@Experimental
 	public boolean collidesWith(RectCollider other) {
+		Pine.useExperimentalFeature();
 		float circleX = getOriginX();
 		float circleY = getOriginY();
 		
@@ -53,6 +59,7 @@ public class CircleCollider extends Collider {
 		return other.isInside(x, y);
 	}
 	
+	@Experimental
 	@Override
 	public boolean collidesWith(Collider other) {
 		return other.collidesWith(this);

@@ -1,5 +1,6 @@
 package dev.prozilla.pine.examples.flappybird;
 
+import dev.prozilla.pine.Pine;
 import dev.prozilla.pine.common.asset.image.Texture;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.core.Application;
@@ -43,6 +44,7 @@ public class FlappyBird {
 	}
 	
 	public static void main(String[] args) {
+		Pine.enableExperimentalFeatures();
 		ApplicationBuilder flappyBird = getApplication();
 		flappyBird.build().run();
 	}

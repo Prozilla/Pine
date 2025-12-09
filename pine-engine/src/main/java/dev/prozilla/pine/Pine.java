@@ -22,6 +22,8 @@ public final class Pine {
 	/** Current patch version of Pine. */
 	public static final int VERSION_PATCH = 0;
 	
+	private static boolean enableExperimentalFeatures = false;
+	
 	private Pine() {}
 	
 	/**
@@ -102,6 +104,27 @@ public final class Pine {
 	 */
 	public static String getGLFWVersion() {
 		return glfwGetVersionString();
+	}
+	
+	/**
+	 * Enables experimental features of Pine.
+	 * @see dev.prozilla.pine.common.Experimental
+	 */
+	public static void enableExperimentalFeatures() {
+		enableExperimentalFeatures = true;
+		Logger.system.warn("Experimental features are enabled.");
+	}
+	
+	/**
+	 * Checks if experimental features are enabled.
+	 *
+	 * <p>All experimental methods and constructors must call this method to ensure cautious usage of experimental features.</p>
+	 * @throws RuntimeException If experimental features are disabled.
+	 */
+	public static void useExperimentalFeature() throws RuntimeException {
+		if (!enableExperimentalFeatures) {
+			throw new RuntimeException("experimental features are disabled");
+		}
 	}
 	
 	/**

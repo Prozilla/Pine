@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.component.physics.collision;
 
+import dev.prozilla.pine.Pine;
+import dev.prozilla.pine.common.Experimental;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -21,17 +23,21 @@ public class RectCollider extends Collider {
 		this.size = Checks.isNotNull(size, "size");
 	}
 	
+	@Experimental
 	public boolean collidesWith(RectCollider other) {
+		Pine.useExperimentalFeature();
 		return !(getLeft() > other.getRight()
 			|| getRight() < other.getLeft()
 			|| getBottom() < other.getTop()
 			|| getTop() > other.getBottom());
 	}
 	
+	@Experimental
 	public boolean collidesWith(CircleCollider other) {
 		return other.collidesWith(this);
 	}
 	
+	@Experimental
 	@Override
 	public boolean collidesWith(Collider other) {
 		return other.collidesWith(this);

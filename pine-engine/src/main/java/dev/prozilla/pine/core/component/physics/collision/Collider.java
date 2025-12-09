@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.component.physics.collision;
 
+import dev.prozilla.pine.Pine;
+import dev.prozilla.pine.common.Experimental;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -27,7 +29,9 @@ public class Collider extends Component implements ColoredDrawable {
 	 * @param other The other collider
 	 * @return {@code true} if the colliders are colliding.
 	 */
+	@Experimental
 	public boolean collidesWith(Collider other) {
+		Pine.useExperimentalFeature();
 		return false;
 	}
 	

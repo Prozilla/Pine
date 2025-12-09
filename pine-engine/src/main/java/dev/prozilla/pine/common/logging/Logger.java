@@ -91,7 +91,14 @@ public class Logger implements LogHandler {
 		if (!isErrorActive()) {
 			return;
 		}
-		errorLogHandler.log(applyFormat(Ansi.red(message)));
+		errorLogHandler.log(applyFormat(Ansi.red(formatBadge("error") + message)));
+	}
+	
+	/**
+	 * Logs a warning message.
+	 */
+	public void warn(String message) {
+		log(Ansi.yellow(formatBadge("warning") + message));
 	}
 	
 	public void logPath(String filePath) {
