@@ -223,14 +223,10 @@ public class Window implements Initializable, Destructible, Printable {
 		
 		try (GLFWImage.Buffer icons = GLFWImage.malloc(images.length)) {
 			for (int i = 0; i < images.length; i++) {
-				Image image = images[i];
-				icons.position(i)
-					.width(image.getWidth())
-					.height(image.getHeight())
-					.pixels(image.getFlippedImage());
+				icons.put(i, images[i].toGLFWImage());
 			}
 			
-			icons.position(0);
+			icons.rewind();
 			glfwSetWindowIcon(id, icons);
 		}
 	}
@@ -351,7 +347,7 @@ public class Window implements Initializable, Destructible, Printable {
 	 */
 	public void setHint(int hint, int value) {
 		if (!WindowHint.isValid(hint)) {
-			logger.log("Unknown window hint: " + hint);
+			logger.warn("Unknown window hint: " + hint);
 		}
 		glfwWindowHint(hint, value);
 	}

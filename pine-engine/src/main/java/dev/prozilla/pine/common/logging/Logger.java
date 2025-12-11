@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.logging;
 
 import dev.prozilla.pine.common.logging.handler.LogHandler;
+import dev.prozilla.pine.common.logging.handler.StandardErrorLogHandler;
 import dev.prozilla.pine.common.logging.handler.StandardOutputLogHandler;
 import dev.prozilla.pine.common.system.Ansi;
 import dev.prozilla.pine.common.system.PathUtils;
@@ -24,13 +25,14 @@ public class Logger implements LogHandler {
 	
 	// Handlers
 	protected LogHandler outputLogHandler;
+	protected LogHandler warningLogHandler;
 	protected LogHandler errorLogHandler;
 	
 	/**
 	 * The global system logger for writing things to the console.
 	 * Equivalent of {@link System#out} and {@link System#err}.
 	 */
-	public static final Logger system = new Logger(new StandardOutputLogHandler(), new StandardOutputLogHandler())
+	public static final Logger system = new Logger(new StandardOutputLogHandler(), new StandardErrorLogHandler(), new StandardOutputLogHandler())
 		.setPrefix(formatBadge("system", Ansi.PURPLE));
 	
 	/**
@@ -47,12 +49,21 @@ public class Logger implements LogHandler {
 		this(outputLogHandler, null);
 	}
 	
+	
 	/**
 	 * Creates a logger with an output and error log handler.
 	 */
 	public Logger(LogHandler outputLogHandler, LogHandler errorLogHandler) {
+		this(outputLogHandler, errorLogHandler, null);
+	}
+	
+	/**
+	 * Creates a logger with an output, error and warning log handler.
+	 */
+	public Logger(LogHandler outputLogHandler, LogHandler errorLogHandler, LogHandler warningLogHandler) {
 		this.outputLogHandler = outputLogHandler;
 		this.errorLogHandler = errorLogHandler;
+		this.warningLogHandler = warningLogHandler;
 		
 		enabled = outputLogHandler != null || errorLogHandler != null;
 		enableAnsi = true;
@@ -98,7 +109,10 @@ public class Logger implements LogHandler {
 	 * Logs a warning message.
 	 */
 	public void warn(String message) {
-		log(Ansi.yellow(formatBadge("warning") + message));
+		if (!isWarningActive()) {
+			return;
+		}
+		warningLogHandler.log(applyFormat(Ansi.yellow(formatBadge("warning") + message)));
 	}
 	
 	public void logPath(String filePath) {
@@ -267,6 +281,10 @@ public class Logger implements LogHandler {
 		return enabled && errorLogHandler != null;
 	}
 	
+	protected boolean isWarningActive() {
+		return enabled && warningLogHandler != null;
+	}
+	
 	/**
 	 * Redirects logs from one log level to another.
 	 * @param from Log level to redirect logs from
@@ -276,11 +294,13 @@ public class Logger implements LogHandler {
 		LogHandler handler = switch (to) {
 			case OUTPUT -> outputLogHandler;
 			case ERROR -> errorLogHandler;
+			case WARN -> warningLogHandler;
 		};
 		
 		switch (from) {
 			case OUTPUT -> outputLogHandler = handler;
 			case ERROR -> errorLogHandler = handler;
+			case WARN -> warningLogHandler = handler;
 		}
 		
 		return this;
@@ -312,6 +332,10 @@ public class Logger implements LogHandler {
 	public Logger disableAnsi() {
 		enableAnsi = false;
 		return this;
+	}
+	
+	public static Logger unified(LogHandler logHandler) {
+		return new Logger(logHandler, logHandler, logHandler);
 	}
 	
 	public static String formatPath(String path) {
