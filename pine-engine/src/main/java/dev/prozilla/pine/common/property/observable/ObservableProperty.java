@@ -7,7 +7,7 @@ import dev.prozilla.pine.common.property.mutable.MutableProperty;
  */
 public interface ObservableProperty<T> extends MutableProperty<T> {
 	
-	String OBSERVER_ERROR = "observer failed";
+	String OBSERVER_ERROR = "Observer failed";
 	
 	/**
 	 * Adds an observer that is immediately called with the current value.

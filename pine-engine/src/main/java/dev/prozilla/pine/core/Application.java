@@ -242,7 +242,6 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 		}
 		contextId = 0;
 		currentScene.init();
-		loadIcons();
 		modManager.init();
 		localStorage.init();
 		
@@ -653,19 +652,18 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	/**
 	 * Sets the icons of the application's window.
 	 * @param icons Paths of icons
+	 * @deprecated Replaced by {@link Window#setIcon(String...)} as of 3.0.1
 	 */
+	@Deprecated
 	public void setIcons(String... icons) {
-		config.window.icon.setValue(icons);
-		
-		// Reload icons if they were changed after initialization
-		if (isOpenGLInitialized()) {
-			loadIcons();
-		}
+		window.setIcon(icons);
 	}
 	
 	/**
 	 * Loads the window icons.
+	 * @deprecated Obsolete as of 3.0.1
 	 */
+	@Deprecated
 	public void loadIcons() {
 		if (config.window.icon.isNull() || !mode.usesOpenGL || isPreview()) {
 			return;

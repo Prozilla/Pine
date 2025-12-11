@@ -13,7 +13,7 @@ import dev.prozilla.pine.core.state.config.Config;
  */
 public interface ConfigOption<T> extends SimpleObservableProperty<T>, Transceivable<ConfigOption<T>> {
 	
-	String INITIAL_VALUE_ERROR = "initial value must be a valid value";
+	String INITIAL_VALUE_ERROR = "Initial value must be a valid value";
 
 	/**
 	 * Copies the value of this option to another option.

@@ -2,9 +2,12 @@ package dev.prozilla.pine.common.util;
 
 import org.jetbrains.annotations.Contract;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 import java.util.StringJoiner;
+import java.util.function.Predicate;
 
 public final class ArrayUtils {
 	
@@ -139,6 +142,47 @@ public final class ArrayUtils {
 	 */
 	public static <E> E[] removeLast(int count, E[] array) {
 		return Arrays.copyOfRange(array, 0, array.length - count);
+	}
+	
+	/**
+	 * Removes all elements from an array that are {@code null}.
+	 * @param array The original array
+	 * @return The array without {@code null} elements.
+	 */
+	public static <E> E[] filterNull(E[] array) {
+		return filter(array, Objects::nonNull);
+	}
+	
+	/**
+	 * Removes all elements from an array that match a given predicate?
+	 * @param array The original array
+	 * @param predicate The predicate to evaluate
+	 * @return The filtered array, only containing elements that match the predicate.
+	 */
+	public static <E> E[] filter(E[] array, Predicate<E> predicate) {
+		if (array == null || array.length == 0) {
+			return array;
+		}
+		
+		int newLength = 0;
+		for (E element : array) {
+			if (predicate.test(element)) {
+				newLength++;
+			}
+		}
+		
+		@SuppressWarnings("unchecked")
+		E[] newArray = (E[])Array.newInstance(array.getClass().getComponentType(), newLength);
+		
+		int index = 0;
+		for (E element : array) {
+			if (predicate.test(element)) {
+				newArray[index] = element;
+				index++;
+			}
+		}
+		
+		return newArray;
 	}
 	
 }

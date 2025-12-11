@@ -2,16 +2,19 @@ package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.asset.image.Image;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.config.WindowConfig;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -27,7 +30,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  */
 public class Window implements Initializable, Destructible, Printable {
 	
-	/** Handle of the window */
+	/** Handle of this window */
 	private long id;
 	
 	public int width;
@@ -53,6 +56,8 @@ public class Window implements Initializable, Destructible, Printable {
 	 */
 	@Override
 	public void init() throws RuntimeException {
+		boolean isAlreadyInitialized = isInitialized;
+		
 		// Set window hints
 		setDefaultHints();
 		setHint(WindowHint.GL_VERSION_MAJOR, 4);
@@ -62,7 +67,7 @@ public class Window implements Initializable, Destructible, Printable {
 		setVisible(true);
 		
 		// Read config options
-		if (!isInitialized) {
+		if (!isAlreadyInitialized) {
 			config.showDecorations.read(this::setDecorated);
 			config.title.read((title) -> {
 				if (isInitialized) {
@@ -126,6 +131,11 @@ public class Window implements Initializable, Destructible, Printable {
 		});
 		
 		isInitialized = true;
+		
+		// Initialize icon of window
+		if (!isAlreadyInitialized) {
+			config.icon.read(this::updateIcon);
+		}
 	}
 	
 	/**
@@ -151,7 +161,7 @@ public class Window implements Initializable, Destructible, Printable {
 	}
 	
 	/**
-	 * Destroys the window.
+	 * Destroys this window.
 	 */
 	@Override
 	public void destroy() {
@@ -164,8 +174,8 @@ public class Window implements Initializable, Destructible, Printable {
 	}
 	
 	/**
-	 * Determines whether the window should be closed.
-	 * @return {@code true} if the window should be closed.
+	 * Determines whether this window should be closed.
+	 * @return {@code true} if this window should be closed.
 	 */
 	public boolean shouldClose() {
 		if (!isInitialized) {
@@ -181,6 +191,10 @@ public class Window implements Initializable, Destructible, Printable {
 		renderer.resize();
 	}
 	
+	/**
+	 * Creates a new vector with the width and height of this window.
+	 */
+	@Contract("-> new")
 	public Vector2i getSize() {
 		return new Vector2i(width, height);
 	}
@@ -198,7 +212,7 @@ public class Window implements Initializable, Destructible, Printable {
 	}
 	
 	/**
-	 * Updates the title of this window.
+	 * Sets the title of this window by setting the value of {@link WindowConfig#title}.
 	 * @param title Title
 	 */
 	public void setTitle(String title) {
@@ -206,7 +220,7 @@ public class Window implements Initializable, Destructible, Printable {
 	}
 	
 	/**
-	 * Toggles the fullscreen mode of this window.
+	 * Toggles the fullscreen mode of this window by setting the value of {@link WindowConfig#fullscreen}.
 	 * @param fullscreen Whether to enable or disable fullscreen mode
 	 */
 	public void setFullscreen(boolean fullscreen) {
@@ -217,22 +231,70 @@ public class Window implements Initializable, Destructible, Printable {
 	 * Updates the icons of this window.
 	 * Uses the first element of the images array as the default icon.
 	 * @param images Array of icon images
+	 * @deprecated Replaced by {@link #setIcon(Image...)} as of 3.0.1
 	 */
+	@Deprecated
 	public void setIcons(Image[] images) {
-		checkStatus();
+		setIcon(images);
+	}
+	
+	/**
+	 * Sets the icon of this window by setting the value of {@link WindowConfig#icon} to the paths of the given images.
+	 * @param images The images for the icon
+	 * @see #setIcon(String...)
+	 */
+	public void setIcon(Image... images) {
+		String[] imagePaths = new String[images.length];
+		for (int i = 0; i < images.length; i++) {
+			Image image = images[i];
+			if (image != null) {
+				imagePaths[i] = image.getPath();
+			}
+		}
+		setIcon(imagePaths);
+	}
+	
+	/**
+	 * Sets the icon of this window by setting the value of {@link WindowConfig#icon}.
+	 *
+	 * <p>If multiple images are supplied, the system will use the image that is closest to the preferred size.</p>
+	 * @param imagePaths The paths of the image files for the icon
+	 */
+	public void setIcon(String... imagePaths) {
+		config.icon.setValue(imagePaths);
+	}
+	
+	private void updateIcon(String[] imagePaths) {
+		if (!isInitialized) {
+			return;
+		}
 		
-		try (GLFWImage.Buffer icons = GLFWImage.malloc(images.length)) {
-			for (int i = 0; i < images.length; i++) {
-				icons.put(i, images[i].toGLFWImage());
+		imagePaths = ArrayUtils.filterNull(imagePaths);
+		
+		// Remove icon if missing
+		if (imagePaths == null || imagePaths.length == 0) {
+			glfwSetWindowIcon(id, null);
+			return;
+		}
+		
+		try (GLFWImage.Buffer icons = GLFWImage.malloc(imagePaths.length)) {
+			for (int i = 0; i < imagePaths.length; i++) {
+				String imagePath = imagePaths[i];
+				if (imagePath != null) {
+					Image image = AssetPools.images.load(imagePath);
+					icons.put(i, image.toGLFWImage());
+				}
 			}
 			
 			icons.rewind();
 			glfwSetWindowIcon(id, icons);
+		} catch (RuntimeException e) {
+			logger.error("Failed to load icon", e);
 		}
 	}
 	
 	/**
-	 * Sets the opacity of the entire window.
+	 * Sets the opacity of this entire window.
 	 * @param opacity The opacity, in the range of {@code 0f} and {@code 1f}
 	 */
 	public void setOpacity(float opacity) {
@@ -360,8 +422,8 @@ public class Window implements Initializable, Destructible, Printable {
 	}
 	
 	/**
-	 * Checks if the window has been initialized.
-	 * @throws IllegalStateException If the window has not been initialized yet.
+	 * Checks if this window has been initialized.
+	 * @throws IllegalStateException If this window has not been initialized yet.
 	 */
 	protected void checkStatus() throws IllegalStateException {
 		if (!isInitialized) {

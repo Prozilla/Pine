@@ -1,7 +1,5 @@
 package dev.prozilla.pine.core;
 
-import dev.prozilla.pine.common.asset.image.Image;
-
 public class HeadlessWindow extends Window {
 	
 	public HeadlessWindow(Application application) {
@@ -10,11 +8,6 @@ public class HeadlessWindow extends Window {
 	
 	@Override
 	public void init() {
-	
-	}
-	
-	@Override
-	public void setIcons(Image[] images) {
 	
 	}
 	
