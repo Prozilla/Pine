@@ -9,6 +9,7 @@ import dev.prozilla.pine.common.system.PathUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.List;
 import java.util.StringJoiner;
 
 /**
@@ -65,7 +66,7 @@ public class Logger implements LogHandler {
 		this.errorLogHandler = errorLogHandler;
 		this.warningLogHandler = warningLogHandler;
 		
-		enabled = outputLogHandler != null || errorLogHandler != null;
+		enabled = outputLogHandler != null || errorLogHandler != null || warningLogHandler != null;
 		enableAnsi = true;
 	}
 	
@@ -125,6 +126,14 @@ public class Logger implements LogHandler {
 	
 	public void logHeader(String header) {
 		log(Logger.formatHeader(header));
+	}
+	
+	public <E> void logArray(E[] array) {
+		logArray(array, "Array");
+	}
+	
+	public <E> void logArray(E[] array, String label) {
+		logCollection(List.of(array), label);
 	}
 	
 	public void logCollection(Collection<?> collection) {
@@ -332,10 +341,6 @@ public class Logger implements LogHandler {
 	public Logger disableAnsi() {
 		enableAnsi = false;
 		return this;
-	}
-	
-	public static Logger unified(LogHandler logHandler) {
-		return new Logger(logHandler, logHandler, logHandler);
 	}
 	
 	public static String formatPath(String path) {

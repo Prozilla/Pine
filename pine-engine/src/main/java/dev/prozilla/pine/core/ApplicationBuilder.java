@@ -23,10 +23,6 @@ public class ApplicationBuilder {
 	private int targetFps;
 	private ApplicationMode mode;
 	
-	// App setters parameters
-	private String[] icons;
-	private String defaultFontPath;
-	
 	// App configuration
 	private Config config;
 
@@ -123,12 +119,12 @@ public class ApplicationBuilder {
 	 * @param icons String paths of the icons relative to the resources directory.
 	 */
 	public ApplicationBuilder setIcons(String... icons) {
-		this.icons = icons;
+		config.window.icon.setValue(icons);
 		return this;
 	}
 	
 	public ApplicationBuilder setDefaultFont(String fontPath) {
-		defaultFontPath = fontPath;
+		config.defaultFontPath.setValue(fontPath);
 		return this;
 	}
 	
@@ -195,14 +191,6 @@ public class ApplicationBuilder {
 		
 		if (applicationManagerFactory != null) {
 			application.setApplicationManager(applicationManagerFactory.apply(application));
-		}
-		
-		// Setters
-		if (icons != null) {
-			application.setIcons(icons);
-		}
-		if (defaultFontPath != null) {
-			application.setDefaultFont(defaultFontPath);
 		}
 		
 		// Configuration

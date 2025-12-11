@@ -667,13 +667,12 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * Loads the window icons.
 	 */
 	public void loadIcons() {
-		if (!config.window.icon.isNotNull() || !mode.usesOpenGL) {
+		if (config.window.icon.isNull() || !mode.usesOpenGL || isPreview()) {
 			return;
 		}
 		
 		String[] icons = config.window.icon.getValue();
-		
-		if (icons.length == 0 || isPreview()) {
+		if (icons.length == 0) {
 			return;
 		}
 		
