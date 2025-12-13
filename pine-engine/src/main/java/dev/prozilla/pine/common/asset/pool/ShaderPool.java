@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.asset.pool;
 
+import dev.prozilla.pine.common.system.Platform;
 import dev.prozilla.pine.core.rendering.Shader;
 
 public final class ShaderPool extends TextAssetPool<Shader> {
@@ -29,6 +30,16 @@ public final class ShaderPool extends TextAssetPool<Shader> {
 	public Shader load(int type, String path) {
 		this.type = type;
 		return load(path);
+	}
+	
+	@Override
+	protected String preprocess(StringBuilder stringBuilder) {
+		int nextLineStart = stringBuilder.indexOf("\n") + 1;
+		stringBuilder.insert(nextLineStart, Shader.define("PLATFORM", Platform.getOrdinal()));
+		for (Platform platform : Platform.values()) {
+			stringBuilder.insert(nextLineStart, Shader.define(platform.name(), platform.ordinal()));
+		}
+		return super.preprocess(stringBuilder);
 	}
 	
 	@Override

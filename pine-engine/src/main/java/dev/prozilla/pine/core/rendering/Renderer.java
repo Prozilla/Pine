@@ -12,6 +12,7 @@ import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.common.system.Platform;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.Tracker;
@@ -992,7 +993,9 @@ public class Renderer implements Initializable, Destructible {
 		
 		// Set uniforms
 		program.setUniform("uTexture", 0);
-		program.setUniform("uTextureArray", 0);
+		if (Platform.get() != Platform.MACOS) {
+			program.setUniform("uTextureArray", 0);
+		}
 		program.setUniform("uView", new Matrix4f());
 		
 		resize();

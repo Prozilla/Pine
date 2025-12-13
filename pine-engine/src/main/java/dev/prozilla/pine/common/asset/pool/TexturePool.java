@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.asset.pool;
 
 import dev.prozilla.pine.common.asset.image.*;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.system.Platform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,11 @@ public final class TexturePool extends AssetPool<TextureAsset> implements MultiA
 		Image image = imagePool.load(path);
 		
 		TextureAsset texture = null;
+		
+		// MacOS does not seem to support texture arrays
+		if (Platform.get() == Platform.MACOS) {
+			textureArrayPolicy = TextureArrayPolicy.NEVER;
+		}
 		
 		// Look for available texture array to load texture into
 		if (textureArrayPolicy.canUseArray()) {

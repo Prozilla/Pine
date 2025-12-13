@@ -33,13 +33,22 @@ public abstract class TextAssetPool<T extends Asset> extends AssetPool<T> {
 			return fail(path, null, e);
 		}
 		
-		T result = parse(path, stringBuilder.toString());
+		T result = parse(path, preprocess(stringBuilder));
 		
 		if (result == null) {
 			return fail(path, "Failed to parse");
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * Preprocesses the content of the text file.
+	 * @param stringBuilder The string builder containing the content of the text file.
+	 * @return The preprocessed content of the text file.
+	 */
+	protected String preprocess(StringBuilder stringBuilder) {
+		return stringBuilder.toString();
 	}
 	
 	/**

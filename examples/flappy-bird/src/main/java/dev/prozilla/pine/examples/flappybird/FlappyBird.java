@@ -38,6 +38,8 @@ public class FlappyBird {
 			flappyBird.setTargetFps(0);
 		}
 		
+		flappyBird.setFullscreen(true);
+		
 		AssetPools.textures.setDefaultTextureFilter(Texture.Filter.NEAREST);
 		
 		return flappyBird;

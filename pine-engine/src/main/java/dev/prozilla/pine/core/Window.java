@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.system.Platform;
 import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -36,11 +37,13 @@ public class Window implements Initializable, Destructible, Printable {
 	private GLFWWindowSizeCallback windowSizeCallback;
 	protected boolean isInitialized;
 	
+	private final Application application;
 	private final Renderer renderer;
 	private final WindowConfig config;
 	private final Logger logger;
 	
 	public Window(Application application) {
+		this.application = application;
 		renderer = application.getRenderer();
 		config = application.getConfig().window;
 		logger = application.logger;
@@ -59,7 +62,14 @@ public class Window implements Initializable, Destructible, Printable {
 		setHint(WindowHint.GL_VERSION_MINOR, 1);
 		setHint(WindowHint.GL_FORWARD_COMPATIBLE, true);
 		setHint(WindowHint.GL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		setHint(WindowHint.RETINA_FRAMEBUFFER, false);
 		setVisible(true);
+		
+		// On MacOS, windows can't be initialized in fullscreen mode
+		boolean deferredFullscreen = config.fullscreen.get() && Platform.get() == Platform.MACOS;
+		if (deferredFullscreen) {
+			config.fullscreen.set(false);
+		}
 		
 		// Read config options
 		if (!isInitialized) {
@@ -126,6 +136,10 @@ public class Window implements Initializable, Destructible, Printable {
 		});
 		
 		isInitialized = true;
+		
+		if (deferredFullscreen) {
+			application.defer(() -> config.fullscreen.set(true));
+		}
 	}
 	
 	/**
@@ -204,6 +218,10 @@ public class Window implements Initializable, Destructible, Printable {
 	public void setTitle(String title) {
 		config.title.setValue(title);
 	}
+
+    public void setFullscreen(boolean fullscreen) {
+        config.fullscreen.set(fullscreen);
+    }
 	
 	/**
 	 * Toggles the fullscreen mode of this window.
