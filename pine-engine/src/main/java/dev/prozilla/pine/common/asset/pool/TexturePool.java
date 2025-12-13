@@ -71,7 +71,7 @@ public final class TexturePool extends AssetPool<TextureAsset> implements MultiA
 		
 		TextureAsset texture = null;
 		
-		// MacOS does not seem to support texture arrays
+		// macOS does not seem to support texture arrays
 		if (Platform.get() == Platform.MACOS) {
 			textureArrayPolicy = TextureArrayPolicy.NEVER;
 		}

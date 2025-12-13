@@ -20,7 +20,7 @@ public final class Pine {
 	/** Current minor version of Pine. */
 	public static final int VERSION_MINOR = 0;
 	/** Current patch version of Pine. */
-	public static final int VERSION_PATCH = 0;
+	public static final int VERSION_PATCH = 1;
 	
 	private static boolean enableExperimentalFeatures = false;
 	

@@ -41,7 +41,6 @@ public class ExamplesConventionsPlugin implements Plugin<Project> {
 		
 		project.afterEvaluate((p) -> {
 			try {
-				project.getTasks().forEach(System.out::println);
 				if (project.getTasks().getByName("start") instanceof JavaExec task) {
 					FileCollection classpath = project.getExtensions()
 						.getByType(SourceSetContainer.class)

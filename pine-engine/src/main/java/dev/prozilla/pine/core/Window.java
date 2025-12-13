@@ -65,7 +65,7 @@ public class Window implements Initializable, Destructible, Printable {
 		setHint(WindowHint.RETINA_FRAMEBUFFER, false);
 		setVisible(true);
 		
-		// On MacOS, windows can't be initialized in fullscreen mode
+		// On macOS, windows can't be initialized in fullscreen mode
 		boolean deferredFullscreen = config.fullscreen.get() && Platform.get() == Platform.MACOS;
 		if (deferredFullscreen) {
 			config.fullscreen.set(false);
@@ -218,7 +218,7 @@ public class Window implements Initializable, Destructible, Printable {
 	public void setTitle(String title) {
 		config.title.setValue(title);
 	}
-
+	
 	/**
 	 * Toggles the fullscreen mode of this window.
 	 * @param fullscreen Whether to enable or disable fullscreen mode

@@ -214,6 +214,8 @@ public class Input implements Initializable, Destructible {
 				gamepads[i] = new Gamepad(i);
 			}
 		}
+		
+		logger.log("Input initialized");
 	}
 	
 	/**
