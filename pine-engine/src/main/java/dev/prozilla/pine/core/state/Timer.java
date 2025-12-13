@@ -4,9 +4,9 @@ import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.lifecycle.Updatable;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
+import dev.prozilla.pine.common.util.DeferredList;
 import dev.prozilla.pine.common.util.function.Callback;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
@@ -43,7 +43,7 @@ public class Timer implements Initializable {
 	private final List<TimedAction> timedActions;
 	
 	public Timer() {
-		timedActions = new ArrayList<>();
+		timedActions = new DeferredList<>();
 	}
 	
 	@Override

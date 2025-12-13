@@ -7,6 +7,7 @@ import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.system.Platform;
 import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -39,11 +40,13 @@ public class Window implements Initializable, Destructible, Printable {
 	private GLFWWindowSizeCallback windowSizeCallback;
 	protected boolean isInitialized;
 	
+	private final Application application;
 	private final Renderer renderer;
 	private final WindowConfig config;
 	private final Logger logger;
 	
 	public Window(Application application) {
+		this.application = application;
 		renderer = application.getRenderer();
 		config = application.getConfig().window;
 		logger = application.logger;
@@ -64,7 +67,14 @@ public class Window implements Initializable, Destructible, Printable {
 		setHint(WindowHint.GL_VERSION_MINOR, 1);
 		setHint(WindowHint.GL_FORWARD_COMPATIBLE, true);
 		setHint(WindowHint.GL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		setHint(WindowHint.RETINA_FRAMEBUFFER, false);
 		setVisible(true);
+		
+		// On macOS, windows can't be initialized in fullscreen mode
+		boolean deferredFullscreen = config.fullscreen.get() && Platform.get() == Platform.MACOS;
+		if (deferredFullscreen) {
+			config.fullscreen.set(false);
+		}
 		
 		// Read config options
 		if (!isAlreadyInitialized) {
@@ -135,6 +145,10 @@ public class Window implements Initializable, Destructible, Printable {
 		// Initialize icon of window
 		if (!isAlreadyInitialized) {
 			config.icon.read(this::updateIcon);
+		}
+		
+		if (deferredFullscreen) {
+			application.defer(() -> config.fullscreen.set(true));
 		}
 	}
 	

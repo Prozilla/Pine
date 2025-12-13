@@ -10,6 +10,4 @@ application {
 
 tasks.register("start", JavaExec) {
 	mainClass = "dev.prozilla.pine.examples.sokoban.Main"
-	classpath = sourceSets.main.runtimeClasspath
-	systemProperty "dev-mode", "true"
 }

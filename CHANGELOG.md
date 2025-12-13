@@ -1,5 +1,22 @@
 # Changelog
 
+## v3.0.1
+
+### Changes
+
+- Added utility method `Application.defer()`, which executes a function in the next frame
+
+### Fixes
+
+- Fixed support for macOS
+  - Fixed viewport not being sized correctly in fullscreen windows on retina displays
+  - Disabled texture arrays on macOS
+- Fixed timeouts causing concurrent modification errors
+
+### Examples
+
+- Added the JVM arg `-XstartOnFirstThread` to all example projects on macOS
+
 ## v3.0.0
 
 From this version on, experimental features of Pine will be annotated with `@Experimental`. Minor versions might contain breaking changes for these experimental features.
