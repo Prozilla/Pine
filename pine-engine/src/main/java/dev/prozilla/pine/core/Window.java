@@ -219,10 +219,6 @@ public class Window implements Initializable, Destructible, Printable {
 		config.title.setValue(title);
 	}
 
-    public void setFullscreen(boolean fullscreen) {
-        config.fullscreen.set(fullscreen);
-    }
-	
 	/**
 	 * Toggles the fullscreen mode of this window.
 	 * @param fullscreen Whether to enable or disable fullscreen mode

@@ -10,5 +10,4 @@ application {
 
 tasks.register("start", JavaExec) {
 	mainClass = "dev.prozilla.pine.examples.chat.Chat"
-	classpath = sourceSets.main.runtimeClasspath
 }

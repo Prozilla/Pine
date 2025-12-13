@@ -1,5 +1,4 @@
 import io.github.fourlastor.construo.Target
-import org.gradle.internal.os.OperatingSystem
 
 plugins {
 	id "dev.prozilla.pine.conventions"
@@ -18,11 +17,6 @@ dependencies {
 
 tasks.register("start", JavaExec) {
 	mainClass = "dev.prozilla.pine.examples.flappybird.FlappyBird"
-	classpath = sourceSets.main.runtimeClasspath
-    if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
-        jvmArgs "-XstartOnFirstThread"
-    }
-	systemProperty "dev-mode", "true"
 }
 
 tasks.register("editor", JavaExec) {
