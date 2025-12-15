@@ -298,6 +298,7 @@ public class Logger implements LogHandler {
 	 * Redirects logs from one log level to another.
 	 * @param from Log level to redirect logs from
 	 * @param to Log level to redirect logs to
+	 * @return This logger.
 	 */
 	public Logger redirect(LogLevel from, LogLevel to) {
 		LogHandler handler = switch (to) {
@@ -318,6 +319,7 @@ public class Logger implements LogHandler {
 	/**
 	 * Enables or disables this logger.
 	 * @param enabled If <code>true</code>, the logger will be enabled.
+	 * @return This logger.
 	 */
 	public Logger setEnabled(boolean enabled) {
 		this.enabled = enabled;
@@ -327,19 +329,77 @@ public class Logger implements LogHandler {
 	/**
 	 * Sets the prefix of this logger.
 	 * @param prefix Prefix to add to all logged strings.
+	 * @return This logger.
 	 */
 	public Logger setPrefix(String prefix) {
 		this.prefix = prefix;
 		return this;
 	}
 	
-	public Logger enableAnsi() {
-		enableAnsi = true;
+	/**
+	 * Sets the log handler for the output log level.
+	 * @param outputLogHandler The log handler
+	 * @return This logger.
+	 */
+	public Logger setOutputHandler(LogHandler outputLogHandler) {
+		this.outputLogHandler = outputLogHandler;
 		return this;
 	}
 	
+	/**
+	 * Sets the log handler for the error log level.
+	 * @param errorLogHandler The log handler
+	 * @return This logger.
+	 */
+	public Logger setErrorHandler(LogHandler errorLogHandler) {
+		this.errorLogHandler = errorLogHandler;
+		return this;
+	}
+	
+	/**
+	 * Sets the log handler for the warning log level.
+	 * @param warningLogHandler The log handler
+	 * @return This logger.
+	 */
+	public Logger setWarningHandler(LogHandler warningLogHandler) {
+		this.warningLogHandler = warningLogHandler;
+		return this;
+	}
+	
+	/**
+	 * Enables ANSI escape sequences in logs.
+	 * @return This logger.
+	 * @see #setAnsiEnabled(boolean) 
+	 */
+	public Logger enableAnsi() {
+		return setAnsiEnabled(true);
+	}
+	
+	/**
+	 * Disables ANSI escape sequences in logs.
+	 * @return This logger.
+	 * @see #setAnsiEnabled(boolean)
+	 */
 	public Logger disableAnsi() {
-		enableAnsi = false;
+		return setAnsiEnabled(false);
+	}
+	
+	/**
+	 * Enables/disables ANSI escape sequences in logs.
+	 * @return This logger.
+	 * @see Ansi
+	 */
+	public Logger setAnsiEnabled(boolean ansiEnabled) {
+		enableAnsi = ansiEnabled;
+		return this;
+	}
+	
+	/**
+	 * Enables/disables log timestamps.
+	 * @return This logger.
+	 */
+	public Logger setTimestampsEnabled(boolean timestampsEnabled) {
+		enableTimestamps = timestampsEnabled;
 		return this;
 	}
 	

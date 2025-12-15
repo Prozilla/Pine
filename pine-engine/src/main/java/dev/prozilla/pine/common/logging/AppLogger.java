@@ -10,6 +10,7 @@ import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.common.lifecycle.Initializable;
+import dev.prozilla.pine.common.logging.handler.LogHandler;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.core.Application;
@@ -22,6 +23,7 @@ import dev.prozilla.pine.core.state.config.LogConfig;
 public class AppLogger extends Logger implements Initializable {
 	
 	private final Application application;
+	private LogConfig config;
 	
 	protected final EventListener<AssetPoolEvent<Image>> onImageLoad;
 	protected final EventListener<AssetPoolEvent<TextureAsset>> onTextureLoad;
@@ -56,12 +58,13 @@ public class AppLogger extends Logger implements Initializable {
 	 */
 	@Override
 	public void init() {
-		LogConfig config = application.getConfig().logging;
+		config = application.getConfig().logging;
 		
 		config.enableLogs.read((enabled) -> this.enabled = enabled);
 		config.prefix.read((prefix) -> this.prefix = prefix);
 		config.outputHandler.read((outputLogHandler) -> this.outputLogHandler = outputLogHandler);
 		config.errorHandler.read((errorLogHandler) -> this.errorLogHandler = errorLogHandler);
+		config.errorHandler.read((warningLogHandler) -> this.warningLogHandler = warningLogHandler);
 		config.enableAnsi.read((enableAnsi) -> this.enableAnsi = enableAnsi);
 		config.enableTimestamps.read((enableTimestamps) -> this.enableTimestamps = enableTimestamps);
 		
@@ -105,6 +108,93 @@ public class AppLogger extends Logger implements Initializable {
 				logPath("Loading " + assetName, ResourceUtils.getResourcePath(event.getPath()));
 			}
 		};
+	}
+	
+	/**
+	 * Enables/disables this logger by setting the value of {@link LogConfig#enableLogs}.
+	 * @param enabled Whether to enable or disable this logger
+	 * @return This logger.
+	 */
+	@Override
+	public AppLogger setEnabled(boolean enabled) {
+		config.enableLogs.set(enabled);
+		return this;
+	}
+	
+	/**
+	 * Sets the prefix of this logger by setting the value of {@link LogConfig#prefix}.
+	 * @param prefix The prefix to add to all logs.
+	 * @return This logger.
+	 */
+	@Override
+	public AppLogger setPrefix(String prefix) {
+		config.prefix.setValue(prefix);
+		return this;
+	}
+	
+	/**
+	 * Sets the log handler for the output log level by setting the value of {@link LogConfig#outputHandler}.
+	 * @param outputLogHandler The log handler
+	 * @return This logger.
+	 */
+	@Override
+	public AppLogger setOutputHandler(LogHandler outputLogHandler) {
+		config.outputHandler.setValue(outputLogHandler);
+		return this;
+	}
+	
+	/**
+	 * Sets the log handler for the output log level by setting the value of {@link LogConfig#errorHandler}.
+	 * @param errorLogHandler The log handler
+	 * @return This logger.
+	 */
+	@Override
+	public AppLogger setErrorHandler(LogHandler errorLogHandler) {
+		config.errorHandler.setValue(outputLogHandler);
+		return this;
+	}
+	
+	/**
+	 * Sets the log handler for the output log level by setting the value of {@link LogConfig#warningHandler}.
+	 * @param warningLogHandler The log handler
+	 * @return This logger.
+	 */
+	@Override
+	public AppLogger setWarningHandler(LogHandler warningLogHandler) {
+		config.warningHandler.setValue(outputLogHandler);
+		return this;
+	}
+	
+	/**
+	 * Enables/disables ANSI escape sequences in logs by setting the value of {@link LogConfig#enableAnsi}.
+	 * @param ansiEnabled Whether to enable or disable ANSI
+	 * @return This logger.
+	 */
+	@Override
+	public AppLogger setAnsiEnabled(boolean ansiEnabled) {
+		config.enableAnsi.set(ansiEnabled);
+		return this;
+	}
+	
+	/**
+	 * Enables/disables timestamps in logs by setting the value of {@link LogConfig#enableTimestamps}.
+	 * @param timestampsEnabled Whether to enable or disable timestamps
+	 * @return This logger.
+	 */
+	@Override
+	public AppLogger setTimestampsEnabled(boolean timestampsEnabled) {
+		config.enableTimestamps.set(timestampsEnabled);
+		return this;
+	}
+	
+	/**
+	 * Enables/disables logs related to asset pools by setting the value of {@link LogConfig#enableAssetPoolLogs}.
+	 * @param assetPoolLogsEnabled Whether to enable or disable asset pool logs
+	 * @return This logger.
+	 */
+	public AppLogger setAssetPoolLogsEnabled(boolean assetPoolLogsEnabled) {
+		config.enableAssetPoolLogs.set(assetPoolLogsEnabled);
+		return this;
 	}
 	
 }

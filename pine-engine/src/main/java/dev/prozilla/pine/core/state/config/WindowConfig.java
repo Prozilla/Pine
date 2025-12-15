@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.state.config;
 
+import dev.prozilla.pine.core.Window;
 import dev.prozilla.pine.core.state.config.option.BooleanConfigOption;
 import dev.prozilla.pine.core.state.config.option.IntConfigOption;
 import dev.prozilla.pine.core.state.config.option.ObjectConfigOption;
@@ -20,17 +21,17 @@ public class WindowConfig {
 	public static final ConfigKey<Boolean> ENABLE_TOGGLE_FULLSCREEN = new ConfigKey<>("enableToggleFullscreen", Boolean.class);
 	
 	// Predefines options
-	/** Width of the window. Defaults to <code>900</code>. */
+	/** Width of the window. Only accepts strictly positive values. Defaults to <code>900</code>. */
 	public final IntConfigOption width = new IntConfigOption(900, (width) -> width > 0);
-	/** Height of the window. Defaults to <code>600</code>. */
+	/** Height of the window. Only accepts strictly positive values. Defaults to <code>600</code>. */
 	public final IntConfigOption height = new IntConfigOption(600, (height) -> height > 0);
-	/** Title of the window. Defaults to <code>"Untitled"</code>. */
+	/** Title of the window. Only accepts values that are not {@code null}. Defaults to <code>"Untitled"</code>. The shorthand for this option is {@link Window#setTitle(String)}. */
 	public final StringConfigOption title = new StringConfigOption("Untitled", Objects::nonNull);
-	/** Icon of the window. Defaults to <code>null</code>. */
+	/** Icon of the window. Defaults to <code>null</code>. The shorthand for this option is {@link Window#setIcon(String...)}. */
 	public final ObjectConfigOption<String[]> icon = new ObjectConfigOption<>(null);
 	/** Determines whether the window will have window decorations such as a border, a close widget, etc. Defaults to <code>true</code>. */
 	public final BooleanConfigOption showDecorations = new BooleanConfigOption(true);
-	/** Determines whether the window is in fullscreen or windowed mode. Defaults to <code>false</code>. */
+	/** Determines whether the window is in fullscreen or windowed mode. Defaults to <code>false</code>. The shorthand for this option is {@link Window#setFullscreen(boolean)}. */
 	public final BooleanConfigOption fullscreen = new BooleanConfigOption(false);
 	/** Enables vertical synchronization of the window. Defaults to <code>true</code>. */
 	public final BooleanConfigOption enableVSync = new BooleanConfigOption(true);

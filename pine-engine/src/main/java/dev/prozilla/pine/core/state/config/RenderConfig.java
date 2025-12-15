@@ -21,13 +21,13 @@ public class RenderConfig {
 	public static final ConfigKey<Boolean> SNAP_TEXT = new ConfigKey<>("snapText", Boolean.class);
 	
 	// Predefines options
-	/** Used as the render color for objects when no color is passed to the renderer. Defaults to white. */
+	/** Used as the render color for objects when no color is passed to the renderer. Only accepts values that are not {@code null}. Defaults to white. */
 	public final ObjectConfigOption<Color> fallbackRenderColor = new ObjectConfigOption<>(Color.white(), Objects::nonNull);
 	/** Enables blending. Defaults to <code>true</code>. */
 	public final BooleanConfigOption enableBlend = new BooleanConfigOption(true);
 	/** Enables depth testing. Defaults to <code>true</code>. */
 	public final BooleanConfigOption enableDepthTest = new BooleanConfigOption(true);
-	/** Determines how vertices appear on the screen. Defaults to <code>RenderMode.NORMAL</code>. */
+	/** Determines how vertices appear on the screen. Only accepts values that are not {@code null}. Defaults to <code>RenderMode.NORMAL</code>. */
 	public final ObjectConfigOption<RenderMode> renderMode = new ObjectConfigOption<>(RenderMode.NORMAL, Objects::nonNull);
 	/** Enables snapping of pixels to whole numbers. Defaults to <code>false</code>. */
 	public final BooleanConfigOption snapPixels = new BooleanConfigOption(false);

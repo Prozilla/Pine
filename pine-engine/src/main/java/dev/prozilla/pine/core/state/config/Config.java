@@ -41,6 +41,7 @@ public class Config {
 	public final StringConfigOption appName = new StringConfigOption("Untitled", Objects::nonNull);
 	/** Enables the automatic creation of directories. Defaults to {@code true}. */
 	public final BooleanConfigOption autoCreateDirectories = new BooleanConfigOption(true);
+	
 	/** Options related to rendering. */
 	public final RenderConfig rendering = new RenderConfig();
 	/** Options related to logging. */
@@ -49,6 +50,8 @@ public class Config {
 	public final WindowConfig window = new WindowConfig();
 	/** Options related to storage. */
 	public final StorageConfig storage = new StorageConfig();
+	/** Options related to input. */
+	public final InputConfig input = new InputConfig();
 	
 	private final Logger logger;
 	
@@ -84,6 +87,7 @@ public class Config {
 		addOption(LogConfig.PREFIX, logging.prefix);
 		addOption(LogConfig.OUTPUT_LAYER, logging.outputHandler);
 		addOption(LogConfig.ERROR_LAYER, logging.errorHandler);
+		addOption(LogConfig.WARN_LAYER, logging.warningHandler);
 		addOption(LogConfig.ENABLE_ANSI, logging.enableAnsi);
 		addOption(LogConfig.ENABLE_APPLICATION_STATE_LOGS, logging.enableApplicationStateLogs);
 		addOption(LogConfig.ENABLE_ASSET_POOL_LOGS, logging.enableAssetPoolLogs);
@@ -101,6 +105,10 @@ public class Config {
 		addOption(StorageConfig.ENABLE_LOCAL_STORAGE, storage.enableLocalStorage);
 		addOption(StorageConfig.LOAD_ON_READ, storage.loadOnRead);
 		addOption(StorageConfig.SAVE_ON_WRITE, storage.saveOnWrite);
+		
+		addOption(InputConfig.ENABLE_KEYBOARD, input.enableKeyboard);
+		addOption(InputConfig.ENABLE_MOUSE, input.enableMouse);
+		addOption(InputConfig.ENABLE_GAMEPAD, input.enableGamepad);
 	}
 	
 	/**

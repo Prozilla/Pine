@@ -227,7 +227,7 @@ public class Window implements Initializable, Destructible, Printable {
 	
 	/**
 	 * Sets the title of this window by setting the value of {@link WindowConfig#title}.
-	 * @param title Title
+	 * @param title The new title
 	 */
 	public void setTitle(String title) {
 		config.title.setValue(title);

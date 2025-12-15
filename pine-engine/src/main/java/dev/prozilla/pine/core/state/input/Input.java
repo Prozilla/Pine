@@ -16,15 +16,13 @@ import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.Window;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.state.config.InputConfig;
 import dev.prozilla.pine.core.state.input.gamepad.Gamepad;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadEventType;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadInput;
 import org.lwjgl.glfw.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -77,6 +75,9 @@ public class Input implements Initializable, Destructible {
 	private final Application application;
 	private final Window window;
 	private final Logger logger;
+	private final InputConfig config;
+	
+	private boolean isInitialized;
 	
 	// Constants
 	public static final int CURSOR_TYPE_DEFAULT = CursorType.DEFAULT.getValue();
@@ -99,6 +100,7 @@ public class Input implements Initializable, Destructible {
 		this.application = application;
 		window = application.getWindow();
 		logger = application.getLogger();
+		config = application.getConfig().input;
 		
 		keysPressed = new HashSet<>();
 		keysDown = new HashSet<>();
@@ -134,6 +136,8 @@ public class Input implements Initializable, Destructible {
 			}
 		};
 		gamepadEvents = new SimpleEventDispatcher<>();
+		
+		isInitialized = false;
 	}
 	
 	/**
@@ -141,81 +145,116 @@ public class Input implements Initializable, Destructible {
 	 */
 	@Override
 	public void init() {
-		glfwSetKeyCallback(window.getId(), keyCallback = new GLFWKeyCallback() {
-			@Override
-			public void invoke(long window, int key, int scancode, int action, int mods) {
-				if (action == GLFW_PRESS) {
-					keysPressed.add(key);
-					keysDown.add(key);
-				} else if (action == GLFW_RELEASE) {
-					Integer keyInt = key;
-					keysPressed.remove(keyInt);
-					keysRepeated.remove(keyInt);
-				} else if (action == GLFW_REPEAT) {
-					keysRepeated.add(key);
-				}
-			}
-		});
-		
-		glfwSetCharCallback(window.getId(), charCallback = new GLFWCharCallback() {
-			@Override
-			public void invoke(long window, int codepoint) {
-				char character = (char)codepoint;
-				for (TextListener listener : textListeners) {
-					listener.handle(character);
-				}
-			}
-		});
-		
-		glfwSetScrollCallback(window.getId(), scrollCallback = new GLFWScrollCallback() {
-			@Override
-			public void invoke(long window, double xOffset, double yOffset) {
-				scroll.x = (float)xOffset;
-				scroll.y = (float)yOffset;
-			}
-		});
-		
-		glfwSetCursorPosCallback(window.getId(), cursorPosCallback = new GLFWCursorPosCallback() {
-			@Override
-			public void invoke(long window, double xPos, double yPos) {
-				cursorPosition.x = (int)xPos;
-				cursorPosition.y = (int)yPos;
-			}
-		});
-		
-		glfwSetMouseButtonCallback(window.getId(), mouseButtonCallback = new GLFWMouseButtonCallback() {
-			@Override
-			public void invoke(long window, int button, int action, int mods) {
-				if (action == GLFW_PRESS) {
-					mouseButtonsPressed.add(button);
-					mouseButtonsDown.add(button);
-				} else if (action == GLFW_RELEASE) {
-					mouseButtonsPressed.remove((Integer)button);
-				}
-			}
-		});
-		
-		glfwSetJoystickCallback(joystickCallback = new GLFWJoystickCallback() {
-			@Override
-			public void invoke(int gamepadId, int event) {
-				if (event == GLFW_CONNECTED) {
-					gamepads[gamepadId] = new Gamepad(gamepadId);
-					gamepadEvents.invoke(GamepadEventType.CONNECT, gamepadId);
-				} else if (event == GLFW_DISCONNECTED) {
-					gamepads[gamepadId].destroy();
-					gamepads[gamepadId] = null;
-					gamepadEvents.invoke(GamepadEventType.DISCONNECT, gamepadId);
-				}
-			}
-		});
-		
-		for (int i = 0; i < gamepads.length; i++) {
-			if (glfwJoystickPresent(i)) {
-				gamepads[i] = new Gamepad(i);
-			}
-		}
+		config.enableKeyboard.read(this::updateKeyboardCallbacks);
+		config.enableMouse.read(this::updateMouseCallbacks);
+		config.enableGamepad.read(this::updateGamepadCallbacks);
 		
 		logger.log("Input initialized");
+		isInitialized = true;
+	}
+	
+	private void updateGamepadCallbacks(boolean enableGamepad) {
+		if (enableGamepad) {
+			joystickCallback = new GLFWJoystickCallback() {
+				@Override
+				public void invoke(int gamepadId, int event) {
+					if (event == GLFW_CONNECTED) {
+						gamepads[gamepadId] = new Gamepad(gamepadId);
+						gamepadEvents.invoke(GamepadEventType.CONNECT, gamepadId);
+					} else if (event == GLFW_DISCONNECTED) {
+						gamepads[gamepadId].destroy();
+						gamepads[gamepadId] = null;
+						gamepadEvents.invoke(GamepadEventType.DISCONNECT, gamepadId);
+					}
+				}
+			};
+			for (int i = 0; i < gamepads.length; i++) {
+				if (glfwJoystickPresent(i)) {
+					gamepads[i] = new Gamepad(i);
+				}
+			}
+		} else if (!isInitialized) {
+			return;
+		} else {
+			joystickCallback = GLFWUtils.free(joystickCallback);
+			Arrays.fill(gamepads, null);
+		}
+		glfwSetJoystickCallback(joystickCallback);
+	}
+	
+	private void updateMouseCallbacks(boolean enableMouse) {
+		if (enableMouse) {
+			scrollCallback = new GLFWScrollCallback() {
+				@Override
+				public void invoke(long window, double xOffset, double yOffset) {
+					scroll.x = (float)xOffset;
+					scroll.y = (float)yOffset;
+				}
+			};
+			cursorPosCallback = new GLFWCursorPosCallback() {
+				@Override
+				public void invoke(long window, double xPos, double yPos) {
+					cursorPosition.x = (int)xPos;
+					cursorPosition.y = (int)yPos;
+				}
+			};
+			mouseButtonCallback = new GLFWMouseButtonCallback() {
+				@Override
+				public void invoke(long window, int button, int action, int mods) {
+					if (action == GLFW_PRESS) {
+						mouseButtonsPressed.add(button);
+						mouseButtonsDown.add(button);
+					} else if (action == GLFW_RELEASE) {
+						mouseButtonsPressed.remove((Integer)button);
+					}
+				}
+			};
+		} else if (!isInitialized) {
+			return;
+		} else {
+			scrollCallback = GLFWUtils.free(scrollCallback);
+			cursorPosCallback = GLFWUtils.free(cursorPosCallback);
+			mouseButtonCallback = GLFWUtils.free(mouseButtonCallback);
+		}
+		glfwSetScrollCallback(window.getId(), scrollCallback);
+		glfwSetCursorPosCallback(window.getId(), cursorPosCallback);
+		glfwSetMouseButtonCallback(window.getId(), mouseButtonCallback);
+	}
+	
+	private void updateKeyboardCallbacks(boolean enableKeyboard) {
+		if (enableKeyboard) {
+			keyCallback = new GLFWKeyCallback() {
+				@Override
+				public void invoke(long window, int key, int scancode, int action, int mods) {
+					if (action == GLFW_PRESS) {
+						keysPressed.add(key);
+						keysDown.add(key);
+					} else if (action == GLFW_RELEASE) {
+						Integer keyInt = key;
+						keysPressed.remove(keyInt);
+						keysRepeated.remove(keyInt);
+					} else if (action == GLFW_REPEAT) {
+						keysRepeated.add(key);
+					}
+				}
+			};
+			charCallback = new GLFWCharCallback() {
+				@Override
+				public void invoke(long window, int codepoint) {
+					char character = (char)codepoint;
+					for (TextListener listener : textListeners) {
+						listener.handle(character);
+					}
+				}
+			};
+		} else if (!isInitialized) {
+			return;
+		} else {
+			keyCallback = GLFWUtils.free(keyCallback);
+			charCallback = GLFWUtils.free(charCallback);
+		}
+		glfwSetKeyCallback(window.getId(), keyCallback);
+		glfwSetCharCallback(window.getId(), charCallback);
 	}
 	
 	/**
@@ -286,6 +325,31 @@ public class Input implements Initializable, Destructible {
 		}
 		gamepadEvents.destroy();
 		textListeners.clear();
+		isInitialized = false;
+	}
+	
+	/**
+	 * Enables/disables keyboard input by setting the value of {@link InputConfig#enableKeyboard}.
+	 * @param keyboardEnabled Whether to enable or disable keyboard input
+	 */
+	public void setKeyboardEnabled(boolean keyboardEnabled) {
+		config.enableKeyboard.set(keyboardEnabled);
+	}
+	
+	/**
+	 * Enables/disables mouse input by setting the value of {@link InputConfig#enableMouse}.
+	 * @param mouseEnabled Whether to enable or disable mouse input
+	 */
+	public void setMouseEnabled(boolean mouseEnabled) {
+		config.enableMouse.set(mouseEnabled);
+	}
+	
+	/**
+	 * Enables/disables gamepad input by setting the value of {@link InputConfig#enableGamepad}.
+	 * @param gamepadEnabled Whether to enable or disable gamepad input
+	 */
+	public void setGamepadEnabled(boolean gamepadEnabled) {
+		config.enableGamepad.set(gamepadEnabled);
 	}
 	
 	//region --- Keyboard ---
