@@ -55,6 +55,18 @@ public interface StringProperty extends Property<String> {
 		return () -> getValueOr(defaultValue);
 	}
 	
+	default IntProperty parseInt() {
+		return () -> Integer.parseInt(getValue());
+	}
+	
+	default FloatProperty parseFloat() {
+		return () -> Float.parseFloat(getValue());
+	}
+	
+	default BooleanProperty parseBoolean() {
+		return () -> Boolean.parseBoolean(getValue());
+	}
+	
 	/**
 	 * Returns a property whose value is the result of parsing the value of this property.
 	 *
@@ -88,7 +100,15 @@ public interface StringProperty extends Property<String> {
 	 * @return An integer property representing the length of the value of this property.
 	 */
 	default IntProperty lengthProperty() {
-		return () -> StringUtils.lengthOf(getValue());
+		return this::getLength;
+	}
+	
+	/**
+	 * Returns the length of the value of this property, or {@code 0} if it is {@code null}.
+	 * @return The length of the value of this property.
+	 */
+	default int getLength() {
+		return StringUtils.lengthOf(getValue());
 	}
 	
 	/**

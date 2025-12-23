@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.system.standard.ui.text;
 
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.TextInputNode;
@@ -28,15 +29,35 @@ public final class TextInputRenderer extends RenderSystem {
 		float x = node.currentPosition.x + node.getPaddingX();
 		float y = node.currentPosition.y + node.getPaddingY();
 		
+		float cursorX = x;
+		
 		if (textInputNode.cursorPosition > 0) {
-			if (textNode.font == null) {
-				x += renderer.getTextWidth(textNode.text.substring(0, textInputNode.cursorPosition));
-			} else {
-				x += renderer.getTextWidth(textNode.font, textNode.text.substring(0, textInputNode.cursorPosition));
-			}
+			cursorX += getTextWidth(renderer, textNode, textInputNode.cursorPosition);
 		}
 		
-		renderer.drawRect(x, y, transform.getDepth(), 2, textNode.getFontSize(), node.color);
+		// Draw selection
+		if (textInputNode.hasSelection()) {
+			float selectionX;
+			if (textInputNode.selection > 0) {
+				selectionX = cursorX;
+			} else {
+				selectionX = x + getTextWidth(renderer, textNode, textInputNode.getSelectionStart());
+			}
+			float selectionWidth = getTextWidth(renderer, textNode, textInputNode.getSelectionStart(), textInputNode.getSelectionEnd());
+			renderer.drawRect(selectionX, y, transform.getDepth(), selectionWidth, textNode.getFontSize(), Color.cyan().setAlpha(0.5f));
+		}
+		
+		// Draw cursor
+		renderer.drawRect(cursorX, y, transform.getDepth(), 2, textNode.getFontSize(), node.color);
+	}
+	
+	private static int getTextWidth(Renderer renderer, TextNode textNode, int length) {
+		return getTextWidth(renderer, textNode, 0, length);
+	}
+	
+	private static int getTextWidth(Renderer renderer, TextNode textNode, int start, int end) {
+		String text = textNode.text.substring(start, end);
+		return textNode.font == null ? renderer.getTextWidth(text) : renderer.getTextWidth(textNode.font, text);
 	}
 	
 }

@@ -1,6 +1,5 @@
 package dev.prozilla.pine.core.system.standard.ui.text;
 
-import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.NodeEvent;
 import dev.prozilla.pine.core.component.ui.TextInputNode;
@@ -20,26 +19,22 @@ public final class TextInputInitializer extends InitSystem {
 		TextNode textNode = chunk.getComponent(TextNode.class);
 		Node node = chunk.getComponent(Node.class);
 		
-		textInputNode.cursorPosition = textNode.text.length();
 		textInputNode.textListener = (character) -> {
 			if (node.isFocused()) {
-				boolean changed = textNode.changeText((stringBuilder) -> {
-					String newText = stringBuilder.insert(textInputNode.cursorPosition, character).toString();
-					
-					if (textInputNode.type != TextInputNode.Type.NUMBER || MathUtils.isValidInteger(newText)) {
-						return newText;
-					}
-					
-					return null;
+				boolean changed = textInputNode.getTextProperty().buildValue((stringBuilder) -> {
+					String string = stringBuilder.insert(textInputNode.cursorPosition, character).toString();
+					return textInputNode.type.isValid(string) ? string : null;
 				});
 				
 				if (changed) {
-					textInputNode.cursorPosition++;
+					textInputNode.moveCursorRight();
 					node.invoke(NodeEvent.Type.INPUT);
 				}
 			}
 		};
 		textInputNode.textNode = textNode;
+		textInputNode.getTextProperty().setValue(textNode.text);
+		textInputNode.moveCursorToEnd();
 		
 		application.getInput().addTextListener(textInputNode.textListener);
 	}

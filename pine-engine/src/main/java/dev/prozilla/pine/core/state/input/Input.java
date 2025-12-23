@@ -364,14 +364,12 @@ public class Input implements Initializable, Destructible {
 			return false;
 		}
 		
-		boolean anyPressed = false;
 		for (Key key : keys) {
 			if (getKey(key)) {
-				anyPressed = true;
-				break;
+				return true;
 			}
 		}
-		return anyPressed;
+		return false;
 	}
 	
 	/**
@@ -380,14 +378,16 @@ public class Input implements Initializable, Destructible {
 	 * @return True if any key is pressed
 	 */
 	public boolean getAnyKey(int... keys) {
-		boolean anyPressed = false;
+		if (keys == null) {
+			return false;
+		}
+		
 		for (int key : keys) {
 			if (getKey(key)) {
-				anyPressed = true;
-				break;
+				return true;
 			}
 		}
-		return anyPressed;
+		return false;
 	}
 	
 	/**
@@ -400,14 +400,12 @@ public class Input implements Initializable, Destructible {
 			return false;
 		}
 		
-		boolean allPressed = true;
 		for (Key key : keys) {
 			if (!getKey(key)) {
-				allPressed = false;
-				break;
+				return false;
 			}
 		}
-		return allPressed;
+		return true;
 	}
 	
 	/**
@@ -417,14 +415,47 @@ public class Input implements Initializable, Destructible {
 	 * @return True if all keys are pressed
 	 */
 	public boolean getKeys(int... keys) {
-		boolean allPressed = true;
+		if (keys == null) {
+			return false;
+		}
 		for (int key : keys) {
 			if (!getKey(key)) {
-				allPressed = false;
-				break;
+				return false;
 			}
 		}
-		return allPressed;
+		return true;
+	}
+	
+	public boolean getModifierKey(ModifierKey modifier) {
+		return getModifierKey(modifier, STOP_PROPAGATION_DEFAULT);
+	}
+	
+	public boolean getModifierKey(ModifierKey modifier, boolean stopPropagation) {
+		if (modifier == null) {
+			return false;
+		}
+		for (Key key : modifier.getKeys()) {
+			if (getKey(key, stopPropagation)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean getModifierKeyDown(ModifierKey modifier) {
+		return getModifierKeyDown(modifier, STOP_PROPAGATION_DEFAULT);
+	}
+	
+	public boolean getModifierKeyDown(ModifierKey modifier, boolean stopPropagation) {
+		if (modifier == null) {
+			return false;
+		}
+		for (Key key : modifier.getKeys()) {
+			if (getKeyDown(key, stopPropagation)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**

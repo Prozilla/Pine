@@ -49,7 +49,7 @@ public class Window implements Initializable, Destructible, Printable {
 		this.application = application;
 		renderer = application.getRenderer();
 		config = application.getConfig().window;
-		logger = application.logger;
+		logger = application.getLogger();
 		
 		isInitialized = false;
 	}

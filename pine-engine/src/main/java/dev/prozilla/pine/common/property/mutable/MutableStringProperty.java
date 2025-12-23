@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.property.mutable;
 
 import dev.prozilla.pine.common.property.StringProperty;
 import dev.prozilla.pine.common.util.StringUtils;
+import dev.prozilla.pine.common.util.function.mapper.Mapper;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -41,6 +42,17 @@ public interface MutableStringProperty extends StringProperty, MutableObjectProp
 	
 	default void trimValue() {
 		setValue(StringUtils.trim(getValue()));
+	}
+	
+	default boolean buildValue(Mapper<StringBuilder, Object> mapper) {
+		StringBuilder stringBuilder = isNotNull() ? new StringBuilder(getValue()) : new StringBuilder();
+		
+		Object object = mapper.map(stringBuilder);
+		if (object == null) {
+			return false;
+		}
+		
+		return setValue(object.toString());
 	}
 	
 	/**
