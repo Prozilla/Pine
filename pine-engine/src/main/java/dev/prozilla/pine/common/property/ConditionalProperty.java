@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Contract;
  * A property whose value is determined by a boolean property and a corresponding property for each boolean state.
  *
  * <p>The boolean property determines which property is used to retrieve the value from.</p>
+ * @see BooleanProperty#ifElse(Property, Property)
  */
 public class ConditionalProperty<T> implements Property<T> {
 
@@ -50,8 +51,8 @@ public class ConditionalProperty<T> implements Property<T> {
 	}
 	
 	/**
-	 * Returns the inverse of this conditional property.
-	 * @return The inverse of this conditional property
+	 * Returns the inverse of this conditional property with the same condition.
+	 * @return The inverse of this conditional property.
 	 */
 	@Contract("-> new")
 	public ConditionalProperty<T> invert() {

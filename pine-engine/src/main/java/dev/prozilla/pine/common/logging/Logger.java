@@ -88,6 +88,11 @@ public class Logger implements LogHandler {
 			return;
 		}
 		
+		// Print cause
+		if (throwable.getCause() != null) {
+			trace(throwable.getCause());
+		}
+		
 		// Print stack trace
 		log(Ansi.red(formatBadge("error") + throwable));
 		StackTraceElement[] trace = throwable.getStackTrace();

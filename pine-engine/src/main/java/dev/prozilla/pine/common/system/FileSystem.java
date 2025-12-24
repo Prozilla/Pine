@@ -52,6 +52,33 @@ public final class FileSystem {
 	 * @param source The directory to copy from
 	 * @param target The directory to paste into
 	 */
+	public static void copyDirectory(Path source, Path target) throws IOException {
+		if (Files.isDirectory(source)) {
+			if (!Files.exists(target)) {
+				Files.createDirectories(target);
+			}
+			
+			// List all files and directories
+			try (Stream<Path> paths = Files.list(source)) {
+				paths.forEach((sourcePath) -> {
+					try {
+						copyDirectory(sourcePath, target.resolve(sourcePath.getFileName().toString()));
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+				});
+			}
+		} else {
+			// If it's a file, copy it
+			Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+		}
+	}
+	
+	/**
+	 * Helper method for copying a directory and its contents recursively.
+	 * @param source The directory to copy from
+	 * @param target The directory to paste into
+	 */
 	public static void copyDirectory(File source, File target) throws IOException {
 		if (source.isDirectory()) {
 			if (!target.exists()) {

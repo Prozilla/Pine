@@ -14,12 +14,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Year;
+import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -433,8 +435,25 @@ public class BuildTool {
 	
 	private static void runCommand(String executableDir, String executableName, Path workingDir, String label, boolean debug, String... arguments) throws URISyntaxException, IOException {
 		URL resource = Objects.requireNonNull(BuildTool.class.getResource(executableDir), label + " is missing");
-		Path sourceDir = Paths.get(resource.toURI());
-		FileSystem.copyDirectory(sourceDir.toFile(), workingDir.toFile());
+		URI uri = resource.toURI();
+		
+		Path sourceDir;
+		java.nio.file.FileSystem jarFileSystem = null;
+		
+		try {
+			if (uri.getScheme().equals("jar")) {
+				jarFileSystem = java.nio.file.FileSystems.newFileSystem(uri, Collections.emptyMap());
+				sourceDir = jarFileSystem.getPath(executableDir);
+			} else {
+				sourceDir = Paths.get(uri);
+			}
+			
+			FileSystem.copyDirectory(sourceDir, workingDir);
+		} finally {
+			if (jarFileSystem != null) {
+				jarFileSystem.close();
+			}
+		}
 		
 		Path executable = workingDir.resolve(executableName);
 		if (!executable.toFile().setExecutable(true)) {
