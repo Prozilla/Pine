@@ -5,8 +5,6 @@ import dev.prozilla.pine.common.property.fixed.FixedIntProperty;
 import dev.prozilla.pine.common.util.function.comparator.IntComparator;
 import org.jetbrains.annotations.Contract;
 
-import java.util.Comparator;
-
 public class ComparedIntProperty extends ComparedProperty<Integer, IntComparator, IntProperty> {
 	
 	/**
@@ -34,20 +32,13 @@ public class ComparedIntProperty extends ComparedProperty<Integer, IntComparator
 		return comparator.compare(a.get(), b.get());
 	}
 	
-	/**
-	 * Returns the inverse of this compared property with the same comparator, by swapping the two properties.
-	 * @return The inverse of this compared property.
-	 */
+	@Override
 	@Contract("-> new")
 	public ComparedIntProperty invert() {
 		return new ComparedIntProperty(b, comparator, a);
 	}
 	
-	/**
-	 * Returns a compared property with the reverse of the comparator of this property.
-	 * @return The reverse of this compared property.
-	 * @see Comparator#reversed()
-	 */
+	@Override
 	@Contract("-> new")
 	public ComparedIntProperty reverse() {
 		return new ComparedIntProperty(a, comparator.reversed(), b);

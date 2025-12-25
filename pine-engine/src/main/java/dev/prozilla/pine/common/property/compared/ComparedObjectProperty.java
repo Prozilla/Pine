@@ -28,20 +28,13 @@ public class ComparedObjectProperty<T> extends ComparedProperty<T, Comparator<T>
 		super(a, comparator, b);
 	}
 	
-	/**
-	 * Returns the inverse of this compared property with the same comparator, by swapping the two properties.
-	 * @return The inverse of this compared property.
-	 */
+	@Override
 	@Contract("-> new")
 	public ComparedObjectProperty<T> invert() {
 		return new ComparedObjectProperty<>(b, comparator, a);
 	}
 	
-	/**
-	 * Returns a compared property with the reverse of the comparator of this property.
-	 * @return The reverse of this compared property.
-	 * @see Comparator#reversed()
-	 */
+	@Override
 	@Contract("-> new")
 	public ComparedObjectProperty<T> reverse() {
 		return new ComparedObjectProperty<>(a, comparator.reversed(), b);

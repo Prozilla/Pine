@@ -4,8 +4,6 @@ import dev.prozilla.pine.common.property.BooleanProperty;
 import dev.prozilla.pine.common.util.function.comparator.BooleanComparator;
 import org.jetbrains.annotations.Contract;
 
-import java.util.Comparator;
-
 public class ComparedBooleanProperty extends ComparedProperty<Boolean, BooleanComparator, BooleanProperty> {
 	
 	/**
@@ -33,20 +31,13 @@ public class ComparedBooleanProperty extends ComparedProperty<Boolean, BooleanCo
 		return comparator.compare(a.get(), b.get());
 	}
 	
-	/**
-	 * Returns the inverse of this compared property with the same comparator, by swapping the two properties.
-	 * @return The inverse of this compared property.
-	 */
+	@Override
 	@Contract("-> new")
 	public ComparedBooleanProperty invert() {
 		return new ComparedBooleanProperty(b, comparator, a);
 	}
 	
-	/**
-	 * Returns a compared property with the reverse of the comparator of this property.
-	 * @return The reverse of this compared property.
-	 * @see Comparator#reversed()
-	 */
+	@Override
 	@Contract("-> new")
 	public ComparedBooleanProperty reverse() {
 		return new ComparedBooleanProperty(a, comparator.reversed(), b);

@@ -4,6 +4,10 @@ public class SimpleMutableFloatProperty implements MutableFloatProperty {
 	
 	private float value;
 	
+	public SimpleMutableFloatProperty() {
+		this(0);
+	}
+	
 	/**
 	 * Creates a mutable property with an initial value.
 	 * @param initialValue The initial value

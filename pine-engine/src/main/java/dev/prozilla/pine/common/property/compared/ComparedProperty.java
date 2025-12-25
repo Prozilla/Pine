@@ -1,6 +1,5 @@
 package dev.prozilla.pine.common.property.compared;
 
-import dev.prozilla.pine.common.property.BooleanProperty;
 import dev.prozilla.pine.common.property.IntProperty;
 import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -40,55 +39,16 @@ public abstract class ComparedProperty<T, C extends Comparator<T>, P extends Pro
 	}
 	
 	/**
-	 * Checks if the value of the first property is greater than the value of the second property.
-	 * @return {@code true} if the value of the first property is greater than the value of the second property.
-	 * @see #isStrictlyPositive()
+	 * Returns the inverse of this compared property with the same comparator, by swapping the two properties.
+	 * @return The inverse of this compared property.
 	 */
-	public boolean isGreater() {
-		return isStrictlyPositive();
-	}
+	abstract public ComparedProperty<T, C, P> invert();
 	
 	/**
-	 * Checks if the value of the first property is less than the value of the second property.
-	 * @return {@code true} if the value of the first property is less than the value of the second property.
-	 * @see #isStrictlyNegative()
+	 * Returns a compared property with the reverse of the comparator of this property.
+	 * @return The reverse of this compared property.
+	 * @see Comparator#reversed()
 	 */
-	public boolean isLess() {
-		return isStrictlyNegative();
-	}
-	
-	/**
-	 * Checks if the value of the first property is greater than or equal to the value of the second property.
-	 * @return {@code true} if the value of the first property is greater than or equal to the value of the second property.
-	 * @see #isPositive()
-	 */
-	public boolean isGreaterOrEqual() {
-		return isPositive();
-	}
-	
-	/**
-	 * Checks if the value of the first property is less than or equal to the value of the second property.
-	 * @return {@code true} if the value of the first property is less than or equal to the value of the second property.
-	 * @see #isNegative()
-	 */
-	public boolean isLessOrEqual() {
-		return isNegative();
-	}
-	
-	public BooleanProperty isGreaterProperty() {
-		return isStrictlyPositiveProperty();
-	}
-	
-	public BooleanProperty isLessProperty() {
-		return isStrictlyNegativeProperty();
-	}
-	
-	public BooleanProperty isGreaterOrEqualProperty() {
-		return isPositiveProperty();
-	}
-	
-	public BooleanProperty isLessOrEqualProperty() {
-		return isNegativeProperty();
-	}
+	abstract public ComparedProperty<T, C, P> reverse();
 	
 }

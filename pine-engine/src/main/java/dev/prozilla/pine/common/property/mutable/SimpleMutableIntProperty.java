@@ -4,6 +4,10 @@ public class SimpleMutableIntProperty implements MutableIntProperty {
 	
 	private int value;
 	
+	public SimpleMutableIntProperty() {
+		this(0);
+	}
+	
 	/**
 	 * Creates a mutable property with an initial value.
 	 * @param initialValue The initial value

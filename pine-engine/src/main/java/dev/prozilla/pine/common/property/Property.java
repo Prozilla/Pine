@@ -129,7 +129,7 @@ public interface Property<T> extends Functor<T> {
 	 * @param value The value to compare with
 	 * @return An integer property whose value is based on the comparison of the value of this property and a given value.
 	 */
-	default ComparedObjectProperty<T> compareWith(Comparator<T> comparator, T value) {
+	default IntProperty compareWith(Comparator<T> comparator, T value) {
 		return compareWith(comparator, new FixedObjectProperty<>(value));
 	}
 	
@@ -139,7 +139,7 @@ public interface Property<T> extends Functor<T> {
 	 * @param other The property to compare with
 	 * @return An integer property whose value is based on the comparison of the value of this property and another property.
 	 */
-	default ComparedObjectProperty<T> compareWith(Comparator<T> comparator, Property<T> other) {
+	default IntProperty compareWith(Comparator<T> comparator, Property<T> other) {
 		return new ComparedObjectProperty<>(this, comparator, other);
 	}
 	

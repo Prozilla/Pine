@@ -44,7 +44,7 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	 * @return {@code true} if the value of this property is strictly positive.
 	 */
 	default boolean isStrictlyPositive() {
-		return get() > 0;
+		return isGreaterThan(0);
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	 * @return {@code true} if the value of this property is strictly negative.
 	 */
 	default boolean isStrictlyNegative() {
-		return get() < 0;
+		return isLessThan(0);
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	 * @return {@code true} if the value of this property is positive.
 	 */
 	default boolean isPositive() {
-		return get() >= 0;
+		return isGreaterThanOrEqualTo(0);
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	 * @return {@code true} if the value of this property is negative.
 	 */
 	default boolean isNegative() {
-		return get() <= 0;
+		return isLessThanOrEqualTo(0);
 	}
 	
 	@Contract("_ -> this")
@@ -135,19 +135,67 @@ public interface IntProperty extends NonNullProperty<Integer> {
 		return () -> has(value);
 	}
 	
-	default ComparedIntProperty compareWith(int value) {
+	default boolean isGreaterThan(int value) {
+		return get() > value;
+	}
+	
+	default boolean isLessThan(int value) {
+		return get() < value;
+	}
+	
+	default boolean isGreaterThanOrEqualTo(int value) {
+		return get() >= value;
+	}
+	
+	default boolean isLessThanOrEqualTo(int value) {
+		return get() <= value;
+	}
+	
+	default BooleanProperty isGreaterThanProperty(int value) {
+		return compareWith(value).isStrictlyPositiveProperty();
+	}
+	
+	default BooleanProperty isLessThanProperty(int value) {
+		return compareWith(value).isStrictlyNegativeProperty();
+	}
+	
+	default BooleanProperty isGreaterThanOrEqualToProperty(int value) {
+		return compareWith(value).isPositiveProperty();
+	}
+	
+	default BooleanProperty isLessThanOrEqualToProperty(int value) {
+		return compareWith(value).isNegativeProperty();
+	}
+	
+	default BooleanProperty isGreaterThanProperty(IntProperty other) {
+		return compareWith(other).isStrictlyPositiveProperty();
+	}
+	
+	default BooleanProperty isLessThanProperty(IntProperty other) {
+		return compareWith(other).isStrictlyNegativeProperty();
+	}
+	
+	default BooleanProperty isGreaterThanOrEqualToProperty(IntProperty other) {
+		return compareWith(other).isPositiveProperty();
+	}
+	
+	default BooleanProperty isLessThanOrEqualToProperty(IntProperty other) {
+		return compareWith(other).isNegativeProperty();
+	}
+	
+	default IntProperty compareWith(int value) {
 		return compareWith(new FixedIntProperty(value));
 	}
 	
-	default ComparedIntProperty compareWith(IntProperty other) {
+	default IntProperty compareWith(IntProperty other) {
 		return compareWith(IntComparator.naturalOrder(), other);
 	}
 	
-	default ComparedIntProperty compareWith(IntComparator comparator, int value) {
+	default IntProperty compareWith(IntComparator comparator, int value) {
 		return compareWith(comparator, new FixedIntProperty(value));
 	}
 	
-	default ComparedIntProperty compareWith(IntComparator comparator, IntProperty other) {
+	default IntProperty compareWith(IntComparator comparator, IntProperty other) {
 		return new ComparedIntProperty(this, comparator, other);
 	}
 	

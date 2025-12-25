@@ -177,19 +177,19 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 		return () -> has(value);
 	}
 	
-	default ComparedBooleanProperty compareWith(boolean value) {
+	default IntProperty compareWith(boolean value) {
 		return compareWith(BooleanProperty.fromValue(value));
 	}
 	
-	default ComparedBooleanProperty compareWith(BooleanProperty other) {
+	default IntProperty compareWith(BooleanProperty other) {
 		return compareWith(BooleanComparator.naturalOrder(), other);
 	}
 	
-	default ComparedBooleanProperty compareWith(BooleanComparator comparator, boolean value) {
+	default IntProperty compareWith(BooleanComparator comparator, boolean value) {
 		return compareWith(comparator, BooleanProperty.fromValue(value));
 	}
 	
-	default ComparedBooleanProperty compareWith(BooleanComparator comparator, BooleanProperty other) {
+	default IntProperty compareWith(BooleanComparator comparator, BooleanProperty other) {
 		return new ComparedBooleanProperty(this, comparator, other);
 	}
 	

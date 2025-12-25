@@ -5,8 +5,6 @@ import dev.prozilla.pine.common.property.fixed.FixedFloatProperty;
 import dev.prozilla.pine.common.util.function.comparator.FloatComparator;
 import org.jetbrains.annotations.Contract;
 
-import java.util.Comparator;
-
 public class ComparedFloatProperty extends ComparedProperty<Float, FloatComparator, FloatProperty> {
 	
 	/**
@@ -34,20 +32,13 @@ public class ComparedFloatProperty extends ComparedProperty<Float, FloatComparat
 		return comparator.compare(a.get(), b.get());
 	}
 	
-	/**
-	 * Returns the inverse of this compared property with the same comparator, by swapping the two properties.
-	 * @return The inverse of this compared property.
-	 */
+	@Override
 	@Contract("-> new")
 	public ComparedFloatProperty invert() {
 		return new ComparedFloatProperty(b, comparator, a);
 	}
 	
-	/**
-	 * Returns a compared property with the reverse of the comparator of this property.
-	 * @return The reverse of this compared property.
-	 * @see Comparator#reversed()
-	 */
+	@Override
 	@Contract("-> new")
 	public ComparedFloatProperty reverse() {
 		return new ComparedFloatProperty(a, comparator.reversed(), b);

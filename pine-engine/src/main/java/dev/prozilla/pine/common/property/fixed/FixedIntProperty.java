@@ -29,8 +29,58 @@ public class FixedIntProperty implements IntProperty, FixedProperty<Integer> {
 		return this;
 	}
 	
+	@Override
+	public FixedBooleanProperty isGreaterThanProperty(int value) {
+		return BooleanProperty.fromValue(isGreaterThan(value));
+	}
+	
+	@Override
+	public FixedBooleanProperty isLessThanProperty(int value) {
+		return BooleanProperty.fromValue(isLessThan(value));
+	}
+	
+	@Override
+	public FixedBooleanProperty isGreaterThanOrEqualToProperty(int value) {
+		return BooleanProperty.fromValue(isGreaterThanOrEqualTo(value));
+	}
+	
+	@Override
+	public FixedBooleanProperty isLessThanOrEqualToProperty(int value) {
+		return BooleanProperty.fromValue(isLessThanOrEqualTo(value));
+	}
+	
+	@Override
+	public BooleanProperty isGreaterThanProperty(IntProperty other) {
+		return other.compareWith(get()).isStrictlyPositiveProperty();
+	}
+	
+	@Override
+	public BooleanProperty isLessThanProperty(IntProperty other) {
+		return other.compareWith(get()).isStrictlyNegativeProperty();
+	}
+	
+	@Override
+	public BooleanProperty isGreaterThanOrEqualToProperty(IntProperty other) {
+		return other.compareWith(get()).isPositiveProperty();
+	}
+	
+	@Override
+	public BooleanProperty isLessThanOrEqualToProperty(IntProperty other) {
+		return other.compareWith(get()).isNegativeProperty();
+	}
+	
+	@Override
+	public FixedIntProperty compareWith(int value) {
+		return compareWith(IntComparator.naturalOrder(), value);
+	}
+	
 	public FixedIntProperty compareWith(FixedIntProperty other) {
 		return compareWith(IntComparator.naturalOrder(), other);
+	}
+	
+	@Override
+	public FixedIntProperty compareWith(IntComparator comparator, int value) {
+		return new FixedIntProperty(comparator.compare(get(), value));
 	}
 	
 	public FixedIntProperty compareWith(IntComparator comparator, FixedIntProperty other) {

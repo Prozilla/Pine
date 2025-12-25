@@ -4,6 +4,10 @@ public class SimpleMutableBooleanProperty implements MutableBooleanProperty {
 	
 	private boolean value;
 	
+	public SimpleMutableBooleanProperty() {
+		this(false);
+	}
+	
 	/**
 	 * Creates a mutable property with an initial value.
 	 * @param initialValue The initial value
