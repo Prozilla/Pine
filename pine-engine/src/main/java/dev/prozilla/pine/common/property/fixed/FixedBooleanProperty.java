@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.property.fixed;
 
 import dev.prozilla.pine.common.property.BooleanProperty;
 import dev.prozilla.pine.common.property.Property;
+import dev.prozilla.pine.common.util.function.comparator.BooleanComparator;
 import org.jetbrains.annotations.Contract;
 
 public abstract class FixedBooleanProperty implements BooleanProperty, FixedProperty<Boolean> {
@@ -52,6 +53,19 @@ public abstract class FixedBooleanProperty implements BooleanProperty, FixedProp
 	@Override
 	public FixedBooleanProperty snapshot() {
 		return this;
+	}
+	
+	public FixedIntProperty compareWith(FixedBooleanProperty other) {
+		return compareWith(BooleanComparator.naturalOrder(), other);
+	}
+	
+	public FixedIntProperty compareWith(BooleanComparator comparator, FixedBooleanProperty other) {
+		return new FixedIntProperty(comparator.compare(get(), other.get()));
+	}
+	
+	@Override
+	public FixedIntProperty hashCodeProperty() {
+		return new FixedIntProperty(Boolean.hashCode(get()));
 	}
 	
 	@Contract("_ -> this")

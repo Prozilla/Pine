@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property;
 
 import dev.prozilla.pine.common.exception.InvalidObjectException;
+import dev.prozilla.pine.common.property.compared.ComparedObjectProperty;
 import dev.prozilla.pine.common.property.fixed.FixedObjectProperty;
 import dev.prozilla.pine.common.property.fixed.FixedProperty;
 import dev.prozilla.pine.common.util.StringUtils;
@@ -10,6 +11,7 @@ import dev.prozilla.pine.common.util.function.mapper.Mapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -119,6 +121,35 @@ public interface Property<T> extends Functor<T> {
 	 */
 	default FixedProperty<T> snapshot() {
 		return new FixedObjectProperty<>(getValue());
+	}
+	
+	/**
+	 * Returns an integer property whose value is based on the comparison of the value of this property and a given value.
+	 * @param comparator The comparing function
+	 * @param value The value to compare with
+	 * @return An integer property whose value is based on the comparison of the value of this property and a given value.
+	 */
+	default ComparedObjectProperty<T> compareWith(Comparator<T> comparator, T value) {
+		return compareWith(comparator, new FixedObjectProperty<>(value));
+	}
+	
+	/**
+	 * Returns an integer property whose value is based on the comparison of the value of this property and another property.
+	 * @param comparator The comparing function
+	 * @param other The property to compare with
+	 * @return An integer property whose value is based on the comparison of the value of this property and another property.
+	 */
+	default ComparedObjectProperty<T> compareWith(Comparator<T> comparator, Property<T> other) {
+		return new ComparedObjectProperty<>(this, comparator, other);
+	}
+	
+	/**
+	 * Returns an integer property whose value is the hash code of the value of this property.
+	 * @return An integer property whose value is the hash code of the value of this property.
+	 * @see Objects#hashCode(Object)
+	 */
+	default IntProperty hashCodeProperty() {
+		return () -> Objects.hashCode(getValue());
 	}
 	
 	/**

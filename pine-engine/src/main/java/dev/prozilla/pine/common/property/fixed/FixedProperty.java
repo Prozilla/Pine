@@ -6,6 +6,9 @@ import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.common.util.function.mapper.Mapper;
 import org.jetbrains.annotations.Contract;
 
+import java.util.Comparator;
+import java.util.Objects;
+
 /**
  * A property with a value that never changes.
  */
@@ -35,6 +38,15 @@ public interface FixedProperty<T> extends Property<T> {
 	@Override
 	default FixedProperty<T> snapshot() {
 		return this;
+	}
+	
+	default FixedIntProperty compareWith(Comparator<T> comparator, FixedProperty<T> other) {
+		return new FixedIntProperty(comparator.compare(getValue(), other.getValue()));
+	}
+	
+	@Override
+	default FixedIntProperty hashCodeProperty() {
+		return new FixedIntProperty(Objects.hashCode(getValue()));
 	}
 	
 	@Override

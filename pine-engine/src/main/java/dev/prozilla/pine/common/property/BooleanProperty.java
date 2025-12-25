@@ -1,6 +1,8 @@
 package dev.prozilla.pine.common.property;
 
+import dev.prozilla.pine.common.property.compared.ComparedBooleanProperty;
 import dev.prozilla.pine.common.property.fixed.FixedBooleanProperty;
+import dev.prozilla.pine.common.util.function.comparator.BooleanComparator;
 import dev.prozilla.pine.common.util.function.mapper.BooleanMapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -150,6 +152,7 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 	 * Returns a conditional property using this boolean property as the condition.
 	 * @return The conditional property.
 	 * @param <T> The type of property
+	 * @see ConditionalProperty
 	 */
 	default <T> Property<T> ifElse(Property<T> propertyTrue, Property<T> propertyFalse) {
 		return new ConditionalProperty<>(this, propertyTrue, propertyFalse);
@@ -172,6 +175,22 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 	 */
 	default BooleanProperty hasProperty(boolean value) {
 		return () -> has(value);
+	}
+	
+	default ComparedBooleanProperty compareWith(boolean value) {
+		return compareWith(BooleanProperty.fromValue(value));
+	}
+	
+	default ComparedBooleanProperty compareWith(BooleanProperty other) {
+		return compareWith(BooleanComparator.naturalOrder(), other);
+	}
+	
+	default ComparedBooleanProperty compareWith(BooleanComparator comparator, boolean value) {
+		return compareWith(comparator, BooleanProperty.fromValue(value));
+	}
+	
+	default ComparedBooleanProperty compareWith(BooleanComparator comparator, BooleanProperty other) {
+		return new ComparedBooleanProperty(this, comparator, other);
 	}
 	
 	/**

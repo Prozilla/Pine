@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.property.fixed;
 
 import dev.prozilla.pine.common.property.BooleanProperty;
 import dev.prozilla.pine.common.property.FloatProperty;
+import dev.prozilla.pine.common.util.function.comparator.FloatComparator;
 import org.jetbrains.annotations.Contract;
 
 public class FixedFloatProperty implements FloatProperty, FixedProperty<Float> {
@@ -26,6 +27,44 @@ public class FixedFloatProperty implements FloatProperty, FixedProperty<Float> {
 	@Override
 	public FixedFloatProperty snapshot() {
 		return this;
+	}
+	
+	public FixedIntProperty compareWith(FixedFloatProperty other) {
+		return compareWith(FloatComparator.naturalOrder(), other);
+	}
+	
+	public FixedIntProperty compareWith(FloatComparator comparator, FixedFloatProperty other) {
+		return new FixedIntProperty(comparator.compare(get(), other.get()));
+	}
+	
+	@Override
+	public FixedIntProperty hashCodeProperty() {
+		return new FixedIntProperty(Float.hashCode(get()));
+	}
+	
+	@Override
+	public FixedBooleanProperty isZeroProperty() {
+		return BooleanProperty.fromValue(has(0));
+	}
+	
+	@Override
+	public FixedBooleanProperty isStrictlyPositiveProperty() {
+		return BooleanProperty.fromValue(isStrictlyPositive());
+	}
+	
+	@Override
+	public FixedBooleanProperty isStrictlyNegativeProperty() {
+		return BooleanProperty.fromValue(isStrictlyNegative());
+	}
+	
+	@Override
+	public FixedBooleanProperty isPositiveProperty() {
+		return BooleanProperty.fromValue(isPositive());
+	}
+	
+	@Override
+	public FixedBooleanProperty isNegativeProperty() {
+		return BooleanProperty.fromValue(isNegative());
 	}
 	
 	@Contract("_ -> this")
