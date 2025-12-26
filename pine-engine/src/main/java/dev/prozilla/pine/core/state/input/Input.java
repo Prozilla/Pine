@@ -71,6 +71,7 @@ public class Input implements Initializable, Destructible {
 	private GLFWCursorPosCallback cursorPosCallback;
 	private GLFWMouseButtonCallback mouseButtonCallback;
 	private GLFWJoystickCallback joystickCallback;
+	private GLFWErrorCallback errorCallback;
 	
 	private final Application application;
 	private final Window window;
@@ -148,6 +149,7 @@ public class Input implements Initializable, Destructible {
 		config.enableKeyboard.read(this::updateKeyboardCallbacks);
 		config.enableMouse.read(this::updateMouseCallbacks);
 		config.enableGamepad.read(this::updateGamepadCallbacks);
+		glfwSetErrorCallback(errorCallback = new ErrorCallback());
 		
 		logger.log("Input initialized");
 		isInitialized = true;
@@ -155,19 +157,7 @@ public class Input implements Initializable, Destructible {
 	
 	private void updateGamepadCallbacks(boolean enableGamepad) {
 		if (enableGamepad) {
-			joystickCallback = new GLFWJoystickCallback() {
-				@Override
-				public void invoke(int gamepadId, int event) {
-					if (event == GLFW_CONNECTED) {
-						gamepads[gamepadId] = new Gamepad(gamepadId);
-						gamepadEvents.invoke(GamepadEventType.CONNECT, gamepadId);
-					} else if (event == GLFW_DISCONNECTED) {
-						gamepads[gamepadId].destroy();
-						gamepads[gamepadId] = null;
-						gamepadEvents.invoke(GamepadEventType.DISCONNECT, gamepadId);
-					}
-				}
-			};
+			joystickCallback = new JoystickCallback();
 			for (int i = 0; i < gamepads.length; i++) {
 				if (glfwJoystickPresent(i)) {
 					gamepads[i] = new Gamepad(i);
@@ -184,31 +174,9 @@ public class Input implements Initializable, Destructible {
 	
 	private void updateMouseCallbacks(boolean enableMouse) {
 		if (enableMouse) {
-			scrollCallback = new GLFWScrollCallback() {
-				@Override
-				public void invoke(long window, double xOffset, double yOffset) {
-					scroll.x = (float)xOffset;
-					scroll.y = (float)yOffset;
-				}
-			};
-			cursorPosCallback = new GLFWCursorPosCallback() {
-				@Override
-				public void invoke(long window, double xPos, double yPos) {
-					cursorPosition.x = (int)xPos;
-					cursorPosition.y = (int)yPos;
-				}
-			};
-			mouseButtonCallback = new GLFWMouseButtonCallback() {
-				@Override
-				public void invoke(long window, int button, int action, int mods) {
-					if (action == GLFW_PRESS) {
-						mouseButtonsPressed.add(button);
-						mouseButtonsDown.add(button);
-					} else if (action == GLFW_RELEASE) {
-						mouseButtonsPressed.remove((Integer)button);
-					}
-				}
-			};
+			scrollCallback = new ScrollCallback();
+			cursorPosCallback = new CursorPosCallback();
+			mouseButtonCallback = new MouseButtonCallback();
 		} else if (!isInitialized) {
 			return;
 		} else {
@@ -223,30 +191,8 @@ public class Input implements Initializable, Destructible {
 	
 	private void updateKeyboardCallbacks(boolean enableKeyboard) {
 		if (enableKeyboard) {
-			keyCallback = new GLFWKeyCallback() {
-				@Override
-				public void invoke(long window, int key, int scancode, int action, int mods) {
-					if (action == GLFW_PRESS) {
-						keysPressed.add(key);
-						keysDown.add(key);
-					} else if (action == GLFW_RELEASE) {
-						Integer keyInt = key;
-						keysPressed.remove(keyInt);
-						keysRepeated.remove(keyInt);
-					} else if (action == GLFW_REPEAT) {
-						keysRepeated.add(key);
-					}
-				}
-			};
-			charCallback = new GLFWCharCallback() {
-				@Override
-				public void invoke(long window, int codepoint) {
-					char character = (char)codepoint;
-					for (TextListener listener : textListeners) {
-						listener.handle(character);
-					}
-				}
-			};
+			keyCallback = new KeyCallback();
+			charCallback = new CharCallback();
 		} else if (!isInitialized) {
 			return;
 		} else {
@@ -317,7 +263,14 @@ public class Input implements Initializable, Destructible {
 	 */
 	@Override
 	public void destroy() {
-		GLFWUtils.free(keyCallback, charCallback, scrollCallback, cursorPosCallback, mouseButtonCallback, joystickCallback);
+		GLFWUtils.free(
+			keyCallback,
+			charCallback, scrollCallback,
+			cursorPosCallback,
+			mouseButtonCallback,
+			joystickCallback,
+			errorCallback
+		);
 		for (Gamepad gamepad : gamepads) {
 			if (gamepad != null) {
 				gamepad.destroy();
@@ -913,6 +866,81 @@ public class Input implements Initializable, Destructible {
 	
 	private void setInputMode(int mode, int value) {
 		glfwSetInputMode(window.getId(), mode, value);
+	}
+	
+	private class KeyCallback extends GLFWKeyCallback {
+		@Override
+		public void invoke(long window, int key, int scancode, int action, int mods) {
+			if (action == GLFW_PRESS) {
+				keysPressed.add(key);
+				keysDown.add(key);
+			} else if (action == GLFW_RELEASE) {
+				Integer keyInt = key;
+				keysPressed.remove(keyInt);
+				keysRepeated.remove(keyInt);
+			} else if (action == GLFW_REPEAT) {
+				keysRepeated.add(key);
+			}
+		}
+	}
+	
+	private class CharCallback extends GLFWCharCallback {
+		@Override
+		public void invoke(long window, int codepoint) {
+			char character = (char)codepoint;
+			for (TextListener listener : textListeners) {
+				listener.handle(character);
+			}
+		}
+	}
+	
+	private class MouseButtonCallback extends GLFWMouseButtonCallback {
+		@Override
+		public void invoke(long window, int button, int action, int mods) {
+			if (action == GLFW_PRESS) {
+				mouseButtonsPressed.add(button);
+				mouseButtonsDown.add(button);
+			} else if (action == GLFW_RELEASE) {
+				mouseButtonsPressed.remove((Integer)button);
+			}
+		}
+	}
+	
+	private class CursorPosCallback extends GLFWCursorPosCallback {
+		@Override
+		public void invoke(long window, double xPos, double yPos) {
+			cursorPosition.x = (int)xPos;
+			cursorPosition.y = (int)yPos;
+		}
+	}
+	
+	private class ScrollCallback extends GLFWScrollCallback {
+		@Override
+		public void invoke(long window, double xOffset, double yOffset) {
+			scroll.x = (float)xOffset;
+			scroll.y = (float)yOffset;
+		}
+	}
+	
+	private class JoystickCallback extends GLFWJoystickCallback {
+		@Override
+		public void invoke(int gamepadId, int event) {
+			if (event == GLFW_CONNECTED) {
+				gamepads[gamepadId] = new Gamepad(gamepadId);
+				gamepadEvents.invoke(GamepadEventType.CONNECT, gamepadId);
+			} else if (event == GLFW_DISCONNECTED) {
+				gamepads[gamepadId].destroy();
+				gamepads[gamepadId] = null;
+				gamepadEvents.invoke(GamepadEventType.DISCONNECT, gamepadId);
+			}
+		}
+	}
+	
+	private class ErrorCallback extends GLFWErrorCallback {
+		@Override
+		public void invoke(int error, long description) {
+			application.logLibraryError("GLFW", error, GLFWErrorCallback.getDescription(description));
+		}
 	}
 	
 }

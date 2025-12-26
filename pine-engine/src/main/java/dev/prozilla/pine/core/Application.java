@@ -323,7 +323,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			if (mode.usesOpenGL) {
 				int error = glGetError();
 				if (error != GL_NO_ERROR) {
-					logger.error(String.format("OpenGL error: %s - %s", error, GLUtils.getErrorString(error)));
+					logLibraryError("OpenGL", error, GLUtils.getErrorString(error));
 				}
 			}
 			
@@ -734,6 +734,10 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 */
 	public Timer.Timeout defer(Callback callback) {
 		return timer.startTimeout(callback, 0);
+	}
+	
+	public void logLibraryError(String library, int code, String description) {
+		logger.error(String.format("%s error: %s - %s", library, code, description));
 	}
 	
 	@Override

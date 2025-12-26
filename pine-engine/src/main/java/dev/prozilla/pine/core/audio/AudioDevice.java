@@ -20,6 +20,7 @@ import static org.lwjgl.openal.ALC10.*;
  */
 public class AudioDevice implements Initializable, Destructible {
 	
+	private final Application application;
 	private final Logger logger;
 	
 	private boolean isInitialized;
@@ -27,6 +28,7 @@ public class AudioDevice implements Initializable, Destructible {
 	private long context;
 	
 	public AudioDevice(Application application) {
+		this.application = application;
 		logger = application.getLogger();
 		isInitialized = false;
 	}
@@ -97,7 +99,7 @@ public class AudioDevice implements Initializable, Destructible {
 	}
 	
 	private void handleError(String message, int error) {
-		logger.error(String.format("%s: %s - %s", message, error, ALUtils.getErrorString(error)));
+		application.logLibraryError("OpenAL", error, String.format("%s: %s", ALUtils.getErrorString(error), message));
 		destroy();
 	}
 	
