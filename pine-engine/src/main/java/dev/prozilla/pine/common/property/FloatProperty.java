@@ -7,11 +7,15 @@ import dev.prozilla.pine.common.util.function.mapper.FloatMapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
+
 /**
  * A property with a float value.
  */
 @FunctionalInterface
 public interface FloatProperty extends NonNullProperty<Float> {
+	
+	FloatComparator DEFAULT_ORDER = FloatComparator.naturalOrder();
 	
 	@Override
 	default Float getValueOr(Float defaultValue) {
@@ -183,18 +187,45 @@ public interface FloatProperty extends NonNullProperty<Float> {
 		return compareWith(other).isNegativeProperty();
 	}
 	
+	/**
+	 * @see #compareWith(FixedFloatProperty)
+	 */
 	default IntProperty compareWith(float value) {
 		return compareWith(new FixedFloatProperty(value));
 	}
 	
-	default IntProperty compareWith(FloatProperty other) {
-		return compareWith(FloatComparator.naturalOrder(), other);
+	/**
+	 * @see #compareWith(FloatProperty)
+	 */
+	default IntProperty compareWith(FixedFloatProperty other) {
+		return compareWith((FloatProperty)other);
 	}
 	
+	/**
+	 * Compares this property with another property using the {@link #DEFAULT_ORDER}.
+	 * @see #compareWith(FloatComparator, FloatProperty)
+	 */
+	default IntProperty compareWith(FloatProperty other) {
+		return compareWith(DEFAULT_ORDER, other);
+	}
+	
+	/**
+	 * @see #compareWith(FloatComparator, FixedFloatProperty)
+	 */
 	default IntProperty compareWith(FloatComparator comparator, float value) {
 		return compareWith(comparator, new FixedFloatProperty(value));
 	}
 	
+	/**
+	 * @see #compareWith(FloatComparator, FloatProperty)
+	 */
+	default IntProperty compareWith(FloatComparator comparator, FixedFloatProperty other) {
+		return compareWith(comparator, (FloatProperty)other);
+	}
+	
+	/**
+	 * @see #compareWith(Comparator, Property)
+	 */
 	default IntProperty compareWith(FloatComparator comparator, FloatProperty other) {
 		return new ComparedFloatProperty(this, comparator, other);
 	}

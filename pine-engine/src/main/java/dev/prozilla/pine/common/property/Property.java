@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.property;
 
 import dev.prozilla.pine.common.exception.InvalidObjectException;
 import dev.prozilla.pine.common.property.compared.ComparedObjectProperty;
+import dev.prozilla.pine.common.property.compared.ComparedProperty;
 import dev.prozilla.pine.common.property.fixed.FixedObjectProperty;
 import dev.prozilla.pine.common.property.fixed.FixedProperty;
 import dev.prozilla.pine.common.util.StringUtils;
@@ -124,13 +125,19 @@ public interface Property<T> extends Functor<T> {
 	}
 	
 	/**
-	 * Returns an integer property whose value is based on the comparison of the value of this property and a given value.
-	 * @param comparator The comparing function
-	 * @param value The value to compare with
-	 * @return An integer property whose value is based on the comparison of the value of this property and a given value.
+	 * Compares the value of this property with a given value.
+	 * @see #compareWith(Comparator, FixedProperty)
 	 */
 	default IntProperty compareWith(Comparator<T> comparator, T value) {
 		return compareWith(comparator, new FixedObjectProperty<>(value));
+	}
+	
+	/**
+	 * Compares this property with a property with a fixed value.
+	 * @see #compareWith(Comparator, Property)
+	 */
+	default IntProperty compareWith(Comparator<T> comparator, FixedProperty<T> other) {
+		return compareWith(comparator, (Property<T>)other);
 	}
 	
 	/**
@@ -138,6 +145,7 @@ public interface Property<T> extends Functor<T> {
 	 * @param comparator The comparing function
 	 * @param other The property to compare with
 	 * @return An integer property whose value is based on the comparison of the value of this property and another property.
+	 * @see ComparedProperty
 	 */
 	default IntProperty compareWith(Comparator<T> comparator, Property<T> other) {
 		return new ComparedObjectProperty<>(this, comparator, other);

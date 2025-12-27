@@ -8,6 +8,8 @@ import java.util.Comparator;
 
 /**
  * A property whose value is based on the comparison of the values of two properties.
+ *
+ * <p>A negative integer, zero or a positive integer respectively means that the value of the first property is less than, equal to, or greater than the value of the second property.</p>
  * @param <C> The type of comparator
  * @param <P> The type of properties
  */

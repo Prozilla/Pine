@@ -7,6 +7,8 @@ import dev.prozilla.pine.common.util.function.mapper.BooleanMapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
+
 /**
  * A property with a boolean value.
  */
@@ -42,11 +44,9 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 			return TRUE;
 		}
 		
-		@Override
-		public FixedBooleanProperty isNotNullProperty() {
-			return TRUE;
-		}
 	};
+	
+	BooleanComparator DEFAULT_ORDER = BooleanComparator.naturalOrder();
 	
 	@Override
 	default Boolean getValueOr(Boolean defaultValue) {
@@ -177,18 +177,45 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 		return () -> has(value);
 	}
 	
+	/**
+	 * @see #compareWith(FixedBooleanProperty)
+	 */
 	default IntProperty compareWith(boolean value) {
 		return compareWith(BooleanProperty.fromValue(value));
 	}
 	
-	default IntProperty compareWith(BooleanProperty other) {
-		return compareWith(BooleanComparator.naturalOrder(), other);
+	/**
+	 * @see #compareWith(BooleanProperty)
+	 */
+	default IntProperty compareWith(FixedBooleanProperty other) {
+		return compareWith((BooleanProperty)other);
 	}
 	
+	/**
+	 * Compares this property with another property using the {@link #DEFAULT_ORDER}.
+	 * @see #compareWith(BooleanComparator, BooleanProperty)
+	 */
+	default IntProperty compareWith(BooleanProperty other) {
+		return compareWith(DEFAULT_ORDER, other);
+	}
+	
+	/**
+	 * @see #compareWith(BooleanComparator, FixedBooleanProperty)
+	 */
 	default IntProperty compareWith(BooleanComparator comparator, boolean value) {
 		return compareWith(comparator, BooleanProperty.fromValue(value));
 	}
 	
+	/**
+	 * @see #compareWith(BooleanComparator, BooleanProperty)
+	 */
+	default IntProperty compareWith(BooleanComparator comparator, FixedBooleanProperty other) {
+		return compareWith(comparator, (BooleanProperty)other);
+	}
+	
+	/**
+	 * @see #compareWith(Comparator, Property)
+	 */
 	default IntProperty compareWith(BooleanComparator comparator, BooleanProperty other) {
 		return new ComparedBooleanProperty(this, comparator, other);
 	}

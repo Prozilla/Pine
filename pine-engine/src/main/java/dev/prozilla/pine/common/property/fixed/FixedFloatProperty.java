@@ -71,11 +71,12 @@ public class FixedFloatProperty implements FloatProperty, FixedProperty<Float> {
 	
 	@Override
 	public FixedIntProperty compareWith(float value) {
-		return compareWith(FloatComparator.naturalOrder(), value);
+		return compareWith(FloatProperty.DEFAULT_ORDER, value);
 	}
 	
+	@Override
 	public FixedIntProperty compareWith(FixedFloatProperty other) {
-		return compareWith(FloatComparator.naturalOrder(), other);
+		return compareWith(FloatProperty.DEFAULT_ORDER, other);
 	}
 	
 	@Override
@@ -83,6 +84,7 @@ public class FixedFloatProperty implements FloatProperty, FixedProperty<Float> {
 		return new FixedIntProperty(comparator.compare(get(), value));
 	}
 	
+	@Override
 	public FixedIntProperty compareWith(FloatComparator comparator, FixedFloatProperty other) {
 		return new FixedIntProperty(comparator.compare(get(), other.get()));
 	}

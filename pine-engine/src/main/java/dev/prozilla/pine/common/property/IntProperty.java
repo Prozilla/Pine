@@ -7,11 +7,15 @@ import dev.prozilla.pine.common.util.function.mapper.IntMapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
+
 /**
  * A property with an integer value.
  */
 @FunctionalInterface
 public interface IntProperty extends NonNullProperty<Integer> {
+	
+	IntComparator DEFAULT_ORDER = IntComparator.naturalOrder();
 	
 	@Override
 	default Integer getValueOr(Integer defaultValue) {
@@ -183,18 +187,45 @@ public interface IntProperty extends NonNullProperty<Integer> {
 		return compareWith(other).isNegativeProperty();
 	}
 	
+	/**
+	 * @see #compareWith(FixedIntProperty)
+	 */
 	default IntProperty compareWith(int value) {
 		return compareWith(new FixedIntProperty(value));
 	}
 	
-	default IntProperty compareWith(IntProperty other) {
-		return compareWith(IntComparator.naturalOrder(), other);
+	/**
+	 * @see #compareWith(IntProperty)
+	 */
+	default IntProperty compareWith(FixedIntProperty other) {
+		return compareWith((IntProperty)other);
 	}
 	
+	/**
+	 * Compares this property with another property using the {@link #DEFAULT_ORDER}.
+	 * @see #compareWith(IntComparator, IntProperty)
+	 */
+	default IntProperty compareWith(IntProperty other) {
+		return compareWith(DEFAULT_ORDER, other);
+	}
+	
+	/**
+	 * @see #compareWith(IntComparator, FixedIntProperty)
+	 */
 	default IntProperty compareWith(IntComparator comparator, int value) {
 		return compareWith(comparator, new FixedIntProperty(value));
 	}
 	
+	/**
+	 * @see #compareWith(IntComparator, IntProperty)
+	 */
+	default IntProperty compareWith(IntComparator comparator, FixedIntProperty other) {
+		return compareWith(comparator, (IntProperty)other);
+	}
+	
+	/**
+	 * @see #compareWith(Comparator, Property)
+	 */
 	default IntProperty compareWith(IntComparator comparator, IntProperty other) {
 		return new ComparedIntProperty(this, comparator, other);
 	}

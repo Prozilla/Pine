@@ -71,11 +71,12 @@ public class FixedIntProperty implements IntProperty, FixedProperty<Integer> {
 	
 	@Override
 	public FixedIntProperty compareWith(int value) {
-		return compareWith(IntComparator.naturalOrder(), value);
+		return compareWith(IntProperty.DEFAULT_ORDER, value);
 	}
 	
+	@Override
 	public FixedIntProperty compareWith(FixedIntProperty other) {
-		return compareWith(IntComparator.naturalOrder(), other);
+		return compareWith(IntProperty.DEFAULT_ORDER, other);
 	}
 	
 	@Override
@@ -83,10 +84,12 @@ public class FixedIntProperty implements IntProperty, FixedProperty<Integer> {
 		return new FixedIntProperty(comparator.compare(get(), value));
 	}
 	
+	@Override
 	public FixedIntProperty compareWith(IntComparator comparator, FixedIntProperty other) {
 		return new FixedIntProperty(comparator.compare(get(), other.get()));
 	}
 	
+	@Contract("-> this")
 	@Override
 	public FixedIntProperty hashCodeProperty() {
 		// The hash code of an integer is the integer itself

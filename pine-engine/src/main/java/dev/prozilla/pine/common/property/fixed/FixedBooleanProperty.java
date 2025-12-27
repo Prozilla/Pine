@@ -55,10 +55,22 @@ public abstract class FixedBooleanProperty implements BooleanProperty, FixedProp
 		return this;
 	}
 	
-	public FixedIntProperty compareWith(FixedBooleanProperty other) {
-		return compareWith(BooleanComparator.naturalOrder(), other);
+	@Override
+	public FixedIntProperty compareWith(boolean value) {
+		return compareWith(BooleanProperty.DEFAULT_ORDER, value);
 	}
 	
+	@Override
+	public FixedIntProperty compareWith(FixedBooleanProperty other) {
+		return compareWith(BooleanProperty.DEFAULT_ORDER, other);
+	}
+	
+	@Override
+	public FixedIntProperty compareWith(BooleanComparator comparator, boolean value) {
+		return new FixedIntProperty(comparator.compare(get(), value));
+	}
+	
+	@Override
 	public FixedIntProperty compareWith(BooleanComparator comparator, FixedBooleanProperty other) {
 		return new FixedIntProperty(comparator.compare(get(), other.get()));
 	}
