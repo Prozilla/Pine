@@ -6,10 +6,17 @@ import dev.prozilla.pine.common.system.Color;
 
 public final class AdaptiveColorProperty extends AdaptiveObjectProperty<Color> implements ColorProperty {
 	
+	/**
+	 * Creates a new property with a dynamic value.
+	 * @param property Variable property that determines the value of this property
+	 */
 	public AdaptiveColorProperty(Property<Color> property) {
 		super(property);
 	}
 	
+	/**
+	 * Creates a new property with a fixed value.
+	 */
 	public AdaptiveColorProperty(Color fixedValue) {
 		super(fixedValue);
 	}
@@ -28,6 +35,9 @@ public final class AdaptiveColorProperty extends AdaptiveObjectProperty<Color> i
 		return new AdaptiveColorProperty(value);
 	}
 	
+	/**
+	 * @see #adapt(ColorProperty)
+	 */
 	public static AdaptiveColorProperty adapt(AdaptiveColorProperty property) {
 		return property;
 	}

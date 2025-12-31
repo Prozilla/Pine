@@ -15,15 +15,15 @@ import java.util.Arrays;
  */
 public class InputBindings implements InputProperty {
 
-	private final InputProperty[] inputProperties;
+	private final InputKeyProperty[] inputProperties;
 	
-	public InputBindings(InputProperty... inputProperties) {
+	public InputBindings(InputKeyProperty... inputProperties) {
 		this.inputProperties = Checks.isNotNull(inputProperties, "inputProperties");
 	}
 	
 	@Override
 	public boolean isPressed(Input input) {
-		for (InputProperty inputProperty : inputProperties) {
+		for (InputKeyProperty inputProperty : inputProperties) {
 			if (inputProperty.isPressed(input)) {
 				return true;
 			}
@@ -33,7 +33,7 @@ public class InputBindings implements InputProperty {
 	
 	@Override
 	public boolean isDown(Input input) {
-		for (InputProperty inputProperty : inputProperties) {
+		for (InputKeyProperty inputProperty : inputProperties) {
 			if (inputProperty.isDown(input)) {
 				return true;
 			}
@@ -41,7 +41,7 @@ public class InputBindings implements InputProperty {
 		return false;
 	}
 	
-	public InputProperty getBinding(int index) {
+	public InputKeyProperty getBinding(int index) {
 		return inputProperties[index];
 	}
 	
@@ -78,7 +78,7 @@ public class InputBindings implements InputProperty {
 	}
 	
 	public void unbind(int index) {
-		inputProperties[index] = InputProperty.FALLBACK;
+		inputProperties[index] = InputKeyProperty.FALLBACK;
 	}
 	
 	@Override
@@ -92,7 +92,7 @@ public class InputBindings implements InputProperty {
 	
 	@Override
 	public String toString() {
-		return ArrayUtils.toString(inputProperties, INPUT_BINDING_SEPARATOR);
+		return ArrayUtils.toString(inputProperties, InputKeyProperty.INPUT_BINDING_SEPARATOR);
 	}
 	
 }

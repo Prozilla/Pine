@@ -30,8 +30,14 @@ public interface ObservableIntProperty extends MutableIntProperty, ObservablePro
 		reader.observe(get());
 	}
 	
+	/**
+	 * @see #addObserver(Observer)
+	 */
 	IntObserver addObserver(IntObserver observer);
 	
+	/**
+	 * @see #removeObserver(Observer)
+	 */
 	void removeObserver(IntObserver observer);
 
 }

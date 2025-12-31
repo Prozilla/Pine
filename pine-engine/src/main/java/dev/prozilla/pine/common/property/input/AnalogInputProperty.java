@@ -7,19 +7,35 @@ public abstract class AnalogInputProperty<T> extends SimpleMutableObjectProperty
 	
 	private float threshold;
 	
-	public AnalogInputProperty(T initialValue, float treshold) {
+	/**
+	 * Creates a new analog input property.
+	 * @param initialValue The initial value
+	 * @param threshold The threshold for input registration
+	 */
+	public AnalogInputProperty(T initialValue, float threshold) {
 		super(initialValue);
-		this.threshold = treshold;
+		this.threshold = threshold;
 	}
 	
+	/**
+	 * Returns the threshold for input registration of this property.
+	 * @return The threshold for input registration of this property.
+	 */
 	public float getThreshold() {
 		return threshold;
 	}
 	
+	/**
+	 * Sets the threshold for input registration of this property.
+	 */
 	public void setThreshold(float threshold) {
 		this.threshold = threshold;
 	}
 	
+	/**
+	 * Returns a property whose value is bound to the threshold of this property.
+	 * @return A property whose value is bound to the threshold of this property.
+	 */
 	public MutableFloatProperty thresholdProperty() {
 		return new MutableFloatProperty() {
 			@Override

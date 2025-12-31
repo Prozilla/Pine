@@ -5,10 +5,17 @@ import dev.prozilla.pine.common.property.StringProperty;
 
 public final class AdaptiveStringProperty extends AdaptiveObjectProperty<String> implements StringProperty {
 	
+	/**
+	 * Creates a new property with a dynamic value.
+	 * @param property Variable property that determines the value of this property
+	 */
 	public AdaptiveStringProperty(Property<String> property) {
 		super(property);
 	}
 	
+	/**
+	 * Creates a new property with a fixed value.
+	 */
 	public AdaptiveStringProperty(String fixedValue) {
 		super(fixedValue);
 	}
@@ -21,6 +28,9 @@ public final class AdaptiveStringProperty extends AdaptiveObjectProperty<String>
 		return new AdaptiveStringProperty(value);
 	}
 	
+	/**
+	 * @see #adapt(StringProperty)
+	 */
 	public static AdaptiveStringProperty adapt(AdaptiveStringProperty property) {
 		return property;
 	}

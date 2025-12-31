@@ -35,10 +35,18 @@ public interface Vector3fProperty extends Vector3fPropertyBase<Vector3f>, Transm
 		return value != null ? value.z : 0;
 	}
 	
+	/**
+	 * @see #fromProperty(Property)
+	 */
 	static Vector3fProperty fromProperty(Vector3fProperty property) {
 		return property;
 	}
 	
+	/**
+	 * Converts a property to a vector property.
+	 * @param property The property to convert
+	 * @return The converted vector property.
+	 */
 	@Contract("_ -> new")
 	static Vector3fProperty fromProperty(Property<Vector3f> property) {
 		return property::getValue;

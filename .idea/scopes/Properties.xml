@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Properties" pattern="src:dev.prozilla.pine.common.property..*" />
+</component>

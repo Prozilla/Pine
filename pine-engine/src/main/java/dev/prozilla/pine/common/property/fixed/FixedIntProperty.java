@@ -5,10 +5,16 @@ import dev.prozilla.pine.common.property.IntProperty;
 import dev.prozilla.pine.common.util.function.comparator.IntComparator;
 import org.jetbrains.annotations.Contract;
 
+/**
+ * A property with an integer value that never changes.
+ */
 public class FixedIntProperty implements IntProperty, FixedProperty<Integer> {
 	
 	protected final int value;
 	
+	/**
+	 * Creates a fixed property with the given value.
+	 */
 	public FixedIntProperty(int value) {
 		this.value = value;
 	}

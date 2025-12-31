@@ -3,7 +3,7 @@ package dev.prozilla.pine.common.property.input;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadInput;
 
-public interface GamepadInputProperty extends InputProperty {
+public interface GamepadInputProperty extends InputKeyProperty {
 	
 	@Override
 	default boolean isPressed(Input input) {

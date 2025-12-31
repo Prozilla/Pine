@@ -13,7 +13,7 @@ public class TransitionedColorProperty extends TransitionedObjectProperty<Color>
 	@Override
 	public void transmit(Color target) {
 		target.receive(start);
-		target.mix(end, getFactor());
+		target.mix(end, getProgress());
 	}
 	
 	@Override

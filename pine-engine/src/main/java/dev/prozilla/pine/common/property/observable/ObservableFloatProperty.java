@@ -30,8 +30,14 @@ public interface ObservableFloatProperty extends MutableFloatProperty, Observabl
 		reader.observe(get());
 	}
 	
+	/**
+	 * @see #addObserver(Observer)
+	 */
 	FloatObserver addObserver(FloatObserver observer);
 	
+	/**
+	 * @see #removeObserver(Observer)
+	 */
 	void removeObserver(FloatObserver observer);
 
 }

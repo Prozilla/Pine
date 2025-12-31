@@ -16,18 +16,29 @@ public class JoinedStringProperty implements StringProperty, CollectionProvider<
 	private final String separator;
 	private final List<StringProperty> stringProperties;
 	
+	/**
+	 * Creates a string property that joins the given string properties
+	 * @param stringProperties The string properties to join
+	 */
 	public JoinedStringProperty(StringProperty... stringProperties) {
 		this(null, stringProperties);
 	}
 	
-	public JoinedStringProperty(String separator) {
-		this(separator, (StringProperty[])null);
+	/**
+	 * Creates a string property that joins the given string properties with the given separator.
+	 * @param stringProperties The string properties to join
+	 */
+	public JoinedStringProperty(String separator, StringProperty... stringProperties) {
+		this(separator);
+		addAll(stringProperties);
 	}
 	
-	public JoinedStringProperty(String separator, StringProperty... stringProperties) {
+	/**
+	 * Creates an empty string property with a given separator.
+	 */
+	public JoinedStringProperty(String separator) {
 		this.separator = separator;
 		this.stringProperties = new ArrayList<>();
-		addAll(stringProperties);
 	}
 	
 	@Override

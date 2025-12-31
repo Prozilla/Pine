@@ -8,6 +8,12 @@ public class AnimatedIntProperty extends AnimatedProperty<Integer> implements In
 	protected int start;
 	protected int end;
 	
+	/**
+	 * Creates an integer property with an animation.
+	 * @param start The value at the start of the animation
+	 * @param end The value at the end of the animation
+	 * @param curve The animation curve that determines how this animation progresses over time
+	 */
 	public AnimatedIntProperty(int start, int end, AnimationCurve curve) {
 		super(curve);
 		this.start = start;
@@ -33,7 +39,7 @@ public class AnimatedIntProperty extends AnimatedProperty<Integer> implements In
 	
 	@Override
 	public int get() {
-		return Math.round(MathUtils.remap(getFactor(), 0f, 1f, start, end));
+		return Math.round(MathUtils.remap(getProgress(), 0f, 1f, start, end));
 	}
 	
 }

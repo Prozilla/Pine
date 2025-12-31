@@ -30,8 +30,14 @@ public interface ObservableBooleanProperty extends MutableBooleanProperty, Obser
 		reader.observe(get());
 	}
 	
+	/**
+	 * @see #addObserver(Observer) 
+	 */
 	BooleanObserver addObserver(BooleanObserver observer);
 	
+	/**
+	 * @see #removeObserver(Observer)
+	 */
 	void removeObserver(BooleanObserver observer);
 
 }

@@ -10,8 +10,9 @@ public abstract class AnimatedObjectProperty<T> extends AnimatedProperty<T> {
 	
 	/**
 	 * Creates a property with an animation.
-	 * @param start Value at the start of the animation
-	 * @param end Value at the end of the animation
+	 * @param start The value at the start of the animation
+	 * @param end The value at the end of the animation
+	 * @param curve The animation curve that determines how this animation progresses over time
 	 */
 	public AnimatedObjectProperty(T start, T end, AnimationCurve curve) {
 		super(curve);

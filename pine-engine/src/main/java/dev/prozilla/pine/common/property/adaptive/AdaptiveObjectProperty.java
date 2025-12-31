@@ -36,6 +36,9 @@ public class AdaptiveObjectProperty<T> extends AdaptiveProperty<T, Property<T>> 
 		return new AdaptiveObjectProperty<>(value);
 	}
 	
+	/**
+	 * @see #adapt(Property)
+	 */
 	public static <T> AdaptiveObjectProperty<T> adapt(AdaptiveObjectProperty<T> property) {
 		return property;
 	}

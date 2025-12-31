@@ -7,6 +7,10 @@ import java.util.Iterator;
 
 public interface CollectionProvider<T> extends CollectionContext<T> {
 	
+	/**
+	 * Returns all items in this collection.
+	 * @return The items in this collection.
+	 */
 	Collection<T> items();
 	
 	@Override

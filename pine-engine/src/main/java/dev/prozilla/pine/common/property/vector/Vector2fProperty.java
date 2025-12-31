@@ -29,10 +29,18 @@ public interface Vector2fProperty extends Vector2fPropertyBase<Vector2f>, Transm
 		return value != null ? value.y : 0;
 	}
 	
+	/**
+	 * @see #fromProperty(Property)
+	 */
 	static Vector2fProperty fromProperty(Vector2fProperty property) {
 		return property;
 	}
 	
+	/**
+	 * Converts a property to a vector property.
+	 * @param property The property to convert
+	 * @return The converted vector property.
+	 */
 	@Contract("_ -> new")
 	static Vector2fProperty fromProperty(Property<Vector2f> property) {
 		return property::getValue;

@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.property.compared.ComparedBooleanProperty;
 import dev.prozilla.pine.common.property.fixed.FixedBooleanProperty;
 import dev.prozilla.pine.common.util.function.comparator.BooleanComparator;
 import dev.prozilla.pine.common.util.function.mapper.BooleanMapper;
+import dev.prozilla.pine.common.util.function.mapper.Mapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -70,6 +71,9 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 	 */
 	boolean get();
 	
+	/**
+	 * @see #hasValue(Object)
+	 */
 	default boolean has(boolean value) {
 		return get() == value;
 	}
@@ -164,6 +168,9 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 		return this;
 	}
 	
+	/**
+	 * @see #map(Mapper)
+	 */
 	default BooleanProperty map(BooleanMapper mapper) {
 		return () -> mapper.map(get());
 	}
@@ -175,6 +182,11 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 	 */
 	default BooleanProperty hasProperty(boolean value) {
 		return () -> has(value);
+	}
+	
+	@Override
+	default FixedBooleanProperty snapshot() {
+		return BooleanProperty.fromValue(get());
 	}
 	
 	/**
@@ -233,10 +245,18 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 		}
 	}
 	
+	/**
+	 * @see #fromProperty(Property)
+	 */
 	static BooleanProperty fromProperty(BooleanProperty property) {
 		return property;
 	}
 	
+	/**
+	 * Converts a property to a boolean property.
+	 * @param property The property to convert
+	 * @return The converted boolean property.
+	 */
 	@Contract("_ -> new")
 	static BooleanProperty fromProperty(Property<Boolean> property) {
 		return property::getValue;

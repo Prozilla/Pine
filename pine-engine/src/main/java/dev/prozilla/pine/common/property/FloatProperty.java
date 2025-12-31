@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.property.compared.ComparedFloatProperty;
 import dev.prozilla.pine.common.property.fixed.FixedFloatProperty;
 import dev.prozilla.pine.common.util.function.comparator.FloatComparator;
 import dev.prozilla.pine.common.util.function.mapper.FloatMapper;
+import dev.prozilla.pine.common.util.function.mapper.Mapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +40,9 @@ public interface FloatProperty extends NonNullProperty<Float> {
 	 */
 	float get();
 	
+	/**
+	 * @see #hasValue(Object)
+	 */
 	default boolean has(float value) {
 		return get() == value;
 	}
@@ -81,6 +85,9 @@ public interface FloatProperty extends NonNullProperty<Float> {
 		return this;
 	}
 	
+	/**
+	 * @see #map(Mapper)
+	 */
 	default FloatProperty map(FloatMapper mapper) {
 		return () -> mapper.map(get());
 	}
@@ -139,50 +146,123 @@ public interface FloatProperty extends NonNullProperty<Float> {
 		return () -> has(value);
 	}
 	
+	@Override
+	default FixedFloatProperty snapshot() {
+		return new FixedFloatProperty(get());
+	}
+	
+	/**
+	 * Checks if the value of this property is greater than the given value.
+	 * @param value The value to compare with
+	 * @return {@code true} if the value of this property is greater than the given value.
+	 */
 	default boolean isGreaterThan(float value) {
 		return get() > value;
 	}
 	
+	/**
+	 * Checks if the value of this property is less than the given value.
+	 * @param value The value to compare with
+	 * @return {@code true} if the value of this property is less than the given value.
+	 */
 	default boolean isLessThan(float value) {
 		return get() < value;
 	}
 	
+	/**
+	 * Checks if the value of this property is greater than or equal to the given value.
+	 * @param value The value to compare with
+	 * @return {@code true} if the value of this property is greater than or equal to the given value.
+	 */
 	default boolean isGreaterThanOrEqualTo(float value) {
 		return get() >= value;
 	}
 	
+	/**
+	 * Checks if the value of this property is less than or equal to the given value.
+	 * @param value The value to compare with
+	 * @return {@code true} if the value of this property is less than or equal to the given value.
+	 */
 	default boolean isLessThanOrEqualTo(float value) {
 		return get() <= value;
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is greater than the given value.
+	 * @param value The value to compare with
+	 * @return A boolean property based on whether the value of this property is greater than the given value.
+	 * @see #compareWith(float)
+	 */
 	default BooleanProperty isGreaterThanProperty(float value) {
 		return compareWith(value).isStrictlyPositiveProperty();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is less than the given value.
+	 * @param value The value to compare with
+	 * @return A boolean property based on whether the value of this property is less than the given value.
+	 * @see #compareWith(float)
+	 */
 	default BooleanProperty isLessThanProperty(float value) {
 		return compareWith(value).isStrictlyNegativeProperty();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is greater than or equal to the given value.
+	 * @param value The value to compare with
+	 * @return A boolean property based on whether the value of this property is greater than or equal to the given value.
+	 * @see #compareWith(float)
+	 */
 	default BooleanProperty isGreaterThanOrEqualToProperty(float value) {
 		return compareWith(value).isPositiveProperty();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is less than or equal to the given value.
+	 * @param value The value to compare with
+	 * @return A boolean property based on whether the value of this property is less than or equal to the given value.
+	 * @see #compareWith(float)
+	 */
 	default BooleanProperty isLessThanOrEqualToProperty(float value) {
 		return compareWith(value).isNegativeProperty();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is greater than the value of the given property.
+	 * @param other The property to compare with
+	 * @return A boolean property based on whether the value of this property is greater than the value of the given property.
+	 * @see #compareWith(FloatProperty)
+	 */
 	default BooleanProperty isGreaterThanProperty(FloatProperty other) {
 		return compareWith(other).isStrictlyPositiveProperty();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is less than the value of the given property.
+	 * @param other The property to compare with
+	 * @return A boolean property based on whether the value of this property is less than the value of the given property.
+	 * @see #compareWith(FloatProperty)
+	 */
 	default BooleanProperty isLessThanProperty(FloatProperty other) {
 		return compareWith(other).isStrictlyNegativeProperty();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is greater than or equal to the value of the given property.
+	 * @param other The property to compare with
+	 * @return A boolean property based on whether the value of this property is greater than or equal to the value of the given property.
+	 * @see #compareWith(FloatProperty)
+	 */
 	default BooleanProperty isGreaterThanOrEqualToProperty(FloatProperty other) {
 		return compareWith(other).isPositiveProperty();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is less than or equal to the value of the given property.
+	 * @param other The property to compare with
+	 * @return A boolean property based on whether the value of this property is less than or equal to the value of the given property.
+	 * @see #compareWith(FloatProperty)
+	 */
 	default BooleanProperty isLessThanOrEqualToProperty(FloatProperty other) {
 		return compareWith(other).isNegativeProperty();
 	}
@@ -230,10 +310,18 @@ public interface FloatProperty extends NonNullProperty<Float> {
 		return new ComparedFloatProperty(this, comparator, other);
 	}
 	
+	/**
+	 * @see #fromProperty(Property)
+	 */
 	static FloatProperty fromProperty(FloatProperty property) {
 		return property;
 	}
 	
+	/**
+	 * Converts a property to a float property.
+	 * @param property The property to convert
+	 * @return The converted float property.
+	 */
 	@Contract("_ -> new")
 	static FloatProperty fromProperty(Property<Float> property) {
 		return property::getValue;

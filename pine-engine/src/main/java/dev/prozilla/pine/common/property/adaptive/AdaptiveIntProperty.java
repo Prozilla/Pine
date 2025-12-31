@@ -39,6 +39,9 @@ public final class AdaptiveIntProperty extends AdaptiveProperty<Integer, IntProp
 		return new AdaptiveIntProperty(value);
 	}
 	
+	/**
+	 * @see #adapt(IntProperty)
+	 */
 	public static AdaptiveIntProperty adapt(AdaptiveIntProperty property) {
 		return property;
 	}

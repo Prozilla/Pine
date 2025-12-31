@@ -35,6 +35,10 @@ public interface MutableProperty<T> extends Property<T> {
 	 */
 	boolean setValue(T value);
 	
+	/**
+	 * Returns a property whose value is bound to the value of this property, but can't be modified.
+	 * @return An unmodifiable property based on the value of this mutable property.
+	 */
 	default Property<T> viewProperty() {
 		return this;
 	}

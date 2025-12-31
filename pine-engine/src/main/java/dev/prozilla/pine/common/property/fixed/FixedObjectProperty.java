@@ -8,6 +8,9 @@ public class FixedObjectProperty<T> implements FixedProperty<T>, Cloneable<Fixed
 	
 	protected final T value;
 	
+	/**
+	 * Creates a fixed property with the given value.
+	 */
 	public FixedObjectProperty(T value) {
 		this.value = value;
 	}

@@ -8,6 +8,12 @@ public class AnimatedFloatProperty extends AnimatedProperty<Float> implements Fl
 	protected float start;
 	protected float end;
 	
+	/**
+	 * Creates a float property with an animation.
+	 * @param start The value at the start of the animation
+	 * @param end The value at the end of the animation
+	 * @param curve The animation curve that determines how this animation progresses over time
+	 */
 	public AnimatedFloatProperty(float start, float end, AnimationCurve curve) {
 		super(curve);
 		this.start = start;
@@ -33,7 +39,7 @@ public class AnimatedFloatProperty extends AnimatedProperty<Float> implements Fl
 	
 	@Override
 	public float get() {
-		return MathUtils.remap(getFactor(), 0f, 1f, start, end);
+		return MathUtils.remap(getProgress(), 0f, 1f, start, end);
 	}
 	
 }

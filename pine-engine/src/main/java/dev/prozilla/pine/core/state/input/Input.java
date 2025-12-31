@@ -455,10 +455,21 @@ public class Input implements Initializable, Destructible {
 		return handleKey(keysPressed, key, stopPropagation);
 	}
 	
+	/**
+	 * Checks whether a key is down or repeated.
+	 * Returns {@code true} in the first frame that the key is pressed and in every frame the key is repeated.
+	 * @return {@code true} if the key is down or repeated.
+	 */
 	public boolean getKeyRepeated(Key key) {
 		return getKeyRepeated(key, STOP_PROPAGATION_DEFAULT);
 	}
 	
+	/**
+	 * Checks whether a key is down or repeated.
+	 * Returns {@code true} in the first frame that the key is pressed and in every frame the key is repeated.
+	 * @param stopPropagation Whether to stop this key from affecting other listeners
+	 * @return {@code true} if the key is down or repeated.
+	 */
 	public boolean getKeyRepeated(Key key, boolean stopPropagation) {
 		if (key == null) {
 			return false;
@@ -466,18 +477,30 @@ public class Input implements Initializable, Destructible {
 		return getKeyRepeated(key.getValue(), stopPropagation);
 	}
 	
+	/**
+	 * Checks whether a key is down or repeated.
+	 * Returns {@code true} in the first frame that the key is pressed and in every frame the key is repeated.
+	 * @param key GLFW integer value for a key
+	 * @return {@code true} if the key is down or repeated.
+	 */
 	public boolean getKeyRepeated(int key) {
 		return getKeyRepeated(key, STOP_PROPAGATION_DEFAULT);
 	}
 	
+	/**
+	 * Checks whether a key is down or repeated.
+	 * Returns {@code true} in the first frame that the key is pressed and in every frame the key is repeated.
+	 * @param key GLFW integer value for a key
+	 * @param stopPropagation Whether to stop this key from affecting other listeners
+	 * @return {@code true} if the key is down or repeated.
+	 */
 	public boolean getKeyRepeated(int key, boolean stopPropagation) {
 		return handleKey(keysDown.contains(key) || keysRepeated.contains(key), key, stopPropagation);
 	}
 	
 	/**
 	 * Checks whether a key is down.
-	 * Returns {@code true} in the first frame that the key is pressed
-	 * and in every frame the key is being repeated.
+	 * Returns {@code true} in the first frame that the key is pressed.
 	 * @return {@code true} if the key is down.
 	 */
 	public boolean getKeyDown(Key key) {
@@ -486,8 +509,7 @@ public class Input implements Initializable, Destructible {
 	
 	/**
 	 * Checks whether a key is down.
-	 * Returns {@code true} in the first frame that the key is pressed
-	 * and in every frame the key is being repeated.
+	 * Returns {@code true} in the first frame that the key is pressed.
 	 * @param stopPropagation Whether to stop this key from affecting other listeners
 	 * @return {@code true} if the key is down.
 	 */
@@ -501,8 +523,7 @@ public class Input implements Initializable, Destructible {
 	
 	/**
 	 * Checks whether a key is down.
-	 * Returns {@code true} in the first frame that the key is pressed
-	 * and in every frame the key is being repeated.
+	 * Returns {@code true} in the first frame that the key is pressed.
 	 * @param key GLFW integer value for a key
 	 * @return {@code true} if the key is down.
 	 */
@@ -512,8 +533,7 @@ public class Input implements Initializable, Destructible {
 	
 	/**
 	 * Checks whether a key is down.
-	 * Returns {@code true} in the first frame that the key is pressed
-	 * and in every frame the key is being repeated.
+	 * Returns {@code true} in the first frame that the key is pressed.
 	 * @param key GLFW integer value for a key
 	 * @param stopPropagation Whether to stop this key from affecting other listeners
 	 * @return {@code true} if the key is down.

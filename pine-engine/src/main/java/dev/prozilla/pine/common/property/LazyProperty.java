@@ -10,10 +10,17 @@ public abstract class LazyProperty<T> implements Property<T> {
 	
 	protected T value;
 	
+	/**
+	 * Evaluates the value of this property.
+	 *
+	 * <p>Implementations of this method should ideally set the value of this property before returning it, to avoid unnecessary fetches.</p>
+	 * @return The value this property is supposed to have.
+	 */
 	protected abstract T fetch();
 	
 	/**
 	 * Returns the current value, or fetches the value if it is {@code null}.
+	 * @see #fetch()
 	 */
 	@Override
 	public T getValue() {

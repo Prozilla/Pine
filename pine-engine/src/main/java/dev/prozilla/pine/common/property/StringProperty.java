@@ -127,10 +127,23 @@ public interface StringProperty extends Property<String> {
 		return () -> StringUtils.toLowerCase(getValue());
 	}
 	
+	@Override
+	default FixedStringProperty snapshot() {
+		return new FixedStringProperty(getValue());
+	}
+	
+	/**
+	 * @see #fromProperty(Property)
+	 */
 	static StringProperty fromProperty(StringProperty property) {
 		return property;
 	}
 	
+	/**
+	 * Converts a property to a string property.
+	 * @param property The property to convert
+	 * @return The converted string property.
+	 */
 	@Contract("_ -> new")
 	static StringProperty fromProperty(Property<String> property) {
 		return property::getValue;

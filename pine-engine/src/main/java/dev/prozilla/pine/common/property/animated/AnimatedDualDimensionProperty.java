@@ -9,6 +9,12 @@ public class AnimatedDualDimensionProperty extends AnimatedObjectProperty<DualDi
 	protected final Dimension.Mix mixedDimensionY;
 	protected final DualDimension result;
 	
+	/**
+	 * Creates a dual dimension property with an animation.
+	 * @param start The dual dimension at the start of the animation
+	 * @param end The dual dimension at the end of the animation
+	 * @param curve The animation curve that determines how this animation progresses over time
+	 */
 	public AnimatedDualDimensionProperty(DualDimension start, DualDimension end, AnimationCurve curve) {
 		super(start, end, curve);
 		mixedDimensionX = new Dimension.Mix(start.x, end.x);
@@ -18,8 +24,8 @@ public class AnimatedDualDimensionProperty extends AnimatedObjectProperty<DualDi
 	
 	@Override
 	public DualDimension getValue() {
-		mixedDimensionX.setFactor(getFactor());
-		mixedDimensionY.setFactor(getFactor());
+		mixedDimensionX.setFactor(getProgress());
+		mixedDimensionY.setFactor(getProgress());
 		return result;
 	}
 }

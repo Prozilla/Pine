@@ -56,8 +56,11 @@ public class AnimationCurve {
 		return this == other || (other instanceof  AnimationCurve otherAnimationCurve && equals(otherAnimationCurve));
 	}
 	
+	/**
+	 * @see #equals(Object)
+	 */
 	public boolean equals(AnimationCurve animationCurve) {
-		return animationCurve.duration == duration && animationCurve.easingFunction == easingFunction && animationCurve.direction == direction;
+		return animationCurve != null && animationCurve.duration == duration && animationCurve.easingFunction == easingFunction && animationCurve.direction == direction;
 	}
 	
 	@Override

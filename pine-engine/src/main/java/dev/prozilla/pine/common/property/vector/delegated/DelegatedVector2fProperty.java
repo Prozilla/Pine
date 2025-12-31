@@ -6,6 +6,11 @@ import dev.prozilla.pine.common.property.vector.Vector2fProperty;
 
 public class DelegatedVector2fProperty extends DelegatedVector2fPropertyBase<Vector2f> implements Vector2fProperty {
 	
+	/**
+	 * Creates a {@link Vector2fProperty} by combining two float properties.
+	 * @param x The x property
+	 * @param y The y property
+	 */
 	public DelegatedVector2fProperty(FloatProperty x, FloatProperty y) {
 		super(x, y);
 	}

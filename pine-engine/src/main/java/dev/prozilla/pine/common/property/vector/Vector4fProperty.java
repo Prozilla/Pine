@@ -41,10 +41,18 @@ public interface Vector4fProperty extends Vector4fPropertyBase<Vector4f>, Transm
 		return value != null ? value.w : 0;
 	}
 	
+	/**
+	 * @see #fromProperty(Property)
+	 */
 	static Vector4fProperty fromProperty(Vector4fProperty property) {
 		return property;
 	}
 	
+	/**
+	 * Converts a property to a vector property.
+	 * @param property The property to convert
+	 * @return The converted vector property.
+	 */
 	@Contract("_ -> new")
 	static Vector4fProperty fromProperty(Property<Vector4f> property) {
 		return property::getValue;

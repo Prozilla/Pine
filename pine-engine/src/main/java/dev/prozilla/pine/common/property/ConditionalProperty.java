@@ -15,10 +15,22 @@ public class ConditionalProperty<T> implements Property<T> {
 	protected final Property<T> propertyTrue;
 	protected final Property<T> propertyFalse;
 	
+	/**
+	 * Creates a conditional property with possible two values.
+	 * @param condition The boolean property that represents the condition
+	 * @param valueTrue The value to use when the value of the {@code condition} is {@code true}
+	 * @param valueFalse The value to use when the value of the {@code condition} is {@code false}
+	 */
 	public ConditionalProperty(BooleanProperty condition, T valueTrue, T valueFalse) {
 		this(condition, new FixedObjectProperty<>(valueTrue), new FixedObjectProperty<>(valueFalse));
 	}
 	
+	/**
+	 * Creates a conditional property.
+	 * @param condition The boolean property that represents the condition
+	 * @param propertyTrue The property whose value to use when the value of the {@code condition} is {@code true}
+	 * @param propertyFalse The property whose value to use when the value of the {@code condition} is {@code false}
+	 */
 	public ConditionalProperty(BooleanProperty condition, Property<T> propertyTrue, Property<T> propertyFalse) {
 		this.condition = condition;
 		this.propertyTrue = propertyTrue;

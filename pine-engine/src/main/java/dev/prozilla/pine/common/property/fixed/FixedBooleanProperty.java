@@ -5,6 +5,9 @@ import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.util.function.comparator.BooleanComparator;
 import org.jetbrains.annotations.Contract;
 
+/**
+ * A property with a boolean value that never changes.
+ */
 public abstract class FixedBooleanProperty implements BooleanProperty, FixedProperty<Boolean> {
 	
 	protected FixedBooleanProperty() {}

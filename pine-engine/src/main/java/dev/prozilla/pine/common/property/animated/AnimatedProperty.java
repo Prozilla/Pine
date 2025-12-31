@@ -5,6 +5,10 @@ public abstract class AnimatedProperty<T> implements AnimatedPropertyBase<T> {
 	protected final AnimationCurve curve;
 	protected float time;
 	
+	/**
+	 * Creates a new animated property.
+	 * @param curve The animation curve that determines how this animation progresses over time
+	 */
 	protected AnimatedProperty(AnimationCurve curve) {
 		this.curve = curve;
 		restart();
@@ -25,7 +29,7 @@ public abstract class AnimatedProperty<T> implements AnimatedPropertyBase<T> {
 	}
 	
 	@Override
-	public float getFactor() {
+	public float getProgress() {
 		return curve.evaluate(time);
 	}
 	

@@ -39,6 +39,9 @@ public final class AdaptiveFloatProperty extends AdaptiveProperty<Float, FloatPr
 		return new AdaptiveFloatProperty(value);
 	}
 	
+	/**
+	 * @see #adapt(FloatProperty)
+	 */
 	public static AdaptiveFloatProperty adapt(AdaptiveFloatProperty property) {
 		return property;
 	}

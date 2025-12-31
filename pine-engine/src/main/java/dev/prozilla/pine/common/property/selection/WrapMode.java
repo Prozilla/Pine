@@ -14,7 +14,53 @@ public enum WrapMode {
 	/**
 	 * Values outside the bounds wrap around and re-enter from the opposite side, creating a continuous loop.
 	 *
-	 * <p>Example: With bounds 0–4, an input of 5 becomes 0, and an input of -1 becomes 4.</p>
+	 * <table>
+	 *     <thead>
+	 *         <th colspan="8">Example: {@code String[] array = new String[]{"A", "B", "C"}}</th>
+	 *     </thead>
+	 *     <tbody>
+	 *          <tr>
+	 *              <th scope="row">{@code i}</th>
+	 *              <td>-2</td>
+	 *              <td>-1</td>
+	 *              <td>0</td>
+	 *              <td>1</td>
+	 *              <td>2</td>
+	 *              <td>3</td>
+	 *              <td>4</td>
+	 *          </tr>
+	 *          <tr>
+	 *              <th scope="row">{@code list[i]}</th>
+	 *              <td></td>
+	 *              <td></td>
+	 *              <td>A</td>
+	 *              <td>B</td>
+	 *              <td>C</td>
+	 *              <td></td>
+	 *              <td></td>
+	 *          </tr>
+	 *          <tr>
+	 *              <th scope="row">{@code transformIndex(i, list)}</th>
+	 *              <td>1</td>
+	 *              <td>2</td>
+	 *              <td>0</td>
+	 *              <td>1</td>
+	 *              <td>2</td>
+	 *              <td>0</td>
+	 *              <td>1</td>
+	 *          </tr>
+	 *          <tr>
+	 *              <th scope="row">{@code getElement(i, list)}</th>
+	 *              <td>B</td>
+	 *              <td>C</td>
+	 *              <td>A</td>
+	 *              <td>B</td>
+	 *              <td>C</td>
+	 *              <td>A</td>
+	 *              <td>B</td>
+	 *          </tr>
+	 *     </tbody>
+	 * </table>
 	 */
 	REPEAT {
 		@Override
@@ -31,14 +77,75 @@ public enum WrapMode {
 			
 			return wrapped + min;
 		}
+		
+		/**
+		 * Changes the size of a list by either removing or repeating elements.
+		 *
+		 * <p>If the target size is greater than the size of the list, each element is repeated until the list has the target size.</p>
+		 *
+		 * <p>For example, if the target size is twice the original size of the list, the entire list will essentially be duplicated. The frequency of each element will be doubled.</p>
+		 */
+		@Override
+		public <E> void resizeList(List<E> list, int targetSize) {
+			super.resizeList(list, targetSize);
+		}
 	},
 	
 	/**
 	 * Values outside the bounds are considered invalid and return {@code -1} to indicate no valid result.
 	 *
-	 * <p>Example: With bounds 0–4, inputs like -2 or 6 will return -1.</p>
+	 * <table>
+	 *     <thead>
+	 *         <th colspan="8">Example: {@code String[] array = new String[]{"A", "B", "C"}}</th>
+	 *     </thead>
+	 *     <tbody>
+	 *          <tr>
+	 *              <th scope="row">{@code i}</th>
+	 *              <td>-2</td>
+	 *              <td>-1</td>
+	 *              <td>0</td>
+	 *              <td>1</td>
+	 *              <td>2</td>
+	 *              <td>3</td>
+	 *              <td>4</td>
+	 *          </tr>
+	 *          <tr>
+	 *              <th scope="row">{@code list[i]}</th>
+	 *              <td></td>
+	 *              <td></td>
+	 *              <td>A</td>
+	 *              <td>B</td>
+	 *              <td>C</td>
+	 *              <td></td>
+	 *              <td></td>
+	 *          </tr>
+	 *          <tr>
+	 *              <th scope="row">{@code transformIndex(i, list)}</th>
+	 *              <td>-1</td>
+	 *              <td>-1</td>
+	 *              <td>0</td>
+	 *              <td>1</td>
+	 *              <td>2</td>
+	 *              <td>-1</td>
+	 *              <td>-1</td>
+	 *          </tr>
+	 *          <tr>
+	 *              <th scope="row">{@code getElement(i, list)}</th>
+	 *              <td>null</td>
+	 *              <td>null</td>
+	 *              <td>A</td>
+	 *              <td>B</td>
+	 *              <td>C</td>
+	 *              <td>null</td>
+	 *              <td>null</td>
+	 *          </tr>
+	 *     </tbody>
+	 * </table>
 	 */
 	CLIP {
+		/**
+		 * @return {@code value} if it is within the given bounds, otherwise {@code -1}.
+		 */
 		@Override
 		public int transform(int value, int min, int max) {
 			checkBounds(min, max);
@@ -49,12 +156,68 @@ public enum WrapMode {
 			
 			return value;
 		}
+		
+		/**
+		 * Changes the size of a list by either removing elements or adding {@code null}.
+		 *
+		 * <p>If the target size is greater than the size of the list, {@code null} is added until the list has the target size.</p>
+		 */
+		@Override
+		public <E> void resizeList(List<E> list, int targetSize) {
+			super.resizeList(list, targetSize);
+		}
 	},
 	
 	/**
 	 * Values outside the bounds are forced to the nearest valid bound.
 	 *
-	 * <p>Example: With bounds 0–4, an input of 6 becomes 4, and an input of -2 becomes 0.</p>
+	 * <table>
+	 *     <thead>
+	 *         <th colspan="8">Example: {@code String[] array = new String[]{"A", "B", "C"}}</th>
+	 *     </thead>
+	 *     <tbody>
+	 *          <tr>
+	 *              <th scope="row">{@code i}</th>
+	 *              <td>-2</td>
+	 *              <td>-1</td>
+	 *              <td>0</td>
+	 *              <td>1</td>
+	 *              <td>2</td>
+	 *              <td>3</td>
+	 *              <td>4</td>
+	 *          </tr>
+	 *          <tr>
+	 *              <th scope="row">{@code list[i]}</th>
+	 *              <td></td>
+	 *              <td></td>
+	 *              <td>A</td>
+	 *              <td>B</td>
+	 *              <td>C</td>
+	 *              <td></td>
+	 *              <td></td>
+	 *          </tr>
+	 *          <tr>
+	 *              <th scope="row">{@code transformIndex(i, list)}</th>
+	 *              <td>0</td>
+	 *              <td>0</td>
+	 *              <td>0</td>
+	 *              <td>1</td>
+	 *              <td>2</td>
+	 *              <td>2</td>
+	 *              <td>2</td>
+	 *          </tr>
+	 *          <tr>
+	 *              <th scope="row">{@code getElement(i, list)}</th>
+	 *              <td>A</td>
+	 *              <td>A</td>
+	 *              <td>A</td>
+	 *              <td>B</td>
+	 *              <td>C</td>
+	 *              <td>C</td>
+	 *              <td>C</td>
+	 *          </tr>
+	 *     </tbody>
+	 * </table>
 	 */
 	CLAMP {
 		@Override
@@ -62,8 +225,27 @@ public enum WrapMode {
 			checkBounds(min, max);
 			return MathUtils.clamp(value, min, max);
 		}
+		
+		/**
+		 * Changes the size of a list by either removing or adding the last element in the list repeatedly.
+		 *
+		 * <p>If the target size is greater than the size of the list, the last element is added until the list has the target size.</p>
+		 */
+		@Override
+		public <E> void resizeList(List<E> list, int targetSize) {
+			super.resizeList(list, targetSize);
+		}
 	};
 	
+	/**
+	 * Changes the size of a list by either removing elements or adding elements based on this wrap mode.
+	 *
+	 * <p>If the target size is less than the size of the list, the last element is removed until the list has the target size.</p>
+	 * <p>If the target size is greater than the size of the list, the next element according to this wrap mode is added until the list has the target size.</p>
+	 * @param list The list to resize
+	 * @param targetSize The target size
+	 * @param <E> The type of elements in the list
+	 */
 	public <E> void resizeList(List<E> list, int targetSize) {
 		int originalSize = list.size();
 		if (targetSize < originalSize) {
@@ -83,7 +265,7 @@ public enum WrapMode {
 	}
 	
 	/**
-	 * Returns the element of a list that succeeds another element.
+	 * Returns the element of the given list that succeeds the given element.
 	 * @return The successor of the given element.
 	 * @param <E> The type of elements in the list
 	 */
@@ -92,7 +274,7 @@ public enum WrapMode {
 	}
 	
 	/**
-	 * Returns the element of a list that precedes another element.
+	 * Returns the element of the given list that precedes the given element.
 	 * @return The predecessor of the given element.
 	 * @param <E> The type of elements in the list
 	 */
@@ -158,6 +340,8 @@ public enum WrapMode {
 	
 	/**
 	 * Transforms a value based on the given bounds.
+	 *
+	 * <p>If it is within the bounds, the original value will be returned.</p>
 	 * @param value The value to wrap
 	 * @param min The lower bound
 	 * @param max The upper bound

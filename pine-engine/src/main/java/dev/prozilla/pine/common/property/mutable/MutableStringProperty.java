@@ -28,6 +28,7 @@ public interface MutableStringProperty extends StringProperty, MutableObjectProp
 	
 	/**
 	 * Converts the value of this property to upper case.
+	 * @see StringUtils#toUpperCase(String)
 	 */
 	default void toUpperCase() {
 		setValue(StringUtils.toUpperCase(getValue()));
@@ -35,11 +36,16 @@ public interface MutableStringProperty extends StringProperty, MutableObjectProp
 	
 	/**
 	 * Converts the value of this property to lower case.
+	 * @see StringUtils#toLowerCase(String) 
 	 */
 	default void toLowerCase() {
 		setValue(StringUtils.toLowerCase(getValue()));
 	}
 	
+	/**
+	 * Removes spaces around the value of this property.
+	 * @see StringUtils#trim(String) 
+	 */
 	default void trimValue() {
 		setValue(StringUtils.trim(getValue()));
 	}

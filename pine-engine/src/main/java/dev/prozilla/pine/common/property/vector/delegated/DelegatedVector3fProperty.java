@@ -6,6 +6,12 @@ import dev.prozilla.pine.common.property.vector.Vector3fProperty;
 
 public class DelegatedVector3fProperty extends DelegatedVector3fPropertyBase<Vector3f> implements Vector3fProperty {
 	
+	/**
+	 * Creates a {@link Vector3fProperty} by combining three float properties.
+	 * @param x The x property
+	 * @param y The y property
+	 * @param z The z property
+	 */
 	public DelegatedVector3fProperty(FloatProperty x, FloatProperty y, FloatProperty z) {
 		super(x, y, z);
 	}

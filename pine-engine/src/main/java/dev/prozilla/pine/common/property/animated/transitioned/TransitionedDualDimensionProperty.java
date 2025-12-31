@@ -24,7 +24,7 @@ public class TransitionedDualDimensionProperty extends TransitionedObjectPropert
 	
 	@Override
 	public DualDimension getValue() {
-		float factor = getFactor();
+		float factor = getProgress();
 		
 		if (factor == 0) {
 			return start;

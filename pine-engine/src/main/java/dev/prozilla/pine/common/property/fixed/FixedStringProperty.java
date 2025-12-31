@@ -6,8 +6,14 @@ import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.common.util.parser.Parser;
 import org.jetbrains.annotations.Contract;
 
+/**
+ * A property with a string value that never changes.
+ */
 public class FixedStringProperty extends FixedObjectProperty<String> implements StringProperty, FixedProperty<String> {
 	
+	/**
+	 * Creates a fixed property with the given value.
+	 */
 	public FixedStringProperty(String value) {
 		super(value);
 	}

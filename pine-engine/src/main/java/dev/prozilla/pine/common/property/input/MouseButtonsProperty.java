@@ -7,7 +7,7 @@ import dev.prozilla.pine.core.state.input.MouseButton;
 
 import java.util.Arrays;
 
-public class MouseButtonsProperty extends SimpleMutableObjectProperty<MouseButton[]> implements InputProperty {
+public class MouseButtonsProperty extends SimpleMutableObjectProperty<MouseButton[]> implements InputKeyProperty {
 	
 	public MouseButtonsProperty() {
 		this((MouseButton)null);

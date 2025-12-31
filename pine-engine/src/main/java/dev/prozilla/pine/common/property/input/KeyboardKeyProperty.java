@@ -7,7 +7,7 @@ import dev.prozilla.pine.core.state.input.Key;
 
 import java.util.Objects;
 
-public class KeyboardKeyProperty extends SimpleMutableObjectProperty<Key> implements InputProperty {
+public class KeyboardKeyProperty extends SimpleMutableObjectProperty<Key> implements InputKeyProperty {
 	
 	public KeyboardKeyProperty() {
 		this(null);

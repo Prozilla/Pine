@@ -6,6 +6,13 @@ import dev.prozilla.pine.common.property.vector.Vector4fProperty;
 
 public class DelegatedVector4fProperty extends DelegatedVector4fPropertyBase<Vector4f> implements Vector4fProperty {
 	
+	/**
+	 * Creates a {@link Vector4fProperty} by combining four float properties.
+	 * @param x The x property
+	 * @param y The y property
+	 * @param z The z property
+	 * @param w The w property
+	 */
 	public DelegatedVector4fProperty(FloatProperty x, FloatProperty y, FloatProperty z, FloatProperty w) {
 		super(x, y, z, w);
 	}

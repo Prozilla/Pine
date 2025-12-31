@@ -12,7 +12,7 @@ import dev.prozilla.pine.core.state.input.gamepad.GamepadButton;
  */
 public class InputBinding implements InputProperty {
 
-	private InputProperty inputProperty;
+	private InputKeyProperty inputProperty;
 	
 	public InputBinding(Key defaultKey) {
 		this(new KeyboardKeyProperty(defaultKey));
@@ -46,7 +46,7 @@ public class InputBinding implements InputProperty {
 		this(new GamepadAxesProperty(defaultAxes));
 	}
 	
-	public InputBinding(InputProperty inputProperty) {
+	public InputBinding(InputKeyProperty inputProperty) {
 		this.inputProperty = Checks.isNotNull(inputProperty, "inputProperty");
 	}
 	
@@ -60,7 +60,7 @@ public class InputBinding implements InputProperty {
 		return inputProperty.isDown(input);
 	}
 	
-	public InputProperty getBinding() {
+	public InputKeyProperty getBinding() {
 		return inputProperty;
 	}
 	
@@ -97,7 +97,7 @@ public class InputBinding implements InputProperty {
 	}
 	
 	public void unbind() {
-		inputProperty = InputProperty.FALLBACK;
+		inputProperty = InputKeyProperty.FALLBACK;
 	}
 	
 	@Override

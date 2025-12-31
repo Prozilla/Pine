@@ -14,6 +14,10 @@ public class SystemProperty extends LazyProperty<String> implements MutableStrin
 	
 	private final String key;
 	
+	/**
+	 * Creates a system property with a given key.
+	 * @param key The key of the system property
+	 */
 	public SystemProperty(String key) {
 		Checks.string(key, "key").isNotEmpty();
 		this.key = key;

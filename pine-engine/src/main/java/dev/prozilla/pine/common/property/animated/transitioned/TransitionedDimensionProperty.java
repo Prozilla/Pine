@@ -15,12 +15,12 @@ public class TransitionedDimensionProperty extends TransitionedObjectProperty<Di
 	@Override
 	public void transitionToValue(DimensionBase targetValue) {
 		super.transitionToValue(targetValue);
-		result = new Dimension.Mix(start, end, getFactor());
+		result = new Dimension.Mix(start, end, getProgress());
 	}
 	
 	@Override
 	public DimensionBase getValue() {
-		float factor = getFactor();
+		float factor = getProgress();
 		
 		if (factor == 0) {
 			return start;

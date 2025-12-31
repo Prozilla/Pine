@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.property.compared.ComparedIntProperty;
 import dev.prozilla.pine.common.property.fixed.FixedIntProperty;
 import dev.prozilla.pine.common.util.function.comparator.IntComparator;
 import dev.prozilla.pine.common.util.function.mapper.IntMapper;
+import dev.prozilla.pine.common.util.function.mapper.Mapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +40,9 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	 */
 	int get();
 	
+	/**
+	 * @see #hasValue(Object)
+	 */
 	default boolean has(int value) {
 		return get() == value;
 	}
@@ -81,6 +85,9 @@ public interface IntProperty extends NonNullProperty<Integer> {
 		return this;
 	}
 	
+	/**
+	 * @see #map(Mapper)
+	 */
 	default IntProperty map(IntMapper mapper) {
 		return () -> mapper.map(get());
 	}
@@ -139,50 +146,123 @@ public interface IntProperty extends NonNullProperty<Integer> {
 		return () -> has(value);
 	}
 	
+	@Override
+	default FixedIntProperty snapshot() {
+		return new FixedIntProperty(get());
+	}
+	
+	/**
+	 * Checks if the value of this property is greater than the given value.
+	 * @param value The value to compare with
+	 * @return {@code true} if the value of this property is greater than the given value.
+	 */
 	default boolean isGreaterThan(int value) {
 		return get() > value;
 	}
 	
+	/**
+	 * Checks if the value of this property is less than the given value.
+	 * @param value The value to compare with
+	 * @return {@code true} if the value of this property is less than the given value.
+	 */
 	default boolean isLessThan(int value) {
 		return get() < value;
 	}
 	
+	/**
+	 * Checks if the value of this property is greater than or equal to the given value.
+	 * @param value The value to compare with
+	 * @return {@code true} if the value of this property is greater than or equal to the given value.
+	 */
 	default boolean isGreaterThanOrEqualTo(int value) {
 		return get() >= value;
 	}
 	
+	/**
+	 * Checks if the value of this property is less than or equal to the given value.
+	 * @param value The value to compare with
+	 * @return {@code true} if the value of this property is less than or equal to the given value.
+	 */
 	default boolean isLessThanOrEqualTo(int value) {
 		return get() <= value;
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is greater than the given value.
+	 * @param value The value to compare with
+	 * @return A boolean property based on whether the value of this property is greater than the given value.
+	 * @see #compareWith(int)
+	 */
 	default BooleanProperty isGreaterThanProperty(int value) {
 		return compareWith(value).isStrictlyPositiveProperty();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is less than the given value.
+	 * @param value The value to compare with
+	 * @return A boolean property based on whether the value of this property is less than the given value.
+	 * @see #compareWith(int)
+	 */
 	default BooleanProperty isLessThanProperty(int value) {
 		return compareWith(value).isStrictlyNegativeProperty();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is greater than or equal to the given value.
+	 * @param value The value to compare with
+	 * @return A boolean property based on whether the value of this property is greater than or equal to the given value.
+	 * @see #compareWith(int)
+	 */
 	default BooleanProperty isGreaterThanOrEqualToProperty(int value) {
 		return compareWith(value).isPositiveProperty();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is less than or equal to the given value.
+	 * @param value The value to compare with
+	 * @return A boolean property based on whether the value of this property is less than or equal to the given value.
+	 * @see #compareWith(int)
+	 */
 	default BooleanProperty isLessThanOrEqualToProperty(int value) {
 		return compareWith(value).isNegativeProperty();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is greater than the value of the given property.
+	 * @param other The property to compare with
+	 * @return A boolean property based on whether the value of this property is greater than the value of the given property.
+	 * @see #compareWith(IntProperty)
+	 */
 	default BooleanProperty isGreaterThanProperty(IntProperty other) {
 		return compareWith(other).isStrictlyPositiveProperty();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is less than the value of the given property.
+	 * @param other The property to compare with
+	 * @return A boolean property based on whether the value of this property is less than the value of the given property.
+	 * @see #compareWith(IntProperty)
+	 */
 	default BooleanProperty isLessThanProperty(IntProperty other) {
 		return compareWith(other).isStrictlyNegativeProperty();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is greater than or equal to the value of the given property.
+	 * @param other The property to compare with
+	 * @return A boolean property based on whether the value of this property is greater than or equal to the value of the given property.
+	 * @see #compareWith(IntProperty)
+	 */
 	default BooleanProperty isGreaterThanOrEqualToProperty(IntProperty other) {
 		return compareWith(other).isPositiveProperty();
 	}
 	
+	/**
+	 * Returns a boolean property whose value is {@code true} if the value of this property is less than or equal to the value of the given property.
+	 * @param other The property to compare with
+	 * @return A boolean property based on whether the value of this property is less than or equal to the value of the given property.
+	 * @see #compareWith(IntProperty)
+	 */
 	default BooleanProperty isLessThanOrEqualToProperty(IntProperty other) {
 		return compareWith(other).isNegativeProperty();
 	}
@@ -237,10 +317,18 @@ public interface IntProperty extends NonNullProperty<Integer> {
 		return this;
 	}
 	
+	/**
+	 * @see #fromProperty(Property)
+	 */
 	static IntProperty fromProperty(IntProperty property) {
 		return property;
 	}
 	
+	/**
+	 * Converts a property to an integer property.
+	 * @param property The property to convert
+	 * @return The converted integer property.
+	 */
 	@Contract("_ -> new")
 	static IntProperty fromProperty(Property<Integer> property) {
 		return property::getValue;

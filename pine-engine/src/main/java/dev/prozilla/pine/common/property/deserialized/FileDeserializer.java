@@ -19,6 +19,8 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * Deserializes data from a given JSON file.
+ *
+ * This deserializer is represented by a property whose value is determined by deserializing the source file.
  * @param <Data> The data type to deserialize the file to
  */
 public class FileDeserializer<Data> extends SimpleObservableObjectProperty<Data> {
@@ -45,10 +47,21 @@ public class FileDeserializer<Data> extends SimpleObservableObjectProperty<Data>
 		resetFeatureStates();
 	}
 	
+	/**
+	 * Creates a file deserializer with {@link #alwaysCreateData} set to {@link #ALWAYS_CREATE_DATA_DEFAULT}.
+	 * @param path The path of the source file
+	 * @param dataType The data class
+	 */
 	public FileDeserializer(String path, Class<Data> dataType) {
 		this(path, dataType, ALWAYS_CREATE_DATA_DEFAULT);
 	}
 	
+	/**
+	 * Creates a file deserializer.
+	 * @param path The path of the source file
+	 * @param dataType The data class
+	 * @param alwaysCreateData Enables/disables the automatic creation of fallback data in case the source is missing or invalid.
+	 */
 	public FileDeserializer(String path, Class<Data> dataType, boolean alwaysCreateData) {
 		this.path = path;
 		this.dataType = dataType;
@@ -57,6 +70,14 @@ public class FileDeserializer<Data> extends SimpleObservableObjectProperty<Data>
 		deserialize();
 	}
 	
+	/**
+	 * Enables/disables the automatic creation of fallback data in case the source is missing or invalid.
+	 *
+	 * <p>When {@code alwaysCreateData} is {@code true}, the data object will (almost) never be null, and fields will be set to their default values if the source is missing or invalid.
+	 * This can be useful when working with primitive values, because it allows for default values to be declared in a single place.</p>
+	 * @param alwaysCreateData Whether to always create a data object
+	 * @see #createFallbackData()
+	 */
 	public void setAlwaysCreateData(boolean alwaysCreateData) {
 		if (this.alwaysCreateData == alwaysCreateData) {
 			return;
@@ -92,6 +113,14 @@ public class FileDeserializer<Data> extends SimpleObservableObjectProperty<Data>
 		return data;
 	}
 	
+	/**
+	 * Creates a fallback data object when the deserialization has failed.
+	 *
+	 * <p>If {@link #alwaysCreateData} is {@code false}, {@code null} will be returned.</p>
+	 *
+	 * <p>If {@link #alwaysCreateData} is {@code true}, an empty data object will be created using the constructor of the data class without any arguments. If this fails, {@code null} is returned instead.</p>
+	 * @return The fallback data object, or {@code null}.
+	 */
 	protected Data createFallbackData() {
 		if (!alwaysCreateData) {
 			return null;
