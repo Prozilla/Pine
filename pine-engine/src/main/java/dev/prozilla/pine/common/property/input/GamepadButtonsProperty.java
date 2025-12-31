@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class GamepadButtonsProperty extends SimpleMutableObjectProperty<GamepadButton[]> implements GamepadInputProperty {
 	
 	public GamepadButtonsProperty() {
-		this((GamepadButton)null);
+		this(ArrayUtils.nullAsArray());
 	}
 	
 	public GamepadButtonsProperty(GamepadButton... defaultButtons) {

@@ -40,10 +40,7 @@ public final class StringUtils {
 	}
 	
 	public static int lengthOf(String string) {
-		if (string == null) {
-			return 0;
-		}
-		return string.length();
+		return string == null ? 0 : string.length();
 	}
 	
 	public static int findClosingParenthesis(String input, int openIndex) {

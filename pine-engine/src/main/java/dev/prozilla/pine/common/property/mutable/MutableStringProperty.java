@@ -73,7 +73,7 @@ public interface MutableStringProperty extends StringProperty, MutableObjectProp
 	
 	@Override
 	default StringProperty viewProperty() {
-		return this::getValue;
+		return this;
 	}
 	
 }

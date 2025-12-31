@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class KeyboardKeysProperty extends SimpleMutableObjectProperty<Key[]> implements InputKeyProperty {
 	
 	public KeyboardKeysProperty() {
-		this((Key)null);
+		this(ArrayUtils.nullAsArray());
 	}
 	
 	public KeyboardKeysProperty(Key... defaultKeys) {

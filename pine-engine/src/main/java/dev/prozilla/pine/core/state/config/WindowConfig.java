@@ -1,9 +1,10 @@
 package dev.prozilla.pine.core.state.config;
 
+import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.core.Window;
+import dev.prozilla.pine.core.state.config.option.ArrayConfigOption;
 import dev.prozilla.pine.core.state.config.option.BooleanConfigOption;
 import dev.prozilla.pine.core.state.config.option.IntConfigOption;
-import dev.prozilla.pine.core.state.config.option.ObjectConfigOption;
 import dev.prozilla.pine.core.state.config.option.StringConfigOption;
 
 import java.util.Objects;
@@ -28,7 +29,7 @@ public class WindowConfig {
 	/** Title of the window. Only accepts values that are not {@code null}. Defaults to <code>"Untitled"</code>. The shorthand for this option is {@link Window#setTitle(String)}. */
 	public final StringConfigOption title = new StringConfigOption("Untitled", Objects::nonNull);
 	/** Icon of the window. Defaults to <code>null</code>. The shorthand for this option is {@link Window#setIcon(String...)}. */
-	public final ObjectConfigOption<String[]> icon = new ObjectConfigOption<>(null);
+	public final ArrayConfigOption<String> icon = new ArrayConfigOption<>(ArrayUtils.nullAsArray());
 	/** Determines whether the window will have window decorations such as a border, a close widget, etc. Defaults to <code>true</code>. */
 	public final BooleanConfigOption showDecorations = new BooleanConfigOption(true);
 	/** Determines whether the window is in fullscreen or windowed mode. Defaults to <code>false</code>. The shorthand for this option is {@link Window#setFullscreen(boolean)}. */

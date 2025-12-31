@@ -185,4 +185,17 @@ public final class ArrayUtils {
 		return newArray;
 	}
 	
+	public static <E> int lengthOf(E[] array) {
+		return array == null ? 0 : array.length;
+	}
+	
+	/**
+	 * Converts {@code null} to an array. Useful when dealing with varargs.
+	 * @return {@code null}
+	 */
+	@Contract("-> null")
+	public static <E> E[] nullAsArray() {
+		return null;
+	}
+	
 }

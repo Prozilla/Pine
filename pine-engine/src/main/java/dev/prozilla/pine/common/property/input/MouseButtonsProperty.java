@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class MouseButtonsProperty extends SimpleMutableObjectProperty<MouseButton[]> implements InputKeyProperty {
 	
 	public MouseButtonsProperty() {
-		this((MouseButton)null);
+		this(ArrayUtils.nullAsArray());
 	}
 	
 	public MouseButtonsProperty(MouseButton... defaultButtons) {

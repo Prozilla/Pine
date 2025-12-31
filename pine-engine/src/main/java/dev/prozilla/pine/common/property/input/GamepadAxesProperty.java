@@ -9,7 +9,7 @@ import java.util.Arrays;
 public class GamepadAxesProperty extends AnalogInputProperty<GamepadAxis[]> implements GamepadInputProperty {
 	
 	public GamepadAxesProperty() {
-		this((GamepadAxis)null);
+		this(ArrayUtils.nullAsArray());
 	}
 	
 	public GamepadAxesProperty(GamepadAxis... defaultAxes) {
