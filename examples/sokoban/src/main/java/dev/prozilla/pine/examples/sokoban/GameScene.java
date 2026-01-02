@@ -1,6 +1,9 @@
 package dev.prozilla.pine.examples.sokoban;
 
+import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.entity.prefab.sprite.GridPrefab;
 import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
@@ -111,7 +114,8 @@ public class GameScene extends Scene {
 		}
 		
 		// Add user interface
-		world.addEntity(new UIPrefab());
+		StyleSheet styleSheet = AssetPools.styleSheets.load("style/hud.css", Application.isDevMode());
+		world.addEntity(new UIPrefab(styleSheet));
 		
 		// Move camera to center of map
 		int width = MAP[0].length();

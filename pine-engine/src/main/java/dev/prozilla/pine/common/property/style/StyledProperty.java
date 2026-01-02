@@ -24,14 +24,14 @@ import java.util.StringJoiner;
 public abstract class StyledProperty<T, P extends Property<T>, A extends AdaptiveProperty<T, P>, R extends TransitionedProperty<T>> implements Property<T>, Animatable, Printable {
 	
 	protected final StyledPropertyKey<T> name;
-	protected final Node node;
+	protected final @NotNull Node node;
 	
-	protected final List<StyleRule<T>> rules;
+	protected final @NotNull List<StyleRule<T>> rules;
 	private StyleRule<T> currentRule;
 	protected A adaptiveProperty;
-	private final A fallbackProperty;
+	private final @NotNull A fallbackProperty;
 	
-	protected final List<StyleRule<AnimationCurve>> transitionRules;
+	protected final @NotNull List<StyleRule<AnimationCurve>> transitionRules;
 	private StyleRule<AnimationCurve> currentTransitionRule;
 	private R transitionedProperty;
 	
@@ -64,10 +64,29 @@ public abstract class StyledProperty<T, P extends Property<T>, A extends Adaptiv
 		node.addListener(NodeEvent.Type.SELECTOR_CHANGE, (changedNode) -> this.invalidate());
 	}
 	
+	public void applyStyle(Style<T, A> style) {
+		if (style == null) {
+			rules.clear();
+			transitionRules.clear();
+			invalidate();
+			return;
+		}
+		
+		setTransitionRules(style.getTransitionRules());
+		setRules(style.getRules());
+	}
+	
 	public void addRule(StyleRule<T> rule) {
 		rules.add(rule);
 		applyRules();
 	}
+	
+	public void setRules(List<StyleRule<T>> rules) {
+		this.rules.clear();
+		this.rules.addAll(rules);
+		applyRules();
+	}
+	
 	
 	public void invalidate() {
 		applyTransitionRules();
@@ -81,7 +100,7 @@ public abstract class StyledProperty<T, P extends Property<T>, A extends Adaptiv
 		}
 		currentRule = rule;
 		
-		T value = rule != null ? rule.value() : fallbackProperty.getValue();
+		T value = rule != null ? rule.value() : getDefaultValue();
 		
 		if (transitionedProperty != null) {
 			transitionedProperty.transitionToValue(value);
@@ -90,8 +109,22 @@ public abstract class StyledProperty<T, P extends Property<T>, A extends Adaptiv
 		}
 	}
 	
+	public T getDefaultValue() {
+		return fallbackProperty.getValue();
+	}
+	
+	public @NotNull A getFallbackProperty() {
+		return fallbackProperty;
+	}
+	
 	public void addTransitionRule(StyleRule<AnimationCurve> transitionRule) {
 		transitionRules.add(transitionRule);
+		applyTransitionRules();
+	}
+	
+	public void setTransitionRules(List<StyleRule<AnimationCurve>> transitionRules) {
+		this.transitionRules.clear();
+		this.transitionRules.addAll(transitionRules);
 		applyTransitionRules();
 	}
 	

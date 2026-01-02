@@ -164,4 +164,10 @@ public final class PathUtils {
 		return path.replaceAll(Pattern.quote(File.separator), separator);
 	}
 	
+	public static String getParent(String path) {
+		return path.replaceFirst("[^/]*/?$", "");
+	}
+	
+	
+	
 }

@@ -6,6 +6,8 @@ import dev.prozilla.pine.common.property.style.selector.Selector;
 import dev.prozilla.pine.common.property.style.selector.SelectorParser;
 import dev.prozilla.pine.common.util.parser.SequentialParser;
 
+import java.util.Objects;
+
 public class CSSParser extends SequentialParser<StyleSheet> {
 	
 	private static final SelectorParser selectorParser = new SelectorParser();
@@ -13,8 +15,15 @@ public class CSSParser extends SequentialParser<StyleSheet> {
 	
 	@Override
 	public boolean parse(String input) {
-		startStep(input, new StyleSheet());
-		
+		return parse(input, null);
+	}
+	
+	public boolean parse(String input, StyleSheet target) {
+		startStep(input, Objects.requireNonNullElse(target, new StyleSheet()));
+		return parseStyleSheet();
+	}
+	
+	private boolean parseStyleSheet() {
 		while (!endOfInput()) {
 			skipWhitespace();
 			if (endOfInput())

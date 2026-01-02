@@ -23,7 +23,7 @@ public abstract class TextAssetPool<T extends Asset> extends AssetPool<T> {
 	protected T createAsset(String path) {
 		StringBuilder stringBuilder = new StringBuilder();
 		
-		try (InputStream in = ResourceUtils.getResourceStream(path);
+		try (InputStream in = createInputStream(path);
 	            BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -40,6 +40,10 @@ public abstract class TextAssetPool<T extends Asset> extends AssetPool<T> {
 		}
 		
 		return result;
+	}
+	
+	protected InputStream createInputStream(String path) {
+		return ResourceUtils.getResourceStream(path);
 	}
 	
 	/**

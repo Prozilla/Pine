@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.system;
 
+import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.event.Event;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventListener;
@@ -15,7 +16,7 @@ import java.util.Set;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
-public class DirectoryWatcher extends EventDispatcher<DirectoryWatcher.EventType, String, Event<DirectoryWatcher.EventType, String>> {
+public class DirectoryWatcher extends EventDispatcher<DirectoryWatcher.EventType, String, Event<DirectoryWatcher.EventType, String>> implements Asset {
 	
 	private final String path;
 	private Thread watchThread;
@@ -90,6 +91,15 @@ public class DirectoryWatcher extends EventDispatcher<DirectoryWatcher.EventType
 	}
 	
 	/**
+	 * Adds a file watcher that listens to changes to a file.
+	 * @param watcher The file watcher
+	 * @return The event listener that notifies the file watcher whenever the file is changed.
+	 */
+	public EventListener<Event<EventType, String>> watch(FileWatcher watcher) {
+		return onFileChange(watcher.getPath(), watcher::onFileChange);
+	}
+	
+	/**
 	 * Adds a listener that listens to changes to a given file.
 	 * @param path Path to the file
 	 * @param listener File change listener
@@ -97,6 +107,15 @@ public class DirectoryWatcher extends EventDispatcher<DirectoryWatcher.EventType
 	public EventListener<Event<EventType, String>> onFileChange(String path, EventListener<Event<EventType, String>> listener) {
 		String normalizedPath = PathUtils.removeLeadingSlash(path);
 		return addTargetedListener(EventType.MODIFIED, normalizedPath, listener);
+	}
+	
+	public void removeFileChangeListener(EventListener<Event<EventType, String>> listener) {
+		removeListener(EventType.MODIFIED, listener);
+	}
+	
+	@Override
+	public String getPath() {
+		return path;
 	}
 	
 	/**

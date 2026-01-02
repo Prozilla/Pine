@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.Transceivable;
 import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.logging.Logger;
@@ -16,12 +17,15 @@ import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.style.selector.Selector;
 import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.common.system.DirectoryWatcher;
+import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.Node;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -30,14 +34,19 @@ import java.util.StringJoiner;
 /**
  * Manages style rules for different properties of nodes.
  */
-public class StyleSheet implements Printable, Asset {
+public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 	
 	private final Map<StyledPropertyKey<?>, Style<?, ?>> styles;
 	
 	public String path;
 	
 	public StyleSheet() {
-		this.styles = new HashMap<>();
+		this(null);
+	}
+	
+	public StyleSheet(String path) {
+		this.path = path;
+		styles = new HashMap<>();
 	}
 	
 	public <T> void parseRule(Selector selector, StyledPropertyKey<T> key, String input) {
@@ -159,22 +168,24 @@ public class StyleSheet implements Printable, Asset {
 		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<LayoutNode.Distribution, AdaptiveObjectProperty<LayoutNode.Distribution>, StyledDistributionProperty>)StyledDistributionProperty::new);
 	}
 	
-	@Contract("_, _, _, _ -> new")
 	protected  <T, A extends AdaptiveProperty<T, ?>, P extends StyledProperty<T, ?, A, ?>> P createStyledProperty(StyledPropertyKey<T> name, Node node, A fallbackValue, Style.StyledPropertyFactory<T, A, P> factory) {
 		Style<T, A> style = getStyle(name, false, fallbackValue.getClass());
 		return style != null ? style.toProperty(name, node, fallbackValue, factory) : null;
 	}
 	
+	@Contract("_, true, _ -> !null")
 	@SuppressWarnings("unchecked")
 	protected <T, A extends AdaptiveProperty<T, ?>> Style<T, A> getStyle(StyledPropertyKey<T> propertyName, boolean createIfMissing, Class<A> adaptiveType) {
 		return (Style<T, A>)getGenericStyle(propertyName, createIfMissing);
 	}
 	
+	@Contract("_, true -> !null")
 	@SuppressWarnings("unchecked")
 	protected <T> Style<T, ?> getStyle(StyledPropertyKey<T> propertyName, boolean createIfMissing) {
 		return (Style<T, ?>)getGenericStyle(propertyName, createIfMissing);
 	}
 	
+	@Contract("_, true -> !null")
 	protected Style<?, ?> getGenericStyle(StyledPropertyKey<?> propertyName, boolean createIfMissing) {
 		Style<?, ?> style = styles.get(propertyName);
 		
@@ -186,14 +197,32 @@ public class StyleSheet implements Printable, Asset {
 		return style;
 	}
 	
+	public InputStream createInputStream() {
+		if (path == null) {
+			return null;
+		}
+		return ResourceUtils.getResourceStream(path);
+	}
+	
 	@Override
 	public String getPath() {
 		return path;
 	}
 	
 	@Override
+	public void transmit(StyleSheet target) {
+		target.reset();
+		target.styles.putAll(styles);
+	}
+	
+	@Override
 	public void destroy() {
 		AssetPools.styleSheets.remove(this);
+		reset();
+	}
+	
+	public void reset() {
+		styles.clear();
 	}
 	
 	@Override
@@ -258,6 +287,15 @@ public class StyleSheet implements Printable, Asset {
 	
 	public boolean equals(StyleSheet styleSheet) {
 		return styleSheet != null && Objects.equals(styles, styleSheet.styles);
+	}
+	
+	@Override
+	public StyleSheet self() {
+		return this;
+	}
+	
+	public HotStyleSheet toHotStyleSheet(DirectoryWatcher directoryWatcher) {
+		return HotStyleSheet.fromStyleSheet(directoryWatcher, this);
 	}
 	
 }

@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public abstract class AssetPool<T extends Asset> implements Destructible {
 	
-	private final Map<String, T> pool;
+	protected final Map<String, T> pool;
 	protected final AssetPoolEventDispatcher<T> eventDispatcher;
 	
 	public static final String UNKNOWN_ERROR = "Unknown error";
@@ -41,7 +41,6 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 		Checks.isNotNull(path, "path");
 		path = normalize(path);
 		String key = createKey(path);
-		
 		if (pool.containsKey(key)) {
 			prepareNext();
 			return pool.get(key);
@@ -66,6 +65,12 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 		pool.put(key, asset);
 		prepareNext();
 		return asset;
+	}
+	
+	protected String pathToKey(String path) {
+		Checks.isNotNull(path, "path");
+		path = normalize(path);
+		return createKey(path);
 	}
 	
 	/**

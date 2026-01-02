@@ -1,11 +1,17 @@
 package dev.prozilla.pine.common.system;
 
+import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.core.Application;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static dev.prozilla.pine.common.system.PathUtils.normalizePath;
 
@@ -15,6 +21,39 @@ import static dev.prozilla.pine.common.system.PathUtils.normalizePath;
 public final class ResourceUtils {
 	
 	private ResourceUtils() {}
+	
+	public static InputStream createResourceFileInputStream(String path) {
+		return createResourceFileInputStream(path, getResourceFilePath(path));
+	}
+	
+	public static InputStream createResourceFileInputStream(String path, Path filePath) {
+		if (filePath == null) {
+			return null;
+		}
+		
+		try {
+			return new FileInputStream(filePath.toFile());
+		} catch (FileNotFoundException e) {
+			Logger.system.error("File not found: " + path, e);
+		}
+		
+		return null;
+	}
+	
+	public static Path getResourceFilePath(String path) {
+		if (Application.isDevMode()) {
+			File originalFile = new File("src/main/resources/" + PathUtils.removeLeadingSlash(path));
+			if (originalFile.exists()) {
+				return Path.of(originalFile.getAbsolutePath());
+			}
+		}
+		
+		try {
+			return Paths.get(ResourceUtils.getResourcePath(path)).toAbsolutePath();
+		} catch (RuntimeException e) {
+			return null;
+		}
+	}
 	
 	/**
 	 * Finds the resource and returns its normalized path.
