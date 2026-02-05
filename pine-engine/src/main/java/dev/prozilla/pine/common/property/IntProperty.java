@@ -3,8 +3,7 @@ package dev.prozilla.pine.common.property;
 import dev.prozilla.pine.common.property.compared.ComparedIntProperty;
 import dev.prozilla.pine.common.property.fixed.FixedIntProperty;
 import dev.prozilla.pine.common.util.function.comparator.IntComparator;
-import dev.prozilla.pine.common.util.function.mapper.IntMapper;
-import dev.prozilla.pine.common.util.function.mapper.Mapper;
+import dev.prozilla.pine.common.util.function.mapper.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -86,13 +85,6 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	}
 	
 	/**
-	 * @see #map(Mapper)
-	 */
-	default IntProperty map(IntMapper mapper) {
-		return () -> mapper.map(get());
-	}
-	
-	/**
 	 * Returns a boolean property whose value is {@code true} if the value of this property is {@code 0}.
 	 * @return A boolean property based on whether the value of this property is {@code 0}.
 	 * @see #hasProperty(int)
@@ -107,7 +99,7 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	 * @see #isStrictlyPositive()
 	 */
 	default BooleanProperty isStrictlyPositiveProperty() {
-		return this::isStrictlyPositive;
+		return derive(this::isStrictlyPositive);
 	}
 	
 	/**
@@ -116,7 +108,7 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	 * @see #isStrictlyNegative()
 	 */
 	default BooleanProperty isStrictlyNegativeProperty() {
-		return this::isStrictlyNegative;
+		return derive(this::isStrictlyNegative);
 	}
 	
 	/**
@@ -125,7 +117,7 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	 * @see #isPositive()
 	 */
 	default BooleanProperty isPositiveProperty() {
-		return this::isPositive;
+		return derive(this::isPositive);
 	}
 	
 	/**
@@ -134,7 +126,7 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	 * @see #isNegative()
 	 */
 	default BooleanProperty isNegativeProperty() {
-		return this::isNegative;
+		return derive(this::isNegative);
 	}
 	
 	/**
@@ -143,7 +135,7 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	 * @see #has(int)
 	 */
 	default BooleanProperty hasProperty(int value) {
-		return () -> has(value);
+		return derive(() -> has(value));
 	}
 	
 	@Override
@@ -315,6 +307,41 @@ public interface IntProperty extends NonNullProperty<Integer> {
 	default IntProperty hashCodeProperty() {
 		// The hash code of an integer is the integer itself
 		return this;
+	}
+	
+	/**
+	 * @see #mapToBoolean(ToBooleanMapper)
+	 */
+	default BooleanProperty mapToBoolean(IntToBooleanMapper mapper) {
+		return derive(() -> mapper.mapToBoolean(get()));
+	}
+	
+	/**
+	 * @see #mapToFloat(ToFloatMapper)
+	 */
+	default FloatProperty mapToFloat(IntToFloatMapper mapper) {
+		return derive(() -> mapper.mapToFloat(get()));
+	}
+	
+	/**
+	 * @see #mapToInt(ToIntMapper)
+	 */
+	default IntProperty mapToInt(IntMapper mapper) {
+		return derive(() -> mapper.mapToInt(get()));
+	}
+	
+	/**
+	 * @see #mapToString(Mapper)
+	 */
+	default StringProperty mapToString(FromIntMapper<String> mapper) {
+		return derive(() -> mapper.map(get()));
+	}
+	
+	/**
+	 * @see #map(Mapper)
+	 */
+	default <S> Property<S> map(FromIntMapper<S> mapper) {
+		return derive(() -> mapper.map(get()));
 	}
 	
 	/**

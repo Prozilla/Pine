@@ -3,8 +3,7 @@ package dev.prozilla.pine.common.property;
 import dev.prozilla.pine.common.property.compared.ComparedFloatProperty;
 import dev.prozilla.pine.common.property.fixed.FixedFloatProperty;
 import dev.prozilla.pine.common.util.function.comparator.FloatComparator;
-import dev.prozilla.pine.common.util.function.mapper.FloatMapper;
-import dev.prozilla.pine.common.util.function.mapper.Mapper;
+import dev.prozilla.pine.common.util.function.mapper.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -86,13 +85,6 @@ public interface FloatProperty extends NonNullProperty<Float> {
 	}
 	
 	/**
-	 * @see #map(Mapper)
-	 */
-	default FloatProperty map(FloatMapper mapper) {
-		return () -> mapper.map(get());
-	}
-	
-	/**
 	 * Returns a boolean property whose value is {@code true} if the value of this property is {@code 0}.
 	 * @return A boolean property based on whether the value of this property is {@code 0}.
 	 * @see #hasProperty(float) 
@@ -107,7 +99,7 @@ public interface FloatProperty extends NonNullProperty<Float> {
 	 * @see #isStrictlyPositive()
 	 */
 	default BooleanProperty isStrictlyPositiveProperty() {
-		return this::isStrictlyPositive;
+		return derive(this::isStrictlyPositive);
 	}
 	
 	/**
@@ -116,7 +108,7 @@ public interface FloatProperty extends NonNullProperty<Float> {
 	 * @see #isStrictlyNegative()
 	 */
 	default BooleanProperty isStrictlyNegativeProperty() {
-		return this::isStrictlyNegative;
+		return derive(this::isStrictlyNegative);
 	}
 	
 	/**
@@ -125,7 +117,7 @@ public interface FloatProperty extends NonNullProperty<Float> {
 	 * @see #isPositive()
 	 */
 	default BooleanProperty isPositiveProperty() {
-		return this::isPositive;
+		return derive(this::isPositive);
 	}
 	
 	/**
@@ -134,7 +126,7 @@ public interface FloatProperty extends NonNullProperty<Float> {
 	 * @see #isNegative()
 	 */
 	default BooleanProperty isNegativeProperty() {
-		return this::isNegative;
+		return derive(this::isNegative);
 	}
 	
 	/**
@@ -143,7 +135,7 @@ public interface FloatProperty extends NonNullProperty<Float> {
 	 * @see #has(float)
 	 */
 	default BooleanProperty hasProperty(float value) {
-		return () -> has(value);
+		return derive(() -> has(value));
 	}
 	
 	@Override
@@ -308,6 +300,46 @@ public interface FloatProperty extends NonNullProperty<Float> {
 	 */
 	default IntProperty compareWith(FloatComparator comparator, FloatProperty other) {
 		return new ComparedFloatProperty(this, comparator, other);
+	}
+	
+	@Override
+	default IntProperty hashCodeProperty() {
+		return mapToInt(Float::hashCode);
+	}
+	
+	/**
+	 * @see #mapToBoolean(ToBooleanMapper) 
+	 */
+	default BooleanProperty mapToBoolean(FloatToBooleanMapper mapper) {
+		return derive(() -> mapper.mapToBoolean(get()));
+	}
+	
+	/**
+	 * @see #mapToFloat(ToFloatMapper) 
+	 */
+	default FloatProperty mapToFloat(FloatMapper mapper) {
+		return derive(() -> mapper.mapToFloat(get()));
+	}
+	
+	/**
+	 * @see #mapToInt(ToIntMapper) 
+	 */
+	default IntProperty mapToInt(FloatToIntMapper mapper) {
+		return derive(() -> mapper.mapToInt(get()));
+	}
+	
+	/**
+	 * @see #mapToString(Mapper) 
+	 */
+	default StringProperty mapToString(FromFloatMapper<String> mapper) {
+		return derive(() -> mapper.map(get()));
+	}
+	
+	/**
+	 * @see #map(Mapper)
+	 */
+	default <S> Property<S> map(FromFloatMapper<S> mapper) {
+		return derive(() -> mapper.map(get()));
 	}
 	
 	/**

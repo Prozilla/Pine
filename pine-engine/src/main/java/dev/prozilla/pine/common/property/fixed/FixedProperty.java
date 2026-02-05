@@ -1,14 +1,11 @@
 package dev.prozilla.pine.common.property.fixed;
 
-import dev.prozilla.pine.common.property.BooleanProperty;
-import dev.prozilla.pine.common.property.Property;
+import dev.prozilla.pine.common.property.*;
 import dev.prozilla.pine.common.property.compared.ComparedProperty;
 import dev.prozilla.pine.common.util.StringUtils;
-import dev.prozilla.pine.common.util.function.mapper.Mapper;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Comparator;
-import java.util.Objects;
 
 /**
  * A property with a value that never changes.
@@ -41,6 +38,11 @@ public interface FixedProperty<T> extends Property<T> {
 		return this;
 	}
 	
+	@Override
+	default IntProperty compareWith(Comparator<T> comparator, Property<T> other) {
+		return other.compareWith(comparator, this).mapToInt((value) -> -value);
+	}
+	
 	/**
 	 * Compares this property with another fixed property.
 	 *
@@ -55,11 +57,6 @@ public interface FixedProperty<T> extends Property<T> {
 	}
 	
 	@Override
-	default FixedIntProperty hashCodeProperty() {
-		return new FixedIntProperty(Objects.hashCode(getValue()));
-	}
-	
-	@Override
 	default FixedProperty<T> replaceNull(T defaultValue) {
 		if (isNotNull()) {
 			return this;
@@ -69,8 +66,28 @@ public interface FixedProperty<T> extends Property<T> {
 	}
 	
 	@Override
-	default <S> FixedProperty<S> map(Mapper<T, S> mapper) {
-		return new FixedObjectProperty<>(mapper.map(getValue()));
+	default FixedBooleanProperty derive(BooleanProperty property) {
+		return property.snapshot();
+	}
+	
+	@Override
+	default FixedFloatProperty derive(FloatProperty property) {
+		return property.snapshot();
+	}
+	
+	@Override
+	default FixedIntProperty derive(IntProperty property) {
+		return property.snapshot();
+	}
+	
+	@Override
+	default FixedStringProperty derive(StringProperty property) {
+		return property.snapshot();
+	}
+	
+	@Override
+	default <S> FixedProperty<S> derive(Property<S> property) {
+		return property.snapshot();
 	}
 	
 	/**

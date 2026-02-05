@@ -2,11 +2,22 @@ package dev.prozilla.pine.common.util.function.mapper;
 
 import dev.prozilla.pine.common.util.ObjectUtils;
 
-public interface IntMapper extends Mapper<Integer, Integer> {
+@FunctionalInterface
+public interface IntMapper extends FromIntMapper<Integer>, ToIntMapper<Integer> {
 	
 	@Override
 	default Integer map(Integer in) {
-		return map(ObjectUtils.unbox(in));
+		return mapToInt(in);
+	}
+	
+	@Override
+	default Integer map(int in) {
+		return mapToInt(in);
+	}
+	
+	@Override
+	default int mapToInt(Integer in) {
+		return mapToInt(ObjectUtils.unbox(in));
 	}
 	
 	/**
@@ -14,10 +25,6 @@ public interface IntMapper extends Mapper<Integer, Integer> {
 	 * @param in The original integer
 	 * @return The mapped integer.
 	 */
-	int map(int in);
-	
-	default IntMapper then(IntMapper mapper) {
-		return (input) -> mapper.map(map(input));
-	}
+	int mapToInt(int in);
 	
 }

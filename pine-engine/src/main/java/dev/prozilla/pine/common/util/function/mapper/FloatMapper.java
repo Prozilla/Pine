@@ -2,11 +2,22 @@ package dev.prozilla.pine.common.util.function.mapper;
 
 import dev.prozilla.pine.common.util.ObjectUtils;
 
-public interface FloatMapper extends Mapper<Float, Float> {
+@FunctionalInterface
+public interface FloatMapper extends FromFloatMapper<Float>, ToFloatMapper<Float> {
 	
 	@Override
 	default Float map(Float in) {
-		return map(ObjectUtils.unbox(in));
+		return mapToFloat(in);
+	}
+	
+	@Override
+	default Float map(float in) {
+		return mapToFloat(in);
+	}
+	
+	@Override
+	default float mapToFloat(Float in) {
+		return mapToFloat(ObjectUtils.unbox(in));
 	}
 	
 	/**
@@ -14,10 +25,7 @@ public interface FloatMapper extends Mapper<Float, Float> {
 	 * @param in The original float
 	 * @return The mapped float.
 	 */
-	float map(float in);
-	
-	default FloatMapper then(FloatMapper mapper) {
-		return (input) -> mapper.map(map(input));
-	}
+	float mapToFloat(float in);
 	
 }
+

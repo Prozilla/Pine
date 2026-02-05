@@ -9,6 +9,9 @@ import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.common.util.function.Functor;
 import dev.prozilla.pine.common.util.function.mapper.Mapper;
+import dev.prozilla.pine.common.util.function.mapper.ToBooleanMapper;
+import dev.prozilla.pine.common.util.function.mapper.ToFloatMapper;
+import dev.prozilla.pine.common.util.function.mapper.ToIntMapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +19,17 @@ import java.util.Comparator;
 import java.util.Objects;
 
 /**
- * A property with a value that may change in certain circumstances.
+ * A property with a value determined by a {@link #getValue()} function.
+ *
+ * <p>A derived property is a property created from another property, that makes use of that property's value.</p>
+ * <p>A fixed property is a property with a value that never changes. Any property can be converted to a {@link FixedProperty} using {@link #snapshot()}.</p>
+ * <span>
+ *     <p>Properties use composition over inheritance for two main reasons:</p>
+ *     <ul>
+ *         <li><p>Primitive properties (boolean, float, int) have different implementations from object properties, because their values are passed around as primitives to avoid (un)boxing.</p></li>
+ *         <li><p>Special object properties (e.g., {@link StringProperty}) can have additional functionality specific to that type of object.</p></li>
+ *     </ul>
+ * </span>
  * @param <T> The type of property
  */
 @FunctionalInterface
@@ -74,17 +87,13 @@ public interface Property<T> extends Functor<T> {
 	
 	/**
 	 * Returns a property whose value is the value of this property, or {@code defaultValue} if the value of this property is {@code null}.
+	 * @param defaultValue The value to replace {@code null} with.
 	 * @return A property whose value is never {@code null}.
+	 * @throws InvalidObjectException If {@code defaultValue} is {@code null}.
 	 */
 	@Contract("_ -> new")
-	default Property<T> replaceNull(T defaultValue) {
-		Checks.isNotNull(defaultValue, "defaultValue");
-		return () -> getValueOr(defaultValue);
-	}
-	
-	@Override
-	default <S> Property<S> map(Mapper<T, S> mapper) {
-		return () -> mapper.map(getValue());
+	default Property<T> replaceNull(T defaultValue) throws InvalidObjectException {
+		return map(Mapper.replaceNull(defaultValue));
 	}
 	
 	/**
@@ -95,7 +104,7 @@ public interface Property<T> extends Functor<T> {
 	 */
 	@Contract("-> new")
 	default StringProperty toStringProperty() {
-		return () -> StringUtils.toString(getValue());
+		return mapToString(StringUtils::toString);
 	}
 	
 	/**
@@ -104,7 +113,7 @@ public interface Property<T> extends Functor<T> {
 	 * @see #isNotNull()
 	 */
 	default BooleanProperty isNotNullProperty() {
-		return this::isNotNull;
+		return derive(this::isNotNull);
 	}
 	
 	/**
@@ -113,7 +122,7 @@ public interface Property<T> extends Functor<T> {
 	 * @see #hasValue(Object) 
 	 */
 	default BooleanProperty hasValueProperty(T value) {
-		return () -> hasValue(value);
+		return derive(() -> hasValue(value));
 	}
 	
 	/**
@@ -121,7 +130,7 @@ public interface Property<T> extends Functor<T> {
 	 * @return A fixed property with the current value of this property.
 	 */
 	default FixedProperty<T> snapshot() {
-		return new FixedObjectProperty<>(getValue());
+		return FixedProperty.fromValue(getValue());
 	}
 	
 	/**
@@ -157,7 +166,112 @@ public interface Property<T> extends Functor<T> {
 	 * @see Objects#hashCode(Object)
 	 */
 	default IntProperty hashCodeProperty() {
-		return () -> Objects.hashCode(getValue());
+		return mapToInt(Objects::hashCode);
+	}
+	
+	/**
+	 * Returns a property that maps the value of this property to a boolean.
+	 * @param mapper The function to use
+	 * @return The mapped property.
+	 * @see #map(Mapper)
+	 */
+	default BooleanProperty mapToBoolean(ToBooleanMapper<T> mapper) {
+		return derive(() -> mapper.mapToBoolean(getValue()));
+	}
+	
+	/**
+	 * Returns a property that maps the value of this property to a float.
+	 * @param mapper The function to use
+	 * @return The mapped property.
+	 * @see #map(Mapper)
+	 */
+	default FloatProperty mapToFloat(ToFloatMapper<T> mapper) {
+		return derive(() -> mapper.mapToFloat(getValue()));
+	}
+	
+	/**
+	 * Returns a property that maps the value of this property to an integer.
+	 * @param mapper The function to use
+	 * @return The mapped property.
+	 * @see #map(Mapper)
+	 */
+	default IntProperty mapToInt(ToIntMapper<T> mapper) {
+		return derive(() -> mapper.mapToInt(getValue()));
+	}
+	
+	/**
+	 * Returns a property that maps the value of this property to a string.
+	 * @param mapper The function to use
+	 * @return The mapped property.
+	 * @see #map(Mapper)
+	 */
+	default StringProperty mapToString(Mapper<T, String> mapper) {
+		return derive(() -> mapper.map(getValue()));
+	}
+	
+	/**
+	 * Returns a property that applies a function to the value of this property.
+	 * @param mapper The function to apply
+	 * @return The mapped property.
+	 * @param <S> The type of value to map to
+	 */
+	@Override
+	default <S> Property<S> map(Mapper<T, S> mapper) {
+		return derive(() -> mapper.map(getValue()));
+	}
+	
+	/**
+	 * Derives a boolean property from this property.
+	 * @param property The property to derive
+	 * @return The derived property.
+	 * @see #derive(Property)
+	 */
+	default BooleanProperty derive(BooleanProperty property) {
+		return property;
+	}
+	
+	/**
+	 * Derives a float property from this property.
+	 * @param property The property to derive
+	 * @return The derived property.
+	 * @see #derive(Property)
+	 */
+	default FloatProperty derive(FloatProperty property) {
+		return property;
+	}
+	
+	/**
+	 * Derives an integer property from this property.
+	 * @param property The property to derive
+	 * @return The derived property.
+	 * @see #derive(Property)
+	 */
+	default IntProperty derive(IntProperty property) {
+		return property;
+	}
+	
+	/**
+	 * Derives a string property from this property.
+	 * @param property The property to derive
+	 * @return The derived property.
+	 * @see #derive(Property)
+	 */
+	default StringProperty derive(StringProperty property) {
+		return property;
+	}
+	
+	/**
+	 * Derives a property from this property.
+	 *
+	 * <p>The derived property should depend on (the value of) this property.</p>
+	 *
+	 * <p>If this is a fixed property, derived properties will also be fixed. The value of this property will never change, so any property that depends on it should also never change.</p>
+	 * @param property The property to derive
+	 * @return The derived property.
+	 * @param <S> The type of value of the derived property
+	 */
+	default <S> Property<S> derive(Property<S> property) {
+		return property;
 	}
 	
 	/**
