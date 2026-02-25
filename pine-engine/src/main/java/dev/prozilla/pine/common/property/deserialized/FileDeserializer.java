@@ -138,7 +138,11 @@ public class FileDeserializer<Data> extends SimpleObservableObjectProperty<Data>
 	 * @return The input stream.
 	 */
 	protected InputStream createInputStream() {
-		return ResourceUtils.getResourceStream(path);
+		try {
+			return ResourceUtils.getResourceStream(path);
+		} catch (RuntimeException e) {
+			return null;
+		}
 	}
 	
 	/**
