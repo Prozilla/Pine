@@ -25,7 +25,8 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 	 * @return Self.
 	 */
 	public V normalize() {
-		return divide(length());
+		float length = length();
+		return scale(length == 0 ? 0 : 1f / length);
 	}
 	
 	/**
