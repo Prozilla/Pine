@@ -184,9 +184,19 @@ public class Transform extends Component {
 		position.add(deltaX, deltaY);
 	}
 	
+	public void setPosition(Vector2f position) {
+		Checks.isNotNull(position, "position");
+		setPosition(position.x, position.y);
+	}
+	
 	public void setPosition(float x, float y) {
 		position.x = x;
 		position.y = y;
+	}
+	
+	public void setVelocity(Vector2f velocity) {
+		Checks.isNotNull(velocity, "velocity");
+		setVelocity(velocity.x, velocity.y);
 	}
 	
 	public void setVelocity(float x, float y) {
