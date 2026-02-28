@@ -234,11 +234,27 @@ public class Window implements Initializable, Destructible, Printable {
 	}
 	
 	/**
+	 * Gets the title of this window by getting the value of {@link WindowConfig#title}.
+	 * @return The title of this window.
+	 */
+	public String getTitle() {
+		return config.title.getValue();
+	}
+	
+	/**
 	 * Toggles the fullscreen mode of this window by setting the value of {@link WindowConfig#fullscreen}.
 	 * @param fullscreen Whether to enable or disable fullscreen mode
 	 */
 	public void setFullscreen(boolean fullscreen) {
 		config.fullscreen.set(fullscreen);
+	}
+	
+	/**
+	 * Checks if this window is in fullscreen mode by getting the value of {@link WindowConfig#fullscreen}.
+	 * @return {@code true} if this window is in fullscreen mode.
+	 */
+	public boolean isFullscreen() {
+		return config.fullscreen.get();
 	}
 	
 	/**
@@ -276,6 +292,14 @@ public class Window implements Initializable, Destructible, Printable {
 	 */
 	public void setIcon(String... imagePaths) {
 		config.icon.setValue(imagePaths);
+	}
+	
+	/**
+	 * Gets the icon of this window by getting the value of {@link WindowConfig#icon}.
+	 * @return The paths of the image files for the icon.
+	 */
+	public String[] getIcon() {
+		return config.icon.getValue();
 	}
 	
 	private void updateIcon(String[] imagePaths) {

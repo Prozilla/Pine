@@ -1,0 +1,17 @@
+plugins {
+	id "dev.prozilla.pine.conventions"
+	id "dev.prozilla.pine.examples.conventions"
+	id "com.gradleup.shadow" version "8.3.9"
+}
+
+application {
+	mainClass = "dev.prozilla.pine.examples.openrgb.Main"
+}
+
+tasks.register("start", JavaExec) {
+	mainClass = "dev.prozilla.pine.examples.openrgb.Main"
+}
+
+dependencies {
+	implementation "io.gitlab.mguimard:openrgb-client:1.15"
+}
