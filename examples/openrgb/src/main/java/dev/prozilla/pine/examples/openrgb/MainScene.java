@@ -6,17 +6,24 @@ import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.TextButtonPrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
+import dev.prozilla.pine.common.system.ColorParser;
+import dev.prozilla.pine.core.component.ui.TextInputNode;
+import dev.prozilla.pine.core.entity.EntityChunk;
+import dev.prozilla.pine.core.entity.prefab.ui.*;
 import dev.prozilla.pine.core.scene.Scene;
+import dev.prozilla.pine.core.scene.World;
+import dev.prozilla.pine.core.state.input.Key;
+import dev.prozilla.pine.core.system.init.InitSystem;
 
 import java.io.IOException;
 
 public class MainScene extends Scene {
 	
 	private OpenRGBClient client;
+	private TextInputNode inputNode;
+	private ColorParser colorParser;
+	
+	private static final String COLOR_INPUT_TAG = "color-input";
 	
 	public boolean connect() {
 		if (client.isConnected())
@@ -71,8 +78,19 @@ public class MainScene extends Scene {
 				logger.log("Updated device LEDs: device " + i);
 			} catch (IOException e) {
 				logger.error("Failed to update device " + i + ", reconnecting...", e);
-				if (!connect()) return;
+				if (!connect())
+					return;
 			}
+		}
+	}
+	
+	public void setInputValue(String value) {
+		inputNode.setText(value);
+	}
+	
+	public void apply() {
+		if (colorParser.parse(inputNode.getText())) {
+			setDevicesColor(colorParser.getResult());
 		}
 	}
 	
@@ -80,7 +98,23 @@ public class MainScene extends Scene {
 	protected void load() {
 		super.load();
 		
+		// Create system that will initialize the input node
+		world.addSystem(new InitSystem(TextInputNode.class) {
+			@Override
+			public void initSystem(World world) {
+				setRequiredTag(COLOR_INPUT_TAG);
+				super.initSystem(world);
+			}
+			
+			@Override
+			protected void process(EntityChunk chunk) {
+				inputNode = chunk.getComponent(TextInputNode.class);
+			}
+		});
+		
+		// Initialize fields
 		client = new OpenRGBClient(application.getWindow().getTitle());
+		colorParser = new ColorParser();
 		
 		NodeRootPrefab nodeRootPrefab = new NodeRootPrefab();
 		
@@ -95,22 +129,42 @@ public class MainScene extends Scene {
 		TextPrefab titleTextPrefab = new TextPrefab(application.getWindow().getTitle());
 		titleTextPrefab.setColor(Color.black());
 		
+		TextInputPrefab inputPrefab = new TextInputPrefab();
+		inputPrefab.setColor(Color.black());
+		inputPrefab.setBackgroundColor(Color.lightGray());
+		inputPrefab.setPadding(new DualDimension(16, 8));
+		inputPrefab.setTag(COLOR_INPUT_TAG);
+		
+		LayoutPrefab colorsPrefab = new LayoutPrefab();
+		colorsPrefab.setDirection(Direction.RIGHT);
+		colorsPrefab.setGap(new Dimension(8));
+		
 		TextButtonPrefab redButtonPrefab = new TextButtonPrefab("Red");
 		redButtonPrefab.setColor(Color.black());
+		redButtonPrefab.setBackgroundColor(Color.red());
 		redButtonPrefab.setPadding(new DualDimension(16, 8));
-		redButtonPrefab.setClickCallback((button) -> setDevicesColor(Color.red()));
+		redButtonPrefab.setClickCallback((button) -> setInputValue("red"));
 		
 		TextButtonPrefab greenButtonPrefab = new TextButtonPrefab("Green");
 		greenButtonPrefab.setColor(Color.black());
+		greenButtonPrefab.setBackgroundColor(Color.green());
 		greenButtonPrefab.setPadding(new DualDimension(16, 8));
-		greenButtonPrefab.setClickCallback((button) -> setDevicesColor(Color.green()));
+		greenButtonPrefab.setClickCallback((button) -> setInputValue("green"));
 		
 		TextButtonPrefab blueButtonPrefab = new TextButtonPrefab("Blue");
 		blueButtonPrefab.setColor(Color.black());
+		blueButtonPrefab.setBackgroundColor(Color.blue());
 		blueButtonPrefab.setPadding(new DualDimension(16, 8));
-		blueButtonPrefab.setClickCallback((button) -> setDevicesColor(Color.blue()));
+		blueButtonPrefab.setClickCallback((button) -> setInputValue("blue"));
 		
-		menuPrefab.addChildren(titleTextPrefab, redButtonPrefab, greenButtonPrefab, blueButtonPrefab);
+		colorsPrefab.addChildren(redButtonPrefab, greenButtonPrefab, blueButtonPrefab);
+		
+		TextButtonPrefab applyButtonPrefab = new TextButtonPrefab("Apply");
+		applyButtonPrefab.setColor(Color.black());
+		applyButtonPrefab.setPadding(new DualDimension(16, 8));
+		applyButtonPrefab.setClickCallback((button) -> apply());
+		
+		menuPrefab.addChildren(titleTextPrefab, inputPrefab, colorsPrefab, applyButtonPrefab);
 		nodeRootPrefab.addChild(menuPrefab);
 		world.addEntity(nodeRootPrefab);
 		
@@ -118,8 +172,18 @@ public class MainScene extends Scene {
 	}
 	
 	@Override
+	public void input(float deltaTime) throws IllegalStateException {
+		super.input(deltaTime);
+		
+		if (getInput().getKeyDown(Key.ENTER)) {
+			apply();
+		}
+	}
+	
+	@Override
 	public void destroy() throws IllegalStateException {
 		super.destroy();
 		disconnect();
 	}
+	
 }
