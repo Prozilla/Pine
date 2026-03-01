@@ -11,7 +11,3 @@ application {
 tasks.register("start", JavaExec) {
 	mainClass = "dev.prozilla.pine.examples.openrgb.Main"
 }
-
-dependencies {
-	implementation "io.gitlab.mguimard:openrgb-client:1.15"
-}
