@@ -32,7 +32,7 @@ public final class CameraControlInputHandler extends InputSystem {
 	 * @param deltaTime Delta time in seconds
 	 */
 	private void handleMovementInput(float deltaTime, CameraControlData cameraControlData, CameraData cameraData) {
-		if (cameraControlData.movementSpeed == 0)
+		if (cameraControlData.movementSpeed == 0 || !cameraControlData.enableMovement)
 			return;
 		
 		float deltaX = 0f, deltaY = 0f;
@@ -68,7 +68,7 @@ public final class CameraControlInputHandler extends InputSystem {
 	 * @param deltaTime Delta time in seconds
 	 */
 	private void handleZoomInput(float deltaTime, CameraControlData cameraControlData, Input input) {
-		if (cameraControlData.zoomSpeed == 0)
+		if (cameraControlData.zoomSpeed == 0 || !cameraControlData.enableZoom)
 			return;
 		
 		float deltaZoom = 0f;

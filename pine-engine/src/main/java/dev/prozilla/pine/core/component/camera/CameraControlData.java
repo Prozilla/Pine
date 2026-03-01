@@ -9,6 +9,9 @@ public class CameraControlData extends Component {
 	public float velocityDamping;
 	public boolean disableControlsOnPause;
 	
+	public boolean enableZoom;
+	public boolean enableMovement;
+	
 	public float zoomSpeed;
 	public float minZoom;
 	public float maxZoom;
@@ -34,6 +37,12 @@ public class CameraControlData extends Component {
 		ZOOM_OUT,
 		SPEED_UP,
 		SLOW_DOWN,
+	}
+	
+	public CameraControlData() {
+		enableZoom = true;
+		enableMovement = true;
+		enableBounds = false;
 	}
 	
 	/**
