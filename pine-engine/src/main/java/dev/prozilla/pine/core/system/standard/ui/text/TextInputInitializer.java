@@ -21,13 +21,17 @@ public final class TextInputInitializer extends InitSystem {
 		
 		textInputNode.textListener = (character) -> {
 			if (node.isFocused()) {
-				boolean changed = textInputNode.getTextProperty().buildValue((stringBuilder) -> {
+				boolean selectionDeleted = textInputNode.deleteSelection();
+				
+				boolean textChanged = textInputNode.getTextProperty().buildValue((stringBuilder) -> {
 					String string = stringBuilder.insert(textInputNode.cursorPosition, character).toString();
 					return textInputNode.type.isValid(string) ? string : null;
 				});
 				
-				if (changed) {
-					textInputNode.moveCursorRight();
+				if (selectionDeleted || textChanged) {
+					if (textChanged) {
+						textInputNode.moveCursorRight();
+					}
 					node.invoke(NodeEvent.Type.INPUT);
 				}
 			}

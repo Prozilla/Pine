@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.property.observable.ObservableStringProperty;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.TextInputNode;
@@ -12,6 +13,7 @@ import dev.prozilla.pine.core.entity.prefab.Components;
 public class TextInputPrefab extends TextPrefab {
 	
 	protected TextInputNode.Type type;
+	protected ObservableStringProperty textProperty;
 	
 	public TextInputPrefab() {
 		this(null);
@@ -30,11 +32,16 @@ public class TextInputPrefab extends TextPrefab {
 		this.type = type;
 	}
 	
+	public void setTextProperty(ObservableStringProperty textProperty) {
+		this.textProperty = textProperty;
+	}
+	
 	@Override
 	protected void apply(Entity entity) {
 		super.apply(entity);
 		
-		TextInputNode textInputNode = entity.addComponent(new TextInputNode());
+		TextInputNode textInputNode = textProperty == null ? new TextInputNode() : new TextInputNode(textProperty);
+		entity.addComponent(textInputNode);
 		
 		if (type != null) {
 			textInputNode.type = type;

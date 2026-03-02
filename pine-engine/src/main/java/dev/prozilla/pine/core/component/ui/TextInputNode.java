@@ -32,8 +32,12 @@ public class TextInputNode extends Component {
 	}
 	
 	public TextInputNode() {
+		this(new SimpleObservableStringProperty(""));
+	}
+	
+	public TextInputNode(ObservableStringProperty textProperty) {
 		type = Type.TEXT;
-		setTextProperty(new SimpleObservableStringProperty(""));
+		setTextProperty(textProperty);
 	}
 	
 	@Override
@@ -77,11 +81,19 @@ public class TextInputNode extends Component {
 		updateCursor();
 	}
 	
+	public boolean deleteSelection() {
+		if (!hasSelection()) {
+			return false;
+		}
+		
+		cursorPosition = getSelectionStart();
+		textProperty.buildValue((stringBuilder) -> stringBuilder.delete(cursorPosition, cursorPosition + Math.abs(selection)));
+		clearSelection();
+		return true;
+	}
+	
 	public void deleteText(boolean inFront) {
-		if (hasSelection()) {
-			cursorPosition = getSelectionStart();
-			textProperty.buildValue((stringBuilder) -> stringBuilder.delete(cursorPosition, cursorPosition + Math.abs(selection)));
-			clearSelection();
+		if (deleteSelection()) {
 			return;
 		}
 		

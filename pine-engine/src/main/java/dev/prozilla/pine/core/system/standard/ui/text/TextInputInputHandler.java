@@ -28,25 +28,25 @@ public final class TextInputInputHandler extends InputSystem {
 			return;
 		}
 		
-		if (input.getKeyDown(Key.LEFT_ARROW)) {
+		if (input.getKeyRepeated(Key.LEFT_ARROW)) {
 			if (input.getModifierKey(ModifierKey.SHIFT)) {
 				textInputNode.expandSelectionLeft();
 			} else {
 				textInputNode.moveCursorLeft();
 			}
-		} else if (input.getKeyDown(Key.RIGHT_ARROW)) {
+		} else if (input.getKeyRepeated(Key.RIGHT_ARROW)) {
 			if (input.getModifierKey(ModifierKey.SHIFT)) {
 				textInputNode.expandSelectionRight();
 			} else {
 				textInputNode.moveCursorRight();
 			}
-		} else if (input.getKeyDown(Key.UP_ARROW) || input.getKeyDown(Key.HOME)) {
+		} else if (input.getKeyRepeated(Key.UP_ARROW) || input.getKeyRepeated(Key.HOME)) {
 			textInputNode.moveCursorToStart();
-		} else if (input.getKeyDown(Key.DOWN_ARROW) || input.getKeyDown(Key.END)) {
+		} else if (input.getKeyRepeated(Key.DOWN_ARROW) || input.getKeyRepeated(Key.END)) {
 			textInputNode.moveCursorToEnd();
-		} else if (input.getKeyDown(Key.BACKSPACE)) {
+		} else if (input.getKeyRepeated(Key.BACKSPACE)) {
 			textInputNode.deleteText(true);
-		} else if (input.getKeyDown(Key.DELETE)) {
+		} else if (input.getKeyRepeated(Key.DELETE)) {
 			textInputNode.deleteText(false);
 		}
 	}
