@@ -85,13 +85,18 @@ public class GridGroup extends Component {
 	}
 	
 	public boolean destroyTile(Entity entity) {
+		if (entity == null) {
+			return false;
+		}
 		return destroyTile(entity.getComponent(TileRenderer.class));
 	}
 	
 	public boolean destroyTile(TileRenderer tile) {
-		boolean removed = removeTile(tile);
-		tile.getEntity().destroy();
-		return removed;
+		if (removeTile(tile)) {
+			tile.getEntity().destroy();
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean removeTile(Vector2i coordinate) {

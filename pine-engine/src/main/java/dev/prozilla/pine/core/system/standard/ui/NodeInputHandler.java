@@ -51,8 +51,8 @@ public final class NodeInputHandler extends InputSystemBase {
 			
 			node.cursorHit = cursorHit;
 			
-			if (node.cursorHit) {
-				if (node.tooltipText != null) {
+			if (node.cursorHit || isChildHovered) {
+				if (node.tooltipText != null && (!isChildHovered || !node.getRoot().isTooltipShown())) {
 					node.getRoot().showTooltip(node, node.tooltipText);
 				}
 				
