@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
@@ -63,6 +64,7 @@ public class GridGroup extends Component {
 		tile.setSize(size);
 		coordinateToTile.put(tile.getCoordinate(), tile);
 		TileMover.updateTilePosition(tile.getTransform(), tile.getTile());
+		sortTiles(); // TO DO: Insert tile at correct position, don't sort all children
 		
 		MultiTileRenderer multiTile = tile.getComponent(MultiTileRenderer.class);
 		if (multiTile != null) {
@@ -190,6 +192,36 @@ public class GridGroup extends Component {
 	
 	public Vector2f coordinateToPosition(int x, int y) {
 		return new Vector2f(x * size, y * size);
+	}
+	
+	public void sortTiles() {
+		Map<Transform, Vector2i> transformToCoordinate = new HashMap<>();
+		for (Map.Entry<Vector2i, TileProvider> entry : coordinateToTile.entrySet()) {
+			Transform tileTransform = entry.getValue().getTransform();
+			transformToCoordinate.put(tileTransform, entry.getKey());
+		}
+		
+		getTransform().children.sort((a, b) -> {
+			Vector2i coordinateA = transformToCoordinate.get(a);
+			Vector2i coordinateB = transformToCoordinate.get(b);
+			
+			// Non-tiles sink to the end
+			if (coordinateA == null && coordinateB == null) {
+				return 0;
+			}
+			if (coordinateA == null) {
+				return 1;
+			}
+			if (coordinateB == null) {
+				return -1;
+			}
+			
+			if (coordinateA.y != coordinateB.y) {
+				return Integer.compare(coordinateB.y, coordinateA.y);
+			} else {
+				return Integer.compare(coordinateB.x, coordinateA.x);
+			}
+		});
 	}
 	
 	/**
