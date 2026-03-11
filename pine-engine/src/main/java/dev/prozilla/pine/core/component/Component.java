@@ -67,7 +67,7 @@ public abstract class Component implements Printable, Destructible, EntityProvid
 	}
 	
 	public boolean isActive() {
-		return isActive && entity.isActive();
+		return isActive && entity != null && entity.isActive();
 	}
 	
 	/**

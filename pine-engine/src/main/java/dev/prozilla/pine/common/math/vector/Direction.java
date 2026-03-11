@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.math.vector;
 
 import dev.prozilla.pine.common.util.ArrayUtils;
+import dev.prozilla.pine.common.util.checks.Checks;
 
 /**
  * Represents a 2-dimensional direction.
@@ -148,6 +149,30 @@ public enum Direction {
 		} else {
 			return y > 0 ? Direction.UP : Direction.DOWN;
 		}
+	}
+	
+	public static Direction[] rotations(Direction start) {
+		return rotations(start, 4);
+	}
+	
+	public static Direction[] rotations(Direction start, int count) {
+		return rotations(start, count, true);
+	}
+	
+	public static Direction[] rotations(Direction start, boolean clockwise) {
+		return rotations(start, 4, clockwise);
+	}
+	
+	public static Direction[] rotations(Direction start, int count, boolean clockwise) {
+		Checks.isNotNull(start, "start");
+		
+		Direction[] rotations = new Direction[Math.max(count, 1)];
+		rotations[0] = start;
+		
+		for (int i = 1; i < count; i++) {
+			rotations[i] = clockwise ? rotations[i - 1].rotateClockwise() : rotations[i - 1].rotateCounterclockwise();
+		}
+		return rotations;
 	}
 	
 }

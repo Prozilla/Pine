@@ -169,4 +169,10 @@ public class NodeRoot extends Component implements NodeContext {
 		}
 	}
 	
+	public void removeNode(Node node) {
+		if (Objects.equals(tooltipActivator, node)) {
+			tooltipActivator = null;
+		}
+	}
+	
 }
