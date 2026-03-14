@@ -4,6 +4,11 @@ import dev.prozilla.pine.common.math.vector.Vector2f;
 
 public final class MathUtils {
 	
+	/**
+	 * The ratio of the circumference of a circle to its diameter.
+	 */
+	public static final float PI = (float)Math.PI;
+	
 	private MathUtils() {}
 	
 	/**
@@ -86,7 +91,7 @@ public final class MathUtils {
 	}
 	
 	public static float min(float... values) {
-		float min = -Float.MAX_VALUE;
+		float min = Float.MAX_VALUE;
 		for (float value : values) {
 			min = Math.min(min, value);
 		}
@@ -94,7 +99,7 @@ public final class MathUtils {
 	}
 	
 	public static float max(float... values) {
-		float max = Float.MAX_VALUE;
+		float max = -Float.MAX_VALUE;
 		for (float value : values) {
 			max = Math.max(max, value);
 		}
