@@ -42,5 +42,7 @@ public final class GridInitializer extends InitSystem {
 				}
 			}
 		}
+		
+		gridGroup.sortTiles();
 	}
 }

@@ -334,8 +334,8 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	@Override
 	public void destroy() {
+		getRoot().removeNode(this);
 		super.destroy();
-		
 		eventDispatcher.destroy();
 	}
 	

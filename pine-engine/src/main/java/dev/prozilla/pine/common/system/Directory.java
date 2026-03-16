@@ -8,6 +8,9 @@ import dev.prozilla.pine.common.property.deserialized.HotFileDeserializer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Represents a directory from the file system.
  *
@@ -17,6 +20,8 @@ public class Directory implements Destructible, Cloneable<Directory>, Printable 
 	
 	private final String path;
 	private DirectoryWatcher watcher;
+	
+	private static final Map<String, Directory> pool = new HashMap<>();
 	
 	public Directory(String path) {
 		this.path = PathUtils.onlyTrailingSlash(path);
@@ -78,6 +83,10 @@ public class Directory implements Destructible, Cloneable<Directory>, Printable 
 		return path;
 	}
 	
+	public Directory resolve(String relativePath) {
+		return Directory.of(resolvePath(relativePath));
+	}
+	
 	/**
 	 * Resolves a path relative to this directory.
 	 * @param relativePath The path relative to this directory.
@@ -113,6 +122,11 @@ public class Directory implements Destructible, Cloneable<Directory>, Printable 
 	@Override
 	public void destroy() {
 		watcher = Destructible.destroy(watcher);
+	}
+	
+	public static Directory of(String path) {
+		String normalizedPath = PathUtils.onlyTrailingSlash(path);
+		return pool.computeIfAbsent(normalizedPath, Directory::new);
 	}
 	
 }

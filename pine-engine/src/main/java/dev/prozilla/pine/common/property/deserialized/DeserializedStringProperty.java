@@ -1,8 +1,8 @@
 package dev.prozilla.pine.common.property.deserialized;
 
-import dev.prozilla.pine.common.property.StringProperty;
+import dev.prozilla.pine.common.property.observable.ObservableStringProperty;
 
-public class DeserializedStringProperty extends DeserializedObjectProperty<String> implements StringProperty {
+public class DeserializedStringProperty extends DeserializedObjectProperty<String> implements ObservableStringProperty {
 	
 	public <Data> DeserializedStringProperty(FileDeserializer<Data> source, ValueFactory<Data, String> valueFactory) {
 		this(source, valueFactory, null);

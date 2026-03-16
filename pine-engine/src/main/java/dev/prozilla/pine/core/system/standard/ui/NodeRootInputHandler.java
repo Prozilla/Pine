@@ -17,7 +17,11 @@ public final class NodeRootInputHandler extends InputSystem {
 		NodeRoot nodeRoot = chunk.getComponent(NodeRoot.class);
 		
 		if (nodeRoot.tooltip != null) {
-			nodeRoot.tooltip.setActive(nodeRoot.tooltipActivator.cursorHit);
+			if (!nodeRoot.tooltipActivator.isActive()) {
+				nodeRoot.hideTooltip();
+			} else {
+				nodeRoot.tooltip.setActive(nodeRoot.tooltipActivator.cursorHit);
+			}
 		}
 		
 		if (input.getKeyDown(Key.TAB)) {

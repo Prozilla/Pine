@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.component.ui;
 
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
@@ -89,7 +90,7 @@ public class NodeRoot extends Component implements NodeContext {
 		
 		// Hide previous tooltip
 		if (tooltip != null) {
-			tooltip.destroy();
+			hideTooltip();
 		}
 		
 		// Show new tooltip
@@ -100,19 +101,20 @@ public class NodeRoot extends Component implements NodeContext {
 			
 			currentTooltipText = text;
 			tooltipActivator = activator;
-		} else {
-			currentTooltipText = null;
-			tooltipActivator = null;
 		}
 	}
 	
 	public void hideTooltip() {
 		if (tooltip != null) {
-			tooltip.destroy();
+			tooltip = Destructible.destroy(tooltip);
 		}
 		
 		currentTooltipText = null;
 		tooltipActivator = null;
+	}
+	
+	public boolean isTooltipShown() {
+		return tooltip != null;
 	}
 	
 	public Node getFocusedNode() {
@@ -164,6 +166,12 @@ public class NodeRoot extends Component implements NodeContext {
 			focusedNode = focusableNodes.get(focusedNodeIndex);
 			focusedNode.addModifier(Node.FOCUS_MODIFIER);
 			return true;
+		}
+	}
+	
+	public void removeNode(Node node) {
+		if (Objects.equals(tooltipActivator, node)) {
+			tooltipActivator = null;
 		}
 	}
 	
