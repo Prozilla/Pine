@@ -1,10 +1,10 @@
 package dev.prozilla.pine.core.state.config.option;
 
-import dev.prozilla.pine.common.property.observable.SimpleObservableFloatProperty;
+import dev.prozilla.pine.common.property.bindable.SimpleBindableFloatProperty;
 import dev.prozilla.pine.common.util.ObjectUtils;
 import dev.prozilla.pine.common.util.function.predicate.FloatPredicate;
 
-public class FloatConfigOption extends SimpleObservableFloatProperty implements ConfigOption<Float> {
+public class FloatConfigOption extends SimpleBindableFloatProperty implements ConfigOption<Float> {
 	
 	private final float initialValue;
 	private final FloatPredicate validator;

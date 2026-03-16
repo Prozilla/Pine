@@ -22,20 +22,8 @@ public class SimpleMutableBooleanProperty implements MutableBooleanProperty {
 			return false;
 		}
 		
-		onValueChange(this.value, value);
 		this.value = value;
 		return true;
-	}
-	
-	/**
-	 * This method is called whenever the value of this property changes.
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 * @param oldValue The previous value
-	 * @param newValue The new value
-	 */
-	protected void onValueChange(boolean oldValue, boolean newValue) {
-	
 	}
 	
 	@Override

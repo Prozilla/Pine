@@ -1,11 +1,11 @@
 package dev.prozilla.pine.common.property.observable;
 
-import dev.prozilla.pine.common.property.mutable.MutableIntProperty;
+import dev.prozilla.pine.common.property.IntProperty;
 
 /**
  * A property with an integer value that can be observed.
  */
-public interface ObservableIntProperty extends MutableIntProperty, ObservableProperty<Integer> {
+public interface ObservableIntProperty extends IntProperty, ObservableProperty<Integer> {
 	
 	@Override
 	default void read(Observer<Integer> reader) {

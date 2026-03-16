@@ -1,12 +1,12 @@
 package dev.prozilla.pine.common.property.observable;
 
-import dev.prozilla.pine.common.property.mutable.MutableStringProperty;
+import dev.prozilla.pine.common.property.StringProperty;
 import org.jetbrains.annotations.Contract;
 
 /**
  * A property with a string value that can be observed.
  */
-public interface ObservableStringProperty extends MutableStringProperty, ObservableObjectProperty<String> {
+public interface ObservableStringProperty extends StringProperty, ObservableObjectProperty<String> {
 	
 	/**
 	 * Returns this property.

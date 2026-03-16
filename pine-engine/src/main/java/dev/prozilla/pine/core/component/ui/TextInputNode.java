@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.component.ui;
 
 import dev.prozilla.pine.common.math.MathUtils;
-import dev.prozilla.pine.common.property.observable.ObservableStringProperty;
-import dev.prozilla.pine.common.property.observable.SimpleObservableStringProperty;
+import dev.prozilla.pine.common.property.bindable.BindableStringProperty;
+import dev.prozilla.pine.common.property.bindable.SimpleBindableStringProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.state.input.Input;
@@ -14,7 +14,7 @@ public class TextInputNode extends Component {
 	public Input.TextListener textListener;
 	public Type type;
 	public TextNode textNode;
-	private ObservableStringProperty textProperty;
+	private BindableStringProperty textProperty;
 	
 	public enum Type {
 		TEXT,
@@ -32,10 +32,10 @@ public class TextInputNode extends Component {
 	}
 	
 	public TextInputNode() {
-		this(new SimpleObservableStringProperty(""));
+		this(new SimpleBindableStringProperty(""));
 	}
 	
-	public TextInputNode(ObservableStringProperty textProperty) {
+	public TextInputNode(BindableStringProperty textProperty) {
 		type = Type.TEXT;
 		setTextProperty(textProperty);
 	}
@@ -61,11 +61,11 @@ public class TextInputNode extends Component {
 		textProperty.setValue(text);
 	}
 	
-	public ObservableStringProperty getTextProperty() {
+	public BindableStringProperty getTextProperty() {
 		return textProperty;
 	}
 	
-	public void setTextProperty(ObservableStringProperty textProperty) {
+	public void setTextProperty(BindableStringProperty textProperty) {
 		Checks.isNotNull(textProperty, "textProperty");
 		if (this.textProperty != null) {
 			this.textProperty.removeObserver(this::handleTextChange);

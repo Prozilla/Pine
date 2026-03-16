@@ -1,11 +1,11 @@
 package dev.prozilla.pine.core.state.config.option;
 
-import dev.prozilla.pine.common.property.observable.SimpleObservableIntProperty;
+import dev.prozilla.pine.common.property.bindable.SimpleBindableIntProperty;
 import dev.prozilla.pine.common.util.ObjectUtils;
 
 import java.util.function.IntPredicate;
 
-public class IntConfigOption extends SimpleObservableIntProperty implements ConfigOption<Integer> {
+public class IntConfigOption extends SimpleBindableIntProperty implements ConfigOption<Integer> {
 	
 	private final int initialValue;
 	private final IntPredicate validator;

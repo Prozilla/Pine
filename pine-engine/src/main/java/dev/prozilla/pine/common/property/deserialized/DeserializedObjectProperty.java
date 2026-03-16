@@ -1,12 +1,12 @@
 package dev.prozilla.pine.common.property.deserialized;
 
-import dev.prozilla.pine.common.property.observable.SimpleObservableObjectProperty;
+import dev.prozilla.pine.common.property.bindable.SimpleBindableObjectProperty;
 import org.jetbrains.annotations.Contract;
 
 /**
  * A property whose value is retrieved from a deserialized file.
  */
-public class DeserializedObjectProperty<T> extends SimpleObservableObjectProperty<T> {
+public class DeserializedObjectProperty<T> extends SimpleBindableObjectProperty<T> {
 	
 	/**
 	 * Factory method used to retrieve a value from a deserialized file.

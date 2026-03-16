@@ -7,7 +7,7 @@ import dev.prozilla.pine.common.math.dimension.DimensionParser;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.dimension.DualDimensionParser;
 import dev.prozilla.pine.common.math.vector.*;
-import dev.prozilla.pine.common.property.observable.SimpleObservableObjectProperty;
+import dev.prozilla.pine.common.property.bindable.SimpleBindableObjectProperty;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.ColorParser;
 import dev.prozilla.pine.common.system.ResourceUtils;
@@ -23,7 +23,7 @@ import java.lang.reflect.InvocationTargetException;
  * This deserializer is represented by a property whose value is determined by deserializing the source file.
  * @param <Data> The data type to deserialize the file to
  */
-public class FileDeserializer<Data> extends SimpleObservableObjectProperty<Data> {
+public class FileDeserializer<Data> extends SimpleBindableObjectProperty<Data> {
 	
 	protected final String path;
 	private final Class<Data> dataType;

@@ -1,23 +1,20 @@
 package dev.prozilla.pine.common.property.observable;
 
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.property.mutable.SimpleMutableBooleanProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleObservableBooleanProperty extends SimpleMutableBooleanProperty implements ObservableBooleanProperty, SimpleObservableProperty<Boolean> {
+public abstract class ObservableBooleanPropertyBase implements ObservableBooleanProperty, ObservablePropertyBase<Boolean> {
 	
 	private final List<BooleanObserver> observers;
 	protected Logger logger;
 	
 	/**
 	 * Creates an observable property with an initial value.
-	 * @param initialValue The initial value
 	 */
-	public SimpleObservableBooleanProperty(boolean initialValue) {
-		super(initialValue);
+	public ObservableBooleanPropertyBase() {
 		observers = new ArrayList<>();
 	}
 	
@@ -44,7 +41,6 @@ public class SimpleObservableBooleanProperty extends SimpleMutableBooleanPropert
 	 * @param oldValue The previous value
 	 * @param newValue The new value
 	 */
-	@Override
 	protected void onValueChange(boolean oldValue, boolean newValue) {
 		for (BooleanObserver observer : observers) {
 			try {

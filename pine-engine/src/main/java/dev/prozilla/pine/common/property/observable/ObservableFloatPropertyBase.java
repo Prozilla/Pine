@@ -1,42 +1,32 @@
 package dev.prozilla.pine.common.property.observable;
 
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.property.mutable.SimpleMutableObjectProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleObservableObjectProperty<T> extends SimpleMutableObjectProperty<T> implements ObservableObjectProperty<T>, SimpleObservableProperty<T> {
+public abstract class ObservableFloatPropertyBase implements ObservableFloatProperty, ObservablePropertyBase<Float> {
 	
-	private final List<Observer<T>> observers;
+	private final List<FloatObserver> observers;
 	protected Logger logger;
 	
 	/**
-	 * Creates an observable property without an initial value.
-	 */
-	public SimpleObservableObjectProperty() {
-		this(null);
-	}
-	
-	/**
 	 * Creates an observable property with an initial value.
-	 * @param initialValue The initial value
 	 */
-	public SimpleObservableObjectProperty(T initialValue) {
-		super(initialValue);
+	public ObservableFloatPropertyBase() {
 		observers = new ArrayList<>();
 	}
 	
 	@Override
-	public Observer<T> addObserver(Observer<T> observer) {
+	public FloatObserver addObserver(FloatObserver observer) {
 		Checks.isNotNull(observer, "observer");
 		observers.add(observer);
 		return observer;
 	}
 	
 	@Override
-	public void removeObserver(Observer<T> observer) {
+	public void removeObserver(FloatObserver observer) {
 		Checks.isNotNull(observer, "observer");
 		observers.remove(observer);
 	}
@@ -51,9 +41,8 @@ public class SimpleObservableObjectProperty<T> extends SimpleMutableObjectProper
 	 * @param oldValue The previous value
 	 * @param newValue The new value
 	 */
-	@Override
-	protected void onValueChange(T oldValue, T newValue) {
-		for (Observer<T> observer : observers) {
+	protected void onValueChange(float oldValue, float newValue) {
+		for (FloatObserver observer : observers) {
 			try {
 				observer.observe(newValue);
 			} catch (Exception e) {

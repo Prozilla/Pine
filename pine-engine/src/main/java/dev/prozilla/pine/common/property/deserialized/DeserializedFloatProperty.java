@@ -1,12 +1,12 @@
 package dev.prozilla.pine.common.property.deserialized;
 
-import dev.prozilla.pine.common.property.observable.SimpleObservableFloatProperty;
+import dev.prozilla.pine.common.property.bindable.SimpleBindableFloatProperty;
 import org.jetbrains.annotations.Contract;
 
 /**
  * A property whose value is retrieved from a deserialized file.
  */
-public class DeserializedFloatProperty extends SimpleObservableFloatProperty {
+public class DeserializedFloatProperty extends SimpleBindableFloatProperty {
 	
 	/**
 	 * Factory method used to retrieve a value from a deserialized file.

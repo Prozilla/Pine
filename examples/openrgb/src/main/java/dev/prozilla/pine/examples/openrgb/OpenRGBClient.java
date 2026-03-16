@@ -111,7 +111,7 @@ public class OpenRGBClient {
 	
 	public int getLEDCount(int deviceIndex) throws IOException {
 		byte[] requestData = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN)
-			                     .putInt(protocolVersion).array();
+			.putInt(protocolVersion).array();
 		sendPacket(deviceIndex, OpenRGBCommand.REQUEST_CONTROLLER_DATA, requestData);
 		byte[] response = readPacketData();
 		return parseLEDCount(response);

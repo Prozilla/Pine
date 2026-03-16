@@ -1,10 +1,10 @@
 package dev.prozilla.pine.core.state.config.option;
 
-import dev.prozilla.pine.common.property.StringProperty;
+import dev.prozilla.pine.common.property.bindable.BindableStringProperty;
 
 import java.util.function.Predicate;
 
-public class StringConfigOption extends ObjectConfigOption<String> implements StringProperty {
+public class StringConfigOption extends ObjectConfigOption<String> implements BindableStringProperty {
 	
 	/**
 	 * Creates a config option without a validator.
