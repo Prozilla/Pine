@@ -6,6 +6,7 @@ import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 import dev.prozilla.pine.examples.flappybird.FlappyBird;
+import dev.prozilla.pine.examples.flappybird.GameManager;
 import dev.prozilla.pine.examples.flappybird.component.GroundData;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
 
@@ -32,7 +33,7 @@ public class PlayerMover extends UpdateSystem {
 		}
 		
 		// Crop sprite to current frame
-		spriteRenderer.setRegion(playerData.animationFrame * PlayerData.SPRITE_WIDTH, 0, PlayerData.SPRITE_WIDTH, PlayerData.SPRITE_HEIGHT);
+		spriteRenderer.setRegion(playerData.animationFrame * PlayerData.SPRITE_WIDTH, GameManager.instance.playerVariant * PlayerData.SPRITE_WIDTH, PlayerData.SPRITE_WIDTH, PlayerData.SPRITE_HEIGHT);
 		
 		if (!playerData.gameScene.gameOver) {
 			// Update age and calculate frame

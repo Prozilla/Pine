@@ -5,6 +5,7 @@ import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 import dev.prozilla.pine.examples.flappybird.FlappyBird;
+import dev.prozilla.pine.examples.flappybird.GameManager;
 import dev.prozilla.pine.examples.flappybird.component.PipeData;
 
 /**
@@ -23,7 +24,7 @@ public class PipeInitializer extends InitSystem {
 		Transform transform = chunk.getComponent(Transform.class);
 		
 		// Set sprite properties
-		spriteRenderer.setRegion(0, 0, PipeData.SPRITE_WIDTH, PipeData.SPRITE_HEIGHT);
+		spriteRenderer.setRegion(PipeData.SPRITE_WIDTH * GameManager.instance.pipeVariant, 0, PipeData.SPRITE_WIDTH, PipeData.SPRITE_HEIGHT);
 		spriteRenderer.scale.set(PipeData.SCALE);
 		if (pipeData.isTop) {
 			// Flip sprite

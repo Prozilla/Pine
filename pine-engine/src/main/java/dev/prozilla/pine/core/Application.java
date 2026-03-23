@@ -191,6 +191,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			// Log exception
 			logger.error("Application failed", e);
 		} finally {
+			logger.logProblemCount();
 			logger.log("Application finished");
 		}
 	}
@@ -776,7 +777,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	}
 	
 	@Override
-	public Logger getLogger() {
+	public AppLogger getLogger() {
 		return logger;
 	}
 	

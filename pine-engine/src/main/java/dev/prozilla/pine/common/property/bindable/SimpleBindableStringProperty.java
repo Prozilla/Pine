@@ -9,4 +9,5 @@ public class SimpleBindableStringProperty extends SimpleBindableObjectProperty<S
 	public SimpleBindableStringProperty(String initialValue) {
 		super(initialValue);
 	}
+	
 }

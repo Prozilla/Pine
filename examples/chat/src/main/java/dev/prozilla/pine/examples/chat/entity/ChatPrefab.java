@@ -6,8 +6,9 @@ import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.property.bindable.BindableStringProperty;
+import dev.prozilla.pine.common.property.bindable.SimpleBindableStringProperty;
 import dev.prozilla.pine.common.system.Ansi;
-import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextInputPrefab;
@@ -43,17 +44,18 @@ public class ChatPrefab extends LayoutPrefab {
 		inputBoxPrefab.setGap(new Dimension(8));
 		Entity inputBox = entity.addChild(inputBoxPrefab);
 		
+		BindableStringProperty inputProperty = new SimpleBindableStringProperty("");
 		TextInputPrefab messageInputPrefab = new TextInputPrefab();
+		messageInputPrefab.setTextProperty(inputProperty);
 		messageInputPrefab.setFont(font);
 		messageInputPrefab.setSize(new DualDimension(128, 24));
-		TextNode messageNode = inputBox.addChild(messageInputPrefab).getComponent(TextNode.class);
+		inputBox.addChild(messageInputPrefab);
 		
 		ButtonPrefab sendButtonPrefab = new ButtonPrefab("Send");
 		sendButtonPrefab.setFont(font);
 		sendButtonPrefab.setClickCallback((button) -> {
-			if (!messageNode.text.isBlank()) {
-				user.sendMessage(messageNode.text);
-				messageNode.setText("");
+			if (!inputProperty.isBlank()) {
+				user.sendMessage(inputProperty.swapValue(""));
 			}
 		});
 		inputBox.addChild(sendButtonPrefab);

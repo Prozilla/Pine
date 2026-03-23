@@ -39,8 +39,27 @@ public final class StringUtils {
 		return ObjectUtils.preserveNull(string, String::trim);
 	}
 	
+	/**
+	 * @see String#length()
+	 */
 	public static int lengthOf(String string) {
 		return string == null ? 0 : string.length();
+	}
+	
+	/**
+	 * @see String#isEmpty()
+	 */
+	@Contract("null -> true")
+	public static boolean isEmpty(String string) {
+		return string == null || string.isEmpty();
+	}
+	
+	/**
+	 * @see String#isBlank()
+	 */
+	@Contract("null -> true")
+	public static boolean isBlank(String string) {
+		return string == null || string.isBlank();
 	}
 	
 	public static int findClosingParenthesis(String input, int openIndex) {

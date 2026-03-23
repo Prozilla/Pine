@@ -31,8 +31,9 @@ public class SimpleBindableObjectProperty<T> extends ObservableObjectPropertyBas
 			return false;
 		}
 		
-		onValueChange(this.value, value);
+		T oldValue = this.value;
 		this.value = value;
+		onValueChange(oldValue, this.value);
 		return true;
 	}
 	
