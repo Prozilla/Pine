@@ -427,7 +427,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * Pauses the application.
 	 */
 	public void pause() {
-		timer.timeScale = 0;
+		timer.freeze();
 		stateMachine.changeState(ApplicationState.RUNNING, ApplicationState.PAUSED);
 		if (applicationManager != null) {
 			applicationManager.onPause();
@@ -438,7 +438,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	 * Resumes the application panel.
 	 */
 	public void resume() {
-		timer.timeScale = 1;
+		timer.unfreeze();
 		stateMachine.changeState(ApplicationState.PAUSED, ApplicationState.RUNNING);
 		if (applicationManager != null) {
 			applicationManager.onResume();

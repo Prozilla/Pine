@@ -41,11 +41,11 @@ public class UnionFindNode<T> implements Printable, Cloneable<UnionFindNode<T>> 
 		other.next = this;
 	}
 	
-	public void union(UnionFindNode<T> other) {
+	public boolean union(UnionFindNode<T> other) {
 		UnionFindNode<T> nodeA = find();
 		UnionFindNode<T> nodeB = other.find();
 		if (nodeA.equals(nodeB)) {
-			return;
+			return false;
 		}
 		if (nodeA.rank < nodeB.rank){
 			nodeB.join(nodeA);
@@ -58,6 +58,7 @@ public class UnionFindNode<T> implements Printable, Cloneable<UnionFindNode<T>> 
 				nodeA.rank++;
 			}
 		}
+		return true;
 	}
 	
 	@Override

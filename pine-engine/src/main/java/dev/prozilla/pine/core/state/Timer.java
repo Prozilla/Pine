@@ -142,6 +142,14 @@ public class Timer implements Initializable {
 		return scaledDeltaTime;
 	}
 	
+	public void freeze() {
+		timeScale = 0;
+	}
+	
+	public void unfreeze() {
+		timeScale = 1;
+	}
+	
 	public Interval startInterval(Callback callback, float delay) {
 		return startInterval(callback, delay, false);
 	}

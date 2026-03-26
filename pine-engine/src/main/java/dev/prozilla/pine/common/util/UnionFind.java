@@ -43,13 +43,13 @@ public class UnionFind<T> implements Printable, Destructible {
 		return node.find();
 	}
 	
-	public void union(T valueA, T valueB) {
+	public boolean union(T valueA, T valueB) {
 		UnionFindNode<T> nodeA = getNode(valueA);
 		UnionFindNode<T> nodeB = getNode(valueB);
 		if (nodeA == null || nodeB == null) {
-			return;
+			return false;
 		}
-		nodeA.union(nodeB);
+		return nodeA.union(nodeB);
 	}
 	
 	public boolean isConnected(T valueA, T valueB) {
@@ -73,6 +73,14 @@ public class UnionFind<T> implements Printable, Destructible {
 		return nodes.size();
 	}
 	
+	public Collection<UnionFindNode<T>> nodes() {
+		return nodes.values();
+	}
+	
+	public Set<T> keys() {
+		return nodes.keySet();
+	}
+	
 	public Set<UnionFindNode<T>> getRoots() {
 		Set<UnionFindNode<T>> roots = new HashSet<>();
 		for (UnionFindNode<T> node : nodes.values()) {
@@ -83,7 +91,7 @@ public class UnionFind<T> implements Printable, Destructible {
 	
 	@Override
 	public @NotNull String toString() {
-		return Logger.formatCollection(getRoots());
+		return Logger.formatCollection(nodes());
 	}
 	
 	@Override
