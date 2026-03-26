@@ -4,7 +4,7 @@ import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.event.Event;
 import dev.prozilla.pine.common.event.SimpleEventDispatcher;
 import dev.prozilla.pine.common.lifecycle.Destructible;
-import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.logging.AppLogger;
 import dev.prozilla.pine.common.util.ListUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
@@ -446,7 +446,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	}
 	
 	@Override
-	public Logger getLogger() {
+	public AppLogger getLogger() {
 		return ApplicationProvider.super.getLogger();
 	}
 	

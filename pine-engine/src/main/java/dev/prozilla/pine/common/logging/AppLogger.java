@@ -12,9 +12,12 @@ import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.handler.LogHandler;
 import dev.prozilla.pine.common.property.style.StyleSheet;
+import dev.prozilla.pine.common.system.Ansi;
 import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.config.LogConfig;
+
+import java.util.StringJoiner;
 
 /**
  * Logger for the core application.
@@ -30,6 +33,9 @@ public class AppLogger extends Logger implements Initializable {
 	protected final EventListener<AssetPoolEvent<Font>> onFontLoad;
 	protected final EventListener<AssetPoolEvent<StyleSheet>> onStyleSheetLoad;
 	protected final EventListener<AssetPoolEvent<AudioSource>> onAudioSourceLoad;
+	
+	protected int errorCount;
+	protected int warningCount;
 	
 	public AppLogger(Application application) {
 		this.application = application;
@@ -195,6 +201,34 @@ public class AppLogger extends Logger implements Initializable {
 	public AppLogger setAssetPoolLogsEnabled(boolean assetPoolLogsEnabled) {
 		config.enableAssetPoolLogs.set(assetPoolLogsEnabled);
 		return this;
+	}
+	
+	@Override
+	public void error(String message) {
+		super.error(message);
+		errorCount++;
+	}
+	
+	@Override
+	public void warn(String message) {
+		super.warn(message);
+		warningCount++;
+	}
+	
+	public void logProblemCount() {
+		if (errorCount == 0 && warningCount == 0) {
+			log("No problems found");
+			return;
+		}
+		
+		StringJoiner stringJoiner = new StringJoiner(", ");
+		if (errorCount > 0) {
+			stringJoiner.add(Ansi.red(errorCount + (errorCount == 1 ? " error" : "errors")));
+		}
+		if (warningCount > 0) {
+			stringJoiner.add(Ansi.yellow(warningCount + (warningCount == 1 ? " warning" : "warnings")));
+		}
+		log("Problems found: " + stringJoiner);
 	}
 	
 }

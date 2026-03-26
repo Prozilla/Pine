@@ -1,7 +1,8 @@
 package dev.prozilla.pine.core.state.config.option;
 
 import dev.prozilla.pine.common.Transceivable;
-import dev.prozilla.pine.common.property.observable.SimpleObservableProperty;
+import dev.prozilla.pine.common.property.bindable.BindableObjectProperty;
+import dev.prozilla.pine.common.property.observable.ObservablePropertyBase;
 import dev.prozilla.pine.core.state.config.Config;
 
 /**
@@ -11,7 +12,7 @@ import dev.prozilla.pine.core.state.config.Config;
  * @param <T> The type of the value
  * @see Config
  */
-public interface ConfigOption<T> extends SimpleObservableProperty<T>, Transceivable<ConfigOption<T>> {
+public interface ConfigOption<T> extends BindableObjectProperty<T>, ObservablePropertyBase<T>, Transceivable<ConfigOption<T>> {
 	
 	String INITIAL_VALUE_ERROR = "Initial value must be a valid value";
 

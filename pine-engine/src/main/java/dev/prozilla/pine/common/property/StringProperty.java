@@ -100,7 +100,7 @@ public interface StringProperty extends Property<String> {
 	 * @return An integer property representing the length of the value of this property.
 	 */
 	default IntProperty lengthProperty() {
-		return this::getLength;
+		return derive(this::getLength);
 	}
 	
 	/**
@@ -109,6 +109,22 @@ public interface StringProperty extends Property<String> {
 	 */
 	default int getLength() {
 		return StringUtils.lengthOf(getValue());
+	}
+	
+	default BooleanProperty isEmptyProperty() {
+		return derive(this::isEmpty);
+	}
+	
+	default boolean isEmpty() {
+		return StringUtils.isEmpty(getValue());
+	}
+	
+	default BooleanProperty isBlankProperty() {
+		return derive(this::isBlank);
+	}
+	
+	default boolean isBlank() {
+		return StringUtils.isBlank(getValue());
 	}
 	
 	/**

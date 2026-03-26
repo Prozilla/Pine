@@ -1,23 +1,17 @@
 package dev.prozilla.pine.common.property.observable;
 
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.property.mutable.SimpleMutableIntProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleObservableIntProperty extends SimpleMutableIntProperty implements ObservableIntProperty, SimpleObservableProperty<Integer> {
+public abstract class ObservableIntPropertyBase implements ObservableIntProperty, ObservablePropertyBase<Integer> {
 	
 	private final List<IntObserver> observers;
 	protected Logger logger;
 	
-	/**
-	 * Creates an observable property with an initial value.
-	 * @param initialValue The initial value
-	 */
-	public SimpleObservableIntProperty(int initialValue) {
-		super(initialValue);
+	public ObservableIntPropertyBase() {
 		observers = new ArrayList<>();
 	}
 	
@@ -44,7 +38,6 @@ public class SimpleObservableIntProperty extends SimpleMutableIntProperty implem
 	 * @param oldValue The previous value
 	 * @param newValue The new value
 	 */
-	@Override
 	protected void onValueChange(int oldValue, int newValue) {
 		for (IntObserver observer : observers) {
 			try {

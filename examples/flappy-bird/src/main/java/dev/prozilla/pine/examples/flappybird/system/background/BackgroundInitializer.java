@@ -5,6 +5,7 @@ import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 import dev.prozilla.pine.examples.flappybird.FlappyBird;
+import dev.prozilla.pine.examples.flappybird.GameManager;
 import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 import dev.prozilla.pine.examples.flappybird.scene.GameScene;
 
@@ -29,7 +30,7 @@ public class BackgroundInitializer extends InitSystem {
 		}
 		
 		// Set sprite properties
-		spriteRenderer.setRegion(0, 0, BackgroundData.WIDTH, BackgroundData.HEIGHT);
+		spriteRenderer.setRegion(BackgroundData.WIDTH * GameManager.instance.backgroundVariant, 0, BackgroundData.WIDTH, BackgroundData.HEIGHT);
 		
 		// Set initial position
 		transform.setPosition(FlappyBird.WIDTH / -2f + BackgroundData.WIDTH * backgroundData.index, FlappyBird.HEIGHT / -2f);

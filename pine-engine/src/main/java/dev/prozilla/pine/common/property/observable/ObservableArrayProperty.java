@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.property.observable;
 
-import dev.prozilla.pine.common.property.mutable.MutableArrayProperty;
+import dev.prozilla.pine.common.property.ArrayProperty;
 
-public interface ObservableArrayProperty<E> extends MutableArrayProperty<E>, ObservableObjectProperty<E[]> {
+public interface ObservableArrayProperty<E> extends ArrayProperty<E>, ObservableObjectProperty<E[]> {
 
 }

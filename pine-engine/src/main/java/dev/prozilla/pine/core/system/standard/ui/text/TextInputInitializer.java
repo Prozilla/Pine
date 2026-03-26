@@ -19,11 +19,18 @@ public final class TextInputInitializer extends InitSystem {
 		TextNode textNode = chunk.getComponent(TextNode.class);
 		Node node = chunk.getComponent(Node.class);
 		
+		if (textInputNode.textListener != null) {
+			application.getInput().removeTextListener(textInputNode.textListener);
+		}
+		
 		textInputNode.textListener = (character) -> {
 			if (node.isFocused()) {
 				boolean selectionDeleted = textInputNode.deleteSelection();
 				
 				boolean textChanged = textInputNode.getTextProperty().buildValue((stringBuilder) -> {
+					if (textInputNode.cursorPosition < 0 || textInputNode.cursorPosition > stringBuilder.length()) {
+						return null;
+					}
 					String string = stringBuilder.insert(textInputNode.cursorPosition, character).toString();
 					return textInputNode.type.isValid(string) ? string : null;
 				});

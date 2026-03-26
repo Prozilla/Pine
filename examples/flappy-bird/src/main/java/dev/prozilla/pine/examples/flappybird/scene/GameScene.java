@@ -3,7 +3,6 @@ package dev.prozilla.pine.examples.flappybird.scene;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.property.random.LocalRandomFloatProperty;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
-import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.Directory;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.ui.TextNode;
@@ -58,7 +57,6 @@ public class GameScene extends SceneBase {
 	@Override
 	protected void load() {
 		super.load();
-		cameraData.setBackgroundColor(Color.hex("#4DC1CB"));
 		
 		getInput().hideCursor();
 		

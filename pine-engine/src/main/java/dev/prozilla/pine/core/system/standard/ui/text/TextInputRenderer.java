@@ -56,6 +56,11 @@ public final class TextInputRenderer extends RenderSystem {
 	}
 	
 	private static int getTextWidth(Renderer renderer, TextNode textNode, int start, int end) {
+		start = Math.max(start, 0);
+		end = Math.min(end, textNode.text.length());
+		if (start >= end) {
+			return 0;
+		}
 		String text = textNode.text.substring(start, end);
 		return textNode.font == null ? renderer.getTextWidth(text) : renderer.getTextWidth(textNode.font, text);
 	}

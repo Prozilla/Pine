@@ -1,11 +1,11 @@
 package dev.prozilla.pine.core.state.config.option;
 
-import dev.prozilla.pine.common.property.mutable.SimpleMutableArrayProperty;
-import dev.prozilla.pine.common.property.observable.ObservableArrayProperty;
+import dev.prozilla.pine.common.property.bindable.BindableArrayProperty;
+import dev.prozilla.pine.common.property.bindable.SimpleBindableArrayProperty;
 
 import java.util.function.Predicate;
 
-public class ArrayConfigOption<E> extends ObjectConfigOption<E[]> implements ObservableArrayProperty<E> {
+public class ArrayConfigOption<E> extends ObjectConfigOption<E[]> implements BindableArrayProperty<E> {
 	
 	/**
 	 * Creates a config option without a validator.
@@ -27,7 +27,7 @@ public class ArrayConfigOption<E> extends ObjectConfigOption<E[]> implements Obs
 	
 	@Override
 	public boolean set(int index, E value) {
-		return SimpleMutableArrayProperty.setItem(index, value, this, this::onValueChange);
+		return SimpleBindableArrayProperty.setItem(index, value, this, this::onValueChange);
 	}
 	
 }

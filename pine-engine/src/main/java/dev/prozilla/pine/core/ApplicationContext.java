@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.ContextOf;
-import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.logging.AppLogger;
 import dev.prozilla.pine.core.audio.AudioDevice;
 import dev.prozilla.pine.core.mod.ModManager;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -28,7 +28,7 @@ public interface ApplicationContext {
 	
 	ModManager getModManager();
 	
-	Logger getLogger();
+	AppLogger getLogger();
 	
 	AudioDevice getAudioDevice();
 	

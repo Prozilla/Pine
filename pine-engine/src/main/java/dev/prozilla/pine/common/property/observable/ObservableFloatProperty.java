@@ -1,11 +1,11 @@
 package dev.prozilla.pine.common.property.observable;
 
-import dev.prozilla.pine.common.property.mutable.MutableFloatProperty;
+import dev.prozilla.pine.common.property.FloatProperty;
 
 /**
  * A property with a float value that can be observed.
  */
-public interface ObservableFloatProperty extends MutableFloatProperty, ObservableProperty<Float> {
+public interface ObservableFloatProperty extends FloatProperty, ObservableProperty<Float> {
 	
 	@Override
 	default void read(Observer<Float> reader) {

@@ -15,7 +15,7 @@ public class BackgroundPrefab extends SpritePrefab {
 	public BackgroundPrefab() {
 		super(AssetPools.textures.load("flappybird/background.png", Texture.Wrap.MIRRORED_REPEAT));
 		setName("Background");
-		setScale(new Vector2f(1.01f, 1.01f));
+		setScale(new Vector2f(1.1f, 1.1f));
 		
 		index = 0;
 	}

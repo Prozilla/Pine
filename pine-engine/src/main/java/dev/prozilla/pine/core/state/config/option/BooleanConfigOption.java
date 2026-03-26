@@ -1,10 +1,10 @@
 package dev.prozilla.pine.core.state.config.option;
 
-import dev.prozilla.pine.common.property.observable.SimpleObservableBooleanProperty;
+import dev.prozilla.pine.common.property.bindable.SimpleBindableBooleanProperty;
 import dev.prozilla.pine.common.util.ObjectUtils;
 import dev.prozilla.pine.common.util.function.predicate.BooleanPredicate;
 
-public class BooleanConfigOption extends SimpleObservableBooleanProperty implements ConfigOption<Boolean> {
+public class BooleanConfigOption extends SimpleBindableBooleanProperty implements ConfigOption<Boolean> {
 	
 	private final boolean initialValue;
 	private final BooleanPredicate validator;
