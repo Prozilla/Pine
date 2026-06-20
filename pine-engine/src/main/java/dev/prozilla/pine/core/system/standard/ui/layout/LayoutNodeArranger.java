@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.system.standard.ui.layout;
 
+import dev.prozilla.pine.common.math.vector.Alignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.math.vector.EdgeAlignment;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -74,22 +74,22 @@ public final class LayoutNodeArranger extends UpdateSystem {
 			float childOffsetY = offsetY;
 			if (layoutNode.direction == Direction.UP || layoutNode.direction == Direction.DOWN) {
 				// Vertical alignment
-				if (layoutNode.alignment == EdgeAlignment.END) {
+				if (layoutNode.alignment == Alignment.END) {
 					childOffsetX = offsetX + (layoutNode.innerSize.x - childNode.currentOuterSize.x);
-				} else if (layoutNode.alignment == EdgeAlignment.CENTER) {
+				} else if (layoutNode.alignment == Alignment.CENTER) {
 					childOffsetX = offsetX + (layoutNode.innerSize.x - childNode.currentOuterSize.x) / 2;
 				}
 			} else if (layoutNode.direction == Direction.LEFT || layoutNode.direction == Direction.RIGHT) {
 				// Horizontal alignment
-				if (layoutNode.alignment == EdgeAlignment.END) {
+				if (layoutNode.alignment == Alignment.END) {
 					childOffsetY = offsetY + (layoutNode.innerSize.y - childNode.currentOuterSize.y);
-				} else if (layoutNode.alignment == EdgeAlignment.CENTER) {
+				} else if (layoutNode.alignment == Alignment.CENTER) {
 					childOffsetY = offsetY + (layoutNode.innerSize.y - childNode.currentOuterSize.y) / 2;
 				}
 			}
 			
 			// Set offset for current child node
-			childNode.anchor = GridAlignment.BOTTOM_LEFT;
+			childNode.anchor = Anchor.BOTTOM_LEFT;
 			childNode.offset.x = childOffsetX;
 			childNode.offset.y = childOffsetY;
 			childNode.iterations++;

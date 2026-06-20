@@ -2,8 +2,8 @@ package dev.prozilla.pine.core.component.ui;
 
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
+import dev.prozilla.pine.common.math.vector.Alignment;
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.core.component.Component;
@@ -17,7 +17,7 @@ import java.util.List;
 public class LayoutNode extends Component implements NodeContext {
 	
 	public Direction direction;
-	public EdgeAlignment alignment;
+	public Alignment alignment;
 	public Distribution distribution;
 	public boolean arrangeChildren;
 	
@@ -35,7 +35,7 @@ public class LayoutNode extends Component implements NodeContext {
 	
 	public static final Dimension DEFAULT_GAP = new Dimension();
 	public static final Direction DEFAULT_DIRECTION = Direction.UP;
-	public static final EdgeAlignment DEFAULT_ALIGNMENT = EdgeAlignment.START;
+	public static final Alignment DEFAULT_ALIGNMENT = Alignment.START;
 	public static final Distribution DEFAULT_DISTRIBUTION = Distribution.START;
 	
 	public enum Distribution {
@@ -68,11 +68,11 @@ public class LayoutNode extends Component implements NodeContext {
 		this(direction, DEFAULT_ALIGNMENT);
 	}
 	
-	public LayoutNode(Direction direction, EdgeAlignment alignment) {
+	public LayoutNode(Direction direction, Alignment alignment) {
 		this(direction, alignment, DEFAULT_DISTRIBUTION);
 	}
 	
-	public LayoutNode(Direction direction, EdgeAlignment alignment, Distribution distribution) {
+	public LayoutNode(Direction direction, Alignment alignment, Distribution distribution) {
 		this.direction = direction;
 		this.alignment = alignment;
 		this.distribution = distribution;

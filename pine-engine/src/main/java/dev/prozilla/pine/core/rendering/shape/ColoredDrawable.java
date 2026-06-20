@@ -12,19 +12,17 @@ public interface ColoredDrawable extends Drawable {
 	/**
 	 * Draws this object with the renderer's fallback color.
 	 * @param renderer The renderer
-	 * @param depth The depth of the entity
 	 */
 	@Override
-	default void draw(Renderer renderer, float depth) {
-		draw(renderer, renderer.getFallbackColor(), depth);
+	default void draw(Renderer renderer) {
+		draw(renderer, renderer.getFallbackColor());
 	}
 	
 	/**
 	 * Draws this object with a given color.
 	 * @param renderer The renderer
 	 * @param color The color to draw with
-	 * @param depth The depth of the entity
 	 */
-	void draw(Renderer renderer, Color color, float depth);
+	void draw(Renderer renderer, Color color);
 	
 }

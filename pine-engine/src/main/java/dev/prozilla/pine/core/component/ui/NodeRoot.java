@@ -3,7 +3,7 @@ package dev.prozilla.pine.core.component.ui;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
@@ -42,7 +42,7 @@ public class NodeRoot extends Component implements NodeContext {
 		size = new Vector2i();
 		tooltipCreator = (text) -> {
 			TooltipPrefab tooltipPrefab = new TooltipPrefab();
-			tooltipPrefab.setAnchor(GridAlignment.TOP_LEFT);
+			tooltipPrefab.setAnchor(Anchor.TOP_LEFT);
 			tooltipPrefab.setOffsetX(new Dimension(16));
 			tooltipPrefab.setActive(false);
 			

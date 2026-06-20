@@ -33,7 +33,7 @@ public class PlayerInitializer extends InitSystem {
 		playerData.age = 0;
 		playerData.velocity = playerData.jumpVelocity.get();
 		
-		transform.setPosition(PlayerData.POSITION_X, 0);
+		transform.setPosition(PlayerData.POSITION_X, 0, 0);
 		
 		// Set sprite properties
 		spriteRenderer.scale.set(PlayerData.SCALE);

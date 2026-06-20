@@ -1,7 +1,7 @@
 package dev.prozilla.pine.examples.snake.entity;
 
 import dev.prozilla.pine.common.asset.text.Font;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
@@ -12,7 +12,7 @@ public class GameOverPrefab extends TextPrefab {
 		super("Game over");
 		setName("GameOverText");
 		
-		setAnchor(GridAlignment.CENTER);
+		setAnchor(Anchor.CENTER);
 		setColor(Color.hex("#aa00ff"));
 		setFont(font);
 	}

@@ -4,6 +4,7 @@ import dev.prozilla.pine.Pine;
 import dev.prozilla.pine.common.Experimental;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.rendering.shape.Circle;
@@ -13,10 +14,10 @@ public class CircleCollider extends Collider {
 	public float radius;
 	
 	public CircleCollider(float radius) {
-		this(radius, new Vector2f());
+		this(radius, new Vector3f());
 	}
 	
-	public CircleCollider(float radius, Vector2f offset) {
+	public CircleCollider(float radius, Vector3f offset) {
 		super(offset);
 		this.radius = radius;
 	}
@@ -66,10 +67,9 @@ public class CircleCollider extends Collider {
 	}
 	
 	@Override
-	public void draw(Renderer renderer, Color color, float depth) {
-		Vector2f position = getScene().getCameraData().applyTransform(getOrigin());
-		Circle circle = new Circle(position, radius);
-		circle.draw(renderer, color, depth);
+	public void draw(Renderer renderer, Color color) {
+		Circle circle = new Circle(getOrigin(), radius);
+		circle.draw(renderer, color);
 	}
 	
 }

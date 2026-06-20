@@ -32,6 +32,6 @@ public class GroundInitializer extends InitSystem {
 		spriteRenderer.setRegion(0, 0, GroundData.WIDTH, GroundData.HEIGHT);
 		
 		// Set initial position
-		transform.setPosition(FlappyBird.WIDTH / -2f + GroundData.WIDTH * groundData.index, FlappyBird.HEIGHT / -2f + GroundData.ELEVATION);
+		transform.setPosition(FlappyBird.WIDTH / -2f + GroundData.WIDTH * groundData.index, FlappyBird.HEIGHT / -2f + GroundData.ELEVATION, 0);
 	}
 }

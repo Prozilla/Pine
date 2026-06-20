@@ -6,7 +6,7 @@ import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventDispatcherProvider;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector4f;
@@ -36,7 +36,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public int iterations;
 	
 	// Attributes
-	public GridAlignment anchor;
+	public Anchor anchor;
 	/** If true, allows the cursor to pass through this element. */
 	public boolean passThrough;
 	/** If true, this node won't be arranged by a layout node. */
@@ -72,7 +72,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	public static final Color DEFAULT_COLOR = Color.white();
 	public static final Color DEFAULT_BACKGROUND_COLOR = Color.transparent();
-	public static final GridAlignment DEFAULT_ANCHOR = GridAlignment.BOTTOM_LEFT;
+	public static final Anchor DEFAULT_ANCHOR = Anchor.BOTTOM_LEFT;
 	
 	// Modifiers
 	public static final String HOVER_MODIFIER = "hover";

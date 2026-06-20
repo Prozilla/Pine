@@ -7,6 +7,7 @@ import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
@@ -749,24 +750,26 @@ public class Renderer implements Initializable, Destructible {
 	 * @param uvArray A flat float array containing the corresponding u and v texture coordinates. Must be the same length as {@code vertices}.
 	 * @throws IllegalArgumentException if the length of {@code vertices} does not match {@code uvArray}
 	 */
-	public void drawTriangles(TextureAsset texture, float[] vertices, float z, float[] uvArray, Color c) {
-		if (vertices.length != uvArray.length) {
-			throw new IllegalArgumentException("Length of vertex array must match length of UV array");
+	public void drawTriangles(TextureAsset texture, float[] vertices, float[] uvArray, Color c) {
+		if (vertices.length * 2 != uvArray.length * 3) {
+			throw new IllegalArgumentException("UV array must have an entry for each entry in the vertex array");
 		}
 		
-		int triangleCount = vertices.length / 6;
-		
+		int triangleCount = vertices.length / 9;
 		if (triangleCount == 0) {
 			return;
 		}
 		
 		for (int i = 0; i < triangleCount; i++) {
-			float x1 = vertices[i * 6];
-			float y1 = vertices[i * 6 + 1];
-			float x2 = vertices[i * 6 + 2];
-			float y2 = vertices[i * 6 + 3];
-			float x3 = vertices[i * 6 + 4];
-			float y3 = vertices[i * 6 + 5];
+			float x1 = vertices[i * 9];
+			float y1 = vertices[i * 9 + 1];
+			float z1 = vertices[i * 9 + 2];
+			float x2 = vertices[i * 9 + 3];
+			float y2 = vertices[i * 9 + 4];
+			float z2 = vertices[i * 9 + 5];
+			float x3 = vertices[i * 9 + 6];
+			float y3 = vertices[i * 9 + 7];
+			float z3 = vertices[i * 9 + 8];
 			
 			float u1 = uvArray[i * 6];
 			float v1 = uvArray[i * 6 + 1];
@@ -775,7 +778,7 @@ public class Renderer implements Initializable, Destructible {
 			float u3 = uvArray[i * 6 + 4];
 			float v3 = uvArray[i * 6 + 5];
 			
-			drawTriangle(texture, x1, y1, x2, y2, x3, y3, z, u1, v1, u2, v2, u3, v3, c);
+			drawTriangle(texture, x1, y1, z1, x2, y2, z2, x3, y3, z3, u1, v1, u2, v2, u3, v3, c);
 		}
 	}
 	
@@ -789,11 +792,13 @@ public class Renderer implements Initializable, Destructible {
 	 * </p>
 	 * @param x1 The x-coordinate of the first vertex
 	 * @param y1 The y-coordinate of the first vertex
+	 * @param z1 The z-coordinate of the first vertex
 	 * @param x2 The x-coordinate of the second vertex
 	 * @param y2 The y-coordinate of the second vertex
+	 * @param z2 The z-coordinate of the second vertex
 	 * @param x3 The x-coordinate of the third vertex
 	 * @param y3 The y-coordinate of the third vertex
-	 * @param z The depth value
+	 * @param z3 The z-coordinate of the third vertex
 	 * @param u1 The u texture coordinate for the first vertex
 	 * @param v1 The v texture coordinate for the first vertex
 	 * @param u2 The u texture coordinate for the second vertex
@@ -801,8 +806,12 @@ public class Renderer implements Initializable, Destructible {
 	 * @param u3 The u texture coordinate for the third vertex
 	 * @param v3 The v texture coordinate for the third vertex
 	 */
-	public void drawTriangle(TextureAsset texture, float x1, float y1, float x2, float y2, float x3, float y3, float z,
-	                         float u1, float v1, float u2, float v2, float u3, float v3, Color c) {
+	public void drawTriangle(TextureAsset texture,
+	                         float x1, float y1, float z1,
+	                         float x2, float y2, float z2,
+	                         float x3, float y3, float z3,
+	                         float u1, float v1, float u2, float v2, float u3, float v3,
+	                         Color c) {
 		totalVertices += 3;
 		
 		// Discard draw call if object is outside the viewport bounds
@@ -831,7 +840,7 @@ public class Renderer implements Initializable, Destructible {
 		
 		// Handle depth render mode
 		if (renderMode == RenderMode.DEPTH) {
-			float depth = z * z;
+			float depth = MathUtils.square((z1 + z2 + z3) / 3);
 			r = depth;
 			g = depth;
 			b = depth;
@@ -867,9 +876,9 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		// Push the vertices to the buffer
-		vertices.put(x1).put(y1).put(z).put(r).put(g).put(b).put(a).put(u1).put(v1).put(texId).put(texType);
-		vertices.put(x2).put(y2).put(z).put(r).put(g).put(b).put(a).put(u2).put(v2).put(texId).put(texType);
-		vertices.put(x3).put(y3).put(z).put(r).put(g).put(b).put(a).put(u3).put(v3).put(texId).put(texType);
+		vertices.put(x1).put(y1).put(z1).put(r).put(g).put(b).put(a).put(u1).put(v1).put(texId).put(texType);
+		vertices.put(x2).put(y2).put(z2).put(r).put(g).put(b).put(a).put(u2).put(v2).put(texId).put(texType);
+		vertices.put(x3).put(y3).put(z3).put(r).put(g).put(b).put(a).put(u3).put(v3).put(texId).put(texType);
 		
 		numVertices += 3;
 		

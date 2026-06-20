@@ -1,4 +1,4 @@
-package dev.prozilla.pine.examples.sokoban;
+package dev.prozilla.pine.examples.fps;
 
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationBuilder;

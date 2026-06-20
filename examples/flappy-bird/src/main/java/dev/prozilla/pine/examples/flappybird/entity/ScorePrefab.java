@@ -2,7 +2,7 @@ package dev.prozilla.pine.examples.flappybird.entity;
 
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
@@ -15,7 +15,7 @@ public class ScorePrefab extends TextPrefab {
 		setName("ScoreText");
 		
 		// Set position and appearance
-		setAnchor(GridAlignment.TOP_RIGHT);
+		setAnchor(Anchor.TOP_RIGHT);
 		setColor(Color.white());
 		setMargin(new DualDimension(16));
 		setFont(font);

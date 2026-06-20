@@ -1,6 +1,5 @@
 package dev.prozilla.pine.core.system.standard.shape;
 
-import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.shape.ShapeRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -14,7 +13,6 @@ public final class ShapeRenderSystem extends RenderSystem {
 	
 	@Override
 	protected void process(EntityChunk chunk, Renderer renderer) {
-		Transform transform = chunk.getTransform();
 		ShapeRenderer<?> shapeRenderer = chunk.getComponent(ShapeRenderer.class);
 		
 		if (shapeRenderer.shape == null) {
@@ -22,9 +20,9 @@ public final class ShapeRenderSystem extends RenderSystem {
 		}
 		
 		if (shapeRenderer.color == null) {
-			shapeRenderer.shape.draw(renderer, shapeRenderer.texture, transform.getDepth());
+			shapeRenderer.shape.draw(renderer, shapeRenderer.texture);
 		} else {
-			shapeRenderer.shape.draw(renderer, shapeRenderer.texture, shapeRenderer.color, transform.getDepth());
+			shapeRenderer.shape.draw(renderer, shapeRenderer.texture, shapeRenderer.color);
 		}
 	}
 	

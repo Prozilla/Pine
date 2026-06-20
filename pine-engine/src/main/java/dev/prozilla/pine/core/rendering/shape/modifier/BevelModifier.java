@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.rendering.shape.modifier;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,37 +28,40 @@ public class BevelModifier extends ShapeModifier {
 		}
 		
 		// Reconstruct polygon
-		List<Vector2f> polygon = extractPolygonFromTriangles(vertices);
+		List<Vector3f> polygon = extractPolygonFromTriangles(vertices);
 		
 		// Bevel each corner
-		List<Vector2f> beveledPolygon = new ArrayList<>();
+		List<Vector3f> beveledPolygon = new ArrayList<>();
 		int n = polygon.size();
 		
 		for (int i = 0; i < n; i++) {
-			Vector2f prev = polygon.get((i - 1 + n) % n);
-			Vector2f curr = polygon.get(i);
-			Vector2f next = polygon.get((i + 1) % n);
+			Vector3f prev = polygon.get((i - 1 + n) % n);
+			Vector3f curr = polygon.get(i);
+			Vector3f next = polygon.get((i + 1) % n);
 			
-			List<Vector2f> cornerPoints = bevelCorner(prev, curr, next);
+			List<Vector3f> cornerPoints = bevelCorner(prev, curr, next);
 			beveledPolygon.addAll(cornerPoints);
 		}
 		
 		// Triangulate using center-fan approach
-		Vector2f center = computeCentroid(beveledPolygon);
+		Vector3f center = computeCentroid(beveledPolygon);
 		List<Float> newVertices = new ArrayList<>();
 		
 		for (int i = 0; i < beveledPolygon.size(); i++) {
-			Vector2f p1 = beveledPolygon.get(i);
-			Vector2f p2 = beveledPolygon.get((i + 1) % beveledPolygon.size());
+			Vector3f p1 = beveledPolygon.get(i);
+			Vector3f p2 = beveledPolygon.get((i + 1) % beveledPolygon.size());
 			
 			newVertices.add(center.x);
 			newVertices.add(center.y);
+			newVertices.add(center.z);
 			
 			newVertices.add(p1.x);
 			newVertices.add(p1.y);
+			newVertices.add(p1.z);
 			
 			newVertices.add(p2.x);
 			newVertices.add(p2.y);
+			newVertices.add(p2.z);
 		}
 		
 		float[] out = new float[newVertices.size()];
@@ -67,28 +71,29 @@ public class BevelModifier extends ShapeModifier {
 		return out;
 	}
 	
-	private Vector2f computeCentroid(List<Vector2f> points) {
-		Vector2f centroid = new Vector2f();
-		for (Vector2f point : points) {
+	private Vector3f computeCentroid(List<Vector3f> points) {
+		Vector3f centroid = new Vector3f();
+		for (Vector3f point : points) {
 			centroid.x += point.x;
 			centroid.y += point.y;
+			centroid.z += point.z;
 		}
 		return centroid.divide(points.size());
 	}
 	
-	private List<Vector2f> extractPolygonFromTriangles(float[] vertices) {
-		List<Vector2f> polygon = new ArrayList<>();
-		for (int i = 0; i < vertices.length; i += 2) {
-			polygon.add(new Vector2f(vertices[i], vertices[i + 1]));
+	private List<Vector3f> extractPolygonFromTriangles(float[] vertices) {
+		List<Vector3f> polygon = new ArrayList<>();
+		for (int i = 0; i < vertices.length; i += 3) {
+			polygon.add(new Vector3f(vertices[i], vertices[i + 1], vertices[i + 2]));
 		}
 		return removeDuplicates(polygon);
 	}
 	
-	private List<Vector2f> removeDuplicates(List<Vector2f> list) {
-		List<Vector2f> out = new ArrayList<>();
-		for (Vector2f v : list) {
+	private List<Vector3f> removeDuplicates(List<Vector3f> list) {
+		List<Vector3f> out = new ArrayList<>();
+		for (Vector3f v : list) {
 			boolean found = false;
-			for (Vector2f o : out) {
+			for (Vector3f o : out) {
 				if (distance(o, v) < 0.001f) {
 					found = true;
 					break;
@@ -101,13 +106,14 @@ public class BevelModifier extends ShapeModifier {
 		return out;
 	}
 	
-	private float distance(Vector2f a, Vector2f b) {
+	private float distance(Vector3f a, Vector3f b) {
 		float dx = a.x - b.x;
 		float dy = a.y - b.y;
-		return (float) Math.sqrt(dx * dx + dy * dy);
+		float dz = a.z - b.z;
+		return (float)Math.sqrt(dx * dx + dy * dy + dz * dz);
 	}
 	
-	private List<Vector2f> bevelCorner(Vector2f previous, Vector2f corner, Vector2f next) {
+	private List<Vector3f> bevelCorner(Vector3f previous, Vector3f corner, Vector3f next) {
 		Vector2f directionA = new Vector2f(previous.x - corner.x, previous.y - corner.y).normalize();
 		Vector2f directionB = new Vector2f(next.x - corner.x, next.y - corner.y).normalize();
 		
@@ -119,14 +125,14 @@ public class BevelModifier extends ShapeModifier {
 		}
 		float arcSpan = angleA - angleB;
 		
-		List<Vector2f> arcPoints = new ArrayList<>();
+		List<Vector3f> arcPoints = new ArrayList<>();
 		for (int i = 0; i <= segments; i++) {
 			float t = i / (float) segments;
 			float angle = angleB + t * arcSpan;
 			
 			float x = corner.x - (float) Math.cos(angle) * bevelAmount;
 			float y = corner.y - (float) Math.sin(angle) * bevelAmount;
-			arcPoints.add(new Vector2f(x, y));
+			arcPoints.add(new Vector3f(x, y, corner.z));
 		}
 		
 		return arcPoints;

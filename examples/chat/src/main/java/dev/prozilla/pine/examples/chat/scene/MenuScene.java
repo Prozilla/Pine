@@ -3,8 +3,8 @@ package dev.prozilla.pine.examples.chat.scene;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
-import dev.prozilla.pine.common.math.vector.EdgeAlignment;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.math.vector.Alignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
@@ -18,9 +18,9 @@ public class MenuScene extends SceneBase {
 		super.load();
 		
 		LayoutPrefab layoutPrefab = new LayoutPrefab();
-		layoutPrefab.setAnchor(GridAlignment.CENTER);
+		layoutPrefab.setAnchor(Anchor.CENTER);
 		layoutPrefab.setGap(new Dimension(16));
-		layoutPrefab.setAlignment(EdgeAlignment.CENTER);
+		layoutPrefab.setAlignment(Alignment.CENTER);
 		layoutPrefab.setBorderImage(AssetPools.textures.load("images/png/Default/Panel/panel-031.png"), new Vector4f(0.3f, 0.3f, 0.3f, 0.3f), true);
 		layoutPrefab.setBorder(new Dimension(16));
 		layoutPrefab.setBorderColor(Chat.BACKGROUND_COLOR_B);

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.examples.flappybird.component;
 
-import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.property.deserialized.FileDeserializer;
 import dev.prozilla.pine.common.property.input.*;
 import dev.prozilla.pine.common.property.observable.ObservableFloatProperty;
@@ -42,7 +42,7 @@ public class PlayerData extends DeserializedData<PlayerData.Data> {
 	public static final float HEIGHT = SPRITE_HEIGHT * SCALE;
 	public static final float POSITION_X = FlappyBird.WIDTH / -4f;
 	public static final float COLLIDER_RADIUS = 14 * SCALE;
-	public static final Vector2f COLLIDER_OFFSET = new Vector2f(16, 20).scale(SCALE);
+	public static final Vector3f COLLIDER_OFFSET = new Vector3f(16, 20, 0).scale(SCALE);
 	
 	public static class Data {
 		

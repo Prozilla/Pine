@@ -2,7 +2,7 @@ package dev.prozilla.pine.entity.canvas.header;
 
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
@@ -13,7 +13,7 @@ public class HeaderPrefab extends LayoutPrefab {
 	public HeaderPrefab() {
 		super();
 		setName("Header");
-		setAnchor(GridAlignment.TOP_LEFT);
+		setAnchor(Anchor.TOP_LEFT);
 		setSize(new DualDimension(Dimension.viewportWidth(), new Dimension(32)));
 		setPadding(new DualDimension(8));
 		setBackgroundColor(new Color(0.1f, 0.1f, 0.1f));

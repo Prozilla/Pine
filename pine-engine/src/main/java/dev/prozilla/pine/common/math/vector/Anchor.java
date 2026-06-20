@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.util.parser.EnumParser;
 /**
  * 2-dimensional anchor point relative to the bottom-left corner of a square with width and height <code>1f</code>.
  */
-public enum GridAlignment {
+public enum Anchor {
 	TOP_LEFT(0, 1, "top-left"),
 	TOP(0.5f, 1, "top"),
 	TOP_RIGHT(1, 1, "top-right"),
@@ -23,7 +23,7 @@ public enum GridAlignment {
 	
 	private final String string;
 	
-	GridAlignment(float x, float y, String string) {
+	Anchor(float x, float y, String string) {
 		this.x = x;
 		this.y = y;
 		this.string = string;
@@ -54,8 +54,8 @@ public enum GridAlignment {
 		return string;
 	}
 	
-	public static GridAlignment parse(String input) {
-		return new EnumParser<>(GridAlignment.values()).read(input);
+	public static Anchor parse(String input) {
+		return new EnumParser<>(Anchor.values()).read(input);
 	}
 	
 }

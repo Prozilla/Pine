@@ -166,12 +166,51 @@ public class Transform extends Component {
 		}
 	}
 	
+	public Vector3f getForward() {
+		float pitch = getPitch();
+		float yaw = getYaw();
+		float cosY = (float)Math.cos(yaw);
+		float sinY = (float)Math.sin(yaw);
+		float cosP = (float)Math.cos(pitch);
+		float sinP = (float)Math.sin(pitch);
+		
+		return new Vector3f(sinY * cosP, -sinP, -cosY * cosP);
+	}
+	
+	public Vector3f getRight() {
+		float yaw = getYaw();
+		return new Vector3f((float)Math.cos(yaw), 0, (float)Math.sin(yaw));
+	}
+	
+	public Vector3f getUp() {
+		float pitch = getPitch();
+		float yaw = getYaw();
+		float cosY  = (float)Math.cos(yaw);
+		float sinY  = (float)Math.sin(yaw);
+		float cosP  = (float)Math.cos(pitch);
+		float sinP  = (float)Math.sin(pitch);
+		
+		return new Vector3f(sinY * sinP, cosP, -cosY * sinP);
+	}
+	
 	public Matrix4f getModelMatrix() {
 		return modelMatrix.identity().translate(position.x, position.y, position.z)
-			.rotateX((float)Math.toRadians(-rotation.x))
-			.rotateY((float)Math.toRadians(-rotation.y))
-			.rotateZ((float)Math.toRadians(-rotation.z))
+			.rotateX(-getPitch())
+			.rotateY(-getYaw())
+			.rotateZ(-getRoll())
 			.scale(scale.x, scale.y, scale.z);
+	}
+	
+	public float getPitch() {
+		return (float)Math.toRadians(rotation.x);
+	}
+	
+	public float getYaw() {
+		return (float)Math.toRadians(rotation.y);
+	}
+	
+	public float getRoll() {
+		return (float)Math.toRadians(rotation.z);
 	}
 	
 	public void setParent(Transform parent) {

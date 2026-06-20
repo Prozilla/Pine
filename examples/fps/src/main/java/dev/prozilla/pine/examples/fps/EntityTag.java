@@ -1,4 +1,4 @@
-package dev.prozilla.pine.examples.sokoban;
+package dev.prozilla.pine.examples.fps;
 
 public final class EntityTag {
 	

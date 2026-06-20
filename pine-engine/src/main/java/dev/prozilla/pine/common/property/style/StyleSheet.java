@@ -7,9 +7,9 @@ import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.vector.Alignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.math.vector.EdgeAlignment;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveIntProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveObjectProperty;
@@ -148,8 +148,8 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<DualDimension, AdaptiveObjectProperty<DualDimension>, StyledDualDimensionProperty>)StyledDualDimensionProperty::new);
 	}
 	
-	protected StyledGridAlignmentProperty createStyledGridAlignmentProperty(StyledPropertyKey<GridAlignment> key, Node node, GridAlignment fallbackValue) {
-		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<GridAlignment, AdaptiveObjectProperty<GridAlignment>, StyledGridAlignmentProperty>)StyledGridAlignmentProperty::new);
+	protected StyledGridAlignmentProperty createStyledGridAlignmentProperty(StyledPropertyKey<Anchor> key, Node node, Anchor fallbackValue) {
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<Anchor, AdaptiveObjectProperty<Anchor>, StyledGridAlignmentProperty>)StyledGridAlignmentProperty::new);
 	}
 	
 	protected StyledIntProperty createStyledIntProperty(StyledPropertyKey<Integer> key, Node node, int fallbackValue) {
@@ -160,8 +160,8 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<Direction, AdaptiveObjectProperty<Direction>, StyledDirectionProperty>)StyledDirectionProperty::new);
 	}
 	
-	protected StyledEdgeAlignmentProperty createStyledEdgeAlignmentProperty(StyledPropertyKey<EdgeAlignment> key, Node node, EdgeAlignment fallbackValue) {
-		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<EdgeAlignment, AdaptiveObjectProperty<EdgeAlignment>, StyledEdgeAlignmentProperty>)StyledEdgeAlignmentProperty::new);
+	protected StyledEdgeAlignmentProperty createStyledEdgeAlignmentProperty(StyledPropertyKey<Alignment> key, Node node, Alignment fallbackValue) {
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<Alignment, AdaptiveObjectProperty<Alignment>, StyledEdgeAlignmentProperty>)StyledEdgeAlignmentProperty::new);
 	}
 	
 	protected StyledDistributionProperty createStyledDistributionProperty(StyledPropertyKey<LayoutNode.Distribution> key, Node node, LayoutNode.Distribution fallbackValue) {

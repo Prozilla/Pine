@@ -2,7 +2,7 @@ package dev.prozilla.pine.core.component.physics.collision;
 
 import dev.prozilla.pine.Pine;
 import dev.prozilla.pine.common.Experimental;
-import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
@@ -12,7 +12,7 @@ import dev.prozilla.pine.core.rendering.shape.ColoredDrawable;
 public class Collider extends Component implements ColoredDrawable {
 	
 	/** The offset of this collider from the entity's position. */
-	public Vector2f offset;
+	public Vector3f offset;
 	
 	public static final Color DEFAULT_COLOR = new Color(140, 255, 140, 175);
 	
@@ -20,7 +20,7 @@ public class Collider extends Component implements ColoredDrawable {
 	 * Creates a collider with a given offset.
 	 * @param offset The offset of the collider
 	 */
-	public Collider(Vector2f offset) {
+	public Collider(Vector3f offset) {
 		this.offset = Checks.isNotNull(offset, "offset");
 	}
 	
@@ -35,8 +35,8 @@ public class Collider extends Component implements ColoredDrawable {
 		return false;
 	}
 	
-	public Vector2f getOrigin() {
-		return new Vector2f(getOriginX(), getOriginY());
+	public Vector3f getOrigin() {
+		return new Vector3f(getOriginX(), getOriginY(), getOriginZ());
 	}
 	
 	public float getOriginX() {
@@ -47,22 +47,17 @@ public class Collider extends Component implements ColoredDrawable {
 		return getTransform().position.y + offset.y;
 	}
 	
+	public float getOriginZ() {
+		return getTransform().position.z + offset.z;
+	}
+	
 	/**
 	 * Draws this collider in a green tint.
 	 * @param renderer The renderer
 	 */
+	@Override
 	public void draw(Renderer renderer) {
-		draw(renderer, getTransform().getDepth());
-	}
-	
-	/**
-	 * Draws this collider in a green tint.
-	 * @param renderer The renderer
-	 * @param depth The depth of the entity
-	 */
-	@Override
-	public void draw(Renderer renderer, float depth) {
-		draw(renderer, DEFAULT_COLOR, depth);
+		draw(renderer, DEFAULT_COLOR);
 	}
 	
 	/**
@@ -70,18 +65,8 @@ public class Collider extends Component implements ColoredDrawable {
 	 * @param renderer The renderer
 	 * @param color The color to draw with
 	 */
+	@Override
 	public void draw(Renderer renderer, Color color) {
-		draw(renderer, color, getTransform().getDepth());
-	}
-	
-	/**
-	 * Draws this collider in a given color.
-	 * @param renderer The renderer
-	 * @param color The color to draw with
-	 * @param depth The depth of the entity
-	 */
-	@Override
-	public void draw(Renderer renderer, Color color, float depth) {
 	
 	}
 	

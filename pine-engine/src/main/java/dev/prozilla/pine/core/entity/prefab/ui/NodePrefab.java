@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
@@ -43,7 +43,7 @@ public class NodePrefab extends Prefab {
 	protected Color color;
 	protected Color backgroundColor;
 	protected Color borderColor;
-	protected GridAlignment anchor;
+	protected Anchor anchor;
 	protected boolean absolutePosition;
 	protected boolean passThrough;
 	protected String tooltipText;
@@ -193,7 +193,7 @@ public class NodePrefab extends Prefab {
 	/**
 	 * Sets the anchor point of this node.
 	 */
-	public void setAnchor(GridAlignment anchor) {
+	public void setAnchor(Anchor anchor) {
 		this.anchor = anchor;
 	}
 	

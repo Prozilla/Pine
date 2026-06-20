@@ -33,6 +33,6 @@ public class BackgroundInitializer extends InitSystem {
 		spriteRenderer.setRegion(BackgroundData.WIDTH * GameManager.instance.backgroundVariant, 0, BackgroundData.WIDTH, BackgroundData.HEIGHT);
 		
 		// Set initial position
-		transform.setPosition(FlappyBird.WIDTH / -2f + BackgroundData.WIDTH * backgroundData.index, FlappyBird.HEIGHT / -2f);
+		transform.setPosition(FlappyBird.WIDTH / -2f + BackgroundData.WIDTH * backgroundData.index, FlappyBird.HEIGHT / -2f, 0);
 	}
 }

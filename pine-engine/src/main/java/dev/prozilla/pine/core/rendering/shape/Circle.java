@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.rendering.shape;
 
-import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.util.checks.Checks;
 
 /**
@@ -8,16 +8,16 @@ import dev.prozilla.pine.common.util.checks.Checks;
  */
 public class Circle extends Shape {
 	
-	protected Vector2f position;
+	protected Vector3f position;
 	protected float radius;
 	protected int edges;
 	
-	public Circle(Vector2f position, float radius) {
+	public Circle(Vector3f position, float radius) {
 		this(position, radius, 0);
 		setAutoEdges();
 	}
 	
-	public Circle(Vector2f position, float radius, int edges) {
+	public Circle(Vector3f position, float radius, int edges) {
 		this.position = Checks.isNotNull(position, "position");
 		this.radius = radius;
 		this.edges = edges;
@@ -30,32 +30,37 @@ public class Circle extends Shape {
 		}
 		
 		int vertexCount = edges + 2;
-		float[] vertices = new float[vertexCount * 2];
+		float[] vertices = new float[vertexCount * 3];
 		
 		// Center point
 		vertices[0] = position.x;
 		vertices[1] = position.y;
+		vertices[2] = position.z;
 		
 		for (int i = 0; i <= edges; i++) {
 			double angle = 2.0 * Math.PI * i / edges;
 			float dx = (float) (Math.cos(angle) * radius);
 			float dy = (float) (Math.sin(angle) * radius);
-			vertices[(i + 1) * 2] = position.x + dx;
-			vertices[(i + 1) * 2 + 1] = position.y + dy;
+			vertices[(i + 1) * 3] = position.x + dx;
+			vertices[(i + 1) * 3 + 1] = position.y + dy;
+			vertices[(i + 1) * 3 + 2] = position.z;
 		}
 		
 		// Convert triangle fan to triangles
-		float[] triangles = new float[edges * 3 * 2];
+		float[] triangles = new float[edges * 3 * 3];
 		for (int i = 0; i < edges; i++) {
 			// center
 			triangles[i * 6] = vertices[0];
 			triangles[i * 6 + 1] = vertices[1];
+			triangles[i * 6 + 2] = vertices[2];
 			// edge i
-			triangles[i * 6 + 2] = vertices[(i + 1) * 2];
-			triangles[i * 6 + 3] = vertices[(i + 1) * 2 + 1];
+			triangles[i * 6 + 3] = vertices[(i + 1) * 2];
+			triangles[i * 6 + 4] = vertices[(i + 1) * 2 + 1];
+			triangles[i * 6 + 5] = vertices[(i + 1) * 2 + 2];
 			// edge i+1
-			triangles[i * 6 + 4] = vertices[(i + 2) * 2];
-			triangles[i * 6 + 5] = vertices[(i + 2) * 2 + 1];
+			triangles[i * 6 + 6] = vertices[(i + 2) * 2];
+			triangles[i * 6 + 7] = vertices[(i + 2) * 2 + 1];
+			triangles[i * 6 + 8] = vertices[(i + 2) * 2 + 2];
 		}
 		
 		return triangles;
@@ -107,6 +112,14 @@ public class Circle extends Shape {
 	}
 	
 	/**
+	 * Returns the z-coordinate of this circle.
+	 * @return The z-coordinate of this circle.
+	 */
+	public float getZ() {
+		return position.z;
+	}
+	
+	/**
 	 * Sets the x-coordinate of this circle.
 	 * @param x The new x-coordinate
 	 */
@@ -133,10 +146,23 @@ public class Circle extends Shape {
 	}
 	
 	/**
+	 * Sets the z-coordinate of this circle.
+	 * @param z The new z-coordinate
+	 */
+	public void setZ(float z) {
+		if (z == position.z) {
+			return;
+		}
+		
+		position.z = z;
+		isDirty = true;
+	}
+	
+	/**
 	 * Sets the position of this circle.
 	 * @param position The new position
 	 */
-	public void setPosition(Vector2f position) {
+	public void setPosition(Vector3f position) {
 		Checks.isNotNull(position, "position");
 		
 		if (position.equals(this.position)) {

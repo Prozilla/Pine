@@ -3,9 +3,9 @@ package dev.prozilla.pine.examples.chat.entity;
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.vector.Alignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.math.vector.EdgeAlignment;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.property.bindable.BindableStringProperty;
 import dev.prozilla.pine.common.property.bindable.SimpleBindableStringProperty;
 import dev.prozilla.pine.common.system.Ansi;
@@ -26,7 +26,7 @@ public class ChatPrefab extends LayoutPrefab {
 		
 		setGap(new Dimension(8));
 		setDirection(Direction.DOWN);
-		setAnchor(GridAlignment.CENTER);
+		setAnchor(Anchor.CENTER);
 	}
 	
 	@Override
@@ -36,7 +36,7 @@ public class ChatPrefab extends LayoutPrefab {
 		LayoutPrefab messageListPrefab = new LayoutPrefab();
 		messageListPrefab.setGap(new Dimension(4));
 		messageListPrefab.setDirection(Direction.DOWN);
-		messageListPrefab.setAlignment(EdgeAlignment.START);
+		messageListPrefab.setAlignment(Alignment.START);
 		Entity messageList = entity.addChild(messageListPrefab);
 		
 		LayoutPrefab inputBoxPrefab = new LayoutPrefab();

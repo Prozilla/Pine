@@ -2,9 +2,9 @@ package dev.prozilla.pine.examples.openrgb;
 
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.vector.Alignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.math.vector.EdgeAlignment;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.ColorParser;
 import dev.prozilla.pine.core.component.ui.TextInputNode;
@@ -120,8 +120,8 @@ public class MainScene extends Scene {
 		
 		LayoutPrefab menuPrefab = new LayoutPrefab();
 		menuPrefab.setGap(new Dimension(16));
-		menuPrefab.setAnchor(GridAlignment.CENTER);
-		menuPrefab.setAlignment(EdgeAlignment.CENTER);
+		menuPrefab.setAnchor(Anchor.CENTER);
+		menuPrefab.setAlignment(Alignment.CENTER);
 		menuPrefab.setDirection(Direction.DOWN);
 		menuPrefab.setBackgroundColor(Color.white().setAlpha(0.65f));
 		menuPrefab.setPadding(new DualDimension(16));

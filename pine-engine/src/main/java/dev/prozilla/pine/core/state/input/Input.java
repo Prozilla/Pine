@@ -20,8 +20,10 @@ import dev.prozilla.pine.core.state.config.InputConfig;
 import dev.prozilla.pine.core.state.input.gamepad.Gamepad;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadEventType;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadInput;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 
+import java.nio.DoubleBuffer;
 import java.util.*;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -177,12 +179,19 @@ public class Input implements Initializable, Destructible {
 			scrollCallback = new ScrollCallback();
 			cursorPosCallback = new CursorPosCallback();
 			mouseButtonCallback = new MouseButtonCallback();
+			
+			// Get initial position
+			DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
+			DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
+			glfwGetCursorPos(window.getId(), x, y);
+			cursorPosition.set((int)x.get(), (int)y.get());
 		} else if (!isInitialized) {
 			return;
 		} else {
 			scrollCallback = GLFWUtils.free(scrollCallback);
 			cursorPosCallback = GLFWUtils.free(cursorPosCallback);
 			mouseButtonCallback = GLFWUtils.free(mouseButtonCallback);
+			cursorPosition.set(0, 0);
 		}
 		glfwSetScrollCallback(window.getId(), scrollCallback);
 		glfwSetCursorPosCallback(window.getId(), cursorPosCallback);

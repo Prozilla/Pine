@@ -4,9 +4,9 @@ import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DimensionParser;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.dimension.DualDimensionParser;
+import dev.prozilla.pine.common.math.vector.Alignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.math.vector.EdgeAlignment;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.ColorParser;
 import dev.prozilla.pine.common.util.ArrayUtils;
@@ -26,7 +26,7 @@ public final class StyledPropertyKey<T> {
 	public static final StyledPropertyKey<DualDimension> SIZE = new StyledPropertyKey<>("size", dualDimensionParser);
 	public static final StyledPropertyKey<DualDimension> PADDING = new StyledPropertyKey<>("padding", dualDimensionParser);
 	public static final StyledPropertyKey<DualDimension> MARGIN = new StyledPropertyKey<>("margin", dualDimensionParser);
-	public static final StyledPropertyKey<GridAlignment> ANCHOR = new StyledPropertyKey<>("anchor", new EnumParser<>(GridAlignment.values()));
+	public static final StyledPropertyKey<Anchor> ANCHOR = new StyledPropertyKey<>("anchor", new EnumParser<>(Anchor.values()));
 	public static final StyledPropertyKey<DimensionBase> GAP = new StyledPropertyKey<>("gap", new DimensionParser());
 	public static final StyledPropertyKey<Direction> DIRECTION = new StyledPropertyKey<>("flex-direction", new Parser<>() {
 		@Override
@@ -46,21 +46,21 @@ public final class StyledPropertyKey<T> {
 			return succeed(direction);
 		}
 	});
-	public static final StyledPropertyKey<EdgeAlignment> ALIGNMENT = new StyledPropertyKey<>("align-items", new Parser<>() {
+	public static final StyledPropertyKey<Alignment> ALIGNMENT = new StyledPropertyKey<>("align-items", new Parser<>() {
 		@Override
 		public boolean parse(String input) {
-			EdgeAlignment edgeAlignment = switch (input) {
-				case "flex-start" -> EdgeAlignment.START;
-				case "center" -> EdgeAlignment.CENTER;
-				case "flex-end" -> EdgeAlignment.END;
-				default -> EdgeAlignment.parse(input);
+			Alignment alignment = switch (input) {
+				case "flex-start" -> Alignment.START;
+				case "center" -> Alignment.CENTER;
+				case "flex-end" -> Alignment.END;
+				default -> Alignment.parse(input);
 			};
 			
-			if (edgeAlignment == null) {
+			if (alignment == null) {
 				return fail();
 			}
 			
-			return succeed(edgeAlignment);
+			return succeed(alignment);
 		}
 	});
 	public static final StyledPropertyKey<LayoutNode.Distribution> DISTRIBUTION = new StyledPropertyKey<>("justify-content", new Parser<>() {

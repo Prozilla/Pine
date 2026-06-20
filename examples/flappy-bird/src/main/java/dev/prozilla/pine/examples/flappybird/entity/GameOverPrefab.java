@@ -4,9 +4,9 @@ import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionParser;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.vector.Alignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.math.vector.EdgeAlignment;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
@@ -20,9 +20,9 @@ public class GameOverPrefab extends LayoutPrefab {
 	
 	public GameOverPrefab(Font font) {
 		setName("GameOver");
-		setAnchor(GridAlignment.TOP);
+		setAnchor(Anchor.TOP);
 		setDirection(Direction.DOWN);
-		setAlignment(EdgeAlignment.CENTER);
+		setAlignment(Alignment.CENTER);
 		setMargin(new Dimension(), new DimensionParser().read("33vh"));
 		setGap(new Dimension(16));
 		setTag(EntityTag.GAME_OVER_TAG);

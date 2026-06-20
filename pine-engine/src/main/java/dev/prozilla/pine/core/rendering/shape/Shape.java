@@ -77,10 +77,10 @@ public abstract class Shape implements TexturedDrawable, Cloneable<Shape> {
 	
 	/**
 	 * Draws this shape using its vertex and UV arrays.
-	 * @see Renderer#drawTriangles(TextureAsset, float[], float, float[], Color)
+	 * @see Renderer#drawTriangles(TextureAsset, float[], float[], Color)
 	 */
 	@Override
-	public void draw(Renderer renderer, TextureAsset texture, Color color, float depth) {
+	public void draw(Renderer renderer, TextureAsset texture, Color color) {
 		if (isDirty) {
 			generate();
 		}
@@ -89,7 +89,7 @@ public abstract class Shape implements TexturedDrawable, Cloneable<Shape> {
 			return;
 		}
 		
-		renderer.drawTriangles(texture, vertices, depth, uvArray, color);
+		renderer.drawTriangles(texture, vertices, uvArray, color);
 	}
 	
 	/**

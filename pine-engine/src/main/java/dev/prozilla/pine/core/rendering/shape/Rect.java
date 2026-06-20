@@ -1,7 +1,8 @@
 package dev.prozilla.pine.core.rendering.shape;
 
-import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.util.checks.Checks;
 
 import java.util.Objects;
@@ -11,19 +12,19 @@ import java.util.Objects;
  */
 public class Rect extends Shape {
 	
-	protected Vector2f position;
+	protected Vector3f position;
 	protected Vector2f size;
-	protected GridAlignment anchor;
+	protected Anchor anchor;
 	
 	public Rect() {
-		this(new Vector2f(), new Vector2f());
+		this(new Vector3f(), new Vector2f());
 	}
 	
-	public Rect(Vector2f position, Vector2f size) {
-		this(position, size, GridAlignment.BOTTOM_LEFT);
+	public Rect(Vector3f position, Vector2f size) {
+		this(position, size, Anchor.BOTTOM_LEFT);
 	}
 	
-	public Rect(Vector2f position, Vector2f size, GridAlignment anchor) {
+	public Rect(Vector3f position, Vector2f size, Anchor anchor) {
 		this.position = Checks.isNotNull(position, "position");
 		this.size = Checks.isNotNull(size, "size");
 		this.anchor = Checks.isNotNull(anchor, "anchor");
@@ -35,14 +36,15 @@ public class Rect extends Shape {
 		float y1 = position.y - (anchor.y * size.y);
 		float x2 = position.x + ((1 - anchor.x) * size.x);
 		float y2 = position.y + ((1 - anchor.y) * size.y);
+		float z = position.z;
 		
 		return new float[] {
-			x1, y1,
-			x1, y2,
-			x2, y2,
-			x1, y1,
-			x2, y2,
-			x2, y1
+			x1, y1, z,
+			x1, y2, z,
+			x2, y2, z,
+			x1, y1, z,
+			x2, y2, z,
+			x2, y1, z
 		};
 	}
 	
@@ -66,6 +68,10 @@ public class Rect extends Shape {
 		return position.y;
 	}
 	
+	public float getZ() {
+		return position.z;
+	}
+	
 	public void setX(float x) {
 		if (x == position.x) {
 			return;
@@ -84,7 +90,16 @@ public class Rect extends Shape {
 		isDirty = true;
 	}
 	
-	public void setPosition(Vector2f position) {
+	public void setZ(float z) {
+		if (z == position.z) {
+			return;
+		}
+		
+		position.z = z;
+		isDirty = true;
+	}
+	
+	public void setPosition(Vector3f position) {
 		Checks.isNotNull(position, "position");
 		
 		if (position.equals(this.position)) {
@@ -156,7 +171,7 @@ public class Rect extends Shape {
 	 * Sets the anchor point of this rectangle.
 	 * @param anchor The new anchor point
 	 */
-	public void setAnchor(GridAlignment anchor) {
+	public void setAnchor(Anchor anchor) {
 		Checks.isNotNull(anchor, "anchor");
 		
 		if (anchor == this.anchor) {

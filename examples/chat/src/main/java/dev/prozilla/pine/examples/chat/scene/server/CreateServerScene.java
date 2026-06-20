@@ -1,8 +1,8 @@
 package dev.prozilla.pine.examples.chat.scene.server;
 
 import dev.prozilla.pine.common.math.dimension.Dimension;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.core.component.ui.TextInputNode;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
@@ -19,7 +19,7 @@ public class CreateServerScene extends SceneBase {
 		super.load();
 		
 		LayoutPrefab layoutPrefab = new LayoutPrefab();
-		layoutPrefab.setAnchor(GridAlignment.CENTER);
+		layoutPrefab.setAnchor(Anchor.CENTER);
 		layoutPrefab.setDirection(Direction.RIGHT);
 		layoutPrefab.setGap(new Dimension(8));
 		Entity layoutNode = nodeRoot.addChild(layoutPrefab);
