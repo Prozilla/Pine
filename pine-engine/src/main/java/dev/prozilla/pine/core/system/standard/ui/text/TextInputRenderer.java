@@ -44,11 +44,11 @@ public final class TextInputRenderer extends RenderSystem {
 				selectionX = x + getTextWidth(renderer, textNode, textInputNode.getSelectionStart());
 			}
 			float selectionWidth = getTextWidth(renderer, textNode, textInputNode.getSelectionStart(), textInputNode.getSelectionEnd());
-			renderer.drawRect(selectionX, y, transform.getDepth(), selectionWidth, textNode.getFontSize(), Color.cyan().setAlpha(0.5f));
+			renderer.drawRect(selectionX, y, transform.position.z, selectionWidth, textNode.getFontSize(), Color.cyan().setAlpha(0.5f));
 		}
 		
 		// Draw cursor
-		renderer.drawRect(cursorX, y, transform.getDepth(), 2, textNode.getFontSize(), node.color);
+		renderer.drawRect(cursorX, y, transform.position.z, 2, textNode.getFontSize(), node.color);
 	}
 	
 	private static int getTextWidth(Renderer renderer, TextNode textNode, int length) {

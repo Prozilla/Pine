@@ -99,16 +99,18 @@ public abstract class SystemBase {
 		application = world.application;
 		scene = world.scene;
 		logger = application.getLogger();
-		
-		// Create entity query
-		query = world.queryPool.getQuery(includedComponentTypes, excludedComponentTypes, runOnce, entityTag);
+		query = createQuery();
 		
 		// Process existing entities
-		if (world.entityManager.hasEntities()) {
+		if (query != null && world.entityManager.hasEntities()) {
 			for (Entity entity : world.entityManager.getEntities()) {
 				register(entity);
 			}
 		}
+	}
+	
+	protected EntityQuery createQuery() {
+		return world.queryPool.getQuery(includedComponentTypes, excludedComponentTypes, runOnce, entityTag);
 	}
 	
 	/**
@@ -116,12 +118,12 @@ public abstract class SystemBase {
 	 * @see EntityQuery
 	 */
 	public void register(Entity entity) {
-		if (query.register(entity)) {
-			if (runOnce && !processedEntityIds.contains(entity.id)) {
-				if (world.initialized && this instanceof InitSystemBase initSystemBase) {
-					initSystemBase.init();
-				}
-			}
+		if (query == null || !query.register(entity) || !runOnce || processedEntityIds.contains(entity.id)) {
+			return;
+		}
+		
+		if (world.initialized && this instanceof InitSystemBase initSystemBase) {
+			initSystemBase.init();
 		}
 	}
 	
@@ -134,7 +136,9 @@ public abstract class SystemBase {
 			processedEntityIds.remove(entity.id);
 		}
 		
-		query.unregister(entity);
+		if (query != null) {
+			query.unregister(entity);
+		}
 	}
 	
 	/**
@@ -153,9 +157,10 @@ public abstract class SystemBase {
 				}
 				
 				EntityChunk entityChunk = query.entityChunks.get(i);
-				if (entityChunk.isActive()) {
-					application.getRenderer().setModelMatrix(entityChunk.getTransform().getModelMatrix());
+				if (isChunkActive(entityChunk)) {
+					beforeChunk(entityChunk);
 					accept(entityChunk, action);
+					afterChunk(entityChunk);
 				}
 			}
 		} catch (Exception e) {
@@ -183,9 +188,10 @@ public abstract class SystemBase {
 				}
 				
 				EntityChunk entityChunk = query.entityChunks.get(i);
-				if (entityChunk.isActive()) {
-					application.getRenderer().setModelMatrix(entityChunk.getTransform().getModelMatrix());
+				if (isChunkActive(entityChunk)) {
+					beforeChunk(entityChunk);
 					accept(entityChunk, action);
+					afterChunk(entityChunk);
 				}
 			}
 		} catch (Exception e) {
@@ -195,6 +201,18 @@ public abstract class SystemBase {
 				query.entityChunks.endIteration();
 			}
 		}
+	}
+	
+	protected boolean isChunkActive(EntityChunk chunk) {
+		return chunk.isActive();
+	}
+	
+	protected void beforeChunk(EntityChunk chunk) {
+	
+	}
+	
+	protected void afterChunk(EntityChunk chunk) {
+	
 	}
 	
 	/**
@@ -225,7 +243,9 @@ public abstract class SystemBase {
 	 * Sorts the entity chunks in this system based on a comparator.
 	 */
 	protected void sort(Comparator<EntityChunk> comparator) {
-		query.entityChunks.sort(comparator);
+		if (query != null) {
+			query.entityChunks.sort(comparator);
+		}
 	}
 	
 	/**
@@ -233,7 +253,7 @@ public abstract class SystemBase {
 	 * @see EntityQuery
 	 */
 	public boolean hasEntityChunks() {
-		return query.hasEntityChunks();
+		return query != null && query.hasEntityChunks();
 	}
 	
 	public boolean shouldRun() {

@@ -1,13 +1,17 @@
 package dev.prozilla.pine.examples.sokoban;
 
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.entity.prefab.sprite.GridPrefab;
 import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
 import dev.prozilla.pine.core.scene.Scene;
+import dev.prozilla.pine.core.state.input.Input;
+import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.examples.sokoban.entity.*;
 import dev.prozilla.pine.examples.sokoban.entity.ui.UIPrefab;
 import dev.prozilla.pine.examples.sokoban.system.CrateUpdater;
@@ -15,6 +19,8 @@ import dev.prozilla.pine.examples.sokoban.system.PlayerInputHandler;
 import dev.prozilla.pine.examples.sokoban.system.PlayerMover;
 
 public class GameScene extends Scene {
+	
+	public static final float MOVEMENT_SPEED = 20f;
 	
 	private static final String[] MAP = {
 		"OOOOOOOOOOOO  ",
@@ -63,6 +69,8 @@ public class GameScene extends Scene {
 	@Override
 	protected void load() {
 		super.load();
+		
+		cameraData.orthographic = true;
 		
 		// Create systems
 		world.addSystem(new PlayerInputHandler());
@@ -120,9 +128,45 @@ public class GameScene extends Scene {
 		// Move camera to center of map
 		int width = MAP[0].length();
 		int height = MAP.length;
-		cameraData.getTransform().setPosition((width * TILE_SIZE) / 2f, (height * TILE_SIZE) / 2f, 0);
+		cameraData.getTransform().translate((width * TILE_SIZE) / 2f, (height * TILE_SIZE) / 2f, 0);
 		
 		cameraData.zoomIn(-0.1f);
 		cameraData.setBackgroundColor(Color.hex("#596A6C"));
+	}
+	
+	@Override
+	public void input(float deltaTime) throws IllegalStateException {
+		super.input(deltaTime);
+		
+		Input input = getInput();
+		Vector3f delta = new Vector3f();
+		Transform cameraTransform = cameraData.getTransform();
+		if (input.getKey(Key.W)) {
+			delta.add(cameraTransform.getForward());
+		}
+		if (input.getKey(Key.S)) {
+			delta.subtract(cameraTransform.getForward());
+		}
+		if (input.getKey(Key.D)) {
+			delta.add(cameraTransform.getRight());
+		}
+		if (input.getKey(Key.A)) {
+			delta.subtract(cameraTransform.getRight());
+		}
+		if (input.getKey(Key.E)) {
+			delta.add(cameraTransform.getUp());
+		}
+		if (input.getKey(Key.Q)) {
+			delta.subtract(cameraTransform.getUp());
+		}
+		if (!delta.isZero()) {
+			delta.normalize();
+			delta.scale(deltaTime * MOVEMENT_SPEED);
+			if (input.getKey(Key.L_SHIFT)) {
+				delta.scale(3f);
+			}
+//			cameraTransform.translate(delta);
+//			logger.log(cameraTransform.position);
+		}
 	}
 }

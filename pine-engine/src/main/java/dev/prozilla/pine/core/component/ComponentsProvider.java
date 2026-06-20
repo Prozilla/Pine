@@ -14,27 +14,27 @@ public interface ComponentsProvider extends ComponentsContext {
 	Entity getEntity();
 	
 	@Override
-	default <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass) {
+	default <ComponentType extends Component> ComponentType getComponentAbove(Class<ComponentType> componentClass, boolean includeGrandParents, boolean includeSelf) {
 		if (getEntity() == null) {
 			return null;
 		}
-		return getEntity().getComponentInParent(componentClass);
+		return getEntity().getComponentAbove(componentClass, includeGrandParents, includeSelf);
 	}
 	
 	@Override
-	default <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass, boolean recursive) {
-		if (getEntity() == null) {
-			return null;
-		}
-		return getEntity().getComponentInParent(componentClass, recursive);
-	}
-	
-	@Override
-	default <ComponentType extends Component> List<ComponentType> getComponentsInChildren(Class<ComponentType> componentClass) {
+	default <ComponentType extends Component> List<ComponentType> getComponentsAbove(Class<ComponentType> componentClass, boolean includeGrandParents, boolean includeSelf) {
 		if (getEntity() == null) {
 			return new ArrayList<>();
 		}
-		return getEntity().getComponentsInChildren(componentClass);
+		return getEntity().getComponentsAbove(componentClass, includeGrandParents, includeSelf);
+	}
+	
+	@Override
+	default <ComponentType extends Component> List<ComponentType> getComponentsBelow(Class<ComponentType> componentClass, boolean includeGrandChildren, boolean includeSelf, boolean includeNested) {
+		if (getEntity() == null) {
+			return new ArrayList<>();
+		}
+		return getEntity().getComponentsBelow(componentClass, includeGrandChildren, includeSelf, includeNested);
 	}
 	
 	@Override

@@ -107,7 +107,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		
 		// Create new camera from prefab
 		if (cameraData == null) {
-			Entity camera = world.addEntity(this.cameraPrefab);
+			Entity camera = world.addEntity(this.cameraPrefab, 0, 0, 10f);
 			cameraData = camera.getComponent(CameraData.class);
 			
 			if (cameraData == null) {
@@ -164,7 +164,6 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	@Override
 	public void render(Renderer renderer) throws IllegalStateException {
 		checkStatus();
-		renderer.setViewMatrix(cameraData.getViewMatrix());
 		world.render(renderer);
 	}
 	

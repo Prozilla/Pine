@@ -92,7 +92,7 @@ public class LayoutNode extends Component implements NodeContext {
 	 * Finds and stores node components in children to be used in calculations later.
 	 */
 	public void getChildComponents() {
-		childNodes = entity.getComponentsInChildren(Node.class);
+		childNodes = entity.getComponentsBelow(Node.class);
 	}
 	
 	public Node getNode() {

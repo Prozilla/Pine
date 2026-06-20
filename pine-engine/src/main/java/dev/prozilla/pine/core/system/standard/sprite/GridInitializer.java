@@ -25,7 +25,7 @@ public final class GridInitializer extends InitSystem {
 			gridGroup.coordinateToTile.clear();
 		}
 		
-		List<TileRenderer> tiles = entity.getComponentsInChildren(TileRenderer.class);
+		List<TileRenderer> tiles = entity.getComponentsBelow(TileRenderer.class);
 		
 		if (tiles != null) {
 			for (TileRenderer tile : tiles) {
@@ -33,7 +33,7 @@ public final class GridInitializer extends InitSystem {
 			}
 		}
 		
-		List<MultiTileRenderer> multiTiles = entity.getComponentsInChildren(MultiTileRenderer.class);
+		List<MultiTileRenderer> multiTiles = entity.getComponentsBelow(MultiTileRenderer.class);
 		
 		if (multiTiles != null) {
 			for (MultiTileRenderer multiTile : multiTiles) {

@@ -105,7 +105,7 @@ public class TileRenderer extends Component implements TileProvider {
 			return group;
 		}
 		
-		group = getComponentInParent(GridGroup.class, false);
+		group = getComponentAbove(GridGroup.class, false);
 		return group;
 	}
 	

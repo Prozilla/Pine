@@ -18,7 +18,7 @@ public final class NodeInitializer extends InitSystem {
 		Node node = chunk.getComponent(Node.class);
 		node.updateHierarchy();
 		
-		LayoutNode group = entity.getComponentInParent(LayoutNode.class, false);
+		LayoutNode group = entity.getComponentAbove(LayoutNode.class, false);
 		if (group != null) {
 			group.getChildComponents();
 		}

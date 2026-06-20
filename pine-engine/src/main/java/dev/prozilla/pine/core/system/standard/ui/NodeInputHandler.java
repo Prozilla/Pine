@@ -65,6 +65,6 @@ public final class NodeInputHandler extends InputSystemBase {
 	
 	@Override
 	public void sort() {
-		sort(Comparator.comparingInt(a -> a.getTransform().getDepthIndex()));
+		sort(Comparator.comparingDouble(a -> a.getTransform().position.z));
 	}
 }

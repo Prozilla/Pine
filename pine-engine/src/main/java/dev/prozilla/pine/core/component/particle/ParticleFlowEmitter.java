@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.component.particle;
 
-import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.property.FloatProperty;
 import dev.prozilla.pine.common.property.IntProperty;
 import dev.prozilla.pine.common.property.fixed.FixedFloatProperty;
@@ -14,7 +14,7 @@ public class ParticleFlowEmitter extends ParticleEmitter {
 	public FloatProperty spawnDelay;
 	public float timeUntilSpawn;
 	public boolean isSpawning;
-	public Vector2f origin;
+	public Vector3f origin;
 	public boolean applyTimeScale;
 	
 	public static final FixedFloatProperty DEFAULT_SPAWN_DELAY = new FixedFloatProperty(1f);
@@ -33,7 +33,7 @@ public class ParticleFlowEmitter extends ParticleEmitter {
 		this.spawnDelay = spawnDelay;
 		timeUntilSpawn = 0;
 		isSpawning = false;
-		origin = new Vector2f();
+		origin = new Vector3f();
 		applyTimeScale = APPLY_TIME_SCALE_DEFAULT;
 	}
 	

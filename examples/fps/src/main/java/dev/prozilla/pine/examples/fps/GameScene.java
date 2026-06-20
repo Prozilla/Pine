@@ -14,7 +14,7 @@ public class GameScene extends Scene {
 	
 	private Vector2i previousCursorPosition;
 	
-	public static final float MOVEMENT_SPEED = 10f;
+	public static final float MOVEMENT_SPEED = 20f;
 	public static final float ROTATION_SPEED = 6f;
 	
 	@Override
@@ -61,15 +61,15 @@ public class GameScene extends Scene {
 			delta.normalize();
 			delta.scale(deltaTime * MOVEMENT_SPEED);
 			if (input.getKey(Key.L_SHIFT)) {
-				delta.scale(7);
+				delta.scale(3f);
 			}
-			cameraData.getTransform().translate(delta);
+			cameraTransform.translate(delta);
 		}
 		
 		Vector2i cursorPosition = input.getCursor();
 		if (previousCursorPosition != null) {
 			Vector2i cursorMovement = previousCursorPosition.subtract(cursorPosition);
-			cameraData.getTransform().rotate(-cursorMovement.y * deltaTime * ROTATION_SPEED, -cursorMovement.x * deltaTime * ROTATION_SPEED, 0);
+			cameraTransform.rotate(-cursorMovement.y * deltaTime * ROTATION_SPEED, -cursorMovement.x * deltaTime * ROTATION_SPEED, 0);
 			previousCursorPosition.set(cursorPosition.x, cursorPosition.y);
 		} else {
 			previousCursorPosition = cursorPosition.clone();

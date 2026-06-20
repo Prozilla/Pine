@@ -28,20 +28,20 @@ public final class TextRenderer extends RenderSystem {
 			return;
 		}
 		
-		renderText(renderer, textNode, node, transform.getDepth());
+		renderText(renderer, textNode, node);
 	}
 	
-	public static void renderText(Renderer renderer, TextNode textNode, Node node, float z) {
+	public static void renderText(Renderer renderer, TextNode textNode, Node node) {
 		float x = node.currentPosition.x + node.getPaddingX();
 		float y = node.currentPosition.y + node.getPaddingY();
 		float width = node.currentInnerSize.x;
 		float height = node.currentInnerSize.y;
 		
-		renderText(renderer, textNode, x, y, z, width, height, node.color);
+		renderText(renderer, textNode, x, y, width, height, node.color);
 	}
 	
-	public static void renderText(Renderer renderer, TextNode textNode, float x, float y, float z, float width, float height, Color color) {
-		renderText(renderer, textNode.text, textNode.font, x, y, z, width, height, color);
+	public static void renderText(Renderer renderer, TextNode textNode, float x, float y, float width, float height, Color color) {
+		renderText(renderer, textNode.text, textNode.font, x, y, textNode.getTransform().position.z, width, height, color);
 	}
 	
 	/**

@@ -23,20 +23,21 @@ public final class BorderImageRenderer extends RenderSystem {
 		Node node = chunk.getComponent(Node.class);
 		BorderImage borderImage = chunk.getComponent(BorderImage.class);
 		
-		renderBorderImage(renderer, borderImage.texture, node, borderImage.slice, borderImage.fill, transform.getDepth());
+		renderBorderImage(renderer, borderImage.texture, node, borderImage.slice, borderImage.fill);
 	}
 	
-	public static void renderBorderImage(Renderer renderer, Node node, float z) {
-		renderBorderImage(renderer, node.borderImage, node, node.borderImageSlice, node.borderImageSliceFill, z);
+	public static void renderBorderImage(Renderer renderer, Node node) {
+		renderBorderImage(renderer, node.borderImage, node, node.borderImageSlice, node.borderImageSliceFill);
 	}
 	
-	public static void renderBorderImage(Renderer renderer, TextureAsset texture, Node node, Vector4f slice, boolean fill, float z) {
+	public static void renderBorderImage(Renderer renderer, TextureAsset texture, Node node, Vector4f slice, boolean fill) {
 		float borderWidth = node.getBorderWidth();
 		
 		float nodeX = node.currentPosition.x;
 		float nodeY = node.currentPosition.y;
 		float nodeWidth = node.currentInnerSize.x;
 		float nodeHeight = node.currentInnerSize.y;
+		float z = node.getTransform().position.z;
 		
 		float textureWidth = texture.getWidth();
 		float textureHeight = texture.getHeight();

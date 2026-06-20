@@ -53,30 +53,30 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	}
 	
 	/**
-	 * Creates an entity at the position (0, 0)
+	 * Creates an entity at the position (0, 0, 0)
 	 */
 	public Entity(World world) {
-		this(world, 0, 0);
+		this(world, 0, 0, 0);
 	}
 	
 	/**
-	 * Creates an entity at the position (0, 0)
+	 * Creates an entity at the position (0, 0, 0)
 	 */
 	public Entity(World world, String name) {
-		this(world, name, 0, 0);
+		this(world, name, 0, 0, 0);
 	}
 	
 	/**
-	 * Creates an entity at the position (x, y)
+	 * Creates an entity at the position (x, y, z)
 	 */
-	public Entity(World world, float x, float y) {
-		this(world, null, x, y);
+	public Entity(World world, float x, float y, float z) {
+		this(world, null, x, y, z);
 	}
 	
 	/**
-	 * Creates an entity at the position (x, y)
+	 * Creates an entity at the position (x, y, z)
 	 */
-	public Entity(World world, String name, float x, float y) {
+	public Entity(World world, String name, float x, float y, float z) {
 		this.world = Checks.isNotNull(world, "world");
 		this.name = name;
 
@@ -86,7 +86,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		
 		id = EntityManager.generateEntityId();
 		
-		transform = new Transform(x, y, 0); // TODO: Add z coordinate
+		transform = new Transform(x, y, z);
 		components = new ArrayList<>();
 		addComponent(transform);
 
@@ -312,18 +312,18 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	}
 	
 	@Override
-	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass) {
-		return transform.getComponentInParent(componentClass);
+	public <ComponentType extends Component> ComponentType getComponentAbove(Class<ComponentType> componentClass, boolean includeGrandParents, boolean includeSelf) {
+		return transform.getComponentAbove(componentClass, includeGrandParents, includeSelf);
 	}
 	
 	@Override
-	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass, boolean includeAncestors) {
-		return transform.getComponentInParent(componentClass, includeAncestors);
+	public <ComponentType extends Component> List<ComponentType> getComponentsAbove(Class<ComponentType> componentClass, boolean includeGrandParents, boolean includeSelf) {
+		return transform.getComponentsAbove(componentClass, includeGrandParents, includeSelf);
 	}
 	
 	@Override
-	public <ComponentType extends Component> List<ComponentType> getComponentsInChildren(Class<ComponentType> componentClass) {
-		return transform.getComponentsInChildren(componentClass);
+	public <ComponentType extends Component> List<ComponentType> getComponentsBelow(Class<ComponentType> componentClass, boolean includeGrandChildren, boolean includeSelf, boolean includeNested) {
+		return transform.getComponentsBelow(componentClass, includeGrandChildren, includeSelf, includeNested);
 	}
 	
 	/**
@@ -506,14 +506,13 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 			componentNames[i] = componentClass.getSimpleName();
 		}
 		
-		return String.format("%s: %s (%s, %s) [%s] (%s) {%S}",
+		return String.format("%s: %s (%s, %s) [%s] (%s)",
 			className,
 			getName(),
 			transform.getGlobalX(),
 			transform.getGlobalY(),
 			String.join(", ", componentNames),
-			componentCount,
-			transform.getDepthIndex()
+			componentCount
 		);
 	}
 	

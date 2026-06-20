@@ -21,7 +21,7 @@ import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.style.NodeStyle;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Components;
-import dev.prozilla.pine.core.entity.prefab.Prefab;
+import dev.prozilla.pine.core.entity.prefab.LayerPrefab;
 
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +31,7 @@ import java.util.Set;
  * Prefab for UI elements.
  */
 @Components({ Node.class, Transform.class })
-public class NodePrefab extends Prefab {
+public class NodePrefab extends LayerPrefab {
 	
 	protected DualDimension size;
 	protected DualDimension padding;

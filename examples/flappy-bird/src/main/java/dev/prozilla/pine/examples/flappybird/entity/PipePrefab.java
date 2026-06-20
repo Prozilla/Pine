@@ -22,7 +22,7 @@ public class PipePrefab extends SpritePrefab {
 	
 	public Entity instantiate(World world, float x, float y, boolean top) {
 		this.top = top;
-		return instantiate(world, x, y);
+		return instantiate(world, x, y, 0);
 	}
 	
 	@Override

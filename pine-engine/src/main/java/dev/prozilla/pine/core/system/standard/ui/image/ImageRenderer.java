@@ -2,7 +2,6 @@ package dev.prozilla.pine.core.system.standard.ui.image;
 
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.ImageNode;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -17,27 +16,26 @@ public final class ImageRenderer extends RenderSystem {
 	
 	@Override
 	protected void process(EntityChunk chunk, Renderer renderer) {
-		Transform transform = chunk.getTransform();
 		ImageNode imageNode = chunk.getComponent(ImageNode.class);
 		Node node = chunk.getComponent(Node.class);
-		
-		if (!node.readyToRender) {
-			return;
-		}
-		
-		renderImage(renderer, imageNode, node, transform.getDepth());
+		renderImage(renderer, imageNode, node);
 	}
 	
-	public static void renderImage(Renderer renderer, ImageNode imageNode, Node node, float z) {
+	@Override
+	protected boolean isChunkActive(EntityChunk chunk) {
+		return super.isChunkActive(chunk) && chunk.getComponent(Node.class).readyToRender;
+	}
+	
+	public static void renderImage(Renderer renderer, ImageNode imageNode, Node node) {
 		renderImage(renderer, imageNode,
-		 node.currentPosition.x + node.getPaddingX(), node.currentPosition.y + node.getPaddingY(), node.size.computeX(node), node.size.computeY(node), z, node.color);
+		 node.currentPosition.x + node.getPaddingX(), node.currentPosition.y + node.getPaddingY(), node.size.computeX(node), node.size.computeY(node), node.color);
 	}
 	
-	public static void renderImage(Renderer renderer, ImageNode imageNode, float x, float y, float width, float height, float z, Color color) {
+	public static void renderImage(Renderer renderer, ImageNode imageNode, float x, float y, float width, float height, Color color) {
 		renderImage(renderer, imageNode.image,
 			imageNode.regionOffset.x, imageNode.regionOffset.y,
 			imageNode.regionSize.x, imageNode.regionSize.y,
-			x, y, width, height, z, color);
+			x, y, width, height, imageNode.getTransform().position.z, color);
 	}
 	
 	public static void renderImage(Renderer renderer, TextureAsset texture, float regX, float regY, float regWidth, float regHeight, float x, float y, float width, float height, float z, Color color) {

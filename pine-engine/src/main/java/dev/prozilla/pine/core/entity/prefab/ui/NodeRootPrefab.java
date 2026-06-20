@@ -4,13 +4,13 @@ import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.NodeRoot;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Components;
-import dev.prozilla.pine.core.entity.prefab.Prefab;
+import dev.prozilla.pine.core.entity.prefab.LayerPrefab;
 
 /**
  * Prefab for user interfaces.
  */
 @Components({ NodeRoot.class, Transform.class })
-public class NodeRootPrefab extends Prefab {
+public class NodeRootPrefab extends LayerPrefab {
 	
 	public NodeRootPrefab() {
 		setName("NodeRoot");

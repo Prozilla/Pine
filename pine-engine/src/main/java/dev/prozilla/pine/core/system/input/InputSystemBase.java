@@ -29,6 +29,6 @@ public abstract class InputSystemBase extends SystemBase {
 	 * Sorts the entity chunks in this input system based on their depth index.
 	 */
 	public void sort() {
-		sort(Comparator.comparingInt(a -> -a.getTransform().getDepthIndex()));
+		sort(Comparator.comparingDouble(a -> -a.getTransform().position.z));
 	}
 }

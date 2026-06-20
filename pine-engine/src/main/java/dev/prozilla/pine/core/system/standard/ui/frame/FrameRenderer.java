@@ -22,13 +22,13 @@ public final class FrameRenderer extends RenderSystem {
 		
 		// Draw the background
 		if (frame.backgroundColor != null) {
-			renderer.drawRect(node.currentPosition.x, node.currentPosition.y, transform.getDepth(), frame.getWidth(), frame.getHeight());
+			renderer.drawRect(node.currentPosition.x, node.currentPosition.y, transform.position.z, frame.getWidth(), frame.getHeight());
 		}
 		
 		// Draw the frame buffer
 		FrameBufferObject fbo = frame.fbo;
 		if (fbo != null) {
-			renderer.drawTexture(fbo.getTexture(), node.currentPosition.x, node.currentPosition.y, transform.getDepth());
+			renderer.drawTexture(fbo.getTexture(), node.currentPosition.x, node.currentPosition.y, transform.position.z);
 		}
 	}
 }

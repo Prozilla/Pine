@@ -55,7 +55,7 @@ public final class NodeRootInitializer extends InitSystem {
 				} else if (nodeB.tabIndex == 0) {
 					return 1;
 				} else {
-					return nodeB.getTransform().getDepthIndex() - nodeA.getTransform().getDepthIndex();
+					return Float.compare(nodeB.getTransform().position.z, nodeA.getTransform().position.z);
 				}
 			});
 			

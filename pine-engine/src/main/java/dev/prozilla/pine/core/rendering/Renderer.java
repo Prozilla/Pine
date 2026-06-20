@@ -18,6 +18,7 @@ import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.config.RenderConfig;
 import org.jetbrains.annotations.Contract;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -53,7 +54,6 @@ public class Renderer implements Initializable, Destructible {
 	// Camera
 	private int viewWidth;
 	private int viewHeight;
-	private final org.joml.Matrix4f projectionMatrix;
 	
 	// Fonts
 	private Font defaultFont;
@@ -89,7 +89,6 @@ public class Renderer implements Initializable, Destructible {
 		tracker = application.getTracker();
 		logger = application.getLogger();
 		renderScale = Vector2f.one();
-		projectionMatrix = new org.joml.Matrix4f();
 	}
 	
 	@Override
@@ -746,7 +745,6 @@ public class Renderer implements Initializable, Destructible {
 	 * is determined by dividing the length of the vertex array by 6.
 	 * </p>
 	 * @param vertices A flat float array containing x and y coordinates for each triangle vertex
-	 * @param z The depth value used when rendering each triangle
 	 * @param uvArray A flat float array containing the corresponding u and v texture coordinates. Must be the same length as {@code vertices}.
 	 * @throws IllegalArgumentException if the length of {@code vertices} does not match {@code uvArray}
 	 */
@@ -1009,8 +1007,9 @@ public class Renderer implements Initializable, Destructible {
 		}
 
 		resize();
-		setViewMatrix(new org.joml.Matrix4f());
-		setModelMatrix(new org.joml.Matrix4f());
+		setProjectionMatrix(new Matrix4f());
+		setViewMatrix(new Matrix4f());
+		setModelMatrix(new Matrix4f());
 	}
 	
 	private void handleShaderLoadingError(AssetPoolEvent<Shader> event) {
@@ -1050,19 +1049,17 @@ public class Renderer implements Initializable, Destructible {
 		glViewport(0, 0, width, height);
 		viewWidth = width;
 		viewHeight = height;
-		updateProjectionMatrix();
 	}
 	
-	public void updateProjectionMatrix() {
-		projectionMatrix.setPerspective((float)Math.toRadians(40), (float)viewWidth / viewHeight, 0.01f, 1000.0f);
+	public void setProjectionMatrix(Matrix4f projectionMatrix) {
 		program.setUniform("uProjection", projectionMatrix);
 	}
 	
-	public void setViewMatrix(org.joml.Matrix4f viewMatrix) {
+	public void setViewMatrix(Matrix4f viewMatrix) {
 		program.setUniform("uView", viewMatrix);
 	}
 	
-	public void setModelMatrix(org.joml.Matrix4f modelMatrix) {
+	public void setModelMatrix(Matrix4f modelMatrix) {
 		program.setUniform("uModel", modelMatrix);
 	}
 	

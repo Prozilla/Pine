@@ -30,7 +30,7 @@ public final class CameraControlUpdater extends UpdateSystem {
 		}
 		
 		if (cameraControlData.velocityDamping == 0) {
-			transform.setPosition(cameraControlData.targetX, cameraControlData.targetY, 0);
+			transform.setPosition(cameraControlData.targetX, cameraControlData.targetY, transform.position.z);
 			cameraData.zoomFactor = cameraControlData.targetZoom;
 		} else {
 			// Calculate velocity towards the target position and zoom with damping
@@ -55,7 +55,7 @@ public final class CameraControlUpdater extends UpdateSystem {
 			
 			float newX = MathUtils.clamp(transform.position.x, minX, maxX);
 			float newY = MathUtils.clamp(transform.position.y, minY, maxY);
-			transform.setPosition(newX, newY, 0);
+			transform.setPosition(newX, newY, transform.position.z);
 			
 			cameraControlData.targetX = MathUtils.clamp(cameraControlData.targetX, minX, maxX);
 			cameraControlData.targetY = MathUtils.clamp(cameraControlData.targetY, minY, maxY);

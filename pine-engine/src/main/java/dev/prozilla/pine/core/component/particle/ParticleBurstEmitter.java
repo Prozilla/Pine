@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.component.particle;
 
-import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.property.IntProperty;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.particle.ParticlePrefab;
@@ -19,23 +19,23 @@ public class ParticleBurstEmitter extends ParticleEmitter {
 	}
 	
 	/**
-	 * Spawns particles at (0, 0)
+	 * Spawns particles at (0, 0, 0)
 	 */
 	public void emit() {
-		emit(0, 0);
+		emit(0, 0, 0);
 	}
 	
 	/**
 	 * Spawns particles at a given position.
 	 */
-	public void emit(Vector2f position) {
-		emit(position.x, position.y);
+	public void emit(Vector3f position) {
+		emit(position.x, position.y, position.z);
 	}
 	
 	/**
 	 * Spawns particles at a given position.
 	 */
-	public void emit(float x, float y) {
+	public void emit(float x, float y, float z) {
 		int burstCount = count.get();
 		
 		if (burstCount <= 0) {
@@ -43,7 +43,7 @@ public class ParticleBurstEmitter extends ParticleEmitter {
 		}
 		
 		for (int i = 0; i < burstCount; i++) {
-			Entity particle = particlePrefab.instantiate(getWorld(), x, y);
+			Entity particle = particlePrefab.instantiate(getWorld(), x, y, z);
 			entity.addChild(particle);
 		}
 	}

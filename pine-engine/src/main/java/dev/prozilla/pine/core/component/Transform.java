@@ -24,11 +24,6 @@ public class Transform extends Component {
 	/** Parent of the entity */
 	public Transform parent;
 	
-	/** Z-index in the world, highest values are rendered first. */
-	private int depthIndex;
-	/** If true, sets the depth of children to a lower value than the parent. */
-	private boolean renderChildrenBelow;
-	
 	private final Matrix4f modelMatrix;
 
 	public Transform() {
@@ -51,9 +46,6 @@ public class Transform extends Component {
 		
 		children = new ArrayList<>();
 		velocity = new Vector3f();
-		
-		depthIndex = 0;
-		renderChildrenBelow = false;
 	}
 	
 	@Override
@@ -113,37 +105,72 @@ public class Transform extends Component {
 	}
 	
 	@Override
-	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass) {
-		return getComponentInParent(componentClass, true);
-	}
-	
-	@Override
-	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass, boolean includeAncestors) {
+	public <ComponentType extends Component> ComponentType getComponentAbove(Class<ComponentType> componentClass, boolean includeGrandParents, boolean includeSelf) {
+		if (includeSelf) {
+			ComponentType component = getComponent(componentClass);
+			if (component != null) {
+				return component;
+			}
+		}
+		
 		if (parent == null) {
 			return null;
 		}
 		
 		ComponentType component = parent.getComponent(componentClass);
 		
-		if (component == null && includeAncestors) {
-			return parent.getComponentInParent(componentClass);
+		if (component == null && includeGrandParents) {
+			return parent.getComponentAbove(componentClass);
 		}
 		
 		return component;
 	}
 	
 	@Override
-	public <ComponentType extends Component> List<ComponentType> getComponentsInChildren(Class<ComponentType> componentClass) {
-		if (children.isEmpty()) {
-			return new ArrayList<>();
+	public <ComponentType extends Component> List<ComponentType> getComponentsAbove(Class<ComponentType> componentClass, boolean includeGrandParents, boolean includeSelf) {
+		ArrayList<ComponentType> components = new ArrayList<>();
+		
+		Transform currentParent = includeSelf ? this : parent;
+		while (currentParent != null) {
+			ComponentType component = currentParent.getComponent(componentClass);
+			if (component != null) {
+				components.add(component);
+			}
+			if (currentParent == this || includeGrandParents) {
+				currentParent = currentParent.parent;
+			} else {
+				currentParent = null;
+			}
 		}
 		
+		return components;
+	}
+	
+	@Override
+	public <ComponentType extends Component> List<ComponentType> getComponentsBelow(Class<ComponentType> componentClass, boolean includeGrandChildren, boolean includeSelf, boolean includeNested) {
 		ArrayList<ComponentType> components = new ArrayList<>();
+		
+		if (includeSelf) {
+			ComponentType component = getComponent(componentClass);
+			if (component != null) {
+				components.add(component);
+				if (!includeNested) {
+					return components;
+				}
+			}
+		}
+
+		if (children.isEmpty()) {
+			return components;
+		}
 		
 		for (Transform child : children) {
 			ComponentType component = child.getComponent(componentClass);
 			if (component != null) {
 				components.add(component);
+			}
+			if (includeGrandChildren) {
+				components.addAll(child.getComponentsBelow(componentClass, component == null || includeNested, false));
 			}
 		}
 		
@@ -219,12 +246,6 @@ public class Transform extends Component {
 		}
 		
 		this.parent = parent;
-		
-		if (parent != null) {
-			// Temporarily borrow depth index from parent until depth is recalculated
-			depthIndex = parent.depthIndex;
-		}
-		
 		entity.invoke(Entity.EventType.PARENT_UPDATE);
 	}
 	
@@ -277,46 +298,5 @@ public class Transform extends Component {
 		velocity.x = x;
 		velocity.y = y;
 		velocity.z = z;
-	}
-	
-	public void setRenderChildrenBelow(boolean renderChildrenBelow) {
-		if (this.renderChildrenBelow == renderChildrenBelow) {
-			return;
-		}
-		
-		this.renderChildrenBelow = renderChildrenBelow;
-		getWorld().calculateDepth();
-	}
-	
-	/**
-	 * Calculates the z-indices of this transform and its children based on a depth value.
-	 * @param depth Depth value before calculation
-	 * @return Depth value after calculation
-	 */
-	public int calculateDepth(int depth) {
-		if (!renderChildrenBelow) {
-			depthIndex = depth++;
-		}
-		
-		for (Transform child : children) {
-			depth = child.calculateDepth(depth);
-		}
-		
-		if (renderChildrenBelow) {
-			depthIndex = depth++;
-		}
-		
-		return depth;
-	}
-	
-	public int getDepthIndex() {
-		return depthIndex;
-	}
-	
-	/**
-	 * @return Depth value between <code>0f</code> and <code>1f</code> based on the depth index.
-	 */
-	public float getDepth() {
-		return ((float)depthIndex / getWorld().maxDepth);
 	}
 }

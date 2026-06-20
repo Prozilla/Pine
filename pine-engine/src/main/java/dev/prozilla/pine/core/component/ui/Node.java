@@ -120,13 +120,13 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	}
 	
 	private void handleParentChange(Event<Entity.EventType, Entity> event) {
-		parent = entity.getComponentInParent(Node.class, false);
+		parent = entity.getComponentAbove(Node.class, false);
 		invalidateSelector();
 	}
 	
 	private void handleChildrenChange(Event<Entity.EventType, Entity> event) {
 		children.clear();
-		children.addAll(entity.getComponentsInChildren(Node.class));
+		children.addAll(entity.getComponentsBelow(Node.class));
 		invalidateSelector();
 	}
 	
@@ -170,7 +170,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	}
 	
 	public NodeContext getContext() {
-		LayoutNode layoutNode = entity.getComponentInParent(LayoutNode.class);
+		LayoutNode layoutNode = entity.getComponentAbove(LayoutNode.class);
 		if (layoutNode != null) {
 			return layoutNode;
 		}
@@ -179,7 +179,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	}
 	
 	public boolean isInLayout() {
-		LayoutNode layoutNode = entity.getComponentInParent(LayoutNode.class);
+		LayoutNode layoutNode = entity.getComponentAbove(LayoutNode.class);
 		
 		if (layoutNode == null) {
 			return false;
@@ -189,7 +189,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	}
 	
 	public boolean isInTooltip() {
-		return entity != null && getComponentInParent(TooltipNode.class) != null;
+		return entity != null && getComponentAbove(TooltipNode.class) != null;
 	}
 	
 	/**
@@ -201,7 +201,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 			return root;
 		}
 		
-		NodeRoot nodeRoot = entity.getComponentInParent(NodeRoot.class);
+		NodeRoot nodeRoot = entity.getComponentAbove(NodeRoot.class);
 		
 		if (nodeRoot == null) {
 			throw new IllegalStateException("node must be a child of a node root: " + entity);

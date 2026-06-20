@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.ComponentManager;
+import dev.prozilla.pine.core.component.RenderLayer;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityManager;
@@ -14,6 +15,7 @@ import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.SystemBase;
 import dev.prozilla.pine.core.system.SystemBuilder;
 import dev.prozilla.pine.core.system.SystemManager;
+import dev.prozilla.pine.core.system.standard.RenderLayerInitializer;
 import dev.prozilla.pine.core.system.standard.animation.AnimationInitializer;
 import dev.prozilla.pine.core.system.standard.animation.AnimationUpdater;
 import dev.prozilla.pine.core.system.standard.audio.AudioPlayerInitializer;
@@ -94,6 +96,12 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		if (systemManager.isInitialized()) {
 			throw new IllegalStateException("Initial systems must be specified before the initialization of the system manager.");
 		}
+		
+		// Rendering
+		initialSystems.add(new SceneCameraRenderSystem());
+		
+		// Z-index
+		initialSystems.add(new RenderLayerInitializer());
 		
 		// Animations
 		initialSystems.add(new AnimationInitializer());
@@ -187,7 +195,7 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 			throw new IllegalStateException("World has already been initialized.");
 		}
 		
-		calculateDepth();
+		updateRenderLayers();
 		systemManager.init();
 		initialized = true;
 	}
@@ -226,7 +234,7 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 	}
 	
 	/**
-	 * Instantiates a prefab into this world at (0, 0).
+	 * Instantiates a prefab into this world at (0, 0, 0).
 	 * @param prefab The prefab to instantiate
 	 * @return The instantiated entity
 	 */
@@ -240,11 +248,12 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 	 * @param prefab The prefab to instantiate
 	 * @param x X position
 	 * @param y Y position
+	 * @param z Z position
 	 * @return The instantiated entity
 	 */
-	public Entity addEntity(Prefab prefab, float x, float y) {
+	public Entity addEntity(Prefab prefab, float x, float y, float z) {
 		Checks.isNotNull(prefab, "prefab");
-		return addEntity(prefab.instantiate(this, x, y));
+		return addEntity(prefab.instantiate(this, x, y, z));
 	}
 	
 	/**
@@ -258,13 +267,13 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		if (entityManager.contains(entity)) {
 			systemManager.register(entity); // Check if entity was changed since it was added (e.g. tag changed after components added)
 			if (initialized) {
-				calculateDepth();
+				updateRenderLayers();
 			}
 			return entity;
 		}
 		entityManager.addEntity(entity);
 		if (initialized) {
-			calculateDepth();
+			updateRenderLayers();
 		}
 		systemManager.register(entity);
 		return entity;
@@ -274,7 +283,7 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		Checks.isNotNull(entity, "entity");
 		entityManager.removeEntity(entity);
 		if (initialized) {
-			calculateDepth();
+			updateRenderLayers();
 		}
 		systemManager.unregister(entity);
 		componentManager.removeComponents(entity);
@@ -347,26 +356,27 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		return system;
 	}
 	
-	public void calculateDepth() {
+	public void updateRenderLayers() {
 		if (initialized && !application.getConfig().enableDepthRecalculation.get()) {
 			return;
 		}
 		
-		ArrayList<Transform> rootParents = new ArrayList<>();
+		// TODO: All layers without any layers above them should be treated as root layers
+		ArrayList<RenderLayer> rootLayers = new ArrayList<>();
 		
-		// Get root parent transforms
+		// Get root layers
 		for (Entity entity : entityManager.getEntities()) {
 			if (entity.transform.parent == null) {
-				rootParents.add(entity.transform);
+				rootLayers.addAll(entity.getComponentsBelow(RenderLayer.class, true, true, false));
 			}
 		}
 		
-		// Calculate depth for each root parent
-		int depth = 0;
-		for (Transform rootParent : rootParents) {
-			depth = rootParent.calculateDepth(depth);
+		// Calculate z-index for each root layer
+		int zIndex = 0;
+		for (RenderLayer rootLayer : rootLayers) {
+			zIndex = rootLayer.calculateZIndex(zIndex);
 		}
-		maxDepth = depth;
+		maxDepth = zIndex;
 		
 		// Check if depth indexes are unique
 //		List<Integer> indexes = new ArrayList<>();

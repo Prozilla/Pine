@@ -4,10 +4,10 @@ import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
 import dev.prozilla.pine.core.component.audio.AudioEffectPlayer;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.prefab.Prefab;
+import dev.prozilla.pine.core.entity.prefab.LayerPrefab;
 import dev.prozilla.pine.examples.flappybird.component.PipesData;
 
-public class PipesPrefab extends Prefab {
+public class PipesPrefab extends LayerPrefab {
 	
 	public PipesPrefab() {
 		setName("Pipes");

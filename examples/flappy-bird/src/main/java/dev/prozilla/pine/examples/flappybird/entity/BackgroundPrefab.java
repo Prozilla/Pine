@@ -26,7 +26,7 @@ public class BackgroundPrefab extends SpritePrefab {
 	
 	public Entity instantiate(World world, float x, float y, int index) {
 		this.index = index;
-		return super.instantiate(world, x, y);
+		return super.instantiate(world, x, y, 0);
 	}
 	
 	@Override

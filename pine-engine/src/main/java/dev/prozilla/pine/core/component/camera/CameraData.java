@@ -12,10 +12,15 @@ public class CameraData extends Component {
 	
 	public float zoomFactor;
 	
+	public boolean orthographic;
+	public float fieldOfView;
 	public float width;
 	public float height;
+	public float nearClipPlane;
+	public float farClipPlane;
 	
 	private final Matrix4f viewMatrix;
+	private final Matrix4f projectionMatrix;
 	
 	public Color backgroundColor;
 	
@@ -27,7 +32,14 @@ public class CameraData extends Component {
 		this.backgroundColor = backgroundColor;
 		
 		zoomFactor = 1;
+		
+		orthographic = false;
+		fieldOfView = 40;
+		nearClipPlane = 0.01f;
+		farClipPlane = 1000f;
+		
 		viewMatrix = new Matrix4f();
+		projectionMatrix = new Matrix4f();
 	}
 	
 	public void setSize(int width, int height) {
@@ -129,5 +141,16 @@ public class CameraData extends Component {
 			.rotate((float)Math.toRadians(transform.rotation.x), new Vector3f(1, 0, 0))
 			.rotate((float)Math.toRadians(transform.rotation.y), new Vector3f(0, 1, 0))
 			.translate(-transform.position.x, -transform.position.y, -transform.position.z);
+	}
+	
+	public Matrix4f getProjectionMatrix() {
+		if (orthographic) {
+			float right = width / 2f;
+			float top = height / 2f;
+			projectionMatrix.setOrtho(-right, right, -top, top, nearClipPlane, farClipPlane);
+		} else {
+			projectionMatrix.setPerspective((float)Math.toRadians(fieldOfView), width / height, nearClipPlane, farClipPlane);
+		}
+		return projectionMatrix;
 	}
 }
