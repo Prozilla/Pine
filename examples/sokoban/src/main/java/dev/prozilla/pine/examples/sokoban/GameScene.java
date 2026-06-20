@@ -120,7 +120,7 @@ public class GameScene extends Scene {
 		// Move camera to center of map
 		int width = MAP[0].length();
 		int height = MAP.length;
-		cameraData.getTransform().setPosition((width * TILE_SIZE) / 2f, (height * TILE_SIZE) / 2f);
+		cameraData.getTransform().setPosition((width * TILE_SIZE) / 2f, (height * TILE_SIZE) / 2f, 0);
 		
 		cameraData.zoomIn(-0.1f);
 		cameraData.setBackgroundColor(Color.hex("#596A6C"));

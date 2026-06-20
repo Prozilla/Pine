@@ -86,7 +86,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		
 		id = EntityManager.generateEntityId();
 		
-		transform = new Transform(x, y);
+		transform = new Transform(x, y, 0); // TODO: Add z coordinate
 		components = new ArrayList<>();
 		addComponent(transform);
 

@@ -6,6 +6,7 @@ layout (location=2) in vec2 vTexCoords;
 layout (location=3) in float vTexId;
 layout (location=4) in float vIsArrayTexture;
 
+uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProjection;
 
@@ -22,5 +23,6 @@ void main() {
     fIsArrayTexture = vIsArrayTexture;
 
     // Apply view and projection matrices
-    gl_Position = uProjection * uView * vec4(vPosition, 1.0);
+    mat4 mvp = uProjection * uView * uModel;
+    gl_Position = mvp * vec4(vPosition, 1.0);
 }

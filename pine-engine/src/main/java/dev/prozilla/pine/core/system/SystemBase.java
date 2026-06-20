@@ -154,6 +154,7 @@ public abstract class SystemBase {
 				
 				EntityChunk entityChunk = query.entityChunks.get(i);
 				if (entityChunk.isActive()) {
+					application.getRenderer().setModelMatrix(entityChunk.getTransform().getModelMatrix());
 					accept(entityChunk, action);
 				}
 			}
@@ -183,6 +184,7 @@ public abstract class SystemBase {
 				
 				EntityChunk entityChunk = query.entityChunks.get(i);
 				if (entityChunk.isActive()) {
+					application.getRenderer().setModelMatrix(entityChunk.getTransform().getModelMatrix());
 					accept(entityChunk, action);
 				}
 			}

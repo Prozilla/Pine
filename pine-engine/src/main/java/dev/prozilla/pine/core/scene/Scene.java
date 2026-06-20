@@ -164,6 +164,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	@Override
 	public void render(Renderer renderer) throws IllegalStateException {
 		checkStatus();
+		renderer.setViewMatrix(cameraData.getViewMatrix());
 		world.render(renderer);
 	}
 	

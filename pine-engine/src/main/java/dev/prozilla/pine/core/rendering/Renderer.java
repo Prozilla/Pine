@@ -7,8 +7,6 @@ import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.math.MathUtils;
-import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
@@ -51,9 +49,10 @@ public class Renderer implements Initializable, Destructible {
 	private int renderedVertices;
 	private int totalVertices;
 	
-	// View dimensions
+	// Camera
 	private int viewWidth;
 	private int viewHeight;
+	private final org.joml.Matrix4f projectionMatrix;
 	
 	// Fonts
 	private Font defaultFont;
@@ -89,6 +88,7 @@ public class Renderer implements Initializable, Destructible {
 		tracker = application.getTracker();
 		logger = application.getLogger();
 		renderScale = Vector2f.one();
+		projectionMatrix = new org.joml.Matrix4f();
 	}
 	
 	@Override
@@ -263,12 +263,12 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	public void setScale(float scale) {
-		this.renderScale.set(scale);
+//		this.renderScale.set(scale);
 	}
 	
 	public void setScale(Vector2f scale) {
 		Checks.isNotNull(scale, "scale");
-		this.renderScale.set(scale.x, scale.y);
+//		this.renderScale.set(scale.x, scale.y);
 	}
 	
 	public void setMirrorHorizontally(boolean mirrorHorizontally) {
@@ -891,17 +891,19 @@ public class Renderer implements Initializable, Destructible {
 	 * Checks if a quad is outside the screen bounds.
 	 */
 	public boolean outOfBounds(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
-		return MathUtils.max(x1, x2, x3, x4) < 0
-			|| MathUtils.min(x1, x2, x3, x4) >= viewWidth
-			|| MathUtils.max(y1, y2, y3, y4) < 0
-	        || MathUtils.min(y1, y2, y3, y4) >= viewHeight;
+		return false;
+//		return MathUtils.max(x1, x2, x3, x4) < 0
+//			|| MathUtils.min(x1, x2, x3, x4) >= viewWidth
+//			|| MathUtils.max(y1, y2, y3, y4) < 0
+//	        || MathUtils.min(y1, y2, y3, y4) >= viewHeight;
 	}
 	
 	public boolean outOfBounds(float x1, float y1, float x2, float y2, float x3, float y3) {
-		return MathUtils.max(x1, x2, x3) < 0
-			|| MathUtils.min(x1, x2, x3) >= viewWidth
-			|| MathUtils.max(y1, y2, y3) < 0
-			|| MathUtils.min(y1, y2, y3) >= viewHeight;
+		return false;
+//		return MathUtils.max(x1, x2, x3) < 0
+//			|| MathUtils.min(x1, x2, x3) >= viewWidth
+//			|| MathUtils.max(y1, y2, y3) < 0
+//			|| MathUtils.min(y1, y2, y3) >= viewHeight;
 	}
 	
 	/**
@@ -996,9 +998,10 @@ public class Renderer implements Initializable, Destructible {
 		if (Platform.get() != Platform.MACOS) {
 			program.setUniform("uTextureArray", 0);
 		}
-		program.setUniform("uView", new Matrix4f());
-		
+
 		resize();
+		setViewMatrix(new org.joml.Matrix4f());
+		setModelMatrix(new org.joml.Matrix4f());
 	}
 	
 	private void handleShaderLoadingError(AssetPoolEvent<Shader> event) {
@@ -1036,13 +1039,22 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		glViewport(0, 0, width, height);
-		
-		// Set projection matrix to an orthographic projection
-		Matrix4f projection = Matrix4f.orthographic(0f, width, 0f, height, -1f, 1f);
-		program.setUniform("uProjection", projection);
-		
 		viewWidth = width;
 		viewHeight = height;
+		updateProjectionMatrix();
+	}
+	
+	public void updateProjectionMatrix() {
+		projectionMatrix.setPerspective((float)Math.toRadians(40), (float)viewWidth / viewHeight, 0.01f, 1000.0f);
+		program.setUniform("uProjection", projectionMatrix);
+	}
+	
+	public void setViewMatrix(org.joml.Matrix4f viewMatrix) {
+		program.setUniform("uView", viewMatrix);
+	}
+	
+	public void setModelMatrix(org.joml.Matrix4f modelMatrix) {
+		program.setUniform("uModel", modelMatrix);
 	}
 	
 	/**

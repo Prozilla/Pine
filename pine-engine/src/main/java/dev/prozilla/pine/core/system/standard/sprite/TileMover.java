@@ -26,6 +26,6 @@ public final class TileMover extends UpdateSystem {
 		float x = tileRenderer.getCoordinate().x * tileRenderer.size;
 		float y = tileRenderer.getCoordinate().y * tileRenderer.size;
 		
-		transform.setPosition(x, y);
+		transform.setPosition(x, y, 0);
 	}
 }

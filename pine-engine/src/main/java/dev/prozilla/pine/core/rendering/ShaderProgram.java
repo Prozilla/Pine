@@ -262,6 +262,57 @@ public class ShaderProgram implements Destructible {
 		}
 	}
 	
+	public void setUniform(CharSequence name, org.joml.Matrix2f value) {
+		setUniform(requireUniformLocation(name), value);
+	}
+	
+	/**
+	 * Sets the uniform variable for specified location.
+	 * @param location Uniform location
+	 * @param value    Value to set
+	 */
+	public void setUniform(int location, org.joml.Matrix2f value) {
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			FloatBuffer buffer = stack.mallocFloat(2 * 2);
+			value.get(buffer);
+			glUniformMatrix2fv(location, false, buffer);
+		}
+	}
+	
+	public void setUniform(CharSequence name, org.joml.Matrix3f value) {
+		setUniform(requireUniformLocation(name), value);
+	}
+	
+	/**
+	 * Sets the uniform variable for specified location.
+	 * @param location Uniform location
+	 * @param value    Value to set
+	 */
+	public void setUniform(int location, org.joml.Matrix3f value) {
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			FloatBuffer buffer = stack.mallocFloat(3 * 3);
+			value.get(buffer);
+			glUniformMatrix3fv(location, false, buffer);
+		}
+	}
+	
+	public void setUniform(CharSequence name, org.joml.Matrix4f value) {
+		setUniform(requireUniformLocation(name), value);
+	}
+	
+	/**
+	 * Sets the uniform variable for specified location.
+	 * @param location Uniform location
+	 * @param value    Value to set
+	 */
+	public void setUniform(int location, org.joml.Matrix4f value) {
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			FloatBuffer buffer = stack.mallocFloat(4 * 4);
+			value.get(buffer);
+			glUniformMatrix4fv(location, false, buffer);
+		}
+	}
+	
 	public void setUniform(CharSequence name, int[] value) {
 		setUniform(requireUniformLocation(name), value);
 	}

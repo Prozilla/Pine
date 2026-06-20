@@ -37,6 +37,8 @@ import dev.prozilla.pine.core.system.standard.ui.tooltip.TooltipInputHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: merge into Scene
+
 /**
  * An isolated collection of entities, components and systems that live inside a scene.
  */

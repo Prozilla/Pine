@@ -1,8 +1,9 @@
 package dev.prozilla.pine.core.component;
 
-import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.entity.Entity;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +12,12 @@ import java.util.Objects;
 public class Transform extends Component {
 	
 	/** Local position */
-	public Vector2f position;
+	public Vector3f position;
 	/** Rotation in degrees */
-	public float rotation;
+	public Vector3f rotation;
+	public Vector3f scale;
 	/** The velocity vector is added to the position each frame. */
-	public Vector2f velocity;
+	public Vector3f velocity;
 	
 	/** Children of the entity */
 	public final List<Transform> children;
@@ -26,21 +28,29 @@ public class Transform extends Component {
 	private int depthIndex;
 	/** If true, sets the depth of children to a lower value than the parent. */
 	private boolean renderChildrenBelow;
+	
+	private final Matrix4f modelMatrix;
 
 	public Transform() {
-		this(0, 0);
+		this(0, 0, 0);
 	}
 	
-	public Transform(float x, float y) {
-		this(x, y, 0);
+	public Transform(float x, float y, float z) {
+		this(new Vector3f(x, y, z));
 	}
 	
-	public Transform(float x, float y, float rotation) {
-		position = new Vector2f(x, y);
+	public Transform(Vector3f position) {
+		this(position, new Vector3f());
+	}
+	
+	public Transform(Vector3f position, Vector3f rotation) {
+		this.position = position;
 		this.rotation = rotation;
+		scale = Vector3f.one();
+		modelMatrix = new Matrix4f();
 		
 		children = new ArrayList<>();
-		velocity = new Vector2f();
+		velocity = new Vector3f();
 		
 		depthIndex = 0;
 		renderChildrenBelow = false;
@@ -156,6 +166,14 @@ public class Transform extends Component {
 		}
 	}
 	
+	public Matrix4f getModelMatrix() {
+		return modelMatrix.identity().translate(position.x, position.y, position.z)
+			.rotateX((float)Math.toRadians(-rotation.x))
+			.rotateY((float)Math.toRadians(-rotation.y))
+			.rotateZ((float)Math.toRadians(-rotation.z))
+			.scale(scale.x, scale.y, scale.z);
+	}
+	
 	public void setParent(Transform parent) {
 		if (Objects.equals(parent, this.parent)) {
 			return;
@@ -175,33 +193,51 @@ public class Transform extends Component {
 		return children.size();
 	}
 	
-	public void translate(Vector2f delta) {
+	public void translate(Vector3f delta) {
 		Checks.isNotNull(delta, "delta");
-		translate(delta.x, delta.y);
+		translate(delta.x, delta.y, delta.z);
 	}
 	
-	public void translate(float deltaX, float deltaY) {
-		position.add(deltaX, deltaY);
+	public void translate(float deltaX, float deltaY, float deltaZ) {
+		position.add(deltaX, deltaY, deltaZ);
 	}
 	
-	public void setPosition(Vector2f position) {
+	public void setPosition(Vector3f position) {
 		Checks.isNotNull(position, "position");
-		setPosition(position.x, position.y);
+		setPosition(position.x, position.y, position.z);
 	}
 	
-	public void setPosition(float x, float y) {
-		position.x = x;
-		position.y = y;
+	public void setPosition(float x, float y, float z) {
+		position.set(x, y, z);
 	}
 	
-	public void setVelocity(Vector2f velocity) {
+	public void rotate(Vector3f delta) {
+		Checks.isNotNull(delta, "delta");
+		rotate(delta.x, delta.y, delta.z);
+	}
+	
+	public void rotate(float deltaX, float deltaY, float deltaZ) {
+		rotation.add(deltaX, deltaY, deltaZ);
+	}
+	
+	public void setRotation(Vector3f rotation) {
+		Checks.isNotNull(rotation, "rotation");
+		setRotation(rotation.x, rotation.y, rotation.z);
+	}
+	
+	public void setRotation(float x, float y, float z) {
+		rotation.set(x, y, z);
+	}
+	
+	public void setVelocity(Vector3f velocity) {
 		Checks.isNotNull(velocity, "velocity");
-		setVelocity(velocity.x, velocity.y);
+		setVelocity(velocity.x, velocity.y, velocity.z);
 	}
 	
-	public void setVelocity(float x, float y) {
+	public void setVelocity(float x, float y, float z) {
 		velocity.x = x;
 		velocity.y = y;
+		velocity.z = z;
 	}
 	
 	public void setRenderChildrenBelow(boolean renderChildrenBelow) {

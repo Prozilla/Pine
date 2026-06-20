@@ -12,6 +12,7 @@ include(
 	":examples:sokoban",
 	":examples:chat",
 	":examples:audio-visualizer",
-	":examples:openrgb"
+	":examples:openrgb",
+	":examples:fps"
 )
 include(":examples:mods:dev-mode-activator")

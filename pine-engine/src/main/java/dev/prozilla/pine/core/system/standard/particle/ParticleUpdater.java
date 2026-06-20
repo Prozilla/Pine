@@ -38,7 +38,7 @@ public final class ParticleUpdater extends UpdateSystem {
 		
 		// Update position based on velocity
 		if (particleRenderer.velocity != null) {
-			transform.translate(particleRenderer.velocity.x * deltaTime, particleRenderer.velocity.y * deltaTime);
+			transform.translate(particleRenderer.velocity.x * deltaTime, particleRenderer.velocity.y * deltaTime, 0);
 		}
 		
 		// Update scale based on animation
