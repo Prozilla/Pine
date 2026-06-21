@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * Contains a partition of the data of an entity.
  */
-public abstract class Component implements Printable, Destructible, EntityProvider, ComponentsProvider, ApplicationProvider, SceneProvider {
+public abstract class Component implements Printable, Destructible, EntityProvider, ComponentQueryProvider, ApplicationProvider, SceneProvider {
 	
 	// Identifier
 	public final int id;

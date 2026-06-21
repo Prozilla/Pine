@@ -9,32 +9,32 @@ import java.util.List;
  * Interface with utility methods for finding certain components in the current context.
  */
 @FunctionalInterface
-public interface ComponentsProvider extends ComponentsContext {
+public interface ComponentQueryProvider extends ComponentQueryContext {
 	
 	Entity getEntity();
 	
 	@Override
-	default <ComponentType extends Component> ComponentType getComponentAbove(Class<ComponentType> componentClass, boolean includeGrandParents, boolean includeSelf) {
+	default <ComponentType extends Component> ComponentType getComponentAbove(Class<ComponentType> componentClass, ComponentQuery query) {
 		if (getEntity() == null) {
 			return null;
 		}
-		return getEntity().getComponentAbove(componentClass, includeGrandParents, includeSelf);
+		return getEntity().getComponentAbove(componentClass, query);
 	}
 	
 	@Override
-	default <ComponentType extends Component> List<ComponentType> getComponentsAbove(Class<ComponentType> componentClass, boolean includeGrandParents, boolean includeSelf) {
+	default <ComponentType extends Component> List<ComponentType> getComponentsAbove(Class<ComponentType> componentClass, ComponentQuery query) {
 		if (getEntity() == null) {
 			return new ArrayList<>();
 		}
-		return getEntity().getComponentsAbove(componentClass, includeGrandParents, includeSelf);
+		return getEntity().getComponentsAbove(componentClass, query);
 	}
 	
 	@Override
-	default <ComponentType extends Component> List<ComponentType> getComponentsBelow(Class<ComponentType> componentClass, boolean includeGrandChildren, boolean includeSelf, boolean includeNested) {
+	default <ComponentType extends Component> List<ComponentType> getComponentsBelow(Class<ComponentType> componentClass, ComponentQuery query) {
 		if (getEntity() == null) {
 			return new ArrayList<>();
 		}
-		return getEntity().getComponentsBelow(componentClass, includeGrandChildren, includeSelf, includeNested);
+		return getEntity().getComponentsBelow(componentClass, query);
 	}
 	
 	@Override

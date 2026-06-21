@@ -3,10 +3,7 @@ package dev.prozilla.pine.core.scene;
 import dev.prozilla.pine.common.lifecycle.*;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
-import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.component.ComponentManager;
-import dev.prozilla.pine.core.component.RenderLayer;
-import dev.prozilla.pine.core.component.Transform;
+import dev.prozilla.pine.core.component.*;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityManager;
 import dev.prozilla.pine.core.entity.EntityQueryPool;
@@ -367,7 +364,7 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		// Get root layers
 		for (Entity entity : entityManager.getEntities()) {
 			if (entity.transform.parent == null) {
-				rootLayers.addAll(entity.getComponentsBelow(RenderLayer.class, true, true, false));
+				rootLayers.addAll(entity.getComponentsBelow(RenderLayer.class, ComponentQuery.SELF_OR_NEAREST_PATHS));
 			}
 		}
 		

@@ -10,7 +10,8 @@ import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.component.ComponentsContext;
+import dev.prozilla.pine.core.component.ComponentQuery;
+import dev.prozilla.pine.core.component.ComponentQueryContext;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.scene.Scene;
@@ -24,7 +25,7 @@ import java.util.List;
 /**
  * Represents a unique entity in the world with a list of components.
  */
-public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> implements Destructible, Printable, EntityContext, ComponentsContext, ApplicationProvider, SceneProvider {
+public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> implements Destructible, Printable, EntityContext, ComponentQueryContext, ApplicationProvider, SceneProvider {
 	
 	public final int id;
 	private final String name;
@@ -312,18 +313,18 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	}
 	
 	@Override
-	public <ComponentType extends Component> ComponentType getComponentAbove(Class<ComponentType> componentClass, boolean includeGrandParents, boolean includeSelf) {
-		return transform.getComponentAbove(componentClass, includeGrandParents, includeSelf);
+	public <ComponentType extends Component> ComponentType getComponentAbove(Class<ComponentType> componentClass, ComponentQuery query) {
+		return transform.getComponentAbove(componentClass, query);
 	}
 	
 	@Override
-	public <ComponentType extends Component> List<ComponentType> getComponentsAbove(Class<ComponentType> componentClass, boolean includeGrandParents, boolean includeSelf) {
-		return transform.getComponentsAbove(componentClass, includeGrandParents, includeSelf);
+	public <ComponentType extends Component> List<ComponentType> getComponentsAbove(Class<ComponentType> componentClass, ComponentQuery query) {
+		return transform.getComponentsAbove(componentClass, query);
 	}
 	
 	@Override
-	public <ComponentType extends Component> List<ComponentType> getComponentsBelow(Class<ComponentType> componentClass, boolean includeGrandChildren, boolean includeSelf, boolean includeNested) {
-		return transform.getComponentsBelow(componentClass, includeGrandChildren, includeSelf, includeNested);
+	public <ComponentType extends Component> List<ComponentType> getComponentsBelow(Class<ComponentType> componentClass, ComponentQuery query) {
+		return transform.getComponentsBelow(componentClass, query);
 	}
 	
 	/**

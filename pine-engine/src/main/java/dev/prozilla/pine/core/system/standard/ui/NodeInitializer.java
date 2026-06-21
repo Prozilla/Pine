@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.system.standard.ui;
 
+import dev.prozilla.pine.core.component.ComponentQuery;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.entity.Entity;
@@ -18,7 +19,7 @@ public final class NodeInitializer extends InitSystem {
 		Node node = chunk.getComponent(Node.class);
 		node.updateHierarchy();
 		
-		LayoutNode group = entity.getComponentAbove(LayoutNode.class, false);
+		LayoutNode group = entity.getComponentAbove(LayoutNode.class, ComponentQuery.SHALLOW);
 		if (group != null) {
 			group.getChildComponents();
 		}

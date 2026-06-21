@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.ComponentQuery;
 
 
 /**
@@ -105,7 +106,7 @@ public class TileRenderer extends Component implements TileProvider {
 			return group;
 		}
 		
-		group = getComponentAbove(GridGroup.class, false);
+		group = getComponentAbove(GridGroup.class, ComponentQuery.SHALLOW);
 		return group;
 	}
 	

@@ -12,6 +12,7 @@ import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.ComponentQuery;
 import dev.prozilla.pine.core.entity.Entity;
 
 import java.util.ArrayList;
@@ -120,7 +121,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	}
 	
 	private void handleParentChange(Event<Entity.EventType, Entity> event) {
-		parent = entity.getComponentAbove(Node.class, false);
+		parent = entity.getComponentAbove(Node.class, ComponentQuery.SHALLOW);
 		invalidateSelector();
 	}
 	

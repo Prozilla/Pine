@@ -105,8 +105,8 @@ public class Transform extends Component {
 	}
 	
 	@Override
-	public <ComponentType extends Component> ComponentType getComponentAbove(Class<ComponentType> componentClass, boolean includeGrandParents, boolean includeSelf) {
-		if (includeSelf) {
+	public <ComponentType extends Component> ComponentType getComponentAbove(Class<ComponentType> componentClass, ComponentQuery query) {
+		if (query.includesSelf()) {
 			ComponentType component = getComponent(componentClass);
 			if (component != null) {
 				return component;
@@ -119,24 +119,24 @@ public class Transform extends Component {
 		
 		ComponentType component = parent.getComponent(componentClass);
 		
-		if (component == null && includeGrandParents) {
-			return parent.getComponentAbove(componentClass);
+		if (component == null && query.isRecursive()) {
+			return parent.getComponentAbove(componentClass, query.withoutSelf());
 		}
 		
 		return component;
 	}
 	
 	@Override
-	public <ComponentType extends Component> List<ComponentType> getComponentsAbove(Class<ComponentType> componentClass, boolean includeGrandParents, boolean includeSelf) {
+	public <ComponentType extends Component> List<ComponentType> getComponentsAbove(Class<ComponentType> componentClass, ComponentQuery query) {
 		ArrayList<ComponentType> components = new ArrayList<>();
 		
-		Transform currentParent = includeSelf ? this : parent;
+		Transform currentParent = query.includesSelf() ? this : parent;
 		while (currentParent != null) {
 			ComponentType component = currentParent.getComponent(componentClass);
 			if (component != null) {
 				components.add(component);
 			}
-			if (currentParent == this || includeGrandParents) {
+			if (currentParent == this || query.getMode() == ComponentQuery.Mode.EXHAUSTIVE || (query.isRecursive() && components.isEmpty())) {
 				currentParent = currentParent.parent;
 			} else {
 				currentParent = null;
@@ -147,31 +147,28 @@ public class Transform extends Component {
 	}
 	
 	@Override
-	public <ComponentType extends Component> List<ComponentType> getComponentsBelow(Class<ComponentType> componentClass, boolean includeGrandChildren, boolean includeSelf, boolean includeNested) {
+	public <ComponentType extends Component> List<ComponentType> getComponentsBelow(Class<ComponentType> componentClass, ComponentQuery query) {
 		ArrayList<ComponentType> components = new ArrayList<>();
 		
-		if (includeSelf) {
-			ComponentType component = getComponent(componentClass);
-			if (component != null) {
-				components.add(component);
-				if (!includeNested) {
-					return components;
-				}
-			}
-		}
-
-		if (children.isEmpty()) {
-			return components;
+		List<Transform> currentLevel = new ArrayList<>();
+		if (query.includesSelf()) {
+			currentLevel.add(this);
+		} else {
+			currentLevel.addAll(children);
 		}
 		
-		for (Transform child : children) {
-			ComponentType component = child.getComponent(componentClass);
-			if (component != null) {
-				components.add(component);
+		while (!currentLevel.isEmpty() && (query.getMode() != ComponentQuery.Mode.NEAREST_LEVEL || components.isEmpty())) {
+			List<Transform> nextLevel = new ArrayList<>();
+			for (Transform transform : currentLevel) {
+				ComponentType component = transform.getComponent(componentClass);
+				if (component != null) {
+					components.add(component);
+				}
+				if (query.isRecursive() && (query.getMode() != ComponentQuery.Mode.NEAREST_PATHS || component == null)) {
+					nextLevel.addAll(transform.children);
+				}
 			}
-			if (includeGrandChildren) {
-				components.addAll(child.getComponentsBelow(componentClass, component == null || includeNested, false));
-			}
+			currentLevel = nextLevel;
 		}
 		
 		return components;

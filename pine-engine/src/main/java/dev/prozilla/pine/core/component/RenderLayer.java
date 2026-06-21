@@ -53,7 +53,7 @@ public class RenderLayer extends Component {
 			if (childLayer != null) {
 				zIndex = childLayer.calculateZIndex(zIndex);
 			} else {
-				for (RenderLayer grandChildLayer : child.getComponentsBelow(RenderLayer.class, true, false, false)) {
+				for (RenderLayer grandChildLayer : child.getComponentsBelow(RenderLayer.class, ComponentQuery.NEAREST_PATHS)) {
 					zIndex = grandChildLayer.calculateZIndex(zIndex);
 				}
 			}
