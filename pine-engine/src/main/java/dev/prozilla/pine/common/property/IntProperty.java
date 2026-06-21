@@ -333,6 +333,10 @@ public interface IntProperty extends NonNullProperty<Integer> {
 		return mapToInt((value) -> value * operand);
 	}
 	
+	default IntProperty mod(int operand) {
+		return mapToInt((value) -> value % operand);
+	}
+	
 	/**
 	 * @see #mapToBoolean(ToBooleanMapper)
 	 */

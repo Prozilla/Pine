@@ -1,24 +1,22 @@
 package dev.prozilla.pine.core.rendering.mesh;
 
 import dev.prozilla.pine.common.math.vector.Vector3f;
-import dev.prozilla.pine.common.util.checks.Checks;
 
 /**
  * Generates a circular shape.
  */
 public class Circle extends Mesh {
 	
-	protected Vector3f position;
 	protected float radius;
 	protected int edges;
 	
-	public Circle(Vector3f position, float radius) {
-		this(position, radius, 0);
+	public Circle(Vector3f origin, float radius) {
+		this(origin, radius, 0);
 		setAutoEdges();
 	}
 	
-	public Circle(Vector3f position, float radius, int edges) {
-		this.position = Checks.isNotNull(position, "position");
+	public Circle(Vector3f origin, float radius, int edges) {
+		super(origin);
 		this.radius = radius;
 		this.edges = edges;
 	}
@@ -33,17 +31,17 @@ public class Circle extends Mesh {
 		float[] vertices = new float[vertexCount * 3];
 		
 		// Center point
-		vertices[0] = position.x;
-		vertices[1] = position.y;
-		vertices[2] = position.z;
+		vertices[0] = origin.x;
+		vertices[1] = origin.y;
+		vertices[2] = origin.z;
 		
 		for (int i = 0; i <= edges; i++) {
 			double angle = 2.0 * Math.PI * i / edges;
 			float dx = (float) (Math.cos(angle) * radius);
 			float dy = (float) (Math.sin(angle) * radius);
-			vertices[(i + 1) * 3] = position.x + dx;
-			vertices[(i + 1) * 3 + 1] = position.y + dy;
-			vertices[(i + 1) * 3 + 2] = position.z;
+			vertices[(i + 1) * 3] = origin.x + dx;
+			vertices[(i + 1) * 3 + 1] = origin.y + dy;
+			vertices[(i + 1) * 3 + 2] = origin.z;
 		}
 		
 		// Convert triangle fan to triangles
@@ -96,84 +94,6 @@ public class Circle extends Mesh {
 	}
 	
 	/**
-	 * Returns the x-coordinate of this circle.
-	 * @return The x-coordinate of this circle.
-	 */
-	public float getX() {
-		return position.x;
-	}
-	
-	/**
-	 * Returns the y-coordinate of this circle.
-	 * @return The y-coordinate of this circle.
-	 */
-	public float getY() {
-		return position.y;
-	}
-	
-	/**
-	 * Returns the z-coordinate of this circle.
-	 * @return The z-coordinate of this circle.
-	 */
-	public float getZ() {
-		return position.z;
-	}
-	
-	/**
-	 * Sets the x-coordinate of this circle.
-	 * @param x The new x-coordinate
-	 */
-	public void setX(float x) {
-		if (x == position.x) {
-			return;
-		}
-		
-		position.x = x;
-		isDirty = true;
-	}
-	
-	/**
-	 * Sets the y-coordinate of this circle.
-	 * @param y The new y-coordinate
-	 */
-	public void setY(float y) {
-		if (y == position.y) {
-			return;
-		}
-		
-		position.y = y;
-		isDirty = true;
-	}
-	
-	/**
-	 * Sets the z-coordinate of this circle.
-	 * @param z The new z-coordinate
-	 */
-	public void setZ(float z) {
-		if (z == position.z) {
-			return;
-		}
-		
-		position.z = z;
-		isDirty = true;
-	}
-	
-	/**
-	 * Sets the position of this circle.
-	 * @param position The new position
-	 */
-	public void setPosition(Vector3f position) {
-		Checks.isNotNull(position, "position");
-		
-		if (position.equals(this.position)) {
-			return;
-		}
-		
-		this.position = position;
-		isDirty = true;
-	}
-	
-	/**
 	 * Returns the radius of this circle.
 	 * @return The radius of this circle.
 	 */
@@ -191,7 +111,7 @@ public class Circle extends Mesh {
 		}
 
 		this.radius = radius;
-		isDirty = true;
+		markAsDirty();
 	}
 	
 	/**
@@ -219,7 +139,7 @@ public class Circle extends Mesh {
 		}
 		
 		this.edges = edges;
-		isDirty = true;
+		markAsDirty();
 	}
 	
 	@Override
@@ -233,12 +153,12 @@ public class Circle extends Mesh {
 	}
 	
 	public boolean equals(Circle circle) {
-		return circle != null && circle.position.equals(position) && circle.radius == radius && circle.edges == edges;
+		return circle != null && circle.origin.equals(origin) && circle.radius == radius && circle.edges == edges;
 	}
 	
 	@Override
 	public Mesh clone() {
-		return new Circle(position, radius, edges);
+		return new Circle(origin, radius, edges);
 	}
 	
 }

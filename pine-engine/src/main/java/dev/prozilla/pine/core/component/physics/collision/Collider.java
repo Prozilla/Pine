@@ -7,9 +7,9 @@ import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.rendering.mesh.ColoredDrawable;
+import dev.prozilla.pine.core.rendering.mesh.ColoredRenderable;
 
-public class Collider extends Component implements ColoredDrawable {
+public class Collider extends Component implements ColoredRenderable {
 	
 	/** The offset of this collider from the entity's position. */
 	public Vector3f offset;

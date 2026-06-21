@@ -83,7 +83,7 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 	 * @return A boolean property that negates this property.
 	 */
 	default BooleanProperty not() {
-		return () -> !get();
+		return mapToBoolean((value) -> !value);
 	}
 	
 	/**
@@ -105,7 +105,7 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 	 * @return A boolean property representing the AND operator.
 	 */
 	default BooleanProperty and(BooleanProperty booleanProperty) {
-		return () -> get() && booleanProperty.get();
+		return mapToBoolean((value) -> value && booleanProperty.get());
 	}
 	
 	/**
@@ -127,7 +127,7 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 	 * @return A boolean property representing the OR operator
 	 */
 	default BooleanProperty or(BooleanProperty booleanProperty) {
-		return () -> get() || booleanProperty.get();
+		return mapToBoolean((value) -> value || booleanProperty.get());
 	}
 	
 	/**
@@ -149,7 +149,7 @@ public interface BooleanProperty extends NonNullProperty<Boolean> {
 	 * @return A boolean property representing the XOR operator
 	 */
 	default BooleanProperty xor(BooleanProperty booleanProperty) {
-		return () -> get() ^ booleanProperty.get();
+		return mapToBoolean((value) -> value ^ booleanProperty.get());
 	}
 	
 	/**

@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.math.vector;
 
+import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,8 +23,16 @@ public class Vector2i extends VectorInt<Vector2i> {
 	/**
 	 * Creates a default 2-dimensional vector with all values set to <code>0</code>.
 	 */
-	public Vector2i() {
-		this(0, 0);
+	public Vector2i() {}
+	
+	public Vector2i(int xy) {
+		this.x = xy;
+		this.y = xy;
+	}
+	
+	public Vector2i(Vector2i vector) {
+		this.x = vector.x;
+		this.y = vector.y;
 	}
 	
 	/**
@@ -34,14 +43,28 @@ public class Vector2i extends VectorInt<Vector2i> {
 		this.y = y;
 	}
 	
+	@Override
 	public Vector2i set(int xy) {
-		return set(xy, xy);
+		this.x = xy;
+		this.y = xy;
+		return this;
+	}
+	
+	@Override
+	public Vector2i set(Vector2i vector) {
+		this.x = vector.x;
+		this.y = vector.y;
+		return this;
 	}
 	
 	public Vector2i set(int x, int y) {
 		this.x = x;
 		this.y = y;
 		return this;
+	}
+	
+	public Vector3i expand(int z) {
+		return new Vector3i(x, y, z);
 	}
 	
 	public Vector2i add(int x, int y) {
@@ -51,9 +74,15 @@ public class Vector2i extends VectorInt<Vector2i> {
 	}
 	
 	@Override
-	public Vector2i add(Vector2i vector2i) {
-		x += vector2i.x;
-		y += vector2i.y;
+	public Vector2i add(Vector2i vector) {
+		x += vector.x;
+		y += vector.y;
+		return this;
+	}
+	
+	public Vector2i subtract(int x, int y) {
+		this.x -= x;
+		this.y -= y;
 		return this;
 	}
 	
@@ -76,9 +105,31 @@ public class Vector2i extends VectorInt<Vector2i> {
 		return x * x + y * y;
 	}
 	
+	public int dot(int x, int y) {
+		return this.x * x + this.y * y;
+	}
+	
 	@Override
-	public int dot(Vector2i vector2i) {
-		return x * vector2i.x + y * vector2i.y;
+	public int dot(Vector2i vector) {
+		return x * vector.x + y * vector.y;
+	}
+	
+	@Override
+	public float distance(Vector2i vector) {
+		return distance(vector.x, vector.y);
+	}
+	
+	public float distance(int x, int y) {
+		return MathUtils.sqrt(distanceSquared(x, y));
+	}
+	
+	@Override
+	public float distanceSquared(Vector2i vector) {
+		return distanceSquared(vector.x, vector.y);
+	}
+	
+	public float distanceSquared(int x, int y) {
+		return MathUtils.square(x - this.x) + MathUtils.square(y - this.y);
 	}
 	
 	@Override
@@ -111,12 +162,24 @@ public class Vector2i extends VectorInt<Vector2i> {
 		return new Vector2i(x, y);
 	}
 	
+	@Override
+	public Vector2i self() {
+		return this;
+	}
+	
 	/**
 	 * Converts this vector to a string representation in the format "(x,y)".
 	 */
 	@Override
 	public @NotNull String toString() {
 		return String.format("(%s,%s)", x, y);
+	}
+	
+	/**
+	 * Creates a new vector (0, 0)
+	 */
+	public static Vector2i zero() {
+		return new Vector2i(0, 0);
 	}
 	
 	/**

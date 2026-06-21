@@ -1,6 +1,7 @@
 package dev.prozilla.pine.examples.sokoban;
 
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.system.Color;
@@ -12,6 +13,7 @@ import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
+import dev.prozilla.pine.core.state.input.ModifierKey;
 import dev.prozilla.pine.examples.sokoban.entity.*;
 import dev.prozilla.pine.examples.sokoban.entity.ui.UIPrefab;
 import dev.prozilla.pine.examples.sokoban.system.CrateUpdater;
@@ -20,7 +22,11 @@ import dev.prozilla.pine.examples.sokoban.system.PlayerMover;
 
 public class GameScene extends Scene {
 	
-	public static final float MOVEMENT_SPEED = 20f;
+	private Vector2i previousCursorPosition;
+	private boolean cameraMovementEnabled = false;
+	
+	public static final float MOVEMENT_SPEED = 300f;
+	public static final float ROTATION_SPEED = 6f;
 	
 	private static final String[] MAP = {
 		"OOOOOOOOOOOO  ",
@@ -125,13 +131,11 @@ public class GameScene extends Scene {
 		StyleSheet styleSheet = AssetPools.styleSheets.load("style/hud.css", Application.isDevMode());
 		world.addEntity(new UIPrefab(styleSheet));
 		
-		// Move camera to center of map
-		int width = MAP[0].length();
-		int height = MAP.length;
-		cameraData.getTransform().translate((width * TILE_SIZE) / 2f, (height * TILE_SIZE) / 2f, 0);
-		
 		cameraData.zoomIn(-0.1f);
 		cameraData.setBackgroundColor(Color.hex("#596A6C"));
+		cameraData.farClipPlane = 10000f;
+		world.depthMultiplier = 25f;
+		resetCamera();
 	}
 	
 	@Override
@@ -139,34 +143,66 @@ public class GameScene extends Scene {
 		super.input(deltaTime);
 		
 		Input input = getInput();
-		Vector3f delta = new Vector3f();
-		Transform cameraTransform = cameraData.getTransform();
-		if (input.getKey(Key.W)) {
-			delta.add(cameraTransform.getForward());
-		}
-		if (input.getKey(Key.S)) {
-			delta.subtract(cameraTransform.getForward());
-		}
-		if (input.getKey(Key.D)) {
-			delta.add(cameraTransform.getRight());
-		}
-		if (input.getKey(Key.A)) {
-			delta.subtract(cameraTransform.getRight());
-		}
-		if (input.getKey(Key.E)) {
-			delta.add(cameraTransform.getUp());
-		}
-		if (input.getKey(Key.Q)) {
-			delta.subtract(cameraTransform.getUp());
-		}
-		if (!delta.isZero()) {
-			delta.normalize();
-			delta.scale(deltaTime * MOVEMENT_SPEED);
-			if (input.getKey(Key.L_SHIFT)) {
-				delta.scale(3f);
+		if (input.getKeyDown(Key.F) || (input.getKeyDown(Key.ESCAPE) && cameraMovementEnabled)) {
+			cameraMovementEnabled = !cameraMovementEnabled;
+			if (cameraMovementEnabled) {
+				input.disableCursor();
+				previousCursorPosition = null;
+				cameraData.orthographic = false;
+			} else {
+				input.showCursor();
+				cameraData.orthographic = true;
+				resetCamera();
 			}
-//			cameraTransform.translate(delta);
-//			logger.log(cameraTransform.position);
 		}
+		
+		if (cameraMovementEnabled) {
+			Vector3f delta = new Vector3f();
+			Transform cameraTransform = cameraData.getTransform();
+			if (input.getKey(Key.UP_ARROW)) {
+				delta.add(cameraTransform.getForward());
+			}
+			if (input.getKey(Key.DOWN_ARROW)) {
+				delta.subtract(cameraTransform.getForward());
+			}
+			if (input.getKey(Key.RIGHT_ARROW)) {
+				delta.add(cameraTransform.getRight());
+			}
+			if (input.getKey(Key.LEFT_ARROW)) {
+				delta.subtract(cameraTransform.getRight());
+			}
+			if (input.getKey(Key.PAGE_UP)) {
+				delta.add(cameraTransform.getUp());
+			}
+			if (input.getKey(Key.PAGE_DOWN)) {
+				delta.subtract(cameraTransform.getUp());
+			}
+			if (!delta.isZero()) {
+				delta.normalize();
+				delta.scale(deltaTime * MOVEMENT_SPEED);
+				if (input.getModifierKey(ModifierKey.SHIFT)) {
+					delta.scale(3f);
+				}
+				cameraTransform.translate(delta);
+			}
+			
+			Vector2i cursorPosition = input.getCursor(true);
+			if (previousCursorPosition != null) {
+				Vector2i cursorMovement = previousCursorPosition.subtract(cursorPosition);
+				cameraTransform.rotate(-cursorMovement.y * deltaTime * ROTATION_SPEED, -cursorMovement.x * deltaTime * ROTATION_SPEED, 0);
+				previousCursorPosition.set(cursorPosition.x, cursorPosition.y);
+			} else {
+				previousCursorPosition = cursorPosition.clone();
+			}
+		}
+	}
+	
+	private void resetCamera() {
+		// Move camera to center of map
+		int width = MAP[0].length();
+		int height = MAP.length;
+		
+		cameraData.getTransform().reset();
+		cameraData.getTransform().translate((width * TILE_SIZE) / 2f, (height * TILE_SIZE) / 2f, 10f * world.depthMultiplier);
 	}
 }

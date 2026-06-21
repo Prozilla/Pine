@@ -20,6 +20,7 @@ import dev.prozilla.pine.core.scene.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -334,7 +335,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	@Override
 	public <ComponentType extends Component> List<ComponentType> getComponents(Class<ComponentType> componentClass) {
 		if (components.isEmpty()) {
-			return new ArrayList<>();
+			return Collections.emptyList();
 		}
 		
 		// Find all components that are instances of componentClass

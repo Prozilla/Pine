@@ -2,48 +2,51 @@ package dev.prozilla.pine.core.component.sprite;
 
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.mesh.MeshRenderer;
+import dev.prozilla.pine.core.rendering.mesh.Rect;
+import dev.prozilla.pine.core.rendering.mesh.modifier.UVModifier;
 
+// TODO: Remove
 /**
  * A component for rendering 2D sprites in the world.
+ * @deprecated
  */
-public class SpriteRenderer extends Component {
+public class SpriteRenderer extends MeshRenderer<Rect> {
 	
-	// Visual properties
-	public TextureAsset texture;
-	public final Color color;
+	private final UVModifier uvModifier;
 	
 	// Transformations
-	public Vector2f scale;
-	public float rotation;
-	public Vector2f offset;
 	public boolean mirrorHorizontally;
 	public boolean mirrorVertically;
 	
 	// Cropping
-	/** Determines whether the texture will be cropped to a given region. */
 	public boolean cropToRegion;
 	public Vector2f regionOffset;
 	public Vector2f regionSize;
 	
+	private final Vector2f textureSize;
+	
 	public SpriteRenderer(TextureAsset texture) {
-		this(texture, Color.white());
+		this(texture, null);
 	}
 	
 	public SpriteRenderer(TextureAsset texture, Color color) {
-		this.texture = texture;
-		this.color = color;
+		super(new Rect(new Vector3f(), new Vector2f(texture.getWidth(), texture.getHeight())), texture, color);
 		
-		scale = Vector2f.one();
-		rotation = 0f;
-		offset = new Vector2f();
+		textureSize = new Vector2f(texture.getWidth(), texture.getHeight());
+		
 		mirrorHorizontally = false;
 		mirrorVertically = false;
 		
 		cropToRegion = false;
 		regionOffset = new Vector2f();
 		regionSize = new Vector2f(texture.getWidth(), texture.getHeight());
+		
+		uvModifier = new UVModifier(0, 0, 1, 1);
+		mesh.addModifier(uvModifier);
+		updateMesh();
 	}
 	
 	@Override
@@ -55,47 +58,48 @@ public class SpriteRenderer extends Component {
 		setRegion(regionOffset.x, regionOffset.y, regionSize.x, regionSize.y);
 	}
 	
-	/**
-	 * Crops this sprite to a given region.
-	 */
 	public void setRegion(float regX, float regY, float regWidth, float regHeight) {
 		regionOffset.x = regX;
 		regionOffset.y = regY;
 		regionSize.x = regWidth;
 		regionSize.y = regHeight;
 		cropToRegion = true;
+		updateMesh();
 	}
 	
-	/**
-	 * Disables cropping for this sprite.
-	 */
+	public Vector2f getOffset() {
+		return mesh.getOrigin().shrink();
+	}
+
+	public void setOffset(Vector2f offset) {
+		setOffset(offset.x, offset.y);
+	}
+	
+	public void setOffset(float x, float y) {
+		mesh.setOriginX(x);
+		mesh.setOriginY(y);
+	}
+	
 	public void unsetRegion() {
 		cropToRegion = false;
+		updateMesh();
 	}
 	
-	// TO DO: apply rotation
-	public float getWidth() {
+	private void updateMesh() {
+		float w, h;
 		if (cropToRegion) {
-			return regionSize.x * scale.x;
+			w = regionSize.x;
+			h = regionSize.y;
+			uvModifier.setRegion(regionOffset, regionSize, textureSize);
 		} else {
-			return (float)texture.getWidth() * scale.x;
+			w = textureSize.x;
+			h = textureSize.y;
+			uvModifier.resetRegion();
 		}
-	}
-	
-	// TO DO: apply rotation
-	public float getHeight() {
-		if (cropToRegion) {
-			return regionSize.y * scale.y;
-		} else {
-			return (float)texture.getHeight() * scale.y;
-		}
-	}
-	
-	public float getX() {
-		return entity.transform.getGlobalX() + offset.x;
-	}
-	
-	public float getY() {
-		return entity.transform.getGlobalY() + offset.y;
+		
+		uvModifier.setFlipHorizontal(mirrorHorizontally);
+		uvModifier.setFlipVertical(mirrorVertically);
+		
+		mesh.setSize(new Vector2f(w, h));
 	}
 }

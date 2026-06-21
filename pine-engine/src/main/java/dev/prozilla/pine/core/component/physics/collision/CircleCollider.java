@@ -29,7 +29,7 @@ public class CircleCollider extends Collider {
 		float y1 = getOriginY();
 		float x2 = other.getOriginX();
 		float y2 = other.getOriginY();
-		return Vector2f.distance(x1, y1, x2, y2) <= radius + other.radius;
+		return new Vector2f(x1, y1).distance(x2, y2) <= radius + other.radius;
 	}
 	
 	@Experimental

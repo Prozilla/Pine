@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.easing.EasingFunction;
 import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.property.ColorProperty;
 import dev.prozilla.pine.common.property.FloatProperty;
 import dev.prozilla.pine.common.property.IntProperty;
@@ -15,8 +16,8 @@ import dev.prozilla.pine.common.property.fixed.FixedColorProperty;
 import dev.prozilla.pine.common.property.fixed.FixedFloatProperty;
 import dev.prozilla.pine.common.property.vector.Vector2fProperty;
 import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
 import dev.prozilla.pine.core.component.particle.ParticleRenderer;
-import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.sprite.SpritePrefab;
 
@@ -175,8 +176,7 @@ public class ParticlePrefab extends SpritePrefab {
 		
 		// Apply scale
 		if (scale != null) {
-			spriteRenderer.scale.x = scale.get();
-			spriteRenderer.scale.y = scale.get();
+			entity.transform.setScale(new Vector3f(scale.get()));
 		} else if (scaleAnimation != null) {
 			particleRenderer.scaleAnimation = scaleAnimation.getValue();
 		}

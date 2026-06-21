@@ -1,9 +1,12 @@
 package dev.prozilla.pine.core.rendering.mesh;
 
 import dev.prozilla.pine.common.Cloneable;
+import dev.prozilla.pine.common.Memoizable;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.ListUtils;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.rendering.mesh.modifier.MeshModifier;
 
@@ -13,13 +16,14 @@ import java.util.List;
 /**
  * Represents a mesh using vertex and UV arrays which respectively represent the vertex and texture coordinates of each triangle.
  */
-public abstract class Mesh implements TexturedDrawable, Cloneable<Mesh> {
+public abstract class Mesh implements TexturedRenderable, Cloneable<Mesh>, Memoizable {
 	
+	protected final Vector3f origin;
 	// TODO: Replace with list of unique vertices + list of triangles (indices of vertices)
 	private float[] vertices;
 	private float[] uvArray;
 	/** If {@code true}, the vertex and UV arrays of this mesh will be re-generated before the next draw call. */
-	public boolean isDirty;
+	private boolean isDirty;
 	
 	private final List<MeshModifier> modifiers = new ArrayList<>();
 	
@@ -29,8 +33,18 @@ public abstract class Mesh implements TexturedDrawable, Cloneable<Mesh> {
 	 * @param uvArray The UV array
 	 */
 	public Mesh(float[] vertices, float[] uvArray) {
+		this(vertices, uvArray, new Vector3f());
+	}
+	
+	/**
+	 * Creates a mesh at a given origin point with pre-generated geometry.
+	 * @param vertices The vertex array
+	 * @param uvArray The UV array
+	 */
+	public Mesh(float[] vertices, float[] uvArray, Vector3f origin) {
 		this.vertices = vertices;
 		this.uvArray = uvArray;
+		this.origin = Checks.isNotNull(origin, "origin");
 		isDirty = false;
 	}
 	
@@ -38,7 +52,15 @@ public abstract class Mesh implements TexturedDrawable, Cloneable<Mesh> {
 	 * Creates a mesh that will be generated before the first draw call.
 	 */
 	public Mesh() {
-		isDirty = true;
+		this(new Vector3f());
+	}
+	
+	/**
+	 * Creates a mesh at a given origin point that will be generated before the first draw call.
+	 */
+	public Mesh(Vector3f origin) {
+		this.origin = Checks.isNotNull(origin, "origin");
+		markAsDirty();
 	}
 	
 	/**
@@ -93,6 +115,60 @@ public abstract class Mesh implements TexturedDrawable, Cloneable<Mesh> {
 		renderer.drawTriangles(texture, vertices, uvArray, color);
 	}
 	
+	public Vector3f getOrigin() {
+		return origin;
+	}
+	
+	public float getOriginX() {
+		return origin.x;
+	}
+	
+	public float getOriginY() {
+		return origin.y;
+	}
+	
+	public float getOriginZ() {
+		return origin.z;
+	}
+	
+	public void setOriginX(float x) {
+		if (x == origin.x) {
+			return;
+		}
+		
+		origin.x = x;
+		markAsDirty();
+	}
+	
+	public void setOriginY(float y) {
+		if (y == origin.y) {
+			return;
+		}
+		
+		origin.y = y;
+		markAsDirty();
+	}
+	
+	public void setOriginZ(float z) {
+		if (z == origin.z) {
+			return;
+		}
+		
+		origin.z = z;
+		markAsDirty();
+	}
+	
+	public void setOrigin(Vector3f origin) {
+		Checks.isNotNull(origin, "position");
+		
+		if (origin.equals(this.origin)) {
+			return;
+		}
+		
+		this.origin.set(origin);
+		markAsDirty();
+	}
+	
 	/**
 	 * Gets the first modifier of a given type.
 	 * @param modifierType The type of modifier to search for
@@ -110,7 +186,7 @@ public abstract class Mesh implements TexturedDrawable, Cloneable<Mesh> {
 	public void addModifier(MeshModifier modifier) {
 		modifiers.add(modifier);
 		modifier.addTarget(this);
-		isDirty = true;
+		markAsDirty();
 	}
 	
 	/**
@@ -118,9 +194,20 @@ public abstract class Mesh implements TexturedDrawable, Cloneable<Mesh> {
 	 * @param modifier The modifier to remove
 	 */
 	public void removeModifier(MeshModifier modifier) {
-		modifiers.remove(modifier);
-		modifier.removeTarget(this);
+		if (modifiers.remove(modifier)) {
+			modifier.removeTarget(this);
+			markAsDirty();
+		}
+	}
+	
+	@Override
+	public void markAsDirty() {
 		isDirty = true;
+	}
+	
+	@Override
+	public boolean isDirty() {
+		return isDirty;
 	}
 	
 	public Mesh cloneWithModifiers() {

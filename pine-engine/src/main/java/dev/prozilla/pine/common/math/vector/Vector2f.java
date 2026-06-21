@@ -21,28 +21,67 @@ public class Vector2f extends VectorFloat<Vector2f> {
 	public static final Vector2f temp = new Vector2f();
 	
 	/**
-	 * Creates a default 2-dimensional vector with all values set to <code>0f</code>.
+	 * Creates a default 3-dimensional vector with all values set to <code>0f</code>.
 	 */
-	public Vector2f() {
-		this(0f, 0f);
+	public Vector2f() {}
+	
+	public Vector2f(float xy) {
+		this.x = xy;
+		this.y = xy;
 	}
 	
 	/**
-	 * Creates a 2-dimensional vector with given values.
+	 * Creates a clone of a 3-dimensional vector.
+	 */
+	public Vector2f(Vector2f vector) {
+		this.x = vector.x;
+		this.y = vector.y;
+	}
+	
+	/**
+	 * Converts a 3-dimensional vector with integer precision to a vector with floating point precision.
+	 */
+	public Vector2f(Vector2i vector) {
+		this.x = vector.x;
+		this.y = vector.y;
+	}
+	
+	/**
+	 * Creates a 3-dimensional vector with given values.
 	 */
 	public Vector2f(float x, float y) {
 		this.x = x;
 		this.y = y;
 	}
 	
-	public Vector2f set(float xy) {
-		return set(xy, xy);
+	@Override
+	public Vector2f set(float xyz) {
+		this.x = xyz;
+		this.y = xyz;
+		return this;
+	}
+	
+	@Override
+	public Vector2f set(Vector2f vector) {
+		this.x = vector.x;
+		this.y = vector.y;
+		return this;
+	}
+	
+	public Vector2f set(Vector2i vector) {
+		this.x = vector.x;
+		this.y = vector.y;
+		return this;
 	}
 	
 	public Vector2f set(float x, float y) {
 		this.x = x;
 		this.y = y;
 		return this;
+	}
+	
+	public Vector3f expand(float z) {
+		return new Vector3f(x, y, z);
 	}
 	
 	public Vector2f add(float x, float y) {
@@ -52,9 +91,15 @@ public class Vector2f extends VectorFloat<Vector2f> {
 	}
 	
 	@Override
-	public Vector2f add(Vector2f vector2f) {
-		x += vector2f.x;
-		y += vector2f.y;
+	public Vector2f add(Vector2f vector) {
+		x += vector.x;
+		y += vector.y;
+		return this;
+	}
+	
+	public Vector2f subtract(float x, float y) {
+		this.x -= x;
+		this.y -= y;
 		return this;
 	}
 	
@@ -77,17 +122,31 @@ public class Vector2f extends VectorFloat<Vector2f> {
 		return x * x + y * y;
 	}
 	
+	public float dot(float x, float y) {
+		return this.x * x + this.y * y;
+	}
+	
 	@Override
-	public float dot(Vector2f vector2f) {
-		return this.x * vector2f.x + this.y * vector2f.y;
+	public float dot(Vector2f vector) {
+		return x * vector.x + y * vector.y;
 	}
 	
-	public float distance(Vector2f vector2f) {
-		return MathUtils.sqrt(distanceSquared(vector2f));
+	@Override
+	public float distance(Vector2f vector) {
+		return distance(vector.x, vector.y);
 	}
 	
-	public float distanceSquared(Vector2f vector2f) {
-		return distanceSquared(this.x, this.y, vector2f.x, vector2f.y);
+	public float distance(float x, float y) {
+		return MathUtils.sqrt(distanceSquared(x, y));
+	}
+	
+	@Override
+	public float distanceSquared(Vector2f vector) {
+		return distanceSquared(vector.x, vector.y);
+	}
+	
+	public float distanceSquared(float x, float y) {
+		return MathUtils.square(x - this.x) + MathUtils.square(y - this.y);
 	}
 	
 	@Override
@@ -120,12 +179,24 @@ public class Vector2f extends VectorFloat<Vector2f> {
 		return new Vector2f(x, y);
 	}
 	
+	@Override
+	public Vector2f self() {
+		return this;
+	}
+	
 	/**
 	 * Converts this vector to a string representation in the format "(x,y)".
 	 */
 	@Override
 	public @NotNull String toString() {
 		return String.format("(%s,%s)", x, y);
+	}
+	
+	/**
+	 * Creates a new vector (0, 0)
+	 */
+	public static Vector2f zero() {
+		return new Vector2f(0, 0);
 	}
 	
 	/**
@@ -171,14 +242,6 @@ public class Vector2f extends VectorFloat<Vector2f> {
 		temp.x = x;
 		temp.y = y;
 		return temp;
-	}
-	
-	public static float distance(float x1, float y1, float x2, float y2) {
-		return MathUtils.sqrt(distanceSquared(x1, y1, x2, y2));
-	}
-	
-	public static float distanceSquared(float x1, float y1, float x2, float y2) {
-		return MathUtils.square(x2 - x1) + MathUtils.square(y2 - y1);
 	}
 	
 	public static class Parser extends dev.prozilla.pine.common.util.parser.Parser<Vector2f> {

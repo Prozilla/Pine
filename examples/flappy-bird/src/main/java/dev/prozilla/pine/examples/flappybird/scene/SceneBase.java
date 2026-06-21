@@ -18,6 +18,7 @@ public abstract class SceneBase extends Scene {
 	@Override
 	protected void load() {
 		super.load();
+		cameraData.orthographic = true;
 		cameraData.setBackgroundColor(Color.hex(GameManager.instance.backgroundVariant == 1 ? "#008894" : "#4DC1CB"));
 		
 		font = AssetPools.fonts.load("flappybird/flappy-bird.ttf", 32);

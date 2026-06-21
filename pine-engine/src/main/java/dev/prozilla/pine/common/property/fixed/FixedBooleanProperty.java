@@ -16,33 +16,6 @@ public abstract class FixedBooleanProperty implements BooleanProperty, FixedProp
 	abstract public FixedBooleanProperty not();
 	
 	@Override
-	public BooleanProperty and(BooleanProperty booleanProperty) {
-		if (!get()) {
-			return BooleanProperty.FALSE;
-		} else {
-			return booleanProperty;
-		}
-	}
-	
-	@Override
-	public BooleanProperty or(BooleanProperty booleanProperty) {
-		if (get()) {
-			return BooleanProperty.TRUE;
-		} else {
-			return booleanProperty;
-		}
-	}
-	
-	@Override
-	public BooleanProperty xor(BooleanProperty booleanProperty) {
-		if (get()) {
-			return booleanProperty.not();
-		} else {
-			return booleanProperty;
-		}
-	}
-	
-	@Override
 	public <T> Property<T> ifElse(Property<T> propertyTrue, Property<T> propertyFalse) {
 		return get() ? propertyTrue : propertyFalse;
 	}

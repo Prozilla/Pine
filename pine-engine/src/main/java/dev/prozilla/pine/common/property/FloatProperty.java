@@ -323,6 +323,22 @@ public interface FloatProperty extends NonNullProperty<Float> {
 		return mapToFloat((value) -> value * operand);
 	}
 	
+	default IntProperty round() {
+		return mapToInt(Math::round);
+	}
+	
+	default IntProperty ceil() {
+		return mapToInt((value) -> (int)Math.ceil(value));
+	}
+	
+	default IntProperty floor() {
+		return mapToInt((value) -> (int)Math.floor(value));
+	}
+	
+	default FloatProperty mod(float operand) {
+		return mapToFloat((value) -> value % operand);
+	}
+	
 	/**
 	 * @see #mapToBoolean(ToBooleanMapper) 
 	 */

@@ -9,6 +9,8 @@ import java.nio.FloatBuffer;
  */
 public abstract class VectorFloat<V extends VectorFloat<V>> extends Vector<V> {
 	
+	public abstract V set(float value);
+	
 	@Override
 	public float length() {
 		return MathUtils.sqrt(lengthSquared());

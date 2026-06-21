@@ -11,12 +11,12 @@ import dev.prozilla.pine.core.system.update.UpdateSystem;
 public final class TileMover extends UpdateSystem {
 	
 	public TileMover() {
-		super( Transform.class, TileRenderer.class);
+		super(TileRenderer.class);
 	}
 	
 	@Override
 	protected void process(EntityChunk chunk, float deltaTime) {
-		Transform transform = chunk.getComponent(Transform.class);
+		Transform transform = chunk.getTransform();
 		TileRenderer tileRenderer = chunk.getComponent(TileRenderer.class);
 		
 		updateTilePosition(transform, tileRenderer);
@@ -26,6 +26,6 @@ public final class TileMover extends UpdateSystem {
 		float x = tileRenderer.getCoordinate().x * tileRenderer.size;
 		float y = tileRenderer.getCoordinate().y * tileRenderer.size;
 		
-		transform.setPosition(x, y, 0);
+		transform.setPosition(x, y, transform.position.z);
 	}
 }

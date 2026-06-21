@@ -23,7 +23,10 @@ import dev.prozilla.pine.core.system.standard.particle.ParticleInitializer;
 import dev.prozilla.pine.core.system.standard.particle.ParticleUpdater;
 import dev.prozilla.pine.core.system.standard.shape.QuadRenderSystem;
 import dev.prozilla.pine.core.system.standard.shape.ShapeRenderSystem;
-import dev.prozilla.pine.core.system.standard.sprite.*;
+import dev.prozilla.pine.core.system.standard.sprite.GridInitializer;
+import dev.prozilla.pine.core.system.standard.sprite.GridInputHandler;
+import dev.prozilla.pine.core.system.standard.sprite.MultiTileInitializer;
+import dev.prozilla.pine.core.system.standard.sprite.TileMover;
 import dev.prozilla.pine.core.system.standard.ui.*;
 import dev.prozilla.pine.core.system.standard.ui.frame.FrameRenderer;
 import dev.prozilla.pine.core.system.standard.ui.frame.FrameResizer;
@@ -57,6 +60,7 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 	public boolean initialized;
 	
 	public int maxDepth;
+	public float depthMultiplier;
 	
 	/**
 	 * List of all systems that are added during initialization.
@@ -78,6 +82,7 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		useStandardSystems();
 		
 		initialized = false;
+		depthMultiplier = 1f;
 	}
 	
 	/**
@@ -127,7 +132,6 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		initialSystems.add(new GridInitializer());
 		initialSystems.add(new MultiTileInitializer());
 		initialSystems.add(new TileMover());
-		initialSystems.add(new SpriteRenderSystem());
 		
 		// Shapes
 		initialSystems.add(new ShapeRenderSystem());

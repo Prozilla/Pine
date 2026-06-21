@@ -1,7 +1,8 @@
 package dev.prozilla.pine.core.system.standard.particle;
 
+import dev.prozilla.pine.common.math.vector.Vector3f;
+import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
 import dev.prozilla.pine.core.component.particle.ParticleRenderer;
-import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
@@ -18,14 +19,13 @@ public final class ParticleInitializer extends InitSystem {
 		
 		float textureWidth = spriteRenderer.texture.getWidth();
 		float textureHeight = spriteRenderer.texture.getHeight() / (float)particleRenderer.frameCount;
-		spriteRenderer.setRegion(0, textureHeight * (particleRenderer.frameCount - particleRenderer.initialFrame - 1), textureWidth, textureHeight);
+		spriteRenderer.getMesh().setRegion(0, textureHeight * (particleRenderer.frameCount - particleRenderer.initialFrame - 1), textureWidth, textureHeight);
 		
-		spriteRenderer.offset.x = -textureWidth / 2f;
-		spriteRenderer.offset.y = -textureHeight / 2f;
+		spriteRenderer.getMesh().setOffset(-textureWidth / 2f, -textureHeight / 2f);
 		
 		if (particleRenderer.scaleAnimation != null) {
 			particleRenderer.scaleAnimation.setDuration(particleRenderer.lifetime);
-			spriteRenderer.scale.set(particleRenderer.scaleAnimation.getRestarted());
+			chunk.getTransform().setScale(new Vector3f(particleRenderer.scaleAnimation.getRestarted()));
 		}
 		if (particleRenderer.colorAnimation != null) {
 			particleRenderer.colorAnimation.setDuration(particleRenderer.lifetime);

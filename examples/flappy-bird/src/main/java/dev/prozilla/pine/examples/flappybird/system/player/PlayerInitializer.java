@@ -1,7 +1,6 @@
 package dev.prozilla.pine.examples.flappybird.system.player;
 
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
@@ -13,13 +12,12 @@ import dev.prozilla.pine.examples.flappybird.scene.GameScene;
 public class PlayerInitializer extends InitSystem {
 	
 	public PlayerInitializer() {
-		super(Transform.class, SpriteRenderer.class, PlayerData.class);
+		super(Transform.class, PlayerData.class);
 	}
 	
 	@Override
 	protected void process(EntityChunk chunk) {
 		Transform transform = chunk.getComponent(Transform.class);
-		SpriteRenderer spriteRenderer = chunk.getComponent(SpriteRenderer.class);
 		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		
 		// Store reference to scene
@@ -36,7 +34,7 @@ public class PlayerInitializer extends InitSystem {
 		transform.setPosition(PlayerData.POSITION_X, 0, 0);
 		
 		// Set sprite properties
-		spriteRenderer.scale.set(PlayerData.SCALE);
-		spriteRenderer.rotation = 0;
+		transform.scale.set(PlayerData.SCALE);
+		transform.rotation.z = 0;
 	}
 }

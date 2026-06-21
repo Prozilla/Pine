@@ -20,7 +20,7 @@ public abstract class MeshModifier implements Destructible {
 
 	protected void markAsDirty() {
 		for (Mesh target : targets) {
-			target.isDirty = true;
+			target.markAsDirty();
 		}
 	}
 	

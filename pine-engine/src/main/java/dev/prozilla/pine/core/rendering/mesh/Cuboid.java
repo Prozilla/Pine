@@ -10,8 +10,7 @@ import java.util.Objects;
  */
 public class Cuboid extends Mesh {
 	
-	protected Vector3f origin;
-	protected Vector3f size;
+	protected final Vector3f size;
 	
 	public Cuboid() {
 		this(Vector3f.one());
@@ -22,8 +21,8 @@ public class Cuboid extends Mesh {
 	}
 	
 	public Cuboid(Vector3f size, Vector3f origin) {
+		super(origin);
 		this.size = Checks.isNotNull(size, "size");
-		this.origin = Checks.isNotNull(origin, "origin");
 	}
 	
 	@Override
@@ -178,56 +177,6 @@ public class Cuboid extends Mesh {
 		};
 	}
 	
-	public float getX() {
-		return origin.x;
-	}
-	
-	public float getY() {
-		return origin.y;
-	}
-	
-	public float getZ() {
-		return origin.z;
-	}
-	
-	public void setX(float x) {
-		if (x == origin.x) {
-			return;
-		}
-		
-		origin.x = x;
-		isDirty = true;
-	}
-	
-	public void setY(float y) {
-		if (y == origin.y) {
-			return;
-		}
-		
-		origin.y = y;
-		isDirty = true;
-	}
-	
-	public void setZ(float z) {
-		if (z == origin.z) {
-			return;
-		}
-		
-		origin.z = z;
-		isDirty = true;
-	}
-	
-	public void setOrigin(Vector3f origin) {
-		Checks.isNotNull(origin, "position");
-		
-		if (origin.equals(this.origin)) {
-			return;
-		}
-		
-		this.origin = origin;
-		isDirty = true;
-	}
-	
 	public float getSizeX() {
 		return size.x;
 	}
@@ -246,7 +195,7 @@ public class Cuboid extends Mesh {
 		}
 		
 		size.x = x;
-		isDirty = true;
+		markAsDirty();
 	}
 	
 	public void setSizeY(float y) {
@@ -255,7 +204,7 @@ public class Cuboid extends Mesh {
 		}
 		
 		size.y = y;
-		isDirty = true;
+		markAsDirty();
 	}
 	
 	public void setSizeZ(float z) {
@@ -264,7 +213,7 @@ public class Cuboid extends Mesh {
 		}
 		
 		size.y = z;
-		isDirty = true;
+		markAsDirty();
 	}
 	
 	public void setSize(Vector3f size) {
@@ -274,8 +223,8 @@ public class Cuboid extends Mesh {
 			return;
 		}
 		
-		this.size = size;
-		isDirty = true;
+		this.size.set(size);
+		markAsDirty();
 	}
 	
 	@Override

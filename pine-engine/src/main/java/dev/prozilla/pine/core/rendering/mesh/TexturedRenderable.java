@@ -8,7 +8,7 @@ import dev.prozilla.pine.core.rendering.Renderer;
  * An object that can be drawn on the screen with a given texture, color and depth.
  */
 @FunctionalInterface
-public interface TexturedDrawable extends ColoredDrawable {
+public interface TexturedRenderable extends ColoredRenderable {
 	
 	@Override
 	default void draw(Renderer renderer, Color color) {

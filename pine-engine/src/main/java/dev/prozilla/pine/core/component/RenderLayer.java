@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.component;
 
+// TODO: Add way to visualize this in 3D by scaling the depth value and adding more space between different layers/parents.
 /**
  * Orders entities into layers on the z-axis based on their z-indices.
  */
@@ -75,7 +76,7 @@ public class RenderLayer extends Component {
 	 * @return Depth value between <code>0f</code> and <code>1f</code> based on the z-index of this entity.
 	 */
 	public float getDepth() {
-		return ((float)zIndex / getWorld().maxDepth);
+		return ((float)zIndex / getWorld().maxDepth) * getWorld().depthMultiplier;
 	}
 	
 }

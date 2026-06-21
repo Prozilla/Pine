@@ -1,7 +1,7 @@
 package dev.prozilla.pine.examples.flappybird.system.obstacle;
 
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
+import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 import dev.prozilla.pine.examples.flappybird.FlappyBird;
@@ -24,11 +24,11 @@ public class PipeInitializer extends InitSystem {
 		Transform transform = chunk.getComponent(Transform.class);
 		
 		// Set sprite properties
-		spriteRenderer.setRegion(PipeData.SPRITE_WIDTH * GameManager.instance.pipeVariant, 0, PipeData.SPRITE_WIDTH, PipeData.SPRITE_HEIGHT);
-		spriteRenderer.scale.set(PipeData.SCALE);
+		spriteRenderer.getMesh().setRegion(PipeData.SPRITE_WIDTH * GameManager.instance.pipeVariant, 0, PipeData.SPRITE_WIDTH, PipeData.SPRITE_HEIGHT);
+		transform.scale.set(PipeData.SCALE);
 		if (pipeData.isTop) {
 			// Flip sprite
-			spriteRenderer.rotation = 180;
+			transform.rotation.z = 180;
 		}
 		
 		// Set initial position

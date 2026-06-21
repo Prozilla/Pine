@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.asset.image;
 
+import dev.prozilla.pine.common.math.vector.Vector2i;
+
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -41,6 +43,10 @@ public interface TextureBase {
 	void setParameter(int name, int value);
 	
 	int getId();
+	
+	default Vector2i getSize() {
+		return new Vector2i(getWidth(), getHeight());
+	}
 	
 	/**
 	 * Returns the width of this texture.

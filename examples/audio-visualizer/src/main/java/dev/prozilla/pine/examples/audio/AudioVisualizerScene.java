@@ -122,7 +122,7 @@ public class AudioVisualizerScene extends Scene {
 			Rect rect = rectRenderer.getMesh();
 			
 			float position = (float)i / barCount;
-			rect.setX((position) * (Main.WIDTH));
+			rect.setOriginX((position) * (Main.WIDTH));
 			
 			rect.setWidth((float)Main.WIDTH / barCount - BAR_GAP);
 			rectRenderer.color.setRGB(Color.hsl(position, 0.9f, 0.65f));

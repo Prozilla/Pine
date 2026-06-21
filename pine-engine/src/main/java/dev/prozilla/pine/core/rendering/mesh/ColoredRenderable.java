@@ -7,7 +7,7 @@ import dev.prozilla.pine.core.rendering.Renderer;
  * An object that can be drawn on the screen with a given color and depth.
  */
 @FunctionalInterface
-public interface ColoredDrawable extends Drawable {
+public interface ColoredRenderable extends Renderable {
 	
 	/**
 	 * Draws this object with the renderer's fallback color.

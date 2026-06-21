@@ -6,7 +6,7 @@ import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
+import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Components;
 import dev.prozilla.pine.core.entity.prefab.LayerPrefab;
@@ -68,10 +68,10 @@ public class SpritePrefab extends LayerPrefab {
 		SpriteRenderer spriteRenderer = color != null ? new SpriteRenderer(texture, color) : new SpriteRenderer(texture);
 		
 		if (scale != null) {
-			spriteRenderer.scale = scale.clone();
+			entity.transform.setScale(scale.x, scale.y, 1);
 		}
 		if (cropToRegion) {
-			spriteRenderer.setRegion(regionOffset, regionSize);
+			spriteRenderer.getMesh().setRegion(regionOffset, regionSize);
 		}
 		
 		entity.addComponent(spriteRenderer);

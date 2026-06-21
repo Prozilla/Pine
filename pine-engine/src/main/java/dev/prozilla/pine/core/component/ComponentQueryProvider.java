@@ -2,7 +2,7 @@ package dev.prozilla.pine.core.component;
 
 import dev.prozilla.pine.core.entity.Entity;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,7 +24,7 @@ public interface ComponentQueryProvider extends ComponentQueryContext {
 	@Override
 	default <ComponentType extends Component> List<ComponentType> getComponentsAbove(Class<ComponentType> componentClass, ComponentQuery query) {
 		if (getEntity() == null) {
-			return new ArrayList<>();
+			return Collections.emptyList();
 		}
 		return getEntity().getComponentsAbove(componentClass, query);
 	}
@@ -32,7 +32,7 @@ public interface ComponentQueryProvider extends ComponentQueryContext {
 	@Override
 	default <ComponentType extends Component> List<ComponentType> getComponentsBelow(Class<ComponentType> componentClass, ComponentQuery query) {
 		if (getEntity() == null) {
-			return new ArrayList<>();
+			return Collections.emptyList();
 		}
 		return getEntity().getComponentsBelow(componentClass, query);
 	}
@@ -48,7 +48,7 @@ public interface ComponentQueryProvider extends ComponentQueryContext {
 	@Override
 	default <ComponentType extends Component> List<ComponentType> getComponents(Class<ComponentType> componentClass) {
 		if (getEntity() == null) {
-			return new ArrayList<>();
+			return Collections.emptyList();
 		}
 		return getEntity().getComponents(componentClass);
 	}

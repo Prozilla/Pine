@@ -218,7 +218,12 @@ public class Transform extends Component {
 	}
 	
 	public Matrix4f getModelMatrix() {
-		return modelMatrix.identity().translate(position.x, position.y, position.z)
+		if (parent != null) {
+			modelMatrix.set(parent.getModelMatrix());
+		} else {
+			modelMatrix.identity();
+		}
+		return modelMatrix.translate(position.x, position.y, position.z)
 			.rotateX(-getPitch())
 			.rotateY(-getYaw())
 			.rotateZ(-getRoll())
@@ -253,6 +258,13 @@ public class Transform extends Component {
 	public void translate(Vector3f delta) {
 		Checks.isNotNull(delta, "delta");
 		translate(delta.x, delta.y, delta.z);
+	}
+	
+	public void reset() {
+		setPosition(0, 0, 0);
+		setRotation(0, 0, 0);
+		setScale(1, 1, 1);
+		setVelocity(0, 0, 0);
 	}
 	
 	public void translate(float deltaX, float deltaY, float deltaZ) {
