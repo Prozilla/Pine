@@ -309,6 +309,30 @@ public interface IntProperty extends NonNullProperty<Integer> {
 		return this;
 	}
 	
+	default IntProperty subtract(int operand) {
+		return add(-operand);
+	}
+	
+	default IntProperty add(int operand) {
+		return mapToInt((value) -> value + operand);
+	}
+	
+	default FloatProperty divide(float operand) {
+		return multiply(1f / operand);
+	}
+	
+	default IntProperty divide(int operand) {
+		return mapToInt((value) -> value / operand);
+	}
+	
+	default FloatProperty multiply(float operand) {
+		return mapToFloat((value) -> value * operand);
+	}
+	
+	default IntProperty multiply(int operand) {
+		return mapToInt((value) -> value * operand);
+	}
+	
 	/**
 	 * @see #mapToBoolean(ToBooleanMapper)
 	 */

@@ -4,9 +4,9 @@ import dev.prozilla.pine.common.asset.audio.AudioSource;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.property.selection.SingleSelectionProperty;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.component.shape.RectRenderer;
+import dev.prozilla.pine.core.component.mesh.RectRenderer;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.rendering.shape.Rect;
+import dev.prozilla.pine.core.rendering.mesh.Rect;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
@@ -119,7 +119,7 @@ public class AudioVisualizerScene extends Scene {
 		int barCount = bars.size();
 		for (int i = 0; i < barCount; i++) {
 			RectRenderer rectRenderer = bars.get(i);
-			Rect rect = rectRenderer.getShape();
+			Rect rect = rectRenderer.getMesh();
 			
 			float position = (float)i / barCount;
 			rect.setX((position) * (Main.WIDTH));

@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.system.standard.shape;
 
-import dev.prozilla.pine.core.component.shape.ShapeRenderer;
+import dev.prozilla.pine.core.component.mesh.MeshRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderSystem;
@@ -8,21 +8,21 @@ import dev.prozilla.pine.core.system.render.RenderSystem;
 public final class ShapeRenderSystem extends RenderSystem {
 	
 	public ShapeRenderSystem() {
-		super(ShapeRenderer.class);
+		super(MeshRenderer.class);
 	}
 	
 	@Override
 	protected void process(EntityChunk chunk, Renderer renderer) {
-		ShapeRenderer<?> shapeRenderer = chunk.getComponent(ShapeRenderer.class);
+		MeshRenderer<?> meshRenderer = chunk.getComponent(MeshRenderer.class);
 		
-		if (shapeRenderer.shape == null) {
+		if (meshRenderer.mesh == null) {
 			return;
 		}
 		
-		if (shapeRenderer.color == null) {
-			shapeRenderer.shape.draw(renderer, shapeRenderer.texture);
+		if (meshRenderer.color == null) {
+			meshRenderer.mesh.draw(renderer, meshRenderer.texture);
 		} else {
-			shapeRenderer.shape.draw(renderer, shapeRenderer.texture, shapeRenderer.color);
+			meshRenderer.mesh.draw(renderer, meshRenderer.texture, meshRenderer.color);
 		}
 	}
 	

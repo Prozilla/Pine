@@ -1,16 +1,16 @@
-package dev.prozilla.pine.core.rendering.shape.modifier;
+package dev.prozilla.pine.core.rendering.mesh.modifier;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
-import dev.prozilla.pine.core.rendering.shape.Shape;
+import dev.prozilla.pine.core.rendering.mesh.Mesh;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ShapeModifier implements Destructible {
+public abstract class MeshModifier implements Destructible {
 	
-	private final List<Shape> targets;
+	private final List<Mesh> targets;
 	
-	public ShapeModifier() {
+	public MeshModifier() {
 		targets = new ArrayList<>();
 	}
 	
@@ -19,24 +19,24 @@ public abstract class ShapeModifier implements Destructible {
 	public abstract float[] modifyUVs(float[] oldVertices, float[] newVertices, float[] uvArray);
 
 	protected void markAsDirty() {
-		for (Shape target : targets) {
+		for (Mesh target : targets) {
 			target.isDirty = true;
 		}
 	}
 	
-	public void addTarget(Shape target) {
+	public void addTarget(Mesh target) {
 		targets.add(target);
 	}
 	
-	public void removeTarget(Shape target) {
+	public void removeTarget(Mesh target) {
 		targets.remove(target);
 	}
 	
 	@Override
 	public void destroy() {
-		List<Shape> targets = new ArrayList<>(this.targets);
+		List<Mesh> targets = new ArrayList<>(this.targets);
 		this.targets.clear();
-		for (Shape target : targets) {
+		for (Mesh target : targets) {
 			target.removeModifier(this);
 		}
 	}

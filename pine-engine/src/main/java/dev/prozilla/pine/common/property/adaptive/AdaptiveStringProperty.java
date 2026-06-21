@@ -40,6 +40,9 @@ public final class AdaptiveStringProperty extends AdaptiveObjectProperty<String>
 	 * @param property The property to adapt
 	 */
 	public static AdaptiveStringProperty adapt(StringProperty property) {
+		if (property instanceof AdaptiveStringProperty adaptiveProperty) {
+			return adaptiveProperty;
+		}
 		return new AdaptiveStringProperty(property);
 	}
 	

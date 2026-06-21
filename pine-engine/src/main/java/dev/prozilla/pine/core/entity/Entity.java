@@ -53,31 +53,11 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		PARENT_UPDATE,
 	}
 	
-	/**
-	 * Creates an entity at the position (0, 0, 0)
-	 */
 	public Entity(World world) {
-		this(world, 0, 0, 0);
+		this(world, null);
 	}
 	
-	/**
-	 * Creates an entity at the position (0, 0, 0)
-	 */
 	public Entity(World world, String name) {
-		this(world, name, 0, 0, 0);
-	}
-	
-	/**
-	 * Creates an entity at the position (x, y, z)
-	 */
-	public Entity(World world, float x, float y, float z) {
-		this(world, null, x, y, z);
-	}
-	
-	/**
-	 * Creates an entity at the position (x, y, z)
-	 */
-	public Entity(World world, String name, float x, float y, float z) {
 		this.world = Checks.isNotNull(world, "world");
 		this.name = name;
 
@@ -87,7 +67,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		
 		id = EntityManager.generateEntityId();
 		
-		transform = new Transform(x, y, z);
+		transform = new Transform();
 		components = new ArrayList<>();
 		addComponent(transform);
 

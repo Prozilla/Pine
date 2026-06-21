@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.rendering.shape;
+package dev.prozilla.pine.core.rendering.mesh;
 
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.system.Color;

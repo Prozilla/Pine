@@ -47,6 +47,9 @@ public final class AdaptiveColorProperty extends AdaptiveObjectProperty<Color> i
 	 * @param property The property to adapt
 	 */
 	public static AdaptiveColorProperty adapt(ColorProperty property) {
+		if (property instanceof AdaptiveColorProperty adaptiveProperty) {
+			return adaptiveProperty;
+		}
 		return new AdaptiveColorProperty(property);
 	}
 	

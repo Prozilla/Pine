@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.rendering.shape.modifier;
+package dev.prozilla.pine.core.rendering.mesh.modifier;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector3f;
@@ -6,7 +6,7 @@ import dev.prozilla.pine.common.math.vector.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BevelModifier extends ShapeModifier {
+public class BevelModifier extends MeshModifier {
 	
 	private float bevelAmount;
 	private int segments;

@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.rendering.shape;
+package dev.prozilla.pine.core.rendering.mesh;
 
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.Renderer;

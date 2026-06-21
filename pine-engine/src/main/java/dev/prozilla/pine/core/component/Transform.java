@@ -286,6 +286,15 @@ public class Transform extends Component {
 		rotation.set(x, y, z);
 	}
 	
+	public void setScale(Vector3f scale) {
+		Checks.isNotNull(scale, "scale");
+		setScale(scale.x, scale.y, scale.z);
+	}
+	
+	public void setScale(float x, float y, float z) {
+		scale.set(x, y, z);
+	}
+	
 	public void setVelocity(Vector3f velocity) {
 		Checks.isNotNull(velocity, "velocity");
 		setVelocity(velocity.x, velocity.y, velocity.z);

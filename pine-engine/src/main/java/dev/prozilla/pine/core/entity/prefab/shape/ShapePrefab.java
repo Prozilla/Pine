@@ -4,12 +4,12 @@ import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.component.shape.ShapeRenderer;
+import dev.prozilla.pine.core.component.mesh.MeshRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
-import dev.prozilla.pine.core.rendering.shape.Shape;
+import dev.prozilla.pine.core.rendering.mesh.Mesh;
 
-public class ShapePrefab<S extends Shape> extends Prefab {
+public class ShapePrefab<S extends Mesh> extends Prefab {
 	
 	protected S shape;
 	protected TextureAsset texture;
@@ -55,8 +55,8 @@ public class ShapePrefab<S extends Shape> extends Prefab {
 		this.color = color;
 	}
 	
-	protected ShapeRenderer<S> createRenderer(S shape, TextureAsset texture, Color color) {
-		return new ShapeRenderer<>(shape, texture, color);
+	protected MeshRenderer<S> createRenderer(S shape, TextureAsset texture, Color color) {
+		return new MeshRenderer<>(shape, texture, color);
 	}
 	
 	@Override

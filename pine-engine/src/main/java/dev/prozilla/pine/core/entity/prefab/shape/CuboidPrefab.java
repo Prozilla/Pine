@@ -2,9 +2,9 @@ package dev.prozilla.pine.core.entity.prefab.shape;
 
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.component.shape.CuboidRenderer;
-import dev.prozilla.pine.core.component.shape.ShapeRenderer;
-import dev.prozilla.pine.core.rendering.shape.Cuboid;
+import dev.prozilla.pine.core.component.mesh.CuboidRenderer;
+import dev.prozilla.pine.core.component.mesh.MeshRenderer;
+import dev.prozilla.pine.core.rendering.mesh.Cuboid;
 
 public class CuboidPrefab extends ShapePrefab<Cuboid> {
 	
@@ -33,7 +33,7 @@ public class CuboidPrefab extends ShapePrefab<Cuboid> {
 	}
 	
 	@Override
-	protected ShapeRenderer<Cuboid> createRenderer(Cuboid shape, TextureAsset texture, Color color) {
+	protected MeshRenderer<Cuboid> createRenderer(Cuboid shape, TextureAsset texture, Color color) {
 		return new CuboidRenderer(shape, texture, color);
 	}
 	

@@ -3,8 +3,8 @@ package dev.prozilla.pine.examples.audio;
 import dev.prozilla.pine.common.asset.audio.AudioSource;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.util.ArrayUtils;
-import dev.prozilla.pine.core.component.shape.RectRenderer;
-import dev.prozilla.pine.core.rendering.shape.Rect;
+import dev.prozilla.pine.core.component.mesh.RectRenderer;
+import dev.prozilla.pine.core.rendering.mesh.Rect;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 
 public class BarResizer extends UpdateSystemBase {
@@ -36,7 +36,7 @@ public class BarResizer extends UpdateSystemBase {
 		forEach((chunk) -> {
 			BarData barData = chunk.getComponent(BarData.class);
 			RectRenderer rectRenderer = chunk.getComponent(RectRenderer.class);
-			Rect rect = rectRenderer.getShape();
+			Rect rect = rectRenderer.getMesh();
 			
 			float factor = 0.1f;
 			if (magnitudes != null && source.isPlaying()) {

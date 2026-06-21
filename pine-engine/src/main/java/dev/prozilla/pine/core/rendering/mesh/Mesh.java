@@ -1,47 +1,48 @@
-package dev.prozilla.pine.core.rendering.shape;
+package dev.prozilla.pine.core.rendering.mesh;
 
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.ListUtils;
 import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.rendering.shape.modifier.ShapeModifier;
+import dev.prozilla.pine.core.rendering.mesh.modifier.MeshModifier;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a shape using vertex and UV arrays which respectively represent the vertex and texture coordinates of each triangle.
+ * Represents a mesh using vertex and UV arrays which respectively represent the vertex and texture coordinates of each triangle.
  */
-public abstract class Shape implements TexturedDrawable, Cloneable<Shape> {
+public abstract class Mesh implements TexturedDrawable, Cloneable<Mesh> {
 	
+	// TODO: Replace with list of unique vertices + list of triangles (indices of vertices)
 	private float[] vertices;
 	private float[] uvArray;
-	/** If {@code true}, the vertex and UV arrays of this shape will be re-generated before the next draw call. */
+	/** If {@code true}, the vertex and UV arrays of this mesh will be re-generated before the next draw call. */
 	public boolean isDirty;
 	
-	private final List<ShapeModifier> modifiers = new ArrayList<>();
+	private final List<MeshModifier> modifiers = new ArrayList<>();
 	
 	/**
-	 * Creates a shape with pre-generated geometry.
+	 * Creates a mesh with pre-generated geometry.
 	 * @param vertices The vertex array
 	 * @param uvArray The UV array
 	 */
-	public Shape(float[] vertices, float[] uvArray) {
+	public Mesh(float[] vertices, float[] uvArray) {
 		this.vertices = vertices;
 		this.uvArray = uvArray;
 		isDirty = false;
 	}
 	
 	/**
-	 * Creates a shape that will be generated before the first draw call.
+	 * Creates a mesh that will be generated before the first draw call.
 	 */
-	public Shape() {
+	public Mesh() {
 		isDirty = true;
 	}
 	
 	/**
-	 * Generates the arrays of vertices and texture coordinates for this shape and applies each modifier.
+	 * Generates the arrays of vertices and texture coordinates for this mesh and applies each modifier.
 	 */
 	public void generate() {
 		vertices = generateVertices();
@@ -49,7 +50,7 @@ public abstract class Shape implements TexturedDrawable, Cloneable<Shape> {
 			uvArray = generateUVs();
 		}
 		
-		for (ShapeModifier modifier : modifiers) {
+		for (MeshModifier modifier : modifiers) {
 			float[] newVertices = modifier.modifyVertices(vertices);
 			uvArray = modifier.modifyUVs(vertices, newVertices, uvArray);
 			vertices = newVertices;
@@ -59,7 +60,7 @@ public abstract class Shape implements TexturedDrawable, Cloneable<Shape> {
 	}
 	
 	/**
-	 * Generates the vertex array for this shape.
+	 * Generates the vertex array for this mesh.
 	 *
 	 * <p>Odd elements define the x-component of the vertex and even elements define the y-component.</p>
 	 * <p>Every three vertices (or six elements) define a triangle.</p>
@@ -68,7 +69,7 @@ public abstract class Shape implements TexturedDrawable, Cloneable<Shape> {
 	abstract protected float[] generateVertices();
 	
 	/**
-	 * Generates the UV array for this shape.
+	 * Generates the UV array for this mesh.
 	 *
 	 * <p>Odd elements define the x-component of the texture coordinate and even elements define the y-component.</p>
 	 * @return The array of texture coordinates.
@@ -76,7 +77,7 @@ public abstract class Shape implements TexturedDrawable, Cloneable<Shape> {
 	abstract protected float[] generateUVs();
 	
 	/**
-	 * Draws this shape using its vertex and UV arrays.
+	 * Draws this mesh using its vertex and UV arrays.
 	 * @see Renderer#drawTriangles(TextureAsset, float[], float[], Color)
 	 */
 	@Override
@@ -98,39 +99,39 @@ public abstract class Shape implements TexturedDrawable, Cloneable<Shape> {
 	 * @return The modifier of the given type, or {@code null} if there is none.
 	 * @param <M> The type of modifier
 	 */
-	public <M extends ShapeModifier> M getModifier(Class<M> modifierType) {
+	public <M extends MeshModifier> M getModifier(Class<M> modifierType) {
 		return ListUtils.getInstance(modifiers, modifierType);
 	}
 	
 	/**
-	 * Adds a modifier to this shape.
+	 * Adds a modifier to this mesh.
 	 * @param modifier The modifier to add
 	 */
-	public void addModifier(ShapeModifier modifier) {
+	public void addModifier(MeshModifier modifier) {
 		modifiers.add(modifier);
 		modifier.addTarget(this);
 		isDirty = true;
 	}
 	
 	/**
-	 * Removes a modifier from this shape.
+	 * Removes a modifier from this mesh.
 	 * @param modifier The modifier to remove
 	 */
-	public void removeModifier(ShapeModifier modifier) {
+	public void removeModifier(MeshModifier modifier) {
 		modifiers.remove(modifier);
 		modifier.removeTarget(this);
 		isDirty = true;
 	}
 	
-	public Shape cloneWithModifiers() {
-		Shape clone = clone();
-		for (ShapeModifier modifier : modifiers) {
+	public Mesh cloneWithModifiers() {
+		Mesh clone = clone();
+		for (MeshModifier modifier : modifiers) {
 			clone.addModifier(modifier);
 		}
 		return clone;
 	}
 	
 	@Override
-	public abstract Shape clone();
+	public abstract Mesh clone();
 	
 }

@@ -51,6 +51,9 @@ public final class AdaptiveFloatProperty extends AdaptiveProperty<Float, FloatPr
 	 * @param property The property to adapt
 	 */
 	public static AdaptiveFloatProperty adapt(FloatProperty property) {
+		if (property instanceof AdaptiveFloatProperty adaptiveProperty) {
+			return adaptiveProperty;
+		}
 		return new AdaptiveFloatProperty(property);
 	}
 	

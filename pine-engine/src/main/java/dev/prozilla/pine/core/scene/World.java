@@ -17,6 +17,7 @@ import dev.prozilla.pine.core.system.standard.animation.AnimationInitializer;
 import dev.prozilla.pine.core.system.standard.animation.AnimationUpdater;
 import dev.prozilla.pine.core.system.standard.audio.AudioPlayerInitializer;
 import dev.prozilla.pine.core.system.standard.camera.*;
+import dev.prozilla.pine.core.system.standard.driver.TransformDriverUpdater;
 import dev.prozilla.pine.core.system.standard.particle.ParticleFlowUpdater;
 import dev.prozilla.pine.core.system.standard.particle.ParticleInitializer;
 import dev.prozilla.pine.core.system.standard.particle.ParticleUpdater;
@@ -103,6 +104,7 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		// Animations
 		initialSystems.add(new AnimationInitializer());
 		initialSystems.add(new AnimationUpdater());
+		initialSystems.add(new TransformDriverUpdater());
 		
 		initialSystems.add(new NodeStyler());
 		initialSystems.add(new LayoutNodeStyler());

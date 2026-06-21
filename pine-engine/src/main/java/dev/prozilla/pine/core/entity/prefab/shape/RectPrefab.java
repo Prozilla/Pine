@@ -2,9 +2,9 @@ package dev.prozilla.pine.core.entity.prefab.shape;
 
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.component.shape.RectRenderer;
-import dev.prozilla.pine.core.component.shape.ShapeRenderer;
-import dev.prozilla.pine.core.rendering.shape.Rect;
+import dev.prozilla.pine.core.component.mesh.MeshRenderer;
+import dev.prozilla.pine.core.component.mesh.RectRenderer;
+import dev.prozilla.pine.core.rendering.mesh.Rect;
 
 public class RectPrefab extends ShapePrefab<Rect> {
 	
@@ -33,7 +33,7 @@ public class RectPrefab extends ShapePrefab<Rect> {
 	}
 	
 	@Override
-	protected ShapeRenderer<Rect> createRenderer(Rect shape, TextureAsset texture, Color color) {
+	protected MeshRenderer<Rect> createRenderer(Rect shape, TextureAsset texture, Color color) {
 		return new RectRenderer(shape, texture, color);
 	}
 	

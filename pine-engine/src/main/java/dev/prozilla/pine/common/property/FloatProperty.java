@@ -307,6 +307,22 @@ public interface FloatProperty extends NonNullProperty<Float> {
 		return mapToInt(Float::hashCode);
 	}
 	
+	default FloatProperty subtract(float operand) {
+		return add(-operand);
+	}
+	
+	default FloatProperty add(float operand) {
+		return mapToFloat((value) -> value + operand);
+	}
+	
+	default FloatProperty divide(float operand) {
+		return multiply(1f / operand);
+	}
+	
+	default FloatProperty multiply(float operand) {
+		return mapToFloat((value) -> value * operand);
+	}
+	
 	/**
 	 * @see #mapToBoolean(ToBooleanMapper) 
 	 */

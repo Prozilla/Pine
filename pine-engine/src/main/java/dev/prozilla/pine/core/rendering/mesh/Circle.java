@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.rendering.shape;
+package dev.prozilla.pine.core.rendering.mesh;
 
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -6,7 +6,7 @@ import dev.prozilla.pine.common.util.checks.Checks;
 /**
  * Generates a circular shape.
  */
-public class Circle extends Shape {
+public class Circle extends Mesh {
 	
 	protected Vector3f position;
 	protected float radius;
@@ -228,8 +228,8 @@ public class Circle extends Shape {
 	}
 	
 	@Override
-	public boolean equals(Shape shape) {
-		return shape == this || (shape instanceof Circle circle && equals(circle));
+	public boolean equals(Mesh mesh) {
+		return mesh == this || (mesh instanceof Circle circle && equals(circle));
 	}
 	
 	public boolean equals(Circle circle) {
@@ -237,7 +237,7 @@ public class Circle extends Shape {
 	}
 	
 	@Override
-	public Shape clone() {
+	public Mesh clone() {
 		return new Circle(position, radius, edges);
 	}
 	

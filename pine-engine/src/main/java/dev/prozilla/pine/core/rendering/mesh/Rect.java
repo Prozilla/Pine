@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.rendering.shape;
+package dev.prozilla.pine.core.rendering.mesh;
 
 import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Vector2f;
@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * Generates a rectangular shape.
  */
-public class Rect extends Shape {
+public class Rect extends Mesh {
 	
 	protected Vector3f position;
 	protected Vector2f size;
@@ -188,8 +188,8 @@ public class Rect extends Shape {
 	}
 	
 	@Override
-	public boolean equals(Shape shape) {
-		return shape == this || (shape instanceof Rect rect && equals(rect));
+	public boolean equals(Mesh mesh) {
+		return mesh == this || (mesh instanceof Rect rect && equals(rect));
 	}
 	
 	public boolean equals(Rect rect) {

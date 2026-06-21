@@ -446,7 +446,7 @@ public class Renderer implements Initializable, Destructible {
 		float x2 = x + width * renderScale.x;
 		float y2 = y + height * renderScale.y;
 		
-		drawTextureRegion(null, x, y, x2, y2, z, 0, 0, 0, 0, c);
+		drawTextureRegion(null, x, y, z, x2, y2, z, 0, 0, 0, 0, c);
 	}
 	
 	public void drawRotatedTexture(TextureAsset texture, float x, float y, float z, float r) {
@@ -469,7 +469,7 @@ public class Renderer implements Initializable, Destructible {
 		float s2 = 1f;
 		float t2 = 1f;
 		
-		drawRotatedTextureRegion(texture, x, y, x2, y2, z, s1, t1, s2, t2, c, r);
+		drawRotatedTextureRegion(texture, x, y, z, x2, y2, z, s1, t1, s2, t2, c, r);
 	}
 	
 	/**
@@ -501,7 +501,7 @@ public class Renderer implements Initializable, Destructible {
 		float s2 = 1f;
 		float t2 = 1f;
 		
-		drawTextureRegion(texture, x, y, x2, y2, z, s1, t1, s2, t2, c);
+		drawTextureRegion(texture, x, y, z, x2, y2, z, s1, t1, s2, t2, c);
 	}
 	
 	public void drawRotatedTextureRegion(TextureAsset texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, float r) {
@@ -531,16 +531,16 @@ public class Renderer implements Initializable, Destructible {
 		float t2 = (regY + regHeight) / texture.getHeight();
 		
 		// Delegate to the rotation drawing method
-		drawRotatedTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, c, r);
+		drawRotatedTextureRegion(texture, x1, y1, z, x2, y2, z, s1, t1, s2, t2, c, r);
 	}
 	
-	public void drawRotatedTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, float r) {
-		drawRotatedTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, fallbackColor, r);
+	public void drawRotatedTextureRegion(TextureAsset texture, float x1, float y1, float z1, float x2, float y2, float z2, float s1, float t1, float s2, float t2, float r) {
+		drawRotatedTextureRegion(texture, x1, y1, z1, x2, y2, z2, s1, t1, s2, t2, fallbackColor, r);
 	}
 	
-	public void drawRotatedTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, Color c, float r) {
+	public void drawRotatedTextureRegion(TextureAsset texture, float x1, float y1, float z1, float x2, float y2, float z2, float s1, float t1, float s2, float t2, Color c, float r) {
 		if (r == 0) {
-			drawTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, c);
+			drawTextureRegion(texture, x1, y1, z1, x2, y2, z2, s1, t1, s2, t2, c);
 			return;
 		}
 		
@@ -577,7 +577,7 @@ public class Renderer implements Initializable, Destructible {
 		float newX4 = cosAngle * localX4 - sinAngle * localY4 + centerX;
 		float newY4 = sinAngle * localX4 + cosAngle * localY4 + centerY;
 		
-		drawTextureRegion(texture, newX1, newY1, newX2, newY2, newX3, newY3, newX4, newY4, z, s2, t1, s1, t2, c);
+		drawTextureRegion(texture, newX1, newY1, z1, newX2, newY2, z2, newX3, newY3, z1, newX4, newY4, z2, s2, t1, s1, t2, c);
 	}
 	
 	/**
@@ -621,7 +621,7 @@ public class Renderer implements Initializable, Destructible {
 		float s2 = (regX + regWidth) / texture.getWidth();
 		float t2 = (regY + regHeight) / texture.getHeight();
 		
-		drawTextureRegion(texture, x, y, x2, y2, z, s1, t1, s2, t2, c);
+		drawTextureRegion(texture, x, y, z, x2, y2, z, s1, t1, s2, t2, c);
 	}
 	
 	/**
@@ -635,8 +635,8 @@ public class Renderer implements Initializable, Destructible {
 	 * @param s2 Top right s coordinate
 	 * @param t2 Top right t coordinate
 	 */
-	public void drawTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2) {
-		drawTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, fallbackColor);
+	public void drawTextureRegion(TextureAsset texture, float x1, float y1, float z1, float x2, float y2, float z2, float s1, float t1, float s2, float t2) {
+		drawTextureRegion(texture, x1, y1, z1, x2, y2, z2, s1, t1, s2, t2, fallbackColor);
 	}
 	
 	/**
@@ -651,15 +651,25 @@ public class Renderer implements Initializable, Destructible {
 	 * @param t2 Top right t coordinate
 	 * @param c  The color to use
 	 */
-	public void drawTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, Color c) {
-		drawTextureRegion(texture, x1, y1, x1, y2, x2, y2, x2, y1, z, s1, t1, s2, t2, c);
+	public void drawTextureRegion(TextureAsset texture,
+	                              float x1, float y1, float z1,
+	                              float x2, float y2, float z2,
+	                              float s1, float t1, float s2, float t2,
+	                              Color c) {
+		float z3 = (z1 + z2) / 2;
+		drawTextureRegion(texture, x1, y1, z1, x1, y2, z3, x2, y2, z2, x2, y1, z3, s1, t1, s2, t2, c);
 	}
 	
 	/**
 	 * Draws a texture region on specified coordinates.
 	 */
-	public void drawTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float z,
-	                              float s1, float t1, float s2, float t2, Color c) {
+	public void drawTextureRegion(TextureAsset texture,
+	                              float x1, float y1, float z1,
+	                              float x2, float y2, float z2,
+	                              float x3, float y3, float z3,
+	                              float x4, float y4, float z4,
+	                              float s1, float t1, float s2, float t2,
+	                              Color c) {
 		requireRendering();
 		totalVertices += 6;
 		
@@ -689,7 +699,7 @@ public class Renderer implements Initializable, Destructible {
 		
 		// Handle depth render mode
 		if (renderMode == RenderMode.DEPTH) {
-			float depth = z * z;
+			float depth = MathUtils.square((z1 + z2 + z3 + z4) / 4);
 			r = depth;
 			g = depth;
 			b = depth;
@@ -723,13 +733,13 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		// Push the vertices to the buffer
-		vertices.put(x1).put(y1).put(z).put(r).put(g).put(b).put(a).put(s1).put(t1).put(texId).put(texType);
-		vertices.put(x2).put(y2).put(z).put(r).put(g).put(b).put(a).put(s1).put(t2).put(texId).put(texType);
-		vertices.put(x3).put(y3).put(z).put(r).put(g).put(b).put(a).put(s2).put(t2).put(texId).put(texType);
+		vertices.put(x1).put(y1).put(z1).put(r).put(g).put(b).put(a).put(s1).put(t1).put(texId).put(texType);
+		vertices.put(x2).put(y2).put(z2).put(r).put(g).put(b).put(a).put(s1).put(t2).put(texId).put(texType);
+		vertices.put(x3).put(y3).put(z3).put(r).put(g).put(b).put(a).put(s2).put(t2).put(texId).put(texType);
 		
-		vertices.put(x1).put(y1).put(z).put(r).put(g).put(b).put(a).put(s1).put(t1).put(texId).put(texType);
-		vertices.put(x3).put(y3).put(z).put(r).put(g).put(b).put(a).put(s2).put(t2).put(texId).put(texType);
-		vertices.put(x4).put(y4).put(z).put(r).put(g).put(b).put(a).put(s2).put(t1).put(texId).put(texType);
+		vertices.put(x1).put(y1).put(z1).put(r).put(g).put(b).put(a).put(s1).put(t1).put(texId).put(texType);
+		vertices.put(x3).put(y3).put(z3).put(r).put(g).put(b).put(a).put(s2).put(t2).put(texId).put(texType);
+		vertices.put(x4).put(y4).put(z4).put(r).put(g).put(b).put(a).put(s2).put(t1).put(texId).put(texType);
 		
 		numVertices += 6;
 		
@@ -1052,14 +1062,17 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	public void setProjectionMatrix(Matrix4f projectionMatrix) {
+		flush();
 		program.setUniform("uProjection", projectionMatrix);
 	}
 	
 	public void setViewMatrix(Matrix4f viewMatrix) {
+		flush();
 		program.setUniform("uView", viewMatrix);
 	}
 	
 	public void setModelMatrix(Matrix4f modelMatrix) {
+		flush();
 		program.setUniform("uModel", modelMatrix);
 	}
 	

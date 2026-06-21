@@ -51,6 +51,9 @@ public final class AdaptiveIntProperty extends AdaptiveProperty<Integer, IntProp
 	 * @param property The property to adapt
 	 */
 	public static AdaptiveIntProperty adapt(IntProperty property) {
+		if (property instanceof AdaptiveIntProperty adaptiveProperty) {
+			return adaptiveProperty;
+		}
 		return new AdaptiveIntProperty(property);
 	}
 	

@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.component.shape;
+package dev.prozilla.pine.core.component.mesh;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.system.Color;

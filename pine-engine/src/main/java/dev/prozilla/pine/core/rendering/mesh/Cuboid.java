@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.rendering.shape;
+package dev.prozilla.pine.core.rendering.mesh;
 
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -8,28 +8,32 @@ import java.util.Objects;
 /**
  * Generates a cuboid shape.
  */
-public class Cuboid extends Shape {
+public class Cuboid extends Mesh {
 	
-	protected Vector3f position;
+	protected Vector3f origin;
 	protected Vector3f size;
 	
 	public Cuboid() {
-		this(new Vector3f(), new Vector3f());
+		this(Vector3f.one());
 	}
 	
-	public Cuboid(Vector3f position, Vector3f size) {
-		this.position = Checks.isNotNull(position, "position");
+	public Cuboid(Vector3f size) {
+		this(size, size.clone().divide(-2f));
+	}
+	
+	public Cuboid(Vector3f size, Vector3f origin) {
 		this.size = Checks.isNotNull(size, "size");
+		this.origin = Checks.isNotNull(origin, "origin");
 	}
 	
 	@Override
 	protected float[] generateVertices() {
-		float x1 = this.position.x;
-		float y1 = this.position.y;
-		float z1 = this.position.z;
-		float x2 = this.position.x + this.size.x;
-		float y2 = this.position.y + this.size.y;
-		float z2 = this.position.z + this.size.z;
+		float x1 = this.origin.x;
+		float y1 = this.origin.y;
+		float z1 = this.origin.z;
+		float x2 = this.origin.x + this.size.x;
+		float y2 = this.origin.y + this.size.y;
+		float z2 = this.origin.z + this.size.z;
 		
 		return new float[] {
 			// Front
@@ -175,52 +179,52 @@ public class Cuboid extends Shape {
 	}
 	
 	public float getX() {
-		return position.x;
+		return origin.x;
 	}
 	
 	public float getY() {
-		return position.y;
+		return origin.y;
 	}
 	
 	public float getZ() {
-		return position.z;
+		return origin.z;
 	}
 	
 	public void setX(float x) {
-		if (x == position.x) {
+		if (x == origin.x) {
 			return;
 		}
 		
-		position.x = x;
+		origin.x = x;
 		isDirty = true;
 	}
 	
 	public void setY(float y) {
-		if (y == position.y) {
+		if (y == origin.y) {
 			return;
 		}
 		
-		position.y = y;
+		origin.y = y;
 		isDirty = true;
 	}
 	
 	public void setZ(float z) {
-		if (z == position.z) {
+		if (z == origin.z) {
 			return;
 		}
 		
-		position.z = z;
+		origin.z = z;
 		isDirty = true;
 	}
 	
-	public void setPosition(Vector3f position) {
-		Checks.isNotNull(position, "position");
+	public void setOrigin(Vector3f origin) {
+		Checks.isNotNull(origin, "position");
 		
-		if (position.equals(this.position)) {
+		if (origin.equals(this.origin)) {
 			return;
 		}
 		
-		this.position = position;
+		this.origin = origin;
 		isDirty = true;
 	}
 	
@@ -280,17 +284,17 @@ public class Cuboid extends Shape {
 	}
 	
 	@Override
-	public boolean equals(Shape shape) {
-		return shape == this || (shape instanceof Cuboid cuboid && equals(cuboid));
+	public boolean equals(Mesh mesh) {
+		return mesh == this || (mesh instanceof Cuboid cuboid && equals(cuboid));
 	}
 	
 	public boolean equals(Cuboid cuboid) {
-		return cuboid != null && Objects.equals(cuboid.position, position) && Objects.equals(cuboid.size, size);
+		return cuboid != null && Objects.equals(cuboid.origin, origin) && Objects.equals(cuboid.size, size);
 	}
 	
 	@Override
 	public Cuboid clone() {
-		return new Cuboid(position, size);
+		return new Cuboid(size, origin);
 	}
 	
 }

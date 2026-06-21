@@ -2,10 +2,11 @@ package dev.prozilla.pine.examples.fps;
 
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector3f;
+import dev.prozilla.pine.common.property.fixed.FixedFloatProperty;
+import dev.prozilla.pine.common.property.vector.delegated.DelegatedVector3fProperty;
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.shape.CuboidPrefab;
-import dev.prozilla.pine.core.rendering.shape.Cuboid;
+import dev.prozilla.pine.core.rendering.mesh.Cuboid;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
@@ -22,8 +23,17 @@ public class GameScene extends Scene {
 		super.load();
 		previousCursorPosition = null;
 		
-		Entity rect = world.addEntity(new CuboidPrefab(new Cuboid(new Vector3f(-5, -5, -15), new Vector3f(10, 10, 10)), "textures/checker.png"));
-		rect.transform.translate(0, 0, -10);
+		CuboidPrefab cubePrefab = new CuboidPrefab(new Cuboid(new Vector3f(10, 10, 10)), "textures/checker.png");
+		
+		world.addEntity(cubePrefab, 0, 5, -20);
+		
+		cubePrefab.setShape(new Cuboid(new Vector3f(15, 15, 15)));
+		cubePrefab.setRotation(new DelegatedVector3fProperty(
+			new FixedFloatProperty(0),
+			getTimer().scaledTimeProperty().multiply(100),
+			new FixedFloatProperty(0)
+		));
+		world.addEntity(cubePrefab, 15, 7.5f, -35);
 		
 		getInput().disableCursor();
 	}
@@ -36,6 +46,9 @@ public class GameScene extends Scene {
 		if (input.getKeyDown(Key.ESCAPE)) {
 			application.stop();
 			return;
+		}
+		if (input.getKeyDown(Key.P)) {
+			application.togglePause();
 		}
 		Vector3f delta = new Vector3f();
 		Transform cameraTransform = cameraData.getTransform();

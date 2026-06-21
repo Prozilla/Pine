@@ -7,7 +7,7 @@ import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.rendering.shape.Circle;
+import dev.prozilla.pine.core.rendering.mesh.Circle;
 
 public class CircleCollider extends Collider {
 	

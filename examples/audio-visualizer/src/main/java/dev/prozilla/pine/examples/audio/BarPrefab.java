@@ -3,7 +3,7 @@ package dev.prozilla.pine.examples.audio;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.shape.RectPrefab;
-import dev.prozilla.pine.core.rendering.shape.Rect;
+import dev.prozilla.pine.core.rendering.mesh.Rect;
 
 public class BarPrefab extends RectPrefab {
 	

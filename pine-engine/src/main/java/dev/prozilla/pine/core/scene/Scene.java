@@ -107,7 +107,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		
 		// Create new camera from prefab
 		if (cameraData == null) {
-			Entity camera = world.addEntity(this.cameraPrefab, 0, 0, 10f);
+			Entity camera = world.addEntity(this.cameraPrefab, 0, 10f, 10f);
 			cameraData = camera.getComponent(CameraData.class);
 			
 			if (cameraData == null) {
