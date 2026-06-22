@@ -67,6 +67,9 @@ public abstract class Mesh implements TexturedRenderable, Cloneable<Mesh>, Memoi
 	 * Generates the arrays of vertices and texture coordinates for this mesh and applies each modifier.
 	 */
 	public void generate() {
+		if (!isDirty) {
+			return;
+		}
 		vertices = generateVertices();
 		if (vertices != null && vertices.length > 0) {
 			uvArray = generateUVs();
@@ -104,15 +107,23 @@ public abstract class Mesh implements TexturedRenderable, Cloneable<Mesh>, Memoi
 	 */
 	@Override
 	public void draw(Renderer renderer, TextureAsset texture, Color color) {
-		if (isDirty) {
-			generate();
-		}
+		generate();
 		
 		if (vertices == null) {
 			return;
 		}
 		
 		renderer.drawTriangles(texture, vertices, uvArray, color);
+	}
+	
+	public float[] getVertices() {
+		generate();
+		return vertices;
+	}
+	
+	public float[] getUVArray() {
+		generate();
+		return uvArray;
 	}
 	
 	public Vector3f getOrigin() {
@@ -208,6 +219,10 @@ public abstract class Mesh implements TexturedRenderable, Cloneable<Mesh>, Memoi
 	@Override
 	public boolean isDirty() {
 		return isDirty;
+	}
+	
+	public <M extends Mesh> Meshes<Mesh, M> join(M mesh) {
+		return new Meshes<>(this, mesh);
 	}
 	
 	public Mesh cloneWithModifiers() {

@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.system.standard.shape;
+package dev.prozilla.pine.core.system.standard.mesh;
 
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.core.component.Transform;

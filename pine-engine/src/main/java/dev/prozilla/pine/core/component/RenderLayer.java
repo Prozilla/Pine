@@ -26,7 +26,7 @@ public class RenderLayer extends Component {
 		}
 		
 		this.renderChildrenBelow = renderChildrenBelow;
-		getWorld().updateRenderLayers();
+		getWorld().updateZIndices();
 	}
 	
 	/**
@@ -64,19 +64,11 @@ public class RenderLayer extends Component {
 			this.zIndex = zIndex++;
 		}
 		
-		getTransform().position.z = getDepth();
 		return zIndex;
 	}
 	
 	public int getzIndex() {
 		return zIndex;
-	}
-	
-	/**
-	 * @return Depth value between <code>0f</code> and <code>1f</code> based on the z-index of this entity.
-	 */
-	public float getDepth() {
-		return ((float)zIndex / getWorld().maxDepth) * getWorld().depthMultiplier;
 	}
 	
 }

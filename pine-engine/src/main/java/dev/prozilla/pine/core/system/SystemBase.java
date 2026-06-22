@@ -13,6 +13,7 @@ import dev.prozilla.pine.core.system.init.InitSystemBase;
 
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -246,6 +247,10 @@ public abstract class SystemBase {
 		if (query != null) {
 			query.entityChunks.sort(comparator);
 		}
+	}
+	
+	protected List<EntityChunk> getChunks() {
+		return query.entityChunks;
 	}
 	
 	/**

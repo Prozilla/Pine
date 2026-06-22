@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Responsible for loading objects into the world.
  */
+// TODO: Create separate 2D and 3D scenes, e.g., with default camera values
 public class Scene implements Initializable, InputHandler, Updatable, Renderable, Destructible, Printable, SceneContext, ApplicationProvider {
 	
 	// Scene properties

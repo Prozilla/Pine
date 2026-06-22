@@ -31,6 +31,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.opengl.GL11.*;
 
+// TODO: Split drawing methods into separate helpers
 /**
  * Handles the rendering process.
  */

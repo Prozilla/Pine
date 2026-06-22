@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.property.fixed.FixedFloatProperty;
 import dev.prozilla.pine.common.property.vector.delegated.DelegatedVector3fProperty;
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.entity.prefab.shape.CuboidPrefab;
+import dev.prozilla.pine.core.entity.prefab.mesh.CuboidPrefab;
 import dev.prozilla.pine.core.rendering.mesh.Cuboid;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.input.Input;
@@ -27,7 +27,7 @@ public class GameScene extends Scene {
 		
 		world.addEntity(cubePrefab, 0, 5, -20);
 		
-		cubePrefab.setShape(new Cuboid(new Vector3f(15, 15, 15)));
+		cubePrefab.setMesh(new Cuboid(new Vector3f(15, 15, 15)));
 		cubePrefab.setRotation(new DelegatedVector3fProperty(
 			new FixedFloatProperty(0),
 			getTimer().scaledTimeProperty().multiply(100),

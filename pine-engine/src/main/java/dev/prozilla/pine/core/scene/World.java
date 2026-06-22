@@ -3,7 +3,9 @@ package dev.prozilla.pine.core.scene;
 import dev.prozilla.pine.common.lifecycle.*;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
-import dev.prozilla.pine.core.component.*;
+import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.ComponentManager;
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityManager;
 import dev.prozilla.pine.core.entity.EntityQueryPool;
@@ -12,17 +14,18 @@ import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.SystemBase;
 import dev.prozilla.pine.core.system.SystemBuilder;
 import dev.prozilla.pine.core.system.SystemManager;
-import dev.prozilla.pine.core.system.standard.RenderLayerInitializer;
 import dev.prozilla.pine.core.system.standard.animation.AnimationInitializer;
 import dev.prozilla.pine.core.system.standard.animation.AnimationUpdater;
 import dev.prozilla.pine.core.system.standard.audio.AudioPlayerInitializer;
 import dev.prozilla.pine.core.system.standard.camera.*;
 import dev.prozilla.pine.core.system.standard.driver.TransformDriverUpdater;
+import dev.prozilla.pine.core.system.standard.layer.RenderLayerInitializer;
+import dev.prozilla.pine.core.system.standard.layer.RenderLayerUpdater;
+import dev.prozilla.pine.core.system.standard.mesh.MeshRenderSystem;
+import dev.prozilla.pine.core.system.standard.mesh.QuadRenderSystem;
 import dev.prozilla.pine.core.system.standard.particle.ParticleFlowUpdater;
 import dev.prozilla.pine.core.system.standard.particle.ParticleInitializer;
 import dev.prozilla.pine.core.system.standard.particle.ParticleUpdater;
-import dev.prozilla.pine.core.system.standard.shape.QuadRenderSystem;
-import dev.prozilla.pine.core.system.standard.shape.ShapeRenderSystem;
 import dev.prozilla.pine.core.system.standard.sprite.GridInitializer;
 import dev.prozilla.pine.core.system.standard.sprite.GridInputHandler;
 import dev.prozilla.pine.core.system.standard.sprite.MultiTileInitializer;
@@ -59,8 +62,7 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 	
 	public boolean initialized;
 	
-	public int maxDepth;
-	public float depthMultiplier;
+	public RenderLayerUpdater renderLayerUpdater;
 	
 	/**
 	 * List of all systems that are added during initialization.
@@ -82,7 +84,6 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		useStandardSystems();
 		
 		initialized = false;
-		depthMultiplier = 1f;
 	}
 	
 	/**
@@ -104,6 +105,8 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		initialSystems.add(new SceneCameraRenderSystem());
 		
 		// Z-index
+		renderLayerUpdater = new RenderLayerUpdater();
+		initialSystems.add(renderLayerUpdater);
 		initialSystems.add(new RenderLayerInitializer());
 		
 		// Animations
@@ -133,8 +136,8 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		initialSystems.add(new MultiTileInitializer());
 		initialSystems.add(new TileMover());
 		
-		// Shapes
-		initialSystems.add(new ShapeRenderSystem());
+		// Meshes
+		initialSystems.add(new MeshRenderSystem());
 		initialSystems.add(new QuadRenderSystem());
 
 		// Nodes
@@ -198,7 +201,7 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 			throw new IllegalStateException("World has already been initialized.");
 		}
 		
-		updateRenderLayers();
+		updateZIndices();
 		systemManager.init();
 		initialized = true;
 	}
@@ -269,15 +272,11 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		Checks.isNotNull(entity, "entity");
 		if (entityManager.contains(entity)) {
 			systemManager.register(entity); // Check if entity was changed since it was added (e.g. tag changed after components added)
-			if (initialized) {
-				updateRenderLayers();
-			}
+			updateZIndices();
 			return entity;
 		}
 		entityManager.addEntity(entity);
-		if (initialized) {
-			updateRenderLayers();
-		}
+		updateZIndices();
 		systemManager.register(entity);
 		return entity;
 	}
@@ -285,9 +284,7 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 	public void removeEntity(Entity entity) {
 		Checks.isNotNull(entity, "entity");
 		entityManager.removeEntity(entity);
-		if (initialized) {
-			updateRenderLayers();
-		}
+		updateZIndices();
 		systemManager.unregister(entity);
 		componentManager.removeComponents(entity);
 	}
@@ -359,46 +356,10 @@ public class World implements Initializable, InputHandler, Updatable, Renderable
 		return system;
 	}
 	
-	public void updateRenderLayers() {
-		if (initialized && !application.getConfig().enableDepthRecalculation.get()) {
-			return;
+	public void updateZIndices() {
+		if (renderLayerUpdater != null) {
+			renderLayerUpdater.updateZIndices();
 		}
-		
-		// TODO: All layers without any layers above them should be treated as root layers
-		ArrayList<RenderLayer> rootLayers = new ArrayList<>();
-		
-		// Get root layers
-		for (Entity entity : entityManager.getEntities()) {
-			if (entity.transform.parent == null) {
-				rootLayers.addAll(entity.getComponentsBelow(RenderLayer.class, ComponentQuery.SELF_OR_NEAREST_PATHS));
-			}
-		}
-		
-		// Calculate z-index for each root layer
-		int zIndex = 0;
-		for (RenderLayer rootLayer : rootLayers) {
-			zIndex = rootLayer.calculateZIndex(zIndex);
-		}
-		maxDepth = zIndex;
-		
-		// Check if depth indexes are unique
-//		List<Integer> indexes = new ArrayList<>();
-//		boolean unique = true;
-//		for (Entity entity : entityManager.getEntities()) {
-//			int depthIndex = entity.transform.getDepthIndex();
-//			if (indexes.contains(depthIndex)) {
-//				unique = false;
-//				System.err.println("Duplicate depth index found: " + depthIndex);
-//			} else {
-//				indexes.add(depthIndex);
-//			}
-//		}
-//		if (unique) {
-//			System.out.println("Generated new unique depth indexes successfully");
-//		}
-		
-		// Update systems that use depth
-		systemManager.updateEntityDepth();
 	}
 	
 	public boolean isActive() {

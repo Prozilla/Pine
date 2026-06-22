@@ -134,7 +134,11 @@ public class GameScene extends Scene {
 		cameraData.zoomIn(-0.1f);
 		cameraData.setBackgroundColor(Color.hex("#596A6C"));
 		cameraData.farClipPlane = 10000f;
-		world.depthMultiplier = 25f;
+		
+		if (world.renderLayerUpdater != null) {
+			world.renderLayerUpdater.setDepthMultiplier(25f);
+		}
+		
 		resetCamera();
 	}
 	
@@ -202,7 +206,12 @@ public class GameScene extends Scene {
 		int width = MAP[0].length();
 		int height = MAP.length;
 		
+		float depthMultiplier = 1f;
+		if (world.renderLayerUpdater != null) {
+			depthMultiplier = world.renderLayerUpdater.getDepthMultiplier();
+		}
+		
 		cameraData.getTransform().reset();
-		cameraData.getTransform().translate((width * TILE_SIZE) / 2f, (height * TILE_SIZE) / 2f, 10f * world.depthMultiplier);
+		cameraData.getTransform().translate((width * TILE_SIZE) / 2f, (height * TILE_SIZE) / 2f, 10f * depthMultiplier);
 	}
 }

@@ -12,7 +12,7 @@ import java.util.Objects;
  */
 public class Rect extends Mesh {
 	
-	protected Vector2f size;
+	protected final Vector2f size;
 	protected Anchor anchor;
 	
 	public Rect() {
@@ -112,7 +112,7 @@ public class Rect extends Mesh {
 			return;
 		}
 		
-		this.size = size;
+		this.size.set(size);
 		markAsDirty();
 	}
 	

@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.entity.prefab.shape;
+package dev.prozilla.pine.core.entity.prefab.mesh;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.system.Color;

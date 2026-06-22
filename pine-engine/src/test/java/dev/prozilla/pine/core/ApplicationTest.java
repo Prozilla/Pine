@@ -2,7 +2,7 @@ package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.entity.prefab.shape.QuadPrefab;
+import dev.prozilla.pine.core.entity.prefab.mesh.QuadPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.*;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.scene.World;
