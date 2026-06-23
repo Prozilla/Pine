@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.rendering.mesh;
 
-import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.test.TestLoggingExtension;
 import dev.prozilla.pine.test.TestUtils;
 import org.junit.jupiter.api.MethodOrderer;
@@ -18,7 +18,7 @@ public class CircleTest {
 	}
 	
 	Circle mockCircle() {
-		return new Circle(new Vector2f(1, 2), 4f);
+		return new Circle(new Vector3f(1, 2, 0), 4f);
 	}
 	
 }

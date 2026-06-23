@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.component.physics.collision;
 
-import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 
 public class MockedCircleCollider extends CircleCollider {
 	
@@ -8,7 +8,7 @@ public class MockedCircleCollider extends CircleCollider {
 		super(radius);
 	}
 	
-	public MockedCircleCollider(float radius, Vector2f offset) {
+	public MockedCircleCollider(float radius, Vector3f offset) {
 		super(radius, offset);
 	}
 	
