@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.sprite.SpritePrefab;
-import dev.prozilla.pine.core.scene.World;
+import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 
 public class BackgroundPrefab extends SpritePrefab {
@@ -20,13 +20,13 @@ public class BackgroundPrefab extends SpritePrefab {
 		index = 0;
 	}
 	
-	public Entity instantiate(World world, int index) {
-		return instantiate(world, 0, 0, index);
+	public Entity instantiate(Scene scene, int index) {
+		return instantiate(scene, 0, 0, index);
 	}
 	
-	public Entity instantiate(World world, float x, float y, int index) {
+	public Entity instantiate(Scene scene, float x, float y, int index) {
 		this.index = index;
-		return super.instantiate(world, x, y, 0);
+		return super.instantiate(scene, x, y, 0);
 	}
 	
 	@Override

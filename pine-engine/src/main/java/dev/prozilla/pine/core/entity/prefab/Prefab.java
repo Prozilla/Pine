@@ -8,7 +8,7 @@ import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.animation.AnimationData;
 import dev.prozilla.pine.core.component.driver.TransformDriver;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.scene.World;
+import dev.prozilla.pine.core.scene.Scene;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -89,36 +89,36 @@ public class Prefab {
 		scaleProperty = AdaptiveVector3fProperty.adapt(scale);
 	}
 	
-	public Entity instantiate(World world, Vector3f position) {
+	public Entity instantiate(Scene scene, Vector3f position) {
 		Checks.isNotNull(position, "position");
-		return instantiate(world, position.x, position.y, position.z);
+		return instantiate(scene, position.x, position.y, position.z);
 	}
 	
 	/**
 	 * Creates a new entity instance with the prefab's default components.
-	 * @param world The world where the entity will be added.
+	 * @param scene The scene to add this entity to.
 	 * @param x X position
 	 * @param y Y position
 	 * @param z Z position
 	 * @return A new entity instance.
 	 */
-	public Entity instantiate(World world, float x, float y, float z) {
-		Entity entity = instantiate(world);
+	public Entity instantiate(Scene scene, float x, float y, float z) {
+		Entity entity = instantiate(scene);
 		entity.transform.setPosition(x, y, z);
 		return entity;
 	}
 	
 	/**
 	 * Creates a new entity instance with the prefab's default components at position (0, 0, 0).
-	 * @param world The world where the entity will be added.
+	 * @param scene The scene to add this entity to.
 	 * @return A new entity instance.
 	 */
-	public Entity instantiate(World world) {
+	public Entity instantiate(Scene scene) {
 		Entity entity;
 		if (name != null) {
-			entity = new Entity(world, name);
+			entity = new Entity(scene, name);
 		} else {
-			entity = new Entity(world);
+			entity = new Entity(scene);
 		}
 		
 		try {
@@ -129,7 +129,7 @@ public class Prefab {
 				message += ": " + name;
 			}
 			
-			world.application.getLogger().error(message, e);
+			scene.getLogger().error(message, e);
 		}
 		
 		if (!isActive) {

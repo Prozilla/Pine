@@ -755,7 +755,7 @@ public class Input implements Initializable, Destructible {
 	}
 	
 	/**
-	 * Returns the position of the cursor inside the world.
+	 * Returns the position of the cursor in world space.
 	 * Returns <code>null</code> if the cursor is being blocked.
 	 * @return Position of the cursor
 	 */
@@ -764,7 +764,7 @@ public class Input implements Initializable, Destructible {
 	}
 	
 	/**
-	 * Returns the position of the cursor inside the world.
+	 * Returns the position of the cursor in world space.
 	 * Returns <code>null</code> if the cursor is being blocked, unless blocks are being ignored.
 	 * @param ignoreBlock Whether to ignore blocks.
 	 * @return Position of the cursor

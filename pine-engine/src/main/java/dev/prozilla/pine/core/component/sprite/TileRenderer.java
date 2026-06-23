@@ -8,7 +8,7 @@ import dev.prozilla.pine.core.component.ComponentQuery;
 
 
 /**
- * A component for rendering 2D square tiles in the world.
+ * A component for rendering 2D square tiles in the scene.
  */
 public class TileRenderer extends Component implements TileProvider {
 	

@@ -79,16 +79,16 @@ public class GameScene extends Scene {
 		cameraData.orthographic = true;
 		
 		// Create systems
-		world.addSystem(new PlayerInputHandler());
-		world.addSystem(new PlayerMover());
+		addSystem(new PlayerInputHandler());
+		addSystem(new PlayerMover());
 		
 		// Create grid entities
 		GridPrefab gridPrefab = new GridPrefab(TILE_SIZE);
-		GridGroup backgroundGrid = world.addEntity(gridPrefab).getComponent(GridGroup.class);
-		GridGroup goalGrid = world.addEntity(gridPrefab).getComponent(GridGroup.class);
-		GridGroup foregroundGrid = world.addEntity(gridPrefab).getComponent(GridGroup.class);
+		GridGroup backgroundGrid = addEntity(gridPrefab).getComponent(GridGroup.class);
+		GridGroup goalGrid = addEntity(gridPrefab).getComponent(GridGroup.class);
+		GridGroup foregroundGrid = addEntity(gridPrefab).getComponent(GridGroup.class);
 		
-		world.addSystem(new CrateUpdater(goalGrid));
+		addSystem(new CrateUpdater(goalGrid));
 		
 		// Create tile entities
 		BlockPrefab blockPrefab = new BlockPrefab();
@@ -129,14 +129,14 @@ public class GameScene extends Scene {
 		
 		// Add user interface
 		StyleSheet styleSheet = AssetPools.styleSheets.load("style/hud.css", Application.isDevMode());
-		world.addEntity(new UIPrefab(styleSheet));
+		addEntity(new UIPrefab(styleSheet));
 		
 		cameraData.zoomIn(-0.1f);
 		cameraData.setBackgroundColor(Color.hex("#596A6C"));
 		cameraData.farClipPlane = 10000f;
 		
-		if (world.renderLayerUpdater != null) {
-			world.renderLayerUpdater.setDepthMultiplier(25f);
+		if (renderLayerUpdater != null) {
+			renderLayerUpdater.setDepthMultiplier(25f);
 		}
 		
 		resetCamera();
@@ -207,8 +207,8 @@ public class GameScene extends Scene {
 		int height = MAP.length;
 		
 		float depthMultiplier = 1f;
-		if (world.renderLayerUpdater != null) {
-			depthMultiplier = world.renderLayerUpdater.getDepthMultiplier();
+		if (renderLayerUpdater != null) {
+			depthMultiplier = renderLayerUpdater.getDepthMultiplier();
 		}
 		
 		cameraData.getTransform().reset();

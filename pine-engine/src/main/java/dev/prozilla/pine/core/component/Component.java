@@ -7,7 +7,6 @@ import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityProvider;
 import dev.prozilla.pine.core.scene.Scene;
-import dev.prozilla.pine.core.scene.SceneProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -15,7 +14,7 @@ import java.util.Objects;
 /**
  * Contains a partition of the data of an entity.
  */
-public abstract class Component implements Printable, Destructible, EntityProvider, ComponentQueryProvider, ApplicationProvider, SceneProvider {
+public abstract class Component implements Printable, Destructible, EntityProvider, ComponentQueryProvider, ApplicationProvider {
 	
 	// Identifier
 	public final int id;
@@ -83,7 +82,6 @@ public abstract class Component implements Printable, Destructible, EntityProvid
 		return entity.getApplication();
 	}
 	
-	@Override
 	public Scene getScene() {
 		return entity.getScene();
 	}

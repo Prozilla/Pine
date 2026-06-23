@@ -34,15 +34,15 @@ public class GridGroup extends Component {
 	}
 	
 	public TileRenderer addTile(TilePrefab tilePrefab, Vector2i coordinate) {
-		return addTile(tilePrefab.instantiate(entity.getWorld(), coordinate));
+		return addTile(tilePrefab.instantiate(entity.getScene(), coordinate));
 	}
 	
 	public TileRenderer addTile(TilePrefab tilePrefab, int x, int y) {
-		return addTile(tilePrefab.instantiate(entity.getWorld(), x, y));
+		return addTile(tilePrefab.instantiate(entity.getScene(), x, y));
 	}
 	
 	public TileRenderer addTile(Prefab prefab) {
-		return addTile(prefab.instantiate(entity.getWorld()));
+		return addTile(prefab.instantiate(entity.getScene()));
 	}
 	
 	public TileRenderer addTile(Entity entity) {

@@ -18,8 +18,8 @@ public class EditorScene extends Scene {
 	protected void load() {
 		super.load();
 		
-		world.addSystem(new PreviewFrameUpdater());
+		addSystem(new PreviewFrameUpdater());
 		
-		world.addEntity(new EditorNodeRootPrefab(preview));
+		addEntity(new EditorNodeRootPrefab(preview));
 	}
 }

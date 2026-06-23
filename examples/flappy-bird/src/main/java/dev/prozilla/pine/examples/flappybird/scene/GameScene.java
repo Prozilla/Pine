@@ -70,36 +70,36 @@ public class GameScene extends SceneBase {
 		pipesPrefab = new PipesPrefab();
 		
 		// Add systems
-		world.addSystem(new PlayerInitializer());
-		world.addSystem(new PlayerInputHandler());
-		world.addSystem(new PlayerMover());
-		world.addSystem(new BackgroundMover());
-		world.addSystem(new PipeInitializer());
-		world.addSystem(new PipesInitializer());
-		world.addSystem(new PipesMover());
-		world.addSystem(new ScoreTextUpdater());
-		world.addSystem(new GroundInitializer());
-		world.addSystem(new GroundMover());
+		addSystem(new PlayerInitializer());
+		addSystem(new PlayerInputHandler());
+		addSystem(new PlayerMover());
+		addSystem(new BackgroundMover());
+		addSystem(new PipeInitializer());
+		addSystem(new PipesInitializer());
+		addSystem(new PipesMover());
+		addSystem(new ScoreTextUpdater());
+		addSystem(new GroundInitializer());
+		addSystem(new GroundMover());
 		
 		if (Application.isDevMode()) {
-//			world.addSystem(new ColliderRenderSystem());
+//			addSystem(new ColliderRenderSystem());
 		}
 		
 		// Create empty parent for obstacles
-		obstacles = world.addEntity(new Entity(world));
+		obstacles = addEntity(new Entity(this));
 		
 		// Create ground objects
 		int groundCount = Math.round((float)FlappyBird.WIDTH / BackgroundData.WIDTH + 0.5f) + 1;
 		for (int i = 0; i < groundCount; i++) {
-			world.addEntity(groundPrefab.instantiate(world, i));
+			addEntity(groundPrefab.instantiate(this, i));
 		}
 		
 		// Create player object
-		player = world.addEntity(playerPrefab);
+		player = addEntity(playerPrefab);
 		playerData = player.getComponent(PlayerData.class);
 		
 		// Create user interface
-		Entity nodeRoot = world.addEntity(new NodeRootPrefab());
+		Entity nodeRoot = addEntity(new NodeRootPrefab());
 		nodeRoot.addChild(scorePrefab);
 		gameOverText = nodeRoot.addChild(gameOverPrefab);
 		
@@ -143,7 +143,7 @@ public class GameScene extends SceneBase {
 	}
 	
 	public void spawnObstacle() {
-		obstacles.addChild(pipesPrefab.instantiate(world));
+		obstacles.addChild(pipesPrefab);
 	}
 	
 	public void endGame() {

@@ -56,6 +56,6 @@ public class MainScene extends Scene {
 		nodeRootPrefab.addChild(menuPrefab);
 		
 		// Instantiate prefabs
-		world.addEntity(nodeRootPrefab);
+		addEntity(nodeRootPrefab);
 	}
 }

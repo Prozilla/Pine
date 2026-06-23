@@ -45,7 +45,7 @@ public class RenderLayerUpdater extends UpdateSystemBase {
 	}
 
 	public void updateZIndices() {
-		if ((world.initialized && !application.getConfig().enableDepthRecalculation.get()) || !hasEntityChunks()) {
+		if ((scene.initialized && !application.getConfig().enableDepthRecalculation.get()) || !hasEntityChunks()) {
 			return;
 		}
 		
@@ -90,8 +90,8 @@ public class RenderLayerUpdater extends UpdateSystemBase {
 			}
 		}
 		
-		if (world.systemManager != null) {
-			world.systemManager.updateEntityDepth();
+		if (scene.getSystemManager() != null) {
+			scene.getSystemManager().sortEntities();
 		}
 	}
 }

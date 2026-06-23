@@ -59,7 +59,7 @@ public class AudioVisualizerScene extends Scene {
 			source.play();
 		});
 		
-		world.addSystem(new BarResizer(this));
+		addSystem(new BarResizer(this));
 		
 		barPrefab = new BarPrefab();
 		bars = new ArrayList<>();
@@ -105,7 +105,7 @@ public class AudioVisualizerScene extends Scene {
 	
 	private void addBar() {
 		barPrefab.setIndex(bars.size());
-		Entity bar = world.addEntity(barPrefab);
+		Entity bar = addEntity(barPrefab);
 		bars.add(bar.getComponent(RectRenderer.class));
 	}
 	

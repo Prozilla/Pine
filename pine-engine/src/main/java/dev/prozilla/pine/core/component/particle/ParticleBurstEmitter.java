@@ -43,7 +43,7 @@ public class ParticleBurstEmitter extends ParticleEmitter {
 		}
 		
 		for (int i = 0; i < burstCount; i++) {
-			Entity particle = particlePrefab.instantiate(getWorld(), x, y, z);
+			Entity particle = particlePrefab.instantiate(getScene(), x, y, z);
 			entity.addChild(particle);
 		}
 	}

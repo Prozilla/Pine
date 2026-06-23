@@ -33,7 +33,7 @@ public final class ParticleFlowUpdater extends UpdateSystem {
 			}
 			
 			for (int i = 0; i < spawnCount; i++) {
-				Entity particle = particleFlowEmitter.particlePrefab.instantiate(world, particleFlowEmitter.origin.x, particleFlowEmitter.origin.y, particleFlowEmitter.origin.z);
+				Entity particle = particleFlowEmitter.particlePrefab.instantiate(scene, particleFlowEmitter.origin.x, particleFlowEmitter.origin.y, particleFlowEmitter.origin.z);
 				particleFlowEmitter.getEntity().addChild(particle);
 			}
 			

@@ -5,7 +5,6 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.mesh.QuadPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.*;
 import dev.prozilla.pine.core.scene.Scene;
-import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.test.TestPerformanceExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,15 +38,15 @@ public class ApplicationTest {
 		Application application = mockApplication();
 		application.init();
 		
-		World world = application.getCurrentScene().getWorld();
+		Scene scene = application.getCurrentScene();
 		
-		Entity nodeRoot = world.addEntity(new NodeRootPrefab());
+		Entity nodeRoot = scene.addEntity(new NodeRootPrefab());
 		nodeRoot.addChild(new LayoutPrefab());
 		nodeRoot.addChild(new TextPrefab("Test"));
 		nodeRoot.addChild(new TextInputPrefab());
 		nodeRoot.addChild(new TextButtonPrefab("Test"));
 		
-		world.addEntity(new QuadPrefab(Vector2f.one()));
+		scene.addEntity(new QuadPrefab(Vector2f.one()));
 		
 		for (int i = 0; i < FRAMES; i++) {
 			float deltaTime = 1f / FPS;

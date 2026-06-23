@@ -28,7 +28,7 @@ public interface Destructible {
 	 *     Example usage:
 	 *     <pre>
 	 *         {@code
-	 *         Entity entity = world.addEntity(prefab);
+	 *         Entity entity = scene.addEntity(prefab);
 	 *
 	 *         // Then, in some method that might get called repeatedly
 	 *         entity = Destructible.destroy(entity);

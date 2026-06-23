@@ -15,8 +15,6 @@ import dev.prozilla.pine.core.component.ComponentQueryContext;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.scene.Scene;
-import dev.prozilla.pine.core.scene.SceneProvider;
-import dev.prozilla.pine.core.scene.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -24,9 +22,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents a unique entity in the world with a list of components.
+ * Represents a unique entity in the scene with a list of components.
  */
-public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> implements Destructible, Printable, EntityContext, ComponentQueryContext, ApplicationProvider, SceneProvider {
+public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> implements Destructible, Printable, EntityContext, ComponentQueryContext, ApplicationProvider {
 	
 	public final int id;
 	private final String name;
@@ -35,9 +33,8 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	
 	public final Transform transform;
 	
-	protected final World world;
-	protected final Application application;
 	protected final Scene scene;
+	protected final Application application;
 	
 	/** Components of this entity */
 	public final List<Component> components;
@@ -54,17 +51,16 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		PARENT_UPDATE,
 	}
 	
-	public Entity(World world) {
-		this(world, null);
+	public Entity(Scene scene) {
+		this(scene, null);
 	}
 	
-	public Entity(World world, String name) {
-		this.world = Checks.isNotNull(world, "world");
+	public Entity(Scene scene, String name) {
+		this.scene = Checks.isNotNull(scene, "scene");
 		this.name = name;
 
-		application = world.application;
+		application = scene.getApplication();
 		logger = application.getLogger();
-		scene = world.scene;
 		
 		id = EntityManager.generateEntityId();
 		
@@ -92,9 +88,9 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 			transform.parent.getEntity().removeChild(this);
 		}
 		
-		// Unregister entity from world
+		// Unregister entity from scene
 		if (isRegistered()) {
-			world.removeEntity(this);
+			scene.removeEntity(this);
 		}
 		
 		invoke(EventType.DESTROY, this);
@@ -125,11 +121,11 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	 */
 	public Entity addChild(Prefab prefab) throws IllegalStateException, IllegalArgumentException {
 		Checks.isNotNull(prefab, "prefab");
-		return addChild(prefab.instantiate(world));
+		return addChild(prefab.instantiate(scene));
 	}
 	
 	/**
-	 * Adds a child to this entity. Also adds the child to the world if this entity is inside the world.
+	 * Adds a child to this entity. Also adds the child to the scene if this entity is inside a scene.
 	 * @param child Entity to add as a child
 	 * @return Child entity
 	 */
@@ -144,7 +140,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		child.transform.setParent(transform);
 		
 		if (isRegistered()) {
-			world.addEntity(child);
+			scene.addEntity(child);
 		}
 		
 		invoke(EventType.CHILD_ADD, child);
@@ -164,7 +160,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	}
 	
 	/**
-	 * Detaches a child from this entity without removing it from the world.
+	 * Detaches a child from this entity without removing it from the scene.
 	 * @param child Child object
 	 */
 	public void removeChild(Entity child) throws IllegalStateException, IllegalArgumentException {
@@ -182,7 +178,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	}
 	
 	/**
-	 * Detaches children from this entity without removing them from the world.
+	 * Detaches children from this entity without removing them from the scene.
 	 * @param children Child entities
 	 */
 	public void removeChildren(Entity... children) throws IllegalStateException, IllegalArgumentException {
@@ -255,7 +251,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		this.isActive = active;
 		
 		if (active) {
-			world.activateEntity(this);
+			scene.activateEntity(this);
 		}
 	}
 	
@@ -274,7 +270,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	 */
 	public <C extends Component> C addComponent(C component) {
 		Checks.isNotNull(component, "component");
-		world.addComponent(this, component);
+		scene.addComponent(this, component);
 		invoke(EventType.COMPONENTS_UPDATE, this);
 		return component;
 	}
@@ -288,8 +284,8 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		if (!components.contains(component)) {
 			return;
 		}
-
-		world.removeComponent(this, component);
+		
+		scene.removeComponent(this, component);
 		invoke(EventType.COMPONENTS_UPDATE, this);
 	}
 	
@@ -432,7 +428,6 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		return ApplicationProvider.super.getLogger();
 	}
 	
-	@Override
 	public Scene getScene() {
 		return scene;
 	}
@@ -441,7 +436,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	 * Checks whether this entity is registered in the entity manager.
 	 */
 	public boolean isRegistered() {
-		return world.entityManager.contains(this);
+		return getScene().getEntityManager().contains(this);
 	}
 	
 	@Override

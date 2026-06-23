@@ -25,7 +25,7 @@ public class GameScene extends Scene {
 		
 		CuboidPrefab cubePrefab = new CuboidPrefab(new Cuboid(new Vector3f(10, 10, 10)), "textures/checker.png");
 		
-		world.addEntity(cubePrefab, 0, 5, -20);
+		addEntity(cubePrefab, 0, 5, -20);
 		
 		cubePrefab.setMesh(new Cuboid(new Vector3f(15, 15, 15)));
 		cubePrefab.setRotation(new DelegatedVector3fProperty(
@@ -33,7 +33,7 @@ public class GameScene extends Scene {
 			getTimer().scaledTimeProperty().multiply(100),
 			new FixedFloatProperty(0)
 		));
-		world.addEntity(cubePrefab, 15, 7.5f, -35);
+		addEntity(cubePrefab, 15, 7.5f, -35);
 		
 		getInput().disableCursor();
 	}

@@ -51,7 +51,7 @@ public class NodeRoot extends Component implements NodeContext {
 			textPrefab.setPadding(new DualDimension(8, 4));
 			tooltipPrefab.addChild(textPrefab);
 
-			return getWorld().addEntity(tooltipPrefab);
+			return getScene().addEntity(tooltipPrefab);
 		};
 		focusedNodeIndex = -1;
 		focusedNode = null;

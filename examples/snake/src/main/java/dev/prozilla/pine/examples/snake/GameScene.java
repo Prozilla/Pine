@@ -68,10 +68,10 @@ public class GameScene extends Scene {
 		BackgroundPrefab backgroundPrefab = new BackgroundPrefab();
 		applePrefab = new ApplePrefab();
 		
-		// Add systems to world
-		world.addSystem(new PlayerInput());
-		world.addSystem(new PlayerMover());
-		world.addSystem(new PlayerTailUpdater());
+		// Add systems
+		addSystem(new PlayerInput());
+		addSystem(new PlayerMover());
+		addSystem(new PlayerTailUpdater());
 		
 		// Create grid prefabs
 		GridPrefab backgroundGridPrefab = new GridPrefab(CELL_SIZE);
@@ -80,7 +80,7 @@ public class GameScene extends Scene {
 		foregroundGridPrefab.setName("ForegroundGrid");
 		
 		// Add background grid filled with tiles
-		GridGroup backgroundGrid = world.addEntity(backgroundGridPrefab).getComponent(GridGroup.class);
+		GridGroup backgroundGrid = addEntity(backgroundGridPrefab).getComponent(GridGroup.class);
 		for (int x = MIN_GRID_X; x < MAX_GRID_X; x++) {
 			for (int y = MIN_GRID_Y; y < MAX_GRID_Y; y++) {
 				backgroundGrid.addTile(backgroundPrefab, x, y);
@@ -88,15 +88,15 @@ public class GameScene extends Scene {
 		}
 		
 		// Add foreground grid with player
-		foregroundGrid = world.addEntity(foregroundGridPrefab).getComponent(GridGroup.class);
+		foregroundGrid = addEntity(foregroundGridPrefab).getComponent(GridGroup.class);
 		foregroundGrid.addTile(playerHeadPrefab, new Vector2i(0, MIN_GRID_Y));
 
 		// Add particle emitter
-		ParticleBurstEmitter appleParticleEmitter = world.addEntity(new AppleParticleEmitterPrefab()).getComponent(ParticleBurstEmitter.class);
+		ParticleBurstEmitter appleParticleEmitter = addEntity(new AppleParticleEmitterPrefab()).getComponent(ParticleBurstEmitter.class);
 		applePrefab.setParticleEmitter(appleParticleEmitter);
 		
 		// Add user interface
-		Entity nodeRoot = world.addEntity(new NodeRootPrefab());
+		Entity nodeRoot = addEntity(new NodeRootPrefab());
 		gameOverText = nodeRoot.addChild(new GameOverPrefab(font));
 		
 		// Reset state
@@ -136,7 +136,7 @@ public class GameScene extends Scene {
 		} while (foregroundGrid.coordinateToTile.containsKey(appleCoordinate));
 		
 		// Spawn apple
-		foregroundGrid.addTile(applePrefab.instantiate(world, appleCoordinate));
+		foregroundGrid.addTile(applePrefab.instantiate(this, appleCoordinate));
 	}
 	
 	public void endGame() {

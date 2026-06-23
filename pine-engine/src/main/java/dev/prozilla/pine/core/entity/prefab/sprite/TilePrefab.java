@@ -9,7 +9,7 @@ import dev.prozilla.pine.core.component.sprite.MultiTileRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Components;
-import dev.prozilla.pine.core.scene.World;
+import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.system.standard.sprite.TileMover;
 
 /**
@@ -65,13 +65,13 @@ public class TilePrefab extends SpritePrefab {
 		this.dimensions = dimensions;
 	}
 	
-	public Entity instantiate(World world, int x, int y) {
-		return instantiate(world, new Vector2i(x, y));
+	public Entity instantiate(Scene scene, int x, int y) {
+		return instantiate(scene, new Vector2i(x, y));
 	}
 	
-	public Entity instantiate(World world, Vector2i coordinate) {
+	public Entity instantiate(Scene scene, Vector2i coordinate) {
 		setCoordinate(coordinate);
-		return super.instantiate(world);
+		return super.instantiate(scene);
 	}
 	
 	@Override

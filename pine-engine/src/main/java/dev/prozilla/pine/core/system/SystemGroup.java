@@ -1,9 +1,8 @@
 package dev.prozilla.pine.core.system;
 
 import dev.prozilla.pine.common.Container;
-import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.scene.World;
+import dev.prozilla.pine.core.scene.Scene;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -22,18 +21,15 @@ public class SystemGroup<S extends SystemBase> implements Container<S> {
 	/** Type of the systems in this group. */
 	private final Class<S> type;
 	
-	private final World world;
-	private final Logger logger;
+	private final Scene scene;
 	
 	/**
-	 * Creates a new system group in a world with systems of a given type.
+	 * Creates a new system group in a scene with systems of a given type.
 	 * @param type Type of the systems in this group
 	 */
-	public SystemGroup(World world, Class<S> type) {
-		this.world = world;
+	public SystemGroup(Scene scene, Class<S> type) {
+		this.scene = scene;
 		this.type = type;
-		
-		logger = world.application.getLogger();
 		
 		systems = new ArrayList<>();
 	}
@@ -80,19 +76,19 @@ public class SystemGroup<S extends SystemBase> implements Container<S> {
 			return;
 		}
 		
-		int contextId = world.application.getContextId();
+		int contextId = scene.getApplication().getContextId();
 		for (S system : systems) {
 			try {
 				if (system.shouldRun()) {
 					consumer.accept(system);
 				}
 				
-				// Abort if the world was unloaded
-				if (contextId != world.application.getContextId()) {
+				// Abort if the scene was unloaded
+				if (contextId != scene.getApplication().getContextId()) {
 					break;
 				}
 			} catch (RuntimeException e) {
-				logger.error("Failed to run system: " + system.getClass().getSimpleName(), e);
+				scene.getLogger().error("Failed to run system: " + system.getClass().getSimpleName(), e);
 			}
 		}
 	}

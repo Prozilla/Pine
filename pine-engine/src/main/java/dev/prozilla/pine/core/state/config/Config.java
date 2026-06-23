@@ -31,7 +31,7 @@ public class Config {
 	// Predefines options
 	/** Target frames per second. When set to <code>0</code>, fps is uncapped. Defaults to <code>120</code>. */
 	public final IntConfigOption fps = new IntConfigOption(120, (fps) -> fps >= 0);
-	/** Determines whether depth values will be recalculated when new entities are added to the world. Defaults to <code>true</code>. */
+	/** Determines whether depth values will be recalculated when new entities are added to the scene. Defaults to <code>true</code>. */
 	public final BooleanConfigOption enableDepthRecalculation = new BooleanConfigOption(true);
 	/** Default font used to render text elements. Defaults to <code>null</code>. */
 	public final StringConfigOption defaultFontPath = new StringConfigOption(null);

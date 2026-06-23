@@ -11,7 +11,6 @@ import dev.prozilla.pine.core.component.ui.TextInputNode;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.entity.prefab.ui.*;
 import dev.prozilla.pine.core.scene.Scene;
-import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
@@ -99,11 +98,11 @@ public class MainScene extends Scene {
 		super.load();
 		
 		// Create system that will initialize the input node
-		world.addSystem(new InitSystem(TextInputNode.class) {
+		addSystem(new InitSystem(TextInputNode.class) {
 			@Override
-			public void initSystem(World world) {
+			public void initSystem(Scene scene) {
 				setRequiredTag(COLOR_INPUT_TAG);
-				super.initSystem(world);
+				super.initSystem(scene);
 			}
 			
 			@Override
@@ -166,7 +165,7 @@ public class MainScene extends Scene {
 		
 		menuPrefab.addChildren(titleTextPrefab, inputPrefab, colorsPrefab, applyButtonPrefab);
 		nodeRootPrefab.addChild(menuPrefab);
-		world.addEntity(nodeRootPrefab);
+		addEntity(nodeRootPrefab);
 		
 		connect();
 	}

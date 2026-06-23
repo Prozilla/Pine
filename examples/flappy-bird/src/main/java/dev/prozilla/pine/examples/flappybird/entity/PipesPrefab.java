@@ -20,8 +20,8 @@ public class PipesPrefab extends LayerPrefab {
 		PipePrefab pipePrefab = new PipePrefab();
 		
 		// Add pipes
-		Entity bottomPipe = entity.addChild(pipePrefab.instantiate(entity.getWorld(), false));
-		Entity topPipe = entity.addChild(pipePrefab.instantiate(entity.getWorld(), true));
+		Entity bottomPipe = entity.addChild(pipePrefab.instantiate(entity.getScene(), false));
+		Entity topPipe = entity.addChild(pipePrefab.instantiate(entity.getScene(), true));
 		
 		entity.addComponent(new PipesData(bottomPipe, topPipe));
 		

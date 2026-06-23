@@ -4,7 +4,7 @@ import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.core.component.physics.collision.RectCollider;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.sprite.SpritePrefab;
-import dev.prozilla.pine.core.scene.World;
+import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.examples.flappybird.component.PipeData;
 
 public class PipePrefab extends SpritePrefab {
@@ -16,13 +16,13 @@ public class PipePrefab extends SpritePrefab {
 		setName("Pipe");
 	}
 	
-	public Entity instantiate(World world, boolean top) {
-		return instantiate(world, 0, 0, top);
+	public Entity instantiate(Scene scene, boolean top) {
+		return instantiate(scene, 0, 0, top);
 	}
 	
-	public Entity instantiate(World world, float x, float y, boolean top) {
+	public Entity instantiate(Scene scene, float x, float y, boolean top) {
 		this.top = top;
-		return instantiate(world, x, y, 0);
+		return instantiate(scene, x, y, 0);
 	}
 	
 	@Override

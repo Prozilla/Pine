@@ -28,6 +28,6 @@ public abstract class SceneBase extends Scene {
 		
 		font = AssetPools.fonts.load(Chat.FONT, 16);
 		
-		nodeRoot = world.addEntity(new NodeRootPrefab());
+		nodeRoot = addEntity(new NodeRootPrefab());
 	}
 }

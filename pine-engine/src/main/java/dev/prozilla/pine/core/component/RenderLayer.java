@@ -6,7 +6,7 @@ package dev.prozilla.pine.core.component;
  */
 public class RenderLayer extends Component {
 	
-	/** Z-index in the world, highest values are rendered first. */
+	/** Z-index of the entity, highest values are rendered first. */
 	private int zIndex;
 	/** If true, sets the depth of children to a lower value than the parent. */
 	private boolean renderChildrenBelow;
@@ -26,7 +26,7 @@ public class RenderLayer extends Component {
 		}
 		
 		this.renderChildrenBelow = renderChildrenBelow;
-		getWorld().updateZIndices();
+		getScene().updateZIndices();
 	}
 	
 	/**
