@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.scene;
 import dev.prozilla.pine.common.ProviderOf;
 import dev.prozilla.pine.core.component.ComponentManager;
 import dev.prozilla.pine.core.component.camera.CameraData;
+import dev.prozilla.pine.core.component.camera.OverlayCameraData;
 import dev.prozilla.pine.core.entity.EntityManager;
 import dev.prozilla.pine.core.entity.EntityQueryPool;
 import dev.prozilla.pine.core.system.SystemManager;
@@ -38,4 +39,8 @@ public interface SceneProvider extends SceneContext {
 		return getScene().getCameraData();
 	}
 	
+	@Override
+	default OverlayCameraData getOverlayCameraData() {
+		return getScene().getOverlayCameraData();
+	}
 }

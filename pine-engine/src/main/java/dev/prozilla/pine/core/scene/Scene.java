@@ -10,6 +10,7 @@ import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.ComponentManager;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.camera.CameraData;
+import dev.prozilla.pine.core.component.camera.OverlayCameraData;
 import dev.prozilla.pine.core.component.ui.NodeRoot;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityManager;
@@ -68,6 +69,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	protected Application application;
 	protected Logger logger;
 	protected CameraData cameraData;
+	protected OverlayCameraData overlayCameraData;
 	/** Prefab that will be used during scene loading to create a camera entity. */
 	protected Prefab cameraPrefab;
 	protected RenderLayerUpdater renderLayerUpdater;
@@ -168,6 +170,10 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 			}
 		}
 		
+		if (overlayCameraData == null) {
+			overlayCameraData = new OverlayCameraData();
+		}
+		
 		loaded = true;
 	}
 	
@@ -188,6 +194,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		
 		// Rendering
 		initialSystems.add(new SceneCameraRenderSystem());
+		initialSystems.add(new OverlayCameraRenderSystem());
 		
 		// Z-index
 		renderLayerUpdater = new RenderLayerUpdater();
@@ -535,6 +542,11 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	@Override
 	public CameraData getCameraData() {
 		return cameraData;
+	}
+	
+	@Override
+	public OverlayCameraData getOverlayCameraData() {
+		return overlayCameraData;
 	}
 	
 	@Override

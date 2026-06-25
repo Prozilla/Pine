@@ -6,12 +6,14 @@ import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.FrameBufferObject;
 import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.system.render.RenderPass;
 import dev.prozilla.pine.core.system.render.RenderSystem;
 
 public final class FrameRenderer extends RenderSystem {
 	
 	public FrameRenderer() {
 		super(Node.class, FrameNode.class);
+		setRenderPass(RenderPass.OVERLAY);
 	}
 	
 	@Override

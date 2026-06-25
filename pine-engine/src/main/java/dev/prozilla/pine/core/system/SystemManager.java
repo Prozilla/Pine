@@ -11,6 +11,7 @@ import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.system.init.InitSystemBase;
 import dev.prozilla.pine.core.system.input.InputSystemBase;
+import dev.prozilla.pine.core.system.render.RenderPass;
 import dev.prozilla.pine.core.system.render.RenderSystemBase;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 
@@ -67,7 +68,7 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 	 */
 	@Override
 	public void input(float deltaTime) {
-		inputSystems.forEach(inputSystem -> inputSystem.input(deltaTime));
+		inputSystems.forEach((inputSystem) -> inputSystem.input(deltaTime));
 	}
 	
 	/**
@@ -75,7 +76,7 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 	 */
 	@Override
 	public void update(float deltaTime) {
-		updateSystems.forEach(updateSystem -> updateSystem.update(deltaTime));
+		updateSystems.forEach((updateSystem) -> updateSystem.update(deltaTime));
 	}
 	
 	/**
@@ -83,7 +84,15 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 	 */
 	@Override
 	public void render(Renderer renderer) {
-		renderSystems.forEach(renderSystem -> renderSystem.render(renderer));
+		for (int i = RenderPass.FIRST; i <= RenderPass.LAST; i++) {
+			int currentPass = i;
+			// TODO: Support separate cameras
+			renderSystems.forEach((renderSystem) -> {
+				if (renderSystem.getRenderPass() == currentPass) {
+					renderSystem.render(renderer);
+				}
+			});
+		}
 	}
 	
 	/**
@@ -121,9 +130,7 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 	public void activateEntity(Entity entity) {
 		Checks.isNotNull(entity, "entity");
 		
-		initSystems.forEach((initSystem) -> {
-			initSystem.activateEntity(entity);
-		});
+		initSystems.forEach((initSystem) -> initSystem.activateEntity(entity));
 	}
 	
 	public boolean addSystem(SystemBase system) {

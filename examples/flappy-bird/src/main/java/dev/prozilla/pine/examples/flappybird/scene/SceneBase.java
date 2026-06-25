@@ -35,5 +35,4 @@ public abstract class SceneBase extends Scene {
 			addEntity(backgroundPrefab.instantiate(this, i));
 		}
 	}
-	
 }

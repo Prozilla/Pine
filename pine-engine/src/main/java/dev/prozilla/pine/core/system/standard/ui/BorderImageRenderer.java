@@ -3,11 +3,11 @@ package dev.prozilla.pine.core.system.standard.ui;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.BorderImage;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.system.render.RenderPass;
 import dev.prozilla.pine.core.system.render.RenderSystem;
 import dev.prozilla.pine.core.system.standard.ui.image.ImageRenderer;
 
@@ -15,11 +15,11 @@ public final class BorderImageRenderer extends RenderSystem {
 	
 	public BorderImageRenderer() {
 		super(Node.class, BorderImage.class);
+		setRenderPass(RenderPass.OVERLAY);
 	}
 	
 	@Override
 	protected void process(EntityChunk chunk, Renderer renderer) {
-		Transform transform = chunk.getTransform();
 		Node node = chunk.getComponent(Node.class);
 		BorderImage borderImage = chunk.getComponent(BorderImage.class);
 		

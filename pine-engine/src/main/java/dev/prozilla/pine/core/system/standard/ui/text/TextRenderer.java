@@ -2,11 +2,11 @@ package dev.prozilla.pine.core.system.standard.ui.text;
 
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.system.render.RenderPass;
 import dev.prozilla.pine.core.system.render.RenderSystem;
 
 /**
@@ -16,11 +16,11 @@ public final class TextRenderer extends RenderSystem {
 	
 	public TextRenderer() {
 		super(TextNode.class, Node.class);
+		setRenderPass(RenderPass.OVERLAY);
 	}
 	
 	@Override
 	public void process(EntityChunk chunk, Renderer renderer) {
-		Transform transform = chunk.getTransform();
 		TextNode textNode = chunk.getComponent(TextNode.class);
 		Node node = chunk.getComponent(Node.class);
 		
@@ -60,12 +60,12 @@ public final class TextRenderer extends RenderSystem {
 			int roundedWidth = Math.round(width);
 			int roundedHeight = Math.round(height);
 			
-			renderer.setRegion(roundedX, roundedY, roundedWidth, roundedHeight);
+//			renderer.setRegion(roundedX, roundedY, roundedWidth, roundedHeight);
 			
 			x = roundedX;
 			y = roundedY;
 		} else {
-			renderer.setRegion(x, y, width, height);
+//			renderer.setRegion(x, y, width, height);
 		}
 		
 		if (font == null) {

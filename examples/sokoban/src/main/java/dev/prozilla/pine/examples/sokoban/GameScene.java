@@ -134,6 +134,7 @@ public class GameScene extends Scene {
 		cameraData.zoomIn(-0.1f);
 		cameraData.setBackgroundColor(Color.hex("#596A6C"));
 		cameraData.farClipPlane = 10000f;
+		overlayCameraData.farClipPlane = 10000f;
 		
 		if (renderLayerUpdater != null) {
 			renderLayerUpdater.setDepthMultiplier(25f);

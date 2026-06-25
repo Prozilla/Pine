@@ -19,8 +19,8 @@ public class CameraData extends Component {
 	public float nearClipPlane;
 	public float farClipPlane;
 	
-	private final Matrix4f viewMatrix;
-	private final Matrix4f projectionMatrix;
+	protected final Matrix4f viewMatrix;
+	protected final Matrix4f projectionMatrix;
 	
 	public Color backgroundColor;
 	
@@ -40,6 +40,10 @@ public class CameraData extends Component {
 		
 		viewMatrix = new Matrix4f();
 		projectionMatrix = new Matrix4f();
+	}
+	
+	public void setSize(Vector2i size) {
+		setSize(size.x, size.y);
 	}
 	
 	public void setSize(int width, int height) {
