@@ -13,6 +13,6 @@ include(
 	":examples:chat",
 	":examples:audio-visualizer",
 	":examples:openrgb",
-	":examples:fps"
+	":examples:tetris"
 )
 include(":examples:mods:dev-mode-activator")

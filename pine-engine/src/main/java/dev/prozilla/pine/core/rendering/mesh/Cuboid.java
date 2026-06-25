@@ -27,13 +27,14 @@ public class Cuboid extends Mesh {
 	
 	@Override
 	protected float[] generateVertices() {
-		float x1 = this.origin.x;
-		float y1 = this.origin.y;
-		float z1 = this.origin.z;
-		float x2 = this.origin.x + this.size.x;
-		float y2 = this.origin.y + this.size.y;
-		float z2 = this.origin.z + this.size.z;
+		float x1 = -this.origin.x;
+		float y1 = -this.origin.y;
+		float z1 = -this.origin.z;
+		float x2 = -this.origin.x + this.size.x;
+		float y2 = -this.origin.y + this.size.y;
+		float z2 = -this.origin.z + this.size.z;
 		
+		// TODO: Remove duplicates
 		return new float[] {
 			// Front face
 			x1, y1, z1,
