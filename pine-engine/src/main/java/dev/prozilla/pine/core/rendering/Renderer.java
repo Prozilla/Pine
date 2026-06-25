@@ -621,44 +621,49 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	/**
-	 * Draws multiple textured triangles using the given vertex and UV arrays.
-	 *
-	 * <p>
-	 * Each triangle is defined by 3 vertices (6 floats: x1, y1, x2, y2, x3, y3) and corresponding
-	 * texture coordinates (u1, v1, u2, v2, u3, v3) from the UV array. The number of triangles drawn
-	 * is determined by dividing the length of the vertex array by 6.
-	 * </p>
-	 * @param vertices A flat float array containing x and y coordinates for each triangle vertex
-	 * @param uvArray A flat float array containing the corresponding u and v texture coordinates. Must be the same length as {@code vertices}.
-	 * @throws IllegalArgumentException if the length of {@code vertices} does not match {@code uvArray}
+	 * Draws multiple textured triangles using vertex, triangle and UV arrays.
+	 * @param vertices Array of vertex positions (x, y, z)
+	 * @param uvArray Array of texture coordinates (u, v)
+	 * @param triangles Array of triangles (every triangle is made up of 3 vertex indices)
+	 * @throws IllegalArgumentException if any array has an invalid length
 	 */
-	public void drawTriangles(TextureAsset texture, float[] vertices, float[] uvArray, Color c) {
+	public void drawTriangles(TextureAsset texture, float[] vertices, float[] uvArray, int[] triangles, Color c) {
+		if (vertices.length % 3 != 0) {
+			throw new IllegalArgumentException("Vertex array length must be a multiple of 3");
+		}
 		if (vertices.length * 2 != uvArray.length * 3) {
-			throw new IllegalArgumentException("UV array must have an entry for each entry in the vertex array");
+			throw new IllegalArgumentException("UV array length must correspond to vertex array length");
+		}
+		if (triangles.length % 3 != 0) {
+			throw new IllegalArgumentException("Triangle array length must be a multiple of 3");
 		}
 		
-		int triangleCount = vertices.length / 9;
+		int triangleCount = triangles.length / 3;
 		if (triangleCount == 0) {
 			return;
 		}
 		
 		for (int i = 0; i < triangleCount; i++) {
-			float x1 = vertices[i * 9];
-			float y1 = vertices[i * 9 + 1];
-			float z1 = vertices[i * 9 + 2];
-			float x2 = vertices[i * 9 + 3];
-			float y2 = vertices[i * 9 + 4];
-			float z2 = vertices[i * 9 + 5];
-			float x3 = vertices[i * 9 + 6];
-			float y3 = vertices[i * 9 + 7];
-			float z3 = vertices[i * 9 + 8];
+			int i1 = triangles[i * 3];
+			int i2 = triangles[i * 3 + 1];
+			int i3 = triangles[i * 3 + 2];
 			
-			float u1 = uvArray[i * 6];
-			float v1 = uvArray[i * 6 + 1];
-			float u2 = uvArray[i * 6 + 2];
-			float v2 = uvArray[i * 6 + 3];
-			float u3 = uvArray[i * 6 + 4];
-			float v3 = uvArray[i * 6 + 5];
+			float x1 = vertices[i1 * 3];
+			float y1 = vertices[i1 * 3 + 1];
+			float z1 = vertices[i1 * 3 + 2];
+			float x2 = vertices[i2 * 3];
+			float y2 = vertices[i2 * 3 + 1];
+			float z2 = vertices[i2 * 3 + 2];
+			float x3 = vertices[i3 * 3];
+			float y3 = vertices[i3 * 3 + 1];
+			float z3 = vertices[i3 * 3 + 2];
+			
+			float u1 = uvArray[i1 * 2];
+			float v1 = uvArray[i1 * 2 + 1];
+			float u2 = uvArray[i2 * 2];
+			float v2 = uvArray[i2 * 2 + 1];
+			float u3 = uvArray[i3 * 2];
+			float v3 = uvArray[i3 * 2 + 1];
 			
 			drawTriangle(texture, x1, y1, z1, x2, y2, z2, x3, y3, z3, u1, v1, u2, v2, u3, v3, c);
 		}

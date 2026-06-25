@@ -56,7 +56,7 @@ public class Meshes<A extends Mesh, B extends Mesh> extends Mesh {
 		
 		float[] vertices = new float[verticesA.length + verticesB.length];
 		System.arraycopy(verticesA, 0, vertices, 0, verticesA.length);
-		System.arraycopy(verticesA, 0, vertices, verticesA.length, verticesB.length);
+		System.arraycopy(verticesB, 0, vertices, verticesA.length, verticesB.length);
 		return vertices;
 	}
 	
@@ -73,8 +73,30 @@ public class Meshes<A extends Mesh, B extends Mesh> extends Mesh {
 		
 		float[] uvArray = new float[uvArrayA.length + uvArrayB.length];
 		System.arraycopy(uvArrayA, 0, uvArray, 0, uvArrayA.length);
-		System.arraycopy(uvArrayA, 0, uvArray, uvArrayA.length, uvArrayB.length);
+		System.arraycopy(uvArrayB, 0, uvArray, uvArrayA.length, uvArrayB.length);
 		return uvArray;
+	}
+	
+	@Override
+	protected int[] generateTriangles() {
+		int[] trianglesA = meshA.getTriangles();
+		int[] trianglesB = meshB.getTriangles();
+		
+		if (trianglesA == null) {
+			return trianglesB;
+		} else if (trianglesB == null) {
+			return trianglesA;
+		}
+		
+		int[] triangles = new int[trianglesA.length + trianglesB.length];
+		System.arraycopy(trianglesA, 0, triangles, 0, trianglesA.length);
+		
+		int vertexOffset = meshA.getVertices().length / 3;
+		for (int i = 0; i < trianglesB.length; i++) {
+			triangles[trianglesA.length + i] = trianglesB[i] + vertexOffset;
+		}
+		
+		return triangles;
 	}
 	
 	@Override

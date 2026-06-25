@@ -27,15 +27,13 @@ public class Circle extends Mesh {
 			return null;
 		}
 		
-		int vertexCount = edges + 2;
-		float[] vertices = new float[vertexCount * 3];
+		float[] vertices = new float[(edges + 1) * 3];
 		
-		// Center point
 		vertices[0] = origin.x;
 		vertices[1] = origin.y;
 		vertices[2] = origin.z;
 		
-		for (int i = 0; i <= edges; i++) {
+		for (int i = 0; i < edges; i++) {
 			double angle = 2.0 * Math.PI * i / edges;
 			float dx = (float) (Math.cos(angle) * radius);
 			float dy = (float) (Math.sin(angle) * radius);
@@ -44,53 +42,34 @@ public class Circle extends Mesh {
 			vertices[(i + 1) * 3 + 2] = origin.z;
 		}
 		
-		// Convert triangle fan to triangles
-		float[] triangles = new float[edges * 3 * 3];
-		for (int i = 0; i < edges; i++) {
-			// center
-			triangles[i * 6] = vertices[0];
-			triangles[i * 6 + 1] = vertices[1];
-			triangles[i * 6 + 2] = vertices[2];
-			// edge i
-			triangles[i * 6 + 3] = vertices[(i + 1) * 2];
-			triangles[i * 6 + 4] = vertices[(i + 1) * 2 + 1];
-			triangles[i * 6 + 5] = vertices[(i + 1) * 2 + 2];
-			// edge i+1
-			triangles[i * 6 + 6] = vertices[(i + 2) * 2];
-			triangles[i * 6 + 7] = vertices[(i + 2) * 2 + 1];
-			triangles[i * 6 + 8] = vertices[(i + 2) * 2 + 2];
-		}
-		
-		return triangles;
+		return vertices;
 	}
 	
 	@Override
 	protected float[] generateUVs() {
-		float[] uvArray = new float[edges * 3 * 2];
+		float[] uvArray = new float[(edges + 1) * 2];
 		
-		float centerU = 0.5f;
-		float centerV = 0.5f;
+		uvArray[0] = 0.5f;
+		uvArray[1] = 0.5f;
 		
 		for (int i = 0; i < edges; i++) {
-			double angle1 = 2.0 * Math.PI * i / edges;
-			double angle2 = 2.0 * Math.PI * (i + 1) / edges;
-			
-			// UVs for the edge points
-			float u1 = (float) (Math.cos(angle1) * 0.5 + 0.5f);
-			float v1 = (float) (Math.sin(angle1) * 0.5 + 0.5f);
-			
-			float u2 = (float) (Math.cos(angle2) * 0.5 + 0.5f);
-			float v2 = (float) (Math.sin(angle2) * 0.5 + 0.5f);
-			
-			uvArray[i * 6] = centerU;
-			uvArray[i * 6 + 1] = centerV;
-			uvArray[i * 6 + 2] = u1;
-			uvArray[i * 6 + 3] = v1;
-			uvArray[i * 6 + 4] = u2;
-			uvArray[i * 6 + 5] = v2;
+			double angle = 2.0 * Math.PI * i / edges;
+			uvArray[(i + 1) * 2] = (float) (Math.cos(angle) * 0.5 + 0.5);
+			uvArray[(i + 1) * 2 + 1] = (float) (Math.sin(angle) * 0.5 + 0.5);
 		}
 		
 		return uvArray;
+	}
+	
+	@Override
+	protected int[] generateTriangles() {
+		int[] triangles = new int[edges * 3];
+		for (int i = 0; i < edges; i++) {
+			triangles[i * 3] = 0;
+			triangles[i * 3 + 1] = i + 1;
+			triangles[i * 3 + 2] = (i + 1) % edges + 1;
+		}
+		return triangles;
 	}
 	
 	/**

@@ -41,8 +41,6 @@ public class Rect extends Mesh {
 			x1, y1, z,
 			x1, y2, z,
 			x2, y2, z,
-			x1, y1, z,
-			x2, y2, z,
 			x2, y1, z
 		};
 	}
@@ -53,9 +51,15 @@ public class Rect extends Mesh {
 			0, 0,
 			0, 1,
 			1, 1,
-			0, 0,
-			1, 1,
 			1, 0
+		};
+	}
+	
+	@Override
+	protected int[] generateTriangles() {
+		return new int[] {
+			0, 1, 2,
+			0, 2, 3
 		};
 	}
 	

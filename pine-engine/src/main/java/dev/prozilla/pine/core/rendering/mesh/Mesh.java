@@ -14,15 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a mesh using vertex and UV arrays which respectively represent the vertex and texture coordinates of each triangle.
+ * Represents a polygon mesh using a vertex array, UV array and an array of triangles, where each element corresponds to the index of a vertex in the vertex array.
  */
 public abstract class Mesh implements TexturedRenderable, Cloneable<Mesh>, Memoizable {
 	
 	protected final Vector3f origin;
-	// TODO: Replace with list of unique vertices + list of triangles (indices of vertices)
 	private float[] vertices;
+	private int[] triangles;
 	private float[] uvArray;
-	/** If {@code true}, the vertex and UV arrays of this mesh will be re-generated before the next draw call. */
+	/** If {@code true}, the vertices, triangles and UVs of this mesh will be re-generated before the next draw call. */
 	private boolean isDirty;
 	
 	private final List<MeshModifier> modifiers = new ArrayList<>();
@@ -31,19 +31,22 @@ public abstract class Mesh implements TexturedRenderable, Cloneable<Mesh>, Memoi
 	 * Creates a mesh with pre-generated geometry.
 	 * @param vertices The vertex array
 	 * @param uvArray The UV array
+	 * @param triangles The array of vertex indices representing triangles
 	 */
-	public Mesh(float[] vertices, float[] uvArray) {
-		this(vertices, uvArray, new Vector3f());
+	public Mesh(float[] vertices, float[] uvArray, int[] triangles) {
+		this(vertices, uvArray, triangles, new Vector3f());
 	}
 	
 	/**
 	 * Creates a mesh at a given origin point with pre-generated geometry.
 	 * @param vertices The vertex array
 	 * @param uvArray The UV array
+	 * @param triangles The array of vertex indices representing triangles
 	 */
-	public Mesh(float[] vertices, float[] uvArray, Vector3f origin) {
+	public Mesh(float[] vertices, float[] uvArray, int[] triangles, Vector3f origin) {
 		this.vertices = vertices;
 		this.uvArray = uvArray;
+		this.triangles = triangles;
 		this.origin = Checks.isNotNull(origin, "origin");
 		isDirty = false;
 	}
@@ -64,21 +67,26 @@ public abstract class Mesh implements TexturedRenderable, Cloneable<Mesh>, Memoi
 	}
 	
 	/**
-	 * Generates the arrays of vertices and texture coordinates for this mesh and applies each modifier.
+	 * Generates the vertices, triangles and UVs of this mesh and applies each modifier.
 	 */
 	public void generate() {
 		if (!isDirty) {
 			return;
 		}
+		
 		vertices = generateVertices();
 		if (vertices != null && vertices.length > 0) {
 			uvArray = generateUVs();
+			triangles = generateTriangles();
 		}
 		
-		for (MeshModifier modifier : modifiers) {
-			float[] newVertices = modifier.modifyVertices(vertices);
-			uvArray = modifier.modifyUVs(vertices, newVertices, uvArray);
-			vertices = newVertices;
+		if (!modifiers.isEmpty() && vertices != null) {
+			for (MeshModifier modifier : modifiers) {
+				MeshModifier.ModifiedMesh result = modifier.apply(vertices, uvArray, triangles);
+				vertices = result.vertices;
+				uvArray = result.uvArray;
+				triangles = result.triangles;
+			}
 		}
 		
 		isDirty = false;
@@ -86,34 +94,38 @@ public abstract class Mesh implements TexturedRenderable, Cloneable<Mesh>, Memoi
 	
 	/**
 	 * Generates the vertex array for this mesh.
-	 *
-	 * <p>Odd elements define the x-component of the vertex and even elements define the y-component.</p>
-	 * <p>Every three vertices (or six elements) define a triangle.</p>
+	 * <p>Every three elements define a vertex (x, y, z).</p>
 	 * @return The array of vertices.
 	 */
 	abstract protected float[] generateVertices();
 	
 	/**
 	 * Generates the UV array for this mesh.
-	 *
-	 * <p>Odd elements define the x-component of the texture coordinate and even elements define the y-component.</p>
-	 * @return The array of texture coordinates.
+	 * <p>Every two elements define a UV coordinate (u, v).</p>
+	 * @return The array of UV coordinates.
 	 */
 	abstract protected float[] generateUVs();
 	
 	/**
+	 * Generates the triangles for this mesh.
+	 * <p>Every three elements define a triangle, represented by the indices of the corresponding vertices.</p>
+	 * @return The array of triangles.
+	 */
+	abstract protected int[] generateTriangles();
+	
+	/**
 	 * Draws this mesh using its vertex and UV arrays.
-	 * @see Renderer#drawTriangles(TextureAsset, float[], float[], Color)
+	 * @see Renderer#drawTriangles(TextureAsset, float[], float[], int[], Color)
 	 */
 	@Override
 	public void draw(Renderer renderer, TextureAsset texture, Color color) {
 		generate();
 		
-		if (vertices == null) {
+		if (vertices == null || triangles == null) {
 			return;
 		}
 		
-		renderer.drawTriangles(texture, vertices, uvArray, color);
+		renderer.drawTriangles(texture, vertices, uvArray, triangles, color);
 	}
 	
 	public float[] getVertices() {
@@ -124,6 +136,11 @@ public abstract class Mesh implements TexturedRenderable, Cloneable<Mesh>, Memoi
 	public float[] getUVArray() {
 		generate();
 		return uvArray;
+	}
+	
+	public int[] getTriangles() {
+		generate();
+		return triangles;
 	}
 	
 	public Vector3f getOrigin() {

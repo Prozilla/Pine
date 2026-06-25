@@ -14,10 +14,8 @@ public abstract class MeshModifier implements Destructible {
 		targets = new ArrayList<>();
 	}
 	
-	public abstract float[] modifyVertices(float[] vertices);
+	public abstract ModifiedMesh apply(float[] vertices, float[] uvArray, int[] triangles);
 	
-	public abstract float[] modifyUVs(float[] oldVertices, float[] newVertices, float[] uvArray);
-
 	protected void markAsDirty() {
 		for (Mesh target : targets) {
 			target.markAsDirty();
@@ -41,4 +39,15 @@ public abstract class MeshModifier implements Destructible {
 		}
 	}
 	
+	public static class ModifiedMesh {
+		public final float[] vertices;
+		public final float[] uvArray;
+		public final int[] triangles;
+		
+		public ModifiedMesh(float[] vertices, float[] uvArray, int[] triangles) {
+			this.vertices = vertices;
+			this.uvArray = uvArray;
+			this.triangles = triangles;
+		}
+	}
 }

@@ -35,51 +35,39 @@ public class Cuboid extends Mesh {
 		float z2 = this.origin.z + this.size.z;
 		
 		return new float[] {
-			// Front
+			// Front face
 			x1, y1, z1,
 			x1, y2, z1,
 			x2, y2, z1,
-			x1, y1, z1,
-			x2, y2, z1,
 			x2, y1, z1,
 			
-			// Back
+			// Back face
 			x1, y1, z2,
 			x1, y2, z2,
-			x2, y2, z2,
-			x1, y1, z2,
 			x2, y2, z2,
 			x2, y1, z2,
 			
-			// Left
+			// Left face
 			x1, y1, z2,
 			x1, y2, z2,
 			x1, y2, z1,
-			x1, y1, z2,
-			x1, y2, z1,
 			x1, y1, z1,
 			
-			// Right
+			// Right face
 			x2, y1, z1,
 			x2, y2, z1,
-			x2, y2, z2,
-			x2, y1, z1,
 			x2, y2, z2,
 			x2, y1, z2,
 			
-			// Top
+			// Top face
 			x1, y2, z1,
 			x1, y2, z2,
 			x2, y2, z2,
-			x1, y2, z1,
-			x2, y2, z2,
 			x2, y2, z1,
 			
-			// Bottom
+			// Bottom face
 			x1, y1, z2,
 			x1, y1, z1,
-			x2, y1, z1,
-			x1, y1, z2,
 			x2, y1, z1,
 			x2, y1, z2
 		};
@@ -90,90 +78,84 @@ public class Cuboid extends Mesh {
 		float faceWidth = 1f / 4f;
 		float faceHeight = 1f / 3f;
 		
-		// Front
 		float u1Front = faceWidth;
 		float u2Front = faceWidth * 2f;
 		float v1Front = faceHeight;
 		float v2Front = faceHeight * 2f;
 		
-		// Back
 		float u1Back = faceWidth * 3f;
 		float u2Back = 1f;
 		float v1Back = faceHeight;
 		float v2Back = faceHeight * 2f;
 		
-		// Left
 		float u1Left = 0f;
 		float u2Left = faceWidth;
 		float v1Left = faceHeight;
 		float v2Left = faceHeight * 2f;
 		
-		// Right
 		float u1Right = faceWidth * 2f;
 		float u2Right = faceWidth * 3f;
 		float v1Right = faceHeight;
 		float v2Right = faceHeight * 2f;
 		
-		// Top
 		float u1Top = faceWidth;
 		float u2Top = faceWidth * 2f;
 		float v1Top = 0f;
 		float v2Top = faceHeight;
 		
-		// Bottom
 		float u1Bottom = faceWidth;
 		float u2Bottom = faceWidth * 2f;
 		float v1Bottom = faceHeight * 2f;
 		float v2Bottom = 1f;
 		
 		return new float[] {
-			// Front
 			u2Front, v1Front,
 			u2Front, v2Front,
 			u1Front, v2Front,
-			u2Front, v1Front,
-			u1Front, v2Front,
 			u1Front, v1Front,
 			
-			// Back
 			u1Back, v1Back,
 			u1Back, v2Back,
 			u2Back, v2Back,
-			u1Back, v1Back,
-			u2Back, v2Back,
 			u2Back, v1Back,
 			
-			// Left
 			u2Left, v1Left,
 			u2Left, v2Left,
 			u1Left, v2Left,
-			u2Left, v1Left,
-			u1Left, v2Left,
 			u1Left, v1Left,
 			
-			// Right
 			u2Right, v1Right,
 			u2Right, v2Right,
 			u1Right, v2Right,
-			u2Right, v1Right,
-			u1Right, v2Right,
 			u1Right, v1Right,
 			
-			// Top
 			u2Top, v1Top,
 			u2Top, v2Top,
 			u1Top, v2Top,
-			u2Top, v1Top,
-			u1Top, v2Top,
 			u1Top, v1Top,
 			
-			// Bottom
 			u2Bottom, v1Bottom,
 			u2Bottom, v2Bottom,
 			u1Bottom, v2Bottom,
-			u2Bottom, v1Bottom,
-			u1Bottom, v2Bottom,
 			u1Bottom, v1Bottom
+		};
+	}
+	
+	@Override
+	protected int[] generateTriangles() {
+		return new int[] {
+			0, 1, 2,
+			0, 2, 3,
+			4, 5, 6,
+			4, 6, 7,
+			8, 9, 10,
+			8, 10, 11,
+			12, 13, 14,
+			12, 14, 15,
+			16, 17, 18,
+			16, 18, 19,
+			20, 21, 22,
+			20, 22, 23
 		};
 	}
 	
