@@ -1,6 +1,5 @@
 package dev.prozilla.pine.core.system.standard.ui.layout;
 
-import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
@@ -28,36 +27,32 @@ public final class LayoutNodeArranger extends UpdateSystem {
 	public static void arrangeLayoutNode(LayoutNode layoutNode, Node parentNode) {
 		NodeUpdater.updateNode(parentNode);
 		
-		if (layoutNode.childNodes.isEmpty() || !layoutNode.arrangeChildren) {
+		if (layoutNode.content.isEmpty() || !layoutNode.arrangeChildren) {
 			return;
 		}
 		
-		float gap = layoutNode.getGap();
+		float gap = layoutNode.currentGap;
 		
 		// Calculate initial offset
 		float offsetX = parentNode.currentPosition.x + parentNode.getPaddingX();
 		float offsetY = parentNode.currentPosition.y + parentNode.getPaddingY();
 		
 		switch (layoutNode.direction) {
-			case LEFT -> offsetX = parentNode.currentPosition.x + layoutNode.innerSize.x + layoutNode.childNodes.getFirst().currentOuterSize.x;
-			case DOWN -> offsetY = parentNode.currentPosition.y + layoutNode.innerSize.y + layoutNode.childNodes.getFirst().currentOuterSize.y;
+			case LEFT -> offsetX = parentNode.currentPosition.x + layoutNode.innerSize.x + layoutNode.content.getFirst().currentOuterSize.x;
+			case DOWN -> offsetY = parentNode.currentPosition.y + layoutNode.innerSize.y + layoutNode.content.getFirst().currentOuterSize.y;
 		}
 		
 		if (layoutNode.distribution == LayoutNode.Distribution.CENTER) {
 			switch (layoutNode.direction) {
-				case LEFT, RIGHT -> offsetX += (layoutNode.innerSize.x - (layoutNode.totalChildrenSize.x + gap * (layoutNode.childNodes.size() - 1))) / 2;
-				case UP, DOWN -> offsetY += (layoutNode.innerSize.y - (layoutNode.totalChildrenSize.y + gap * (layoutNode.childNodes.size() - 1))) / 2;
+				case LEFT, RIGHT -> offsetX += (layoutNode.innerSize.x - (layoutNode.totalContentSize.x + gap * (layoutNode.content.size() - 1))) / 2;
+				case UP, DOWN -> offsetY += (layoutNode.innerSize.y - (layoutNode.totalContentSize.y + gap * (layoutNode.content.size() - 1))) / 2;
 			}
 		}
 		
 		// Calculate individual offset for each child node
-		int count = layoutNode.childNodes.size();
+		int count = layoutNode.content.size();
 		for (int i = 0; i < count; i++) {
-			Node childNode = layoutNode.childNodes.get(i);
-			
-			if (childNode.absolutePosition) {
-				continue;
-			}
+			Node childNode = layoutNode.content.get(i);
 			
 			// Move offset for current child node
 			switch (layoutNode.direction) {
@@ -72,14 +67,14 @@ public final class LayoutNodeArranger extends UpdateSystem {
 			// Adjust offset based on alignments
 			float childOffsetX = offsetX;
 			float childOffsetY = offsetY;
-			if (layoutNode.direction == Direction.UP || layoutNode.direction == Direction.DOWN) {
+			if (layoutNode.direction.isVertical()) {
 				// Vertical alignment
 				if (layoutNode.alignment == EdgeAlignment.END) {
 					childOffsetX = offsetX + (layoutNode.innerSize.x - childNode.currentOuterSize.x);
 				} else if (layoutNode.alignment == EdgeAlignment.CENTER) {
 					childOffsetX = offsetX + (layoutNode.innerSize.x - childNode.currentOuterSize.x) / 2;
 				}
-			} else if (layoutNode.direction == Direction.LEFT || layoutNode.direction == Direction.RIGHT) {
+			} else {
 				// Horizontal alignment
 				if (layoutNode.alignment == EdgeAlignment.END) {
 					childOffsetY = offsetY + (layoutNode.innerSize.y - childNode.currentOuterSize.y);

@@ -223,10 +223,10 @@ public class AppLogger extends Logger implements Initializable {
 		
 		StringJoiner stringJoiner = new StringJoiner(", ");
 		if (errorCount > 0) {
-			stringJoiner.add(Ansi.red(errorCount + (errorCount == 1 ? " error" : "errors")));
+			stringJoiner.add(Ansi.red(errorCount + (errorCount == 1 ? " error" : " errors")));
 		}
 		if (warningCount > 0) {
-			stringJoiner.add(Ansi.yellow(warningCount + (warningCount == 1 ? " warning" : "warnings")));
+			stringJoiner.add(Ansi.yellow(warningCount + (warningCount == 1 ? " warning" : " warnings")));
 		}
 		log("Problems found: " + stringJoiner);
 	}

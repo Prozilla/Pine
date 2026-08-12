@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.system.standard.ui;
 
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.NodeContext;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -12,7 +13,7 @@ import dev.prozilla.pine.core.system.update.UpdateSystem;
 public final class NodeUpdater extends UpdateSystem {
 	
 	public NodeUpdater() {
-		super( Node.class);
+		super(Node.class);
 	}
 	
 	@Override
@@ -31,7 +32,7 @@ public final class NodeUpdater extends UpdateSystem {
 	}
 	
 	public static void resizeNode(Node node) {
-		if (!node.size.isZero(node)) {
+		if (!node.entity.hasComponent(LayoutNode.class) && !node.size.isZero(node)) {
 			float innerSizeX = node.getInnerSizeX();
 			float innerSizeY = node.getInnerSizeY();
 			
@@ -74,7 +75,7 @@ public final class NodeUpdater extends UpdateSystem {
 		
 		float remainingWidth = contextWidth - node.currentInnerSize.x;
 		float remainingHeight = contextHeight - node.currentInnerSize.y;
-
+		
 		// Calculate offset based on anchor and position
 		float offsetX = (1 - 2 * node.anchor.x) * (node.getX());
 		float offsetY = (1 - 2 * node.anchor.y) * (node.getY());

@@ -1,7 +1,6 @@
 package dev.prozilla.pine.core.system.standard.ui.layout;
 
 import dev.prozilla.pine.common.math.dimension.Unit;
-import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -35,10 +34,12 @@ public final class LayoutNodeResizer extends UpdateSystem {
 		}
 		
 		// Calculate total outer size of all children
-		layoutNode.totalChildrenSize.set(0);
+		layoutNode.totalContentSize.set(0);
+		layoutNode.content.clear();
 		for (Node childNode : layoutNode.childNodes) {
 			if (!childNode.absolutePosition) {
-				layoutNode.totalChildrenSize.add(childNode.currentOuterSize);
+				layoutNode.totalContentSize.add(childNode.currentOuterSize);
+				layoutNode.content.add(childNode);
 			}
 		}
 		
@@ -49,7 +50,7 @@ public final class LayoutNodeResizer extends UpdateSystem {
 			
 			// Logic for space between distribution
 			if (layoutNode.distribution == LayoutNode.Distribution.SPACE_BETWEEN && !layoutNode.childNodes.isEmpty()) {
-				float newGap = calculateSpaceBetweenGap(layoutNode, innerHeight, innerWidth);
+				float newGap = calculateSpaceBetweenGapWithFixedSize(layoutNode, innerHeight, innerWidth);
 				currentGap = Math.max(newGap, currentGap);
 			}
 		} else if (!layoutNode.childNodes.isEmpty()) {
@@ -86,7 +87,7 @@ public final class LayoutNodeResizer extends UpdateSystem {
 			}
 			
 			// Logic for space between distribution
-			currentGap = calculateSpaceBetweenGap2(layoutNode, parentNode, currentGap);
+			currentGap = calculateSpaceBetweenGapWithAutoSize(layoutNode, parentNode, currentGap);
 		}
 		
 		// Calculate height
@@ -96,7 +97,7 @@ public final class LayoutNodeResizer extends UpdateSystem {
 			
 			// Logic for space between distribution
 			if (layoutNode.distribution == LayoutNode.Distribution.SPACE_BETWEEN && !layoutNode.childNodes.isEmpty()) {
-				float newGap = calculateSpaceBetweenGap(layoutNode, innerHeight, innerWidth);
+				float newGap = calculateSpaceBetweenGapWithFixedSize(layoutNode, innerHeight, innerWidth);
 				currentGap = Math.max(newGap, currentGap);
 			}
 		} else if (!layoutNode.childNodes.isEmpty()) {
@@ -129,7 +130,7 @@ public final class LayoutNodeResizer extends UpdateSystem {
 			}
 			
 			// Logic for space between distribution
-			currentGap = calculateSpaceBetweenGap2(layoutNode, parentNode, currentGap);
+			currentGap = calculateSpaceBetweenGapWithAutoSize(layoutNode, parentNode, currentGap);
 		}
 		
 		// Content size of the node (without padding)
@@ -147,40 +148,30 @@ public final class LayoutNodeResizer extends UpdateSystem {
 		layoutNode.currentGap = currentGap;
 	}
 	
-	private static float calculateSpaceBetweenGap2(LayoutNode layoutNode, Node parentNode, float currentGap) {
-		if (layoutNode.distribution == LayoutNode.Distribution.SPACE_BETWEEN && parentNode.size != null) {
+	private static float calculateSpaceBetweenGapWithAutoSize(LayoutNode layoutNode, Node parentNode, float currentGap) {
+		if (layoutNode.distribution != LayoutNode.Distribution.SPACE_BETWEEN || parentNode.size == null) {
+			return currentGap;
+		}
+		
+		if (layoutNode.content.size() >= 2) {
 			float newGap;
-			if (layoutNode.direction == Direction.UP || layoutNode.direction == Direction.DOWN) {
-				newGap = parentNode.size.computeY(parentNode) - parentNode.getPaddingY() * 2 - layoutNode.totalChildrenSize.x;
+			if (layoutNode.direction.isVertical()) {
+				newGap = parentNode.size.computeY(parentNode) - parentNode.getPaddingY() * 2 - layoutNode.totalContentSize.y;
 			} else {
-				newGap = parentNode.size.computeX(parentNode) - parentNode.getPaddingX() * 2 - layoutNode.totalChildrenSize.y;
+				newGap = parentNode.size.computeX(parentNode) - parentNode.getPaddingX() * 2 - layoutNode.totalContentSize.x;
 			}
+			newGap = newGap / (layoutNode.content.size() - 1);
 			
 			if (newGap > currentGap) {
 				currentGap = newGap;
 			}
 		}
+		
 		return currentGap;
 	}
 	
-	private static float calculateSpaceBetweenGap(LayoutNode layoutNode, float innerHeight, float innerWidth) {
-		float newGap = layoutNode.direction.isVertical() ? innerHeight : innerWidth;
-		
-		// Subtract outer sizes of children from gap
-		for (Node childNode : layoutNode.childNodes) {
-			if (!childNode.absolutePosition) {
-				switch (layoutNode.direction) {
-					case UP:
-					case DOWN:
-						newGap -= childNode.currentOuterSize.y;
-						break;
-					case LEFT:
-					case RIGHT:
-						newGap -= childNode.currentOuterSize.x;
-						break;
-				}
-			}
-		}
-		return newGap;
+	private static float calculateSpaceBetweenGapWithFixedSize(LayoutNode layoutNode, float innerHeight, float innerWidth) {
+		float newGap = layoutNode.direction.isVertical() ? innerHeight - layoutNode.totalContentSize.y : innerWidth - layoutNode.totalContentSize.x;
+		return layoutNode.content.size() >= 2 ? newGap / (layoutNode.content.size() - 1) : 0;
 	}
 }

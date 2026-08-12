@@ -26,7 +26,10 @@ public class LayoutNode extends Component implements NodeContext {
 	public DimensionBase gap;
 	
 	public Vector2f innerSize;
-	public Vector2f totalChildrenSize;
+	/** Total size of all children that are not absolutely positioned. */
+	public Vector2f totalContentSize;
+	/** Children that are not absolutely positioned. */
+	public List<Node> content;
 	
 	/** Array of node components in children of the attached entity */
 	public List<Node> childNodes;
@@ -79,7 +82,8 @@ public class LayoutNode extends Component implements NodeContext {
 		
 		childNodes = new ArrayList<>();
 		innerSize = new Vector2f();
-		totalChildrenSize = new Vector2f();
+		totalContentSize = new Vector2f();
+		content = new ArrayList<>();
 		arrangeChildren = true;
 	}
 	
