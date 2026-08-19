@@ -102,6 +102,7 @@ public class Texture implements TextureAsset, Printable, Cloneable<Texture> {
 	
 	@Override
 	public void unbind() {
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	

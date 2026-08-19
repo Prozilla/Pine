@@ -876,7 +876,7 @@ public class Renderer implements Initializable, Destructible {
 		// Set uniforms
 		program.setUniform("uTexture", 0);
 		if (Platform.get() != Platform.MACOS) {
-			program.setUniform("uTextureArray", 0);
+			program.setUniform("uTextureArray", 1);
 		}
 
 		resize();

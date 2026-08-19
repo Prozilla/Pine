@@ -27,6 +27,7 @@ import dev.prozilla.pine.core.storage.LocalStorage;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
+import org.lwjgl.opengl.GLUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -229,6 +230,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			if (glCapabilities.OpenGL43) {
 				glEnable(GL_DEBUG_OUTPUT);
 			}
+//			GLUtil.setupDebugMessageCallback(); // TODO: turn into setting (debugMessages)
 			logger.log("Initialized OpenGL (Initialization: 3/4)");
 		} else {
 			logger.log("Skipping initialization of OpenGL (Initialization: 3/4)");

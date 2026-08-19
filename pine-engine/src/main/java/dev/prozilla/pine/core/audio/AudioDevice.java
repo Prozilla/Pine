@@ -27,6 +27,8 @@ public class AudioDevice implements Initializable, Destructible {
 	private long device;
 	private long context;
 	
+	private static AudioDevice currentDevice;
+	
 	public AudioDevice(Application application) {
 		this.application = application;
 		logger = application.getLogger();
@@ -72,6 +74,7 @@ public class AudioDevice implements Initializable, Destructible {
 		logger.log("Audio device initialized");
 
 		isInitialized = true;
+		currentDevice = this;
 	}
 	
 	@Override
@@ -84,6 +87,9 @@ public class AudioDevice implements Initializable, Destructible {
 			alcCloseDevice(device);
 			device = MemoryUtil.NULL;
 		}
+		if (currentDevice == this) {
+			currentDevice = null;
+		}
 		isInitialized = false;
 	}
 	
@@ -92,6 +98,13 @@ public class AudioDevice implements Initializable, Destructible {
 	 */
 	public boolean isAvailable() {
 		return isInitialized;
+	}
+	
+	/**
+	 * Checks if an audio device is currently available.
+	 */
+	public static boolean isAudioAvailable() {
+		return currentDevice != null && currentDevice.isAvailable();
 	}
 	
 	private void handleError(String message) {
