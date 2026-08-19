@@ -2,55 +2,47 @@ package dev.prozilla.pine.examples.chat.net.server;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.examples.chat.net.user.UserData;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 
-import java.io.*;
-import java.net.Socket;
-
-public class ClientHandler implements Runnable, UserData, Destructible {
+public class ClientHandler extends SimpleChannelInboundHandler<String> implements UserData, Destructible {
 	
-	private Server server;
-	private Socket socket;
-	private BufferedReader bufferedReader;
-	private BufferedWriter bufferedWriter;
+	private final Server server;
+	private Channel channel;
 	private String username;
 	
-	public ClientHandler(Server server, Socket socket) {
-		try {
-			this.server = server;
-			this.socket = socket;
-			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			username = bufferedReader.readLine();
-		} catch (Exception e) {
-			disconnect();
+	public ClientHandler(Server server) {
+		this.server = server;
+	}
+	
+	@Override
+	public void channelActive(ChannelHandlerContext context) {
+		channel = context.channel();
+	}
+	
+	@Override
+	protected void channelRead0(ChannelHandlerContext context, String message) {
+		if (username == null) {
+			username = message;
+			server.connect(this);
+		} else {
+			server.broadcastChatMessage(this, message);
 		}
 	}
 	
 	@Override
-	public void run() {
-		while (socket.isConnected()) {
-			try {
-				String message = bufferedReader.readLine();
-				if (message == null) {
-					disconnect();
-					break;
-				}
-				server.broadcastChatMessage(this, message);
-			} catch (IOException e) {
-				disconnect();
-				break;
-			}
-		}
+	public void channelInactive(ChannelHandlerContext context) {
+		disconnect();
+	}
+	
+	@Override
+	public void exceptionCaught(ChannelHandlerContext context, Throwable cause) {
+		disconnect();
 	}
 	
 	public void receiveMessage(String message) {
-		try {
-			bufferedWriter.write(message);
-			bufferedWriter.newLine();
-			bufferedWriter.flush();
-		} catch (IOException e) {
-			disconnect();
-		}
+		channel.writeAndFlush(message + "\n");
 	}
 	
 	public void disconnect() {
@@ -62,16 +54,10 @@ public class ClientHandler implements Runnable, UserData, Destructible {
 	@Override
 	public void destroy() {
 		try {
-			if (bufferedWriter != null) {
-				bufferedWriter.close();
+			if (channel != null) {
+				channel.close();
 			}
-			if (bufferedReader != null) {
-				bufferedReader.close();
-			}
-			if (socket != null) {
-				socket.close();
-			}
-		} catch (IOException e) {
+		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
 	}

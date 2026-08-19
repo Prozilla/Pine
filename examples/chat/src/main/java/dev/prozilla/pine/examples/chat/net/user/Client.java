@@ -1,58 +1,63 @@
 package dev.prozilla.pine.examples.chat.net.user;
 
-import java.io.*;
-import java.net.Socket;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.nio.NioIoHandler;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LineBasedFrameDecoder;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 
-public class Client extends User implements Runnable {
+import java.io.IOException;
+import java.nio.charset.Charset;
 
-	private final Socket socket;
-	private volatile BufferedWriter bufferedWriter;
-	private volatile BufferedReader bufferedReader;
+public class Client extends User {
+
+	private final Channel channel;
+	private final EventLoopGroup group;
 	private final String username;
 	
 	public static final String DEFAULT_HOST = "localhost";
 	public static final int DEFAULT_PORT = 1234;
 	
-	public Client(Socket socket, String username) {
-		this.socket = socket;
+	public Client(String host, int port, String username) throws IOException {
 		this.username = username;
 		
-		try {
-			bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		} catch (IOException e) {
-			destroy();
-		}
-	}
-	
-	@Override
-	public void run() {
-		sendMessage(username);
+		group = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 		
-		while (socket.isConnected()) {
-			try {
-				String receivedMessage = bufferedReader.readLine();
-				if (receivedMessage == null) {
-					destroy();
-					break;
+		Bootstrap bootstrap = new Bootstrap();
+		bootstrap.group(group)
+			.channel(NioSocketChannel.class)
+			.handler(new ChannelInitializer<SocketChannel>() {
+				@Override
+				protected void initChannel(SocketChannel socketChannel) {
+					ChannelPipeline pipeline = socketChannel.pipeline();
+					pipeline.addLast(new LineBasedFrameDecoder(8192));
+					pipeline.addLast(new StringDecoder(Charset.defaultCharset()));
+					pipeline.addLast(new StringEncoder(Charset.defaultCharset()));
+					pipeline.addLast(new MessageHandler());
 				}
-				receiveMessage(receivedMessage);
-			} catch (IOException e) {
-				destroy();
-				break;
-			}
+			});
+		
+		try {
+			channel = bootstrap.connect(host, port).sync().channel();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			group.shutdownGracefully();
+			throw new IOException("Failed to connect to server", e);
 		}
 	}
 	
 	@Override
 	public void sendMessage(String message) {
-		try {
-			bufferedWriter.write(message);
-			bufferedWriter.newLine();
-			bufferedWriter.flush();
-		} catch (IOException e) {
-			destroy();
-		}
+		channel.writeAndFlush(message + "\n");
 	}
 	
 	@Override
@@ -63,16 +68,9 @@ public class Client extends User implements Runnable {
 	@Override
 	public void destroy() {
 		try {
-			if (bufferedWriter != null) {
-				bufferedWriter.close();
-			}
-			if (bufferedReader != null) {
-				bufferedReader.close();
-			}
-			if (socket != null) {
-				socket.close();
-			}
-		} catch (IOException | SecurityException e) {
+			channel.close();
+			group.shutdownGracefully();
+		} catch (SecurityException e) {
 			e.printStackTrace();
 		} finally {
 			super.destroy();
@@ -80,8 +78,28 @@ public class Client extends User implements Runnable {
 	}
 	
 	public static Client create(String host, int port, String username) throws IOException {
-		Socket socket = new Socket(host, port);
-		return new Client(socket, username);
+		Client client = new Client(host, port, username);
+		client.sendMessage(username);
+		return client;
+	}
+	
+	private class MessageHandler extends SimpleChannelInboundHandler<String> {
+		
+		@Override
+		protected void channelRead0(ChannelHandlerContext context, String message) {
+			receiveMessage(message);
+		}
+		
+		@Override
+		public void channelInactive(ChannelHandlerContext context) {
+			destroy();
+		}
+		
+		@Override
+		public void exceptionCaught(ChannelHandlerContext context, Throwable cause) {
+			destroy();
+		}
+		
 	}
 	
 }

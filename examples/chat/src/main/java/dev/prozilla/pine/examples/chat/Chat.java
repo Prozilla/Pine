@@ -17,11 +17,9 @@ public class Chat extends Application {
 	
 	// Server
 	private Server server;
-	private Thread serverThread;
 	
 	// Client
 	private Client client;
-	private Thread clientThread;
 	
 	public final Scene connectScene;
 	public final Scene serverStartupScene;
@@ -45,8 +43,6 @@ public class Chat extends Application {
 	public void startClient(String host, int port, String username) {
 		try {
 			client = Client.create(host, port, username);
-			clientThread = new Thread(client);
-			clientThread.start();
 			
 			Scene clientScene = new ClientScene(client);
 			addScene(clientScene);
@@ -60,8 +56,6 @@ public class Chat extends Application {
 	public void startServer(int port) {
 		try {
 			server = Server.create(port);
-			serverThread = new Thread(server);
-			serverThread.start();
 			
 			Scene serverScene = new ServerScene(server);
 			addScene(serverScene);
@@ -76,24 +70,10 @@ public class Chat extends Application {
 	public void destroy() {
 		super.destroy();
 		
-		if (clientThread != null) {
-			try {
-				clientThread.interrupt();
-			} catch (SecurityException e) {
-				e.printStackTrace();
-			}
-		}
 		if (client != null) {
 			client.destroy();
 		}
 		
-		if (serverThread != null) {
-			try {
-				serverThread.interrupt();
-			} catch (SecurityException e) {
-				e.printStackTrace();
-			}
-		}
 		if (server != null) {
 			server.destroy();
 		}
