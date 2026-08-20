@@ -1,10 +1,10 @@
-package dev.prozilla.pine.examples.sokoban;
+package dev.prozilla.pine.examples.sokoban.scene;
 
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.property.style.StyleSheet;
-import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
@@ -14,63 +14,25 @@ import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.ModifierKey;
+import dev.prozilla.pine.examples.sokoban.GameManager;
+import dev.prozilla.pine.examples.sokoban.GameMap;
+import dev.prozilla.pine.examples.sokoban.component.NetworkManager;
 import dev.prozilla.pine.examples.sokoban.entity.*;
 import dev.prozilla.pine.examples.sokoban.entity.ui.UIPrefab;
-import dev.prozilla.pine.examples.sokoban.system.CrateUpdater;
-import dev.prozilla.pine.examples.sokoban.system.PlayerInputHandler;
-import dev.prozilla.pine.examples.sokoban.system.PlayerMover;
+import dev.prozilla.pine.examples.sokoban.net.server.Server;
+import dev.prozilla.pine.examples.sokoban.system.*;
+
+import java.io.IOException;
 
 public class GameScene extends Scene {
 	
 	private Vector2i previousCursorPosition;
 	private boolean cameraMovementEnabled = false;
 	
+	private NetworkManager network;
+	
 	public static final float MOVEMENT_SPEED = 300f;
 	public static final float ROTATION_SPEED = 6f;
-	
-	private static final String[] MAP = {
-		"OOOOOOOOOOOO  ",
-		"O..  O     OOO",
-		"O..  O x  x  O",
-		"O..  OxOOOO  O",
-		"O..    s OO  O",
-		"O..  O O  x OO",
-		"OOOOOO OOx x O",
-		"  O x  x x x O",
-		"  O    O     O",
-		"  OOOOOOOOOOOO"
-	};
-	
-//	private static final String[] MAP = {
-//		"OOOOOO  OOO ",
-//		"O..  O OOsOO",
-//		"O..  OOO   O",
-//		"O..     xx O",
-//		"O..  O O x O",
-//		"O..OOO O x O",
-//		"OOOO x Ox  O",
-//		"   O  xO x O",
-//		"   O x  x  O",
-//		"   O  OO   O",
-//		"   OOOOOOOOO"
-//	};
-
-//	private static final String[] MAP = {
-//		"###########",
-//		"#---------#",
-//		"#-$-$@$-$-#",
-//		"#--$-$-$--#",
-//		"#-$-$-$-$-#",
-//		"#--$-$-$--#",
-//		"#####$##$##",
-//		"-#.....#-#",
-//		"-#....*#-#",
-//		"-#...*---#",
-//		"-#....-###",
-//		"-########"
-//	};
-	
-	private static final int TILE_SIZE = 64;
 	
 	@Override
 	protected void load() {
@@ -78,17 +40,15 @@ public class GameScene extends Scene {
 		
 		cameraData.orthographic = true;
 		
-		// Create systems
-		addSystem(new PlayerInputHandler());
-		addSystem(new PlayerMover());
+		boolean isMultiplayer = GameManager.instance.isMultiplayer();
+		boolean isHost = isMultiplayer && GameManager.instance.getSessionConfig().hosting();
 		
 		// Create grid entities
-		GridPrefab gridPrefab = new GridPrefab(TILE_SIZE);
+		GridPrefab gridPrefab = new GridPrefab(GameManager.TILE_SIZE);
 		GridGroup backgroundGrid = addEntity(gridPrefab).getComponent(GridGroup.class);
 		GridGroup goalGrid = addEntity(gridPrefab).getComponent(GridGroup.class);
 		GridGroup foregroundGrid = addEntity(gridPrefab).getComponent(GridGroup.class);
-		
-		addSystem(new CrateUpdater(goalGrid));
+		network = addEntity(new NetworkManagerPrefab()).getComponent(NetworkManager.class);
 		
 		// Create tile entities
 		BlockPrefab blockPrefab = new BlockPrefab();
@@ -98,9 +58,10 @@ public class GameScene extends Scene {
 		CratePrefab cratePrefab = new CratePrefab();
 		
 		GameManager.instance.totalCrates = 0;
+		String[] map = GameMap.MAP;
 		
-		for (int i = 0; i < MAP.length; i++) {
-			String row = MAP[i];
+		for (int i = 0; i < map.length; i++) {
+			String row = map[i];
 			
 			for (int j = 0; j < row.length(); j++) {
 				char tileName = row.charAt(j);
@@ -110,10 +71,10 @@ public class GameScene extends Scene {
 				} else {
 					TilePrefab tilePrefab = switch (tileName) {
 						case 'O' -> blockPrefab;
-						case 's' -> playerPrefab;
+						case 's' -> isMultiplayer ? null : playerPrefab;
 						case 'x' -> {
 							GameManager.instance.totalCrates++;
-							yield cratePrefab;
+							yield isMultiplayer && !isHost ? null : cratePrefab;
 						}
 						default -> null;
 					};
@@ -127,12 +88,21 @@ public class GameScene extends Scene {
 			}
 		}
 		
+		// Create systems
+		RequestProcessor processor = addSystem(new RequestProcessor(foregroundGrid));
+		if (isMultiplayer) {
+			addSystem(new NetworkSystem(network, foregroundGrid, processor));
+		}
+		addSystem(new PlayerInputHandler(foregroundGrid, network));
+		addSystem(new PlayerMover());
+		addSystem(new CrateUpdater(goalGrid));
+		
 		// Add user interface
 		StyleSheet styleSheet = AssetPools.styleSheets.load("style/hud.css", Application.isDevMode());
 		addEntity(new UIPrefab(styleSheet));
 		
 		cameraData.zoomIn(-0.1f);
-		cameraData.setBackgroundColor(Color.hex("#596A6C"));
+		cameraData.setBackgroundColor(GameManager.BACKGROUND_COLOR);
 		cameraData.farClipPlane = 10000f;
 		overlayCameraData.farClipPlane = 10000f;
 		
@@ -141,6 +111,24 @@ public class GameScene extends Scene {
 		}
 		
 		resetCamera();
+		
+		// Connect to network
+		if (isMultiplayer) {
+			GameManager.SessionConfig sessionConfig = GameManager.instance.getSessionConfig();
+			
+			if (isHost) {
+				try {
+					network.startHost(new Server(sessionConfig.port(), processor));
+				} catch (IOException e) {
+					logger.error("Failed to start server", e);
+				}
+			} else {
+				network.startClient(sessionConfig.address(), sessionConfig.port());
+			}
+		} else {
+			network.startLocal(processor::receive);
+			network.setLocalPlayerId(RequestProcessor.HOST_PLAYER_ID);
+		}
 	}
 	
 	@Override
@@ -204,8 +192,8 @@ public class GameScene extends Scene {
 	
 	private void resetCamera() {
 		// Move camera to center of map
-		int width = MAP[0].length();
-		int height = MAP.length;
+		int width = GameMap.getWidth();
+		int height = GameMap.getHeight();
 		
 		float depthMultiplier = 1f;
 		if (renderLayerUpdater != null) {
@@ -213,6 +201,13 @@ public class GameScene extends Scene {
 		}
 		
 		cameraData.getTransform().reset();
-		cameraData.getTransform().translate((width * TILE_SIZE) / 2f, (height * TILE_SIZE) / 2f, 10f * depthMultiplier);
+		cameraData.getTransform().translate((width * GameManager.TILE_SIZE) / 2f, (height * GameManager.TILE_SIZE) / 2f, 10f * depthMultiplier);
 	}
+	
+	@Override
+	public void destroy() {
+		network = Destructible.destroy(network);
+		super.destroy();
+	}
+	
 }

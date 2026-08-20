@@ -70,7 +70,9 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	protected Logger logger;
 	protected CameraData cameraData;
 	protected OverlayCameraData overlayCameraData;
-	/** Prefab that will be used during scene loading to create a camera entity. */
+	/**
+	 * Prefab that will be used during scene loading to create a camera entity.
+	 */
 	protected Prefab cameraPrefab;
 	protected RenderLayerUpdater renderLayerUpdater;
 	
@@ -107,6 +109,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	
 	/**
 	 * Creates a new scene with a given name.
+	 *
 	 * @param name Name of the scene
 	 */
 	public Scene(String name) {
@@ -149,6 +152,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	
 	/**
 	 * Loads the entities, components and systems of this scene.
+	 *
 	 * @param cameraPrefab Prefab for the camera entity.
 	 */
 	protected void load(Prefab cameraPrefab) throws IllegalStateException {
@@ -303,6 +307,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	
 	/**
 	 * Handles input for the scene.
+	 *
 	 * @param deltaTime Delta time in seconds
 	 */
 	@Override
@@ -317,6 +322,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	
 	/**
 	 * Updates the scene every frame.
+	 *
 	 * @param deltaTime Delta time in seconds
 	 */
 	@Override
@@ -357,6 +363,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	
 	/**
 	 * Instantiates a prefab into this scene at (0, 0, 0).
+	 *
 	 * @param prefab The prefab to instantiate
 	 * @return The instantiated entity
 	 */
@@ -367,6 +374,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	
 	/**
 	 * Instantiates a prefab into this scene.
+	 *
 	 * @param prefab The prefab to instantiate
 	 * @param x X position
 	 * @param y Y position
@@ -380,6 +388,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	
 	/**
 	 * Adds an entity into this scene.
+	 *
 	 * @param entity The entity to add
 	 * @return The added entity
 	 */
@@ -415,6 +424,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	
 	/**
 	 * Adds a component to an entity in this scene.
+	 *
 	 * @param entity The entity
 	 * @param component The component to add to the entity
 	 * @return The added component
@@ -433,6 +443,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	
 	/**
 	 * Removes a component from an entity in this scene.
+	 *
 	 * @param entity The entity
 	 * @param component The component to remove from the entity
 	 */
@@ -446,21 +457,23 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	
 	/**
 	 * Builds a system and adds it to this scene.
+	 *
 	 * @param systemBuilder Builder of the system
+	 * @param <B> Type of the system builder
 	 * @return System that was built and added
-	 * @param <S> Type of the system builder
 	 */
-	public <S extends SystemBuilder<? extends SystemBase, S>> SystemBase addSystem(S systemBuilder) {
+	public <S extends SystemBase, B extends SystemBuilder<S, B>> S addSystem(B systemBuilder) {
 		Checks.isNotNull(systemBuilder, "systemBuilder");
 		return addSystem(systemBuilder.build());
 	}
 	
 	/**
 	 * Adds a system to this scene.
+	 *
 	 * @param system The system to add
 	 * @return The added system
 	 */
-	public SystemBase addSystem(SystemBase system) {
+	public <S extends SystemBase> S addSystem(S system) {
 		Checks.isNotNull(system, "system");
 		
 		if (!systemManager.isInitialized()) {
@@ -483,6 +496,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	
 	/**
 	 * Generates a new unique scene ID.
+	 *
 	 * @return Scene ID
 	 */
 	public static int generateId() {
@@ -500,6 +514,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	
 	/**
 	 * Checks if this scene is equal to another scene by comparing both ID's.
+	 *
 	 * @param scene Other scene
 	 * @return True if both scenes have the same ID.
 	 */
@@ -553,7 +568,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	public @NotNull String toString() {
 		return String.format("%s (%s)", name, id);
 	}
-
+	
 	public void toggleDevConsole() {
 		toggleDevConsole(devConsole == null || !devConsole.isActive());
 	}

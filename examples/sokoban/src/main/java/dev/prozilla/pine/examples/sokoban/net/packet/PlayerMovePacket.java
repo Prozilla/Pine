@@ -1,0 +1,53 @@
+package dev.prozilla.pine.examples.sokoban.net.packet;
+
+import dev.prozilla.pine.common.math.vector.Direction;
+import dev.prozilla.pine.examples.sokoban.component.Move;
+
+public record PlayerMovePacket(Move move) implements Packet {
+	
+	public static final int ID = 14;
+	
+	@Override
+	public int getPacketId() {
+		return ID;
+	}
+	
+	@Override
+	public void write(PacketBuffer buffer) {
+		buffer.writeVarInt(move.playerId());
+		buffer.writeByte(move.direction().ordinal());
+		buffer.writeInt(move.fromX());
+		buffer.writeInt(move.fromY());
+		buffer.writeInt(move.toX());
+		buffer.writeInt(move.toY());
+		buffer.writeBoolean(move.pushedCrate());
+		if (move.pushedCrate()) {
+			buffer.writeInt(move.crateFromX());
+			buffer.writeInt(move.crateFromY());
+			buffer.writeInt(move.crateToX());
+			buffer.writeInt(move.crateToY());
+		}
+	}
+	
+	public static PlayerMovePacket read(PacketBuffer buffer) {
+		int playerId = buffer.readVarInt();
+		Direction direction = Direction.values()[buffer.readUnsignedByte()];
+		int fromX = buffer.readInt();
+		int fromY = buffer.readInt();
+		int toX = buffer.readInt();
+		int toY = buffer.readInt();
+		boolean pushedCrate = buffer.readBoolean();
+		int crateFromX = 0, crateFromY = 0, crateToX = 0, crateToY = 0;
+		if (pushedCrate) {
+			crateFromX = buffer.readInt();
+			crateFromY = buffer.readInt();
+			crateToX = buffer.readInt();
+			crateToY = buffer.readInt();
+		}
+		
+		Move move = new Move(playerId, direction, fromX, fromY, toX, toY,
+			pushedCrate, crateFromX, crateFromY, crateToX, crateToY);
+		return new PlayerMovePacket(move);
+	}
+	
+}

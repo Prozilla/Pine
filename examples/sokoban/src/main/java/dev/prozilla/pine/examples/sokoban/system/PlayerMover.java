@@ -6,9 +6,6 @@ import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 import dev.prozilla.pine.examples.sokoban.component.PlayerData;
-import dev.prozilla.pine.examples.sokoban.util.Command;
-import dev.prozilla.pine.examples.sokoban.util.PlayerMoveAction;
-import dev.prozilla.pine.examples.sokoban.util.TileMoveAction;
 
 public class PlayerMover extends UpdateSystem {
 	
@@ -47,19 +44,7 @@ public class PlayerMover extends UpdateSystem {
 				spriteRenderer.getMesh().setOffset(playerData.direction.x * movementFactor, playerData.direction.y * movementFactor);
 			} else {
 				// Finish movement
-				spriteRenderer.getMesh().setOffset(0, 0);
-				
-				PlayerMoveAction playerMoveAction = new PlayerMoveAction(tileRenderer, playerData);
-				TileMoveAction crateMoveAction = null;
-				
-				if (playerData.pushingCrateTile != null) {
-					crateMoveAction = new TileMoveAction(playerData.pushingCrateTile, playerData.direction.x, playerData.direction.y);
-					playerData.pushingCrateTile.moveBy(playerData.direction.x, playerData.direction.y);
-				}
-				
-				tileRenderer.moveBy(playerData.direction.x, playerData.direction.y);
-				playerData.direction = null;
-				playerData.history.push(new Command(playerMoveAction, crateMoveAction));
+				playerData.finishMove();
 			}
 			
 			// Animate movement of crate
@@ -72,4 +57,5 @@ public class PlayerMover extends UpdateSystem {
 			playerData.timeUntilMoveCompletes = 0;
 		}
 	}
+	
 }

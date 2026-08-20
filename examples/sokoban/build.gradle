@@ -8,6 +8,10 @@ application {
 	mainClass = "dev.prozilla.pine.examples.sokoban.Main"
 }
 
+dependencies {
+	implementation "io.netty:netty-all:4.2.17.Final"
+}
+
 tasks.register("start", JavaExec) {
 	mainClass = "dev.prozilla.pine.examples.sokoban.Main"
 }

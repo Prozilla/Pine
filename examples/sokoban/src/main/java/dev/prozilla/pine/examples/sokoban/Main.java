@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.asset.image.Texture;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationBuilder;
+import dev.prozilla.pine.examples.sokoban.scene.MenuScene;
 
 public class Main {
 	
@@ -13,7 +14,7 @@ public class Main {
 		applicationBuilder.setTitle("Sokoban");
 		applicationBuilder.setCompanyName("Pine");
 		applicationBuilder.setWindowSize(900, 600);
-		applicationBuilder.setInitialScene(new GameScene());
+		applicationBuilder.setInitialScene(new MenuScene());
 		applicationBuilder.setIcons("images/crates/crate_03.png");
 		applicationBuilder.setTargetFps(120);
 		applicationBuilder.setApplicationManagerFactory(GameManager::new);
