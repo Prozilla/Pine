@@ -1,7 +1,9 @@
-package dev.prozilla.pine.examples.sokoban.net.packet;
+package dev.prozilla.pine.examples.sokoban.packet;
 
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.examples.sokoban.component.Move;
+import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
+import dev.prozilla.pine.examples.sokoban.net.packet.PacketBuffer;
 
 public record PlayerMovePacket(Move move) implements Packet {
 	
@@ -29,7 +31,7 @@ public record PlayerMovePacket(Move move) implements Packet {
 		}
 	}
 	
-	public static PlayerMovePacket read(PacketBuffer buffer) {
+	public static PlayerMovePacket decode(PacketBuffer buffer) {
 		int playerId = buffer.readVarInt();
 		Direction direction = Direction.values()[buffer.readUnsignedByte()];
 		int fromX = buffer.readInt();

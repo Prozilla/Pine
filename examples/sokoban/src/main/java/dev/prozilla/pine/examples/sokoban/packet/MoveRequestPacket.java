@@ -1,6 +1,8 @@
-package dev.prozilla.pine.examples.sokoban.net.packet;
+package dev.prozilla.pine.examples.sokoban.packet;
 
 import dev.prozilla.pine.common.math.vector.Direction;
+import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
+import dev.prozilla.pine.examples.sokoban.net.packet.PacketBuffer;
 
 public record MoveRequestPacket(Direction direction) implements Packet {
 	
@@ -16,7 +18,7 @@ public record MoveRequestPacket(Direction direction) implements Packet {
 		buffer.writeByte(direction.ordinal());
 	}
 	
-	public static MoveRequestPacket read(PacketBuffer buffer) {
+	public static MoveRequestPacket decode(PacketBuffer buffer) {
 		return new MoveRequestPacket(Direction.values()[buffer.readUnsignedByte()]);
 	}
 	

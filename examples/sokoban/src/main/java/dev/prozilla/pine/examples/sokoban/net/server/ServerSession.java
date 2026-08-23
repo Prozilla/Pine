@@ -3,43 +3,36 @@ package dev.prozilla.pine.examples.sokoban.net.server;
 import dev.prozilla.pine.examples.sokoban.net.Session;
 import dev.prozilla.pine.examples.sokoban.net.connection.Connection;
 import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
-import dev.prozilla.pine.examples.sokoban.system.RequestProcessor;
-
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * A connection between a client and a {@link Server}, from the perspective of the server.
  */
-public class ServerSession implements Session, RequestProcessor.Responder {
+public class ServerSession extends Session {
 	
 	private final Server server;
-	private final Connection connection;
-	private final RequestProcessor processor;
-	private final boolean host;
-	private final Queue<Packet> inbound;
+	private final boolean isHost;
 	private volatile boolean disconnectRequested;
 	private boolean disconnected;
 	private boolean joined;
-	private int playerId = -1;
+	private int clientId = -1;
 	
-	public ServerSession(Server server, Connection connection, RequestProcessor processor, boolean host) {
+	public ServerSession(Server server, Connection connection, boolean isHost) {
+		super(connection);
 		this.server = server;
-		this.connection = connection;
-		this.processor = processor;
-		this.host = host;
-		inbound = new ConcurrentLinkedQueue<>();
+		this.isHost = isHost;
 	}
 	
-	public void enqueue(Packet packet) {
-		inbound.add(packet);
+	@Override
+	public void receive(Packet packet) {
+		server.receive(clientId, packet, this);
 	}
 	
-	public void markDisconnected() {
+	@Override
+	public void disconnect() {
 		disconnectRequested = true;
 	}
 	
-	public void tick() {
+	public void synchronize() {
 		if (disconnectRequested) {
 			destroy();
 			return;
@@ -49,47 +42,23 @@ public class ServerSession implements Session, RequestProcessor.Responder {
 			joined = true;
 			join();
 		}
-		
-		Connection.drain(inbound, this::onPacket);
 	}
 	
 	private void join() {
-		playerId = processor.onJoin(host, this);
-	}
-	
-	private void onPacket(Packet packet) {
-		processor.receive(playerId, packet, this);
-	}
-	
-	@Override
-	public void send(Packet packet) {
-		connection.send(packet);
-	}
-	
-	@Override
-	public void broadcast(Packet packet) {
-		server.broadcast(packet, null);
-	}
-	
-	@Override
-	public void broadcastOthers(Packet packet) {
-		server.broadcast(packet, this);
-	}
-	
-	public Connection getConnection() {
-		return connection;
+		clientId = isHost ? Server.HOST_ID : server.getNextClientId();
+		server.getMessageHandler().handleJoin(new Server.Message(clientId, null, this, server));
 	}
 	
 	@Override
 	public void destroy() {
-		if (disconnected || playerId < 0) {
+		if (disconnected || clientId < 0) {
 			return;
 		}
 		disconnected = true;
 		
-		processor.onLeave(playerId, this);
+		server.getMessageHandler().handleLeave(new Server.Message(clientId, null, this, server));
 		server.disconnect(this);
-		connection.destroy();
+		super.destroy();
 	}
 	
 }

@@ -12,10 +12,14 @@ import dev.prozilla.pine.core.state.input.gamepad.GamepadAxis;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadButton;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadInput;
 import dev.prozilla.pine.core.system.input.InputSystem;
-import dev.prozilla.pine.examples.sokoban.component.*;
-import dev.prozilla.pine.examples.sokoban.net.packet.MoveRequestPacket;
-import dev.prozilla.pine.examples.sokoban.net.packet.RestartRequestPacket;
-import dev.prozilla.pine.examples.sokoban.net.packet.UndoRequestPacket;
+import dev.prozilla.pine.examples.sokoban.component.History;
+import dev.prozilla.pine.examples.sokoban.component.Move;
+import dev.prozilla.pine.examples.sokoban.component.PlayerData;
+import dev.prozilla.pine.examples.sokoban.net.component.NetworkIdentity;
+import dev.prozilla.pine.examples.sokoban.net.component.NetworkManager;
+import dev.prozilla.pine.examples.sokoban.packet.MoveRequestPacket;
+import dev.prozilla.pine.examples.sokoban.packet.RestartRequestPacket;
+import dev.prozilla.pine.examples.sokoban.packet.UndoRequestPacket;
 
 public class PlayerInputHandler extends InputSystem {
 	
@@ -23,28 +27,28 @@ public class PlayerInputHandler extends InputSystem {
 	private final NetworkManager network;
 	
 	public PlayerInputHandler(GridGroup foregroundGrid, NetworkManager network) {
-		super(PlayerData.class, TileRenderer.class, AudioEffectPlayer.class, NetworkPlayer.class, History.class);
+		super(PlayerData.class, TileRenderer.class, AudioEffectPlayer.class, NetworkIdentity.class, History.class);
 		this.foregroundGrid = foregroundGrid;
 		this.network = network;
 	}
 	
 	@Override
 	protected void process(EntityChunk chunk, Input input, float deltaTime) {
-		NetworkPlayer networkPlayer = chunk.getComponent(NetworkPlayer.class);
+		NetworkIdentity networkIdentity = chunk.getComponent(NetworkIdentity.class);
 		
-		if (!network.isLocalPlayer(networkPlayer.id)) {
+		if (!network.isLocalClient(networkIdentity.id)) {
 			return;
 		}
 		
 		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		
-		if (input.getKeyDown(Key.R) && network.isHost(networkPlayer.id)) {
+		if (input.getKeyDown(Key.R) && network.isHost(networkIdentity.id)) {
 			network.send(new RestartRequestPacket());
 			return;
 		}
 		
 		if (isUndoDown(input)) {
-			if (!networkPlayer.awaitingConfirm && playerData.timeUntilMoveCompletes <= 0) {
+			if (!playerData.awaitingConfirm && playerData.timeUntilMoveCompletes <= 0) {
 				network.send(new UndoRequestPacket());
 			}
 			return;
@@ -55,7 +59,7 @@ public class PlayerInputHandler extends InputSystem {
 			return;
 		}
 		
-		if (networkPlayer.awaitingConfirm || playerData.timeUntilMoveCompletes > 0) {
+		if (playerData.awaitingConfirm || playerData.timeUntilMoveCompletes > 0) {
 			return;
 		}
 		
@@ -66,7 +70,7 @@ public class PlayerInputHandler extends InputSystem {
 		}
 		
 		playerData.beginMove(move, foregroundGrid);
-		networkPlayer.awaitingConfirm = true;
+		playerData.awaitingConfirm = true;
 		network.send(new MoveRequestPacket(direction));
 	}
 	

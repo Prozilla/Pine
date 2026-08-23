@@ -1,7 +1,6 @@
 package dev.prozilla.pine.examples.sokoban.net.server;
 
 import dev.prozilla.pine.examples.sokoban.net.connection.RemoteConnection;
-import dev.prozilla.pine.examples.sokoban.system.RequestProcessor;
 import io.netty.channel.ChannelHandlerContext;
 
 /**
@@ -10,28 +9,17 @@ import io.netty.channel.ChannelHandlerContext;
 public class ServerConnection extends RemoteConnection {
 	
 	private final Server server;
-	private final RequestProcessor processor;
-	private ServerSession session;
 	
-	public ServerConnection(Server server, RequestProcessor processor) {
+	public ServerConnection(Server server) {
 		this.server = server;
-		this.processor = processor;
 	}
 	
 	@Override
 	public void channelActive(ChannelHandlerContext context) {
 		super.channelActive(context);
-		session = new ServerSession(server, this, processor, false);
-		bind(session::enqueue);
+		ServerSession session = new ServerSession(server, this, false);
+		bind(session);
 		server.connect(session);
-	}
-	
-	@Override
-	public void channelInactive(ChannelHandlerContext context) {
-		if (session != null) {
-			session.markDisconnected();
-			session = null;
-		}
 	}
 	
 }

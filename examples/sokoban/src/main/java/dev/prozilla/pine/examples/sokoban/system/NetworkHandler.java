@@ -2,36 +2,43 @@ package dev.prozilla.pine.examples.sokoban.system;
 
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.core.component.audio.AudioEffectPlayer;
+import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 import dev.prozilla.pine.examples.sokoban.EntityTag;
+import dev.prozilla.pine.examples.sokoban.GameManager;
 import dev.prozilla.pine.examples.sokoban.GameMap;
 import dev.prozilla.pine.examples.sokoban.component.History;
 import dev.prozilla.pine.examples.sokoban.component.Move;
-import dev.prozilla.pine.examples.sokoban.component.NetworkPlayer;
 import dev.prozilla.pine.examples.sokoban.component.PlayerData;
 import dev.prozilla.pine.examples.sokoban.entity.CratePrefab;
 import dev.prozilla.pine.examples.sokoban.entity.PlayerPrefab;
-import dev.prozilla.pine.examples.sokoban.net.packet.*;
+import dev.prozilla.pine.examples.sokoban.net.client.ClientPacketHandler;
+import dev.prozilla.pine.examples.sokoban.net.component.NetworkIdentity;
+import dev.prozilla.pine.examples.sokoban.net.component.NetworkManager;
+import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
+import dev.prozilla.pine.examples.sokoban.net.server.Server;
+import dev.prozilla.pine.examples.sokoban.net.server.ServerMessageHandler;
+import dev.prozilla.pine.examples.sokoban.packet.*;
 
 import java.util.*;
 
-public class RequestProcessor extends UpdateSystemBase {
+public class NetworkHandler extends UpdateSystemBase implements ClientPacketHandler, ServerMessageHandler {
 	
-	public static final int HOST_PLAYER_ID = 0;
-	
+	private final NetworkManager network;
 	private final GridGroup foregroundGrid;
 	private final List<Vector2i> crateSpawns;
-	private final Queue<Request> requests;
-	private final Responder localResponder;
-	private int nextPlayerId = 1;
 	
-	public RequestProcessor(GridGroup foregroundGrid) {
-		super(NetworkPlayer.class, PlayerData.class, TileRenderer.class, History.class);
+	private boolean disconnectHandled;
+	
+	public NetworkHandler(NetworkManager network, GridGroup foregroundGrid) {
+		super(NetworkIdentity.class, PlayerData.class, TileRenderer.class, SpriteRenderer.class, AudioEffectPlayer.class, History.class);
 		setRequiredTag(EntityTag.PLAYER);
+		this.network = network;
 		this.foregroundGrid = foregroundGrid;
 		
 		crateSpawns = new ArrayList<>();
@@ -41,46 +48,138 @@ public class RequestProcessor extends UpdateSystemBase {
 				crateSpawns.add(tile.getCoordinate().clone());
 			}
 		}
-		
-		requests = new ArrayDeque<>();
-		localResponder = new Responder() {
-			@Override
-			public void send(Packet packet) {
-			}
-			
-			@Override
-			public void broadcast(Packet packet) {
-			}
-			
-			@Override
-			public void broadcastOthers(Packet packet) {
-			}
-		};
 	}
 	
 	@Override
 	public void update(float deltaTime) {
-		Request request;
-		while ((request = requests.poll()) != null) {
-			try {
-				handle(request);
-			} catch (RuntimeException e) {
-				logger.error("Failed to handle request: " + request.packet().getClass().getSimpleName(), e);
-			}
+		if (!network.isConnected() && !disconnectHandled) {
+			disconnectHandled = true;
+			GameManager.instance.leaveSession();
 		}
 	}
 	
-	public void receive(Packet packet) {
-		receive(HOST_PLAYER_ID, packet, localResponder);
+	@Override
+	public boolean shouldRun() {
+		return network.getSession() != null;
 	}
 	
-	public void receive(int playerId, Packet packet, Responder responder) {
-		requests.add(new Request(playerId, packet, responder));
+	@Override
+	public void handleMessage(Server.Message message) {
+		Packet payload = message.getPayload();
+		
+		if (payload instanceof MoveRequestPacket(Direction direction)) {
+			move(message, direction);
+		} else if (payload instanceof UndoRequestPacket) {
+			undo(message);
+		} else if (payload instanceof RestartRequestPacket) {
+			restart(message);
+		}
+	}
+	
+	@Override
+	public void handleJoin(Server.Message message) {
+		Vector2i spawn = findSpawn();
+		foregroundGrid.addTile(new PlayerPrefab(message.getAuthorId()), spawn.x, spawn.y);
+		
+		message.reply(new WelcomePacket(message.getAuthorId()));
+		message.reply(createSnapshot());
+		message.replyToOthers(new PlayerJoinPacket(message.getAuthorId(), spawn.x, spawn.y));
+	}
+	
+	@Override
+	public void handleLeave(Server.Message message) {
+		EntityChunk chunk = getPlayer(message.getAuthorId());
+		if (chunk != null) {
+			chunk.getEntity().destroy();
+		}
+		
+		message.replyToOthers(new PlayerLeavePacket(message.getAuthorId()));
+	}
+	
+	@Override
+	public void handlePacket(Packet packet) {
+		switch (packet) {
+			case WelcomePacket(int playerId) -> network.setLocalClientId(playerId);
+			case GameStatePacket state -> applyGameState(state);
+			case PlayerJoinPacket(int playerId, int x, int y) -> applyPlayer(playerId, new Vector2i(x, y));
+			case PlayerLeavePacket(int playerId) -> despawnPlayer(playerId);
+			case PlayerMovePacket move -> applyMove(move);
+			case RejectionPacket ignored -> rejectPendingMove(network.getLocalClientId());
+			default -> {}
+		}
+	}
+	
+	private void applyGameState(GameStatePacket state) {
+		clearAwaitingConfirm(network.getLocalClientId());
+		
+		Map<Integer, Vector2i> playerPositions = new HashMap<>();
+		for (int i = 0; i < state.playerIds().length; i++) {
+			playerPositions.put(state.playerIds()[i], new Vector2i(state.playerX()[i], state.playerY()[i]));
+		}
+		
+		List<Vector2i> cratePositions = new ArrayList<>();
+		for (int i = 0; i < state.crateX().length; i++) {
+			cratePositions.add(new Vector2i(state.crateX()[i], state.crateY()[i]));
+		}
+		
+		applyState(playerPositions, cratePositions);
+	}
+	
+	private void applyMove(PlayerMovePacket packet) {
+		Move move = packet.move();
+		
+		int localId = network.getLocalClientId();
+		if (move.playerId() == localId) {
+			clearAwaitingConfirm(localId);
+		}
+		
+		EntityChunk chunk = getPlayer(move.playerId());
+		if (chunk == null) {
+			return;
+		}
+		
+		PlayerData playerData = chunk.getComponent(PlayerData.class);
+		TileRenderer tileRenderer = chunk.getComponent(TileRenderer.class);
+		
+		Vector2i coordinate = tileRenderer.getCoordinate();
+		if (coordinate.x == move.toX() && coordinate.y == move.toY()) {
+			return;
+		}
+		
+		if (move.playerId() == localId && playerData.timeUntilMoveCompletes > 0) {
+			return;
+		}
+		
+		playerData.beginMove(move, foregroundGrid);
+	}
+	
+	private void rejectPendingMove(int playerId) {
+		EntityChunk chunk = getPlayer(playerId);
+		if (chunk == null) {
+			return;
+		}
+		
+		chunk.getComponent(History.class).revertPending(foregroundGrid);
+		clearAwaitingConfirm(playerId);
+	}
+	
+	private void despawnPlayer(int playerId) {
+		EntityChunk chunk = getPlayer(playerId);
+		if (chunk != null) {
+			chunk.getEntity().destroy();
+		}
+	}
+	
+	private void clearAwaitingConfirm(int playerId) {
+		EntityChunk chunk = getPlayer(playerId);
+		if (chunk != null) {
+			chunk.getComponent(PlayerData.class).awaitingConfirm = false;
+		}
 	}
 	
 	public void applyState(Map<Integer, Vector2i> playerPositions, List<Vector2i> cratePositions) {
 		forEach(chunk -> {
-			int id = chunk.getComponent(NetworkPlayer.class).id;
+			int id = chunk.getComponent(NetworkIdentity.class).id;
 			
 			if (!playerPositions.containsKey(id)) {
 				chunk.getEntity().destroy();
@@ -112,104 +211,64 @@ public class RequestProcessor extends UpdateSystemBase {
 		}
 	}
 	
-	public int onJoin(boolean host, Responder responder) {
-		int playerId = host ? HOST_PLAYER_ID : nextPlayerId++;
-		
-		Vector2i spawn = findSpawn();
-		foregroundGrid.addTile(new PlayerPrefab(playerId), spawn.x, spawn.y);
-		
-		responder.send(new WelcomePacket(playerId));
-		responder.send(createSnapshot());
-		responder.broadcastOthers(new PlayerJoinPacket(playerId, spawn.x, spawn.y));
-		
-		return playerId;
-	}
-	
-	public void onLeave(int playerId, Responder responder) {
-		EntityChunk chunk = getPlayer(playerId);
-		if (chunk != null) {
-			chunk.getEntity().destroy();
-		}
-		
-		responder.broadcastOthers(new PlayerLeavePacket(playerId));
-	}
-	
-	public Vector2i getPlayerPosition(int playerId) {
-		EntityChunk chunk = getPlayer(playerId);
-		return chunk != null ? chunk.getComponent(TileRenderer.class).getCoordinate() : null;
-	}
-	
-	private void handle(Request request) {
-		Packet packet = request.packet();
-		
-		if (packet instanceof MoveRequestPacket(Direction direction)) {
-			move(request.playerId(), direction, request.responder());
-		} else if (packet instanceof UndoRequestPacket) {
-			undo(request.playerId(), request.responder());
-		} else if (packet instanceof RestartRequestPacket) {
-			restart(request.playerId(), request.responder());
-		}
-	}
-	
-	private void move(int playerId, Direction direction, Responder responder) {
-		EntityChunk chunk = getPlayer(playerId);
+	private void move(Server.Message message, Direction direction) {
+		EntityChunk chunk = getPlayer(message.getAuthorId());
 		if (chunk == null) {
-			fail(playerId, responder);
+			fail(message);
 			return;
 		}
 		
 		History history = chunk.getComponent(History.class);
-		NetworkPlayer networkPlayer = chunk.getComponent(NetworkPlayer.class);
 		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		
-		if (!networkPlayer.awaitingConfirm) {
+		if (!playerData.awaitingConfirm) {
 			playerData.finishMove();
 		}
 		
 		Move move = playerData.computeMove(foregroundGrid, direction);
 		if (move == null) {
-			fail(playerId, responder);
+			fail(message);
 			return;
 		}
 		
 		history.push(move);
-		if (!networkPlayer.awaitingConfirm) {
+		if (!playerData.awaitingConfirm) {
 			playerData.beginMove(move, foregroundGrid);
 		}
-		responder.broadcast(new PlayerMovePacket(move));
+		message.replyToAll(new PlayerMovePacket(move));
 		
-		if (responder == localResponder) {
-			networkPlayer.awaitingConfirm = false;
+		if (message.isLocal()) {
+			playerData.awaitingConfirm = false;
 		}
 	}
 	
-	private void undo(int playerId, Responder responder) {
-		EntityChunk chunk = getPlayer(playerId);
+	private void undo(Server.Message message) {
+		EntityChunk chunk = getPlayer(message.getAuthorId());
 		if (chunk == null) {
-			fail(playerId, responder);
+			fail(message);
 			return;
 		}
 		
 		chunk.getComponent(PlayerData.class).finishMove();
 		
 		if (chunk.getComponent(History.class).undo(foregroundGrid) != null) {
-			responder.broadcast(createSnapshot());
+			message.replyToAll(createSnapshot());
 		} else {
-			fail(playerId, responder);
+			fail(message);
 		}
 	}
 	
-	private void restart(int playerId, Responder responder) {
-		boolean allowed = responder == localResponder || playerId == HOST_PLAYER_ID;
+	private void restart(Server.Message message) {
+		boolean allowed = message.receivedFromHost();
 		if (!allowed) {
-			fail(playerId, responder);
+			fail(message);
 			return;
 		}
 		
 		Map<Integer, Vector2i> playerPositions = new HashMap<>();
 		Set<Vector2i> reserved = new HashSet<>(crateSpawns);
 		forEach(chunk -> {
-			int id = chunk.getComponent(NetworkPlayer.class).id;
+			int id = chunk.getComponent(NetworkIdentity.class).id;
 			Vector2i spawn = findSpawn(reserved, false);
 			reserved.add(spawn);
 			
@@ -220,28 +279,17 @@ public class RequestProcessor extends UpdateSystemBase {
 		
 		forEach(chunk -> chunk.getComponent(History.class).clear());
 		
-		responder.broadcast(createSnapshot());
+		message.replyToAll(createSnapshot());
 	}
 	
-	
-	private void fail(int playerId, Responder responder) {
-		if (responder == localResponder) {
-			rejectPendingMove(playerId);
+	private void fail(Server.Message message) {
+		if (message.isLocal()) {
+			rejectPendingMove(message.getAuthorId());
 			return;
 		}
 		
-		responder.send(new RejectionPacket());
-		responder.send(createSnapshot());
-	}
-	
-	private void rejectPendingMove(int playerId) {
-		EntityChunk chunk = getPlayer(playerId);
-		if (chunk == null) {
-			return;
-		}
-		
-		chunk.getComponent(History.class).revertPending(foregroundGrid);
-		chunk.getComponent(NetworkPlayer.class).awaitingConfirm = false;
+		message.reply(new RejectionPacket());
+		message.reply(createSnapshot());
 	}
 	
 	private void clearCrates() {
@@ -257,16 +305,17 @@ public class RequestProcessor extends UpdateSystemBase {
 		}
 	}
 	
-	private EntityChunk getPlayer(int playerId) {
+	private EntityChunk getPlayer(int clientId) {
 		EntityChunk result = null;
 		
 		if (hasEntityChunks()) {
 			for (EntityChunk chunk : getChunks()) {
-				if (chunk.getComponent(NetworkPlayer.class).id == playerId) {
+				if (chunk.getComponent(NetworkIdentity.class).id == clientId) {
 					result = chunk;
 				}
 			}
 		}
+		
 		return result;
 	}
 	
@@ -317,7 +366,7 @@ public class RequestProcessor extends UpdateSystemBase {
 			
 			Entity entity = tile.getEntity();
 			if (entity.hasTag(EntityTag.PLAYER)) {
-				players.add(new int[] { entity.getComponent(NetworkPlayer.class).id, coordinate.x, coordinate.y });
+				players.add(new int[] { entity.getComponent(NetworkIdentity.class).id, coordinate.x, coordinate.y });
 			} else if (entity.hasTag(EntityTag.CRATE)) {
 				crates.add(coordinate);
 			}
@@ -342,19 +391,6 @@ public class RequestProcessor extends UpdateSystemBase {
 		}
 		
 		return new GameStatePacket(playerIds, playerX, playerY, crateX, crateY);
-	}
-	
-	public interface Responder {
-		
-		void send(Packet packet);
-		
-		void broadcast(Packet packet);
-		
-		void broadcastOthers(Packet packet);
-		
-	}
-	
-	private record Request(int playerId, Packet packet, Responder responder) {
 	}
 	
 }

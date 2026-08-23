@@ -1,5 +1,6 @@
 package dev.prozilla.pine.examples.sokoban.net.connection;
 
+import dev.prozilla.pine.examples.sokoban.net.Session;
 import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
 import dev.prozilla.pine.examples.sokoban.net.packet.PacketCodec;
 import io.netty.channel.Channel;
@@ -9,15 +10,14 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 
-import java.util.function.Consumer;
-
 public class RemoteConnection extends SimpleChannelInboundHandler<Packet> implements Connection {
 	
 	private Channel channel;
-	private Consumer<Packet> receiver;
+	private Session session;
 	
-	public void bind(Consumer<Packet> receiver) {
-		this.receiver = receiver;
+	@Override
+	public void bind(Session session) {
+		this.session = session;
 	}
 	
 	@Override
@@ -27,8 +27,8 @@ public class RemoteConnection extends SimpleChannelInboundHandler<Packet> implem
 	
 	@Override
 	protected void channelRead0(ChannelHandlerContext context, Packet packet) {
-		if (receiver != null) {
-			receiver.accept(packet);
+		if (session != null) {
+			session.receive(packet);
 		}
 	}
 	
@@ -48,6 +48,14 @@ public class RemoteConnection extends SimpleChannelInboundHandler<Packet> implem
 	public void destroy() {
 		if (channel != null) {
 			channel.close();
+		}
+	}
+	
+	@Override
+	public void channelInactive(ChannelHandlerContext context) {
+		if (session != null) {
+			session.disconnect();
+			session = null;
 		}
 	}
 	

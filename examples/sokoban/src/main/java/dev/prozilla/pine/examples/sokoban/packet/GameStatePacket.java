@@ -1,4 +1,7 @@
-package dev.prozilla.pine.examples.sokoban.net.packet;
+package dev.prozilla.pine.examples.sokoban.packet;
+
+import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
+import dev.prozilla.pine.examples.sokoban.net.packet.PacketBuffer;
 
 public record GameStatePacket(int[] playerIds, int[] playerX, int[] playerY, int[] crateX, int[] crateY) implements Packet {
 	
@@ -18,7 +21,7 @@ public record GameStatePacket(int[] playerIds, int[] playerX, int[] playerY, int
 		buffer.writeIntArray(crateY);
 	}
 	
-	public static GameStatePacket read(PacketBuffer buffer) {
+	public static GameStatePacket decode(PacketBuffer buffer) {
 		return new GameStatePacket(
 			buffer.readIntArray(),
 			buffer.readIntArray(),

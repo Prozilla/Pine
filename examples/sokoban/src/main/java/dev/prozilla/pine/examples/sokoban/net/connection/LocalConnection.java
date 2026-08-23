@@ -1,33 +1,32 @@
 package dev.prozilla.pine.examples.sokoban.net.connection;
 
+import dev.prozilla.pine.examples.sokoban.net.Session;
 import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
-
-import java.util.function.Consumer;
 
 public class LocalConnection implements Connection {
 	
-	private Consumer<Packet> receiver;
-	private volatile boolean open = true;
+	private Session session;
 	private LocalConnection peer;
-	
-	public void bind(Consumer<Packet> receiver) {
-		this.receiver = receiver;
-	}
+	private volatile boolean isConnected = true;
 	
 	@Override
 	public void send(Packet packet) {
-		LocalConnection target = peer;
-		if (open && target != null && target.open && target.receiver != null) {
-			target.receiver.accept(packet);
+		if (isConnected && peer != null && peer.isConnected && peer.session != null) {
+			peer.session.receive(packet);
 		}
 	}
 	
 	@Override
+	public void bind(Session session) {
+		this.session = session;
+	}
+	
+	@Override
 	public void destroy() {
-		open = false;
+		isConnected = false;
 		
 		if (peer != null) {
-			peer.open = false;
+			peer.isConnected = false;
 		}
 	}
 	

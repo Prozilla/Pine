@@ -1,87 +1,91 @@
 package dev.prozilla.pine.examples.sokoban.net.client;
 
+import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.util.QueueUtils;
 import dev.prozilla.pine.examples.sokoban.net.Session;
 import dev.prozilla.pine.examples.sokoban.net.connection.Connection;
 import dev.prozilla.pine.examples.sokoban.net.connection.LocalConnection;
 import dev.prozilla.pine.examples.sokoban.net.connection.RemoteConnection;
+import dev.prozilla.pine.examples.sokoban.net.connection.RemoteConnectionInitializer;
 import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
+import dev.prozilla.pine.examples.sokoban.net.packet.PacketCodec;
 import dev.prozilla.pine.examples.sokoban.net.server.Server;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.MultiThreadIoEventLoopGroup;
 import io.netty.channel.nio.NioIoHandler;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.io.IOException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.Consumer;
 
 /**
  * A connection between a client and a {@link Server}, from the perspective of the client.
  */
-public class ClientSession implements Session {
+public class ClientSession extends Session {
 	
-	private final Connection connection;
-	private final Queue<Packet> inbound;
 	private final EventLoopGroup group;
-	private volatile boolean connected = true;
+	private volatile boolean isConnected;
 	
-	private ClientSession(Connection connection, EventLoopGroup group) {
-		this.connection = connection;
+	private final Queue<Packet> receivedPackets;
+	private final ClientPacketHandler packetHandler;
+	
+	private ClientSession(Connection connection, ClientPacketHandler packetHandler, EventLoopGroup group) {
+		super(connection);
+		this.packetHandler = packetHandler;
 		this.group = group;
-		inbound = new ConcurrentLinkedQueue<>();
+		receivedPackets = new ConcurrentLinkedQueue<>();
+		isConnected = true;
+	}
+	
+	@Override
+	public void receive(Packet packet) {
+		receivedPackets.add(packet);
+	}
+	
+	@Override
+	public void disconnect() {
+		destroy();
+	}
+	
+	public void synchronize() {
+		QueueUtils.drain(receivedPackets, this::handlePacket);
+	}
+	
+	private void handlePacket(Packet packet) {
+		try {
+			packetHandler.handlePacket(packet);
+		} catch (RuntimeException e) {
+			Logger.system.error("Failed to handle packet: " + packet.getClass().getSimpleName(), e);
+		}
 	}
 	
 	public boolean isConnected() {
-		return connected;
-	}
-	
-	@Override
-	public void markDisconnected() {
-		connected = false;
-	}
-	
-	@Override
-	public void send(Packet packet) {
-		connection.send(packet);
-	}
-	
-	void receive(Packet packet) {
-		inbound.add(packet);
-	}
-	
-	public void tick(Consumer<Packet> consumer) {
-		Connection.drain(inbound, consumer);
+		return isConnected;
 	}
 	
 	@Override
 	public void destroy() {
-		connection.destroy();
+		isConnected = false;
+		super.destroy();
 		if (group != null) {
 			group.shutdownGracefully();
 		}
 	}
 	
-	public static ClientSession createRemote(String host, int port) throws IOException {
+	public static ClientSession createRemote(String host, int port, ClientPacketHandler packetHandler, PacketCodec codec) throws IOException {
 		EventLoopGroup group = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
-		ClientConnection connection = new ClientConnection();
+		RemoteConnection connection = new RemoteConnection();
 		
 		Bootstrap bootstrap = new Bootstrap();
 		bootstrap.group(group)
 			.channel(NioSocketChannel.class)
-			.handler(new ChannelInitializer<SocketChannel>() {
-				@Override
-				protected void initChannel(SocketChannel socketChannel) {
-					RemoteConnection.configure(socketChannel.pipeline(), connection);
-				}
-			});
+			.handler(new RemoteConnectionInitializer(connection, codec));
 		
 		try {
 			bootstrap.connect(host, port).sync();
-			ClientSession client = new ClientSession(connection, group);
+			ClientSession client = new ClientSession(connection, packetHandler, group);
 			connection.bind(client);
 			return client;
 		} catch (InterruptedException e) {
@@ -91,9 +95,9 @@ public class ClientSession implements Session {
 		}
 	}
 	
-	public static ClientSession createLocal(LocalConnection connection) {
-		ClientSession session = new ClientSession(connection, null);
-		connection.bind(session::receive);
+	public static ClientSession createLocal(LocalConnection connection, ClientPacketHandler packetHandler) {
+		ClientSession session = new ClientSession(connection, packetHandler, null);
+		connection.bind(session);
 		return session;
 	}
 	

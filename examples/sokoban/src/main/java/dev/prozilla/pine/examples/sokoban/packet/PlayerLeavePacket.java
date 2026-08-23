@@ -1,4 +1,7 @@
-package dev.prozilla.pine.examples.sokoban.net.packet;
+package dev.prozilla.pine.examples.sokoban.packet;
+
+import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
+import dev.prozilla.pine.examples.sokoban.net.packet.PacketBuffer;
 
 public record PlayerLeavePacket(int playerId) implements Packet {
 	
@@ -14,7 +17,7 @@ public record PlayerLeavePacket(int playerId) implements Packet {
 		buffer.writeVarInt(playerId);
 	}
 	
-	public static PlayerLeavePacket read(PacketBuffer buffer) {
+	public static PlayerLeavePacket decode(PacketBuffer buffer) {
 		return new PlayerLeavePacket(buffer.readVarInt());
 	}
 	

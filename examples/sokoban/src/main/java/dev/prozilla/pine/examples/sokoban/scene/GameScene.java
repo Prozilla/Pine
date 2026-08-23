@@ -16,13 +16,16 @@ import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.ModifierKey;
 import dev.prozilla.pine.examples.sokoban.GameManager;
 import dev.prozilla.pine.examples.sokoban.GameMap;
-import dev.prozilla.pine.examples.sokoban.component.NetworkManager;
 import dev.prozilla.pine.examples.sokoban.entity.*;
 import dev.prozilla.pine.examples.sokoban.entity.ui.UIPrefab;
-import dev.prozilla.pine.examples.sokoban.net.server.Server;
-import dev.prozilla.pine.examples.sokoban.system.*;
-
-import java.io.IOException;
+import dev.prozilla.pine.examples.sokoban.net.component.NetworkManager;
+import dev.prozilla.pine.examples.sokoban.net.entity.NetworkManagerPrefab;
+import dev.prozilla.pine.examples.sokoban.net.system.NetworkSynchronizer;
+import dev.prozilla.pine.examples.sokoban.packet.*;
+import dev.prozilla.pine.examples.sokoban.system.CrateUpdater;
+import dev.prozilla.pine.examples.sokoban.system.NetworkHandler;
+import dev.prozilla.pine.examples.sokoban.system.PlayerInputHandler;
+import dev.prozilla.pine.examples.sokoban.system.PlayerMover;
 
 public class GameScene extends Scene {
 	
@@ -48,7 +51,19 @@ public class GameScene extends Scene {
 		GridGroup backgroundGrid = addEntity(gridPrefab).getComponent(GridGroup.class);
 		GridGroup goalGrid = addEntity(gridPrefab).getComponent(GridGroup.class);
 		GridGroup foregroundGrid = addEntity(gridPrefab).getComponent(GridGroup.class);
+		
+		// Create network
 		network = addEntity(new NetworkManagerPrefab()).getComponent(NetworkManager.class);
+		network.getCodec()
+			.addDecoder(MoveRequestPacket.ID, MoveRequestPacket::decode)
+			.addDecoder(UndoRequestPacket.ID, UndoRequestPacket::decode)
+			.addDecoder(RestartRequestPacket.ID, RestartRequestPacket::decode)
+			.addDecoder(WelcomePacket.ID, WelcomePacket::decode)
+			.addDecoder(GameStatePacket.ID, GameStatePacket::decode)
+			.addDecoder(PlayerJoinPacket.ID, PlayerJoinPacket::decode)
+			.addDecoder(PlayerLeavePacket.ID, PlayerLeavePacket::decode)
+			.addDecoder(PlayerMovePacket.ID, PlayerMovePacket::decode)
+			.addDecoder(RejectionPacket.ID, RejectionPacket::decode);
 		
 		// Create tile entities
 		BlockPrefab blockPrefab = new BlockPrefab();
@@ -88,11 +103,9 @@ public class GameScene extends Scene {
 			}
 		}
 		
-		// Create systems
-		RequestProcessor processor = addSystem(new RequestProcessor(foregroundGrid));
-		if (isMultiplayer) {
-			addSystem(new NetworkSystem(network, foregroundGrid, processor));
-		}
+		// Add systems
+		addSystem(new NetworkSynchronizer());
+		NetworkHandler packetHandler = addSystem(new NetworkHandler(network, foregroundGrid));
 		addSystem(new PlayerInputHandler(foregroundGrid, network));
 		addSystem(new PlayerMover());
 		addSystem(new CrateUpdater(goalGrid));
@@ -117,17 +130,12 @@ public class GameScene extends Scene {
 			GameManager.SessionConfig sessionConfig = GameManager.instance.getSessionConfig();
 			
 			if (isHost) {
-				try {
-					network.startHost(new Server(sessionConfig.port(), processor));
-				} catch (IOException e) {
-					logger.error("Failed to start server", e);
-				}
+				network.createHost(sessionConfig.port(), packetHandler, packetHandler);
 			} else {
-				network.startClient(sessionConfig.address(), sessionConfig.port());
+				network.createClient(sessionConfig.address(), sessionConfig.port(), packetHandler);
 			}
 		} else {
-			network.startLocal(processor::receive);
-			network.setLocalPlayerId(RequestProcessor.HOST_PLAYER_ID);
+			network.createStandalone(packetHandler);
 		}
 	}
 	

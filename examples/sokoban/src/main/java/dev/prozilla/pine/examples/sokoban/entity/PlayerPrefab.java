@@ -7,8 +7,8 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
 import dev.prozilla.pine.examples.sokoban.EntityTag;
 import dev.prozilla.pine.examples.sokoban.component.History;
-import dev.prozilla.pine.examples.sokoban.component.NetworkPlayer;
 import dev.prozilla.pine.examples.sokoban.component.PlayerData;
+import dev.prozilla.pine.examples.sokoban.net.component.NetworkIdentity;
 
 public class PlayerPrefab extends TilePrefab {
 	
@@ -29,7 +29,7 @@ public class PlayerPrefab extends TilePrefab {
 		super.apply(entity);
 		
 		entity.addComponent(new PlayerData(index));
-		entity.addComponent(new NetworkPlayer(index));
+		entity.addComponent(new NetworkIdentity(index));
 		entity.addComponent(new History(coordinate.clone()));
 		
 		AudioEffectPlayer audioEffectPlayer = new AudioEffectPlayer(AssetPools.audioSources.loadAll("audio/pushing-crate.ogg"));

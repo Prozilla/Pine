@@ -18,6 +18,7 @@ public class PlayerData extends Component {
 	public boolean canMove;
 	public float timeUntilMoveCompletes;
 	public Move pendingMove;
+	public boolean awaitingConfirm;
 	
 	public SpriteRenderer pushingCrateSprite;
 	public TileRenderer pushingCrateTile;
