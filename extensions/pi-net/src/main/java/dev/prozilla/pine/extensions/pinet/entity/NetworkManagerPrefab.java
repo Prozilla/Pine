@@ -1,9 +1,9 @@
-package dev.prozilla.pine.examples.sokoban.net.entity;
+package dev.prozilla.pine.extensions.pinet.entity;
 
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
-import dev.prozilla.pine.examples.sokoban.net.component.NetworkManager;
-import dev.prozilla.pine.examples.sokoban.net.packet.PacketCodec;
+import dev.prozilla.pine.extensions.pinet.component.NetworkManager;
+import dev.prozilla.pine.extensions.pinet.packet.PacketCodec;
 
 public class NetworkManagerPrefab extends Prefab {
 	

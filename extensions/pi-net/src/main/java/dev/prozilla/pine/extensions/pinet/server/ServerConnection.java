@@ -1,6 +1,6 @@
-package dev.prozilla.pine.examples.sokoban.net.server;
+package dev.prozilla.pine.extensions.pinet.server;
 
-import dev.prozilla.pine.examples.sokoban.net.connection.RemoteConnection;
+import dev.prozilla.pine.extensions.pinet.connection.RemoteConnection;
 import io.netty.channel.ChannelHandlerContext;
 
 /**

@@ -1,8 +1,8 @@
-package dev.prozilla.pine.examples.sokoban.net.server;
+package dev.prozilla.pine.extensions.pinet.server;
 
-import dev.prozilla.pine.examples.sokoban.net.Session;
-import dev.prozilla.pine.examples.sokoban.net.connection.Connection;
-import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
+import dev.prozilla.pine.extensions.pinet.Session;
+import dev.prozilla.pine.extensions.pinet.connection.Connection;
+import dev.prozilla.pine.extensions.pinet.packet.Packet;
 
 /**
  * A connection between a client and a {@link Server}, from the perspective of the server.

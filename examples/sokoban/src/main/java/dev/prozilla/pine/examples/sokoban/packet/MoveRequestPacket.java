@@ -1,8 +1,8 @@
 package dev.prozilla.pine.examples.sokoban.packet;
 
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
-import dev.prozilla.pine.examples.sokoban.net.packet.PacketBuffer;
+import dev.prozilla.pine.extensions.pinet.packet.Packet;
+import dev.prozilla.pine.extensions.pinet.packet.PacketBuffer;
 
 public record MoveRequestPacket(Direction direction) implements Packet {
 	

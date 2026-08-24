@@ -1,13 +1,13 @@
-package dev.prozilla.pine.examples.sokoban.net.component;
+package dev.prozilla.pine.extensions.pinet.component;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.examples.sokoban.net.client.ClientPacketHandler;
-import dev.prozilla.pine.examples.sokoban.net.client.ClientSession;
-import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
-import dev.prozilla.pine.examples.sokoban.net.packet.PacketCodec;
-import dev.prozilla.pine.examples.sokoban.net.server.Server;
-import dev.prozilla.pine.examples.sokoban.net.server.ServerMessageHandler;
+import dev.prozilla.pine.extensions.pinet.client.ClientPacketHandler;
+import dev.prozilla.pine.extensions.pinet.client.ClientSession;
+import dev.prozilla.pine.extensions.pinet.packet.Packet;
+import dev.prozilla.pine.extensions.pinet.packet.PacketCodec;
+import dev.prozilla.pine.extensions.pinet.server.Server;
+import dev.prozilla.pine.extensions.pinet.server.ServerMessageHandler;
 
 import java.io.IOException;
 

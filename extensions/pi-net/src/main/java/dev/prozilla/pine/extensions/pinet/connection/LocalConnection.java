@@ -1,7 +1,7 @@
-package dev.prozilla.pine.examples.sokoban.net.connection;
+package dev.prozilla.pine.extensions.pinet.connection;
 
-import dev.prozilla.pine.examples.sokoban.net.Session;
-import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
+import dev.prozilla.pine.extensions.pinet.Session;
+import dev.prozilla.pine.extensions.pinet.packet.Packet;
 
 public class LocalConnection implements Connection {
 	

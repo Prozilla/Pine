@@ -16,3 +16,4 @@ include(
 	":examples:tetris"
 )
 include(":examples:mods:dev-mode-activator")
+include("extensions:pi-net")

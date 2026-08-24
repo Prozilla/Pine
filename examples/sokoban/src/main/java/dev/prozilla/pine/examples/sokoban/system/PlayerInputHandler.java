@@ -15,11 +15,11 @@ import dev.prozilla.pine.core.system.input.InputSystem;
 import dev.prozilla.pine.examples.sokoban.component.History;
 import dev.prozilla.pine.examples.sokoban.component.Move;
 import dev.prozilla.pine.examples.sokoban.component.PlayerData;
-import dev.prozilla.pine.examples.sokoban.net.component.NetworkIdentity;
-import dev.prozilla.pine.examples.sokoban.net.component.NetworkManager;
 import dev.prozilla.pine.examples.sokoban.packet.MoveRequestPacket;
 import dev.prozilla.pine.examples.sokoban.packet.RestartRequestPacket;
 import dev.prozilla.pine.examples.sokoban.packet.UndoRequestPacket;
+import dev.prozilla.pine.extensions.pinet.component.NetworkIdentity;
+import dev.prozilla.pine.extensions.pinet.component.NetworkManager;
 
 public class PlayerInputHandler extends InputSystem {
 	

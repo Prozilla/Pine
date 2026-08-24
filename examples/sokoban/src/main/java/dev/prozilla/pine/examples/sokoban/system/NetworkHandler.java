@@ -17,13 +17,13 @@ import dev.prozilla.pine.examples.sokoban.component.Move;
 import dev.prozilla.pine.examples.sokoban.component.PlayerData;
 import dev.prozilla.pine.examples.sokoban.entity.CratePrefab;
 import dev.prozilla.pine.examples.sokoban.entity.PlayerPrefab;
-import dev.prozilla.pine.examples.sokoban.net.client.ClientPacketHandler;
-import dev.prozilla.pine.examples.sokoban.net.component.NetworkIdentity;
-import dev.prozilla.pine.examples.sokoban.net.component.NetworkManager;
-import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
-import dev.prozilla.pine.examples.sokoban.net.server.Server;
-import dev.prozilla.pine.examples.sokoban.net.server.ServerMessageHandler;
 import dev.prozilla.pine.examples.sokoban.packet.*;
+import dev.prozilla.pine.extensions.pinet.client.ClientPacketHandler;
+import dev.prozilla.pine.extensions.pinet.component.NetworkIdentity;
+import dev.prozilla.pine.extensions.pinet.component.NetworkManager;
+import dev.prozilla.pine.extensions.pinet.packet.Packet;
+import dev.prozilla.pine.extensions.pinet.server.Server;
+import dev.prozilla.pine.extensions.pinet.server.ServerMessageHandler;
 
 import java.util.*;
 

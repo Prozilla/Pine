@@ -1,4 +1,4 @@
-package dev.prozilla.pine.examples.sokoban.net.component;
+package dev.prozilla.pine.extensions.pinet.component;
 
 import dev.prozilla.pine.core.component.Component;
 

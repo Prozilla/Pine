@@ -1,4 +1,4 @@
-package dev.prozilla.pine.examples.sokoban.net.server;
+package dev.prozilla.pine.extensions.pinet.server;
 
 /**
  * Processes {@link Server.Message}s received by a {@link Server} and generates replies.

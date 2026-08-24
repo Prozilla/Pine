@@ -1,6 +1,6 @@
-package dev.prozilla.pine.examples.sokoban.net.connection;
+package dev.prozilla.pine.extensions.pinet.connection;
 
-import dev.prozilla.pine.examples.sokoban.net.packet.PacketCodec;
+import dev.prozilla.pine.extensions.pinet.packet.PacketCodec;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;

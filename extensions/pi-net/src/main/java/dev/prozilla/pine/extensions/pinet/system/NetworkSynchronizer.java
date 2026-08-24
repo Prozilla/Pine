@@ -1,8 +1,8 @@
-package dev.prozilla.pine.examples.sokoban.net.system;
+package dev.prozilla.pine.extensions.pinet.system;
 
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
-import dev.prozilla.pine.examples.sokoban.net.component.NetworkManager;
+import dev.prozilla.pine.extensions.pinet.component.NetworkManager;
 
 public class NetworkSynchronizer extends UpdateSystem {
 	

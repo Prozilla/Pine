@@ -1,15 +1,15 @@
-package dev.prozilla.pine.examples.sokoban.net.client;
+package dev.prozilla.pine.extensions.pinet.client;
 
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.util.QueueUtils;
-import dev.prozilla.pine.examples.sokoban.net.Session;
-import dev.prozilla.pine.examples.sokoban.net.connection.Connection;
-import dev.prozilla.pine.examples.sokoban.net.connection.LocalConnection;
-import dev.prozilla.pine.examples.sokoban.net.connection.RemoteConnection;
-import dev.prozilla.pine.examples.sokoban.net.connection.RemoteConnectionInitializer;
-import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
-import dev.prozilla.pine.examples.sokoban.net.packet.PacketCodec;
-import dev.prozilla.pine.examples.sokoban.net.server.Server;
+import dev.prozilla.pine.extensions.pinet.Session;
+import dev.prozilla.pine.extensions.pinet.connection.Connection;
+import dev.prozilla.pine.extensions.pinet.connection.LocalConnection;
+import dev.prozilla.pine.extensions.pinet.connection.RemoteConnection;
+import dev.prozilla.pine.extensions.pinet.connection.RemoteConnectionInitializer;
+import dev.prozilla.pine.extensions.pinet.packet.Packet;
+import dev.prozilla.pine.extensions.pinet.packet.PacketCodec;
+import dev.prozilla.pine.extensions.pinet.server.Server;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.MultiThreadIoEventLoopGroup;

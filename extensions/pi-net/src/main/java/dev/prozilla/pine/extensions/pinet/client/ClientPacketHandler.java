@@ -1,6 +1,7 @@
-package dev.prozilla.pine.examples.sokoban.net.client;
+package dev.prozilla.pine.extensions.pinet.client;
 
-import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
+
+import dev.prozilla.pine.extensions.pinet.packet.Packet;
 
 /**
  * Processes {@link Packet}s received by a client.

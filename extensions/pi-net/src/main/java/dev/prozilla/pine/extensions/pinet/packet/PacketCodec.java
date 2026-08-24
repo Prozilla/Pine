@@ -1,4 +1,4 @@
-package dev.prozilla.pine.examples.sokoban.net.packet;
+package dev.prozilla.pine.extensions.pinet.packet;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

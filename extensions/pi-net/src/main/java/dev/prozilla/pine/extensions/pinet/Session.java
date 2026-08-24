@@ -1,9 +1,9 @@
-package dev.prozilla.pine.examples.sokoban.net;
+package dev.prozilla.pine.extensions.pinet;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
-import dev.prozilla.pine.examples.sokoban.net.connection.Connection;
-import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
-import dev.prozilla.pine.examples.sokoban.net.server.Server;
+import dev.prozilla.pine.extensions.pinet.connection.Connection;
+import dev.prozilla.pine.extensions.pinet.packet.Packet;
+import dev.prozilla.pine.extensions.pinet.server.Server;
 
 /**
  * A connection between a client and a {@link Server}.

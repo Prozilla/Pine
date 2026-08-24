@@ -8,7 +8,7 @@ import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
 import dev.prozilla.pine.examples.sokoban.EntityTag;
 import dev.prozilla.pine.examples.sokoban.component.History;
 import dev.prozilla.pine.examples.sokoban.component.PlayerData;
-import dev.prozilla.pine.examples.sokoban.net.component.NetworkIdentity;
+import dev.prozilla.pine.extensions.pinet.component.NetworkIdentity;
 
 public class PlayerPrefab extends TilePrefab {
 	

@@ -1,6 +1,6 @@
-package dev.prozilla.pine.examples.sokoban.net.packet;
+package dev.prozilla.pine.extensions.pinet.packet;
 
-import dev.prozilla.pine.examples.sokoban.net.server.Server;
+import dev.prozilla.pine.extensions.pinet.server.Server;
 
 /**
  * Represents a message between a client and a {@link Server} that is written into a {@link PacketBuffer} by the sender and read from a {@link PacketBuffer} by the receiver.

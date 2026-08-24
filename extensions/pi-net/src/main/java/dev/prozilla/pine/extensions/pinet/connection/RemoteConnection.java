@@ -1,8 +1,8 @@
-package dev.prozilla.pine.examples.sokoban.net.connection;
+package dev.prozilla.pine.extensions.pinet.connection;
 
-import dev.prozilla.pine.examples.sokoban.net.Session;
-import dev.prozilla.pine.examples.sokoban.net.packet.Packet;
-import dev.prozilla.pine.examples.sokoban.net.packet.PacketCodec;
+import dev.prozilla.pine.extensions.pinet.Session;
+import dev.prozilla.pine.extensions.pinet.packet.Packet;
+import dev.prozilla.pine.extensions.pinet.packet.PacketCodec;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;

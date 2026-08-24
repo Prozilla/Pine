@@ -18,14 +18,14 @@ import dev.prozilla.pine.examples.sokoban.GameManager;
 import dev.prozilla.pine.examples.sokoban.GameMap;
 import dev.prozilla.pine.examples.sokoban.entity.*;
 import dev.prozilla.pine.examples.sokoban.entity.ui.UIPrefab;
-import dev.prozilla.pine.examples.sokoban.net.component.NetworkManager;
-import dev.prozilla.pine.examples.sokoban.net.entity.NetworkManagerPrefab;
-import dev.prozilla.pine.examples.sokoban.net.system.NetworkSynchronizer;
 import dev.prozilla.pine.examples.sokoban.packet.*;
 import dev.prozilla.pine.examples.sokoban.system.CrateUpdater;
 import dev.prozilla.pine.examples.sokoban.system.NetworkHandler;
 import dev.prozilla.pine.examples.sokoban.system.PlayerInputHandler;
 import dev.prozilla.pine.examples.sokoban.system.PlayerMover;
+import dev.prozilla.pine.extensions.pinet.component.NetworkManager;
+import dev.prozilla.pine.extensions.pinet.entity.NetworkManagerPrefab;
+import dev.prozilla.pine.extensions.pinet.system.NetworkSynchronizer;
 
 public class GameScene extends Scene {
 	
