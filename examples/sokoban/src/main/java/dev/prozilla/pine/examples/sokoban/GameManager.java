@@ -7,7 +7,6 @@ import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationManager;
 import dev.prozilla.pine.examples.sokoban.scene.GameScene;
-import dev.prozilla.pine.examples.sokoban.scene.MenuScene;
 
 public class GameManager extends ApplicationManager {
 	
@@ -70,7 +69,7 @@ public class GameManager extends ApplicationManager {
 	
 	public void leaveSession() {
 		sessionConfig = null;
-		application.loadScene(new MenuScene());
+		application.loadScene(0);
 	}
 	
 	public record SessionConfig(boolean hosting, String address, int port) {}

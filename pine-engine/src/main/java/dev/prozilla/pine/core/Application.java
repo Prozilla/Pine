@@ -27,7 +27,6 @@ import dev.prozilla.pine.core.storage.LocalStorage;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
-import org.lwjgl.opengl.GLUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -560,7 +559,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	
 	public void loadScene(Scene scene) {
 		// Check if scene is already loaded
-		if (Objects.equals(currentScene, scene)) {
+		if (Objects.equals(currentScene, scene) || !isRunning()) {
 			return;
 		} else if (currentScene != null) {
 			unloadScene();

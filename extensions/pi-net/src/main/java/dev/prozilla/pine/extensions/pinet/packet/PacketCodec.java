@@ -1,6 +1,7 @@
 package dev.prozilla.pine.extensions.pinet.packet;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
 
@@ -12,6 +13,7 @@ import java.util.function.Function;
 /**
  * Encodes packets into byte buffers and decodes byte buffers into packets, using {@link PacketBuffer} as an intermediate step.
  */
+@ChannelHandler.Sharable
 public class PacketCodec extends MessageToMessageCodec<ByteBuf, Packet> {
 	
 	private final Map<Integer, Function<PacketBuffer, Packet>> decoders;

@@ -73,4 +73,18 @@ public final class IntChecks {
 		return this;
 	}
 	
+	public IntChecks isEven() throws InvalidNumberException {
+		if (value % 2 != 0) {
+			throw new InvalidNumberException(name + " must be even");
+		}
+		return this;
+	}
+	
+	public IntChecks isOdd() throws InvalidNumberException {
+		if (value % 2 == 0) {
+			throw new InvalidNumberException(name + " must be odd");
+		}
+		return this;
+	}
+	
 }

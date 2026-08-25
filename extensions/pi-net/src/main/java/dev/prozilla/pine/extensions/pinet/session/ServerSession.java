@@ -1,7 +1,8 @@
-package dev.prozilla.pine.extensions.pinet.server;
+package dev.prozilla.pine.extensions.pinet.session;
 
-import dev.prozilla.pine.extensions.pinet.Session;
+import dev.prozilla.pine.extensions.pinet.Server;
 import dev.prozilla.pine.extensions.pinet.connection.Connection;
+import dev.prozilla.pine.extensions.pinet.message.request.ServerRequest;
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
 
 /**
@@ -14,12 +15,13 @@ public class ServerSession extends Session {
 	private volatile boolean disconnectRequested;
 	private boolean disconnected;
 	private boolean joined;
-	private int clientId = -1;
+	private int clientId;
 	
 	public ServerSession(Server server, Connection connection, boolean isHost) {
-		super(connection);
+		super(connection, server.getLogger());
 		this.server = server;
 		this.isHost = isHost;
+		clientId = Server.UNASSIGNED_ID;
 	}
 	
 	@Override
@@ -32,6 +34,7 @@ public class ServerSession extends Session {
 		disconnectRequested = true;
 	}
 	
+	@Override
 	public void synchronize() {
 		if (disconnectRequested) {
 			destroy();
@@ -46,17 +49,25 @@ public class ServerSession extends Session {
 	
 	private void join() {
 		clientId = isHost ? Server.HOST_ID : server.getNextClientId();
-		server.getRequestHandler().handleJoin(new Server.Request(clientId, null, this, server));
+		try {
+			server.getRequestHandler().handleJoin(new ServerRequest(clientId, null, this, server));
+		} catch (RuntimeException e) {
+			getLogger().error("Failed to handle request to join", e);
+		}
 	}
 	
 	@Override
 	public void destroy() {
-		if (disconnected || clientId < 0) {
+		if (disconnected || clientId == Server.UNASSIGNED_ID) {
 			return;
 		}
 		disconnected = true;
 		
-		server.getRequestHandler().handleLeave(new Server.Request(clientId, null, this, server));
+		try {
+			server.getRequestHandler().handleLeave(new ServerRequest(clientId, null, this, server));
+		} catch (RuntimeException e) {
+			getLogger().error("Failed to handle request to leave", e);
+		}
 		server.disconnect(this);
 		super.destroy();
 	}

@@ -8,7 +8,7 @@ import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityChunk;
-import dev.prozilla.pine.core.system.update.UpdateSystemBase;
+import dev.prozilla.pine.core.system.update.NoOpUpdateSystem;
 import dev.prozilla.pine.examples.sokoban.EntityTag;
 import dev.prozilla.pine.examples.sokoban.GameManager;
 import dev.prozilla.pine.examples.sokoban.GameMap;
@@ -18,24 +18,25 @@ import dev.prozilla.pine.examples.sokoban.component.PlayerData;
 import dev.prozilla.pine.examples.sokoban.entity.CratePrefab;
 import dev.prozilla.pine.examples.sokoban.entity.PlayerPrefab;
 import dev.prozilla.pine.examples.sokoban.packet.*;
-import dev.prozilla.pine.extensions.pinet.client.ClientPacketHandler;
+import dev.prozilla.pine.examples.sokoban.request.MoveRequest;
+import dev.prozilla.pine.examples.sokoban.request.RestartRequest;
+import dev.prozilla.pine.examples.sokoban.request.UndoRequest;
 import dev.prozilla.pine.extensions.pinet.component.NetworkIdentity;
 import dev.prozilla.pine.extensions.pinet.component.NetworkManager;
+import dev.prozilla.pine.extensions.pinet.message.ServerMessageHandler;
+import dev.prozilla.pine.extensions.pinet.message.request.ServerRequest;
+import dev.prozilla.pine.extensions.pinet.message.response.ServerResponse;
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
-import dev.prozilla.pine.extensions.pinet.server.Server;
-import dev.prozilla.pine.extensions.pinet.server.ServerRequestHandler;
 
 import java.util.*;
 
-public class NetworkHandler extends UpdateSystemBase implements ClientPacketHandler, ServerRequestHandler {
+public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHandler {
 	
 	private final NetworkManager network;
 	private final GridGroup foregroundGrid;
 	private final List<Vector2i> crateSpawns;
 	
-	private boolean disconnectHandled;
-	
-	public NetworkHandler(NetworkManager network, GridGroup foregroundGrid) {
+	public MessageHandler(NetworkManager network, GridGroup foregroundGrid) {
 		super(NetworkIdentity.class, PlayerData.class, TileRenderer.class, SpriteRenderer.class, AudioEffectPlayer.class, History.class);
 		setRequiredTag(EntityTag.PLAYER);
 		this.network = network;
@@ -51,62 +52,70 @@ public class NetworkHandler extends UpdateSystemBase implements ClientPacketHand
 	}
 	
 	@Override
-	public void update(float deltaTime) {
-		if (!network.isConnected() && !disconnectHandled) {
-			disconnectHandled = true;
-			GameManager.instance.leaveSession();
+	public void handleRequest(ServerRequest request) {
+		switch (request.getPayload()) {
+			case MoveRequest(Direction direction) -> move(request, direction);
+			case UndoRequest ignored -> undo(request);
+			case RestartRequest ignored -> restart(request);
+			default -> {}
 		}
 	}
 	
 	@Override
-	public boolean shouldRun() {
-		return network.getSession() != null;
-	}
-	
-	@Override
-	public void handleRequest(Server.Request request) {
-		Packet payload = request.getPayload();
-		
-		if (payload instanceof MoveRequestPacket(Direction direction)) {
-			move(request, direction);
-		} else if (payload instanceof UndoRequestPacket) {
-			undo(request);
-		} else if (payload instanceof RestartRequestPacket) {
-			restart(request);
-		}
-	}
-	
-	@Override
-	public void handleJoin(Server.Request request) {
+	public void handleJoin(ServerRequest request) {
 		Vector2i spawn = findSpawn();
-		foregroundGrid.addTile(new PlayerPrefab(request.getAuthorId()), spawn.x, spawn.y);
+		foregroundGrid.addTile(new PlayerPrefab(request.getSenderId()), spawn.x, spawn.y);
 		
-		request.reply(new WelcomePacket(request.getAuthorId()));
+		request.reply(new WelcomePacket(request.getSenderId()));
 		request.reply(createSnapshot());
-		request.replyToOthers(new PlayerJoinPacket(request.getAuthorId(), spawn.x, spawn.y));
+		request.replyToOthers(new PlayerJoinPacket(request.getSenderId(), spawn.x, spawn.y));
 	}
 	
 	@Override
-	public void handleLeave(Server.Request request) {
-		EntityChunk chunk = getPlayer(request.getAuthorId());
+	public void handleLeave(ServerRequest request) {
+		EntityChunk chunk = getPlayer(request.getSenderId());
 		if (chunk != null) {
 			chunk.getEntity().destroy();
 		}
 		
-		request.replyToOthers(new PlayerLeavePacket(request.getAuthorId()));
+		request.replyToOthers(new PlayerLeavePacket(request.getSenderId()));
 	}
 	
 	@Override
-	public void handlePacket(Packet packet) {
-		switch (packet) {
-			case WelcomePacket(int playerId) -> network.setLocalClientId(playerId);
-			case GameStatePacket state -> applyGameState(state);
-			case PlayerJoinPacket(int playerId, int x, int y) -> applyPlayer(playerId, new Vector2i(x, y));
-			case PlayerLeavePacket(int playerId) -> despawnPlayer(playerId);
-			case PlayerMovePacket move -> applyMove(move);
-			case RejectionPacket ignored -> rejectPendingMove(network.getLocalClientId());
+	public void handleResponse(ServerResponse response) {
+		switch (response.getPayload()) {
+			case WelcomePacket(int playerId) -> {
+				response.acknowledge();
+				network.setLocalClientId(playerId);
+			}
+			case GameStatePacket state -> {
+				response.acknowledge();
+				applyGameState(state);
+			}
+			case PlayerJoinPacket(int playerId, int x, int y) -> {
+				response.acknowledge();
+				applyPlayer(playerId, new Vector2i(x, y));
+			}
+			case PlayerLeavePacket(int playerId) -> {
+				response.acknowledge();
+				despawnPlayer(playerId);
+			}
+			case PlayerMovePacket move -> {
+				response.acknowledge();
+				applyMove(move);
+			}
+			case RejectionPacket ignored -> {
+				response.acknowledge();
+				rejectPendingMove(network.getLocalClientId());
+			}
 			default -> {}
 		}
+	}
+	
+	@Override
+	public void handleDisconnect(ServerResponse response) {
+		response.acknowledge();
+		GameManager.instance.leaveSession();
 	}
 	
 	private void applyGameState(GameStatePacket state) {
@@ -211,10 +220,10 @@ public class NetworkHandler extends UpdateSystemBase implements ClientPacketHand
 		}
 	}
 	
-	private void move(Server.Request request, Direction direction) {
-		EntityChunk chunk = getPlayer(request.getAuthorId());
+	private void move(ServerRequest request, Direction direction) {
+		EntityChunk chunk = getPlayer(request.getSenderId());
 		if (chunk == null) {
-			fail(request);
+			reject(request);
 			return;
 		}
 		
@@ -227,7 +236,7 @@ public class NetworkHandler extends UpdateSystemBase implements ClientPacketHand
 		
 		Move move = playerData.computeMove(foregroundGrid, direction);
 		if (move == null) {
-			fail(request);
+			reject(request);
 			return;
 		}
 		
@@ -236,16 +245,12 @@ public class NetworkHandler extends UpdateSystemBase implements ClientPacketHand
 			playerData.beginMove(move, foregroundGrid);
 		}
 		request.replyToAll(new PlayerMovePacket(move));
-		
-		if (request.isLocal()) {
-			playerData.awaitingConfirm = false;
-		}
 	}
 	
-	private void undo(Server.Request request) {
-		EntityChunk chunk = getPlayer(request.getAuthorId());
+	private void undo(ServerRequest request) {
+		EntityChunk chunk = getPlayer(request.getSenderId());
 		if (chunk == null) {
-			fail(request);
+			reject(request);
 			return;
 		}
 		
@@ -254,14 +259,14 @@ public class NetworkHandler extends UpdateSystemBase implements ClientPacketHand
 		if (chunk.getComponent(History.class).undo(foregroundGrid) != null) {
 			request.replyToAll(createSnapshot());
 		} else {
-			fail(request);
+			reject(request);
 		}
 	}
 	
-	private void restart(Server.Request request) {
-		boolean allowed = request.receivedFromHost();
+	private void restart(ServerRequest request) {
+		boolean allowed = request.isSentByHost();
 		if (!allowed) {
-			fail(request);
+			reject(request);
 			return;
 		}
 		
@@ -282,12 +287,7 @@ public class NetworkHandler extends UpdateSystemBase implements ClientPacketHand
 		request.replyToAll(createSnapshot());
 	}
 	
-	private void fail(Server.Request request) {
-		if (request.isLocal()) {
-			rejectPendingMove(request.getAuthorId());
-			return;
-		}
-		
+	private void reject(ServerRequest request) {
 		request.reply(new RejectionPacket());
 		request.reply(createSnapshot());
 	}

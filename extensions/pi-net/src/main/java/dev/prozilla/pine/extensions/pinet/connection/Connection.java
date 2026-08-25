@@ -1,8 +1,8 @@
 package dev.prozilla.pine.extensions.pinet.connection;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
-import dev.prozilla.pine.extensions.pinet.Session;
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
+import dev.prozilla.pine.extensions.pinet.session.Session;
 
 /**
  * A connection between a sender and a received, which can be used to transport {@link Packet}s.

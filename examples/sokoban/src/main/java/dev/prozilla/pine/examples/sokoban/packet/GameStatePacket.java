@@ -15,10 +15,8 @@ public record GameStatePacket(int[] playerIds, int[] playerX, int[] playerY, int
 	@Override
 	public void encode(PacketBuffer buffer) {
 		buffer.writeIntArray(playerIds);
-		buffer.writeIntArray(playerX);
-		buffer.writeIntArray(playerY);
-		buffer.writeIntArray(crateX);
-		buffer.writeIntArray(crateY);
+		buffer.writeIntArray(playerX).writeIntArray(playerY);
+		buffer.writeIntArray(crateX).writeIntArray(crateY);
 	}
 	
 	public static GameStatePacket decode(PacketBuffer buffer) {

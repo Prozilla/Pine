@@ -18,16 +18,12 @@ public record PlayerMovePacket(Move move) implements Packet {
 	public void encode(PacketBuffer buffer) {
 		buffer.writeVarInt(move.playerId());
 		buffer.writeByte(move.direction().ordinal());
-		buffer.writeInt(move.fromX());
-		buffer.writeInt(move.fromY());
-		buffer.writeInt(move.toX());
-		buffer.writeInt(move.toY());
+		buffer.writeInt(move.fromX()).writeInt(move.fromY());
+		buffer.writeInt(move.toX()).writeInt(move.toY());
 		buffer.writeBoolean(move.pushedCrate());
 		if (move.pushedCrate()) {
-			buffer.writeInt(move.crateFromX());
-			buffer.writeInt(move.crateFromY());
-			buffer.writeInt(move.crateToX());
-			buffer.writeInt(move.crateToY());
+			buffer.writeInt(move.crateFromX()).writeInt(move.crateFromY());
+			buffer.writeInt(move.crateToX()).writeInt(move.crateToY());
 		}
 	}
 	

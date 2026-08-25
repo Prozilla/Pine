@@ -893,6 +893,18 @@ public class Input implements Initializable, Destructible {
 	
 	//endregion Mouse
 	
+	//region Clipboard
+	
+	public String getClipboard() {
+		return glfwGetClipboardString(window.getId());
+	}
+	
+	public void setClipboard(String content) {
+		glfwSetClipboardString(window.getId(), content);
+	}
+	
+	//endregion Clipboard
+	
 	private void setInputMode(int mode, int value) {
 		glfwSetInputMode(window.getId(), mode, value);
 	}

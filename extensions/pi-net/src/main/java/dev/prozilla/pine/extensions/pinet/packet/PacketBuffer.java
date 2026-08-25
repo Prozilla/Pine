@@ -16,8 +16,9 @@ public final class PacketBuffer {
 		this.buffer = buffer;
 	}
 	
-	public void writeByte(int value) {
+	public PacketBuffer writeByte(int value) {
 		buffer.writeByte(value);
+		return this;
 	}
 	
 	public byte readByte() {
@@ -28,27 +29,30 @@ public final class PacketBuffer {
 		return buffer.readUnsignedByte();
 	}
 	
-	public void writeBoolean(boolean value) {
+	public PacketBuffer writeBoolean(boolean value) {
 		buffer.writeBoolean(value);
+		return this;
 	}
 	
 	public boolean readBoolean() {
 		return buffer.readBoolean();
 	}
 	
-	public void writeInt(int value) {
+	public PacketBuffer writeInt(int value) {
 		buffer.writeInt(value);
+		return this;
 	}
 	
 	public int readInt() {
 		return buffer.readInt();
 	}
 	
-	public void writeIntArray(int[] values) {
+	public PacketBuffer writeIntArray(int[] values) {
 		writeVarInt(values.length);
 		for (int value : values) {
 			buffer.writeInt(value);
 		}
+		return this;
 	}
 	
 	public int[] readIntArray() {
@@ -60,13 +64,14 @@ public final class PacketBuffer {
 		return values;
 	}
 	
-	public void writeString(String string) {
-		writeString(string, StandardCharsets.UTF_8);
+	public PacketBuffer writeString(String string) {
+		return writeString(string, StandardCharsets.UTF_8);
 	}
 	
-	public void writeString(String string, Charset charset) {
+	public PacketBuffer writeString(String string, Charset charset) {
 		writeVarInt(string.length());
 		buffer.writeCharSequence(string, charset);
+		return this;
 	}
 	
 	public String readString() {
@@ -78,12 +83,13 @@ public final class PacketBuffer {
 		return buffer.readCharSequence(length, charset).toString();
 	}
 	
-	public void writeVarInt(int value) {
+	public PacketBuffer writeVarInt(int value) {
 		while ((value & ~0x7F) != 0) {
 			buffer.writeByte((value & 0x7F) | 0x80);
 			value >>>= 7;
 		}
 		buffer.writeByte(value);
+		return this;
 	}
 	
 	public int readVarInt() {

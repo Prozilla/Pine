@@ -34,7 +34,6 @@ public class Chat extends Application {
 	
 	public ChatScene loadChatScene(String username) {
 		ChatScene chatScene = new ChatScene(username);
-		addScene(chatScene);
 		loadScene(chatScene);
 		return chatScene;
 	}

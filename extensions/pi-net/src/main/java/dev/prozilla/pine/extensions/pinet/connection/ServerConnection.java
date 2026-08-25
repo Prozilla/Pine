@@ -1,6 +1,7 @@
-package dev.prozilla.pine.extensions.pinet.server;
+package dev.prozilla.pine.extensions.pinet.connection;
 
-import dev.prozilla.pine.extensions.pinet.connection.RemoteConnection;
+import dev.prozilla.pine.extensions.pinet.Server;
+import dev.prozilla.pine.extensions.pinet.session.ServerSession;
 import io.netty.channel.ChannelHandlerContext;
 
 /**

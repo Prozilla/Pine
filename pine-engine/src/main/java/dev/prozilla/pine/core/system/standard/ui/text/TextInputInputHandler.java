@@ -28,26 +28,44 @@ public final class TextInputInputHandler extends InputSystem {
 			return;
 		}
 		
+		boolean ctrlKey = input.getModifierKey(ModifierKey.CONTROL);
+		boolean shiftKey = input.getModifierKey(ModifierKey.SHIFT);
+		
 		if (input.getKeyRepeated(Key.LEFT_ARROW)) {
-			if (input.getModifierKey(ModifierKey.SHIFT)) {
+			if (shiftKey) {
 				textInputNode.expandSelectionLeft();
 			} else {
 				textInputNode.moveCursorLeft();
 			}
 		} else if (input.getKeyRepeated(Key.RIGHT_ARROW)) {
-			if (input.getModifierKey(ModifierKey.SHIFT)) {
+			if (shiftKey) {
 				textInputNode.expandSelectionRight();
 			} else {
 				textInputNode.moveCursorRight();
 			}
 		} else if (input.getKeyRepeated(Key.UP_ARROW) || input.getKeyRepeated(Key.HOME)) {
-			textInputNode.moveCursorToStart();
+			textInputNode.moveCursorToStart(shiftKey);
 		} else if (input.getKeyRepeated(Key.DOWN_ARROW) || input.getKeyRepeated(Key.END)) {
-			textInputNode.moveCursorToEnd();
+			textInputNode.moveCursorToEnd(shiftKey);
 		} else if (input.getKeyRepeated(Key.BACKSPACE)) {
 			textInputNode.deleteText(true);
 		} else if (input.getKeyRepeated(Key.DELETE)) {
 			textInputNode.deleteText(false);
+		} else if (input.getKeyDown(Key.A) && ctrlKey) {
+			textInputNode.selectAll();
+		} else if (input.getKeyDown(Key.C) && ctrlKey) {
+			String selectedText = textInputNode.getSelectedText();
+			if (selectedText != null) {
+				input.setClipboard(selectedText);
+			}
+		} else if (input.getKeyDown(Key.X) && ctrlKey) {
+			String selectedText = textInputNode.getSelectedText();
+			if (selectedText != null) {
+				input.setClipboard(selectedText);
+			}
+			textInputNode.deleteSelection();
+		} else if (input.getKeyDown(Key.V) && ctrlKey) {
+			textInputNode.insert(input.getClipboard());
 		}
 	}
 	

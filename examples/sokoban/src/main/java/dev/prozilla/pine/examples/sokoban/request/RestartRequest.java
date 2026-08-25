@@ -1,11 +1,11 @@
-package dev.prozilla.pine.examples.sokoban.packet;
+package dev.prozilla.pine.examples.sokoban.request;
 
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
 import dev.prozilla.pine.extensions.pinet.packet.PacketBuffer;
 
-public record RejectionPacket() implements Packet {
+public record RestartRequest() implements Packet {
 	
-	public static final int ID = 15;
+	public static final int ID = 4;
 	
 	@Override
 	public int getPacketId() {
@@ -15,8 +15,8 @@ public record RejectionPacket() implements Packet {
 	@Override
 	public void encode(PacketBuffer buffer) {}
 	
-	public static RejectionPacket decode(PacketBuffer buffer) {
-		return new RejectionPacket();
+	public static RestartRequest decode(PacketBuffer buffer) {
+		return new RestartRequest();
 	}
 	
 }

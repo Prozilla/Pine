@@ -15,9 +15,9 @@ import dev.prozilla.pine.core.system.input.InputSystem;
 import dev.prozilla.pine.examples.sokoban.component.History;
 import dev.prozilla.pine.examples.sokoban.component.Move;
 import dev.prozilla.pine.examples.sokoban.component.PlayerData;
-import dev.prozilla.pine.examples.sokoban.packet.MoveRequestPacket;
-import dev.prozilla.pine.examples.sokoban.packet.RestartRequestPacket;
-import dev.prozilla.pine.examples.sokoban.packet.UndoRequestPacket;
+import dev.prozilla.pine.examples.sokoban.request.MoveRequest;
+import dev.prozilla.pine.examples.sokoban.request.RestartRequest;
+import dev.prozilla.pine.examples.sokoban.request.UndoRequest;
 import dev.prozilla.pine.extensions.pinet.component.NetworkIdentity;
 import dev.prozilla.pine.extensions.pinet.component.NetworkManager;
 
@@ -43,13 +43,13 @@ public class PlayerInputHandler extends InputSystem {
 		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		
 		if (input.getKeyDown(Key.R) && network.isHost(networkIdentity.id)) {
-			network.send(new RestartRequestPacket());
+			network.send(new RestartRequest());
 			return;
 		}
 		
 		if (isUndoDown(input)) {
 			if (!playerData.awaitingConfirm && playerData.timeUntilMoveCompletes <= 0) {
-				network.send(new UndoRequestPacket());
+				network.send(new UndoRequest());
 			}
 			return;
 		}
@@ -71,7 +71,7 @@ public class PlayerInputHandler extends InputSystem {
 		
 		playerData.beginMove(move, foregroundGrid);
 		playerData.awaitingConfirm = true;
-		network.send(new MoveRequestPacket(direction));
+		network.send(new MoveRequest(direction));
 	}
 	
 	private static Direction getMoveDirection(Input input) {

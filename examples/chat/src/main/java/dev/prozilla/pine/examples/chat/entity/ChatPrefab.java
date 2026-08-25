@@ -12,7 +12,7 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextInputPrefab;
 import dev.prozilla.pine.examples.chat.EntityTag;
-import dev.prozilla.pine.examples.chat.request.SendMessageRequest;
+import dev.prozilla.pine.examples.chat.request.SendMessagePacket;
 import dev.prozilla.pine.extensions.pinet.component.NetworkManager;
 
 public class ChatPrefab extends LayoutPrefab {
@@ -56,7 +56,7 @@ public class ChatPrefab extends LayoutPrefab {
 		sendButtonPrefab.setFont(font);
 		sendButtonPrefab.setClickCallback((button) -> {
 			if (!inputProperty.isBlank() && network.isConnected()) {
-				network.send(new SendMessageRequest(network.getLocalClientId(), inputProperty.swapValue("")));
+				network.send(new SendMessagePacket(inputProperty.swapValue("")));
 			}
 		});
 		inputBox.addChild(sendButtonPrefab);

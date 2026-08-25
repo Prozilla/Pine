@@ -1,14 +1,19 @@
 package dev.prozilla.pine.extensions.pinet.connection;
 
-import dev.prozilla.pine.extensions.pinet.Session;
+import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
 import dev.prozilla.pine.extensions.pinet.packet.PacketCodec;
+import dev.prozilla.pine.extensions.pinet.session.Session;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPipeline;
+import io.netty.channel.ChannelInitializer;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
+
+import java.util.function.Supplier;
 
 public class RemoteConnection extends SimpleChannelInboundHandler<Packet> implements Connection {
 	
@@ -34,6 +39,8 @@ public class RemoteConnection extends SimpleChannelInboundHandler<Packet> implem
 	
 	@Override
 	public void exceptionCaught(ChannelHandlerContext context, Throwable cause) {
+		Logger logger = session != null ? session.getLogger() : Logger.system;
+		logger.error("Connection aborted", cause);
 		context.close();
 	}
 	
@@ -59,12 +66,27 @@ public class RemoteConnection extends SimpleChannelInboundHandler<Packet> implem
 		}
 	}
 	
-	public static <T extends RemoteConnection> T configure(ChannelPipeline pipeline, T connection) {
-		pipeline.addLast(new LengthFieldBasedFrameDecoder(65535, 0, 4, 0, 4));
-		pipeline.addLast(new LengthFieldPrepender(4));
-		pipeline.addLast(new PacketCodec());
-		pipeline.addLast(connection);
-		return connection;
+	public static class Initializer extends ChannelInitializer<SocketChannel> {
+		
+		private final Supplier<RemoteConnection> connectionFactory;
+		private final PacketCodec codec;
+		
+		public static final int LENGTH_FIELD_SIZE = 4;
+		public static final int MAX_FRAME_LENGTH = 1 << 4 * LENGTH_FIELD_SIZE;
+		
+		public Initializer(Supplier<RemoteConnection> connectionFactory, PacketCodec codec) {
+			this.connectionFactory = connectionFactory;
+			this.codec = Checks.isNotNull(codec, "codec");
+		}
+		
+		@Override
+		protected void initChannel(SocketChannel socketChannel) {
+			socketChannel.pipeline()
+				.addLast(new LengthFieldBasedFrameDecoder(MAX_FRAME_LENGTH, 0, LENGTH_FIELD_SIZE, 0, LENGTH_FIELD_SIZE))
+				.addLast(new LengthFieldPrepender(LENGTH_FIELD_SIZE))
+				.addLast(codec)
+				.addLast(connectionFactory.get());
+		}
+		
 	}
-	
 }

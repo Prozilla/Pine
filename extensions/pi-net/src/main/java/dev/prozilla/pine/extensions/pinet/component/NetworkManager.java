@@ -1,29 +1,41 @@
 package dev.prozilla.pine.extensions.pinet.component;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.extensions.pinet.client.ClientPacketHandler;
-import dev.prozilla.pine.extensions.pinet.client.ClientSession;
+import dev.prozilla.pine.extensions.pinet.Server;
+import dev.prozilla.pine.extensions.pinet.Synchronizable;
+import dev.prozilla.pine.extensions.pinet.message.ServerMessageHandler;
+import dev.prozilla.pine.extensions.pinet.message.request.ServerRequest;
+import dev.prozilla.pine.extensions.pinet.message.request.ServerRequestHandler;
+import dev.prozilla.pine.extensions.pinet.message.response.ServerResponse;
+import dev.prozilla.pine.extensions.pinet.message.response.ServerResponseHandler;
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
 import dev.prozilla.pine.extensions.pinet.packet.PacketCodec;
-import dev.prozilla.pine.extensions.pinet.server.Server;
-import dev.prozilla.pine.extensions.pinet.server.ServerRequestHandler;
+import dev.prozilla.pine.extensions.pinet.session.ClientSession;
 
 import java.io.IOException;
 
 /**
  * Manages a client's connection to a network.
  * <p>
- * The network can either be a {@link Server}, in which case the connection is local if the client is the host and otherwise remote,
- * or a standalone network, in which case the "client" has no connection and {@link Packet}s get sent directly to a {@link ServerRequestHandler}.
+ *     The network can either be a {@link Server}, in which case the connection is local if the client is the host and otherwise remote,
+ *     or a standalone network, in which case the "client" has no connection and {@link Packet}s get sent directly to a {@link ServerRequestHandler}.
+ * </p>
+ * <p>
+ *     This makes it possible to treat all different modes equally and to run the same logic,
+ *     regardless of whether there is any connection and the type of connection.
+ * </p>
  */
-public class NetworkManager extends Component {
+public class NetworkManager extends Component implements Synchronizable {
 	
 	private Server server;
 	private ClientSession session;
-	private int localClientId;
-	private ServerRequestHandler localRequestHandler;
 	private PacketCodec codec;
+	private int localClientId;
+	
+	private ServerRequestHandler standaloneRequestHandler;
+	private ServerResponseHandler standaloneResponseHandler;
 	
 	public NetworkManager() {
 		this(new PacketCodec());
@@ -31,17 +43,24 @@ public class NetworkManager extends Component {
 	
 	public NetworkManager(PacketCodec codec) {
 		this.codec = codec;
-		localClientId = -1;
+		localClientId = Server.UNASSIGNED_ID;
 	}
 	
 	/**
 	 * Creates an integrated server and a local connection to it.
 	 */
-	public void createHost(int port, ServerRequestHandler requestHandler, ClientPacketHandler packetHandler) {
+	public void createHost(int port, ServerMessageHandler messageHandler) {
+		createHost(port, messageHandler, messageHandler);
+	}
+	
+	/**
+	 * Creates an integrated server and a local connection to it.
+	 */
+	public void createHost(int port, ServerRequestHandler requestHandler, ServerResponseHandler responseHandler) {
 		disconnect();
 		try {
-			server = new Server(port, requestHandler, codec);
-			session = ClientSession.createLocal(server.connectHost(), packetHandler);
+			server = new Server(port, requestHandler, codec, getLogger());
+			session = ClientSession.createLocal(server.connectHost(), responseHandler, getLogger());
 		} catch (IOException e) {
 			getLogger().error("Failed to start server", e);
 		}
@@ -51,22 +70,29 @@ public class NetworkManager extends Component {
 	 * Creates a connection to a remote server.
 	 * @param address The address of the server
 	 */
-	public void createClient(String address, int port, ClientPacketHandler packetHandler) {
+	public void createClient(String address, int port, ServerResponseHandler responseHandler) {
 		disconnect();
 		try {
-			session = ClientSession.createRemote(address, port, packetHandler, codec);
+			session = ClientSession.createRemote(address, port, responseHandler, codec, getLogger());
 		} catch (IOException e) {
 			getLogger().error("Failed to connect to server", e);
 		}
 	}
 	
 	/**
-	 * Creates a standalone network that sends packets directly to a request handler.
-	 * @param requestHandler The request handler
+	 * Creates a standalone network that sends messages directly to the handler.
 	 */
-	public void createStandalone(ServerRequestHandler requestHandler) {
+	public void createStandalone(ServerMessageHandler messageHandler) {
+		createStandalone(messageHandler, messageHandler);
+	}
+	
+	/**
+	 * Creates a standalone network that sends messages directly to the handlers.
+	 */
+	public void createStandalone(ServerRequestHandler requestHandler, ServerResponseHandler responseHandler) {
 		disconnect();
-		localRequestHandler = requestHandler;
+		standaloneRequestHandler = Checks.isNotNull(requestHandler, "requestHandler");
+		standaloneResponseHandler = Checks.isNotNull(responseHandler, "responseHandler");
 		localClientId = Server.HOST_ID;
 	}
 	
@@ -75,9 +101,13 @@ public class NetworkManager extends Component {
 	 * @param packet The packet to send
 	 */
 	public void send(Packet packet) {
-		if (localRequestHandler != null) {
-			localRequestHandler.handleRequest(new Server.Request(packet));
-		} else if (session != null) {
+		if (isStandalone()) {
+			try {
+				standaloneRequestHandler.handleRequest(new StandaloneServerRequest(packet));
+			} catch (RuntimeException e) {
+				getLogger().error("Failed to handle request: " + packet.getClass().getSimpleName(), e);
+			}
+		} else if (isConnected()) {
 			session.send(packet);
 		}
 	}
@@ -85,6 +115,7 @@ public class NetworkManager extends Component {
 	/**
 	 * Synchronizes the network.
 	 */
+	@Override
 	public void synchronize() {
 		if (server != null) {
 			server.synchronize();
@@ -92,6 +123,10 @@ public class NetworkManager extends Component {
 		if (session != null) {
 			session.synchronize();
 		}
+	}
+	
+	public Server getServer() {
+		return server;
 	}
 	
 	public ClientSession getSession() {
@@ -116,7 +151,11 @@ public class NetworkManager extends Component {
 	}
 	
 	public boolean isLocalClient(int clientId) {
-		return clientId == localClientId && (session != null || localRequestHandler != null);
+		return clientId == localClientId && (session != null || isStandalone());
+	}
+	
+	public boolean isStandalone() {
+		return standaloneRequestHandler != null && standaloneResponseHandler != null;
 	}
 	
 	public int getLocalClientId() {
@@ -147,7 +186,46 @@ public class NetworkManager extends Component {
 	public void disconnect() {
 		session = Destructible.destroy(session);
 		server = Destructible.destroy(server);
-		localRequestHandler = null;
+		standaloneRequestHandler = null;
+		standaloneResponseHandler = null;
+	}
+	
+	private class StandaloneServerRequest extends ServerRequest {
+		
+		public StandaloneServerRequest(Packet payload) {
+			super(Server.HOST_ID, payload, null, null);
+		}
+		
+		@Override
+		public void replyToAll(Packet packet) {
+			acknowledge();
+			reply(packet);
+		}
+		
+		@Override
+		public void reply(Packet packet) {
+			acknowledge();
+			if (standaloneResponseHandler != null) {
+				standaloneResponseHandler.handleResponse(new StandaloneServerResponse(packet));
+			}
+		}
+		
+	}
+	
+	private class StandaloneServerResponse extends ServerResponse {
+		
+		public StandaloneServerResponse(Packet payload) {
+			super(payload, null);
+		}
+		
+		@Override
+		public void reply(Packet packet) {
+			acknowledge();
+			if (standaloneRequestHandler != null) {
+				standaloneRequestHandler.handleRequest(new StandaloneServerRequest(packet));
+			}
+		}
+		
 	}
 	
 }

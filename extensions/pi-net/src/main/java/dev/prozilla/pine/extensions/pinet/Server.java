@@ -1,13 +1,19 @@
-package dev.prozilla.pine.extensions.pinet.server;
+package dev.prozilla.pine.extensions.pinet;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.util.QueueUtils;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.extensions.pinet.connection.LocalConnection;
 import dev.prozilla.pine.extensions.pinet.connection.RemoteConnection;
-import dev.prozilla.pine.extensions.pinet.connection.RemoteConnectionInitializer;
+import dev.prozilla.pine.extensions.pinet.connection.ServerConnection;
+import dev.prozilla.pine.extensions.pinet.message.ServerMessage;
+import dev.prozilla.pine.extensions.pinet.message.request.ServerRequest;
+import dev.prozilla.pine.extensions.pinet.message.request.ServerRequestHandler;
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
 import dev.prozilla.pine.extensions.pinet.packet.PacketCodec;
+import dev.prozilla.pine.extensions.pinet.session.ServerSession;
+import dev.prozilla.pine.extensions.pinet.session.Session;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -27,11 +33,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * <p>
  *     The server keeps track of the clients connected to the network and handles the communication between them, using {@link ServerSession}s.
- *     The server collects {@link Request}s from clients and queues them up to be processed by a {@link ServerRequestHandler},
+ *     The server collects {@link ServerRequest}s from clients and queues them up to be processed by a {@link ServerRequestHandler},
  *     which may generate {@link Packet}s in response, which the server then sends back to the clients via their respective {@link ServerSession}.
  * </p>
+ * @see ServerMessage
  */
-public class Server implements Destructible {
+public class Server implements Destructible, Synchronizable {
 	
 	private final Channel channel;
 	private final EventLoopGroup bossGroup;
@@ -41,26 +48,31 @@ public class Server implements Destructible {
 	private ServerSession hostSession;
 	private int nextClientId;
 	
-	private final Queue<Request> receivedRequests;
+	private final Queue<ServerRequest> receivedRequests;
 	private final ServerRequestHandler requestHandler;
+	
+	private Logger logger;
 	
 	/** The client ID of the host. */
 	public static final int HOST_ID = 0;
+	/** The ID of a client that is not connected to the network. */
+	public static final int UNASSIGNED_ID = -1;
 	
-	public Server(int port, ServerRequestHandler requestHandler, PacketCodec codec) throws IOException {
-		this.requestHandler = requestHandler;
+	public Server(int port, ServerRequestHandler requestHandler, PacketCodec codec, Logger logger) throws IOException {
+		this.requestHandler = Checks.isNotNull(requestHandler, "requestHandler");
+		this.logger = logger;
+		
 		sessions = new CopyOnWriteArrayList<>();
 		nextClientId = HOST_ID + 1;
 		receivedRequests = new ArrayDeque<>();
 		
 		bossGroup = new MultiThreadIoEventLoopGroup(1, NioIoHandler.newFactory());
 		workerGroup = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
-		RemoteConnection connection = new ServerConnection(this);
 		
 		ServerBootstrap bootstrap = new ServerBootstrap();
 		bootstrap.group(bossGroup, workerGroup)
 			.channel(NioServerSocketChannel.class)
-			.childHandler(new RemoteConnectionInitializer(connection, codec));
+			.childHandler(new RemoteConnection.Initializer(this::connectClient, codec));
 		
 		try {
 			channel = bootstrap.bind(port).sync().channel();
@@ -88,6 +100,10 @@ public class Server implements Destructible {
 		return clientSide;
 	}
 	
+	public RemoteConnection connectClient() {
+		return new ServerConnection(this);
+	}
+	
 	/**
 	 * Connects a client to this server.
 	 * @param session The client to connect
@@ -112,7 +128,7 @@ public class Server implements Destructible {
 	 * @param packet The packet to send
 	 * @param exclude The client to exclude, or {@code null} to include all clients
 	 */
-	public void broadcast(Packet packet, ServerSession exclude) {
+	public void broadcast(Packet packet, Session exclude) {
 		for (ServerSession session : sessions) {
 			if (session != exclude) {
 				session.send(packet);
@@ -127,12 +143,13 @@ public class Server implements Destructible {
 	 * @param source The source of the request
 	 */
 	public void receive(int clientId, Packet packet, ServerSession source) {
-		receivedRequests.add(new Request(clientId, packet, source, this));
+		receivedRequests.add(new ServerRequest(clientId, packet, source, this));
 	}
 	
 	/**
-	 * Processes all requests that were received after the last synchronization and synchronizes each session.
+	 * Handles all requests that were received after the last synchronization and synchronizes each session.
 	 */
+	@Override
 	public void synchronize() {
 		QueueUtils.drain(receivedRequests, this::handleRequest);
 		
@@ -141,11 +158,11 @@ public class Server implements Destructible {
 		}
 	}
 	
-	private void handleRequest(Request request) {
+	private void handleRequest(ServerRequest request) {
 		try {
 			requestHandler.handleRequest(request);
 		} catch (RuntimeException e) {
-			Logger.system.error("Failed to handle request: " + request.getPayload().getClass().getSimpleName(), e);
+			getLogger().error("Failed to handle request: " + request, e);
 		}
 	}
 	
@@ -158,6 +175,14 @@ public class Server implements Destructible {
 	 */
 	public int getNextClientId() {
 		return nextClientId++;
+	}
+	
+	public Logger getLogger() {
+		return logger != null ? logger : Logger.system;
+	}
+	
+	public void setLogger(Logger logger) {
+		this.logger = logger;
 	}
 	
 	/**
@@ -173,95 +198,5 @@ public class Server implements Destructible {
 		bossGroup.shutdownGracefully();
 		workerGroup.shutdownGracefully();
 	}
-
-	/**
-	 * A request received by the {@link Server} from a client, optionally containing a {@link Packet} as a payload.
-	 *
-	 * <p>
-	 *     A client (referred to as the author in this context) can send a request to the server to ask it to do something for them.
-	 *     The request may contain a {@link Packet} as a payload to indicate the type of request
-	 *     and provide any information the server might need to process it. The server may then respond
-	 *     by sending {@link Packet}s to the author and/or the other clients on the network.
-	 * </p>
-	 */
-	public static final class Request {
-		
-		private final int authorId;
-		private final Packet payload;
-		private final ServerSession source;
-		private final Server server;
-		
-		public Request(Packet payload) {
-			this(Server.HOST_ID, payload, null, null);
-		}
-		
-		public Request(int authorId, Packet payload, ServerSession source, Server server) {
-			this.authorId = authorId;
-			this.payload = payload;
-			this.source = source;
-			this.server = server;
-		}
-		
-		/**
-		 * @return The ID of the user that created this request.
-		 */
-		public int getAuthorId() {
-			return authorId;
-		}
-		
-		/**
-		 * @return The payload attached to this request, or {@code null}.
-		 */
-		public Packet getPayload() {
-			return payload;
-		}
-		
-		/**
-		 * @return The server that received this request.
-		 */
-		public Server getServer() {
-			return server;
-		}
-		
-		public boolean isLocal() {
-			return source == null;
-		}
-		
-		/**
-		 * @return {@code true} if this request was created by the host.
-		 */
-		public boolean receivedFromHost() {
-			return authorId == Server.HOST_ID;
-		}
-		
-		/**
-		 * Sends a packet as a reply to this request to its author.
-		 * @param packet The packet to send
-		 */
-		public void reply(Packet packet) {
-			if (source != null) {
-				source.send(packet);
-			}
-		}
-		
-		/**
-		 * Sends a packet as a reply to this request to all clients.
-		 * @param packet The packet to send
-		 */
-		public void replyToAll(Packet packet) {
-			if (server != null) {
-				server.broadcast(packet, null);
-			}
-		}
-		
-		/**
-		 * Sends a packet as a reply to this request to all clients, except the author of this request.
-		 * @param packet The packet to send
-		 */
-		public void replyToOthers(Packet packet) {
-			if (server != null) {
-				server.broadcast(packet, source);
-			}
-		}
-	}
+	
 }

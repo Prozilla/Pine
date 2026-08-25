@@ -1,4 +1,4 @@
-package dev.prozilla.pine.examples.chat.packet;
+package dev.prozilla.pine.examples.chat.response;
 
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
 import dev.prozilla.pine.extensions.pinet.packet.PacketBuffer;

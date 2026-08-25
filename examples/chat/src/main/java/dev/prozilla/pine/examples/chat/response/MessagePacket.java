@@ -1,9 +1,9 @@
-package dev.prozilla.pine.examples.chat.packet;
+package dev.prozilla.pine.examples.chat.response;
 
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
 import dev.prozilla.pine.extensions.pinet.packet.PacketBuffer;
 
-public record MessagePacket(int clientId, String username, String content) implements Packet {
+public record MessagePacket(String username, String content) implements Packet {
 	
 	public static final int ID = 6;
 	
@@ -14,13 +14,11 @@ public record MessagePacket(int clientId, String username, String content) imple
 	
 	@Override
 	public void encode(PacketBuffer buffer) {
-		buffer.writeVarInt(clientId);
-		buffer.writeString(username);
-		buffer.writeString(content);
+		buffer.writeString(username).writeString(content);
 	}
 	
 	public static MessagePacket decode(PacketBuffer buffer) {
-		return new MessagePacket(buffer.readVarInt(), buffer.readString(), buffer.readString());
+		return new MessagePacket(buffer.readString(), buffer.readString());
 	}
 	
 }

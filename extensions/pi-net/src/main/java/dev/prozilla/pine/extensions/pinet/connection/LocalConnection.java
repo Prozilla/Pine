@@ -1,7 +1,7 @@
 package dev.prozilla.pine.extensions.pinet.connection;
 
-import dev.prozilla.pine.extensions.pinet.Session;
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
+import dev.prozilla.pine.extensions.pinet.session.Session;
 
 public class LocalConnection implements Connection {
 	

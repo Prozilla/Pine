@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.component.ui;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.property.bindable.BindableStringProperty;
 import dev.prozilla.pine.common.property.bindable.SimpleBindableStringProperty;
+import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.state.input.Input;
@@ -81,6 +82,33 @@ public class TextInputNode extends Component {
 		updateCursor();
 	}
 	
+	public String getSelectedText() {
+		if (!hasSelection()) {
+			return null;
+		}
+		return textProperty.getValue().substring(getSelectionStart(), getSelectionEnd());
+	}
+	
+	public void insert(String text) {
+		deleteSelection();
+		
+		if (StringUtils.isEmpty(text)) {
+			return;
+		}
+		
+		boolean inserted = textProperty.buildValue((stringBuilder) -> {
+			if (cursorPosition < 0 || cursorPosition > stringBuilder.length()) {
+				return null;
+			}
+			String string = stringBuilder.insert(cursorPosition, text).toString();
+			return type.isValid(string) ? string : null;
+		});
+		
+		if (inserted) {
+			cursorPosition += text.length();
+		}
+	}
+	
 	public boolean deleteSelection() {
 		if (!hasSelection()) {
 			return false;
@@ -107,6 +135,26 @@ public class TextInputNode extends Component {
 			cursorPosition--;
 		}
 		textProperty.buildValue((stringBuilder) -> stringBuilder.deleteCharAt(cursorPosition));
+	}
+	
+	public void moveCursorToStart(boolean select) {
+		if (select) {
+			selection = getSelectionStart();
+		} else {
+			clearSelection();
+		}
+		cursorPosition = 0;
+		updateCursor();
+	}
+	
+	public void moveCursorToEnd(boolean select) {
+		if (select) {
+			selection = getSelectionEnd() - textProperty.getLength();
+		} else {
+			clearSelection();
+		}
+		cursorPosition = textProperty.getLength();
+		updateCursor();
 	}
 	
 	public int getSelectionStart() {
@@ -149,18 +197,6 @@ public class TextInputNode extends Component {
 		updateCursor();
 	}
 	
-	public void moveCursorToStart() {
-		cursorPosition = 0;
-		clearSelection();
-		updateCursor();
-	}
-	
-	public void moveCursorToEnd() {
-		cursorPosition = textProperty.getLength();
-		clearSelection();
-		updateCursor();
-	}
-	
 	public void clearSelection() {
 		selection = 0;
 	}
@@ -180,6 +216,12 @@ public class TextInputNode extends Component {
 		}
 		cursorPosition++;
 		selection--;
+		updateCursor();
+	}
+	
+	public void selectAll() {
+		cursorPosition = textProperty.getLength();
+		selection = -cursorPosition;
 		updateCursor();
 	}
 	

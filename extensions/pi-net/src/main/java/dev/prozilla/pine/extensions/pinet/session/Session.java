@@ -1,19 +1,24 @@
-package dev.prozilla.pine.extensions.pinet;
+package dev.prozilla.pine.extensions.pinet.session;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
+import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.util.checks.Checks;
+import dev.prozilla.pine.extensions.pinet.Server;
+import dev.prozilla.pine.extensions.pinet.Synchronizable;
 import dev.prozilla.pine.extensions.pinet.connection.Connection;
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
-import dev.prozilla.pine.extensions.pinet.server.Server;
 
 /**
- * A connection between a client and a {@link Server}.
+ * A connection between a client and the {@link Server}.
  */
-public abstract class Session implements Destructible {
+public abstract class Session implements Destructible, Synchronizable {
 	
 	private final Connection connection;
+	private Logger logger;
 	
-	public Session(Connection connection) {
+	public Session(Connection connection, Logger logger) {
 		this.connection = connection;
+		this.logger = logger;
 	}
 	
 	/**
@@ -21,6 +26,7 @@ public abstract class Session implements Destructible {
 	 * @param packet The packet to send
 	 */
 	public void send(Packet packet) {
+		Checks.isNotNull(packet, "packet");
 		connection.send(packet);
 	}
 	
@@ -38,6 +44,14 @@ public abstract class Session implements Destructible {
 	 * Disconnects the client associated with this session from the {@link Server}.
 	 */
 	public abstract void disconnect();
+	
+	public Logger getLogger() {
+		return logger != null ? logger : Logger.system;
+	}
+	
+	public void setLogger(Logger logger) {
+		this.logger = logger;
+	}
 	
 	@Override
 	public void destroy() {

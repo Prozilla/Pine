@@ -1,9 +1,9 @@
-package dev.prozilla.pine.examples.sokoban.packet;
+package dev.prozilla.pine.examples.chat.response;
 
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
 import dev.prozilla.pine.extensions.pinet.packet.PacketBuffer;
 
-public record UndoRequestPacket() implements Packet {
+public record ClientLeavePacket(String username) implements Packet {
 	
 	public static final int ID = 2;
 	
@@ -14,10 +14,11 @@ public record UndoRequestPacket() implements Packet {
 	
 	@Override
 	public void encode(PacketBuffer buffer) {
+		buffer.writeString(username);
 	}
 	
-	public static UndoRequestPacket decode(PacketBuffer buffer) {
-		return new UndoRequestPacket();
+	public static ClientLeavePacket decode(PacketBuffer buffer) {
+		return new ClientLeavePacket(buffer.readString());
 	}
 	
 }

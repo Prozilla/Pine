@@ -19,12 +19,18 @@ import dev.prozilla.pine.examples.sokoban.GameMap;
 import dev.prozilla.pine.examples.sokoban.entity.*;
 import dev.prozilla.pine.examples.sokoban.entity.ui.UIPrefab;
 import dev.prozilla.pine.examples.sokoban.packet.*;
+import dev.prozilla.pine.examples.sokoban.request.MoveRequest;
+import dev.prozilla.pine.examples.sokoban.request.RestartRequest;
+import dev.prozilla.pine.examples.sokoban.request.UndoRequest;
 import dev.prozilla.pine.examples.sokoban.system.CrateUpdater;
-import dev.prozilla.pine.examples.sokoban.system.NetworkHandler;
+import dev.prozilla.pine.examples.sokoban.system.MessageHandler;
 import dev.prozilla.pine.examples.sokoban.system.PlayerInputHandler;
 import dev.prozilla.pine.examples.sokoban.system.PlayerMover;
 import dev.prozilla.pine.extensions.pinet.component.NetworkManager;
 import dev.prozilla.pine.extensions.pinet.entity.NetworkManagerPrefab;
+import dev.prozilla.pine.extensions.pinet.message.ServerMessageFilter;
+import dev.prozilla.pine.extensions.pinet.message.ServerMessageHandler;
+import dev.prozilla.pine.extensions.pinet.message.ServerMessageLogger;
 import dev.prozilla.pine.extensions.pinet.system.NetworkSynchronizer;
 
 public class GameScene extends Scene {
@@ -55,9 +61,9 @@ public class GameScene extends Scene {
 		// Create network
 		network = addEntity(new NetworkManagerPrefab()).getComponent(NetworkManager.class);
 		network.getCodec()
-			.addDecoder(MoveRequestPacket.ID, MoveRequestPacket::decode)
-			.addDecoder(UndoRequestPacket.ID, UndoRequestPacket::decode)
-			.addDecoder(RestartRequestPacket.ID, RestartRequestPacket::decode)
+			.addDecoder(MoveRequest.ID, MoveRequest::decode)
+			.addDecoder(UndoRequest.ID, UndoRequest::decode)
+			.addDecoder(RestartRequest.ID, RestartRequest::decode)
 			.addDecoder(WelcomePacket.ID, WelcomePacket::decode)
 			.addDecoder(GameStatePacket.ID, GameStatePacket::decode)
 			.addDecoder(PlayerJoinPacket.ID, PlayerJoinPacket::decode)
@@ -105,7 +111,9 @@ public class GameScene extends Scene {
 		
 		// Add systems
 		addSystem(new NetworkSynchronizer());
-		NetworkHandler packetHandler = addSystem(new NetworkHandler(network, foregroundGrid));
+		ServerMessageHandler messageHandler = addSystem(new MessageHandler(network, foregroundGrid))
+			.then(ServerMessageFilter.unacknowledged())
+			.then(new ServerMessageLogger(logger));
 		addSystem(new PlayerInputHandler(foregroundGrid, network));
 		addSystem(new PlayerMover());
 		addSystem(new CrateUpdater(goalGrid));
@@ -130,12 +138,12 @@ public class GameScene extends Scene {
 			GameManager.SessionConfig sessionConfig = GameManager.instance.getSessionConfig();
 			
 			if (isHost) {
-				network.createHost(sessionConfig.port(), packetHandler, packetHandler);
+				network.createHost(sessionConfig.port(), messageHandler);
 			} else {
-				network.createClient(sessionConfig.address(), sessionConfig.port(), packetHandler);
+				network.createClient(sessionConfig.address(), sessionConfig.port(), messageHandler);
 			}
 		} else {
-			network.createStandalone(packetHandler);
+			network.createStandalone(messageHandler);
 		}
 	}
 	

@@ -1,12 +1,12 @@
 package dev.prozilla.pine.examples.chat.request;
 
-import dev.prozilla.pine.examples.chat.packet.ClientJoinPacket;
-import dev.prozilla.pine.examples.chat.packet.ClientLeavePacket;
-import dev.prozilla.pine.examples.chat.packet.MessagePacket;
-import dev.prozilla.pine.examples.chat.packet.WelcomePacket;
+import dev.prozilla.pine.examples.chat.response.ClientJoinPacket;
+import dev.prozilla.pine.examples.chat.response.ClientLeavePacket;
+import dev.prozilla.pine.examples.chat.response.MessagePacket;
+import dev.prozilla.pine.examples.chat.response.WelcomePacket;
+import dev.prozilla.pine.extensions.pinet.message.request.ServerRequest;
+import dev.prozilla.pine.extensions.pinet.message.request.ServerRequestHandler;
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
-import dev.prozilla.pine.extensions.pinet.server.Server;
-import dev.prozilla.pine.extensions.pinet.server.ServerRequestHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,31 +20,31 @@ public class RequestHandler implements ServerRequestHandler {
 	}
 	
 	@Override
-	public void handleRequest(Server.Request request) {
+	public void handleRequest(ServerRequest request) {
 		Packet payload = request.getPayload();
 		
-		if (payload instanceof SetUsernameRequest(int clientId, String username)) {
-			if (clientId == request.getAuthorId() && usernames.put(clientId, username) == null) {
-				request.replyToOthers(new ClientJoinPacket(clientId, username));
+		if (payload instanceof SetUsernamePacket(String username)) {
+			if (usernames.put(request.getSenderId(), username) == null) {
+				request.replyToOthers(new ClientJoinPacket(username));
 			}
-		} else if (payload instanceof SendMessageRequest(int clientId, String content)) {
-			String username = usernames.get(clientId);
-			if (clientId == request.getAuthorId() && username != null) {
-				request.replyToAll(new MessagePacket(clientId, username, content));
+		} else if (payload instanceof SendMessagePacket(String content)) {
+			String username = usernames.get(request.getSenderId());
+			if (username != null) {
+				request.replyToAll(new MessagePacket(username, content));
 			}
 		}
 	}
 	
 	@Override
-	public void handleJoin(Server.Request request) {
-		request.reply(new WelcomePacket(request.getAuthorId()));
+	public void handleJoin(ServerRequest request) {
+		request.reply(new WelcomePacket(request.getSenderId()));
 	}
 	
 	@Override
-	public void handleLeave(Server.Request request) {
-		String username = usernames.get(request.getAuthorId());
+	public void handleLeave(ServerRequest request) {
+		String username = usernames.get(request.getSenderId());
 		if (username != null) {
-			request.replyToOthers(new ClientLeavePacket(request.getAuthorId(), username));
+			request.replyToOthers(new ClientLeavePacket(username));
 		}
 	}
 	

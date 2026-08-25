@@ -3,7 +3,7 @@ package dev.prozilla.pine.examples.chat.request;
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
 import dev.prozilla.pine.extensions.pinet.packet.PacketBuffer;
 
-public record SetUsernameRequest(int clientId, String username) implements Packet {
+public record SetUsernamePacket(String username) implements Packet {
 	
 	public static final int ID = 4;
 	
@@ -14,12 +14,11 @@ public record SetUsernameRequest(int clientId, String username) implements Packe
 	
 	@Override
 	public void encode(PacketBuffer buffer) {
-		buffer.writeVarInt(clientId);
 		buffer.writeString(username);
 	}
 	
-	public static SetUsernameRequest decode(PacketBuffer buffer) {
-		return new SetUsernameRequest(buffer.readVarInt(), buffer.readString());
+	public static SetUsernamePacket decode(PacketBuffer buffer) {
+		return new SetUsernamePacket(buffer.readString());
 	}
 	
 }
