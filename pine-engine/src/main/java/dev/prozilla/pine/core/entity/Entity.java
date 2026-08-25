@@ -76,6 +76,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	 */
 	@Override
 	public void destroy() {
+		// TODO: handle proper scene cleanUp when application stops
 		if (!application.isRunning() || application.isLoading()) {
 			return;
 		}

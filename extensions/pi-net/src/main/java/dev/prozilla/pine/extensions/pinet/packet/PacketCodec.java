@@ -25,7 +25,7 @@ public class PacketCodec extends MessageToMessageCodec<ByteBuf, Packet> {
 		ByteBuf buffer = context.alloc().buffer();
 		PacketBuffer packetBuffer = new PacketBuffer(buffer);
 		packetBuffer.writeVarInt(packet.getPacketId());
-		packet.write(packetBuffer);
+		packet.encode(packetBuffer);
 		out.add(buffer);
 	}
 	

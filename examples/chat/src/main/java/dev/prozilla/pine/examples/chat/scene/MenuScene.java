@@ -29,13 +29,13 @@ public class MenuScene extends SceneBase {
 		
 		ButtonPrefab hostButtonPrefab = new ButtonPrefab("Create chat");
 		hostButtonPrefab.setClickCallback((button) -> {
-			chatApp.loadScene(chatApp.serverStartupScene);
+			chatApp.loadScene(chatApp.hostScene);
 		});
 		layout.addChild(hostButtonPrefab);
 		
 		ButtonPrefab connectButtonPrefab = new ButtonPrefab("Join chat");
 		connectButtonPrefab.setClickCallback((button) -> {
-			chatApp.loadScene(chatApp.connectScene);
+			chatApp.loadScene(chatApp.joinScene);
 		});
 		layout.addChild(connectButtonPrefab);
 	}

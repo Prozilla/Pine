@@ -13,7 +13,7 @@ public record RestartRequestPacket() implements Packet {
 	}
 	
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void encode(PacketBuffer buffer) {
 	}
 	
 	public static RestartRequestPacket decode(PacketBuffer buffer) {

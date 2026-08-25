@@ -13,7 +13,7 @@ public record GameStatePacket(int[] playerIds, int[] playerX, int[] playerY, int
 	}
 	
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void encode(PacketBuffer buffer) {
 		buffer.writeIntArray(playerIds);
 		buffer.writeIntArray(playerX);
 		buffer.writeIntArray(playerY);

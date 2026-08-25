@@ -14,7 +14,7 @@ public record MoveRequestPacket(Direction direction) implements Packet {
 	}
 	
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void encode(PacketBuffer buffer) {
 		buffer.writeByte(direction.ordinal());
 	}
 	

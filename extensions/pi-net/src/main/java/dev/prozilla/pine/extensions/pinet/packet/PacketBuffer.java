@@ -2,6 +2,9 @@ package dev.prozilla.pine.extensions.pinet.packet;
 
 import io.netty.buffer.ByteBuf;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 /**
  * A buffer that contains the data of a {@link Packet} as bytes.
  */
@@ -11,34 +14,6 @@ public final class PacketBuffer {
 	
 	public PacketBuffer(ByteBuf buffer) {
 		this.buffer = buffer;
-	}
-	
-	public void writeVarInt(int value) {
-		while ((value & ~0x7F) != 0) {
-			buffer.writeByte((value & 0x7F) | 0x80);
-			value >>>= 7;
-		}
-		buffer.writeByte(value);
-	}
-	
-	public int readVarInt() {
-		int value = 0;
-		int position = 0;
-		byte current;
-		
-		while (true) {
-			current = buffer.readByte();
-			value |= (current & 0x7F) << position;
-			if ((current & 0x80) == 0) {
-				break;
-			}
-			position += 7;
-			if (position >= 32) {
-				throw new IllegalArgumentException("VarInt too big");
-			}
-		}
-		
-		return value;
 	}
 	
 	public void writeByte(int value) {
@@ -83,6 +58,52 @@ public final class PacketBuffer {
 			values[i] = buffer.readInt();
 		}
 		return values;
+	}
+	
+	public void writeString(String string) {
+		writeString(string, StandardCharsets.UTF_8);
+	}
+	
+	public void writeString(String string, Charset charset) {
+		writeVarInt(string.length());
+		buffer.writeCharSequence(string, charset);
+	}
+	
+	public String readString() {
+		return readString(StandardCharsets.UTF_8);
+	}
+	
+	public String readString(Charset charset) {
+		int length = readVarInt();
+		return buffer.readCharSequence(length, charset).toString();
+	}
+	
+	public void writeVarInt(int value) {
+		while ((value & ~0x7F) != 0) {
+			buffer.writeByte((value & 0x7F) | 0x80);
+			value >>>= 7;
+		}
+		buffer.writeByte(value);
+	}
+	
+	public int readVarInt() {
+		int value = 0;
+		int position = 0;
+		byte current;
+		
+		while (true) {
+			current = buffer.readByte();
+			value |= (current & 0x7F) << position;
+			if ((current & 0x80) == 0) {
+				break;
+			}
+			position += 7;
+			if (position >= 32) {
+				throw new IllegalArgumentException("VarInt too big");
+			}
+		}
+		
+		return value;
 	}
 	
 	public int readableBytes() {

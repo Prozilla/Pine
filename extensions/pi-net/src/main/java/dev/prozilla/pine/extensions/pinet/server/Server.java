@@ -24,6 +24,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * An integrated server that runs on the host and handles connections of clients to the host.
+ *
+ * <p>
+ *     The server keeps track of the clients connected to the network and handles the communication between them, using {@link ServerSession}s.
+ *     The server collects {@link Request}s from clients and queues them up to be processed by a {@link ServerRequestHandler},
+ *     which may generate {@link Packet}s in response, which the server then sends back to the clients via their respective {@link ServerSession}.
+ * </p>
  */
 public class Server implements Destructible {
 	
@@ -35,17 +41,17 @@ public class Server implements Destructible {
 	private ServerSession hostSession;
 	private int nextClientId;
 	
-	private final Queue<Message> receivedMessages;
-	private final ServerMessageHandler messageHandler;
+	private final Queue<Request> receivedRequests;
+	private final ServerRequestHandler requestHandler;
 	
 	/** The client ID of the host. */
 	public static final int HOST_ID = 0;
 	
-	public Server(int port, ServerMessageHandler messageHandler, PacketCodec codec) throws IOException {
-		this.messageHandler = messageHandler;
+	public Server(int port, ServerRequestHandler requestHandler, PacketCodec codec) throws IOException {
+		this.requestHandler = requestHandler;
 		sessions = new CopyOnWriteArrayList<>();
 		nextClientId = HOST_ID + 1;
-		receivedMessages = new ArrayDeque<>();
+		receivedRequests = new ArrayDeque<>();
 		
 		bossGroup = new MultiThreadIoEventLoopGroup(1, NioIoHandler.newFactory());
 		workerGroup = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
@@ -115,36 +121,36 @@ public class Server implements Destructible {
 	}
 	
 	/**
-	 * Adds a message to the queue to be process during the next synchronization.
-	 * @param clientId The ID of the author of the message
-	 * @param packet The payload of the message
-	 * @param source The source of the message
+	 * Adds a request to the queue to be processed during the next synchronization.
+	 * @param clientId The ID of the author of the request
+	 * @param packet The payload of the request
+	 * @param source The source of the request
 	 */
 	public void receive(int clientId, Packet packet, ServerSession source) {
-		receivedMessages.add(new Message(clientId, packet, source, this));
+		receivedRequests.add(new Request(clientId, packet, source, this));
 	}
 	
 	/**
-	 * Processes all messages that were received after the last synchronization and synchronizes each session.
+	 * Processes all requests that were received after the last synchronization and synchronizes each session.
 	 */
 	public void synchronize() {
-		QueueUtils.drain(receivedMessages, this::handleMessage);
+		QueueUtils.drain(receivedRequests, this::handleRequest);
 		
 		for (ServerSession session : sessions) {
 			session.synchronize();
 		}
 	}
 	
-	private void handleMessage(Message message) {
+	private void handleRequest(Request request) {
 		try {
-			messageHandler.handleMessage(message);
+			requestHandler.handleRequest(request);
 		} catch (RuntimeException e) {
-			Logger.system.error("Failed to handle server packet: " + message.getPayload().getClass().getSimpleName(), e);
+			Logger.system.error("Failed to handle request: " + request.getPayload().getClass().getSimpleName(), e);
 		}
 	}
 	
-	public ServerMessageHandler getMessageHandler() {
-		return messageHandler;
+	public ServerRequestHandler getRequestHandler() {
+		return requestHandler;
 	}
 	
 	/**
@@ -167,22 +173,29 @@ public class Server implements Destructible {
 		bossGroup.shutdownGracefully();
 		workerGroup.shutdownGracefully();
 	}
-	
+
 	/**
-	 * A messaged received by the {@link Server}, optionally containing a {@link Packet} as a payload.
+	 * A request received by the {@link Server} from a client, optionally containing a {@link Packet} as a payload.
+	 *
+	 * <p>
+	 *     A client (referred to as the author in this context) can send a request to the server to ask it to do something for them.
+	 *     The request may contain a {@link Packet} as a payload to indicate the type of request
+	 *     and provide any information the server might need to process it. The server may then respond
+	 *     by sending {@link Packet}s to the author and/or the other clients on the network.
+	 * </p>
 	 */
-	public static final class Message {
+	public static final class Request {
 		
 		private final int authorId;
 		private final Packet payload;
 		private final ServerSession source;
 		private final Server server;
 		
-		public Message(Packet payload) {
+		public Request(Packet payload) {
 			this(Server.HOST_ID, payload, null, null);
 		}
 		
-		public Message(int authorId, Packet payload, ServerSession source, Server server) {
+		public Request(int authorId, Packet payload, ServerSession source, Server server) {
 			this.authorId = authorId;
 			this.payload = payload;
 			this.source = source;
@@ -190,21 +203,21 @@ public class Server implements Destructible {
 		}
 		
 		/**
-		 * @return The ID of the user that created this message.
+		 * @return The ID of the user that created this request.
 		 */
 		public int getAuthorId() {
 			return authorId;
 		}
 		
 		/**
-		 * @return The payload attached to this message, or {@code null}.
+		 * @return The payload attached to this request, or {@code null}.
 		 */
 		public Packet getPayload() {
 			return payload;
 		}
 		
 		/**
-		 * @return The server that received this message.
+		 * @return The server that received this request.
 		 */
 		public Server getServer() {
 			return server;
@@ -215,14 +228,14 @@ public class Server implements Destructible {
 		}
 		
 		/**
-		 * @return {@code true} if this message was created by the host.
+		 * @return {@code true} if this request was created by the host.
 		 */
 		public boolean receivedFromHost() {
 			return authorId == Server.HOST_ID;
 		}
 		
 		/**
-		 * Sends a packet as a reply to this message to the author of this message.
+		 * Sends a packet as a reply to this request to its author.
 		 * @param packet The packet to send
 		 */
 		public void reply(Packet packet) {
@@ -232,7 +245,7 @@ public class Server implements Destructible {
 		}
 		
 		/**
-		 * Sends a packet as a reply to this message to all clients.
+		 * Sends a packet as a reply to this request to all clients.
 		 * @param packet The packet to send
 		 */
 		public void replyToAll(Packet packet) {
@@ -242,7 +255,7 @@ public class Server implements Destructible {
 		}
 		
 		/**
-		 * Sends a packet as a reply to this message to all clients, except the author of this message.
+		 * Sends a packet as a reply to this request to all clients, except the author of this request.
 		 * @param packet The packet to send
 		 */
 		public void replyToOthers(Packet packet) {

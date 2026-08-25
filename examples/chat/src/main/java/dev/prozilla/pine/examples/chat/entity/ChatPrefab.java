@@ -8,20 +8,20 @@ import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.property.bindable.BindableStringProperty;
 import dev.prozilla.pine.common.property.bindable.SimpleBindableStringProperty;
-import dev.prozilla.pine.common.system.Ansi;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextInputPrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
-import dev.prozilla.pine.examples.chat.net.user.User;
+import dev.prozilla.pine.examples.chat.EntityTag;
+import dev.prozilla.pine.examples.chat.request.SendMessageRequest;
+import dev.prozilla.pine.extensions.pinet.component.NetworkManager;
 
 public class ChatPrefab extends LayoutPrefab {
 	
-	private final User user;
+	private final NetworkManager network;
 	private final Font font;
 	
-	public ChatPrefab(User user, Font font) {
-		this.user = user;
+	public ChatPrefab(NetworkManager network, Font font) {
+		this.network = network;
 		this.font = font;
 		
 		setGap(new Dimension(8));
@@ -37,7 +37,8 @@ public class ChatPrefab extends LayoutPrefab {
 		messageListPrefab.setGap(new Dimension(4));
 		messageListPrefab.setDirection(Direction.DOWN);
 		messageListPrefab.setAlignment(Alignment.START);
-		Entity messageList = entity.addChild(messageListPrefab);
+		messageListPrefab.setTag(EntityTag.MESSAGE_LIST);
+		entity.addChild(messageListPrefab);
 		
 		LayoutPrefab inputBoxPrefab = new LayoutPrefab();
 		inputBoxPrefab.setDirection(Direction.RIGHT);
@@ -54,17 +55,10 @@ public class ChatPrefab extends LayoutPrefab {
 		ButtonPrefab sendButtonPrefab = new ButtonPrefab("Send");
 		sendButtonPrefab.setFont(font);
 		sendButtonPrefab.setClickCallback((button) -> {
-			if (!inputProperty.isBlank()) {
-				user.sendMessage(inputProperty.swapValue(""));
+			if (!inputProperty.isBlank() && network.isConnected()) {
+				network.send(new SendMessageRequest(network.getLocalClientId(), inputProperty.swapValue("")));
 			}
 		});
 		inputBox.addChild(sendButtonPrefab);
-		
-		TextPrefab messagePrefab = new TextPrefab();
-		messagePrefab.setFont(font);
-		user.addMessageListener((event) -> {
-			messagePrefab.setText(Ansi.strip(event.getTarget()));
-			messageList.addChild(messagePrefab);
-		});
 	}
 }

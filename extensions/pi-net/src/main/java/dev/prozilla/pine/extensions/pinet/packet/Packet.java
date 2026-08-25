@@ -3,7 +3,7 @@ package dev.prozilla.pine.extensions.pinet.packet;
 import dev.prozilla.pine.extensions.pinet.server.Server;
 
 /**
- * Represents a message between a client and a {@link Server} that is written into a {@link PacketBuffer} by the sender and read from a {@link PacketBuffer} by the receiver.
+ * Represents a message between a client and a {@link Server} that is encoded into a {@link PacketBuffer} by the sender and decoded by the receiver.
  */
 public interface Packet {
 	
@@ -13,9 +13,9 @@ public interface Packet {
 	int getPacketId();
 	
 	/**
-	 * Writes the data of this packet into a {@link PacketBuffer}.
+	 * Encodes the data of this packet into a {@link PacketBuffer}.
 	 * @param buffer The buffer to write to
 	 */
-	void write(PacketBuffer buffer);
+	void encode(PacketBuffer buffer);
 	
 }

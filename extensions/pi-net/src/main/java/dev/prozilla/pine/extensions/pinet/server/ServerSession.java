@@ -46,7 +46,7 @@ public class ServerSession extends Session {
 	
 	private void join() {
 		clientId = isHost ? Server.HOST_ID : server.getNextClientId();
-		server.getMessageHandler().handleJoin(new Server.Message(clientId, null, this, server));
+		server.getRequestHandler().handleJoin(new Server.Request(clientId, null, this, server));
 	}
 	
 	@Override
@@ -56,7 +56,7 @@ public class ServerSession extends Session {
 		}
 		disconnected = true;
 		
-		server.getMessageHandler().handleLeave(new Server.Message(clientId, null, this, server));
+		server.getRequestHandler().handleLeave(new Server.Request(clientId, null, this, server));
 		server.disconnect(this);
 		super.destroy();
 	}

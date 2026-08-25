@@ -1,11 +1,11 @@
-package dev.prozilla.pine.examples.sokoban.packet;
+package dev.prozilla.pine.examples.chat.packet;
 
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
 import dev.prozilla.pine.extensions.pinet.packet.PacketBuffer;
 
-public record WelcomePacket(int playerId) implements Packet {
+public record WelcomePacket(int clientId) implements Packet {
 	
-	public static final int ID = 10;
+	public static final int ID = 3;
 	
 	@Override
 	public int getPacketId() {
@@ -14,7 +14,7 @@ public record WelcomePacket(int playerId) implements Packet {
 	
 	@Override
 	public void encode(PacketBuffer buffer) {
-		buffer.writeVarInt(playerId);
+		buffer.writeVarInt(clientId);
 	}
 	
 	public static WelcomePacket decode(PacketBuffer buffer) {

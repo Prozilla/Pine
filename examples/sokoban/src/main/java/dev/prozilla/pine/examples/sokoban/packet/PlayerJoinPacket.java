@@ -13,7 +13,7 @@ public record PlayerJoinPacket(int playerId, int x, int y) implements Packet {
 	}
 	
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void encode(PacketBuffer buffer) {
 		buffer.writeVarInt(playerId);
 		buffer.writeInt(x);
 		buffer.writeInt(y);

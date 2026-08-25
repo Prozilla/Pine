@@ -13,7 +13,7 @@ public record RejectionPacket() implements Packet {
 	}
 	
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void encode(PacketBuffer buffer) {
 	}
 	
 	public static RejectionPacket decode(PacketBuffer buffer) {

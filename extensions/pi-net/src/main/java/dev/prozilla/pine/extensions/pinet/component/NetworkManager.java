@@ -7,7 +7,7 @@ import dev.prozilla.pine.extensions.pinet.client.ClientSession;
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
 import dev.prozilla.pine.extensions.pinet.packet.PacketCodec;
 import dev.prozilla.pine.extensions.pinet.server.Server;
-import dev.prozilla.pine.extensions.pinet.server.ServerMessageHandler;
+import dev.prozilla.pine.extensions.pinet.server.ServerRequestHandler;
 
 import java.io.IOException;
 
@@ -15,14 +15,14 @@ import java.io.IOException;
  * Manages a client's connection to a network.
  * <p>
  * The network can either be a {@link Server}, in which case the connection is local if the client is the host and otherwise remote,
- * or a standalone network, in which case the "client" has no connection and {@link Packet}s get sent directly to a {@link ServerMessageHandler}.
+ * or a standalone network, in which case the "client" has no connection and {@link Packet}s get sent directly to a {@link ServerRequestHandler}.
  */
 public class NetworkManager extends Component {
 	
 	private Server server;
 	private ClientSession session;
 	private int localClientId;
-	private ServerMessageHandler localMessageHandler;
+	private ServerRequestHandler localRequestHandler;
 	private PacketCodec codec;
 	
 	public NetworkManager() {
@@ -37,10 +37,10 @@ public class NetworkManager extends Component {
 	/**
 	 * Creates an integrated server and a local connection to it.
 	 */
-	public void createHost(int port, ServerMessageHandler messageHandler, ClientPacketHandler packetHandler) {
+	public void createHost(int port, ServerRequestHandler requestHandler, ClientPacketHandler packetHandler) {
 		disconnect();
 		try {
-			server = new Server(port, messageHandler, codec);
+			server = new Server(port, requestHandler, codec);
 			session = ClientSession.createLocal(server.connectHost(), packetHandler);
 		} catch (IOException e) {
 			getLogger().error("Failed to start server", e);
@@ -61,12 +61,12 @@ public class NetworkManager extends Component {
 	}
 	
 	/**
-	 * Creates a standalone network that sends packets directly to a message handler.
-	 * @param messageHandler The message handler
+	 * Creates a standalone network that sends packets directly to a request handler.
+	 * @param requestHandler The request handler
 	 */
-	public void createStandalone(ServerMessageHandler messageHandler) {
+	public void createStandalone(ServerRequestHandler requestHandler) {
 		disconnect();
-		localMessageHandler = messageHandler;
+		localRequestHandler = requestHandler;
 		localClientId = Server.HOST_ID;
 	}
 	
@@ -75,8 +75,8 @@ public class NetworkManager extends Component {
 	 * @param packet The packet to send
 	 */
 	public void send(Packet packet) {
-		if (localMessageHandler != null) {
-			localMessageHandler.handleMessage(new Server.Message(packet));
+		if (localRequestHandler != null) {
+			localRequestHandler.handleRequest(new Server.Request(packet));
 		} else if (session != null) {
 			session.send(packet);
 		}
@@ -116,19 +116,23 @@ public class NetworkManager extends Component {
 	}
 	
 	public boolean isLocalClient(int clientId) {
-		return (session != null || localMessageHandler != null) && clientId == getLocalClientId();
-	}
-	
-	public void setLocalClientId(int localClientId) {
-		this.localClientId = localClientId;
+		return clientId == localClientId && (session != null || localRequestHandler != null);
 	}
 	
 	public int getLocalClientId() {
 		return localClientId;
 	}
 	
+	public void setLocalClientId(int localClientId) {
+		this.localClientId = localClientId;
+	}
+	
 	public PacketCodec getCodec() {
 		return codec;
+	}
+	
+	public void setCodec(PacketCodec codec) {
+		this.codec = codec;
 	}
 	
 	@Override
@@ -143,7 +147,7 @@ public class NetworkManager extends Component {
 	public void disconnect() {
 		session = Destructible.destroy(session);
 		server = Destructible.destroy(server);
-		localMessageHandler = null;
+		localRequestHandler = null;
 	}
 	
 }

@@ -15,7 +15,7 @@ public record PlayerMovePacket(Move move) implements Packet {
 	}
 	
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void encode(PacketBuffer buffer) {
 		buffer.writeVarInt(move.playerId());
 		buffer.writeByte(move.direction().ordinal());
 		buffer.writeInt(move.fromX());

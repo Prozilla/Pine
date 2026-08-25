@@ -13,7 +13,7 @@ public record PlayerLeavePacket(int playerId) implements Packet {
 	}
 	
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void encode(PacketBuffer buffer) {
 		buffer.writeVarInt(playerId);
 	}
 	

@@ -23,11 +23,11 @@ import dev.prozilla.pine.extensions.pinet.component.NetworkIdentity;
 import dev.prozilla.pine.extensions.pinet.component.NetworkManager;
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
 import dev.prozilla.pine.extensions.pinet.server.Server;
-import dev.prozilla.pine.extensions.pinet.server.ServerMessageHandler;
+import dev.prozilla.pine.extensions.pinet.server.ServerRequestHandler;
 
 import java.util.*;
 
-public class NetworkHandler extends UpdateSystemBase implements ClientPacketHandler, ServerMessageHandler {
+public class NetworkHandler extends UpdateSystemBase implements ClientPacketHandler, ServerRequestHandler {
 	
 	private final NetworkManager network;
 	private final GridGroup foregroundGrid;
@@ -64,36 +64,36 @@ public class NetworkHandler extends UpdateSystemBase implements ClientPacketHand
 	}
 	
 	@Override
-	public void handleMessage(Server.Message message) {
-		Packet payload = message.getPayload();
+	public void handleRequest(Server.Request request) {
+		Packet payload = request.getPayload();
 		
 		if (payload instanceof MoveRequestPacket(Direction direction)) {
-			move(message, direction);
+			move(request, direction);
 		} else if (payload instanceof UndoRequestPacket) {
-			undo(message);
+			undo(request);
 		} else if (payload instanceof RestartRequestPacket) {
-			restart(message);
+			restart(request);
 		}
 	}
 	
 	@Override
-	public void handleJoin(Server.Message message) {
+	public void handleJoin(Server.Request request) {
 		Vector2i spawn = findSpawn();
-		foregroundGrid.addTile(new PlayerPrefab(message.getAuthorId()), spawn.x, spawn.y);
+		foregroundGrid.addTile(new PlayerPrefab(request.getAuthorId()), spawn.x, spawn.y);
 		
-		message.reply(new WelcomePacket(message.getAuthorId()));
-		message.reply(createSnapshot());
-		message.replyToOthers(new PlayerJoinPacket(message.getAuthorId(), spawn.x, spawn.y));
+		request.reply(new WelcomePacket(request.getAuthorId()));
+		request.reply(createSnapshot());
+		request.replyToOthers(new PlayerJoinPacket(request.getAuthorId(), spawn.x, spawn.y));
 	}
 	
 	@Override
-	public void handleLeave(Server.Message message) {
-		EntityChunk chunk = getPlayer(message.getAuthorId());
+	public void handleLeave(Server.Request request) {
+		EntityChunk chunk = getPlayer(request.getAuthorId());
 		if (chunk != null) {
 			chunk.getEntity().destroy();
 		}
 		
-		message.replyToOthers(new PlayerLeavePacket(message.getAuthorId()));
+		request.replyToOthers(new PlayerLeavePacket(request.getAuthorId()));
 	}
 	
 	@Override
@@ -211,10 +211,10 @@ public class NetworkHandler extends UpdateSystemBase implements ClientPacketHand
 		}
 	}
 	
-	private void move(Server.Message message, Direction direction) {
-		EntityChunk chunk = getPlayer(message.getAuthorId());
+	private void move(Server.Request request, Direction direction) {
+		EntityChunk chunk = getPlayer(request.getAuthorId());
 		if (chunk == null) {
-			fail(message);
+			fail(request);
 			return;
 		}
 		
@@ -227,7 +227,7 @@ public class NetworkHandler extends UpdateSystemBase implements ClientPacketHand
 		
 		Move move = playerData.computeMove(foregroundGrid, direction);
 		if (move == null) {
-			fail(message);
+			fail(request);
 			return;
 		}
 		
@@ -235,33 +235,33 @@ public class NetworkHandler extends UpdateSystemBase implements ClientPacketHand
 		if (!playerData.awaitingConfirm) {
 			playerData.beginMove(move, foregroundGrid);
 		}
-		message.replyToAll(new PlayerMovePacket(move));
+		request.replyToAll(new PlayerMovePacket(move));
 		
-		if (message.isLocal()) {
+		if (request.isLocal()) {
 			playerData.awaitingConfirm = false;
 		}
 	}
 	
-	private void undo(Server.Message message) {
-		EntityChunk chunk = getPlayer(message.getAuthorId());
+	private void undo(Server.Request request) {
+		EntityChunk chunk = getPlayer(request.getAuthorId());
 		if (chunk == null) {
-			fail(message);
+			fail(request);
 			return;
 		}
 		
 		chunk.getComponent(PlayerData.class).finishMove();
 		
 		if (chunk.getComponent(History.class).undo(foregroundGrid) != null) {
-			message.replyToAll(createSnapshot());
+			request.replyToAll(createSnapshot());
 		} else {
-			fail(message);
+			fail(request);
 		}
 	}
 	
-	private void restart(Server.Message message) {
-		boolean allowed = message.receivedFromHost();
+	private void restart(Server.Request request) {
+		boolean allowed = request.receivedFromHost();
 		if (!allowed) {
-			fail(message);
+			fail(request);
 			return;
 		}
 		
@@ -279,17 +279,17 @@ public class NetworkHandler extends UpdateSystemBase implements ClientPacketHand
 		
 		forEach(chunk -> chunk.getComponent(History.class).clear());
 		
-		message.replyToAll(createSnapshot());
+		request.replyToAll(createSnapshot());
 	}
 	
-	private void fail(Server.Message message) {
-		if (message.isLocal()) {
-			rejectPendingMove(message.getAuthorId());
+	private void fail(Server.Request request) {
+		if (request.isLocal()) {
+			rejectPendingMove(request.getAuthorId());
 			return;
 		}
 		
-		message.reply(new RejectionPacket());
-		message.reply(createSnapshot());
+		request.reply(new RejectionPacket());
+		request.reply(createSnapshot());
 	}
 	
 	private void clearCrates() {
