@@ -2,6 +2,7 @@ package dev.prozilla.pine.examples.sokoban.system;
 
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.math.vector.Vector3i;
 import dev.prozilla.pine.core.component.audio.AudioEffectPlayer;
 import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
@@ -68,7 +69,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		
 		request.reply(new WelcomePacket(request.getSenderId()));
 		request.reply(createSnapshot());
-		request.replyToOthers(new PlayerJoinPacket(request.getSenderId(), spawn.x, spawn.y));
+		request.replyToOthers(new PlayerJoinPacket(request.getSenderId(), spawn));
 	}
 	
 	@Override
@@ -92,9 +93,9 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 				response.acknowledge();
 				applyGameState(state);
 			}
-			case PlayerJoinPacket(int playerId, int x, int y) -> {
+			case PlayerJoinPacket(int playerId, Vector2i spawn) -> {
 				response.acknowledge();
-				applyPlayer(playerId, new Vector2i(x, y));
+				applyPlayer(playerId, spawn);
 			}
 			case PlayerLeavePacket(int playerId) -> {
 				response.acknowledge();
@@ -122,13 +123,13 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		clearAwaitingConfirm(network.getLocalClientId());
 		
 		Map<Integer, Vector2i> playerPositions = new HashMap<>();
-		for (int i = 0; i < state.playerIds().length; i++) {
-			playerPositions.put(state.playerIds()[i], new Vector2i(state.playerX()[i], state.playerY()[i]));
+		for (Vector3i player : state.players()) {
+			playerPositions.put(player.x, new Vector2i(player.y, player.z));
 		}
 		
 		List<Vector2i> cratePositions = new ArrayList<>();
-		for (int i = 0; i < state.crateX().length; i++) {
-			cratePositions.add(new Vector2i(state.crateX()[i], state.crateY()[i]));
+		for (Vector2i crate : state.crates()) {
+			cratePositions.add(crate.clone());
 		}
 		
 		applyState(playerPositions, cratePositions);
@@ -151,7 +152,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		TileRenderer tileRenderer = chunk.getComponent(TileRenderer.class);
 		
 		Vector2i coordinate = tileRenderer.getCoordinate();
-		if (coordinate.x == move.toX() && coordinate.y == move.toY()) {
+		if (coordinate.equals(move.end())) {
 			return;
 		}
 		
@@ -186,11 +187,11 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		}
 	}
 	
-	public void applyState(Map<Integer, Vector2i> playerPositions, List<Vector2i> cratePositions) {
+	public void applyState(Map<Integer, Vector2i> playerCoordinates, List<Vector2i> crateCoordinates) {
 		forEach(chunk -> {
 			int id = chunk.getComponent(NetworkIdentity.class).id;
 			
-			if (!playerPositions.containsKey(id)) {
+			if (!playerCoordinates.containsKey(id)) {
 				chunk.getEntity().destroy();
 				return;
 			}
@@ -199,24 +200,25 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		});
 		
 		clearCrates();
-		for (Vector2i cratePosition : cratePositions) {
+		for (Vector2i cratePosition : crateCoordinates) {
 			foregroundGrid.addTile(new CratePrefab(), cratePosition.x, cratePosition.y);
 		}
 		
-		for (Map.Entry<Integer, Vector2i> entry : playerPositions.entrySet()) {
+		for (Map.Entry<Integer, Vector2i> entry : playerCoordinates.entrySet()) {
 			applyPlayer(entry.getKey(), entry.getValue());
 		}
 	}
 	
-	public void applyPlayer(int playerId, Vector2i position) {
+	public void applyPlayer(int playerId, Vector2i coordinate) {
 		EntityChunk chunk = getPlayer(playerId);
 		if (chunk != null) {
-			chunk.getComponent(PlayerData.class).teleportTo(foregroundGrid, position.x, position.y);
+			PlayerData playerData = chunk.getComponent(PlayerData.class);
+			playerData.teleportTo(foregroundGrid, coordinate, playerData.direction);
 			return;
 		}
 		
-		if (!foregroundGrid.hasTile(position.x, position.y)) {
-			foregroundGrid.addTile(new PlayerPrefab(playerId), position.x, position.y);
+		if (!foregroundGrid.hasTile(coordinate)) {
+			foregroundGrid.addTile(new PlayerPrefab(playerId), coordinate);
 		}
 	}
 	
@@ -339,7 +341,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 					}
 					
 					Vector2i candidate = new Vector2i(spawn.x + dx, spawn.y + dy);
-					if (GameMap.contains(candidate.x, candidate.y) && isSpawnable(candidate, reserved, avoidLiveTiles)) {
+					if (GameMap.contains(candidate) && isSpawnable(candidate, reserved, avoidLiveTiles)) {
 						return candidate;
 					}
 				}
@@ -348,14 +350,14 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		return spawn;
 	}
 	
-	private boolean isSpawnable(Vector2i candidate, Set<Vector2i> reserved, boolean avoidLiveTiles) {
-		return !reserved.contains(candidate)
-			       && !(avoidLiveTiles && foregroundGrid.hasTile(candidate.x, candidate.y))
-			       && !GameMap.isWall(candidate.x, candidate.y);
+	private boolean isSpawnable(Vector2i coordinate, Set<Vector2i> reserved, boolean avoidLiveTiles) {
+		return !reserved.contains(coordinate)
+			&& !(avoidLiveTiles && foregroundGrid.hasTile(coordinate))
+			&& !GameMap.isWall(coordinate);
 	}
 	
 	private Packet createSnapshot() {
-		List<int[]> players = new ArrayList<>();
+		List<Vector3i> players = new ArrayList<>();
 		List<Vector2i> crates = new ArrayList<>();
 		
 		for (Vector2i coordinate : foregroundGrid.coordinateToTile.keySet()) {
@@ -366,31 +368,13 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 			
 			Entity entity = tile.getEntity();
 			if (entity.hasTag(EntityTag.PLAYER)) {
-				players.add(new int[] { entity.getComponent(NetworkIdentity.class).id, coordinate.x, coordinate.y });
+				players.add(new Vector3i(entity.getComponent(NetworkIdentity.class).id, coordinate.x, coordinate.y));
 			} else if (entity.hasTag(EntityTag.CRATE)) {
 				crates.add(coordinate);
 			}
 		}
 		
-		players.sort(Comparator.comparingInt(player -> player[0]));
-		
-		int[] playerIds = new int[players.size()];
-		int[] playerX = new int[players.size()];
-		int[] playerY = new int[players.size()];
-		for (int i = 0; i < players.size(); i++) {
-			playerIds[i] = players.get(i)[0];
-			playerX[i] = players.get(i)[1];
-			playerY[i] = players.get(i)[2];
-		}
-		
-		int[] crateX = new int[crates.size()];
-		int[] crateY = new int[crates.size()];
-		for (int i = 0; i < crates.size(); i++) {
-			crateX[i] = crates.get(i).x;
-			crateY[i] = crates.get(i).y;
-		}
-		
-		return new GameStatePacket(playerIds, playerX, playerY, crateX, crateY);
+		return new GameStatePacket(players.toArray(new Vector3i[0]), crates.toArray(new Vector2i[0]));
 	}
 	
 }

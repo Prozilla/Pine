@@ -56,20 +56,18 @@ public class History extends Component {
 	}
 	
 	private void revert(Move move, GridGroup grid) {
-		getEntity().getComponent(PlayerData.class).teleportTo(grid, move.fromX(), move.fromY(), move.direction());
+		getEntity().getComponent(PlayerData.class).teleportTo(grid, move.start(), move.direction());
 		
 		if (move.pushedCrate()) {
-			TileRenderer crateTile = getCrate(grid, move.crateToX(), move.crateToY());
+			TileRenderer crateTile = getCrate(grid, move.crateEnd());
 			if (crateTile != null) {
-				crateTile.moveTo(new Vector2i(move.crateFromX(), move.crateFromY()));
+				crateTile.moveTo(move.crateStart());
 			}
 		}
 	}
 	
 	private boolean canUndo(GridGroup grid, Move move) {
-		int playerX = move.fromX();
-		int playerY = move.fromY();
-		if (!isFreeOfPlayers(grid, playerX, playerY) || isCrate(grid, playerX, playerY)) {
+		if (!isFreeOfPlayers(grid, move.start()) || isCrate(grid, move.start())) {
 			return false;
 		}
 		
@@ -77,29 +75,29 @@ public class History extends Component {
 			return true;
 		}
 		
-		TileRenderer crateTile = getCrate(grid, move.crateToX(), move.crateToY());
+		TileRenderer crateTile = getCrate(grid, move.crateEnd());
 		if (crateTile == null) {
 			return false;
 		}
 		
-		TileRenderer occupant = grid.getTile(move.crateFromX(), move.crateFromY());
+		TileRenderer occupant = grid.getTile(move.crateStart());
 		return occupant == null || occupant.getEntity() == getEntity();
 	}
 	
-	private boolean isFreeOfPlayers(GridGroup grid, int x, int y) {
-		TileRenderer tile = grid.getTile(x, y);
+	private boolean isFreeOfPlayers(GridGroup grid, Vector2i coordinate) {
+		TileRenderer tile = grid.getTile(coordinate);
 		if (tile == null || !tile.getEntity().hasTag(EntityTag.PLAYER)) {
 			return true;
 		}
 		return tile.getEntity() == getEntity();
 	}
 	
-	private boolean isCrate(GridGroup grid, int x, int y) {
-		return getCrate(grid, x, y) != null;
+	private boolean isCrate(GridGroup grid, Vector2i coordinate) {
+		return getCrate(grid, coordinate) != null;
 	}
 	
-	private TileRenderer getCrate(GridGroup grid, int x, int y) {
-		TileRenderer tile = grid.getTile(x, y);
+	private TileRenderer getCrate(GridGroup grid, Vector2i coordinate) {
+		TileRenderer tile = grid.getTile(coordinate);
 		return tile != null && tile.getEntity().hasTag(EntityTag.CRATE) ? tile : null;
 	}
 	

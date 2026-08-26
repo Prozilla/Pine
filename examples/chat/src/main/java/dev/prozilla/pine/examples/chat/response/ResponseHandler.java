@@ -1,6 +1,5 @@
 package dev.prozilla.pine.examples.chat.response;
 
-import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
@@ -13,16 +12,14 @@ public class ResponseHandler implements ServerResponseHandler {
 	
 	private final NetworkManager network;
 	private final String username;
-	private final TextPrefab messagePrefab;
 	private final Entity messageList;
+	private final TextPrefab messagePrefab;
 	
-	public ResponseHandler(NetworkManager network, String username, Entity messageList, Font font) {
+	public ResponseHandler(NetworkManager network, String username, Entity messageList, TextPrefab messagePrefab) {
 		this.network = network;
 		this.username = username;
 		this.messageList = messageList;
-		
-		messagePrefab = new TextPrefab();
-		messagePrefab.setFont(font);
+		this.messagePrefab = messagePrefab;
 	}
 	
 	@Override

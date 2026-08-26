@@ -59,37 +59,34 @@ public class PlayerData extends Component {
 	
 	public Move computeMove(GridGroup grid, Direction direction) {
 		TileRenderer tileRenderer = getEntity().getComponent(TileRenderer.class);
-		Vector2i from = tileRenderer.getCoordinate();
-		int toX = from.x + direction.x;
-		int toY = from.y + direction.y;
+		Vector2i start = tileRenderer.getCoordinate();
+		Vector2i end = direction.toIntVector().add(start);
 		
-		if (!GameMap.contains(toX, toY)) {
+		if (!GameMap.contains(end)) {
 			return null;
 		}
 		
-		TileRenderer targetTile = grid.getTile(toX, toY);
+		TileRenderer targetTile = grid.getTile(end);
 		boolean pushedCrate = false;
-		int crateFromX = 0, crateFromY = 0, crateToX = 0, crateToY = 0;
+		Vector2i crateStart = null;
+		Vector2i crateEnd = null;
 		
 		if (targetTile != null) {
 			if (!targetTile.getEntity().hasTag(EntityTag.CRATE)) {
 				return null;
 			}
 			
-			crateFromX = toX;
-			crateFromY = toY;
-			crateToX = toX + direction.x;
-			crateToY = toY + direction.y;
+			crateStart = end.clone();
+			crateEnd = direction.toIntVector().add(crateStart);
 			
-			if (!GameMap.contains(crateToX, crateToY) || grid.hasTile(crateToX, crateToY)) {
+			if (!GameMap.contains(crateEnd) || grid.hasTile(crateEnd)) {
 				return null;
 			}
 			
 			pushedCrate = true;
 		}
 		
-		return new Move(index, direction, from.x, from.y, toX, toY,
-			pushedCrate, crateFromX, crateFromY, crateToX, crateToY);
+		return new Move(index, direction, start, end, pushedCrate, crateStart, crateEnd);
 	}
 	
 	public void beginMove(Move move, GridGroup grid) {
@@ -99,7 +96,7 @@ public class PlayerData extends Component {
 		pendingMove = move;
 		
 		if (move.pushedCrate()) {
-			TileRenderer crateTile = grid.getTile(move.crateFromX(), move.crateFromY());
+			TileRenderer crateTile = grid.getTile(move.crateStart());
 			if (crateTile != null && crateTile.getEntity().hasTag(EntityTag.CRATE)) {
 				pushingCrateTile = crateTile;
 				pushingCrateSprite = crateTile.getComponent(SpriteRenderer.class);
@@ -120,10 +117,10 @@ public class PlayerData extends Component {
 		
 		if (pendingMove != null) {
 			if (pendingMove.pushedCrate() && pushingCrateTile != null) {
-				pushingCrateTile.moveTo(new Vector2i(pendingMove.crateToX(), pendingMove.crateToY()));
+				pushingCrateTile.moveTo(new Vector2i(pendingMove.crateEnd()));
 			}
 			
-			tileRenderer.moveTo(new Vector2i(pendingMove.toX(), pendingMove.toY()));
+			tileRenderer.moveTo(new Vector2i(pendingMove.end()));
 		}
 		
 		startMove(null);
@@ -138,11 +135,11 @@ public class PlayerData extends Component {
 		timeUntilMoveCompletes = 0;
 	}
 	
-	public void teleportTo(GridGroup grid, int x, int y) {
-		teleportTo(grid, x, y, null);
+	public void teleportTo(GridGroup grid, Vector2i destination) {
+		teleportTo(grid, destination, null);
 	}
 	
-	public void teleportTo(GridGroup grid, int x, int y, Direction facing) {
+	public void teleportTo(GridGroup grid, Vector2i destination, Direction facing) {
 		startMove(facing);
 		canMove = false;
 		timeUntilMoveCompletes = 0;
@@ -159,7 +156,7 @@ public class PlayerData extends Component {
 			grid.removeTile(tileRenderer);
 		}
 		
-		tileRenderer.setCoordinate(new Vector2i(x, y));
+		tileRenderer.setCoordinate(destination);
 		grid.addTile(tileRenderer);
 	}
 	

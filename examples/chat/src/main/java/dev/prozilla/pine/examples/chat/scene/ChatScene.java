@@ -2,6 +2,7 @@ package dev.prozilla.pine.examples.chat.scene;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
 import dev.prozilla.pine.examples.chat.EntityTag;
 import dev.prozilla.pine.examples.chat.entity.ChatPrefab;
 import dev.prozilla.pine.examples.chat.request.RequestHandler;
@@ -43,9 +44,11 @@ public class ChatScene extends SceneBase {
 		// Create chat UI
 		Entity chat = nodeRoot.addChild(new ChatPrefab(network, font));
 		Entity messageList = chat.getChildWithTag(EntityTag.MESSAGE_LIST);
+		TextPrefab messagePrefab = new TextPrefab();
+		messagePrefab.setFont(font);
 		
 		// Create message pipeline
-		messagePipeline = new ResponseHandler(network, username, messageList, font).and(new RequestHandler())
+		messagePipeline = new ResponseHandler(network, username, messageList, messagePrefab).and(new RequestHandler())
 			.then(ServerMessageFilter.unacknowledged())
 			.then(new ServerMessageLogger(logger));
 	}

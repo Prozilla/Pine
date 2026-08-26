@@ -1,7 +1,10 @@
 package dev.prozilla.pine.extensions.pinet.packet;
 
+import dev.prozilla.pine.common.math.vector.*;
+import dev.prozilla.pine.common.system.Color;
 import io.netty.buffer.ByteBuf;
 
+import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -11,9 +14,11 @@ import java.nio.charset.StandardCharsets;
 public final class PacketBuffer {
 	
 	private final ByteBuf buffer;
+	private final PacketCodec codec;
 	
-	public PacketBuffer(ByteBuf buffer) {
+	public PacketBuffer(ByteBuf buffer, PacketCodec codec) {
 		this.buffer = buffer;
+		this.codec = codec;
 	}
 	
 	public PacketBuffer writeByte(int value) {
@@ -38,6 +43,48 @@ public final class PacketBuffer {
 		return buffer.readBoolean();
 	}
 	
+	public PacketBuffer writeColor(Color value) {
+		writeFloat(value.getRed()).writeFloat(value.getGreen()).writeFloat(value.getBlue());
+		boolean hasAlpha = value.getAlpha() < 1;
+		writeBoolean(hasAlpha);
+		if (hasAlpha) {
+			writeFloat(value.getAlpha());
+		}
+		return this;
+	}
+	
+	public Color readColor() {
+		float red = readFloat();
+		float green = readFloat();
+		float blue = readFloat();
+		boolean hasAlpha = readBoolean();
+		return hasAlpha ? new Color(red, green, blue, readFloat()) : new Color(red, green, blue);
+	}
+	
+	public PacketBuffer writeVector2i(Vector2i value) {
+		return writeInt(value.x).writeInt(value.y);
+	}
+	
+	public Vector2i readVector2i() {
+		return new Vector2i(readInt(), readInt());
+	}
+	
+	public PacketBuffer writeVector3i(Vector3i value) {
+		return writeInt(value.x).writeInt(value.y).writeInt(value.z);
+	}
+	
+	public Vector3i readVector3i() {
+		return new Vector3i(readInt(), readInt(), readInt());
+	}
+	
+	public PacketBuffer writeVector4i(Vector4i value) {
+		return writeInt(value.x).writeInt(value.y).writeInt(value.z).writeInt(value.w);
+	}
+	
+	public Vector4i readVector4i() {
+		return new Vector4i(readInt(), readInt(), readInt(), readInt());
+	}
+	
 	public PacketBuffer writeInt(int value) {
 		buffer.writeInt(value);
 		return this;
@@ -45,6 +92,39 @@ public final class PacketBuffer {
 	
 	public int readInt() {
 		return buffer.readInt();
+	}
+	
+	public PacketBuffer writeVector2f(Vector2f value) {
+		return writeFloat(value.x).writeFloat(value.y);
+	}
+	
+	public Vector2f readVector2f() {
+		return new Vector2f(readFloat(), readFloat());
+	}
+	
+	public PacketBuffer writeVector3f(Vector3f value) {
+		return writeFloat(value.x).writeFloat(value.y).writeFloat(value.z);
+	}
+	
+	public Vector3f readVector3f() {
+		return new Vector3f(readFloat(), readFloat(), readFloat());
+	}
+	
+	public PacketBuffer writeVector4f(Vector4f value) {
+		return writeFloat(value.x).writeFloat(value.y).writeFloat(value.z).writeFloat(value.w);
+	}
+	
+	public Vector4f readVector4f() {
+		return new Vector4f(readFloat(), readFloat(), readFloat(), readFloat());
+	}
+	
+	public PacketBuffer writeFloat(float value) {
+		buffer.writeFloat(value);
+		return this;
+	}
+	
+	public float readFloat() {
+		return buffer.readFloat();
 	}
 	
 	public PacketBuffer writeIntArray(int[] values) {
@@ -62,6 +142,23 @@ public final class PacketBuffer {
 			values[i] = buffer.readInt();
 		}
 		return values;
+	}
+	
+	public <E> PacketBuffer writeArray(E[] elements) {
+		writeVarInt(elements.length);
+		for (E element : elements) {
+			writeObject(element);
+		}
+		return this;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <E> E[] readArray(Class<E> type) {
+		E[] array = (E[])Array.newInstance(type, readVarInt());
+		for (int i = 0; i < array.length; i++) {
+			array[i] = readObject(type);
+		}
+		return array;
 	}
 	
 	public PacketBuffer writeString(String string) {
@@ -110,6 +207,15 @@ public final class PacketBuffer {
 		}
 		
 		return value;
+	}
+	
+	public PacketBuffer writeObject(Object object) {
+		codec.writeObject(this, object);
+		return this;
+	}
+	
+	public <T> T readObject(Class<T> type) {
+		return codec.readObject(this, type);
 	}
 	
 	public int readableBytes() {

@@ -1,6 +1,7 @@
 package dev.prozilla.pine.examples.sokoban.packet;
 
 import dev.prozilla.pine.common.math.vector.Direction;
+import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.examples.sokoban.component.Move;
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
 import dev.prozilla.pine.extensions.pinet.packet.PacketBuffer;
@@ -18,33 +19,27 @@ public record PlayerMovePacket(Move move) implements Packet {
 	public void encode(PacketBuffer buffer) {
 		buffer.writeVarInt(move.playerId());
 		buffer.writeByte(move.direction().ordinal());
-		buffer.writeInt(move.fromX()).writeInt(move.fromY());
-		buffer.writeInt(move.toX()).writeInt(move.toY());
+		buffer.writeVector2i(move.start()).writeVector2i(move.end());
 		buffer.writeBoolean(move.pushedCrate());
 		if (move.pushedCrate()) {
-			buffer.writeInt(move.crateFromX()).writeInt(move.crateFromY());
-			buffer.writeInt(move.crateToX()).writeInt(move.crateToY());
+			buffer.writeVector2i(move.crateStart()).writeVector2i(move.crateEnd());
 		}
 	}
 	
 	public static PlayerMovePacket decode(PacketBuffer buffer) {
 		int playerId = buffer.readVarInt();
 		Direction direction = Direction.values()[buffer.readUnsignedByte()];
-		int fromX = buffer.readInt();
-		int fromY = buffer.readInt();
-		int toX = buffer.readInt();
-		int toY = buffer.readInt();
+		Vector2i start = buffer.readVector2i();
+		Vector2i end = buffer.readVector2i();
 		boolean pushedCrate = buffer.readBoolean();
-		int crateFromX = 0, crateFromY = 0, crateToX = 0, crateToY = 0;
+		Vector2i crateStart = null;
+		Vector2i crateEnd = null;
 		if (pushedCrate) {
-			crateFromX = buffer.readInt();
-			crateFromY = buffer.readInt();
-			crateToX = buffer.readInt();
-			crateToY = buffer.readInt();
+			crateStart = buffer.readVector2i();
+			crateEnd = buffer.readVector2i();
 		}
 		
-		Move move = new Move(playerId, direction, fromX, fromY, toX, toY,
-			pushedCrate, crateFromX, crateFromY, crateToX, crateToY);
+		Move move = new Move(playerId, direction, start, end, pushedCrate, crateStart, crateEnd);
 		return new PlayerMovePacket(move);
 	}
 	

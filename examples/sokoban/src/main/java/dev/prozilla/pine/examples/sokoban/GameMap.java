@@ -59,12 +59,16 @@ public final class GameMap {
 		return new Vector2i(1, 1);
 	}
 	
-	public static boolean contains(int x, int y) {
-		return x >= 0 && y >= 0 && x < getWidth() && y < getHeight();
+	public static boolean contains(Vector2i coordinate) {
+		return coordinate.x >= 0 && coordinate.y >= 0 && coordinate.x < getWidth() && coordinate.y < getHeight();
 	}
 	
-	public static boolean isWall(int x, int y) {
-		return getTile(x, y) == 'O';
+	public static boolean isWall(Vector2i coordinate) {
+		return getTile(coordinate) == 'O';
+	}
+	
+	public static char getTile(Vector2i coordinate) {
+		return getTile(coordinate.x, coordinate.y);
 	}
 	
 	public static char getTile(int x, int y) {

@@ -1,9 +1,11 @@
 package dev.prozilla.pine.examples.sokoban.packet;
 
+import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.math.vector.Vector3i;
 import dev.prozilla.pine.extensions.pinet.packet.Packet;
 import dev.prozilla.pine.extensions.pinet.packet.PacketBuffer;
 
-public record GameStatePacket(int[] playerIds, int[] playerX, int[] playerY, int[] crateX, int[] crateY) implements Packet {
+public record GameStatePacket(Vector3i[] players, Vector2i[] crates) implements Packet {
 	
 	public static final int ID = 11;
 	
@@ -14,19 +16,14 @@ public record GameStatePacket(int[] playerIds, int[] playerX, int[] playerY, int
 	
 	@Override
 	public void encode(PacketBuffer buffer) {
-		buffer.writeIntArray(playerIds);
-		buffer.writeIntArray(playerX).writeIntArray(playerY);
-		buffer.writeIntArray(crateX).writeIntArray(crateY);
+		buffer.writeArray(players);
+		buffer.writeArray(crates);
 	}
 	
 	public static GameStatePacket decode(PacketBuffer buffer) {
-		return new GameStatePacket(
-			buffer.readIntArray(),
-			buffer.readIntArray(),
-			buffer.readIntArray(),
-			buffer.readIntArray(),
-			buffer.readIntArray()
-		);
+		Vector3i[] players = buffer.readArray(Vector3i.class);
+		Vector2i[] crates = buffer.readArray(Vector2i.class);
+		return new GameStatePacket(players, crates);
 	}
 	
 }

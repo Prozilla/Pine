@@ -1,19 +1,14 @@
 package dev.prozilla.pine.examples.sokoban.component;
 
 import dev.prozilla.pine.common.math.vector.Direction;
+import dev.prozilla.pine.common.math.vector.Vector2i;
 
 public record Move(
 	int playerId,
 	Direction direction,
-	int fromX,
-	int fromY,
-	int toX,
-	int toY,
+	Vector2i start,
+	Vector2i end,
 	boolean pushedCrate,
-	int crateFromX,
-	int crateFromY,
-	int crateToX,
-	int crateToY
-) {
-	
-}
+	Vector2i crateStart,
+	Vector2i crateEnd
+) {}
