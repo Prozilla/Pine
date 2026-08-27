@@ -67,7 +67,7 @@ public class NodePrefab extends LayerPrefab {
 		styleSheets = new LinkedHashSet<>();
 		useDefaultStyleSheet = true;
 		
-		setName("CanvasElement");
+		setName("Node");
 	}
 	
 	/**

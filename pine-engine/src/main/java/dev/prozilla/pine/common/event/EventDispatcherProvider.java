@@ -19,8 +19,8 @@ public interface EventDispatcherProvider<EventType extends Enum<EventType>, Targ
 	}
 	
 	@Override
-	default void invoke(EventType eventType, Target target) {
-		getEventDispatcher().invoke(eventType, target);
+	default boolean invoke(EventType eventType, Target target) {
+		return getEventDispatcher().invoke(eventType, target);
 	}
 	
 }

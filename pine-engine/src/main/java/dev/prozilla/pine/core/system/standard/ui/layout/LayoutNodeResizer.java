@@ -20,10 +20,10 @@ public final class LayoutNodeResizer extends UpdateSystem {
 	protected void process(EntityChunk chunk, float deltaTime) {
 		LayoutNode layoutNode = chunk.getComponent(LayoutNode.class);
 		Node node = chunk.getComponent(Node.class);
-		resizeCanvasGroup(layoutNode, node);
+		resizeLayoutNode(layoutNode, node);
 	}
 	
-	public static void resizeCanvasGroup(LayoutNode layoutNode, Node parentNode) {
+	public static void resizeLayoutNode(LayoutNode layoutNode, Node parentNode) {
 		// New inner size of the node without padding
 		float innerWidth = 0, innerHeight = 0;
 		float currentGap = layoutNode.getGap();

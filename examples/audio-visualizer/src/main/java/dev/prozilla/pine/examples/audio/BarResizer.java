@@ -2,6 +2,7 @@ package dev.prozilla.pine.examples.audio;
 
 import dev.prozilla.pine.common.asset.audio.AudioSource;
 import dev.prozilla.pine.common.math.MathUtils;
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.core.component.mesh.RectRenderer;
 import dev.prozilla.pine.core.rendering.mesh.Rect;
@@ -46,5 +47,17 @@ public class BarResizer extends UpdateSystemBase {
 			
 			rect.setHeight(MathUtils.lerp(rect.getHeight(), factor * 64f, deltaTime * LERP_SPEED));
 		});
+		
+		if (magnitudes != null) {
+			scene.canvas.reset()
+				.setLineWidth(5)
+				.parametricCurve((t) -> {
+					int index = Math.clamp(Math.round((t / MathUtils.PI) * magnitudes.length - 1), 0, magnitudes.length - 1);
+					float factor = 75 + (float)Math.log1p(magnitudes[index] * 10) * 32;
+					float theta = t + application.getTimer().getScaledTime() / 10f;
+					return new Vector2f((float)Math.cos(theta), (float)Math.sin(theta)).scale(factor);
+				}, 0, 2 * MathUtils.PI, scene.getBarCount() - 2)
+				.stroke();
+		}
 	}
 }

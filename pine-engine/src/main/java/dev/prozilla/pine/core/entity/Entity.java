@@ -358,9 +358,9 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	}
 	
 	@Override
-	protected void invoke(Event<EventType, Entity> event) {
+	protected boolean invoke(Event<EventType, Entity> event) {
 		if (!shouldInvoke(event.getType())) {
-			return;
+			return false;
 		}
 		
 		super.invoke(event);
@@ -370,6 +370,8 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 			case CHILD_REMOVE -> invoke(EventType.DESCENDANT_REMOVE, event.getTarget());
 			case CHILDREN_UPDATE -> invoke(EventType.DESCENDANT_UPDATE, event.getTarget());
 		}
+		
+		return true;
 	}
 	
 	@Override

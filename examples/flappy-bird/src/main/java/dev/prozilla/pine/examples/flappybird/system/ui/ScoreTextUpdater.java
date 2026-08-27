@@ -1,4 +1,4 @@
-package dev.prozilla.pine.examples.flappybird.system.canvas;
+package dev.prozilla.pine.examples.flappybird.system.ui;
 
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;

@@ -19,7 +19,6 @@ import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
 import dev.prozilla.pine.examples.flappybird.entity.*;
 import dev.prozilla.pine.examples.flappybird.system.background.BackgroundMover;
-import dev.prozilla.pine.examples.flappybird.system.canvas.ScoreTextUpdater;
 import dev.prozilla.pine.examples.flappybird.system.ground.GroundInitializer;
 import dev.prozilla.pine.examples.flappybird.system.ground.GroundMover;
 import dev.prozilla.pine.examples.flappybird.system.obstacle.PipeInitializer;
@@ -28,6 +27,7 @@ import dev.prozilla.pine.examples.flappybird.system.obstacle.PipesMover;
 import dev.prozilla.pine.examples.flappybird.system.player.PlayerInitializer;
 import dev.prozilla.pine.examples.flappybird.system.player.PlayerInputHandler;
 import dev.prozilla.pine.examples.flappybird.system.player.PlayerMover;
+import dev.prozilla.pine.examples.flappybird.system.ui.ScoreTextUpdater;
 
 public class GameScene extends SceneBase {
 	

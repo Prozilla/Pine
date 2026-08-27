@@ -72,12 +72,12 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 	}
 	
 	@Override
-	public void invoke(EventType eventType, Target target) {
+	public boolean invoke(EventType eventType, Target target) {
 		if (!shouldInvoke(eventType)) {
 			// If no one is listening, we pretend the event never happened
-			return;
+			return false;
 		}
-		invoke(createEvent(eventType, target));
+		return invoke(createEvent(eventType, target));
 	}
 	
 	/**
@@ -92,9 +92,9 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 	 * Invokes an event.
 	 * @param event The event to invoke
 	 */
-	protected void invoke(E event) {
+	protected boolean invoke(E event) {
 		if (!shouldInvoke(event.getType())) {
-			return;
+			return false;
 		}
 		
 		DeferredList<EventListener<E>> eventListeners = listeners.get(event.getType());
@@ -116,6 +116,8 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 		if (shouldPropagate(event.getType()) && !event.isPropagationStopped()) {
 			propagate(event);
 		}
+		
+		return true;
 	}
 	
 	protected boolean shouldInvoke(EventType eventType) {

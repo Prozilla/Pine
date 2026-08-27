@@ -4,7 +4,7 @@ import dev.prozilla.pine.core.component.ui.NodeRoot;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 
 /**
- * Resizes canvases based on the window's dimensions.
+ * Resizes node roots based on the window's dimensions.
  */
 public final class NodeRootResizer extends UpdateSystemBase {
 	
@@ -20,8 +20,7 @@ public final class NodeRootResizer extends UpdateSystemBase {
 		forEach(chunk -> {
 			NodeRoot nodeRoot = chunk.getComponent(NodeRoot.class);
 			
-			nodeRoot.size.x = width;
-			nodeRoot.size.y = height;
+			nodeRoot.size.set(width, height);
 		});
 	}
 }

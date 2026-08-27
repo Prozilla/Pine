@@ -24,6 +24,7 @@ public abstract class Mesh implements TexturedRenderable, Cloneable<Mesh>, Memoi
 	private float[] uvArray;
 	/** If {@code true}, the vertices, triangles and UVs of this mesh will be re-generated before the next draw call. */
 	private boolean isDirty;
+	private boolean isGenerating;
 	
 	private final List<MeshModifier> modifiers = new ArrayList<>();
 	
@@ -49,6 +50,7 @@ public abstract class Mesh implements TexturedRenderable, Cloneable<Mesh>, Memoi
 		this.triangles = triangles;
 		this.origin = Checks.isNotNull(origin, "origin");
 		isDirty = false;
+		isGenerating = false;
 	}
 	
 	/**
@@ -70,10 +72,11 @@ public abstract class Mesh implements TexturedRenderable, Cloneable<Mesh>, Memoi
 	 * Generates the vertices, triangles and UVs of this mesh and applies each modifier.
 	 */
 	public void generate() {
-		if (!isDirty) {
+		if (!isDirty || isGenerating) {
 			return;
 		}
 		
+		isGenerating = true;
 		vertices = generateVertices();
 		if (vertices != null && vertices.length > 0) {
 			uvArray = generateUVs();
@@ -90,6 +93,7 @@ public abstract class Mesh implements TexturedRenderable, Cloneable<Mesh>, Memoi
 		}
 		
 		isDirty = false;
+		isGenerating = false;
 	}
 	
 	/**

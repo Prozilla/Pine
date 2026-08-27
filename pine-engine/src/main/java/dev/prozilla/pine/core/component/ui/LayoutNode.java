@@ -85,7 +85,7 @@ public class LayoutNode extends Component implements NodeContext {
 	
 	@Override
 	public String getName() {
-		return "CanvasGroup";
+		return "LayoutNode";
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public class LayoutNode extends Component implements NodeContext {
 		node = getComponent(Node.class);
 		
 		if (node == null) {
-			throw new IllegalStateException("CanvasGroup component requires RectTransform component");
+			throw new IllegalStateException("LayoutNode component requires Node component");
 		}
 		
 		return node;

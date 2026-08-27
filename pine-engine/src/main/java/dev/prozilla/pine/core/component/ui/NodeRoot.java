@@ -60,7 +60,7 @@ public class NodeRoot extends Component implements NodeContext {
 	
 	@Override
 	public String getName() {
-		return "CanvasRenderer";
+		return "NodeRoot";
 	}
 	
 	@Override

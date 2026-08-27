@@ -114,7 +114,7 @@ public class Meshes<A extends Mesh, B extends Mesh> extends Mesh {
 	}
 	
 	@Override
-	public Mesh clone() {
+	public Meshes<A, B> clone() {
 		return new Meshes<>(meshA, meshB, origin);
 	}
 }

@@ -75,7 +75,7 @@ public final class MathUtils {
 	 */
 	public static float remap(float value, float x, float y, float a, float b) throws IllegalArgumentException {
 		if (x == y) {
-			throw new IllegalArgumentException("Original range cannot have the same lower and upper bounds.");
+			return a;
 		}
 		float normalized = (value - x) / (y - x);
 		return a + normalized * (b - a);
