@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Represents a unique entity in the scene with a list of components.
@@ -312,6 +313,11 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	 */
 	public <ComponentType extends Component> boolean hasComponent(Class<ComponentType> componentClass) {
 		return getComponent(componentClass) != null;
+	}
+	
+	public <ComponentType extends Component> ComponentType getOrAddComponent(Class<ComponentType> componentClass, Supplier<ComponentType> componentFactory) {
+		ComponentType component = getComponent(componentClass);
+		return component != null ? component : addComponent(componentFactory.get());
 	}
 	
 	/**

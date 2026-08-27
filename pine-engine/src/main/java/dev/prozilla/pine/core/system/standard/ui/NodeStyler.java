@@ -45,5 +45,8 @@ public final class NodeStyler extends UpdateSystem {
 		if (nodeStyle.getAnchorProperty() != null && (!node.isInLayout() || node.absolutePosition)) {
 			node.anchor = nodeStyle.getAnchorProperty().getValue();
 		}
+		if (nodeStyle.getCursorProperty() != null) {
+			node.cursor = nodeStyle.getCursorProperty().getValue();
+		}
 	}
 }

@@ -4,21 +4,24 @@ import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.event.Event;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventDispatcherProvider;
-import dev.prozilla.pine.common.math.dimension.Dimension;
+import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector4f;
+import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.ComponentQuery;
+import dev.prozilla.pine.core.component.animation.AnimationData;
+import dev.prozilla.pine.core.component.ui.style.BorderStyle;
+import dev.prozilla.pine.core.component.ui.style.NodeStyle;
 import dev.prozilla.pine.core.entity.Entity;
+import dev.prozilla.pine.core.entity.prefab.Prefab;
+import dev.prozilla.pine.core.state.input.CursorType;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Component for nodes that make up the user interface.
@@ -45,20 +48,24 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public String tooltipText;
 	public int tabIndex;
 	public boolean autoFocus;
+	public String pseudoName;
 	
 	// Style
+	public NodeStyle nodeStyle;
 	public Color color;
 	public Color backgroundColor;
 	public Color borderColor;
 	public DualDimension size;
 	public DualDimension padding;
 	public DualDimension margin;
+	public CursorType cursor;
 	
 	// Border style
-	public Dimension border;
+	public DimensionBase borderWidth;
 	public TextureAsset borderImage;
 	public Vector4f borderImageSlice;
 	public boolean borderImageSliceFill;
+	public BorderStyle borderStyle;
 	
 	public String htmlTag;
 	public final Set<String> classes;
@@ -68,6 +75,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public NodeRoot root;
 	public Node parent;
 	public final List<Node> children;
+	public final Map<String, Node> pseudoElements;
 	
 	private final NodeEventDispatcher eventDispatcher;
 	
@@ -101,6 +109,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		
 		eventDispatcher = new NodeEventDispatcher();
 		children = new ArrayList<>();
+		pseudoElements = new HashMap<>();
 	}
 	
 	@Override
@@ -128,6 +137,11 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	private void handleChildrenChange(Event<Entity.EventType, Entity> event) {
 		children.clear();
 		children.addAll(entity.getComponentsBelow(Node.class));
+		if (nodeStyle != null) {
+			for (Node childNode : children) {
+				childNode.addStyleSheets(nodeStyle.getStyleSheets());
+			}
+		}
 		invalidateSelector();
 	}
 	
@@ -212,23 +226,31 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		return nodeRoot;
 	}
 	
-	public float getOuterSizeX() {
-		return getInnerSizeX() + getMarginX() * 2;
+	public float getTotalWidth() {
+		return getBoxWidth() + getMarginX() * 2;
 	}
 	
-	public float getOuterSizeY() {
-		return getInnerSizeY() + getMarginY() * 2;
+	public float getTotalHeight() {
+		return getBoxHeight() + getMarginY() * 2;
 	}
 	
-	public float getInnerSizeX() {
-		return size.computeX(this) + getPaddingX() * 2;
+	public float getBoxWidth() {
+		return size.computeX(this) + getBoxX() * 2;
 	}
 	
-	public float getInnerSizeY() {
-		return size.computeY(this) + getPaddingY() * 2;
+	public float getBoxHeight() {
+		return size.computeY(this) + getBoxY() * 2;
 	}
 	
-	public float getPaddingX() {
+	public float getBoxX() {
+		return getPaddingX() + getBorderWidth();
+	}
+	
+	public float getBoxY() {
+		return getPaddingY() + getBorderWidth();
+	}
+	
+	private float getPaddingX() {
 		return padding != null ? padding.computeX(this) : 0;
 	}
 	
@@ -253,7 +275,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	}
 	
 	public float getBorderWidth() {
-		return border != null ? border.compute(this, true) : 0;
+		return borderWidth != null && borderStyle != BorderStyle.NONE ? borderWidth.compute(this, true) : 0;
 	}
 	
 	@Override
@@ -307,6 +329,63 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		if (modifiers.remove(modifier)) {
 			invalidateSelector();
 		}
+	}
+	
+	public Node getPseudoElement(String name) {
+		return pseudoElements.get(name);
+	}
+	
+	public Node addPseudoElement(String name, Prefab pseudoPrefab) {
+		return addPseudoElement(name, getEntity().addChild(pseudoPrefab));
+	}
+	
+	public Node addPseudoElement(String name, Entity pseudoChild) {
+		Node pseudoElement = pseudoChild.getComponent(Node.class);
+		if (pseudoElement == null) {
+			return null;
+		}
+		addPseudoElement(name, pseudoElement);
+		return pseudoElement;
+	}
+	
+	public void addPseudoElement(String name, Node pseudoElement) {
+		Node previous = pseudoElements.put(name, pseudoElement);
+		if (previous != null) {
+			getEntity().removeChild(previous.getEntity());
+		}
+		pseudoElement.pseudoName = name;
+		pseudoElement.invalidateSelector();
+		getEntity().addChild(pseudoElement.getEntity());
+		if (nodeStyle != null) {
+			pseudoElement.addStyleSheets(nodeStyle.getStyleSheets());
+		}
+	}
+	
+	public void removePseudoElement(String name) {
+		Node pseudoElement = pseudoElements.remove(name);
+		if (pseudoElement != null) {
+			getEntity().removeChild(pseudoElement.getEntity());
+		}
+	}
+	
+	public void addStyleSheets(Set<StyleSheet> styleSheets) {
+		for (StyleSheet styleSheet : styleSheets) {
+			addStyleSheet(styleSheet);
+		}
+	}
+	
+	public void addStyleSheet(StyleSheet styleSheet) {
+		getNodeStyle().applyStyleSheet(styleSheet);
+	}
+	
+	public NodeStyle getNodeStyle() {
+		if (nodeStyle == null) {
+			nodeStyle = getEntity().getOrAddComponent(NodeStyle.class, () -> {
+				AnimationData animationData = getEntity().getOrAddComponent(AnimationData.class, AnimationData::new);
+				return new NodeStyle(animationData, this);
+			});
+		}
+		return nodeStyle;
 	}
 	
 	private void invalidateSelector() {

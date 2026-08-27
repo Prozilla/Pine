@@ -5,8 +5,10 @@ import dev.prozilla.pine.common.Transceivable;
 import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.dimension.Unit;
 import dev.prozilla.pine.common.math.vector.Alignment;
 import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Direction;
@@ -15,13 +17,18 @@ import dev.prozilla.pine.common.property.adaptive.AdaptiveIntProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveObjectProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
+import dev.prozilla.pine.common.property.style.selector.ModifierSelector;
 import dev.prozilla.pine.common.property.style.selector.Selector;
+import dev.prozilla.pine.common.property.style.selector.SelectorCombo;
+import dev.prozilla.pine.common.property.style.selector.TypeSelector;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.DirectoryWatcher;
 import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.Node;
+import dev.prozilla.pine.core.component.ui.style.BorderStyle;
+import dev.prozilla.pine.core.state.input.CursorType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +46,8 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 	private final Map<StyledPropertyKey<?>, Style<?, ?>> styles;
 	
 	public String path;
+	
+	public static final StyleSheet DEFAULT = createDefault();
 	
 	public StyleSheet() {
 		this(null);
@@ -62,7 +71,15 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 	}
 	
 	public <T> void addRule(Selector selector, StyledPropertyKey<T> key, T value) {
-		addRule(key, new StyleRule<>(selector, value));
+		addRule(selector, key, value, false);
+	}
+	
+	protected <T> void addDefaultRule(Selector selector, StyledPropertyKey<T> key, T value) {
+		addRule(selector, key, value, true);
+	}
+	
+	protected <T> void addRule(Selector selector, StyledPropertyKey<T> key, T value, boolean isDefault) {
+		addRule(key, new StyleRule<>(selector, value, isDefault));
 	}
 	
 	protected <T> void addRule(StyledPropertyKey<T> key, StyleRule<T> rule) {
@@ -71,7 +88,15 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 	}
 	
 	public void addTransition(Selector selector, StyledPropertyKey<?> key, AnimationCurve value) {
-		addTransition(key, new StyleRule<>(selector, value));
+		addTransition(selector, key, value, false);
+	}
+	
+	protected void addDefaultTransition(Selector selector, StyledPropertyKey<?> key, AnimationCurve value) {
+		addTransition(selector, key, value, true);
+	}
+	
+	protected void addTransition(Selector selector, StyledPropertyKey<?> key, AnimationCurve value, boolean isDefault) {
+		addTransition(key, new StyleRule<>(selector, value, isDefault));
 	}
 	
 	protected void addTransition(StyledPropertyKey<?> key, StyleRule<AnimationCurve> transitionRule) {
@@ -136,6 +161,21 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 		return createStyledDistributionProperty(StyledPropertyKey.DISTRIBUTION, node, LayoutNode.DEFAULT_DISTRIBUTION);
 	}
 	
+	@Contract("_ -> new")
+	public StyledCursorProperty createCursorProperty(Node node) {
+		return createStyledCursorProperty(StyledPropertyKey.CURSOR, node, CursorType.DEFAULT);
+	}
+	
+	@Contract("_ -> new")
+	public StyledDimensionProperty createBorderWidthProperty(Node node) {
+		return createStyledDimensionProperty(StyledPropertyKey.BORDER_WIDTH, node, Dimension.zero());
+	}
+	
+	@Contract("_ -> new")
+	public StyledBorderStyleProperty createBorderStyleProperty(Node node) {
+		return createStyledBorderStyleProperty(StyledPropertyKey.BORDER_STYLE, node, BorderStyle.NONE);
+	}
+	
 	protected StyledColorProperty createStyledColorProperty(StyledPropertyKey<Color> key, Node node, Color fallbackValue) {
 		return createStyledProperty(key, node, new AdaptiveColorProperty(fallbackValue),  (Style.StyledPropertyFactory<Color, AdaptiveObjectProperty<Color>, StyledColorProperty>)StyledColorProperty::new);
 	}
@@ -166,6 +206,14 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 	
 	protected StyledDistributionProperty createStyledDistributionProperty(StyledPropertyKey<LayoutNode.Distribution> key, Node node, LayoutNode.Distribution fallbackValue) {
 		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<LayoutNode.Distribution, AdaptiveObjectProperty<LayoutNode.Distribution>, StyledDistributionProperty>)StyledDistributionProperty::new);
+	}
+	
+	protected StyledCursorProperty createStyledCursorProperty(StyledPropertyKey<CursorType> key, Node node, CursorType fallbackValue) {
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<CursorType, AdaptiveObjectProperty<CursorType>, StyledCursorProperty>)StyledCursorProperty::new);
+	}
+	
+	protected StyledBorderStyleProperty createStyledBorderStyleProperty(StyledPropertyKey<BorderStyle> key, Node node, BorderStyle fallbackValue) {
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<BorderStyle, AdaptiveObjectProperty<BorderStyle>, StyledBorderStyleProperty>)StyledBorderStyleProperty::new);
 	}
 	
 	protected  <T, A extends AdaptiveProperty<T, ?>, P extends StyledProperty<T, ?, A, ?>> P createStyledProperty(StyledPropertyKey<T> name, Node node, A fallbackValue, Style.StyledPropertyFactory<T, A, P> factory) {
@@ -296,6 +344,30 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 	
 	public HotStyleSheet toHotStyleSheet(DirectoryWatcher directoryWatcher) {
 		return HotStyleSheet.fromStyleSheet(directoryWatcher, this);
+	}
+	
+	private static StyleSheet createDefault() {
+		StyleSheet styleSheet = new StyleSheet();
+		
+		Color buttonText = new Color(0, 0, 0);
+		Color buttonFace = new Color(233, 233, 237);
+		Color buttonHoverFace = new Color(208, 208, 215);
+		
+		styleSheet.addDefaultRule(Selector.UNIVERSAL, StyledPropertyKey.COLOR, Color.white());
+		
+		styleSheet.addDefaultRule(TypeSelector.P, StyledPropertyKey.MARGIN, new DualDimension(Dimension.auto(), new Dimension(1, Unit.ELEMENT_SIZE)));
+		styleSheet.addDefaultRule(TypeSelector.P, StyledPropertyKey.CURSOR, CursorType.TEXT);
+		
+		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.PADDING, new DualDimension(new Dimension(1), new Dimension(4)));
+		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.CURSOR, CursorType.TEXT);
+		
+		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.PADDING, new DualDimension(new Dimension(1), new Dimension(4)));
+		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.COLOR, buttonText);
+		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.BACKGROUND_COLOR, buttonFace);
+		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.CURSOR, CursorType.POINTER);
+		styleSheet.addDefaultRule( new SelectorCombo(TypeSelector.BUTTON, ModifierSelector.HOVER), StyledPropertyKey.BACKGROUND_COLOR, buttonHoverFace);
+		
+		return styleSheet;
 	}
 	
 }

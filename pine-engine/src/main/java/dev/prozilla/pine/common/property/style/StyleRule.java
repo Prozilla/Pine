@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * @param value The value this rule assigns to styled properties of elements that match its selector
  * @param <T> The type of the property
  */
-public record StyleRule<T>(Selector selector, T value) implements Printable {
+public record StyleRule<T>(Selector selector, T value, boolean isDefault) implements Printable {
 	
 	/**
 	 * Checks whether this rule applies to a given node.

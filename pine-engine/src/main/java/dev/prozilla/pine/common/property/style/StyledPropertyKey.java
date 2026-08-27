@@ -13,6 +13,8 @@ import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.common.util.parser.EnumParser;
 import dev.prozilla.pine.common.util.parser.Parser;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
+import dev.prozilla.pine.core.component.ui.style.BorderStyle;
+import dev.prozilla.pine.core.state.input.CursorType;
 
 import java.util.Objects;
 
@@ -81,8 +83,34 @@ public final class StyledPropertyKey<T> {
 			return succeed(distribution);
 		}
 	});
+	public static final StyledPropertyKey<CursorType> CURSOR = new StyledPropertyKey<>("cursor", new Parser<>() {
+		@Override
+		public boolean parse(String input) {
+			CursorType cursor = switch (input) {
+				case "default" -> CursorType.DEFAULT;
+				case "pointer" -> CursorType.POINTER;
+				case "text" -> CursorType.TEXT;
+				case "crosshair" -> CursorType.CROSSHAIR;
+				case "n-resize", "s-resize", "ns-resize" -> CursorType.RESIZE_VERTICAL;
+				case "e-resize", "w-resize", "ew-resize" -> CursorType.RESIZE_HORIZONTAL;
+				case "nesw-resize" -> CursorType.RESIZE_TOP_RIGHT_BOTTOM_LEFT;
+				case "nwse-resize" -> CursorType.RESIZE_TOP_LEFT_BOTTOM_RIGHT;
+				case "not-allowed", "no-drop" -> CursorType.NOT_ALLOWED;
+				case "move", "all-scroll" -> CursorType.RESIZE_ALL;
+				default -> null;
+			};
+			
+			if (cursor == null) {
+				return fail();
+			}
+			
+			return succeed(cursor);
+		}
+	});
+	public static final StyledPropertyKey<DimensionBase> BORDER_WIDTH = new StyledPropertyKey<>("border-width", new DimensionParser());
+	public static final StyledPropertyKey<BorderStyle> BORDER_STYLE = new StyledPropertyKey<>("border-style", new EnumParser<>(BorderStyle.values()));
 	
-	private static final StyledPropertyKey<?>[] keys = new StyledPropertyKey<?>[] {
+	private static final StyledPropertyKey<?>[] KEYS = new StyledPropertyKey<?>[] {
 		COLOR,
 		BACKGROUND_COLOR,
 		SIZE,
@@ -93,6 +121,9 @@ public final class StyledPropertyKey<T> {
 		DIRECTION,
 		ALIGNMENT,
 		DISTRIBUTION,
+		CURSOR,
+		BORDER_WIDTH,
+		BORDER_STYLE
 	};
 	
 	private final String string;
@@ -112,7 +143,7 @@ public final class StyledPropertyKey<T> {
 	}
 	
 	public static StyledPropertyKey<?> parse(String string) {
-		return ArrayUtils.findByString(keys, string, true);
+		return ArrayUtils.findByString(KEYS, string, true);
 	}
 	
 	@Override

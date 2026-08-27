@@ -30,7 +30,7 @@ public final class ImageRenderer extends RenderSystem {
 	
 	public static void renderImage(Renderer renderer, ImageNode imageNode, Node node) {
 		renderImage(renderer, imageNode,
-		 node.currentPosition.x + node.getPaddingX(), node.currentPosition.y + node.getPaddingY(), node.size.computeX(node), node.size.computeY(node), node.color);
+		 node.currentPosition.x + node.getBoxX(), node.currentPosition.y + node.getBoxY(), node.size.computeX(node), node.size.computeY(node), node.color);
 	}
 	
 	public static void renderImage(Renderer renderer, ImageNode imageNode, float x, float y, float width, float height, Color color) {

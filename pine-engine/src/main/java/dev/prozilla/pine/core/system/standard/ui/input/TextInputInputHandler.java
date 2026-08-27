@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.system.standard.ui.text;
+package dev.prozilla.pine.core.system.standard.ui.input;
 
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.TextInputNode;

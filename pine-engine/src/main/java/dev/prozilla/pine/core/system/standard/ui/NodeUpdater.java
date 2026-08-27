@@ -32,8 +32,8 @@ public final class NodeUpdater extends UpdateSystem {
 	
 	public static void resizeNode(Node node) {
 		if (!node.size.isZero(node)) {
-			float innerSizeX = node.getInnerSizeX();
-			float innerSizeY = node.getInnerSizeY();
+			float innerSizeX = node.getBoxWidth();
+			float innerSizeY = node.getBoxHeight();
 			
 			if (innerSizeX != 0) {
 				node.currentInnerSize.x = innerSizeX;

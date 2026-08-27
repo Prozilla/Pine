@@ -32,6 +32,9 @@ public final class BorderImageRenderer extends RenderSystem {
 	
 	public static void renderBorderImage(Renderer renderer, TextureAsset texture, Node node, Vector4f slice, boolean fill) {
 		float borderWidth = node.getBorderWidth();
+		if (borderWidth <= 0) {
+			return;
+		}
 		
 		float nodeX = node.currentPosition.x;
 		float nodeY = node.currentPosition.y;

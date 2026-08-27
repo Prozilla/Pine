@@ -1,11 +1,10 @@
 package dev.prozilla.pine.core.component.ui.style;
 
-import dev.prozilla.pine.common.property.style.StyleSheet;
-import dev.prozilla.pine.common.property.style.StyledColorProperty;
-import dev.prozilla.pine.common.property.style.StyledDualDimensionProperty;
-import dev.prozilla.pine.common.property.style.StyledGridAlignmentProperty;
+import dev.prozilla.pine.common.property.style.*;
 import dev.prozilla.pine.core.component.animation.AnimationData;
 import dev.prozilla.pine.core.component.ui.Node;
+
+import java.util.Set;
 
 /**
  * A component that applies styles to nodes.
@@ -18,23 +17,35 @@ public class NodeStyle extends NodeStyleBase {
 	private StyledDualDimensionProperty paddingProperty;
 	private StyledDualDimensionProperty marginProperty;
 	private StyledGridAlignmentProperty anchorProperty;
+	private StyledCursorProperty cursorProperty;
+	private StyledDimensionProperty borderWidthProperty;
+	private StyledBorderStyleProperty borderStyleProperty;
 	
 	public NodeStyle(AnimationData animationData, Node node) {
 		this(animationData, node, null);
 	}
 	
-	public NodeStyle(AnimationData animationData, Node node, StyleSheet styleSheet) {
-		super(animationData, node, styleSheet);
+	public NodeStyle(AnimationData animationData, Node node, Set<StyleSheet> styleSheets) {
+		super(animationData, node, styleSheets);
 	}
 	
 	@Override
-	public void applyStyleSheet(StyleSheet styleSheet) {
+	public boolean applyStyleSheet(StyleSheet styleSheet) {
+		if (!super.applyStyleSheet(styleSheet)) {
+			return false;
+		}
+		
 		setColorProperty(styleSheet.createColorProperty(node));
 		setBackgroundColorProperty(styleSheet.createBackgroundColorProperty(node));
 		setSizeProperty(styleSheet.createSizeProperty(node));
 		setPaddingProperty(styleSheet.createPaddingProperty(node));
 		setMarginProperty(styleSheet.createMarginProperty(node));
 		setAnchorProperty(styleSheet.createAnchorProperty(node));
+		setCursorProperty(styleSheet.createCursorProperty(node));
+		setBorderWidthProperty(styleSheet.createBorderWidthProperty(node));
+		setBorderStyleProperty(styleSheet.createBorderStyleProperty(node));
+		
+		return true;
 	}
 	
 	public StyledColorProperty getColorProperty() {
@@ -42,8 +53,7 @@ public class NodeStyle extends NodeStyleBase {
 	}
 	
 	public void setColorProperty(StyledColorProperty colorProperty) {
-		changeProperty(this.colorProperty, colorProperty);
-		this.colorProperty = colorProperty;
+		this.colorProperty = changeProperty(this.colorProperty, colorProperty);
 	}
 	
 	public StyledColorProperty getBackgroundColorProperty() {
@@ -51,8 +61,7 @@ public class NodeStyle extends NodeStyleBase {
 	}
 	
 	public void setBackgroundColorProperty(StyledColorProperty backgroundColorProperty) {
-		changeProperty(this.backgroundColorProperty, backgroundColorProperty);
-		this.backgroundColorProperty = backgroundColorProperty;
+		this.backgroundColorProperty = changeProperty(this.backgroundColorProperty, backgroundColorProperty);
 	}
 	
 	public StyledDualDimensionProperty getSizeProperty() {
@@ -60,8 +69,7 @@ public class NodeStyle extends NodeStyleBase {
 	}
 	
 	public void setSizeProperty(StyledDualDimensionProperty sizeProperty) {
-		changeProperty(this.sizeProperty, sizeProperty);
-		this.sizeProperty = sizeProperty;
+		this.sizeProperty = changeProperty(this.sizeProperty, sizeProperty);
 	}
 	
 	public StyledDualDimensionProperty getPaddingProperty() {
@@ -69,8 +77,7 @@ public class NodeStyle extends NodeStyleBase {
 	}
 	
 	public void setPaddingProperty(StyledDualDimensionProperty paddingProperty) {
-		changeProperty(this.paddingProperty, paddingProperty);
-		this.paddingProperty = paddingProperty;
+		this.paddingProperty = changeProperty(this.paddingProperty, paddingProperty);
 	}
 	
 	public StyledDualDimensionProperty getMarginProperty() {
@@ -78,8 +85,7 @@ public class NodeStyle extends NodeStyleBase {
 	}
 	
 	public void setMarginProperty(StyledDualDimensionProperty marginProperty) {
-		changeProperty(this.marginProperty, marginProperty);
-		this.marginProperty = marginProperty;
+		this.marginProperty = changeProperty(this.marginProperty, marginProperty);
 	}
 	
 	public StyledGridAlignmentProperty getAnchorProperty() {
@@ -87,7 +93,31 @@ public class NodeStyle extends NodeStyleBase {
 	}
 	
 	public void setAnchorProperty(StyledGridAlignmentProperty anchorProperty) {
-		changeProperty(this.anchorProperty, anchorProperty);
-		this.anchorProperty = anchorProperty;
+		this.anchorProperty = changeProperty(this.anchorProperty, anchorProperty);
 	}
+	
+	public StyledCursorProperty getCursorProperty() {
+		return cursorProperty;
+	}
+	
+	public void setCursorProperty(StyledCursorProperty cursorProperty) {
+		this.cursorProperty = changeProperty(this.cursorProperty, cursorProperty);
+	}
+	
+	public StyledDimensionProperty getBorderWidthProperty() {
+		return borderWidthProperty;
+	}
+	
+	public void setBorderWidthProperty(StyledDimensionProperty borderWidthProperty) {
+		this.borderWidthProperty = changeProperty(this.borderWidthProperty, borderWidthProperty);
+	}
+	
+	public StyledBorderStyleProperty getBorderStyleProperty() {
+		return borderStyleProperty;
+	}
+	
+	public void setBorderStyleProperty(StyledBorderStyleProperty borderStyleProperty) {
+		this.borderStyleProperty = changeProperty(this.borderStyleProperty, borderStyleProperty);
+	}
+	
 }

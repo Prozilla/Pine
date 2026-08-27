@@ -32,8 +32,8 @@ public final class TextRenderer extends RenderSystem {
 	}
 	
 	public static void renderText(Renderer renderer, TextNode textNode, Node node) {
-		float x = node.currentPosition.x + node.getPaddingX();
-		float y = node.currentPosition.y + node.getPaddingY();
+		float x = node.currentPosition.x + node.getBoxX();
+		float y = node.currentPosition.y + node.getBoxY();
 		float width = node.currentInnerSize.x;
 		float height = node.currentInnerSize.y;
 		

@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.system.standard.ui.text;
+package dev.prozilla.pine.core.system.standard.ui.input;
 
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
@@ -28,8 +28,8 @@ public final class TextInputRenderer extends RenderSystem {
 			return;
 		}
 		
-		float x = node.currentPosition.x + node.getPaddingX();
-		float y = node.currentPosition.y + node.getPaddingY();
+		float x = node.currentPosition.x + node.getBoxX();
+		float y = node.currentPosition.y + node.getBoxY();
 		
 		float cursorX = x;
 		

@@ -35,8 +35,8 @@ public final class LayoutNodeArranger extends UpdateSystem {
 		float gap = layoutNode.getGap();
 		
 		// Calculate initial offset
-		float offsetX = parentNode.currentPosition.x + parentNode.getPaddingX();
-		float offsetY = parentNode.currentPosition.y + parentNode.getPaddingY();
+		float offsetX = parentNode.currentPosition.x + parentNode.getBoxX();
+		float offsetY = parentNode.currentPosition.y + parentNode.getBoxY();
 		
 		switch (layoutNode.direction) {
 			case LEFT -> offsetX = parentNode.currentPosition.x + layoutNode.innerSize.x + layoutNode.childNodes.getFirst().currentOuterSize.x;
@@ -62,10 +62,10 @@ public final class LayoutNodeArranger extends UpdateSystem {
 			// Move offset for current child node
 			switch (layoutNode.direction) {
 				case LEFT -> offsetX -= (i == 0)
-					? childNode.currentOuterSize.x * 2 - parentNode.getPaddingX()
+					? childNode.currentOuterSize.x * 2 - parentNode.getBoxX()
 					: childNode.currentOuterSize.x + gap;
 				case DOWN -> offsetY -= (i == 0)
-					? childNode.currentOuterSize.y * 2 - parentNode.getPaddingY()
+					? childNode.currentOuterSize.y * 2 - parentNode.getBoxY()
 					: childNode.currentOuterSize.y + gap;
 			}
 			

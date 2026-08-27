@@ -45,7 +45,7 @@ public final class LayoutNodeResizer extends UpdateSystem {
 		// Calculate width
 		if (innerWidth != 0) {
 			// Subtract padding to get inner size
-			innerWidth -= parentNode.getPaddingX() * 2;
+			innerWidth -= parentNode.getBoxX() * 2;
 			
 			// Logic for space between distribution
 			if (layoutNode.distribution == LayoutNode.Distribution.SPACE_BETWEEN && !layoutNode.childNodes.isEmpty()) {
@@ -92,7 +92,7 @@ public final class LayoutNodeResizer extends UpdateSystem {
 		// Calculate height
 		if (innerHeight != 0) {
 			// Subtract padding to get inner size
-			innerHeight -= parentNode.getPaddingY() * 2;
+			innerHeight -= parentNode.getBoxY() * 2;
 			
 			// Logic for space between distribution
 			if (layoutNode.distribution == LayoutNode.Distribution.SPACE_BETWEEN && !layoutNode.childNodes.isEmpty()) {
@@ -137,8 +137,8 @@ public final class LayoutNodeResizer extends UpdateSystem {
 		layoutNode.innerSize.y = innerHeight;
 		
 		// Inner size of the node (with padding)
-		parentNode.currentInnerSize.x = layoutNode.innerSize.x + parentNode.getPaddingX() * 2;
-		parentNode.currentInnerSize.y = layoutNode.innerSize.y + parentNode.getPaddingY() * 2;
+		parentNode.currentInnerSize.x = layoutNode.innerSize.x + parentNode.getBoxX() * 2;
+		parentNode.currentInnerSize.y = layoutNode.innerSize.y + parentNode.getBoxY() * 2;
 		
 		// Outer size of the node (with margin)
 		parentNode.currentOuterSize.x = parentNode.currentInnerSize.x + parentNode.getMarginX() * 2;
@@ -151,9 +151,9 @@ public final class LayoutNodeResizer extends UpdateSystem {
 		if (layoutNode.distribution == LayoutNode.Distribution.SPACE_BETWEEN && parentNode.size != null) {
 			float newGap;
 			if (layoutNode.direction == Direction.UP || layoutNode.direction == Direction.DOWN) {
-				newGap = parentNode.size.computeY(parentNode) - parentNode.getPaddingY() * 2 - layoutNode.totalChildrenSize.x;
+				newGap = parentNode.size.computeY(parentNode) - parentNode.getBoxY() * 2 - layoutNode.totalChildrenSize.x;
 			} else {
-				newGap = parentNode.size.computeX(parentNode) - parentNode.getPaddingX() * 2 - layoutNode.totalChildrenSize.y;
+				newGap = parentNode.size.computeX(parentNode) - parentNode.getBoxX() * 2 - layoutNode.totalChildrenSize.y;
 			}
 			
 			if (newGap > currentGap) {
