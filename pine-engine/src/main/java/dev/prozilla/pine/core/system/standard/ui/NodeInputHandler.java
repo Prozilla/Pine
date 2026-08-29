@@ -30,7 +30,6 @@ public final class NodeInputHandler extends InputSystemBase {
 			Entity entity = chunk.getEntity();
 			Node node = chunk.getComponent(Node.class);
 			
-			boolean previousCursorHit = node.cursorHit;
 			boolean cursorHit = false;
 			
 			if (!node.passThrough && !node.isInTooltip() && !input.isCursorBlocked()) {
@@ -58,6 +57,9 @@ public final class NodeInputHandler extends InputSystemBase {
 				}
 				
 				if (input.getMouseButtonDown(MouseButton.LEFT)) {
+					if (node.cursorHit) {
+						node.focus();
+					}
 					node.click();
 				}
 			}

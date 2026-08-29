@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.style.selector;
 
 import dev.prozilla.pine.core.component.ui.Node;
+import dev.prozilla.pine.core.component.ui.TextInputNode;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -9,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 public class PseudoElementSelector extends Selector {
 
 	private final String name;
+	
+	public static final PseudoElementSelector PLACEHOLDER = new PseudoElementSelector(TextInputNode.PLACEHOLDER_ELEMENT);
 	
 	public PseudoElementSelector(String name) {
 		this.name = name;

@@ -60,9 +60,9 @@ public final class NodeRootInitializer extends InitSystem {
 			});
 			
 			if (node.autoFocus) {
-				nodeRoot.focusNode(node);
+				nodeRoot.focusNode(node, false);
 			} else if (nodeRoot.focusedNodeIndex >= 0 && nodeRoot.focusableNodes.indexOf(node) <= nodeRoot.focusedNodeIndex) {
-				nodeRoot.focusNextNode();
+				nodeRoot.focusNextNode(false);
 			}
 		}
 	}
@@ -81,7 +81,7 @@ public final class NodeRootInitializer extends InitSystem {
 			return;
 		}
 		if (nodeRoot.focusedNodeIndex >= 0 && nodeRoot.focusableNodes.remove(node)) {
-			nodeRoot.focusPreviousNode();
+			nodeRoot.focusPreviousNode(false);
 		}
 	}
 	

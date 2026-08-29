@@ -24,7 +24,7 @@ public final class TextRenderer extends RenderSystem {
 		TextNode textNode = chunk.getComponent(TextNode.class);
 		Node node = chunk.getComponent(Node.class);
 		
-		if (!node.readyToRender) {
+		if (!node.canBeRendered()) {
 			return;
 		}
 		

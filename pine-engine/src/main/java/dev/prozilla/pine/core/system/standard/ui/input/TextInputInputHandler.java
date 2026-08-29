@@ -3,7 +3,6 @@ package dev.prozilla.pine.core.system.standard.ui.input;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.TextInputNode;
 import dev.prozilla.pine.core.entity.EntityChunk;
-import dev.prozilla.pine.core.state.input.CursorType;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.ModifierKey;
@@ -19,10 +18,6 @@ public final class TextInputInputHandler extends InputSystem {
 	protected void process(EntityChunk chunk, Input input, float deltaTime) {
 		TextInputNode textInputNode = chunk.getComponent(TextInputNode.class);
 		Node node = chunk.getComponent(Node.class);
-		
-		if (node.cursorHit) {
-			input.setCursorType(CursorType.TEXT);
-		}
 		
 		if (!node.isFocused()) {
 			return;

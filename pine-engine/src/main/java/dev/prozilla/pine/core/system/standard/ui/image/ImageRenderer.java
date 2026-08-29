@@ -25,7 +25,7 @@ public final class ImageRenderer extends RenderSystem {
 	
 	@Override
 	protected boolean isChunkActive(EntityChunk chunk) {
-		return super.isChunkActive(chunk) && chunk.getComponent(Node.class).readyToRender;
+		return super.isChunkActive(chunk) && chunk.getComponent(Node.class).canBeRendered();
 	}
 	
 	public static void renderImage(Renderer renderer, ImageNode imageNode, Node node) {

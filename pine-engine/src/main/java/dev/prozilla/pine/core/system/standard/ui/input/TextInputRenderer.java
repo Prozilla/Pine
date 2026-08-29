@@ -9,6 +9,7 @@ import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderPass;
 import dev.prozilla.pine.core.system.render.RenderSystem;
+import dev.prozilla.pine.core.system.standard.ui.text.TextRenderer;
 
 public final class TextInputRenderer extends RenderSystem {
 	
@@ -24,12 +25,20 @@ public final class TextInputRenderer extends RenderSystem {
 		TextNode textNode = chunk.getComponent(TextNode.class);
 		Node node = chunk.getComponent(Node.class);
 		
-		if (!node.isFocused()) {
+		if (node.controlledRender) {
 			return;
 		}
 		
 		float x = node.currentPosition.x + node.getBoxX();
 		float y = node.currentPosition.y + node.getBoxY();
+		
+		if (textInputNode.getTextProperty().isEmpty() && textInputNode.placeholderNode != null) {
+			TextRenderer.renderText(renderer, textInputNode.placeholderTextNode, x, y, node.currentInnerSize.x, node.currentInnerSize.y, textInputNode.placeholderNode.color);
+		}
+		
+		if (!node.isFocused()) {
+			return;
+		}
 		
 		float cursorX = x;
 		

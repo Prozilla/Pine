@@ -17,17 +17,14 @@ import dev.prozilla.pine.common.property.adaptive.AdaptiveIntProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveObjectProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
-import dev.prozilla.pine.common.property.style.selector.ModifierSelector;
-import dev.prozilla.pine.common.property.style.selector.Selector;
-import dev.prozilla.pine.common.property.style.selector.SelectorCombo;
-import dev.prozilla.pine.common.property.style.selector.TypeSelector;
+import dev.prozilla.pine.common.property.style.selector.*;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.DirectoryWatcher;
 import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.Node;
-import dev.prozilla.pine.core.component.ui.style.BorderStyle;
+import dev.prozilla.pine.core.component.ui.style.LineStyle;
 import dev.prozilla.pine.core.state.input.CursorType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -172,8 +169,33 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 	}
 	
 	@Contract("_ -> new")
-	public StyledBorderStyleProperty createBorderStyleProperty(Node node) {
-		return createStyledBorderStyleProperty(StyledPropertyKey.BORDER_STYLE, node, BorderStyle.NONE);
+	public StyledLineStyleProperty createBorderStyleProperty(Node node) {
+		return createStyledLineStyleProperty(StyledPropertyKey.BORDER_STYLE, node, LineStyle.NONE);
+	}
+	
+	@Contract("_ -> new")
+	public StyledColorProperty createBorderColorProperty(Node node) {
+		return createStyledColorProperty(StyledPropertyKey.BORDER_COLOR, node, Node.DEFAULT_BORDER_COLOR.clone());
+	}
+	
+	@Contract("_ -> new")
+	public StyledDimensionProperty createOutlineWidthProperty(Node node) {
+		return createStyledDimensionProperty(StyledPropertyKey.OUTLINE_WIDTH, node, Dimension.zero());
+	}
+	
+	@Contract("_ -> new")
+	public StyledLineStyleProperty createOutlineStyleProperty(Node node) {
+		return createStyledLineStyleProperty(StyledPropertyKey.OUTLINE_STYLE, node, LineStyle.NONE);
+	}
+	
+	@Contract("_ -> new")
+	public StyledColorProperty createOutlineColorProperty(Node node) {
+		return createStyledColorProperty(StyledPropertyKey.OUTLINE_COLOR, node, Node.DEFAULT_OUTLINE_COLOR.clone());
+	}
+	
+	@Contract("_ -> new")
+	public StyledDimensionProperty createOutlineOffsetProperty(Node node) {
+		return createStyledDimensionProperty(StyledPropertyKey.OUTLINE_OFFSET, node, Dimension.zero());
 	}
 	
 	protected StyledColorProperty createStyledColorProperty(StyledPropertyKey<Color> key, Node node, Color fallbackValue) {
@@ -212,8 +234,8 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<CursorType, AdaptiveObjectProperty<CursorType>, StyledCursorProperty>)StyledCursorProperty::new);
 	}
 	
-	protected StyledBorderStyleProperty createStyledBorderStyleProperty(StyledPropertyKey<BorderStyle> key, Node node, BorderStyle fallbackValue) {
-		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<BorderStyle, AdaptiveObjectProperty<BorderStyle>, StyledBorderStyleProperty>)StyledBorderStyleProperty::new);
+	protected StyledLineStyleProperty createStyledLineStyleProperty(StyledPropertyKey<LineStyle> key, Node node, LineStyle fallbackValue) {
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<LineStyle, AdaptiveObjectProperty<LineStyle>, StyledLineStyleProperty>)StyledLineStyleProperty::new);
 	}
 	
 	protected  <T, A extends AdaptiveProperty<T, ?>, P extends StyledProperty<T, ?, A, ?>> P createStyledProperty(StyledPropertyKey<T> name, Node node, A fallbackValue, Style.StyledPropertyFactory<T, A, P> factory) {
@@ -349,23 +371,46 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 	private static StyleSheet createDefault() {
 		StyleSheet styleSheet = new StyleSheet();
 		
+		// Colors
 		Color buttonText = new Color(0, 0, 0);
 		Color buttonFace = new Color(233, 233, 237);
 		Color buttonHoverFace = new Color(208, 208, 215);
+		Color buttonBorder = new Color(143, 143, 157);
+		Color buttonBorderHover = new Color(103, 103, 116);
+		Color accentColor = new Color(0, 96, 223);
+		Color fieldColor = new Color(255, 255, 255);
+		Color fieldText = new Color(0, 0, 0);
 		
 		styleSheet.addDefaultRule(Selector.UNIVERSAL, StyledPropertyKey.COLOR, Color.white());
 		
+		// Text
 		styleSheet.addDefaultRule(TypeSelector.P, StyledPropertyKey.MARGIN, new DualDimension(Dimension.auto(), new Dimension(1, Unit.ELEMENT_SIZE)));
 		styleSheet.addDefaultRule(TypeSelector.P, StyledPropertyKey.CURSOR, CursorType.TEXT);
 		
+		// Input
 		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.PADDING, new DualDimension(new Dimension(1), new Dimension(4)));
 		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.CURSOR, CursorType.TEXT);
+		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.COLOR, fieldText);
+		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.BACKGROUND_COLOR, fieldColor);
+		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.SIZE, new DualDimension( new Dimension(160), new Dimension(16)));
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, ModifierSelector.FOCUS), StyledPropertyKey.OUTLINE_WIDTH, new Dimension(2));
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, ModifierSelector.FOCUS), StyledPropertyKey.OUTLINE_STYLE, LineStyle.SOLID);
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, ModifierSelector.FOCUS), StyledPropertyKey.OUTLINE_COLOR, accentColor);
+		styleSheet.addDefaultRule(PseudoElementSelector.PLACEHOLDER, StyledPropertyKey.COLOR, new Color(0, 0, 0, 0.5f));
 		
+		// Buttons
 		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.PADDING, new DualDimension(new Dimension(1), new Dimension(4)));
 		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.COLOR, buttonText);
 		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.BACKGROUND_COLOR, buttonFace);
+		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.BORDER_COLOR, buttonBorder);
+		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.BORDER_STYLE, LineStyle.SOLID);
+		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.BORDER_WIDTH, new Dimension(2));
 		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.CURSOR, CursorType.POINTER);
-		styleSheet.addDefaultRule( new SelectorCombo(TypeSelector.BUTTON, ModifierSelector.HOVER), StyledPropertyKey.BACKGROUND_COLOR, buttonHoverFace);
+		styleSheet.addDefaultRule( new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.HOVER), StyledPropertyKey.BACKGROUND_COLOR, buttonHoverFace);
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.HOVER), StyledPropertyKey.BORDER_COLOR, buttonBorderHover);
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.FOCUS_VISIBLE), StyledPropertyKey.OUTLINE_WIDTH, new Dimension(2));
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.FOCUS_VISIBLE), StyledPropertyKey.OUTLINE_STYLE, LineStyle.SOLID);
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.FOCUS_VISIBLE), StyledPropertyKey.OUTLINE_COLOR, accentColor);
 		
 		return styleSheet;
 	}

@@ -6,10 +6,7 @@ import dev.prozilla.pine.common.math.vector.Alignment;
 import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.TextButtonPrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.*;
 import dev.prozilla.pine.core.scene.Scene;
 
 public class MainScene extends Scene {
@@ -50,8 +47,12 @@ public class MainScene extends Scene {
 		TextPrefab textPrefab = new TextPrefab("This is a text element");
 		textPrefab.setColor(Color.black());
 		
+		TextInputPrefab textInputPrefab = new TextInputPrefab();
+		textInputPrefab.setPlaceholder("Placeholder...");
+		
 		menuPrefab.addChildren(titleTextPrefab, textPrefab,
-			textButton1Prefab, textButton2Prefab, textButton3Prefab);
+			textButton1Prefab, textButton2Prefab, textButton3Prefab,
+			textInputPrefab);
 		
 		nodeRootPrefab.addChild(menuPrefab);
 		

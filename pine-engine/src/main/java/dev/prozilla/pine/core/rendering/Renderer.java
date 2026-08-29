@@ -593,6 +593,10 @@ public class Renderer implements Initializable, Destructible {
 			texId = -1;
 		}
 		
+		if (a <= 0) {
+			return;
+		}
+		
 		// Avoid subpixel issues by snapping to nearest pixel
 		if (snapPixels) {
 			x1 = Math.round(x1);
@@ -733,6 +737,10 @@ public class Renderer implements Initializable, Destructible {
 			b = depth;
 			a = 1f;
 			texId = -1;
+		}
+		
+		if (a <= 0) {
+			return;
 		}
 		
 		// Avoid subpixel issues by snapping to nearest pixel

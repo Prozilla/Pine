@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.TooltipNode;
+import dev.prozilla.pine.core.component.ui.style.NodeStyle;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
@@ -22,5 +23,10 @@ public final class TooltipInitializer extends InitSystem {
 			Dimension.add(tooltipNode.cursorX, tooltipNode.baseX, tooltipNode.offset.x),
 			Dimension.add(tooltipNode.cursorY, tooltipNode.baseY, tooltipNode.offset.y)
 		);
+		
+		NodeStyle nodeStyle = chunk.getEntity().getComponent(NodeStyle.class);
+		if (nodeStyle != null) {
+			nodeStyle.setMarginProperty(null);
+		}
 	}
 }

@@ -6,19 +6,17 @@ import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventDispatcherProvider;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
-import dev.prozilla.pine.common.math.vector.Anchor;
-import dev.prozilla.pine.common.math.vector.Vector2f;
-import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.common.math.vector.Vector4f;
+import dev.prozilla.pine.common.math.vector.*;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.ComponentQuery;
 import dev.prozilla.pine.core.component.animation.AnimationData;
-import dev.prozilla.pine.core.component.ui.style.BorderStyle;
+import dev.prozilla.pine.core.component.ui.style.LineStyle;
 import dev.prozilla.pine.core.component.ui.style.NodeStyle;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
+import dev.prozilla.pine.core.rendering.mesh.Line;
 import dev.prozilla.pine.core.state.input.CursorType;
 
 import java.util.*;
@@ -28,6 +26,7 @@ import java.util.*;
  *
  * <p>Nodes are similar to HTML elements and the <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Box_model">CSS box model</a>.</p>
  */
+// TODO: Split everything into 4 sides (padding, margin, border, etc.)
 public class Node extends Component implements EventDispatcherProvider<NodeEvent.Type, Node, NodeEvent> {
 	
 	// Current state
@@ -45,16 +44,18 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public boolean passThrough;
 	/** If true, this node won't be arranged by a layout node. */
 	public boolean absolutePosition;
+	/** If true, this node won't be rendered by the node rendering system. */
+	public boolean controlledRender;
 	public String tooltipText;
 	public int tabIndex;
 	public boolean autoFocus;
+	public boolean alwaysVisibleFocus;
 	public String pseudoName;
 	
 	// Style
 	public NodeStyle nodeStyle;
 	public Color color;
 	public Color backgroundColor;
-	public Color borderColor;
 	public DualDimension size;
 	public DualDimension padding;
 	public DualDimension margin;
@@ -62,10 +63,21 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	// Border style
 	public DimensionBase borderWidth;
+	public Color borderColor;
 	public TextureAsset borderImage;
 	public Vector4f borderImageSlice;
 	public boolean borderImageSliceFill;
-	public BorderStyle borderStyle;
+	public LineStyle borderStyle;
+	
+	// Outline style
+	public DimensionBase outlineWidth;
+	public Color outlineColor;
+	public LineStyle outlineStyle;
+	public DimensionBase outlineOffset;
+	
+	// Meshes
+	public Line borderMesh;
+	public Line outlineMesh;
 	
 	public String htmlTag;
 	public final Set<String> classes;
@@ -79,13 +91,17 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	private final NodeEventDispatcher eventDispatcher;
 	
+	// Defaults
 	public static final Color DEFAULT_COLOR = Color.white();
 	public static final Color DEFAULT_BACKGROUND_COLOR = Color.transparent();
+	public static final Color DEFAULT_BORDER_COLOR = Color.transparent();
+	public static final Color DEFAULT_OUTLINE_COLOR = Color.transparent();
 	public static final Anchor DEFAULT_ANCHOR = Anchor.BOTTOM_LEFT;
 	
 	// Modifiers
 	public static final String HOVER_MODIFIER = "hover";
 	public static final String FOCUS_MODIFIER = "focus";
+	public static final String FOCUS_VISIBLE_MODIFIER = "focus-visible";
 	
 	public Node() {
 		currentPosition = new Vector2f();
@@ -99,8 +115,10 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		anchor = DEFAULT_ANCHOR;
 		passThrough = false;
 		absolutePosition = false;
+		controlledRender = false;
 		tabIndex = -1;
 		autoFocus = false;
+		alwaysVisibleFocus = false;
 		
 		size = new DualDimension();
 		
@@ -143,6 +161,51 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 			}
 		}
 		invalidateSelector();
+	}
+	
+	public void updateBorderMesh() {
+		float borderWidth = getBorderWidth();
+		if (borderWidth <= 0 || borderColor == null) {
+			borderMesh = null;
+			return;
+		}
+		
+		if (borderMesh == null) {
+			borderMesh = new Line();
+		}
+		
+		borderMesh.setThickness(new float[]{ borderWidth });
+		borderMesh.setOrigin(new Vector3f(currentPosition.x, currentPosition.y, getTransform().position.z));
+		borderMesh.setClosed(true);
+		
+		float x = borderWidth / 2f;
+		float y = borderWidth / 2f;
+		float width = currentInnerSize.x - borderWidth;
+		float height = currentInnerSize.y - borderWidth;
+		borderMesh.setPoints(Line.pointsOnRect(x, y, width, height));
+	}
+	
+	public void updateOutlineMesh() {
+		float outlineWidth = getOutlineWidth();
+		if (outlineWidth <= 0 || outlineColor == null) {
+			outlineMesh = null;
+			return;
+		}
+		
+		if (outlineMesh == null) {
+			outlineMesh = new Line();
+		}
+		
+		outlineMesh.setThickness(new float[]{ outlineWidth });
+		outlineMesh.setOrigin(new Vector3f(currentPosition.x, currentPosition.y, getTransform().position.z));
+		outlineMesh.setClosed(true);
+		
+		float offset = getOutlineOffset();
+		float x = outlineWidth / -2f - offset;
+		float y = outlineWidth / -2f - offset;
+		float width = currentInnerSize.x + outlineWidth + offset * 2f;
+		float height = currentInnerSize.y + outlineWidth + offset * 2f;
+		outlineMesh.setPoints(Line.pointsOnRect(x, y, width, height));
 	}
 	
 	/**
@@ -194,7 +257,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	}
 	
 	public boolean isInLayout() {
-		LayoutNode layoutNode = entity.getComponentAbove(LayoutNode.class);
+		LayoutNode layoutNode = entity.getComponentAbove(LayoutNode.class, ComponentQuery.SHALLOW);
 		
 		if (layoutNode == null) {
 			return false;
@@ -275,7 +338,15 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	}
 	
 	public float getBorderWidth() {
-		return borderWidth != null && borderStyle != BorderStyle.NONE ? borderWidth.compute(this, true) : 0;
+		return borderWidth != null && borderStyle != LineStyle.NONE ? borderWidth.compute(this, true) : 0;
+	}
+	
+	public float getOutlineWidth() {
+		return outlineWidth != null && outlineStyle != LineStyle.NONE ? outlineWidth.compute(this, true) : 0;
+	}
+	
+	public float getOutlineOffset() {
+		return outlineOffset != null ? outlineOffset.compute(this, true) : 0;
 	}
 	
 	@Override
@@ -393,12 +464,11 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	}
 	
 	public void click() {
-		focus();
 		invoke(NodeEvent.Type.CLICK);
 	}
 	
 	public void focus() {
-		if (getRoot().focusNode(this)) {
+		if (getRoot().focusNode(this, false)) {
 			invoke(NodeEvent.Type.FOCUS);
 		}
 	}
@@ -406,6 +476,10 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public boolean isFocused() {
 		Node focusedNode = getRoot().getFocusedNode();
 		return focusedNode != null && focusedNode.equals(this);
+	}
+	
+	public boolean canBeRendered() {
+		return readyToRender && !controlledRender;
 	}
 	
 	public void invoke(NodeEvent.Type type) {

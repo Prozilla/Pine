@@ -23,6 +23,10 @@ public final class BorderImageRenderer extends RenderSystem {
 		Node node = chunk.getComponent(Node.class);
 		BorderImage borderImage = chunk.getComponent(BorderImage.class);
 		
+		if (node.controlledRender) {
+			return;
+		}
+		
 		renderBorderImage(renderer, borderImage.texture, node, borderImage.slice, borderImage.fill);
 	}
 	

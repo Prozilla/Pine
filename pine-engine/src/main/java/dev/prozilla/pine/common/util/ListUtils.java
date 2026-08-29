@@ -1,5 +1,8 @@
 package dev.prozilla.pine.common.util;
 
+import dev.prozilla.pine.common.property.selection.WrapMode;
+import org.jetbrains.annotations.Contract;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -32,7 +35,7 @@ public final class ListUtils {
 	 * @param <T> The type of element to search for
 	 */
 	public static <E, T extends E> T getInstance(Collection<E> list, Class<T> type) {
-		if (list.isEmpty()) {
+		if (isEmpty(list)) {
 			return null;
 		}
 		
@@ -52,7 +55,7 @@ public final class ListUtils {
 	 * @param <E> The type of elements in the list
 	 */
 	public static <E> E getFirst(List<E> list) {
-		if (list.isEmpty()) {
+		if (isEmpty(list)) {
 			return null;
 		}
 		return list.getFirst();
@@ -72,6 +75,36 @@ public final class ListUtils {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Gets the element at a given position in the list, treating the list as circular.
+	 *
+	 * <p>
+	 *     E.g., if {@code position} is {@code -1}, the last element will be returned,
+	 *     and if {@code position} is {@code list.size()}, the first element will be returned.
+	 * </p>
+	 * <p>
+	 *     If the list is empty or {@code null}, {@code null} will be returned.
+	 * </p>
+	 * @param list The list
+	 * @return {@code true} if the list is empty or {@code null}.
+	 * @param <E> The type of elements in the list
+	 */
+	@Contract("null, _ -> null")
+	public static <E> E getCircular(List<E> list, int position) {
+		return !isEmpty(list) ? WrapMode.REPEAT.getElement(position, list) : null;
+	}
+	
+	/**
+	 * Checks whether the given list is empty or {@code null}.
+	 * @param list The list
+	 * @return {@code true} if the list is empty or {@code null}.
+	 * @param <E> The type of elements in the list
+	 */
+	@Contract("null -> true")
+	public static <E> boolean isEmpty(Collection<E> list) {
+		return list == null || list.isEmpty();
 	}
 	
 }

@@ -1,10 +1,12 @@
 package dev.prozilla.pine.core.system.standard.ui.input;
 
+import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.NodeEvent;
 import dev.prozilla.pine.core.component.ui.TextInputNode;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.EntityChunk;
+import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
 public final class TextInputInitializer extends InitSystem {
@@ -18,6 +20,8 @@ public final class TextInputInitializer extends InitSystem {
 		TextInputNode textInputNode = chunk.getComponent(TextInputNode.class);
 		TextNode textNode = chunk.getComponent(TextNode.class);
 		Node node = chunk.getComponent(Node.class);
+		
+		node.alwaysVisibleFocus = true;
 		
 		if (textInputNode.textListener != null) {
 			application.getInput().removeTextListener(textInputNode.textListener);
@@ -46,6 +50,12 @@ public final class TextInputInitializer extends InitSystem {
 		textInputNode.textNode = textNode;
 		textInputNode.getTextProperty().setValue(textNode.text);
 		textInputNode.moveCursorToEnd(false);
+		
+		if (!StringUtils.isEmpty(textInputNode.placeholder)) {
+			textInputNode.placeholderNode = node.addPseudoElement(TextInputNode.PLACEHOLDER_ELEMENT, new TextPrefab(textInputNode.placeholder));
+			textInputNode.placeholderNode.controlledRender = true;
+			textInputNode.placeholderTextNode = textInputNode.placeholderNode.getComponent(TextNode.class);
+		}
 		
 		application.getInput().addTextListener(textInputNode.textListener);
 	}

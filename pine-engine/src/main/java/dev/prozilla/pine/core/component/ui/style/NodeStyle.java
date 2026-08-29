@@ -19,7 +19,12 @@ public class NodeStyle extends NodeStyleBase {
 	private StyledGridAlignmentProperty anchorProperty;
 	private StyledCursorProperty cursorProperty;
 	private StyledDimensionProperty borderWidthProperty;
-	private StyledBorderStyleProperty borderStyleProperty;
+	private StyledLineStyleProperty borderStyleProperty;
+	private StyledColorProperty borderColorProperty;
+	private StyledDimensionProperty outlineWidthProperty;
+	private StyledLineStyleProperty outlineStyleProperty;
+	private StyledColorProperty outlineColorProperty;
+	private StyledDimensionProperty outlineOffsetProperty;
 	
 	public NodeStyle(AnimationData animationData, Node node) {
 		this(animationData, node, null);
@@ -44,6 +49,11 @@ public class NodeStyle extends NodeStyleBase {
 		setCursorProperty(styleSheet.createCursorProperty(node));
 		setBorderWidthProperty(styleSheet.createBorderWidthProperty(node));
 		setBorderStyleProperty(styleSheet.createBorderStyleProperty(node));
+		setBorderColorProperty(styleSheet.createBorderColorProperty(node));
+		setOutlineWidthProperty(styleSheet.createOutlineWidthProperty(node));
+		setOutlineStyleProperty(styleSheet.createOutlineStyleProperty(node));
+		setOutlineColorProperty(styleSheet.createOutlineColorProperty(node));
+		setOutlineOffsetProperty(styleSheet.createOutlineOffsetProperty(node));
 		
 		return true;
 	}
@@ -112,12 +122,52 @@ public class NodeStyle extends NodeStyleBase {
 		this.borderWidthProperty = changeProperty(this.borderWidthProperty, borderWidthProperty);
 	}
 	
-	public StyledBorderStyleProperty getBorderStyleProperty() {
+	public StyledLineStyleProperty getBorderStyleProperty() {
 		return borderStyleProperty;
 	}
 	
-	public void setBorderStyleProperty(StyledBorderStyleProperty borderStyleProperty) {
+	public void setBorderStyleProperty(StyledLineStyleProperty borderStyleProperty) {
 		this.borderStyleProperty = changeProperty(this.borderStyleProperty, borderStyleProperty);
+	}
+	
+	public StyledColorProperty getBorderColorProperty() {
+		return borderColorProperty;
+	}
+	
+	public void setBorderColorProperty(StyledColorProperty borderColorProperty) {
+		this.borderColorProperty = changeProperty(this.borderColorProperty, borderColorProperty);
+	}
+	
+	public StyledDimensionProperty getOutlineWidthProperty() {
+		return outlineWidthProperty;
+	}
+	
+	public void setOutlineWidthProperty(StyledDimensionProperty outlineWidthProperty) {
+		this.outlineWidthProperty = changeProperty(this.outlineWidthProperty, outlineWidthProperty);
+	}
+	
+	public StyledLineStyleProperty getOutlineStyleProperty() {
+		return outlineStyleProperty;
+	}
+	
+	public void setOutlineStyleProperty(StyledLineStyleProperty outlineStyleProperty) {
+		this.outlineStyleProperty = changeProperty(this.outlineStyleProperty, outlineStyleProperty);
+	}
+	
+	public StyledColorProperty getOutlineColorProperty() {
+		return outlineColorProperty;
+	}
+	
+	public void setOutlineColorProperty(StyledColorProperty outlineColorProperty) {
+		this.outlineColorProperty = changeProperty(this.outlineColorProperty, outlineColorProperty);
+	}
+	
+	public StyledDimensionProperty getOutlineOffsetProperty() {
+		return outlineOffsetProperty;
+	}
+	
+	public void setOutlineOffsetProperty(StyledDimensionProperty outlineOffsetProperty) {
+		this.outlineOffsetProperty = changeProperty(this.outlineOffsetProperty, outlineOffsetProperty);
 	}
 	
 }

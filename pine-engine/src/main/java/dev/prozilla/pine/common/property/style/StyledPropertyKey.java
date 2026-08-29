@@ -13,7 +13,7 @@ import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.common.util.parser.EnumParser;
 import dev.prozilla.pine.common.util.parser.Parser;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
-import dev.prozilla.pine.core.component.ui.style.BorderStyle;
+import dev.prozilla.pine.core.component.ui.style.LineStyle;
 import dev.prozilla.pine.core.state.input.CursorType;
 
 import java.util.Objects;
@@ -21,7 +21,9 @@ import java.util.Objects;
 public final class StyledPropertyKey<T> {
 	
 	private static final ColorParser colorParser = new ColorParser();
+	private static final DimensionParser dimensionParser = new DimensionParser();
 	private static final DualDimensionParser dualDimensionParser = new DualDimensionParser();
+	private static final EnumParser<LineStyle> lineStyleParser = new EnumParser<>(LineStyle.values());
 	
 	public static final StyledPropertyKey<Color> COLOR = new StyledPropertyKey<>("color", colorParser);
 	public static final StyledPropertyKey<Color> BACKGROUND_COLOR = new StyledPropertyKey<>("background-color", colorParser);
@@ -29,7 +31,7 @@ public final class StyledPropertyKey<T> {
 	public static final StyledPropertyKey<DualDimension> PADDING = new StyledPropertyKey<>("padding", dualDimensionParser);
 	public static final StyledPropertyKey<DualDimension> MARGIN = new StyledPropertyKey<>("margin", dualDimensionParser);
 	public static final StyledPropertyKey<Anchor> ANCHOR = new StyledPropertyKey<>("anchor", new EnumParser<>(Anchor.values()));
-	public static final StyledPropertyKey<DimensionBase> GAP = new StyledPropertyKey<>("gap", new DimensionParser());
+	public static final StyledPropertyKey<DimensionBase> GAP = new StyledPropertyKey<>("gap", dimensionParser);
 	public static final StyledPropertyKey<Direction> DIRECTION = new StyledPropertyKey<>("flex-direction", new Parser<>() {
 		@Override
 		public boolean parse(String input) {
@@ -107,8 +109,13 @@ public final class StyledPropertyKey<T> {
 			return succeed(cursor);
 		}
 	});
-	public static final StyledPropertyKey<DimensionBase> BORDER_WIDTH = new StyledPropertyKey<>("border-width", new DimensionParser());
-	public static final StyledPropertyKey<BorderStyle> BORDER_STYLE = new StyledPropertyKey<>("border-style", new EnumParser<>(BorderStyle.values()));
+	public static final StyledPropertyKey<DimensionBase> BORDER_WIDTH = new StyledPropertyKey<>("border-width", dimensionParser);
+	public static final StyledPropertyKey<LineStyle> BORDER_STYLE = new StyledPropertyKey<>("border-style", lineStyleParser);
+	public static final StyledPropertyKey<Color> BORDER_COLOR = new StyledPropertyKey<>("border-color", colorParser);
+	public static final StyledPropertyKey<DimensionBase> OUTLINE_WIDTH = new StyledPropertyKey<>("outline-width", dimensionParser);
+	public static final StyledPropertyKey<LineStyle> OUTLINE_STYLE = new StyledPropertyKey<>("outline-style", lineStyleParser);
+	public static final StyledPropertyKey<Color> OUTLINE_COLOR = new StyledPropertyKey<>("outline-color", colorParser);
+	public static final StyledPropertyKey<DimensionBase> OUTLINE_OFFSET = new StyledPropertyKey<>("outline-width", dimensionParser);
 	
 	private static final StyledPropertyKey<?>[] KEYS = new StyledPropertyKey<?>[] {
 		COLOR,
@@ -123,7 +130,12 @@ public final class StyledPropertyKey<T> {
 		DISTRIBUTION,
 		CURSOR,
 		BORDER_WIDTH,
-		BORDER_STYLE
+		BORDER_STYLE,
+		BORDER_COLOR,
+		OUTLINE_WIDTH,
+		OUTLINE_STYLE,
+		OUTLINE_COLOR,
+		OUTLINE_OFFSET
 	};
 	
 	private final String string;

@@ -8,11 +8,11 @@ import org.jetbrains.annotations.NotNull;
  * 
  * <p>This selector matches a node if all selectors match the node.</p>
  */
-public class SelectorCombo extends Selector {
+public class CompoundSelector extends Selector {
 	
 	private final Selector[] selectors;
 	
-	public SelectorCombo(Selector... selectors) {
+	public CompoundSelector(Selector... selectors) {
 		this.selectors = selectors;
 	}
 	
@@ -47,11 +47,11 @@ public class SelectorCombo extends Selector {
 	
 	@Override
 	public boolean equals(Selector other) {
-		if (!(other instanceof SelectorCombo otherSelectorCombo)) {
+		if (!(other instanceof CompoundSelector otherCompoundSelector)) {
 			return false;
 		}
 		
-		Selector[] otherSelectors = otherSelectorCombo.selectors;
+		Selector[] otherSelectors = otherCompoundSelector.selectors;
 		
 		if (selectors.length != otherSelectors.length) {
 			return false;

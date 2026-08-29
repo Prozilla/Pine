@@ -14,6 +14,7 @@ public class TextInputPrefab extends TextPrefab {
 	
 	protected TextInputNode.Type type;
 	protected BindableStringProperty textProperty;
+	protected String placeholder;
 	
 	public TextInputPrefab() {
 		this(null);
@@ -22,7 +23,6 @@ public class TextInputPrefab extends TextPrefab {
 	public TextInputPrefab(String value) {
 		super(value);
 		setName("TextInput");
-		setAutoFocus(true);
 		setSize(new DualDimension(64, 24));
 		setHTMLTag("input");
 		setTabIndex(0);
@@ -36,11 +36,16 @@ public class TextInputPrefab extends TextPrefab {
 		this.textProperty = textProperty;
 	}
 	
+	public void setPlaceholder(String placeholder) {
+		this.placeholder = placeholder;
+	}
+	
 	@Override
 	protected void apply(Entity entity) {
 		super.apply(entity);
 		
 		TextInputNode textInputNode = textProperty == null ? new TextInputNode() : new TextInputNode(textProperty);
+		textInputNode.placeholder = placeholder;
 		entity.addComponent(textInputNode);
 		
 		if (type != null) {

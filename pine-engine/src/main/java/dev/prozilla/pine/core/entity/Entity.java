@@ -135,7 +135,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		Checks.isNotNull(child, "child");
 		
 		if (transform.children.contains(child.transform)) {
-			throw new IllegalStateException("Entity is already a child");
+			return child;
 		}
 		
 		transform.children.add(child.transform);
@@ -165,18 +165,19 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	 * Detaches a child from this entity without removing it from the scene.
 	 * @param child Child object
 	 */
-	public void removeChild(Entity child) throws IllegalStateException, IllegalArgumentException {
+	public boolean removeChild(Entity child) throws IllegalStateException, IllegalArgumentException {
 		Checks.isNotNull(child, "child");
 		
 		boolean removed = transform.children.remove(child.transform);
 		if (!removed) {
-			throw new IllegalStateException("Entity is not a child");
+			return false;
 		}
 		
 		child.transform.parent = null;
 		
 		invoke(EventType.CHILD_REMOVE, child);
 		invoke(EventType.CHILDREN_UPDATE, this);
+		return true;
 	}
 	
 	/**

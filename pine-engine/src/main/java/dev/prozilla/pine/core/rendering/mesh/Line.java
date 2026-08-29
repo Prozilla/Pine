@@ -3,9 +3,12 @@ package dev.prozilla.pine.core.rendering.mesh;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector3f;
+import dev.prozilla.pine.common.util.ListUtils;
 import dev.prozilla.pine.common.util.ObservableArrayList;
 import dev.prozilla.pine.common.util.ObservableList;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,6 +16,7 @@ public class Line extends Mesh {
 	
 	protected final ObservableList<Vector2f> points;
 	protected float[] thickness;
+	protected boolean isClosed;
 	
 	private static final float EPSILON = 1e-6f;
 	
@@ -49,7 +53,7 @@ public class Line extends Mesh {
 	}
 	
 	public void setThickness(float[] thickness) {
-		if (this.thickness == thickness) {
+		if (Arrays.equals(this.thickness, thickness)) {
 			return;
 		}
 		
@@ -94,6 +98,19 @@ public class Line extends Mesh {
 		points.remove(index);
 	}
 	
+	public boolean isClosed() {
+		return isClosed;
+	}
+	
+	public void setClosed(boolean closed) {
+		if (this.isClosed == closed) {
+			return;
+		}
+		
+		isClosed = closed;
+		markAsDirty();
+	}
+	
 	@Override
 	protected float[] generateVertices() {
 		int totalPoints = points.size();
@@ -105,7 +122,7 @@ public class Line extends Mesh {
 		
 		for (int i = 0; i < totalPoints; i++) {
 			Vector2f point = points.get(i);
-			float pointThickness = thickness[i % thickness.length];
+			float pointOffset = thickness[i % thickness.length] / 2f;
 			
 			vertices[i * 6] = origin.x + point.x;
 			vertices[i * 6 + 1] = origin.y + point.y;
@@ -114,27 +131,27 @@ public class Line extends Mesh {
 			vertices[i * 6 + 4] = origin.y + point.y;
 			vertices[i * 6 + 5] = origin.z;
 			
-			if (i == 0) {
+			if (i == 0 && !isClosed) {
 				Vector2f nextPoint = points.get(i + 1);
 				Vector2f direction = nextPoint.clone().subtract(point);
-				Vector2f perpendicular = new Vector2f(-direction.y, direction.x).normalize().scale(pointThickness);
+				Vector2f perpendicular = new Vector2f(-direction.y, direction.x).normalize().scale(pointOffset);
 				
 				vertices[0] += perpendicular.x;
 				vertices[1] += perpendicular.y;
 				vertices[3] -= perpendicular.x;
 				vertices[4] -= perpendicular.y;
-			} else if (i == totalPoints - 1) {
+			} else if (i == totalPoints - 1 && !isClosed) {
 				Vector2f previousPoint = points.get(i - 1);
 				Vector2f direction = previousPoint.clone().subtract(point);
-				Vector2f perpendicular = new Vector2f(-direction.y, direction.x).normalize().scale(pointThickness);
+				Vector2f perpendicular = new Vector2f(-direction.y, direction.x).normalize().scale(pointOffset);
 				
 				vertices[i * 6] -= perpendicular.x;
 				vertices[i * 6 + 1] -= perpendicular.y;
 				vertices[i * 6 + 3] += perpendicular.x;
 				vertices[i * 6 + 4] += perpendicular.y;
 			} else {
-				Vector2f previousPoint = points.get(i - 1);
-				Vector2f nextPoint = points.get(i + 1);
+				Vector2f previousPoint = ListUtils.getCircular(points, i - 1);
+				Vector2f nextPoint = ListUtils.getCircular(points, i + 1);
 				
 				Vector2f previousDirection = previousPoint.clone().subtract(point).normalize();
 				Vector2f nextDirection = nextPoint.clone().subtract(point).normalize();
@@ -145,15 +162,15 @@ public class Line extends Mesh {
 				Vector2f bisector;
 				
 				if (tangent.lengthSquared() < EPSILON) {
-					bisector = nextDirectionPerpendicular.scale(pointThickness);
+					bisector = nextDirectionPerpendicular.scale(pointOffset);
 				} else {
 					Vector2f miterDirection = tangent.normalize();
 					float dot = miterDirection.dot(nextDirectionPerpendicular);
 					
 					if (Math.abs(dot) < EPSILON) {
-						bisector = nextDirectionPerpendicular.scale(pointThickness);
+						bisector = nextDirectionPerpendicular.scale(pointOffset);
 					} else {
-						bisector = miterDirection.scale(pointThickness / dot);
+						bisector = miterDirection.scale(pointOffset / dot);
 					}
 				}
 				
@@ -200,7 +217,12 @@ public class Line extends Mesh {
 	@Override
 	protected int[] generateTriangles() {
 		int totalPoints = points.size();
-		int[] triangles = new int[(totalPoints - 1) * 6];
+		int triangleCount = totalPoints * 2;
+		if (!isClosed) {
+			triangleCount -= 2;
+		}
+		
+		int[] triangles = new int[triangleCount * 3];
 		
 		for (int i = 0; i < totalPoints - 1; i++) {
 			triangles[i * 6] = i * 2;
@@ -209,6 +231,17 @@ public class Line extends Mesh {
 			triangles[i * 6 + 3] = i * 2;
 			triangles[i * 6 + 4] = i * 2 + 3;
 			triangles[i * 6 + 5] = i * 2 + 2;
+		}
+		
+		if (isClosed) {
+			int lastPoint = totalPoints - 1;
+			int previousPoint = lastPoint - 1;
+			triangles[lastPoint * 6] = previousPoint * 2 + 2;
+			triangles[lastPoint * 6 + 1] = previousPoint * 2 + 3;
+			triangles[lastPoint * 6 + 2] = 1;
+			triangles[lastPoint * 6 + 3] = previousPoint * 2 + 2;
+			triangles[lastPoint * 6 + 4] = 1;
+			triangles[lastPoint * 6 + 5] = 0;
 		}
 		
 		return triangles;
@@ -231,5 +264,14 @@ public class Line extends Mesh {
 	@Override
 	public Line clone() {
 		return new Line(origin, points, thickness);
+	}
+	
+	public static List<Vector2f> pointsOnRect(float x, float y, float width, float height) {
+		List<Vector2f> points = new ArrayList<>();
+		points.add(new Vector2f(x, y));
+		points.add(new Vector2f(x, y + height));
+		points.add(new Vector2f(x + width, y + height));
+		points.add(new Vector2f(x + width, y));
+		return points;
 	}
 }

@@ -99,7 +99,7 @@ public class SelectorParser extends SequentialParser<Selector> {
 		} else if (parts.size() == 1) {
 			return parts.getFirst();
 		} else {
-			return new SelectorCombo(parts.toArray(new Selector[0]));
+			return new CompoundSelector(parts.toArray(new Selector[0]));
 		}
 	}
 	

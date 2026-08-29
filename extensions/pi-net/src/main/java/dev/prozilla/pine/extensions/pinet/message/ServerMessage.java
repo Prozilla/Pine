@@ -64,9 +64,9 @@ import dev.prozilla.pine.extensions.pinet.session.Session;
  */
 public abstract class ServerMessage {
 	
-	private final Packet payload;
+	private Packet payload;
 	/** The session corresponding to the sender of this message. */
-	protected final Session source;
+	protected Session source;
 	
 	private boolean isAcknowledged;
 	private boolean isDiscarded;
@@ -84,6 +84,21 @@ public abstract class ServerMessage {
 	 */
 	public Packet getPayload() {
 		return payload;
+	}
+	
+	public void setPayload(Packet payload) {
+		this.payload = payload;
+	}
+	
+	/**
+	 * @return The session corresponding to the sender of this message.
+	 */
+	public Session getSource() {
+		return source;
+	}
+	
+	public void setSource(Session source) {
+		this.source = source;
 	}
 	
 	/**

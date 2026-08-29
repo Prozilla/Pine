@@ -19,13 +19,8 @@ public final class ButtonInputHandler extends InputSystem {
 		ButtonNode buttonNode = chunk.getComponent(ButtonNode.class);
 		Node node = chunk.getComponent(Node.class);
 		
-		buttonNode.isHovering = node.cursorHit;
-		
-		if (node.cursorHit && buttonNode.clickCallback != null && input.getMouseButtonDown(MouseButton.LEFT)) {
-			buttonNode.click();
-		}
-		
-		if (buttonNode.clickCallback != null && input.getKeyDown(Key.ENTER) && node.isFocused()) {
+		if (node.cursorHit && input.getMouseButtonDown(MouseButton.LEFT)
+			    || input.getKeyDown(Key.ENTER) && node.isFocused()) {
 			buttonNode.click();
 		}
 	}

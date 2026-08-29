@@ -17,18 +17,10 @@ public final class NodeStyler extends UpdateSystem {
 		NodeStyle nodeStyle = chunk.getComponent(NodeStyle.class);
 		
 		if (nodeStyle.getColorProperty() != null) {
-			if (node.color == null) {
-				node.color = nodeStyle.getColorProperty().getValue();
-			} else {
-				nodeStyle.getColorProperty().transmit(node.color);
-			}
+			node.color = nodeStyle.getColorProperty().getValue();
 		}
 		if (nodeStyle.getBackgroundColorProperty() != null) {
-			if (node.backgroundColor == null) {
-				node.backgroundColor = nodeStyle.getBackgroundColorProperty().getValue();
-			} else {
-				nodeStyle.getBackgroundColorProperty().transmit(node.backgroundColor);
-			}
+			node.backgroundColor = nodeStyle.getBackgroundColorProperty().getValue();
 		}
 		if (nodeStyle.getSizeProperty() != null) {
 			node.size = nodeStyle.getSizeProperty().getValue();
@@ -47,6 +39,27 @@ public final class NodeStyler extends UpdateSystem {
 		}
 		if (nodeStyle.getCursorProperty() != null) {
 			node.cursor = nodeStyle.getCursorProperty().getValue();
+		}
+		if (nodeStyle.getBorderWidthProperty() != null) {
+			node.borderWidth = nodeStyle.getBorderWidthProperty().getValue();
+		}
+		if (nodeStyle.getBorderStyleProperty() != null) {
+			node.borderStyle = nodeStyle.getBorderStyleProperty().getValue();
+		}
+		if (nodeStyle.getBorderColorProperty() != null) {
+			node.borderColor = nodeStyle.getBorderColorProperty().getValue();
+		}
+		if (nodeStyle.getOutlineWidthProperty() != null) {
+			node.outlineWidth = nodeStyle.getOutlineWidthProperty().getValue();
+		}
+		if (nodeStyle.getOutlineStyleProperty() != null) {
+			node.outlineStyle = nodeStyle.getOutlineStyleProperty().getValue();
+		}
+		if (nodeStyle.getOutlineColorProperty() != null) {
+			node.outlineColor = nodeStyle.getOutlineColorProperty().getValue();
+		}
+		if (nodeStyle.getOutlineOffsetProperty() != null) {
+			node.outlineOffset = nodeStyle.getOutlineOffsetProperty().getValue();
 		}
 	}
 }

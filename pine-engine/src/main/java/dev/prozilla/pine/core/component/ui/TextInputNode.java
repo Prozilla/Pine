@@ -16,6 +16,12 @@ public class TextInputNode extends Component {
 	public Type type;
 	public TextNode textNode;
 	private BindableStringProperty textProperty;
+	public String placeholder;
+	
+	public Node placeholderNode;
+	public TextNode placeholderTextNode;
+	
+	public static final String PLACEHOLDER_ELEMENT = "placeholder";
 	
 	public enum Type {
 		TEXT,

@@ -15,8 +15,8 @@ public final class TooltipInputHandler extends InputSystemBase {
 	public void input(float deltaTime) {
 		Vector2i cursorPosition = getInput().getCursor(true);
 		
-		int windowWidth = application.getWindow().width;
-		int windowHeight = application.getWindow().height;
+		int windowWidth = application.getWindow().getWidth();
+		int windowHeight = application.getWindow().getHeight();
 		
 		forEach((chunk) -> {
 			Node node = chunk.getComponent(Node.class);

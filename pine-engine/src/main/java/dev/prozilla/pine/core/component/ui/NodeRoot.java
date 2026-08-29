@@ -22,14 +22,17 @@ public class NodeRoot extends Component implements NodeContext {
 	
 	public Vector2i size;
 	
+	// Tooltip
 	public String currentTooltipText;
 	public Entity tooltip;
 	public Node tooltipActivator;
 	public TooltipCreator tooltipCreator;
 	
+	// Focus
 	public int focusedNodeIndex;
 	private Node focusedNode;
 	public final List<Node> focusableNodes;
+	public boolean isUsingKeyboardNavigation;
 	
 	@FunctionalInterface
 	public interface TooltipCreator {
@@ -56,6 +59,7 @@ public class NodeRoot extends Component implements NodeContext {
 		focusedNodeIndex = -1;
 		focusedNode = null;
 		focusableNodes = new ArrayList<>();
+		isUsingKeyboardNavigation = false;
 	}
 	
 	@Override
@@ -121,17 +125,17 @@ public class NodeRoot extends Component implements NodeContext {
 		return focusedNode;
 	}
 	
-	public void focusNextNode() {
+	public void focusNextNode(boolean visible) {
 		int newFocusedNodeIndex;
 		if (focusableNodes.isEmpty()) {
 			newFocusedNodeIndex = 0;
 		} else {
 			newFocusedNodeIndex = (focusedNodeIndex + 1) % focusableNodes.size();
 		}
-		focusNode(newFocusedNodeIndex);
+		focusNode(newFocusedNodeIndex, visible);
 	}
 	
-	public void focusPreviousNode() {
+	public void focusPreviousNode(boolean visible) {
 		int newFocusedNodeIndex = focusedNodeIndex;
 		if (focusableNodes.isEmpty()) {
 			newFocusedNodeIndex = 0;
@@ -141,20 +145,21 @@ public class NodeRoot extends Component implements NodeContext {
 				newFocusedNodeIndex = focusableNodes.size() - 1;
 			}
 		}
-		focusNode(newFocusedNodeIndex);
+		focusNode(newFocusedNodeIndex, visible);
 	}
 	
-	public boolean focusNode(Node node) {
-		return focusNode(focusableNodes.indexOf(node));
+	public boolean focusNode(Node node, boolean visible) {
+		return focusNode(focusableNodes.indexOf(node), visible);
 	}
 	
-	private boolean focusNode(int nodeIndex) {
+	private boolean focusNode(int nodeIndex, boolean visible) {
 		if (focusedNodeIndex == nodeIndex) {
 			return true;
 		}
 		
 		if (focusedNode != null) {
 			focusedNode.removeModifier(Node.FOCUS_MODIFIER);
+			focusedNode.removeModifier(Node.FOCUS_VISIBLE_MODIFIER);
 			focusedNode.invoke(NodeEvent.Type.BLUR);
 		}
 		
@@ -165,6 +170,9 @@ public class NodeRoot extends Component implements NodeContext {
 		} else {
 			focusedNode = focusableNodes.get(focusedNodeIndex);
 			focusedNode.addModifier(Node.FOCUS_MODIFIER);
+			if (visible || focusedNode.alwaysVisibleFocus) {
+				focusedNode.addModifier(Node.FOCUS_VISIBLE_MODIFIER);
+			}
 			return true;
 		}
 	}

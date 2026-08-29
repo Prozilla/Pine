@@ -1,12 +1,12 @@
 package dev.prozilla.pine.core.component.ui.style;
 
-public enum BorderStyle {
+public enum LineStyle {
 	NONE("none"),
 	SOLID("solid");
 	
 	private final String string;
 	
-	BorderStyle(String string) {
+	LineStyle(String string) {
 		this.string = string;
 	}
 	
