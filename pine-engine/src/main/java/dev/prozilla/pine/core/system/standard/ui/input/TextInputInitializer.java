@@ -22,6 +22,7 @@ public final class TextInputInitializer extends InitSystem {
 		Node node = chunk.getComponent(Node.class);
 		
 		node.alwaysVisibleFocus = true;
+		node.setAttribute(Node.TYPE_ATTRIBUTE, "text");
 		
 		if (textInputNode.textListener != null) {
 			application.getInput().removeTextListener(textInputNode.textListener);
@@ -41,7 +42,7 @@ public final class TextInputInitializer extends InitSystem {
 				
 				if (selectionDeleted || textChanged) {
 					if (textChanged) {
-						textInputNode.moveCursorRight();
+						textInputNode.moveCursor(1);
 					}
 					node.invoke(NodeEvent.Type.INPUT);
 				}
@@ -53,7 +54,6 @@ public final class TextInputInitializer extends InitSystem {
 		
 		if (!StringUtils.isEmpty(textInputNode.placeholder)) {
 			textInputNode.placeholderNode = node.addPseudoElement(TextInputNode.PLACEHOLDER_ELEMENT, new TextPrefab(textInputNode.placeholder));
-			textInputNode.placeholderNode.controlledRender = true;
 			textInputNode.placeholderTextNode = textInputNode.placeholderNode.getComponent(TextNode.class);
 		}
 		

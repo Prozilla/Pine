@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.system.standard.ui.input;
 
+import dev.prozilla.pine.common.math.MathUtils;
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.Node;
@@ -40,40 +42,43 @@ public final class TextInputRenderer extends RenderSystem {
 			return;
 		}
 		
-		float cursorX = x;
-		
+		float cursorOffset = 0;
 		if (textInputNode.cursorPosition > 0) {
-			cursorX += getTextWidth(renderer, textNode, textInputNode.cursorPosition);
+			cursorOffset = TextRenderer.getTextWidth(renderer, textNode, textInputNode.cursorPosition);
+		}
+		float cursorX = x + cursorOffset;
+		
+		// Clamp cursor position
+		float visibleTextWidth = node.currentInnerSize.x - node.getBoxX() * 2f;
+		if (cursorOffset + textNode.getOffsetX() > visibleTextWidth) {
+			if (textNode.offset == null) {
+				textNode.offset = new Vector2f();
+			}
+			textNode.offset.x = visibleTextWidth - cursorOffset;
+		} else if (cursorOffset + textNode.getOffsetX() < 0) {
+			if (textNode.offset == null) {
+				textNode.offset = new Vector2f();
+			}
+			textNode.offset.x = -cursorOffset;
 		}
 		
 		// Draw selection
 		if (textInputNode.hasSelection()) {
-			float selectionX;
-			if (textInputNode.selection > 0) {
-				selectionX = cursorX;
-			} else {
-				selectionX = x + getTextWidth(renderer, textNode, textInputNode.getSelectionStart());
-			}
-			float selectionWidth = getTextWidth(renderer, textNode, textInputNode.getSelectionStart(), textInputNode.getSelectionEnd());
-			renderer.drawRect(selectionX, y, transform.position.z, selectionWidth, textNode.getFontSize(), Color.cyan().setAlpha(0.5f));
+			int anchorIndex = textInputNode.cursorPosition + textInputNode.selection;
+			float anchorScreenX = x + TextRenderer.getTextWidth(renderer, textNode, anchorIndex) + textNode.getOffsetX();
+			float cursorScreenX = cursorX + textNode.getOffsetX();
+			
+			float visibleEnd = x + visibleTextWidth;
+			float clampedAnchorX = MathUtils.clamp(anchorScreenX, x, visibleEnd);
+			
+			float selectionLeft = Math.min(cursorScreenX, clampedAnchorX);
+			float selectionWidth = Math.abs(cursorScreenX - clampedAnchorX);
+			
+			renderer.drawRect(selectionLeft, y, transform.position.z, selectionWidth, textNode.getFontSize(), new Color(0, 96, 223).setAlpha(0.5f));
 		}
 		
 		// Draw cursor
-		renderer.drawRect(cursorX, y, transform.position.z, 2, textNode.getFontSize(), node.color);
-	}
-	
-	private static int getTextWidth(Renderer renderer, TextNode textNode, int length) {
-		return getTextWidth(renderer, textNode, 0, length);
-	}
-	
-	private static int getTextWidth(Renderer renderer, TextNode textNode, int start, int end) {
-		start = Math.max(start, 0);
-		end = Math.min(end, textNode.text.length());
-		if (start >= end) {
-			return 0;
-		}
-		String text = textNode.text.substring(start, end);
-		return textNode.font == null ? renderer.getTextWidth(text) : renderer.getTextWidth(textNode.font, text);
+		renderer.drawRect(cursorX + textNode.getOffsetX(), y, transform.position.z, 2, textNode.getFontSize(), node.color);
 	}
 	
 }

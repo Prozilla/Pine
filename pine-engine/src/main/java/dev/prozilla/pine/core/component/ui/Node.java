@@ -7,8 +7,13 @@ import dev.prozilla.pine.common.event.EventDispatcherProvider;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.*;
+import dev.prozilla.pine.common.property.Property;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
+import dev.prozilla.pine.common.property.animated.transitioned.TransitionedProperty;
 import dev.prozilla.pine.common.property.style.StyleSheet;
+import dev.prozilla.pine.common.property.style.StyledProperty;
 import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.ComponentQuery;
 import dev.prozilla.pine.core.component.animation.AnimationData;
@@ -16,10 +21,12 @@ import dev.prozilla.pine.core.component.ui.style.LineStyle;
 import dev.prozilla.pine.core.component.ui.style.NodeStyle;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
+import dev.prozilla.pine.core.entity.prefab.ui.NodePrefab;
 import dev.prozilla.pine.core.rendering.mesh.Line;
 import dev.prozilla.pine.core.state.input.CursorType;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 
 /**
  * Component for nodes that make up the user interface.
@@ -51,6 +58,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public boolean autoFocus;
 	public boolean alwaysVisibleFocus;
 	public String pseudoName;
+	private final Map<String, String> attributes;
 	
 	// Style
 	public NodeStyle nodeStyle;
@@ -103,6 +111,11 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public static final String FOCUS_MODIFIER = "focus";
 	public static final String FOCUS_VISIBLE_MODIFIER = "focus-visible";
 	
+	// Attributes
+	public static final String CLASS_ATTRIBUTE = "class";
+	public static final String ID_ATTRIBUTE = "id";
+	public static final String TYPE_ATTRIBUTE = "type";
+	
 	public Node() {
 		currentPosition = new Vector2f();
 		currentInnerSize = new Vector2f();
@@ -119,6 +132,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		tabIndex = -1;
 		autoFocus = false;
 		alwaysVisibleFocus = false;
+		attributes = new HashMap<>();
 		
 		size = new DualDimension();
 		
@@ -224,27 +238,6 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	 */
 	public boolean isInside(int x, int y) {
 		return isInsideRect(x, y, currentPosition, currentInnerSize);
-	}
-	
-	/**
-	 * Checks if a point is inside a given rectangle.
-	 * @param rectPosition Position of the rectangle
-	 * @param rectSize Size of the rectangle
-	 * @return True if the point is inside the rectangle
-	 */
-	public static boolean isInsideRect(Vector2f point, Vector2f rectPosition, Vector2f rectSize) {
-		return isInsideRect(point.x, point.y, rectPosition, rectSize);
-	}
-	
-	/**
-	 * Checks if a point is inside a given rectangle.
-	 * @param rectPosition Position of the rectangle
-	 * @param rectSize Size of the rectangle
-	 * @return True if the point is inside the rectangle
-	 */
-	public static boolean isInsideRect(float x, float y, Vector2f rectPosition, Vector2f rectSize) {
-		return x >= rectPosition.x && x < rectPosition.x + rectSize.x
-			&& y >= rectPosition.y && y < rectPosition.y + rectSize.y;
 	}
 	
 	public NodeContext getContext() {
@@ -406,7 +399,12 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		return pseudoElements.get(name);
 	}
 	
+	public Node addPseudoElement(String name) {
+		return addPseudoElement(name, new NodePrefab());
+	}
+	
 	public Node addPseudoElement(String name, Prefab pseudoPrefab) {
+		pseudoPrefab.setName(StringUtils.capitalize(name));
 		return addPseudoElement(name, getEntity().addChild(pseudoPrefab));
 	}
 	
@@ -421,15 +419,19 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	public void addPseudoElement(String name, Node pseudoElement) {
 		Node previous = pseudoElements.put(name, pseudoElement);
+		if (previous == pseudoElement) {
+			return;
+		}
 		if (previous != null) {
 			getEntity().removeChild(previous.getEntity());
 		}
 		pseudoElement.pseudoName = name;
-		pseudoElement.invalidateSelector();
+		pseudoElement.controlledRender = true;
 		getEntity().addChild(pseudoElement.getEntity());
 		if (nodeStyle != null) {
 			pseudoElement.addStyleSheets(nodeStyle.getStyleSheets());
 		}
+		pseudoElement.updateHierarchy();
 	}
 	
 	public void removePseudoElement(String name) {
@@ -439,6 +441,10 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		}
 	}
 	
+	public boolean isPseudoElement() {
+		return pseudoName != null;
+	}
+	
 	public void addStyleSheets(Set<StyleSheet> styleSheets) {
 		for (StyleSheet styleSheet : styleSheets) {
 			addStyleSheet(styleSheet);
@@ -446,10 +452,10 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	}
 	
 	public void addStyleSheet(StyleSheet styleSheet) {
-		getNodeStyle().applyStyleSheet(styleSheet);
+		requireNodeStyle().applyStyleSheet(styleSheet);
 	}
 	
-	public NodeStyle getNodeStyle() {
+	public NodeStyle requireNodeStyle() {
 		if (nodeStyle == null) {
 			nodeStyle = getEntity().getOrAddComponent(NodeStyle.class, () -> {
 				AnimationData animationData = getEntity().getOrAddComponent(AnimationData.class, AnimationData::new);
@@ -457,6 +463,58 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 			});
 		}
 		return nodeStyle;
+	}
+	
+	public void overwriteMargin(DualDimension margin) {
+		this.margin = margin;
+		overwriteStyle(NodeStyle::setMarginProperty);
+	}
+	
+	public void overwritePadding(DualDimension padding) {
+		this.padding = padding;
+		overwriteStyle(NodeStyle::setPaddingProperty);
+	}
+	
+	public void overwriteSize(DualDimension size) {
+		this.size = size;
+		overwriteStyle(NodeStyle::setSizeProperty);
+	}
+	
+	private <T, P extends Property<T>, A extends AdaptiveProperty<T, P>, R extends TransitionedProperty<T>, S extends StyledProperty<T, P, A, R>> void overwriteStyle(BiConsumer<NodeStyle, S> setter) {
+		NodeStyle nodeStyle = getComponent(NodeStyle.class);
+		if (nodeStyle != null) {
+			setter.accept(nodeStyle, null);
+		}
+	}
+	
+	public boolean hasAttribute(String name) {
+		return getAttribute(name) != null;
+	}
+	
+	public String getAttribute(String name) {
+		return switch (name) {
+			case CLASS_ATTRIBUTE -> {
+				if (classes.isEmpty()) {
+					yield null;
+				}
+				StringJoiner stringJoiner = new StringJoiner(" ");
+				for (String className : classes) {
+					stringJoiner.add(className);
+				}
+				yield stringJoiner.toString();
+			}
+			case ID_ATTRIBUTE -> entity.tag;
+			default -> attributes.get(name);
+		};
+	}
+	
+	public void setAttribute(String name, String value) {
+		// TODO: handle setting of class attribute
+		switch (StringUtils.toLowerCase(name)) {
+			case ID_ATTRIBUTE -> entity.tag = value;
+			case null -> {}
+			default -> attributes.put(name, value);
+		}
 	}
 	
 	private void invalidateSelector() {
@@ -491,6 +549,27 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		getRoot().removeNode(this);
 		super.destroy();
 		eventDispatcher.destroy();
+	}
+	
+	/**
+	 * Checks if a point is inside a given rectangle.
+	 * @param rectPosition Position of the rectangle
+	 * @param rectSize Size of the rectangle
+	 * @return True if the point is inside the rectangle
+	 */
+	public static boolean isInsideRect(Vector2f point, Vector2f rectPosition, Vector2f rectSize) {
+		return isInsideRect(point.x, point.y, rectPosition, rectSize);
+	}
+	
+	/**
+	 * Checks if a point is inside a given rectangle.
+	 * @param rectPosition Position of the rectangle
+	 * @param rectSize Size of the rectangle
+	 * @return True if the point is inside the rectangle
+	 */
+	public static boolean isInsideRect(float x, float y, Vector2f rectPosition, Vector2f rectSize) {
+		return x >= rectPosition.x && x < rectPosition.x + rectSize.x
+			       && y >= rectPosition.y && y < rectPosition.y + rectSize.y;
 	}
 	
 }

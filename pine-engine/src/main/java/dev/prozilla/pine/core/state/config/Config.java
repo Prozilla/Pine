@@ -27,6 +27,7 @@ public class Config {
 	public static final ConfigKey<String> COMPANY_NAME = new ConfigKey<>("companyName", String.class);
 	public static final ConfigKey<String> APP_NAME = new ConfigKey<>("appName", String.class);
 	public static final ConfigKey<Boolean> AUTO_CREATE_DIRECTORIES = new ConfigKey<>("autoCreateDirectories", Boolean.class);
+	public static final ConfigKey<Boolean> STOP_ON_EXCEPTION = new ConfigKey<>("stopOnException", Boolean.class);
 	
 	// Predefines options
 	/** Target frames per second. When set to <code>0</code>, fps is uncapped. Defaults to <code>120</code>. */
@@ -41,6 +42,8 @@ public class Config {
 	public final StringConfigOption appName = new StringConfigOption("Untitled", Objects::nonNull);
 	/** Enables the automatic creation of directories. Defaults to {@code true}. */
 	public final BooleanConfigOption autoCreateDirectories = new BooleanConfigOption(true);
+	/** Stops the application when an exception occurs. Defaults to {@code false}. */
+	public final BooleanConfigOption stopOnException = new BooleanConfigOption(false);
 	
 	/** Options related to rendering. */
 	public final RenderConfig rendering = new RenderConfig();
@@ -75,6 +78,7 @@ public class Config {
 		addOption(COMPANY_NAME, companyName);
 		addOption(APP_NAME, appName);
 		addOption(AUTO_CREATE_DIRECTORIES, autoCreateDirectories);
+		addOption(STOP_ON_EXCEPTION, stopOnException);
 		
 		addOption(RenderConfig.FALLBACK_RENDER_COLOR, rendering.fallbackRenderColor);
 		addOption(RenderConfig.ENABLE_BLEND, rendering.enableBlend);

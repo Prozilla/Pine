@@ -89,6 +89,9 @@ public class SystemGroup<S extends SystemBase> implements Container<S> {
 				}
 			} catch (RuntimeException e) {
 				scene.getLogger().error("Failed to run system: " + system.getClass().getSimpleName(), e);
+				if (scene.getConfig().stopOnException.get()) {
+					scene.getApplication().stop();
+				}
 			}
 		}
 	}

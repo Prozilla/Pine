@@ -190,6 +190,10 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			
 			// Log exception
 			logger.error("Application failed", e);
+			
+			if (config.stopOnException.get()) {
+				stop();
+			}
 		} finally {
 			logger.logProblemCount();
 			logger.log("Application finished");
@@ -298,6 +302,9 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 				update(deltaTime);
 			} catch (Exception e) {
 				logger.error("Failed to update application", e);
+				if (config.stopOnException.get()) {
+					stop();
+				}
 			} finally {
 				timer.incrementUPS();
 			}
@@ -316,6 +323,10 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 				// Abort rendering
 				if (renderer.isRendering()) {
 					renderer.end();
+				}
+				
+				if (config.stopOnException.get()) {
+					stop();
 				}
 			} finally {
 				timer.incrementFPS();

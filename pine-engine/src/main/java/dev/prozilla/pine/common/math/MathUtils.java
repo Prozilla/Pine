@@ -8,6 +8,7 @@ public final class MathUtils {
 	 * The ratio of the circumference of a circle to its diameter.
 	 */
 	public static final float PI = (float)Math.PI;
+	public static final float EPSILON = Math.ulp(1f);
 	
 	private MathUtils() {}
 	
@@ -19,7 +20,7 @@ public final class MathUtils {
 	 * @return Clamped value
 	 */
 	public static float clamp(float value, float min, float max) {
-		return Math.max(Math.min(value, max), min);
+		return Math.clamp(value, min, max);
 	}
 	
 	/**
@@ -30,7 +31,7 @@ public final class MathUtils {
 	 * @return Clamped value
 	 */
 	public static int clamp(int value, int min, int max) {
-		return Math.max(Math.min(value, max), min);
+		return Math.clamp(value, min, max);
 	}
 	
 	/**

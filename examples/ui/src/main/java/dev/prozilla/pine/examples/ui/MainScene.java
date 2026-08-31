@@ -50,9 +50,11 @@ public class MainScene extends Scene {
 		TextInputPrefab textInputPrefab = new TextInputPrefab();
 		textInputPrefab.setPlaceholder("Placeholder...");
 		
+		RangeInputPrefab rangeInputPrefab = new RangeInputPrefab();
+		
 		menuPrefab.addChildren(titleTextPrefab, textPrefab,
 			textButton1Prefab, textButton2Prefab, textButton3Prefab,
-			textInputPrefab);
+			textInputPrefab, rangeInputPrefab);
 		
 		nodeRootPrefab.addChild(menuPrefab);
 		

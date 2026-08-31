@@ -7,6 +7,7 @@ import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.state.input.Input;
+import dev.prozilla.pine.core.system.standard.ui.text.TextRenderer;
 
 public class TextInputNode extends Component {
 	
@@ -17,6 +18,7 @@ public class TextInputNode extends Component {
 	public TextNode textNode;
 	private BindableStringProperty textProperty;
 	public String placeholder;
+	public boolean isDragging;
 	
 	public Node placeholderNode;
 	public TextNode placeholderTextNode;
@@ -115,17 +117,6 @@ public class TextInputNode extends Component {
 		}
 	}
 	
-	public boolean deleteSelection() {
-		if (!hasSelection()) {
-			return false;
-		}
-		
-		cursorPosition = getSelectionStart();
-		textProperty.buildValue((stringBuilder) -> stringBuilder.delete(cursorPosition, cursorPosition + Math.abs(selection)));
-		clearSelection();
-		return true;
-	}
-	
 	public void deleteText(boolean inFront) {
 		if (deleteSelection()) {
 			return;
@@ -143,23 +134,66 @@ public class TextInputNode extends Component {
 		textProperty.buildValue((stringBuilder) -> stringBuilder.deleteCharAt(cursorPosition));
 	}
 	
-	public void moveCursorToStart(boolean select) {
-		if (select) {
-			selection = getSelectionStart();
-		} else {
-			clearSelection();
+	public boolean deleteSelection() {
+		if (!hasSelection()) {
+			return false;
 		}
-		cursorPosition = 0;
-		updateCursor();
+		
+		cursorPosition = getSelectionStart();
+		textProperty.buildValue((stringBuilder) -> stringBuilder.delete(cursorPosition, cursorPosition + Math.abs(selection)));
+		clearSelection();
+		return true;
+	}
+	
+	public void moveCursorToStart(boolean select) {
+		moveCursorTo(0, select);
 	}
 	
 	public void moveCursorToEnd(boolean select) {
+		moveCursorTo(textProperty.getLength(), select);
+	}
+	
+	public void moveCursorTo(int position, boolean select) {
 		if (select) {
-			selection = getSelectionEnd() - textProperty.getLength();
+			selection += cursorPosition - position;
 		} else {
 			clearSelection();
 		}
-		cursorPosition = textProperty.getLength();
+		cursorPosition = position;
+		updateCursor();
+	}
+	
+	public void moveCursor(int delta) {
+		if (delta == 0) {
+			return;
+		}
+		
+		if (!hasSelection()) {
+			cursorPosition += delta;
+		} else {
+			cursorPosition = delta < 0 ? getSelectionStart() : getSelectionEnd();
+		}
+		
+		clearSelection();
+		updateCursor();
+	}
+	
+	public void clearSelection() {
+		selection = 0;
+	}
+	
+	public void dragSelection(int delta) {
+		if (delta == 0) {
+			return;
+		}
+		
+		boolean isCursorAtEdge = delta < 0 ? isCursorAtStart() : isCursorAtEnd();
+		if (isCursorAtEdge) {
+			return;
+		}
+		
+		cursorPosition += delta;
+		selection -= delta;
 		updateCursor();
 	}
 	
@@ -183,48 +217,6 @@ public class TextInputNode extends Component {
 		return selection != 0;
 	}
 	
-	public void moveCursorLeft() {
-		if (!hasSelection()) {
-			cursorPosition--;
-		} else {
-			cursorPosition = getSelectionStart();
-		}
-		clearSelection();
-		updateCursor();
-	}
-	
-	public void moveCursorRight() {
-		if (!hasSelection()) {
-			cursorPosition++;
-		} else {
-			cursorPosition = getSelectionEnd();
-		}
-		clearSelection();
-		updateCursor();
-	}
-	
-	public void clearSelection() {
-		selection = 0;
-	}
-	
-	public void expandSelectionLeft() {
-		if (isCursorAtStart()) {
-			return;
-		}
-		cursorPosition--;
-		selection++;
-		updateCursor();
-	}
-	
-	public void expandSelectionRight() {
-		if (isCursorAtEnd()) {
-			return;
-		}
-		cursorPosition++;
-		selection--;
-		updateCursor();
-	}
-	
 	public void selectAll() {
 		cursorPosition = textProperty.getLength();
 		selection = -cursorPosition;
@@ -234,6 +226,38 @@ public class TextInputNode extends Component {
 	public void updateCursor() {
 		cursorPosition = MathUtils.clamp(cursorPosition, 0, textProperty.getLength());
 		selection = MathUtils.clamp(cursorPosition + selection, 0, textProperty.getLength()) - cursorPosition;
+	}
+	
+	public int getCursorPosition(float cursor) {
+		int min = 0;
+		int max = textProperty.getLength();
+		
+		if (cursor <= 0) {
+			return 0;
+		} else if (cursor >= TextRenderer.getTextWidth(getRenderer(), textNode, max)) {
+			return max;
+		}
+		
+		while (min < max) {
+			int middle = (min + max) / 2;
+			float width = TextRenderer.getTextWidth(getRenderer(), textNode, middle);
+			
+			if (width < cursor - MathUtils.EPSILON) {
+				min = middle + 1;
+			} else {
+				max = middle;
+			}
+		}
+		
+		if (min > 0) {
+			float guessedWidth = TextRenderer.getTextWidth(getRenderer(), textNode, min);
+			float alternativeWidth = TextRenderer.getTextWidth(getRenderer(), textNode, min - 1);
+			if (Math.abs(cursor - alternativeWidth) < Math.abs(guessedWidth - cursor)) {
+				return min - 1;
+			}
+		}
+		
+		return min;
 	}
 	
 }

@@ -29,8 +29,8 @@ public class SimpleBindableBooleanProperty extends ObservableBooleanPropertyBase
 			return false;
 		}
 		
-		onValueChange(this.value, value);
 		this.value = value;
+		onValueChange(this.value, value);
 		return true;
 	}
 	

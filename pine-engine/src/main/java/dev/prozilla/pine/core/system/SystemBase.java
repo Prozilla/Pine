@@ -163,6 +163,9 @@ public abstract class SystemBase {
 			}
 		} catch (Exception e) {
 			logger.error("Failed to iterate over entities in system: " + getClass().getSimpleName(), e);
+			if (application.getConfig().stopOnException.get()) {
+				application.stop();
+			}
 		} finally {
 			if (contextId == application.getContextId()) {
 				query.entityChunks.endIteration();
@@ -230,6 +233,9 @@ public abstract class SystemBase {
 			action.accept(entityChunk);
 		} catch (Exception e) {
 			logger.error("Failed to run action on entity in system: " + getClass().getSimpleName(), e);
+			if (application.getConfig().stopOnException.get()) {
+				application.stop();
+			}
 		} finally {
 			if (runOnce) {
 				processedEntityIds.add(entityChunk.getEntity().id);

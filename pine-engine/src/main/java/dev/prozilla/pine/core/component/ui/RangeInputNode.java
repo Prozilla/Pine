@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.component.ui;
 
 import dev.prozilla.pine.common.math.MathUtils;
+import dev.prozilla.pine.common.property.FloatProperty;
 import dev.prozilla.pine.common.property.bindable.BindableFloatProperty;
 import dev.prozilla.pine.common.property.bindable.SimpleBindableFloatProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -18,31 +19,41 @@ public class RangeInputNode extends Component {
 	public Node thumbNode;
 	public Node trackNode;
 	
+	public boolean isDragging;
+	
+	public static final float DEFAULT_MIN = 0;
+	public static final float DEFAULT_MAX = 100;
+	public static final float DEFAULT_STEP = 1;
+	
 	public static final String PROGRESS_ELEMENT = "range-progress";
 	public static final String THUMB_ELEMENT = "range-thumb";
 	public static final String TRACK_ELEMENT = "range-track";
 	
 	public RangeInputNode() {
-		this(0, 100);
+		this(DEFAULT_MIN, DEFAULT_MAX);
 	}
 	
 	public RangeInputNode(float min, float max) {
-		this(min, max, 1);
+		this(min, max, DEFAULT_STEP);
 	}
 	
 	public RangeInputNode(float min, float max, float step) {
-		this(new SimpleBindableFloatProperty((min + max) / 2f), min, max, step);
+		this(min, max, step, (min + max) / 2f);
+	}
+	
+	public RangeInputNode(float min, float max, float step, float value) {
+		this(min, max, step, new SimpleBindableFloatProperty(value));
 	}
 	
 	public RangeInputNode(BindableFloatProperty valueProperty) {
-		this(valueProperty, 0, 100);
+		this(DEFAULT_MIN, DEFAULT_MAX, valueProperty);
 	}
 	
-	public RangeInputNode(BindableFloatProperty valueProperty, float min, float max) {
-		this(valueProperty, min, max, 1);
+	public RangeInputNode(float min, float max, BindableFloatProperty valueProperty) {
+		this(min, max, DEFAULT_STEP, valueProperty);
 	}
 	
-	public RangeInputNode(BindableFloatProperty valueProperty, float min, float max, float step) {
+	public RangeInputNode(float min, float max, float step, BindableFloatProperty valueProperty) {
 		this.min = min;
 		this.max = max;
 		this.step = step;
@@ -88,6 +99,14 @@ public class RangeInputNode extends Component {
 	
 	private void handleValueChange(float value) {
 		valueProperty.set(MathUtils.clamp(value, min, max));
+	}
+	
+	public FloatProperty progressProperty() {
+		return this::getProgress;
+	}
+	
+	public float getProgress() {
+		return MathUtils.remap(getValue(), min, max, 0, 1);
 	}
 	
 	public float getValue() {

@@ -31,6 +31,30 @@ public class Dimension extends DimensionBase {
 		
 	}
 	
+	@FunctionalInterface
+	public interface SimpleComputer extends Computer {
+		
+		@Override
+		default float compute(Node node, boolean isHorizontal) {
+			return compute(isHorizontal);
+		}
+		
+		float compute(boolean isHorizontal);
+		
+	}
+	
+	@FunctionalInterface
+	public interface Supplier extends SimpleComputer {
+		
+		@Override
+		default float compute(boolean isHorizontal) {
+			return compute();
+		}
+		
+		float compute();
+		
+	}
+	
 	public Dimension() {
 		this(DEFAULT_VALUE);
 	}
@@ -526,6 +550,14 @@ public class Dimension extends DimensionBase {
 	public static class Dynamic extends DimensionBase {
 		
 		private final Computer computer;
+		
+		public Dynamic(Supplier supplier) {
+			this((Computer)supplier);
+		}
+		
+		public Dynamic(SimpleComputer simpleComputer) {
+			this((Computer)simpleComputer);
+		}
 		
 		public Dynamic(Computer computer) {
 			this.computer = computer;

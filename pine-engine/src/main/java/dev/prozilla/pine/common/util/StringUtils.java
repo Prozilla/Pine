@@ -16,6 +16,13 @@ public final class StringUtils {
 	}
 	
 	/**
+	 * Converts the first letter of a given string to upper case.
+	 */
+	public static String capitalize(String string) {
+		return lengthOf(string) > 1 ? string.substring(0, 1).toUpperCase() + string.substring(1) : toUpperCase(string);
+	}
+	
+	/**
 	 * @see String#toUpperCase()
 	 */
 	@Contract("null -> null; !null -> !null")

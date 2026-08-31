@@ -389,14 +389,20 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 		
 		// Input
 		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.PADDING, new DualDimension(new Dimension(1), new Dimension(4)));
-		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.CURSOR, CursorType.TEXT);
 		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.COLOR, fieldText);
 		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.BACKGROUND_COLOR, fieldColor);
 		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.SIZE, new DualDimension( new Dimension(160), new Dimension(16)));
-		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, ModifierSelector.FOCUS), StyledPropertyKey.OUTLINE_WIDTH, new Dimension(2));
-		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, ModifierSelector.FOCUS), StyledPropertyKey.OUTLINE_STYLE, LineStyle.SOLID);
-		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, ModifierSelector.FOCUS), StyledPropertyKey.OUTLINE_COLOR, accentColor);
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, ModifierSelector.FOCUS_VISIBLE), StyledPropertyKey.OUTLINE_WIDTH, new Dimension(2));
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, ModifierSelector.FOCUS_VISIBLE), StyledPropertyKey.OUTLINE_STYLE, LineStyle.SOLID);
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, ModifierSelector.FOCUS_VISIBLE), StyledPropertyKey.OUTLINE_COLOR, accentColor);
+		
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, new AttributeSelector(Node.TYPE_ATTRIBUTE, "text")), StyledPropertyKey.CURSOR, CursorType.TEXT);
 		styleSheet.addDefaultRule(PseudoElementSelector.PLACEHOLDER, StyledPropertyKey.COLOR, new Color(0, 0, 0, 0.5f));
+
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, new AttributeSelector(Node.TYPE_ATTRIBUTE, "range")), StyledPropertyKey.BACKGROUND_COLOR, Color.transparent());
+		styleSheet.addDefaultRule(PseudoElementSelector.RANGE_TRACK, StyledPropertyKey.BACKGROUND_COLOR, buttonFace);
+		styleSheet.addDefaultRule(PseudoElementSelector.RANGE_PROGRESS, StyledPropertyKey.BACKGROUND_COLOR, accentColor);
+		styleSheet.addDefaultRule(PseudoElementSelector.RANGE_THUMB, StyledPropertyKey.BACKGROUND_COLOR, buttonText);
 		
 		// Buttons
 		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.PADDING, new DualDimension(new Dimension(1), new Dimension(4)));

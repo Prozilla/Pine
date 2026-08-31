@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.system.standard.ui.text;
 
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -36,6 +37,11 @@ public final class TextRenderer extends RenderSystem {
 		float y = node.currentPosition.y + node.getBoxY();
 		float width = node.currentInnerSize.x;
 		float height = node.currentInnerSize.y;
+		
+		if (textNode.offset != null) {
+			x += textNode.offset.x;
+			y += textNode.offset.y;
+		}
 		
 		renderText(renderer, textNode, x, y, width, height, node.color);
 	}
@@ -76,4 +82,23 @@ public final class TextRenderer extends RenderSystem {
 		
 		renderer.resetRegion();
 	}
+	
+	public static int getTextWidth(Renderer renderer, TextNode textNode) {
+		return getTextWidth(renderer, textNode, StringUtils.lengthOf(textNode.text));
+	}
+	
+	public static int getTextWidth(Renderer renderer, TextNode textNode, int length) {
+		return getTextWidth(renderer, textNode, 0, length);
+	}
+	
+	public static int getTextWidth(Renderer renderer, TextNode textNode, int start, int end) {
+		start = Math.max(start, 0);
+		end = Math.min(end, textNode.text.length());
+		if (start >= end) {
+			return 0;
+		}
+		String text = textNode.text.substring(start, end);
+		return textNode.font == null ? renderer.getTextWidth(text) : renderer.getTextWidth(textNode.font, text);
+	}
+	
 }
