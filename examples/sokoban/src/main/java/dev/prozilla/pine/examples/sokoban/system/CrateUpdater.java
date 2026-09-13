@@ -1,8 +1,8 @@
 package dev.prozilla.pine.examples.sokoban.system;
 
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
-import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;

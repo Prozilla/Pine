@@ -23,7 +23,7 @@ public class LayoutNodeResizerTest {
 		LayoutNode layoutNode = new LayoutNode();
 		Node node = new Node();
 		
-		LayoutNodeResizer.resizeCanvasGroup(layoutNode, node);
+		LayoutNodeResizer.resizeLayoutNode(layoutNode, node);
 		
 		assertEquals(new Vector2f(), layoutNode.innerSize);
 		assertEquals(new Vector2f(), node.currentInnerSize);
@@ -37,7 +37,7 @@ public class LayoutNodeResizerTest {
 		Node node = new Node();
 		node.padding = new DualDimension(1, 1);
 		
-		LayoutNodeResizer.resizeCanvasGroup(layoutNode, node);
+		LayoutNodeResizer.resizeLayoutNode(layoutNode, node);
 		
 		assertEquals(new Vector2f(), layoutNode.innerSize);
 		assertEquals(new Vector2f(2, 2), node.currentInnerSize);
@@ -52,7 +52,7 @@ public class LayoutNodeResizerTest {
 		node.padding = new DualDimension(1, 1);
 		node.margin = new DualDimension(1, 1);
 		
-		LayoutNodeResizer.resizeCanvasGroup(layoutNode, node);
+		LayoutNodeResizer.resizeLayoutNode(layoutNode, node);
 		
 		assertEquals(new Vector2f(), layoutNode.innerSize);
 		assertEquals(new Vector2f(2, 2), node.currentInnerSize);
@@ -66,7 +66,7 @@ public class LayoutNodeResizerTest {
 		layoutNode.gap = new Dimension(1);
 		Node node = new Node();
 		
-		LayoutNodeResizer.resizeCanvasGroup(layoutNode, node);
+		LayoutNodeResizer.resizeLayoutNode(layoutNode, node);
 		
 		assertEquals(new Vector2f(), layoutNode.innerSize);
 		assertEquals(new Vector2f(), node.currentInnerSize);
@@ -80,7 +80,7 @@ public class LayoutNodeResizerTest {
 		Node node = new Node();
 		node.size = new DualDimension(1, 1);
 		
-		LayoutNodeResizer.resizeCanvasGroup(layoutNode, node);
+		LayoutNodeResizer.resizeLayoutNode(layoutNode, node);
 		
 		assertEquals(new Vector2f(1, 1), layoutNode.innerSize);
 		assertEquals(new Vector2f(1, 1), node.currentInnerSize);
@@ -103,7 +103,7 @@ public class LayoutNodeResizerTest {
 		Node node = new Node();
 		node.size = new DualDimension(4, 1);
 		
-		LayoutNodeResizer.resizeCanvasGroup(layoutNode, node);
+		LayoutNodeResizer.resizeLayoutNode(layoutNode, node);
 		
 		assertEquals(new Vector2f(4, 1), layoutNode.innerSize);
 		assertEquals(new Vector2f(4, 1), node.currentInnerSize);
@@ -126,7 +126,7 @@ public class LayoutNodeResizerTest {
 		Node node = new Node();
 		node.size = new DualDimension(Dimension.auto(), new Dimension(1));
 		
-		LayoutNodeResizer.resizeCanvasGroup(layoutNode, node);
+		LayoutNodeResizer.resizeLayoutNode(layoutNode, node);
 		
 		assertEquals(new Vector2f(3, 1), layoutNode.innerSize);
 		assertEquals(new Vector2f(3, 1), node.currentInnerSize);
@@ -149,7 +149,7 @@ public class LayoutNodeResizerTest {
 		Node node = new Node();
 		node.size = new DualDimension(new Dimension(1), Dimension.auto());
 		
-		LayoutNodeResizer.resizeCanvasGroup(layoutNode, node);
+		LayoutNodeResizer.resizeLayoutNode(layoutNode, node);
 		
 		assertEquals(new Vector2f(1, 3), layoutNode.innerSize);
 		assertEquals(new Vector2f(1, 3), node.currentInnerSize);
@@ -172,7 +172,7 @@ public class LayoutNodeResizerTest {
 		Node node = new Node();
 		node.size = new DualDimension(4, 1);
 		
-		LayoutNodeResizer.resizeCanvasGroup(layoutNode, node);
+		LayoutNodeResizer.resizeLayoutNode(layoutNode, node);
 		
 		assertEquals(new Vector2f(4, 1), layoutNode.innerSize);
 		assertEquals(new Vector2f(4, 1), node.currentInnerSize);
@@ -194,7 +194,7 @@ public class LayoutNodeResizerTest {
 		Node node = new Node();
 		node.size = new DualDimension(new Dimension(4), Dimension.auto());
 		
-		LayoutNodeResizer.resizeCanvasGroup(layoutNode, node);
+		LayoutNodeResizer.resizeLayoutNode(layoutNode, node);
 		
 		assertEquals(new Vector2f(4, 1), layoutNode.innerSize);
 		assertEquals(new Vector2f(4, 1), node.currentInnerSize);

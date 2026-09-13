@@ -4,13 +4,13 @@ import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Components;
-import dev.prozilla.pine.core.entity.prefab.Prefab;
+import dev.prozilla.pine.core.entity.prefab.LayerPrefab;
 
 /**
  * Prefab for 2D tile grids.
  */
 @Components({ GridGroup.class, Transform.class })
-public class GridPrefab extends Prefab {
+public class GridPrefab extends LayerPrefab {
 	
 	protected int size;
 	

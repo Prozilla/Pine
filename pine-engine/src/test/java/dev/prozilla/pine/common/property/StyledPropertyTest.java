@@ -25,7 +25,7 @@ public class StyledPropertyTest {
 	@Test
 	void testSelectorParser() {
 		SelectorParser selectorParser = new SelectorParser();
-		TestUtils.testParser("div.class#id:not(:hover)", new SelectorCombo(new TypeSelector("div"), new ClassSelector("class"), new IdSelector("id"), new NotSelector(new ModifierSelector("hover"))), selectorParser);
+		TestUtils.testParser("div.class#id:not(:hover)", new CompoundSelector(new TypeSelector("div"), new ClassSelector("class"), new IdSelector("id"), new NotSelector(new ModifierSelector("hover"))), selectorParser);
 		TestUtils.testParser("*", Selector.UNIVERSAL, selectorParser);
 		TestUtils.testParser("div > p", new ChildSelector(new TypeSelector("div"), new TypeSelector("p")), selectorParser);
 	}

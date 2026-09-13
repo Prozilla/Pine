@@ -4,13 +4,23 @@ import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.Transform;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 public class CameraData extends Component {
 	
 	public float zoomFactor;
 	
+	public boolean orthographic;
+	public float fieldOfView;
 	public float width;
 	public float height;
+	public float nearClipPlane;
+	public float farClipPlane;
+	
+	protected final Matrix4f viewMatrix;
+	protected final Matrix4f projectionMatrix;
 	
 	public Color backgroundColor;
 	
@@ -22,6 +32,18 @@ public class CameraData extends Component {
 		this.backgroundColor = backgroundColor;
 		
 		zoomFactor = 1;
+		
+		orthographic = false;
+		fieldOfView = 40;
+		nearClipPlane = 0.01f;
+		farClipPlane = 1000f;
+		
+		viewMatrix = new Matrix4f();
+		projectionMatrix = new Matrix4f();
+	}
+	
+	public void setSize(Vector2i size) {
+		setSize(size.x, size.y);
 	}
 	
 	public void setSize(int width, int height) {
@@ -95,10 +117,11 @@ public class CameraData extends Component {
 	 * @return Array of x and y values
 	 */
 	public Vector2f applyTransform(Vector2f position) {
-		position.x = (position.x - entity.transform.getGlobalX()) * getZoom() + getCenterX();
-		position.y = (position.y - entity.transform.getGlobalY()) * getZoom() + getCenterY();
-		
 		return position;
+//		position.x = (position.x - entity.transform.getGlobalX()) * getZoom() + getCenterX();
+//		position.y = (position.y - entity.transform.getGlobalY()) * getZoom() + getCenterY();
+//
+//		return position;
 	}
 	
 	public Vector2f screenToWorldPosition(Vector2i screenPosition) {
@@ -114,5 +137,24 @@ public class CameraData extends Component {
 		float y = (getCenterY() - (float)screenY) / getZoom() + entity.transform.getGlobalY();
 		
 		return new Vector2f(x, y);
+	}
+	
+	public Matrix4f getViewMatrix() {
+		Transform transform = getTransform();
+		return viewMatrix.identity()
+			.rotate((float)Math.toRadians(transform.rotation.x), new Vector3f(1, 0, 0))
+			.rotate((float)Math.toRadians(transform.rotation.y), new Vector3f(0, 1, 0))
+			.translate(-transform.position.x, -transform.position.y, -transform.position.z);
+	}
+	
+	public Matrix4f getProjectionMatrix() {
+		if (orthographic) {
+			float right = getCenterX() / getZoom();
+			float top = getCenterY() / getZoom();
+			projectionMatrix.setOrtho(-right, right, -top, top, nearClipPlane, farClipPlane);
+		} else {
+			projectionMatrix.setPerspective((float)Math.toRadians(fieldOfView), width / height, nearClipPlane, farClipPlane);
+		}
+		return projectionMatrix;
 	}
 }

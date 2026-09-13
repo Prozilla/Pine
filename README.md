@@ -37,6 +37,10 @@ You can find some example projects that showcase Pine's features in [/examples](
 - [Discord](https://discord.gg/JwbyQP4tdz)
 - [Ko-fi](https://ko-fi.com/prozilla)
 
+### Extensions
+
+- [PiNet](./extensions/pi-net) - Networking library for Pine
+
 ### Related repositories
 
 - [Prozilla/Pine-boilerplate](https://github.com/Prozilla/Pine-boilerplate) - Boilerplate code for a Pine project

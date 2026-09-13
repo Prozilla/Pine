@@ -1,8 +1,9 @@
 package dev.prozilla.pine.examples.snake.system;
 
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
+import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
@@ -29,8 +30,7 @@ public class PlayerTailUpdater extends UpdateSystem {
 		if (!tailData.isCurved) {
 			offset = (0.5f - tailData.playerData.timeUntilNextMove / PlayerData.TIME_BETWEEN_MOVES) * GameScene.CELL_SIZE;
 		}
-		sprite.offset.x = direction.x * offset;
-		sprite.offset.y = direction.y * offset;
+		sprite.getMesh().setOffset(direction.x * offset, direction.y * offset);
 		
 		// Check if the sprite needs to be updated
 		if (!tailData.isDirty) {
@@ -38,19 +38,20 @@ public class PlayerTailUpdater extends UpdateSystem {
 		}
 		
 		// Update tail segment sprite acc
+		float regionOffsetY;
 		if (tailData.nextTile == null) {
 			// Snake butt segment
 			sprite.texture = AssetPools.textures.load("snake/snake_tail.png");
 			tailData.isCurved = false;
 			
 			if (direction.y == 1) {
-				sprite.regionOffset.y = tile.size * 3;
+				regionOffsetY = tile.size * 3;
 			} else if (direction.y == -1) {
-				sprite.regionOffset.y = tile.size;
+				regionOffsetY = tile.size;
 			} else if (direction.x == 1) {
-				sprite.regionOffset.y = 0;
+				regionOffsetY = 0;
 			} else {
-				sprite.regionOffset.y = tile.size * 2;
+				regionOffsetY = tile.size * 2;
 			}
 		} else {
 			Vector2i otherDirection = tailData.nextTile.getCoordinate().clone().subtract(tile.getCoordinate().clone());
@@ -62,9 +63,9 @@ public class PlayerTailUpdater extends UpdateSystem {
 				tailData.isCurved = false;
 				
 				if (direction.x != 0) {
-					sprite.regionOffset.y = tile.size;
+					regionOffsetY = tile.size;
 				} else {
-					sprite.regionOffset.y = 0;
+					regionOffsetY = 0;
 				}
 			} else {
 				// Curved tail segment
@@ -75,20 +76,21 @@ public class PlayerTailUpdater extends UpdateSystem {
 				
 				if (direction.x == -1) {
 					if (direction.y == -1) {
-						sprite.regionOffset.y = 0;
+						regionOffsetY = 0;
 					} else {
-						sprite.regionOffset.y = tile.size;
+						regionOffsetY = tile.size;
 					}
 				} else {
 					if (direction.y == -1) {
-						sprite.regionOffset.y = tile.size * 3;
+						regionOffsetY = tile.size * 3;
 					} else {
-						sprite.regionOffset.y = tile.size * 2;
+						regionOffsetY = tile.size * 2;
 					}
 				}
 			}
 		}
 		
+		sprite.getMesh().setRegion(new Vector2f(0, regionOffsetY), new Vector2f(GameScene.CELL_SIZE), new Vector2f(sprite.texture.getSize()));
 		tailData.isDirty = false;
 	}
 }

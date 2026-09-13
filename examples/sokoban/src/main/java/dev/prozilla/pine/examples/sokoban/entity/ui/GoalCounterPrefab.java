@@ -11,7 +11,7 @@ public class GoalCounterPrefab extends LayoutPrefab {
 	public GoalCounterPrefab(StyleSheet styleSheet) {
 		setName("GoalCounter");
 		addClass("goal-counter");
-		setStyleSheet(styleSheet);
+		addStyleSheet(styleSheet);
 		setAbsolutePosition(true);
 		
 		TextPrefab textPrefab = new TextPrefab("0/0");
@@ -20,7 +20,7 @@ public class GoalCounterPrefab extends LayoutPrefab {
 		
 		ImagePrefab imagePrefab = new ImagePrefab("images/crates/crate_02.png");
 		imagePrefab.addClass("goal-counter-image");
-		imagePrefab.setStyleSheet(styleSheet);
+		imagePrefab.addStyleSheet(styleSheet);
 
 		addChildren(textPrefab, imagePrefab);
 	}

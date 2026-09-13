@@ -26,9 +26,9 @@ public final class NodeRootInputHandler extends InputSystem {
 		
 		if (input.getKeyDown(Key.TAB)) {
 			if (input.getKey(Key.L_SHIFT)) {
-				nodeRoot.focusPreviousNode();
+				nodeRoot.focusPreviousNode(true);
 			} else {
-				nodeRoot.focusNextNode();
+				nodeRoot.focusNextNode(true);
 			}
 		}
 	}

@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.component.ui;
 
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.text.Font;
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
@@ -19,6 +20,7 @@ public class TextNode extends Component {
 	
 	/** Result of size calculation */
 	public Vector2i size;
+	public Vector2f offset;
 	
 	public TextNode() {
 		this(null);
@@ -99,6 +101,14 @@ public class TextNode extends Component {
 		} else {
 			size = renderer.getTextSize(font, text);
 		}
+	}
+	
+	public float getOffsetX() {
+		return offset != null ? offset.x : 0;
+	}
+	
+	public float getOffsetY() {
+		return offset != null ? offset.y : 0;
 	}
 	
 }

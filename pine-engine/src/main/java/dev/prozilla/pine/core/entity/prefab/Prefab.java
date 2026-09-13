@@ -1,9 +1,14 @@
 package dev.prozilla.pine.core.entity.prefab;
 
+import dev.prozilla.pine.common.math.vector.Vector3f;
+import dev.prozilla.pine.common.property.adaptive.AdaptiveVector3fProperty;
+import dev.prozilla.pine.common.property.vector.Vector3fProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Transform;
+import dev.prozilla.pine.core.component.animation.AnimationData;
+import dev.prozilla.pine.core.component.driver.TransformDriver;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.scene.World;
+import dev.prozilla.pine.core.scene.Scene;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,8 +25,17 @@ public class Prefab {
 	protected boolean isActive = true;
 	protected final List<Prefab> children;
 	
+	protected AdaptiveVector3fProperty positionProperty;
+	protected AdaptiveVector3fProperty rotationProperty;
+	protected AdaptiveVector3fProperty scaleProperty;
+	protected AdaptiveVector3fProperty originProperty;
+	
 	public Prefab() {
 		children = new ArrayList<>();
+		positionProperty = AdaptiveVector3fProperty.adapt(new Vector3f());
+		rotationProperty = AdaptiveVector3fProperty.adapt(new Vector3f());
+		scaleProperty = AdaptiveVector3fProperty.adapt(Vector3f.one());
+		originProperty = AdaptiveVector3fProperty.adapt(new Vector3f());
 	}
 	
 	public void setName(String name) {
@@ -53,28 +67,68 @@ public class Prefab {
 		children.remove(child);
 	}
 	
-	/**
-	 * Creates a new entity instance with the prefab's default components at position (0, 0).
-	 * @param world The world where the entity will be added.
-	 * @return A new entity instance.
-	 */
-	public Entity instantiate(World world) {
-		return instantiate(world, 0, 0);
+	public void setPosition(Vector3f position) {
+		positionProperty = AdaptiveVector3fProperty.adapt(position);
+	}
+	
+	public void setPosition(Vector3fProperty position) {
+		positionProperty = AdaptiveVector3fProperty.adapt(position);
+	}
+	
+	public void setRotation(Vector3f rotation) {
+		rotationProperty = AdaptiveVector3fProperty.adapt(rotation);
+	}
+	
+	public void setRotation(Vector3fProperty rotation) {
+		rotationProperty = AdaptiveVector3fProperty.adapt(rotation);
+	}
+	
+	public void setScale(Vector3f scale) {
+		scaleProperty = AdaptiveVector3fProperty.adapt(scale);
+	}
+	
+	public void setScale(Vector3fProperty scale) {
+		scaleProperty = AdaptiveVector3fProperty.adapt(scale);
+	}
+	
+	public void setOrigin(Vector3f origin) {
+		originProperty = AdaptiveVector3fProperty.adapt(origin);
+	}
+	
+	public void setOrigin(Vector3fProperty origin) {
+		originProperty = AdaptiveVector3fProperty.adapt(origin);
+	}
+	
+	public Entity instantiate(Scene scene, Vector3f position) {
+		Checks.isNotNull(position, "position");
+		return instantiate(scene, position.x, position.y, position.z);
 	}
 	
 	/**
 	 * Creates a new entity instance with the prefab's default components.
-	 * @param world The world where the entity will be added.
+	 * @param scene The scene to add this entity to.
 	 * @param x X position
 	 * @param y Y position
+	 * @param z Z position
 	 * @return A new entity instance.
 	 */
-	public Entity instantiate(World world, float x, float y) {
+	public Entity instantiate(Scene scene, float x, float y, float z) {
+		Entity entity = instantiate(scene);
+		entity.transform.setPosition(x, y, z);
+		return entity;
+	}
+	
+	/**
+	 * Creates a new entity instance with the prefab's default components at position (0, 0, 0).
+	 * @param scene The scene to add this entity to.
+	 * @return A new entity instance.
+	 */
+	public Entity instantiate(Scene scene) {
 		Entity entity;
 		if (name != null) {
-			entity = new Entity(world, name, x, y);
+			entity = new Entity(scene, name);
 		} else {
-			entity = new Entity(world, x, y);
+			entity = new Entity(scene);
 		}
 		
 		try {
@@ -85,7 +139,7 @@ public class Prefab {
 				message += ": " + name;
 			}
 			
-			world.application.getLogger().error(message, e);
+			scene.getLogger().error(message, e);
 		}
 		
 		if (!isActive) {
@@ -101,6 +155,28 @@ public class Prefab {
 	protected void apply(Entity entity) {
 		if (tag != null) {
 			entity.tag = tag;
+		}
+		
+		entity.transform.setPosition(positionProperty.getValue());
+		entity.transform.setRotation(rotationProperty.getValue());
+		entity.transform.setScale(scaleProperty.getValue());
+		entity.transform.setOrigin(originProperty.getValue());
+		if (positionProperty.isDynamic() || rotationProperty.isDynamic() || scaleProperty.isDynamic()) {
+			AnimationData animationData = entity.addComponent(new AnimationData());
+			TransformDriver driver = entity.addComponent(new TransformDriver(animationData));
+			
+			if (positionProperty.isDynamic()) {
+				driver.setPositionProperty(positionProperty);
+			}
+			if (rotationProperty.isDynamic()) {
+				driver.setRotationProperty(rotationProperty);
+			}
+			if (scaleProperty.isDynamic()) {
+				driver.setScaleProperty(scaleProperty);
+			}
+			if (originProperty.isDynamic()) {
+				driver.setOriginProperty(originProperty);
+			}
 		}
 		
 		for (Prefab child : children) {

@@ -14,19 +14,26 @@ public class AnimationData extends Component implements Animatable {
 	public final List<Animatable> properties;
 	public final boolean applyTimeScale;
 	
+	public static final boolean APPLY_TIME_SCALE_DEFAULT = true;
+	
+	public AnimationData() {
+		this(APPLY_TIME_SCALE_DEFAULT);
+	}
+	
 	public AnimationData(boolean applyTimeScale) {
 		this.applyTimeScale = applyTimeScale;
 		
 		properties = new ArrayList<>();
 	}
 	
-	public void replaceProperty(Animatable oldProperty, Animatable newProperty) {
+	public <A extends Animatable> A replaceProperty(A oldProperty, A newProperty) {
 		if (oldProperty != null) {
 			properties.remove(oldProperty);
 		}
 		if (newProperty != null) {
 			properties.add(newProperty);
 		}
+		return newProperty;
 	}
 	
 	@Override

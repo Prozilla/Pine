@@ -1,7 +1,8 @@
 package dev.prozilla.pine.core.system.standard.ui.layout;
 
-import dev.prozilla.pine.common.math.vector.EdgeAlignment;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.math.vector.Alignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
+import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -34,8 +35,8 @@ public final class LayoutNodeArranger extends UpdateSystem {
 		float gap = layoutNode.currentGap;
 		
 		// Calculate initial offset
-		float offsetX = parentNode.currentPosition.x + parentNode.getPaddingX();
-		float offsetY = parentNode.currentPosition.y + parentNode.getPaddingY();
+		float offsetX = parentNode.currentPosition.x + parentNode.getBoxX();
+		float offsetY = parentNode.currentPosition.y + parentNode.getBoxY();
 		
 		switch (layoutNode.direction) {
 			case LEFT -> offsetX = parentNode.currentPosition.x + layoutNode.innerSize.x + layoutNode.content.getFirst().currentOuterSize.x;
@@ -57,10 +58,10 @@ public final class LayoutNodeArranger extends UpdateSystem {
 			// Move offset for current child node
 			switch (layoutNode.direction) {
 				case LEFT -> offsetX -= (i == 0)
-					? childNode.currentOuterSize.x * 2 - parentNode.getPaddingX()
+					? childNode.currentOuterSize.x * 2 - parentNode.getBoxX()
 					: childNode.currentOuterSize.x + gap;
 				case DOWN -> offsetY -= (i == 0)
-					? childNode.currentOuterSize.y * 2 - parentNode.getPaddingY()
+					? childNode.currentOuterSize.y * 2 - parentNode.getBoxY()
 					: childNode.currentOuterSize.y + gap;
 			}
 			
@@ -69,22 +70,22 @@ public final class LayoutNodeArranger extends UpdateSystem {
 			float childOffsetY = offsetY;
 			if (layoutNode.direction.isVertical()) {
 				// Vertical alignment
-				if (layoutNode.alignment == EdgeAlignment.END) {
+				if (layoutNode.alignment == Alignment.END) {
 					childOffsetX = offsetX + (layoutNode.innerSize.x - childNode.currentOuterSize.x);
-				} else if (layoutNode.alignment == EdgeAlignment.CENTER) {
+				} else if (layoutNode.alignment == Alignment.CENTER) {
 					childOffsetX = offsetX + (layoutNode.innerSize.x - childNode.currentOuterSize.x) / 2;
 				}
 			} else {
 				// Horizontal alignment
-				if (layoutNode.alignment == EdgeAlignment.END) {
+				if (layoutNode.alignment == Alignment.END) {
 					childOffsetY = offsetY + (layoutNode.innerSize.y - childNode.currentOuterSize.y);
-				} else if (layoutNode.alignment == EdgeAlignment.CENTER) {
+				} else if (layoutNode.alignment == Alignment.CENTER) {
 					childOffsetY = offsetY + (layoutNode.innerSize.y - childNode.currentOuterSize.y) / 2;
 				}
 			}
 			
 			// Set offset for current child node
-			childNode.anchor = GridAlignment.BOTTOM_LEFT;
+			childNode.anchor = Anchor.BOTTOM_LEFT;
 			childNode.offset.x = childOffsetX;
 			childNode.offset.y = childOffsetY;
 			childNode.iterations++;

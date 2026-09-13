@@ -3,9 +3,9 @@ package dev.prozilla.pine.examples.flappybird.entity;
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.vector.Alignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.math.vector.EdgeAlignment;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.entity.Entity;
@@ -29,9 +29,9 @@ public class MenuPrefab extends NodeRootPrefab {
 		super.apply(entity);
 		
 		LayoutPrefab layoutPrefab = new LayoutPrefab();
-		layoutPrefab.setAnchor(GridAlignment.CENTER);
+		layoutPrefab.setAnchor(Anchor.CENTER);
 		layoutPrefab.setDirection(Direction.DOWN);
-		layoutPrefab.setAlignment(EdgeAlignment.CENTER);
+		layoutPrefab.setAlignment(Alignment.CENTER);
 		layoutPrefab.setGap(new Dimension(48));
 		Entity layout = entity.addChild(layoutPrefab);
 		
@@ -70,7 +70,7 @@ public class MenuPrefab extends NodeRootPrefab {
 		TextPrefab textPrefab = new TextPrefab("Highscore: 0", Color.black());
 		textPrefab.setFont(font.setSize(24));
 		textPrefab.setAbsolutePosition(true);
-		textPrefab.setAnchor(GridAlignment.BOTTOM_LEFT);
+		textPrefab.setAnchor(Anchor.BOTTOM_LEFT);
 		textPrefab.setMargin(new DualDimension(16));
 		LocalStorage localStorage = entity.getLocalStorage();
 		textPrefab.setText(localStorage.stringProperty("highscore").replaceNull("0").prepend("Highscore: "));

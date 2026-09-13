@@ -72,7 +72,13 @@ public class HeadlessRenderer extends Renderer {
 	}
 	
 	@Override
-	public void drawTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float z, float s1, float t1, float s2, float t2, Color c) {
+	public void drawTextureRegion(TextureAsset texture,
+	                              float x1, float y1, float z1,
+	                              float x2, float y2, float z2,
+	                              float x3, float y3, float z3,
+	                              float x4, float y4, float z4,
+	                              float s1, float t1, float s2, float t2,
+	                              Color c) {
 	
 	}
 	

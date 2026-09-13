@@ -1,6 +1,6 @@
 package dev.prozilla.pine.entity.canvas;
 
-import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.component.PreviewData;
 import dev.prozilla.pine.core.Application;
@@ -16,7 +16,7 @@ public class PreviewFramePrefab extends FramePrefab {
 		super();
 		setName("PreviewFrame");
 		setTag(EntityTag.PREVIEW_FRAME_TAG);
-		setAnchor(GridAlignment.CENTER);
+		setAnchor(Anchor.CENTER);
 		setBackgroundColor(new Color(0.1f, 0.1f, 0.1f));
 		
 		this.preview = preview;

@@ -31,6 +31,7 @@ public class ModifierSelector extends Selector {
 	
 	public final static ModifierSelector HOVER = new ModifierSelector(Node.HOVER_MODIFIER);
 	public final static ModifierSelector FOCUS = new ModifierSelector(Node.FOCUS_MODIFIER);
+	public final static ModifierSelector FOCUS_VISIBLE = new ModifierSelector(Node.FOCUS_VISIBLE_MODIFIER);
 	
 	@Override
 	public boolean equals(Selector other) {

@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * Represents a pool that creates and stores entity queries.
- * Each world has its own pool, because each world has different entities and components.
+ * Each scene has its own pool, because each scene has different entities and components.
  * Certain entity queries are disposable, meaning the system that consumes them might dispose the results of that query.
  * Disposable queries cannot be included in the pool as their results are temporary.
  */

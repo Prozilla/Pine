@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Engine" pattern="src[pine.pine-engine.*]:dev.prozilla.pine..*" />
+</component>

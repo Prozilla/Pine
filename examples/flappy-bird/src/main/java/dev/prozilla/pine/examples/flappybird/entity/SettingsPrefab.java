@@ -3,9 +3,9 @@ package dev.prozilla.pine.examples.flappybird.entity;
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.vector.Alignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.math.vector.EdgeAlignment;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.TextInputNode;
@@ -23,10 +23,10 @@ public class SettingsPrefab extends LayoutPrefab {
 	public SettingsPrefab(Font font) {
 		setBackgroundColor(Color.white());
 		setSize(DualDimension.fullscreen());
-		setAlignment(EdgeAlignment.CENTER);
+		setAlignment(Alignment.CENTER);
 		setDistribution(LayoutNode.Distribution.CENTER);
 		setAbsolutePosition(true);
-		setAnchor(GridAlignment.CENTER);
+		setAnchor(Anchor.CENTER);
 		setGap(new Dimension(16));
 		setActive(false);
 		setTag(EntityTag.SETTINGS);
@@ -37,7 +37,7 @@ public class SettingsPrefab extends LayoutPrefab {
 		LayoutPrefab seed = new LayoutPrefab();
 		seed.setDirection(Direction.RIGHT);
 		seed.setGap(new Dimension(16));
-		seed.setAlignment(EdgeAlignment.CENTER);
+		seed.setAlignment(Alignment.CENTER);
 		
 		TextPrefab seedLabel = new TextPrefab("Seed", Color.black());
 		seedLabel.setFont(font.setSize(24));

@@ -3,7 +3,7 @@ package dev.prozilla.pine.core.component;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.ECSManager;
 import dev.prozilla.pine.core.entity.Entity;
-import dev.prozilla.pine.core.scene.World;
+import dev.prozilla.pine.core.scene.Scene;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +14,8 @@ public class ComponentManager extends ECSManager {
 	
 	private static int lastComponentId = 0;
 
-	public ComponentManager(World world) {
-		super(world);
+	public ComponentManager(Scene scene) {
+		super(scene);
 		
 		components = new ArrayList<>();
 	}
@@ -32,7 +32,7 @@ public class ComponentManager extends ECSManager {
 		if (components.contains(component)) {
 			throw new IllegalStateException("component has already been added to an entity");
 		}
-		if (!world.entityManager.contains(entity)) {
+		if (!scene.getEntityManager().contains(entity)) {
 			throw new IllegalStateException("entity must be registered before attaching components");
 		}
 		
@@ -58,7 +58,7 @@ public class ComponentManager extends ECSManager {
 		if (!components.contains(component)) {
 			throw new IllegalStateException("component has not been added to an entity yet");
 		}
-		if (!world.entityManager.contains(entity)) {
+		if (!scene.getEntityManager().contains(entity)) {
 			throw new IllegalStateException("entity must be registered before removing components");
 		}
 		

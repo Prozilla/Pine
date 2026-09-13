@@ -33,8 +33,8 @@ public final class NodeUpdater extends UpdateSystem {
 	
 	public static void resizeNode(Node node) {
 		if (!node.entity.hasComponent(LayoutNode.class) && !node.size.isZero(node)) {
-			float innerSizeX = node.getInnerSizeX();
-			float innerSizeY = node.getInnerSizeY();
+			float innerSizeX = node.getBoxWidth();
+			float innerSizeY = node.getBoxHeight();
 			
 			if (innerSizeX != 0) {
 				node.currentInnerSize.x = innerSizeX;
@@ -77,9 +77,10 @@ public final class NodeUpdater extends UpdateSystem {
 		float remainingHeight = contextHeight - node.currentInnerSize.y;
 		
 		// Calculate offset based on anchor and position
-		float offsetX = (1 - 2 * node.anchor.x) * (node.getX());
-		float offsetY = (1 - 2 * node.anchor.y) * (node.getY());
+		float offsetX = (1 - 2 * node.anchor.x) * node.getX();
+		float offsetY = (1 - 2 * node.anchor.y) * node.getY();
 		
+		// TODO: Make position object-space, because transform is now applied by model matrix.
 		node.currentPosition.x = contextX + node.anchor.x * remainingWidth + offsetX;
 		node.currentPosition.y = contextY + node.anchor.y * remainingHeight + offsetY;
 	}

@@ -89,7 +89,7 @@ public interface EventDispatcherContext<EventType extends Enum<EventType>, Targe
 	 * @param eventType The type of event to invoke
 	 * @param target The target of the event
 	 */
-	void invoke(EventType eventType, Target target);
+	boolean invoke(EventType eventType, Target target);
 	
 	class EphemeralEventListener<EventType extends Enum<EventType>, E extends Event<EventType, ?>> implements EventListener<E> {
 		

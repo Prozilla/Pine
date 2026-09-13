@@ -190,6 +190,10 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			
 			// Log exception
 			logger.error("Application failed", e);
+			
+			if (config.stopOnException.get()) {
+				stop();
+			}
 		} finally {
 			logger.logProblemCount();
 			logger.log("Application finished");
@@ -229,6 +233,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 			if (glCapabilities.OpenGL43) {
 				glEnable(GL_DEBUG_OUTPUT);
 			}
+//			GLUtil.setupDebugMessageCallback(); // TODO: turn into setting (debugMessages)
 			logger.log("Initialized OpenGL (Initialization: 3/4)");
 		} else {
 			logger.log("Skipping initialization of OpenGL (Initialization: 3/4)");
@@ -297,6 +302,9 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 				update(deltaTime);
 			} catch (Exception e) {
 				logger.error("Failed to update application", e);
+				if (config.stopOnException.get()) {
+					stop();
+				}
 			} finally {
 				timer.incrementUPS();
 			}
@@ -315,6 +323,10 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 				// Abort rendering
 				if (renderer.isRendering()) {
 					renderer.end();
+				}
+				
+				if (config.stopOnException.get()) {
+					stop();
 				}
 			} finally {
 				timer.incrementFPS();
@@ -558,7 +570,7 @@ public class Application implements Initializable, InputHandler, Updatable, Rend
 	
 	public void loadScene(Scene scene) {
 		// Check if scene is already loaded
-		if (Objects.equals(currentScene, scene)) {
+		if (Objects.equals(currentScene, scene) || !isRunning()) {
 			return;
 		} else if (currentScene != null) {
 			unloadScene();

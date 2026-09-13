@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
@@ -16,14 +16,14 @@ import dev.prozilla.pine.common.property.style.StyledPropertyKey;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.component.animation.AnimationData;
 import dev.prozilla.pine.core.component.ui.Node;
-import dev.prozilla.pine.core.component.ui.style.NodeStyle;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Components;
-import dev.prozilla.pine.core.entity.prefab.Prefab;
+import dev.prozilla.pine.core.entity.prefab.LayerPrefab;
+import dev.prozilla.pine.core.state.input.CursorType;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +31,7 @@ import java.util.Set;
  * Prefab for UI elements.
  */
 @Components({ Node.class, Transform.class })
-public class NodePrefab extends Prefab {
+public class NodePrefab extends LayerPrefab {
 	
 	protected DualDimension size;
 	protected DualDimension padding;
@@ -43,7 +43,8 @@ public class NodePrefab extends Prefab {
 	protected Color color;
 	protected Color backgroundColor;
 	protected Color borderColor;
-	protected GridAlignment anchor;
+	protected Anchor anchor;
+	protected CursorType cursor;
 	protected boolean absolutePosition;
 	protected boolean passThrough;
 	protected String tooltipText;
@@ -53,7 +54,8 @@ public class NodePrefab extends Prefab {
 	protected String htmlTag;
 	protected Set<String> classes;
 	
-	protected StyleSheet styleSheet;
+	protected final LinkedHashSet<StyleSheet> styleSheets;
+	protected boolean useDefaultStyleSheet;
 	
 	public NodePrefab() {
 		size = new DualDimension();
@@ -62,21 +64,36 @@ public class NodePrefab extends Prefab {
 		tabIndex = -1;
 		autoFocus = false;
 		
-		setName("CanvasElement");
+		styleSheets = new LinkedHashSet<>();
+		useDefaultStyleSheet = true;
+		
+		setName("Node");
 	}
 	
 	/**
 	 * Sets the style sheet that is applied to this node by loading it from a CSS file.
 	 */
-	public void setStyleSheet(String filePath) {
-		setStyleSheet(AssetPools.styleSheets.load(filePath));
+	public void addStyleSheet(String filePath) {
+		addStyleSheet(AssetPools.styleSheets.load(filePath));
 	}
 	
 	/**
 	 * Sets the style sheet that is applied to this node.
 	 */
-	public void setStyleSheet(StyleSheet styleSheet) {
-		this.styleSheet = styleSheet;
+	public void addStyleSheet(StyleSheet styleSheet) {
+		styleSheets.add(styleSheet);
+	}
+	
+	public void removeStyleSheet(StyleSheet styleSheet) {
+		styleSheets.remove(styleSheet);
+	}
+	
+	public void addDefaultStyleSheet() {
+		useDefaultStyleSheet = true;
+	}
+	
+	public void removeDefaultStyleSheet() {
+		useDefaultStyleSheet = false;
 	}
 	
 	/**
@@ -90,7 +107,7 @@ public class NodePrefab extends Prefab {
 	 * Sets the size of this node.
 	 */
 	public void setSize(DualDimension size) {
-		if (styleSheet == null) {
+		if (styleSheets.isEmpty()) {
 			this.size = size;
 		} else {
 			setSize(AdaptiveObjectProperty.adapt(size));
@@ -116,7 +133,7 @@ public class NodePrefab extends Prefab {
 	 * Sets the padding around the content of this node.
 	 */
 	public void setPadding(DualDimension padding) {
-		if (styleSheet == null) {
+		if (styleSheets.isEmpty()) {
 			this.padding = padding;
 		} else {
 			setPadding(AdaptiveObjectProperty.adapt(padding));
@@ -136,7 +153,7 @@ public class NodePrefab extends Prefab {
 	}
 	
 	public void setMargin(DualDimension margin) {
-		if (styleSheet == null) {
+		if (styleSheets.isEmpty()) {
 			this.margin = margin;
 		} else {
 			setPadding(AdaptiveObjectProperty.adapt(margin));
@@ -152,7 +169,7 @@ public class NodePrefab extends Prefab {
 	 * Sets the foreground color of this node.
 	 */
 	public void setColor(Color color) {
-		if (styleSheet == null) {
+		if (styleSheets.isEmpty()) {
 			this.color = color;
 		} else {
 			setColor(AdaptiveColorProperty.adapt(color));
@@ -171,7 +188,7 @@ public class NodePrefab extends Prefab {
 	 * Sets the background color of this node.
 	 */
 	public void setBackgroundColor(Color color) {
-		if (styleSheet == null || color == null) {
+		if (styleSheets.isEmpty() || color == null) {
 			backgroundColor = color;
 		} else {
 			setBackgroundColor(AdaptiveColorProperty.adapt(color));
@@ -193,8 +210,12 @@ public class NodePrefab extends Prefab {
 	/**
 	 * Sets the anchor point of this node.
 	 */
-	public void setAnchor(GridAlignment anchor) {
+	public void setAnchor(Anchor anchor) {
 		this.anchor = anchor;
+	}
+	
+	public void setCursor(CursorType cursor) {
+		this.cursor = cursor;
 	}
 	
 	/**
@@ -270,11 +291,11 @@ public class NodePrefab extends Prefab {
 	}
 	
 	protected <T> void setDefaultPropertyValue(StyledPropertyKey<T> propertyName, AdaptiveProperty<T, ?> value) {
-		if (styleSheet == null) {
+		if (styleSheets.isEmpty()) {
 			return;
 		}
 		
-		styleSheet.setDefaultValue(propertyName, value);
+		styleSheets.getLast().setDefaultValue(propertyName, value);
 	}
 	
 	@Override
@@ -288,6 +309,7 @@ public class NodePrefab extends Prefab {
 		node.tabIndex = tabIndex;
 		node.autoFocus = autoFocus;
 		node.htmlTag = htmlTag;
+		node.cursor = cursor;
 		
 		if (padding != null) {
 			node.padding = padding.clone();
@@ -308,7 +330,7 @@ public class NodePrefab extends Prefab {
 			node.tooltipText = tooltipText;
 		}
 		if (border != null) {
-			node.border = border.clone();
+			node.borderWidth = border.clone();
 		}
 		if (borderImage != null) {
 			node.borderImage = borderImage;
@@ -323,9 +345,9 @@ public class NodePrefab extends Prefab {
 			node.classes.addAll(classes);
 		}
 		
-		if (styleSheet != null) {
-			AnimationData animationData = entity.addComponent(new AnimationData(false));
-			entity.addComponent(new NodeStyle(animationData, node, styleSheet));
+		if (useDefaultStyleSheet) {
+			node.addStyleSheet(StyleSheet.DEFAULT);
 		}
+		node.addStyleSheets(styleSheets);
 	}
 }

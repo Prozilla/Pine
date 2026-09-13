@@ -1,7 +1,8 @@
 package dev.prozilla.pine.examples.snake.system;
 
+import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
-import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
+import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -114,7 +115,7 @@ public class PlayerMover extends UpdateSystem {
 			
 			// Change sprite based on current direction
 			int spriteRegionY = GameScene.CELL_SIZE * (3 - playerData.direction);
-			sprite.setRegion(0, spriteRegionY, GameScene.CELL_SIZE, GameScene.CELL_SIZE);
+			sprite.getMesh().setRegion(0, spriteRegionY, GameScene.CELL_SIZE, GameScene.CELL_SIZE);
 			
 			// Reset timer
 			playerData.timeUntilNextMove += PlayerData.TIME_BETWEEN_MOVES;
@@ -123,14 +124,14 @@ public class PlayerMover extends UpdateSystem {
 		}
 		
 		// Interpolate movement between tiles
-		float offset = (0.5f - playerData.timeUntilNextMove / PlayerData.TIME_BETWEEN_MOVES) * GameScene.CELL_SIZE;
-		sprite.offset.x = 0;
-		sprite.offset.y = 0;
+		float delta = (0.5f - playerData.timeUntilNextMove / PlayerData.TIME_BETWEEN_MOVES) * GameScene.CELL_SIZE;
+		Vector2f offset = new Vector2f();
 		switch (playerData.direction) {
-			case 0 -> sprite.offset.y = offset;
-			case 1 -> sprite.offset.x = -offset;
-			case 2 -> sprite.offset.y = -offset;
-			case 3 -> sprite.offset.x = offset;
+			case 0 -> offset.y = delta;
+			case 1 -> offset.x = -delta;
+			case 2 -> offset.y = -delta;
+			case 3 -> offset.x = delta;
 		}
+		sprite.getMesh().setOffset(offset);
 	}
 }

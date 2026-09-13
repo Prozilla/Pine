@@ -10,21 +10,22 @@ import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.component.ComponentsContext;
+import dev.prozilla.pine.core.component.ComponentQuery;
+import dev.prozilla.pine.core.component.ComponentQueryContext;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.scene.Scene;
-import dev.prozilla.pine.core.scene.SceneProvider;
-import dev.prozilla.pine.core.scene.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
- * Represents a unique entity in the world with a list of components.
+ * Represents a unique entity in the scene with a list of components.
  */
-public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> implements Destructible, Printable, EntityContext, ComponentsContext, ApplicationProvider, SceneProvider {
+public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> implements Destructible, Printable, EntityContext, ComponentQueryContext, ApplicationProvider {
 	
 	public final int id;
 	private final String name;
@@ -33,9 +34,8 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	
 	public final Transform transform;
 	
-	protected final World world;
-	protected final Application application;
 	protected final Scene scene;
+	protected final Application application;
 	
 	/** Components of this entity */
 	public final List<Component> components;
@@ -52,41 +52,20 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		PARENT_UPDATE,
 	}
 	
-	/**
-	 * Creates an entity at the position (0, 0)
-	 */
-	public Entity(World world) {
-		this(world, 0, 0);
+	public Entity(Scene scene) {
+		this(scene, null);
 	}
 	
-	/**
-	 * Creates an entity at the position (0, 0)
-	 */
-	public Entity(World world, String name) {
-		this(world, name, 0, 0);
-	}
-	
-	/**
-	 * Creates an entity at the position (x, y)
-	 */
-	public Entity(World world, float x, float y) {
-		this(world, null, x, y);
-	}
-	
-	/**
-	 * Creates an entity at the position (x, y)
-	 */
-	public Entity(World world, String name, float x, float y) {
-		this.world = Checks.isNotNull(world, "world");
+	public Entity(Scene scene, String name) {
+		this.scene = Checks.isNotNull(scene, "scene");
 		this.name = name;
 
-		application = world.application;
+		application = scene.getApplication();
 		logger = application.getLogger();
-		scene = world.scene;
 		
 		id = EntityManager.generateEntityId();
 		
-		transform = new Transform(x, y);
+		transform = new Transform();
 		components = new ArrayList<>();
 		addComponent(transform);
 
@@ -98,6 +77,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	 */
 	@Override
 	public void destroy() {
+		// TODO: handle proper scene cleanUp when application stops
 		if (!application.isRunning() || application.isLoading()) {
 			return;
 		}
@@ -110,9 +90,9 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 			transform.parent.getEntity().removeChild(this);
 		}
 		
-		// Unregister entity from world
+		// Unregister entity from scene
 		if (isRegistered()) {
-			world.removeEntity(this);
+			scene.removeEntity(this);
 		}
 		
 		invoke(EventType.DESTROY, this);
@@ -143,11 +123,11 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	 */
 	public Entity addChild(Prefab prefab) throws IllegalStateException, IllegalArgumentException {
 		Checks.isNotNull(prefab, "prefab");
-		return addChild(prefab.instantiate(world));
+		return addChild(prefab.instantiate(scene));
 	}
 	
 	/**
-	 * Adds a child to this entity. Also adds the child to the world if this entity is inside the world.
+	 * Adds a child to this entity. Also adds the child to the scene if this entity is inside a scene.
 	 * @param child Entity to add as a child
 	 * @return Child entity
 	 */
@@ -155,14 +135,14 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		Checks.isNotNull(child, "child");
 		
 		if (transform.children.contains(child.transform)) {
-			throw new IllegalStateException("Entity is already a child");
+			return child;
 		}
 		
 		transform.children.add(child.transform);
 		child.transform.setParent(transform);
 		
 		if (isRegistered()) {
-			world.addEntity(child);
+			scene.addEntity(child);
 		}
 		
 		invoke(EventType.CHILD_ADD, child);
@@ -182,25 +162,26 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	}
 	
 	/**
-	 * Detaches a child from this entity without removing it from the world.
+	 * Detaches a child from this entity without removing it from the scene.
 	 * @param child Child object
 	 */
-	public void removeChild(Entity child) throws IllegalStateException, IllegalArgumentException {
+	public boolean removeChild(Entity child) throws IllegalStateException, IllegalArgumentException {
 		Checks.isNotNull(child, "child");
 		
 		boolean removed = transform.children.remove(child.transform);
 		if (!removed) {
-			throw new IllegalStateException("Entity is not a child");
+			return false;
 		}
 		
 		child.transform.parent = null;
 		
 		invoke(EventType.CHILD_REMOVE, child);
 		invoke(EventType.CHILDREN_UPDATE, this);
+		return true;
 	}
 	
 	/**
-	 * Detaches children from this entity without removing them from the world.
+	 * Detaches children from this entity without removing them from the scene.
 	 * @param children Child entities
 	 */
 	public void removeChildren(Entity... children) throws IllegalStateException, IllegalArgumentException {
@@ -273,7 +254,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		this.isActive = active;
 		
 		if (active) {
-			world.activateEntity(this);
+			scene.activateEntity(this);
 		}
 	}
 	
@@ -292,7 +273,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	 */
 	public <C extends Component> C addComponent(C component) {
 		Checks.isNotNull(component, "component");
-		world.addComponent(this, component);
+		scene.addComponent(this, component);
 		invoke(EventType.COMPONENTS_UPDATE, this);
 		return component;
 	}
@@ -306,24 +287,24 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		if (!components.contains(component)) {
 			return;
 		}
-
-		world.removeComponent(this, component);
+		
+		scene.removeComponent(this, component);
 		invoke(EventType.COMPONENTS_UPDATE, this);
 	}
 	
 	@Override
-	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass) {
-		return transform.getComponentInParent(componentClass);
+	public <ComponentType extends Component> ComponentType getComponentAbove(Class<ComponentType> componentClass, ComponentQuery query) {
+		return transform.getComponentAbove(componentClass, query);
 	}
 	
 	@Override
-	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass, boolean includeAncestors) {
-		return transform.getComponentInParent(componentClass, includeAncestors);
+	public <ComponentType extends Component> List<ComponentType> getComponentsAbove(Class<ComponentType> componentClass, ComponentQuery query) {
+		return transform.getComponentsAbove(componentClass, query);
 	}
 	
 	@Override
-	public <ComponentType extends Component> List<ComponentType> getComponentsInChildren(Class<ComponentType> componentClass) {
-		return transform.getComponentsInChildren(componentClass);
+	public <ComponentType extends Component> List<ComponentType> getComponentsBelow(Class<ComponentType> componentClass, ComponentQuery query) {
+		return transform.getComponentsBelow(componentClass, query);
 	}
 	
 	/**
@@ -333,6 +314,11 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	 */
 	public <ComponentType extends Component> boolean hasComponent(Class<ComponentType> componentClass) {
 		return getComponent(componentClass) != null;
+	}
+	
+	public <ComponentType extends Component> ComponentType getOrAddComponent(Class<ComponentType> componentClass, Supplier<ComponentType> componentFactory) {
+		ComponentType component = getComponent(componentClass);
+		return component != null ? component : addComponent(componentFactory.get());
 	}
 	
 	/**
@@ -353,7 +339,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	@Override
 	public <ComponentType extends Component> List<ComponentType> getComponents(Class<ComponentType> componentClass) {
 		if (components.isEmpty()) {
-			return new ArrayList<>();
+			return Collections.emptyList();
 		}
 		
 		// Find all components that are instances of componentClass
@@ -373,9 +359,9 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	}
 	
 	@Override
-	protected void invoke(Event<EventType, Entity> event) {
+	protected boolean invoke(Event<EventType, Entity> event) {
 		if (!shouldInvoke(event.getType())) {
-			return;
+			return false;
 		}
 		
 		super.invoke(event);
@@ -385,6 +371,8 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 			case CHILD_REMOVE -> invoke(EventType.DESCENDANT_REMOVE, event.getTarget());
 			case CHILDREN_UPDATE -> invoke(EventType.DESCENDANT_UPDATE, event.getTarget());
 		}
+		
+		return true;
 	}
 	
 	@Override
@@ -450,7 +438,6 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		return ApplicationProvider.super.getLogger();
 	}
 	
-	@Override
 	public Scene getScene() {
 		return scene;
 	}
@@ -459,7 +446,7 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	 * Checks whether this entity is registered in the entity manager.
 	 */
 	public boolean isRegistered() {
-		return world.entityManager.contains(this);
+		return getScene().getEntityManager().contains(this);
 	}
 	
 	@Override
@@ -506,14 +493,13 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 			componentNames[i] = componentClass.getSimpleName();
 		}
 		
-		return String.format("%s: %s (%s, %s) [%s] (%s) {%S}",
+		return String.format("%s: %s (%s, %s) [%s] (%s)",
 			className,
 			getName(),
 			transform.getGlobalX(),
 			transform.getGlobalY(),
 			String.join(", ", componentNames),
-			componentCount,
-			transform.getDepthIndex()
+			componentCount
 		);
 	}
 	

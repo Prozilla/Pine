@@ -24,6 +24,37 @@ public class Dimension extends DimensionBase {
 	public static final float DEFAULT_VALUE = 0;
 	public static final Unit DEFAULT_UNIT = Unit.PIXELS;
 	
+	@FunctionalInterface
+	public interface Computer {
+		
+		float compute(Node node, boolean isHorizontal);
+		
+	}
+	
+	@FunctionalInterface
+	public interface SimpleComputer extends Computer {
+		
+		@Override
+		default float compute(Node node, boolean isHorizontal) {
+			return compute(isHorizontal);
+		}
+		
+		float compute(boolean isHorizontal);
+		
+	}
+	
+	@FunctionalInterface
+	public interface Supplier extends SimpleComputer {
+		
+		@Override
+		default float compute(boolean isHorizontal) {
+			return compute();
+		}
+		
+		float compute();
+		
+	}
+	
 	public Dimension() {
 		this(DEFAULT_VALUE);
 	}
@@ -513,6 +544,52 @@ public class Dimension extends DimensionBase {
 		@Override
 		public @NotNull String toString() {
 			return String.format("mix(%s, %s, %s)", dimensionA, dimensionB, factor);
+		}
+	}
+	
+	public static class Dynamic extends DimensionBase {
+		
+		private final Computer computer;
+		
+		public Dynamic(Supplier supplier) {
+			this((Computer)supplier);
+		}
+		
+		public Dynamic(SimpleComputer simpleComputer) {
+			this((Computer)simpleComputer);
+		}
+		
+		public Dynamic(Computer computer) {
+			this.computer = computer;
+		}
+		
+		@Override
+		public boolean isDirty(Node node, boolean isHorizontal) {
+			return true;
+		}
+		
+		@Override
+		protected float recompute(Node node, boolean isHorizontal) {
+			return computer.compute(node, isHorizontal);
+		}
+		
+		@Override
+		public Dynamic clone() {
+			return new Dynamic(computer);
+		}
+		
+		@Override
+		public boolean equals(DimensionBase dimensionBase) {
+			return dimensionBase == this || dimensionBase instanceof Dynamic dimension && equals(dimension);
+		}
+		
+		public boolean equals(Dynamic dimension) {
+			return dimension.computer.equals(computer);
+		}
+		
+		@Override
+		public @NotNull String toString() {
+			return "dynamic()";
 		}
 	}
 }

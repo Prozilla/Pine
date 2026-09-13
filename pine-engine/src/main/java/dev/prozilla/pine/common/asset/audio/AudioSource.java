@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.util.checks.Checks;
+import dev.prozilla.pine.core.audio.AudioDevice;
 
 import java.nio.ShortBuffer;
 import java.util.Objects;
@@ -47,7 +48,7 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	
 	@Override
 	public void init() throws IllegalStateException {
-		if (initialized) {
+		if (initialized || !AudioDevice.isAudioAvailable()) {
 			return;
 		}
 		
@@ -100,13 +101,17 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	
 	@Override
 	public void rewind() {
+		if (!AudioDevice.isAudioAvailable()) {
+			return;
+		}
+		
 		requireInitialized();
 		alSourceRewind(sourcePointer);
 	}
 	
 	@Override
 	public void play() {
-		if (isPlaying()) {
+		if (!AudioDevice.isAudioAvailable() || isPlaying()) {
 			return;
 		}
 		
@@ -130,6 +135,10 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	
 	@Override
 	public boolean isPlaying() {
+		if (!AudioDevice.isAudioAvailable()) {
+			return false;
+		}
+		
 		if (isPlaying) {
 			isPlaying = getState() == AL_PLAYING;
 		}
@@ -141,6 +150,10 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	}
 	
 	public int getAttribute(int attribute) throws IllegalStateException {
+		if (!AudioDevice.isAudioAvailable()) {
+			return 0;
+		}
+		
 		requireInitialized();
 		return alGetSourcei(sourcePointer, attribute);
 	}
@@ -166,6 +179,10 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	}
 	
 	public void setAttribute(int attribute, float value) throws IllegalStateException {
+		if (!AudioDevice.isAudioAvailable()) {
+			return;
+		}
+		
 		requireInitialized();
 		alSourcef(sourcePointer, attribute, value);
 	}
@@ -175,6 +192,10 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	}
 	
 	public void setAttribute(int attribute, int value) throws IllegalStateException {
+		if (!AudioDevice.isAudioAvailable()) {
+			return;
+		}
+		
 		requireInitialized();
 		alSourcei(sourcePointer, attribute, value);
 	}
@@ -201,6 +222,10 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	}
 	
 	public double[] getMagnitudes() {
+		if (!AudioDevice.isAudioAvailable()) {
+			return null;
+		}
+		
 		requireInitialized();
 		if (samples == null) {
 			return null;

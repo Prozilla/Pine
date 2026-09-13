@@ -427,6 +427,22 @@ public class Matrix4f {
     }
 
     /**
+     * Creates a combined rotation matrix from Euler angles (pitch around the x-axis, yaw around the y-axis, roll around the z-axis).
+     * Rotation is applied to a vector in the order roll, then yaw, then pitch.
+     *
+     * @param pitch Rotation around the x-axis in degrees
+     * @param yaw   Rotation around the y-axis in degrees
+     * @param roll  Rotation around the z-axis in degrees
+     *
+     * @return Combined rotation matrix
+     */
+    public static Matrix4f rotation(float pitch, float yaw, float roll) {
+        return rotate(pitch, 1, 0, 0)
+            .multiply(rotate(yaw, 0, 1, 0))
+            .multiply(rotate(roll, 0, 0, 1));
+    }
+
+    /**
      * Creates a scaling matrix. Similar to <code>glScale(x, y, z)</code>.
      *
      * @param x Scale factor along the x coordinate

@@ -29,8 +29,8 @@ public class SimpleBindableFloatProperty extends ObservableFloatPropertyBase imp
 			return false;
 		}
 		
-		onValueChange(this.value, value);
 		this.value = value;
+		onValueChange(this.value, value);
 		return true;
 	}
 	

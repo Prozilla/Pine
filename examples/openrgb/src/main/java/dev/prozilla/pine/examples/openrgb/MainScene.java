@@ -2,16 +2,15 @@ package dev.prozilla.pine.examples.openrgb;
 
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.vector.Alignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.math.vector.EdgeAlignment;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.ColorParser;
 import dev.prozilla.pine.core.component.ui.TextInputNode;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.entity.prefab.ui.*;
 import dev.prozilla.pine.core.scene.Scene;
-import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.system.init.InitSystem;
 
@@ -99,11 +98,11 @@ public class MainScene extends Scene {
 		super.load();
 		
 		// Create system that will initialize the input node
-		world.addSystem(new InitSystem(TextInputNode.class) {
+		addSystem(new InitSystem(TextInputNode.class) {
 			@Override
-			public void initSystem(World world) {
+			public void initSystem(Scene scene) {
 				setRequiredTag(COLOR_INPUT_TAG);
-				super.initSystem(world);
+				super.initSystem(scene);
 			}
 			
 			@Override
@@ -120,8 +119,8 @@ public class MainScene extends Scene {
 		
 		LayoutPrefab menuPrefab = new LayoutPrefab();
 		menuPrefab.setGap(new Dimension(16));
-		menuPrefab.setAnchor(GridAlignment.CENTER);
-		menuPrefab.setAlignment(EdgeAlignment.CENTER);
+		menuPrefab.setAnchor(Anchor.CENTER);
+		menuPrefab.setAlignment(Alignment.CENTER);
 		menuPrefab.setDirection(Direction.DOWN);
 		menuPrefab.setBackgroundColor(Color.white().setAlpha(0.65f));
 		menuPrefab.setPadding(new DualDimension(16));
@@ -166,7 +165,7 @@ public class MainScene extends Scene {
 		
 		menuPrefab.addChildren(titleTextPrefab, inputPrefab, colorsPrefab, applyButtonPrefab);
 		nodeRootPrefab.addChild(menuPrefab);
-		world.addEntity(nodeRootPrefab);
+		addEntity(nodeRootPrefab);
 		
 		connect();
 	}

@@ -4,19 +4,20 @@ import dev.prozilla.pine.Pine;
 import dev.prozilla.pine.common.Experimental;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.rendering.shape.Circle;
+import dev.prozilla.pine.core.rendering.mesh.Circle;
 
 public class CircleCollider extends Collider {
 	
 	public float radius;
 	
 	public CircleCollider(float radius) {
-		this(radius, new Vector2f());
+		this(radius, new Vector3f());
 	}
 	
-	public CircleCollider(float radius, Vector2f offset) {
+	public CircleCollider(float radius, Vector3f offset) {
 		super(offset);
 		this.radius = radius;
 	}
@@ -28,7 +29,7 @@ public class CircleCollider extends Collider {
 		float y1 = getOriginY();
 		float x2 = other.getOriginX();
 		float y2 = other.getOriginY();
-		return Vector2f.distance(x1, y1, x2, y2) <= radius + other.radius;
+		return new Vector2f(x1, y1).distance(x2, y2) <= radius + other.radius;
 	}
 	
 	@Experimental
@@ -45,10 +46,15 @@ public class CircleCollider extends Collider {
 		float deltaX = rectX - circleX;
 		float deltaY = rectY - circleY;
 		
-		// Normalize delta vector
+		// If the circle's center is inside the rectangle, they are colliding
 		float deltaLength = MathUtils.sqrt(MathUtils.square(deltaX) + MathUtils.square(deltaY));
+		if (deltaLength == 0) {
+			return true;
+		}
+		
+		// Normalize delta vector
 		deltaX /= deltaLength;
-		deltaY /=  deltaLength;
+		deltaY /= deltaLength;
 		
 		// Calculate point on the intersection between this circle and
 		// the line connecting the centers of this circle and the rect
@@ -66,10 +72,9 @@ public class CircleCollider extends Collider {
 	}
 	
 	@Override
-	public void draw(Renderer renderer, Color color, float depth) {
-		Vector2f position = getScene().getCameraData().applyTransform(getOrigin());
-		Circle circle = new Circle(position, radius);
-		circle.draw(renderer, color, depth);
+	public void draw(Renderer renderer, Color color) {
+		Circle circle = new Circle(getOrigin(), radius);
+		circle.draw(renderer, color);
 	}
 	
 }

@@ -2,8 +2,10 @@ package dev.prozilla.pine.common.math.vector;
 
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.Transceivable;
 import dev.prozilla.pine.common.exception.InvalidArrayException;
 import dev.prozilla.pine.common.exception.InvalidStringException;
+import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +15,13 @@ import java.util.function.Function;
 /**
  * Abstract class for vectors.
  */
-public abstract class Vector<V extends Vector<V>> implements Printable, Cloneable<V> {
+public abstract class Vector<V extends Vector<V>> implements Printable, Cloneable<V>, Transceivable<V> {
+	
+	/**
+	 * Copies all values from the given vector into this vector.
+	 * @return Self.
+	 */
+	public abstract V set(V vector);
 	
 	/**
 	 * Calculates the length of this vector.
@@ -72,6 +80,22 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 		return scale(1f - alpha).add(vector.clone().scale(alpha));
 	}
 	
+	/**
+	 * Calculates the distance between this vector and the given vector.
+	 */
+	public float distance(V vector) {
+		return MathUtils.sqrt(distanceSquared(vector));
+	}
+	
+	/**
+	 * Calculates the squared distance between this vector and the given vector.
+	 */
+	public abstract float distanceSquared(V vector);
+	
+	/**
+	 * Checks whether all values of this vector are {@code 0}.
+	 * @return {@code true} if all values of this vector are {@code 0}.
+	 */
 	public abstract boolean isZero();
 	
 	@Override
@@ -93,9 +117,23 @@ public abstract class Vector<V extends Vector<V>> implements Printable, Cloneabl
 		return toString().hashCode();
 	}
 	
+	@Override
 	abstract public boolean equals(V vector);
 	
+	@Override
 	abstract public V clone();
+	
+	@Override
+	public void transmit(V target) {
+		Checks.isNotNull(target, "target");
+		target.receive(self());
+	}
+	
+	@Override
+	public void receive(V source) {
+		Checks.isNotNull(source, "source");
+		set(source);
+	}
 	
 	/**
 	 * Converts this vector to a string representation.

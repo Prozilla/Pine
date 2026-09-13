@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.state;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.lifecycle.Updatable;
+import dev.prozilla.pine.common.property.FloatProperty;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
 import dev.prozilla.pine.common.util.DeferredList;
 import dev.prozilla.pine.common.util.function.Callback;
@@ -130,7 +131,7 @@ public class Timer implements Initializable {
 		return previousLoopTime;
 	}
 	
-	public float getScaledElapsedTime() {
+	public float getScaledTime() {
 		return scaledElapsedTime;
 	}
 	
@@ -140,6 +141,22 @@ public class Timer implements Initializable {
 	
 	public float getScaledDeltaTime() {
 		return scaledDeltaTime;
+	}
+	
+	public FloatProperty timeProperty() {
+		return () -> (float)getTime();
+	}
+	
+	public FloatProperty scaledTimeProperty() {
+		return this::getScaledTime;
+	}
+	
+	public FloatProperty deltaTimeProperty() {
+		return this::getDeltaTime;
+	}
+	
+	public FloatProperty scaledDeltaTimeProperty() {
+		return this::getScaledDeltaTime;
 	}
 	
 	public void freeze() {

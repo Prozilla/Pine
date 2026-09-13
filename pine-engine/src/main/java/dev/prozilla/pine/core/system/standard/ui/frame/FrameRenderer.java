@@ -6,12 +6,14 @@ import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.FrameBufferObject;
 import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.system.render.RenderPass;
 import dev.prozilla.pine.core.system.render.RenderSystem;
 
 public final class FrameRenderer extends RenderSystem {
 	
 	public FrameRenderer() {
 		super(Node.class, FrameNode.class);
+		setRenderPass(RenderPass.OVERLAY);
 	}
 	
 	@Override
@@ -22,13 +24,13 @@ public final class FrameRenderer extends RenderSystem {
 		
 		// Draw the background
 		if (frame.backgroundColor != null) {
-			renderer.drawRect(node.currentPosition.x, node.currentPosition.y, transform.getDepth(), frame.getWidth(), frame.getHeight());
+			renderer.drawRect(node.currentPosition.x, node.currentPosition.y, transform.position.z, frame.getWidth(), frame.getHeight());
 		}
 		
 		// Draw the frame buffer
 		FrameBufferObject fbo = frame.fbo;
 		if (fbo != null) {
-			renderer.drawTexture(fbo.getTexture(), node.currentPosition.x, node.currentPosition.y, transform.getDepth());
+			renderer.drawTexture(fbo.getTexture(), node.currentPosition.x, node.currentPosition.y, transform.position.z);
 		}
 	}
 }

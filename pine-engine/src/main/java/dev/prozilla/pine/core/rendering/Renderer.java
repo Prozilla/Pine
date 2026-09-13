@@ -8,17 +8,16 @@ import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.MathUtils;
-import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.Platform;
-import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.config.RenderConfig;
 import org.jetbrains.annotations.Contract;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -31,6 +30,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.opengl.GL11.*;
 
+// TODO: Split drawing methods into separate helpers
 /**
  * Handles the rendering process.
  */
@@ -41,7 +41,7 @@ public class Renderer implements Initializable, Destructible {
 	private ShaderProgram program;
 	private FrameBufferObject frameBufferObject;
 	
-	// Vertex buffer
+	// State
 	private FloatBuffer vertices;
 	private int numVertices;
 	private boolean isRendering;
@@ -51,7 +51,7 @@ public class Renderer implements Initializable, Destructible {
 	private int renderedVertices;
 	private int totalVertices;
 	
-	// View dimensions
+	// Camera
 	private int viewWidth;
 	private int viewHeight;
 	
@@ -60,9 +60,6 @@ public class Renderer implements Initializable, Destructible {
 	private Font debugFont;
 	
 	// Transformation
-	private final Vector2f renderScale;
-	private boolean mirrorHorizontally;
-	private boolean mirrorVertically;
 	private boolean isRenderRegionEnabled;
 	
 	// Constants
@@ -88,7 +85,6 @@ public class Renderer implements Initializable, Destructible {
 		this.application = application;
 		tracker = application.getTracker();
 		logger = application.getLogger();
-		renderScale = Vector2f.one();
 	}
 	
 	@Override
@@ -173,10 +169,27 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	/**
-	 * Clears the drawing area.
+	 * Clears the color and depth buffers.
 	 */
 	public void clear() {
+		if (isRendering) {
+			flush();
+		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+	
+	public void clearColorBuffer() {
+		if (isRendering) {
+			flush();
+		}
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+	
+	public void clearDepthBuffer() {
+		if (isRendering) {
+			flush();
+		}
+		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 	
 	/**
@@ -253,35 +266,7 @@ public class Renderer implements Initializable, Destructible {
 	//region --- Transformation state ---
 	
 	public void resetTransform() {
-		resetScale();
-		resetMirror();
 		resetRegion();
-	}
-	
-	public void resetScale() {
-		setScale(1f);
-	}
-	
-	public void setScale(float scale) {
-		this.renderScale.set(scale);
-	}
-	
-	public void setScale(Vector2f scale) {
-		Checks.isNotNull(scale, "scale");
-		this.renderScale.set(scale.x, scale.y);
-	}
-	
-	public void setMirrorHorizontally(boolean mirrorHorizontally) {
-		this.mirrorHorizontally = mirrorHorizontally;
-	}
-	
-	public void setMirrorVertically(boolean mirrorVertically) {
-		this.mirrorVertically = mirrorVertically;
-	}
-	
-	public void resetMirror() {
-		mirrorHorizontally = false;
-		mirrorVertically = false;
 	}
 	
 	/**
@@ -443,33 +428,10 @@ public class Renderer implements Initializable, Destructible {
 	 * @param c Color
 	 */
 	public void drawRect(float x, float y, float z, float width, float height, Color c) {
-		float x2 = x + width * renderScale.x;
-		float y2 = y + height * renderScale.y;
+		float x2 = x + width;
+		float y2 = y + height;
 		
-		drawTextureRegion(null, x, y, x2, y2, z, 0, 0, 0, 0, c);
-	}
-	
-	public void drawRotatedTexture(TextureAsset texture, float x, float y, float z, float r) {
-		drawRotatedTexture(texture, x, y, z, fallbackColor, r);
-	}
-	
-	public void drawRotatedTexture(TextureAsset texture, float x, float y, float z, Color c, float r) {
-		if (r == 0) {
-			drawTexture(texture, x, y, z, c);
-			return;
-		}
-		
-		// Vertex positions
-		float x2 = x + texture.getWidth() * renderScale.x;
-		float y2 = y + texture.getHeight() * renderScale.y;
-		
-		// Texture coordinates
-		float s1 = 0f;
-		float t1 = 0f;
-		float s2 = 1f;
-		float t2 = 1f;
-		
-		drawRotatedTextureRegion(texture, x, y, x2, y2, z, s1, t1, s2, t2, c, r);
+		drawTextureRegion(null, x, y, z, x2, y2, z, 0, 0, 0, 0, c);
 	}
 	
 	/**
@@ -492,8 +454,8 @@ public class Renderer implements Initializable, Destructible {
 	 */
 	public void drawTexture(TextureAsset texture, float x, float y, float z, Color c) {
 		// Vertex positions
-		float x2 = x + texture.getWidth() * renderScale.x;
-		float y2 = y + texture.getHeight() * renderScale.y;
+		float x2 = x + texture.getWidth();
+		float y2 = y + texture.getHeight();
 		
 		// Texture coordinates
 		float s1 = 0f;
@@ -501,83 +463,7 @@ public class Renderer implements Initializable, Destructible {
 		float s2 = 1f;
 		float t2 = 1f;
 		
-		drawTextureRegion(texture, x, y, x2, y2, z, s1, t1, s2, t2, c);
-	}
-	
-	public void drawRotatedTextureRegion(TextureAsset texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, float r) {
-		drawRotatedTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, fallbackColor, r);
-	}
-	
-	public void drawRotatedTextureRegion(TextureAsset texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c, float r) {
-		if (r == 0) {
-			drawTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, c);
-			return;
-		}
-		
-		// Compute the center of the texture in world space
-		float centerX = x + (regWidth * renderScale.x) / 2.0f;
-		float centerY = y + (regHeight * renderScale.y) / 2.0f;
-		
-		// Compute the new corners relative to the center
-		float x1 = centerX - (regHeight * renderScale.y) / 2.0f;
-		float y1 = centerY - (regWidth * renderScale.x) / 2.0f;
-		float x2 = centerX + (regHeight * renderScale.y) / 2.0f;
-		float y2 = centerY + (regWidth * renderScale.x) / 2.0f;
-		
-		// Texture coordinates
-		float s1 = regX / texture.getWidth();
-		float t1 = regY / texture.getHeight();
-		float s2 = (regX + regWidth) / texture.getWidth();
-		float t2 = (regY + regHeight) / texture.getHeight();
-		
-		// Delegate to the rotation drawing method
-		drawRotatedTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, c, r);
-	}
-	
-	public void drawRotatedTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, float r) {
-		drawRotatedTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, fallbackColor, r);
-	}
-	
-	public void drawRotatedTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, Color c, float r) {
-		if (r == 0) {
-			drawTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, c);
-			return;
-		}
-		
-		// Convert degrees to radians
-		r = (float) Math.toRadians(r + 90);
-		
-		float cosAngle = (float) Math.cos(r);
-		float sinAngle = (float) Math.sin(r);
-		
-		// Compute the center of the quad
-		float centerX = (x1 + x2) / 2.0f;
-		float centerY = (y1 + y2) / 2.0f;
-		
-		// Compute half-width and half-height
-		float halfWidth = (x2 - x1) / 2.0f;
-		float halfHeight = (y2 - y1) / 2.0f;
-		
-		// Define the four corners relative to the center (before rotation)
-		float localX1 = -halfWidth, localY1 = -halfHeight;
-		float localX2 = halfWidth, localY2 = -halfHeight;
-		float localX3 = halfWidth, localY3 = halfHeight;
-		float localX4 = -halfWidth, localY4 = halfHeight;
-		
-		// Rotate each corner around the center
-		float newX1 = cosAngle * localX1 - sinAngle * localY1 + centerX;
-		float newY1 = sinAngle * localX1 + cosAngle * localY1 + centerY;
-		
-		float newX2 = cosAngle * localX2 - sinAngle * localY2 + centerX;
-		float newY2 = sinAngle * localX2 + cosAngle * localY2 + centerY;
-		
-		float newX3 = cosAngle * localX3 - sinAngle * localY3 + centerX;
-		float newY3 = sinAngle * localX3 + cosAngle * localY3 + centerY;
-		
-		float newX4 = cosAngle * localX4 - sinAngle * localY4 + centerX;
-		float newY4 = sinAngle * localX4 + cosAngle * localY4 + centerY;
-		
-		drawTextureRegion(texture, newX1, newY1, newX2, newY2, newX3, newY3, newX4, newY4, z, s2, t1, s1, t2, c);
+		drawTextureRegion(texture, x, y, z, x2, y2, z, s1, t1, s2, t2, c);
 	}
 	
 	/**
@@ -607,8 +493,8 @@ public class Renderer implements Initializable, Destructible {
 	 */
 	public void drawTextureRegion(TextureAsset texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c) {
 		// Vertex positions
-		float x2 = x + regWidth * renderScale.x;
-		float y2 = y + regHeight * renderScale.y;
+		float x2 = x + regWidth;
+		float y2 = y + regHeight;
 		
 		if (outOfBounds(x, y, x, y2, x2, y2, x2, y)) {
 			totalVertices += 6;
@@ -621,7 +507,7 @@ public class Renderer implements Initializable, Destructible {
 		float s2 = (regX + regWidth) / texture.getWidth();
 		float t2 = (regY + regHeight) / texture.getHeight();
 		
-		drawTextureRegion(texture, x, y, x2, y2, z, s1, t1, s2, t2, c);
+		drawTextureRegion(texture, x, y, z, x2, y2, z, s1, t1, s2, t2, c);
 	}
 	
 	/**
@@ -635,8 +521,8 @@ public class Renderer implements Initializable, Destructible {
 	 * @param s2 Top right s coordinate
 	 * @param t2 Top right t coordinate
 	 */
-	public void drawTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2) {
-		drawTextureRegion(texture, x1, y1, x2, y2, z, s1, t1, s2, t2, fallbackColor);
+	public void drawTextureRegion(TextureAsset texture, float x1, float y1, float z1, float x2, float y2, float z2, float s1, float t1, float s2, float t2) {
+		drawTextureRegion(texture, x1, y1, z1, x2, y2, z2, s1, t1, s2, t2, fallbackColor);
 	}
 	
 	/**
@@ -651,15 +537,25 @@ public class Renderer implements Initializable, Destructible {
 	 * @param t2 Top right t coordinate
 	 * @param c  The color to use
 	 */
-	public void drawTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float z, float s1, float t1, float s2, float t2, Color c) {
-		drawTextureRegion(texture, x1, y1, x1, y2, x2, y2, x2, y1, z, s1, t1, s2, t2, c);
+	public void drawTextureRegion(TextureAsset texture,
+	                              float x1, float y1, float z1,
+	                              float x2, float y2, float z2,
+	                              float s1, float t1, float s2, float t2,
+	                              Color c) {
+		float z3 = (z1 + z2) / 2;
+		drawTextureRegion(texture, x1, y1, z1, x1, y2, z3, x2, y2, z2, x2, y1, z3, s1, t1, s2, t2, c);
 	}
 	
 	/**
 	 * Draws a texture region on specified coordinates.
 	 */
-	public void drawTextureRegion(TextureAsset texture, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float z,
-	                              float s1, float t1, float s2, float t2, Color c) {
+	public void drawTextureRegion(TextureAsset texture,
+	                              float x1, float y1, float z1,
+	                              float x2, float y2, float z2,
+	                              float x3, float y3, float z3,
+	                              float x4, float y4, float z4,
+	                              float s1, float t1, float s2, float t2,
+	                              Color c) {
 		requireRendering();
 		totalVertices += 6;
 		
@@ -689,12 +585,16 @@ public class Renderer implements Initializable, Destructible {
 		
 		// Handle depth render mode
 		if (renderMode == RenderMode.DEPTH) {
-			float depth = z * z;
+			float depth = MathUtils.square((z1 + z2 + z3 + z4) / 4);
 			r = depth;
 			g = depth;
 			b = depth;
 			a = 1f;
 			texId = -1;
+		}
+		
+		if (a <= 0) {
+			return;
 		}
 		
 		// Avoid subpixel issues by snapping to nearest pixel
@@ -710,26 +610,14 @@ public class Renderer implements Initializable, Destructible {
 			y4 = Math.round(y4);
 		}
 		
-		// Transform texture coordinates
-		if (mirrorHorizontally) {
-			float temp = s1;
-			s1 = s2;
-			s2 = temp;
-		}
-		if (mirrorVertically) {
-			float temp = t1;
-			t1 = t2;
-			t2 = temp;
-		}
-		
 		// Push the vertices to the buffer
-		vertices.put(x1).put(y1).put(z).put(r).put(g).put(b).put(a).put(s1).put(t1).put(texId).put(texType);
-		vertices.put(x2).put(y2).put(z).put(r).put(g).put(b).put(a).put(s1).put(t2).put(texId).put(texType);
-		vertices.put(x3).put(y3).put(z).put(r).put(g).put(b).put(a).put(s2).put(t2).put(texId).put(texType);
+		vertices.put(x1).put(y1).put(z1).put(r).put(g).put(b).put(a).put(s1).put(t1).put(texId).put(texType);
+		vertices.put(x2).put(y2).put(z2).put(r).put(g).put(b).put(a).put(s1).put(t2).put(texId).put(texType);
+		vertices.put(x3).put(y3).put(z3).put(r).put(g).put(b).put(a).put(s2).put(t2).put(texId).put(texType);
 		
-		vertices.put(x1).put(y1).put(z).put(r).put(g).put(b).put(a).put(s1).put(t1).put(texId).put(texType);
-		vertices.put(x3).put(y3).put(z).put(r).put(g).put(b).put(a).put(s2).put(t2).put(texId).put(texType);
-		vertices.put(x4).put(y4).put(z).put(r).put(g).put(b).put(a).put(s2).put(t1).put(texId).put(texType);
+		vertices.put(x1).put(y1).put(z1).put(r).put(g).put(b).put(a).put(s1).put(t1).put(texId).put(texType);
+		vertices.put(x3).put(y3).put(z3).put(r).put(g).put(b).put(a).put(s2).put(t2).put(texId).put(texType);
+		vertices.put(x4).put(y4).put(z4).put(r).put(g).put(b).put(a).put(s2).put(t1).put(texId).put(texType);
 		
 		numVertices += 6;
 		
@@ -737,45 +625,51 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	/**
-	 * Draws multiple textured triangles using the given vertex and UV arrays.
-	 *
-	 * <p>
-	 * Each triangle is defined by 3 vertices (6 floats: x1, y1, x2, y2, x3, y3) and corresponding
-	 * texture coordinates (u1, v1, u2, v2, u3, v3) from the UV array. The number of triangles drawn
-	 * is determined by dividing the length of the vertex array by 6.
-	 * </p>
-	 * @param vertices A flat float array containing x and y coordinates for each triangle vertex
-	 * @param z The depth value used when rendering each triangle
-	 * @param uvArray A flat float array containing the corresponding u and v texture coordinates. Must be the same length as {@code vertices}.
-	 * @throws IllegalArgumentException if the length of {@code vertices} does not match {@code uvArray}
+	 * Draws multiple textured triangles using vertex, triangle and UV arrays.
+	 * @param vertices Array of vertex positions (x, y, z)
+	 * @param uvArray Array of texture coordinates (u, v)
+	 * @param triangles Array of triangles (every triangle is made up of 3 vertex indices)
+	 * @throws IllegalArgumentException if any array has an invalid length
 	 */
-	public void drawTriangles(TextureAsset texture, float[] vertices, float z, float[] uvArray, Color c) {
-		if (vertices.length != uvArray.length) {
-			throw new IllegalArgumentException("Length of vertex array must match length of UV array");
+	public void drawTriangles(TextureAsset texture, float[] vertices, float[] uvArray, int[] triangles, Color c) {
+		if (vertices.length % 3 != 0) {
+			throw new IllegalArgumentException("Vertex array length must be a multiple of 3");
+		}
+		if (vertices.length * 2 != uvArray.length * 3) {
+			throw new IllegalArgumentException("UV array length must correspond to vertex array length");
+		}
+		if (triangles.length % 3 != 0) {
+			throw new IllegalArgumentException("Triangle array length must be a multiple of 3");
 		}
 		
-		int triangleCount = vertices.length / 6;
-		
+		int triangleCount = triangles.length / 3;
 		if (triangleCount == 0) {
 			return;
 		}
 		
 		for (int i = 0; i < triangleCount; i++) {
-			float x1 = vertices[i * 6];
-			float y1 = vertices[i * 6 + 1];
-			float x2 = vertices[i * 6 + 2];
-			float y2 = vertices[i * 6 + 3];
-			float x3 = vertices[i * 6 + 4];
-			float y3 = vertices[i * 6 + 5];
+			int i1 = triangles[i * 3];
+			int i2 = triangles[i * 3 + 1];
+			int i3 = triangles[i * 3 + 2];
 			
-			float u1 = uvArray[i * 6];
-			float v1 = uvArray[i * 6 + 1];
-			float u2 = uvArray[i * 6 + 2];
-			float v2 = uvArray[i * 6 + 3];
-			float u3 = uvArray[i * 6 + 4];
-			float v3 = uvArray[i * 6 + 5];
+			float x1 = vertices[i1 * 3];
+			float y1 = vertices[i1 * 3 + 1];
+			float z1 = vertices[i1 * 3 + 2];
+			float x2 = vertices[i2 * 3];
+			float y2 = vertices[i2 * 3 + 1];
+			float z2 = vertices[i2 * 3 + 2];
+			float x3 = vertices[i3 * 3];
+			float y3 = vertices[i3 * 3 + 1];
+			float z3 = vertices[i3 * 3 + 2];
 			
-			drawTriangle(texture, x1, y1, x2, y2, x3, y3, z, u1, v1, u2, v2, u3, v3, c);
+			float u1 = uvArray[i1 * 2];
+			float v1 = uvArray[i1 * 2 + 1];
+			float u2 = uvArray[i2 * 2];
+			float v2 = uvArray[i2 * 2 + 1];
+			float u3 = uvArray[i3 * 2];
+			float v3 = uvArray[i3 * 2 + 1];
+			
+			drawTriangle(texture, x1, y1, z1, x2, y2, z2, x3, y3, z3, u1, v1, u2, v2, u3, v3, c);
 		}
 	}
 	
@@ -789,11 +683,13 @@ public class Renderer implements Initializable, Destructible {
 	 * </p>
 	 * @param x1 The x-coordinate of the first vertex
 	 * @param y1 The y-coordinate of the first vertex
+	 * @param z1 The z-coordinate of the first vertex
 	 * @param x2 The x-coordinate of the second vertex
 	 * @param y2 The y-coordinate of the second vertex
+	 * @param z2 The z-coordinate of the second vertex
 	 * @param x3 The x-coordinate of the third vertex
 	 * @param y3 The y-coordinate of the third vertex
-	 * @param z The depth value
+	 * @param z3 The z-coordinate of the third vertex
 	 * @param u1 The u texture coordinate for the first vertex
 	 * @param v1 The v texture coordinate for the first vertex
 	 * @param u2 The u texture coordinate for the second vertex
@@ -801,8 +697,12 @@ public class Renderer implements Initializable, Destructible {
 	 * @param u3 The u texture coordinate for the third vertex
 	 * @param v3 The v texture coordinate for the third vertex
 	 */
-	public void drawTriangle(TextureAsset texture, float x1, float y1, float x2, float y2, float x3, float y3, float z,
-	                         float u1, float v1, float u2, float v2, float u3, float v3, Color c) {
+	public void drawTriangle(TextureAsset texture,
+	                         float x1, float y1, float z1,
+	                         float x2, float y2, float z2,
+	                         float x3, float y3, float z3,
+	                         float u1, float v1, float u2, float v2, float u3, float v3,
+	                         Color c) {
 		totalVertices += 3;
 		
 		// Discard draw call if object is outside the viewport bounds
@@ -831,12 +731,16 @@ public class Renderer implements Initializable, Destructible {
 		
 		// Handle depth render mode
 		if (renderMode == RenderMode.DEPTH) {
-			float depth = z * z;
+			float depth = MathUtils.square((z1 + z2 + z3) / 3);
 			r = depth;
 			g = depth;
 			b = depth;
 			a = 1f;
 			texId = -1;
+		}
+		
+		if (a <= 0) {
+			return;
 		}
 		
 		// Avoid subpixel issues by snapping to nearest pixel
@@ -850,26 +754,10 @@ public class Renderer implements Initializable, Destructible {
 			y3 = Math.round(y3);
 		}
 		
-		// Transform texture coordinates
-		if (mirrorHorizontally) {
-			float tmp1 = u1;
-			float tmp2 = u2;
-			u1 = u3;
-			u2 = tmp2;
-			u3 = tmp1;
-		}
-		if (mirrorVertically) {
-			float tmp1 = v1;
-			float tmp2 = v2;
-			v1 = v3;
-			v2 = tmp2;
-			v3 = tmp1;
-		}
-		
 		// Push the vertices to the buffer
-		vertices.put(x1).put(y1).put(z).put(r).put(g).put(b).put(a).put(u1).put(v1).put(texId).put(texType);
-		vertices.put(x2).put(y2).put(z).put(r).put(g).put(b).put(a).put(u2).put(v2).put(texId).put(texType);
-		vertices.put(x3).put(y3).put(z).put(r).put(g).put(b).put(a).put(u3).put(v3).put(texId).put(texType);
+		vertices.put(x1).put(y1).put(z1).put(r).put(g).put(b).put(a).put(u1).put(v1).put(texId).put(texType);
+		vertices.put(x2).put(y2).put(z2).put(r).put(g).put(b).put(a).put(u2).put(v2).put(texId).put(texType);
+		vertices.put(x3).put(y3).put(z3).put(r).put(g).put(b).put(a).put(u3).put(v3).put(texId).put(texType);
 		
 		numVertices += 3;
 		
@@ -891,17 +779,19 @@ public class Renderer implements Initializable, Destructible {
 	 * Checks if a quad is outside the screen bounds.
 	 */
 	public boolean outOfBounds(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
-		return MathUtils.max(x1, x2, x3, x4) < 0
-			|| MathUtils.min(x1, x2, x3, x4) >= viewWidth
-			|| MathUtils.max(y1, y2, y3, y4) < 0
-	        || MathUtils.min(y1, y2, y3, y4) >= viewHeight;
+		return false;
+//		return MathUtils.max(x1, x2, x3, x4) < 0
+//			|| MathUtils.min(x1, x2, x3, x4) >= viewWidth
+//			|| MathUtils.max(y1, y2, y3, y4) < 0
+//	        || MathUtils.min(y1, y2, y3, y4) >= viewHeight;
 	}
 	
 	public boolean outOfBounds(float x1, float y1, float x2, float y2, float x3, float y3) {
-		return MathUtils.max(x1, x2, x3) < 0
-			|| MathUtils.min(x1, x2, x3) >= viewWidth
-			|| MathUtils.max(y1, y2, y3) < 0
-			|| MathUtils.min(y1, y2, y3) >= viewHeight;
+		return false;
+//		return MathUtils.max(x1, x2, x3) < 0
+//			|| MathUtils.min(x1, x2, x3) >= viewWidth
+//			|| MathUtils.max(y1, y2, y3) < 0
+//			|| MathUtils.min(y1, y2, y3) >= viewHeight;
 	}
 	
 	/**
@@ -994,11 +884,13 @@ public class Renderer implements Initializable, Destructible {
 		// Set uniforms
 		program.setUniform("uTexture", 0);
 		if (Platform.get() != Platform.MACOS) {
-			program.setUniform("uTextureArray", 0);
+			program.setUniform("uTextureArray", 1);
 		}
-		program.setUniform("uView", new Matrix4f());
-		
+
 		resize();
+		setProjectionMatrix(new Matrix4f());
+		setViewMatrix(new Matrix4f());
+		setModelMatrix(new Matrix4f());
 	}
 	
 	private void handleShaderLoadingError(AssetPoolEvent<Shader> event) {
@@ -1036,13 +928,27 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		glViewport(0, 0, width, height);
-		
-		// Set projection matrix to an orthographic projection
-		Matrix4f projection = Matrix4f.orthographic(0f, width, 0f, height, -1f, 1f);
-		program.setUniform("uProjection", projection);
-		
 		viewWidth = width;
 		viewHeight = height;
+	}
+	
+	public void setProjectionMatrix(Matrix4f projectionMatrix) {
+		flush();
+		program.setUniform("uProjection", projectionMatrix);
+	}
+	
+	public void setViewMatrix(Matrix4f viewMatrix) {
+		flush();
+		program.setUniform("uView", viewMatrix);
+	}
+	
+	public void resetModelMatrix() {
+		setModelMatrix(new Matrix4f());
+	}
+	
+	public void setModelMatrix(Matrix4f modelMatrix) {
+		flush();
+		program.setUniform("uModel", modelMatrix);
 	}
 	
 	/**

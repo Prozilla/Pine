@@ -2,14 +2,11 @@ package dev.prozilla.pine.examples.ui;
 
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.vector.Alignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.math.vector.EdgeAlignment;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.TextButtonPrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.*;
 import dev.prozilla.pine.core.scene.Scene;
 
 public class MainScene extends Scene {
@@ -23,8 +20,8 @@ public class MainScene extends Scene {
 		
 		LayoutPrefab menuPrefab = new LayoutPrefab();
 		menuPrefab.setGap(new Dimension(16));
-		menuPrefab.setAnchor(GridAlignment.CENTER);
-		menuPrefab.setAlignment(EdgeAlignment.CENTER);
+		menuPrefab.setAnchor(Anchor.CENTER);
+		menuPrefab.setAlignment(Alignment.CENTER);
 		menuPrefab.setDirection(Direction.DOWN);
 		menuPrefab.setBackgroundColor(Color.white().setAlpha(0.65f));
 		menuPrefab.setPadding(new DualDimension(16));
@@ -50,12 +47,18 @@ public class MainScene extends Scene {
 		TextPrefab textPrefab = new TextPrefab("This is a text element");
 		textPrefab.setColor(Color.black());
 		
+		TextInputPrefab textInputPrefab = new TextInputPrefab();
+		textInputPrefab.setPlaceholder("Placeholder...");
+		
+		RangeInputPrefab rangeInputPrefab = new RangeInputPrefab();
+		
 		menuPrefab.addChildren(titleTextPrefab, textPrefab,
-			textButton1Prefab, textButton2Prefab, textButton3Prefab);
+			textButton1Prefab, textButton2Prefab, textButton3Prefab,
+			textInputPrefab, rangeInputPrefab);
 		
 		nodeRootPrefab.addChild(menuPrefab);
 		
 		// Instantiate prefabs
-		world.addEntity(nodeRootPrefab);
+		addEntity(nodeRootPrefab);
 	}
 }

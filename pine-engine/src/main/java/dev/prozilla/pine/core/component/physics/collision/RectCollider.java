@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.component.physics.collision;
 import dev.prozilla.pine.Pine;
 import dev.prozilla.pine.common.Experimental;
 import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.rendering.Renderer;
@@ -15,10 +16,10 @@ public class RectCollider extends Collider {
 	public Vector2f size;
 	
 	public RectCollider(Vector2f size) {
-		this(size, new Vector2f());
+		this(size, new Vector3f());
 	}
 	
-	public RectCollider(Vector2f size, Vector2f offset) {
+	public RectCollider(Vector2f size, Vector3f offset) {
 		super(offset);
 		this.size = Checks.isNotNull(size, "size");
 	}
@@ -119,9 +120,9 @@ public class RectCollider extends Collider {
 	}
 	
 	@Override
-	public void draw(Renderer renderer, Color color, float depth) {
-		Vector2f position = getScene().getCameraData().applyTransform(getOrigin());
-		renderer.drawRect(position.x, position.y, depth, size.x, size.y, color);
+	public void draw(Renderer renderer, Color color) {
+		Vector3f position = getOrigin();
+		renderer.drawRect(position.x, position.y, position.z, size.x, size.y, color);
 	}
 	
 }

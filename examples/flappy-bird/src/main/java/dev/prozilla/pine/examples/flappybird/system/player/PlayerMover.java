@@ -2,7 +2,7 @@ package dev.prozilla.pine.examples.flappybird.system.player;
 
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.component.sprite.SpriteRenderer;
+import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
 import dev.prozilla.pine.examples.flappybird.FlappyBird;
@@ -27,13 +27,14 @@ public class PlayerMover extends UpdateSystem {
 		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		
 		// Check if player hit floor or ceiling
-		float groundY = GroundData.TOP_Y - playerData.collider.offset.y + playerData.collider.radius;
-		if (transform.position.y <= groundY || transform.position.y + PlayerData.HEIGHT >= FlappyBird.HEIGHT / 2f) {
+		float groundOffsetY = playerData.collider.getOriginY() - transform.position.y;
+		float groundY = GroundData.TOP_Y - groundOffsetY + playerData.collider.radius;
+		if (transform.position.y <= groundY || transform.position.y + PlayerData.TOP_EXTENT >= FlappyBird.HEIGHT / 2f) {
 			playerData.gameScene.endGame();
 		}
 		
 		// Crop sprite to current frame
-		spriteRenderer.setRegion(playerData.animationFrame * PlayerData.SPRITE_WIDTH, GameManager.instance.playerVariant * PlayerData.SPRITE_WIDTH, PlayerData.SPRITE_WIDTH, PlayerData.SPRITE_HEIGHT);
+		spriteRenderer.getMesh().setRegion(playerData.animationFrame * PlayerData.SPRITE_WIDTH, GameManager.instance.playerVariant * PlayerData.SPRITE_WIDTH, PlayerData.SPRITE_WIDTH, PlayerData.SPRITE_HEIGHT);
 		
 		if (!playerData.gameScene.gameOver) {
 			// Update age and calculate frame
@@ -56,7 +57,7 @@ public class PlayerMover extends UpdateSystem {
 		if (transform.position.y > groundY) {
 			// Apply rotation based on velocity, unless player is dead
 			float targetRotation = playerData.gameScene.gameOver ? 180 : playerData.velocity * playerData.rotationFactor.get();
-			spriteRenderer.rotation = MathUtils.lerp(spriteRenderer.rotation, targetRotation, deltaTime * playerData.rotationSpeed.get());
+			transform.rotation.z = MathUtils.lerp(transform.rotation.z, targetRotation, deltaTime * playerData.rotationSpeed.get());
 		}
 	}
 }

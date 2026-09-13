@@ -8,9 +8,10 @@ import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.ECSManager;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.rendering.Renderer;
-import dev.prozilla.pine.core.scene.World;
+import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.system.init.InitSystemBase;
 import dev.prozilla.pine.core.system.input.InputSystemBase;
+import dev.prozilla.pine.core.system.render.RenderPass;
 import dev.prozilla.pine.core.system.render.RenderSystemBase;
 import dev.prozilla.pine.core.system.update.UpdateSystemBase;
 
@@ -28,15 +29,15 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 	private boolean initialized;
 	
 	@SuppressWarnings("unchecked")
-	public SystemManager(World world) {
-		super(world);
+	public SystemManager(Scene scene) {
+		super(scene);
 		
 		initialized = false;
 		
-		initSystems = new SystemGroup<>(world, InitSystemBase.class);
-		inputSystems = new SystemGroup<>(world, InputSystemBase.class);
-		updateSystems = new SystemGroup<>(world, UpdateSystemBase.class);
-		renderSystems = new SystemGroup<>(world, RenderSystemBase.class);
+		initSystems = new SystemGroup<>(scene, InitSystemBase.class);
+		inputSystems = new SystemGroup<>(scene, InputSystemBase.class);
+		updateSystems = new SystemGroup<>(scene, UpdateSystemBase.class);
+		renderSystems = new SystemGroup<>(scene, RenderSystemBase.class);
 		
 		systemGroups = new SystemGroup[]{
 			initSystems,
@@ -67,7 +68,7 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 	 */
 	@Override
 	public void input(float deltaTime) {
-		inputSystems.forEach(inputSystem -> inputSystem.input(deltaTime));
+		inputSystems.forEach((inputSystem) -> inputSystem.input(deltaTime));
 	}
 	
 	/**
@@ -75,7 +76,7 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 	 */
 	@Override
 	public void update(float deltaTime) {
-		updateSystems.forEach(updateSystem -> updateSystem.update(deltaTime));
+		updateSystems.forEach((updateSystem) -> updateSystem.update(deltaTime));
 	}
 	
 	/**
@@ -83,7 +84,15 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 	 */
 	@Override
 	public void render(Renderer renderer) {
-		renderSystems.forEach(renderSystem -> renderSystem.render(renderer));
+		for (int i = RenderPass.FIRST; i <= RenderPass.LAST; i++) {
+			int currentPass = i;
+			// TODO: Support separate cameras
+			renderSystems.forEach((renderSystem) -> {
+				if (renderSystem.getRenderPass() == currentPass) {
+					renderSystem.render(renderer);
+				}
+			});
+		}
 	}
 	
 	/**
@@ -121,9 +130,7 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 	public void activateEntity(Entity entity) {
 		Checks.isNotNull(entity, "entity");
 		
-		initSystems.forEach((initSystem) -> {
-			initSystem.activateEntity(entity);
-		});
+		initSystems.forEach((initSystem) -> initSystem.activateEntity(entity));
 	}
 	
 	public boolean addSystem(SystemBase system) {
@@ -138,17 +145,14 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 		}
 		
 		if (added) {
-			system.initSystem(world);
+			system.initSystem(scene);
 			getTracker().addSystem();
 		}
 		
 		return added;
 	}
 	
-	/**
-	 * Updates all systems that depend on entity depth.
-	 */
-	public void updateEntityDepth() {
+	public void sortEntities() {
 		renderSystems.forEach(RenderSystemBase::sort);
 		inputSystems.forEach(InputSystemBase::sort);
 	}

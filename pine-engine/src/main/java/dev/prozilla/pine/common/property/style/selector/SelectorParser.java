@@ -60,11 +60,20 @@ public class SelectorParser extends SequentialParser<Selector> {
 					}
 				} else {
 					moveCursor(); // skip ':'
-					String modifier = readWhile(SelectorParser::isValidNameChar);
-					if (modifier.isEmpty()) {
-						return fail("Invalid modifier selector");
+					if (getChar() == ':') {
+						moveCursor();
+						String pseudoElement = readWhile(SelectorParser::isValidNameChar);
+						if (pseudoElement.isEmpty()) {
+							return fail("Invalid pseudo element selector");
+						}
+						parts.add(new PseudoElementSelector(pseudoElement));
+					} else {
+						String modifier = readWhile(SelectorParser::isValidNameChar);
+						if (modifier.isEmpty()) {
+							return fail("Invalid modifier selector");
+						}
+						parts.add(new ModifierSelector(modifier));
 					}
-					parts.add(new ModifierSelector(modifier));
 				}
 			} else if (isValidNameChar(c)) {
 				// Type selector
@@ -90,7 +99,7 @@ public class SelectorParser extends SequentialParser<Selector> {
 		} else if (parts.size() == 1) {
 			return parts.getFirst();
 		} else {
-			return new SelectorCombo(parts.toArray(new Selector[0]));
+			return new CompoundSelector(parts.toArray(new Selector[0]));
 		}
 	}
 	

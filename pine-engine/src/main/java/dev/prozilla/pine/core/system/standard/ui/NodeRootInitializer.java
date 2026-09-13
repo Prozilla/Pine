@@ -55,14 +55,14 @@ public final class NodeRootInitializer extends InitSystem {
 				} else if (nodeB.tabIndex == 0) {
 					return 1;
 				} else {
-					return nodeB.getTransform().getDepthIndex() - nodeA.getTransform().getDepthIndex();
+					return Float.compare(nodeB.getTransform().position.z, nodeA.getTransform().position.z);
 				}
 			});
 			
 			if (node.autoFocus) {
-				nodeRoot.focusNode(node);
+				nodeRoot.focusNode(node, false);
 			} else if (nodeRoot.focusedNodeIndex >= 0 && nodeRoot.focusableNodes.indexOf(node) <= nodeRoot.focusedNodeIndex) {
-				nodeRoot.focusNextNode();
+				nodeRoot.focusNextNode(false);
 			}
 		}
 	}
@@ -81,7 +81,7 @@ public final class NodeRootInitializer extends InitSystem {
 			return;
 		}
 		if (nodeRoot.focusedNodeIndex >= 0 && nodeRoot.focusableNodes.remove(node)) {
-			nodeRoot.focusPreviousNode();
+			nodeRoot.focusPreviousNode(false);
 		}
 	}
 	

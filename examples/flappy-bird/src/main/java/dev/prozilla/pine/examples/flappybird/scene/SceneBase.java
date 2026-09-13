@@ -18,7 +18,9 @@ public abstract class SceneBase extends Scene {
 	@Override
 	protected void load() {
 		super.load();
+		cameraData.orthographic = true;
 		cameraData.setBackgroundColor(Color.hex(GameManager.instance.backgroundVariant == 1 ? "#008894" : "#4DC1CB"));
+		cameraData.getTransform().setPosition(0, 0, 10);
 		
 		font = AssetPools.fonts.load("flappybird/flappy-bird.ttf", 32);
 		
@@ -26,13 +28,12 @@ public abstract class SceneBase extends Scene {
 		BackgroundPrefab backgroundPrefab = new BackgroundPrefab();
 		
 		// Add systems
-		world.addSystem(new BackgroundInitializer());
+		addSystem(new BackgroundInitializer());
 		
 		// Fill screen with background sprites
 		int backgroundCount = Math.round((float)FlappyBird.WIDTH / BackgroundData.WIDTH + 0.5f) + 1;
 		for (int i = 0; i < backgroundCount; i++) {
-			world.addEntity(backgroundPrefab.instantiate(world, i));
+			addEntity(backgroundPrefab.instantiate(this, i));
 		}
 	}
-	
 }

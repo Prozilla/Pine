@@ -8,7 +8,7 @@ public class HUDPrefab extends LayoutPrefab {
 	public HUDPrefab(StyleSheet styleSheet) {
 		setName("HUD");
 		addClass("hud");
-		setStyleSheet(styleSheet);
+		addStyleSheet(styleSheet);
 		addChild(new GoalCounterPrefab(styleSheet));
 	}
 	

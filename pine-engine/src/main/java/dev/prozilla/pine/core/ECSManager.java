@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
-import dev.prozilla.pine.core.scene.World;
+import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.Tracker;
 
 /**
@@ -9,17 +9,17 @@ import dev.prozilla.pine.core.state.Tracker;
  */
 public abstract class ECSManager implements Destructible {
 	
-	protected final World world;
+	protected final Scene scene;
 	
-	public ECSManager(World world) {
-		this.world = world;
+	public ECSManager(Scene scene) {
+		this.scene = scene;
 	}
 	
 	/**
 	 * Returns the application's tracker.
 	 */
 	protected Tracker getTracker() {
-		return world.application.getTracker();
+		return scene.getApplication().getTracker();
 	}
 	
 }

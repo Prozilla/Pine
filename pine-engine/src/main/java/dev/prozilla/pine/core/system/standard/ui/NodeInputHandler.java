@@ -30,11 +30,15 @@ public final class NodeInputHandler extends InputSystemBase {
 			Entity entity = chunk.getEntity();
 			Node node = chunk.getComponent(Node.class);
 			
+			if (node.isPseudoElement()) {
+				return;
+			}
+			
 			boolean cursorHit = false;
 			
 			if (!node.passThrough && !node.isInTooltip() && !input.isCursorBlocked()) {
-				float canvasHeight = node.getRoot().getHeight();
-				if (cursor != null && Node.isInsideRect(new Vector2f(cursor.x, canvasHeight - cursor.y), node.currentPosition, node.currentInnerSize)) {
+				float nodeRootHeight = node.getRoot().getHeight();
+				if (cursor != null && Node.isInsideRect(new Vector2f(cursor.x, nodeRootHeight - cursor.y), node.currentPosition, node.currentInnerSize)) {
 					cursorHit = true;
 					input.blockCursor(entity);
 				}
@@ -57,14 +61,21 @@ public final class NodeInputHandler extends InputSystemBase {
 				}
 				
 				if (input.getMouseButtonDown(MouseButton.LEFT)) {
+					if (node.cursorHit) {
+						node.focus();
+					}
 					node.click();
 				}
+			}
+			
+			if (node.cursorHit && node.cursor != null) {
+				input.setCursorType(node.cursor);
 			}
 		});
 	}
 	
 	@Override
 	public void sort() {
-		sort(Comparator.comparingInt(a -> a.getTransform().getDepthIndex()));
+		sort(Comparator.comparingDouble(a -> a.getTransform().position.z));
 	}
 }

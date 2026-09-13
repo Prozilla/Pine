@@ -4,10 +4,11 @@ import dev.prozilla.pine.common.math.vector.Direction;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.ComponentQuery;
 
 
 /**
- * A component for rendering 2D square tiles in the world.
+ * A component for rendering 2D square tiles in the scene.
  */
 public class TileRenderer extends Component implements TileProvider {
 	
@@ -105,7 +106,7 @@ public class TileRenderer extends Component implements TileProvider {
 			return group;
 		}
 		
-		group = getComponentInParent(GridGroup.class, false);
+		group = getComponentAbove(GridGroup.class, ComponentQuery.SHALLOW);
 		return group;
 	}
 	

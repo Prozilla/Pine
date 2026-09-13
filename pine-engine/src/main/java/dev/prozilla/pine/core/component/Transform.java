@@ -1,8 +1,10 @@
 package dev.prozilla.pine.core.component;
 
-import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector3f;
+import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.entity.Entity;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,39 +13,42 @@ import java.util.Objects;
 public class Transform extends Component {
 	
 	/** Local position */
-	public Vector2f position;
+	public Vector3f position;
 	/** Rotation in degrees */
-	public float rotation;
+	public Vector3f rotation;
+	public Vector3f scale;
 	/** The velocity vector is added to the position each frame. */
-	public Vector2f velocity;
+	public Vector3f velocity;
+	public Vector3f origin;
 	
 	/** Children of the entity */
 	public final List<Transform> children;
 	/** Parent of the entity */
 	public Transform parent;
 	
-	/** Z-index in the world, highest values are rendered first. */
-	private int depthIndex;
-	/** If true, sets the depth of children to a lower value than the parent. */
-	private boolean renderChildrenBelow;
+	private final Matrix4f modelMatrix;
 
 	public Transform() {
-		this(0, 0);
+		this(0, 0, 0);
 	}
 	
-	public Transform(float x, float y) {
-		this(x, y, 0);
+	public Transform(float x, float y, float z) {
+		this(new Vector3f(x, y, z));
 	}
 	
-	public Transform(float x, float y, float rotation) {
-		position = new Vector2f(x, y);
+	public Transform(Vector3f position) {
+		this(position, new Vector3f());
+	}
+	
+	public Transform(Vector3f position, Vector3f rotation) {
+		this.position = position;
 		this.rotation = rotation;
+		scale = Vector3f.one();
+		origin = new Vector3f();
+		modelMatrix = new Matrix4f();
 		
 		children = new ArrayList<>();
-		velocity = new Vector2f();
-		
-		depthIndex = 0;
-		renderChildrenBelow = false;
+		velocity = new Vector3f();
 	}
 	
 	@Override
@@ -103,38 +108,70 @@ public class Transform extends Component {
 	}
 	
 	@Override
-	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass) {
-		return getComponentInParent(componentClass, true);
-	}
-	
-	@Override
-	public <ComponentType extends Component> ComponentType getComponentInParent(Class<ComponentType> componentClass, boolean includeAncestors) {
+	public <ComponentType extends Component> ComponentType getComponentAbove(Class<ComponentType> componentClass, ComponentQuery query) {
+		if (query.includesSelf()) {
+			ComponentType component = getComponent(componentClass);
+			if (component != null) {
+				return component;
+			}
+		}
+		
 		if (parent == null) {
 			return null;
 		}
 		
 		ComponentType component = parent.getComponent(componentClass);
 		
-		if (component == null && includeAncestors) {
-			return parent.getComponentInParent(componentClass);
+		if (component == null && query.isRecursive()) {
+			return parent.getComponentAbove(componentClass, query.withoutSelf());
 		}
 		
 		return component;
 	}
 	
 	@Override
-	public <ComponentType extends Component> List<ComponentType> getComponentsInChildren(Class<ComponentType> componentClass) {
-		if (children.isEmpty()) {
-			return new ArrayList<>();
-		}
-		
+	public <ComponentType extends Component> List<ComponentType> getComponentsAbove(Class<ComponentType> componentClass, ComponentQuery query) {
 		ArrayList<ComponentType> components = new ArrayList<>();
 		
-		for (Transform child : children) {
-			ComponentType component = child.getComponent(componentClass);
+		Transform currentParent = query.includesSelf() ? this : parent;
+		while (currentParent != null) {
+			ComponentType component = currentParent.getComponent(componentClass);
 			if (component != null) {
 				components.add(component);
 			}
+			if (currentParent == this || query.getMode() == ComponentQuery.Mode.EXHAUSTIVE || (query.isRecursive() && components.isEmpty())) {
+				currentParent = currentParent.parent;
+			} else {
+				currentParent = null;
+			}
+		}
+		
+		return components;
+	}
+	
+	@Override
+	public <ComponentType extends Component> List<ComponentType> getComponentsBelow(Class<ComponentType> componentClass, ComponentQuery query) {
+		ArrayList<ComponentType> components = new ArrayList<>();
+		
+		List<Transform> currentLevel = new ArrayList<>();
+		if (query.includesSelf()) {
+			currentLevel.add(this);
+		} else {
+			currentLevel.addAll(children);
+		}
+		
+		while (!currentLevel.isEmpty() && (query.getMode() != ComponentQuery.Mode.NEAREST_LEVEL || components.isEmpty())) {
+			List<Transform> nextLevel = new ArrayList<>();
+			for (Transform transform : currentLevel) {
+				ComponentType component = transform.getComponent(componentClass);
+				if (component != null) {
+					components.add(component);
+				}
+				if (query.isRecursive() && (query.getMode() != ComponentQuery.Mode.NEAREST_PATHS || component == null)) {
+					nextLevel.addAll(transform.children);
+				}
+			}
+			currentLevel = nextLevel;
 		}
 		
 		return components;
@@ -156,18 +193,77 @@ public class Transform extends Component {
 		}
 	}
 	
+	public Vector3f getForward() {
+		float pitch = getPitch();
+		float yaw = getYaw();
+		float cosY = (float)Math.cos(yaw);
+		float sinY = (float)Math.sin(yaw);
+		float cosP = (float)Math.cos(pitch);
+		float sinP = (float)Math.sin(pitch);
+		
+		return new Vector3f(sinY * cosP, -sinP, -cosY * cosP);
+	}
+	
+	public Vector3f getRight() {
+		float yaw = getYaw();
+		return new Vector3f((float)Math.cos(yaw), 0, (float)Math.sin(yaw));
+	}
+	
+	public Vector3f getUp() {
+		float pitch = getPitch();
+		float yaw = getYaw();
+		float cosY  = (float)Math.cos(yaw);
+		float sinY  = (float)Math.sin(yaw);
+		float cosP  = (float)Math.cos(pitch);
+		float sinP  = (float)Math.sin(pitch);
+		
+		return new Vector3f(sinY * sinP, cosP, -cosY * sinP);
+	}
+	
+	public Matrix4f getModelMatrix() {
+		if (parent != null) {
+			modelMatrix.set(parent.getModelMatrix());
+		} else {
+			modelMatrix.identity();
+		}
+		return modelMatrix.translate(origin.x, origin.y, origin.z)
+			.translate(position.x, position.y, position.z)
+			.rotateX(getPitch())
+			.rotateY(getYaw())
+			.rotateZ(getRoll())
+			.scale(scale.x, scale.y, scale.z)
+			.translate(-origin.x, -origin.y, -origin.z);
+	}
+	
+	/**
+	 * Rotates a vector by this transform's current rotation.
+	 * @param vector The vector to rotate
+	 * @return The rotated vector
+	 */
+	public Vector3f rotateVector(Vector3f vector) {
+		Vector4f rotated = dev.prozilla.pine.common.math.matrix.Matrix4f.rotation(rotation.x, rotation.y, rotation.z)
+			.multiply(vector.expand(0));
+		return new Vector3f(rotated.x, rotated.y, rotated.z);
+	}
+	
+	public float getPitch() {
+		return (float)Math.toRadians(rotation.x);
+	}
+	
+	public float getYaw() {
+		return (float)Math.toRadians(rotation.y);
+	}
+	
+	public float getRoll() {
+		return (float)Math.toRadians(rotation.z);
+	}
+	
 	public void setParent(Transform parent) {
 		if (Objects.equals(parent, this.parent)) {
 			return;
 		}
 		
 		this.parent = parent;
-		
-		if (parent != null) {
-			// Temporarily borrow depth index from parent until depth is recalculated
-			depthIndex = parent.depthIndex;
-		}
-		
 		entity.invoke(Entity.EventType.PARENT_UPDATE);
 	}
 	
@@ -175,73 +271,74 @@ public class Transform extends Component {
 		return children.size();
 	}
 	
-	public void translate(Vector2f delta) {
+	public void translate(Vector3f delta) {
 		Checks.isNotNull(delta, "delta");
-		translate(delta.x, delta.y);
+		translate(delta.x, delta.y, delta.z);
 	}
 	
-	public void translate(float deltaX, float deltaY) {
-		position.add(deltaX, deltaY);
+	public void reset() {
+		setPosition(0, 0, 0);
+		setRotation(0, 0, 0);
+		setScale(1, 1, 1);
+		setVelocity(0, 0, 0);
+		setOrigin(0, 0, 0);
 	}
 	
-	public void setPosition(Vector2f position) {
+	public void translate(float deltaX, float deltaY, float deltaZ) {
+		position.add(deltaX, deltaY, deltaZ);
+	}
+	
+	public void setPosition(Vector3f position) {
 		Checks.isNotNull(position, "position");
-		setPosition(position.x, position.y);
+		setPosition(position.x, position.y, position.z);
 	}
 	
-	public void setPosition(float x, float y) {
-		position.x = x;
-		position.y = y;
+	public void setPosition(float x, float y, float z) {
+		position.set(x, y, z);
 	}
 	
-	public void setVelocity(Vector2f velocity) {
+	public void rotate(Vector3f delta) {
+		Checks.isNotNull(delta, "delta");
+		rotate(delta.x, delta.y, delta.z);
+	}
+	
+	public void rotate(float deltaX, float deltaY, float deltaZ) {
+		rotation.add(deltaX, deltaY, deltaZ);
+	}
+	
+	public void setRotation(Vector3f rotation) {
+		Checks.isNotNull(rotation, "rotation");
+		setRotation(rotation.x, rotation.y, rotation.z);
+	}
+	
+	public void setRotation(float x, float y, float z) {
+		rotation.set(x, y, z);
+	}
+	
+	public void setScale(Vector3f scale) {
+		Checks.isNotNull(scale, "scale");
+		setScale(scale.x, scale.y, scale.z);
+	}
+	
+	public void setScale(float x, float y, float z) {
+		scale.set(x, y, z);
+	}
+	
+	public void setVelocity(Vector3f velocity) {
 		Checks.isNotNull(velocity, "velocity");
-		setVelocity(velocity.x, velocity.y);
+		setVelocity(velocity.x, velocity.y, velocity.z);
 	}
 	
-	public void setVelocity(float x, float y) {
-		velocity.x = x;
-		velocity.y = y;
+	public void setVelocity(float x, float y, float z) {
+		velocity.set(x, y, z);
 	}
 	
-	public void setRenderChildrenBelow(boolean renderChildrenBelow) {
-		if (this.renderChildrenBelow == renderChildrenBelow) {
-			return;
-		}
-		
-		this.renderChildrenBelow = renderChildrenBelow;
-		getWorld().calculateDepth();
+	public void setOrigin(Vector3f origin) {
+		Checks.isNotNull(origin, "origin");
+		setOrigin(origin.x, origin.y, origin.z);
 	}
 	
-	/**
-	 * Calculates the z-indices of this transform and its children based on a depth value.
-	 * @param depth Depth value before calculation
-	 * @return Depth value after calculation
-	 */
-	public int calculateDepth(int depth) {
-		if (!renderChildrenBelow) {
-			depthIndex = depth++;
-		}
-		
-		for (Transform child : children) {
-			depth = child.calculateDepth(depth);
-		}
-		
-		if (renderChildrenBelow) {
-			depthIndex = depth++;
-		}
-		
-		return depth;
-	}
-	
-	public int getDepthIndex() {
-		return depthIndex;
-	}
-	
-	/**
-	 * @return Depth value between <code>0f</code> and <code>1f</code> based on the depth index.
-	 */
-	public float getDepth() {
-		return ((float)depthIndex / getWorld().maxDepth);
+	public void setOrigin(float x, float y, float z) {
+		origin.set(x, y, z);
 	}
 }

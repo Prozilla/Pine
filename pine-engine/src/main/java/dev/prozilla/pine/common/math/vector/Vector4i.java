@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.math.vector;
 
+import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,8 +25,20 @@ public class Vector4i extends VectorInt<Vector4i> {
 	/**
 	 * Creates a default 4-dimensional vector with all values set to <code>0</code>.
 	 */
-	public Vector4i() {
-		this(0, 0, 0, 0);
+	public Vector4i() {}
+	
+	public Vector4i(int xyzw) {
+		this.x = xyzw;
+		this.y = xyzw;
+		this.z = xyzw;
+		this.w = xyzw;
+	}
+	
+	public Vector4i(Vector4i vector) {
+		this.x = vector.x;
+		this.y = vector.y;
+		this.z = vector.z;
+		this.w = vector.w;
 	}
 	
 	/**
@@ -38,8 +51,22 @@ public class Vector4i extends VectorInt<Vector4i> {
 		this.w = w;
 	}
 	
+	@Override
 	public Vector4i set(int xyzw) {
-		return set(xyzw, xyzw, xyzw, xyzw);
+		this.x = xyzw;
+		this.y = xyzw;
+		this.z = xyzw;
+		this.w = xyzw;
+		return this;
+	}
+	
+	@Override
+	public Vector4i set(Vector4i vector) {
+		this.x = vector.x;
+		this.y = vector.y;
+		this.z = vector.z;
+		this.w = vector.w;
+		return this;
 	}
 	
 	public Vector4i set(int x, int y, int z, int w) {
@@ -48,6 +75,10 @@ public class Vector4i extends VectorInt<Vector4i> {
 		this.z = z;
 		this.w = w;
 		return this;
+	}
+	
+	public Vector3i shrink() {
+		return new Vector3i(x, y, z);
 	}
 	
 	public Vector4i add(int x, int y, int z, int w) {
@@ -59,11 +90,19 @@ public class Vector4i extends VectorInt<Vector4i> {
 	}
 	
 	@Override
-	public Vector4i add(Vector4i vector4i) {
-		x += vector4i.x;
-		y += vector4i.y;
-		z += vector4i.z;
-		w += vector4i.w;
+	public Vector4i add(Vector4i vector) {
+		x += vector.x;
+		y += vector.y;
+		z += vector.z;
+		w += vector.w;
+		return this;
+	}
+	
+	public Vector4i subtract(int x, int y, int z, int w) {
+		this.x -= x;
+		this.y -= y;
+		this.z -= z;
+		this.w -= w;
 		return this;
 	}
 	
@@ -90,9 +129,31 @@ public class Vector4i extends VectorInt<Vector4i> {
 		return x * x + y * y + z * z + w * w;
 	}
 	
+	public int dot(int x, int y, int z, int w) {
+		return this.x * x + this.y * y + this.z * z + this.w * w;
+	}
+	
 	@Override
-	public int dot(Vector4i vector4i) {
-		return x * vector4i.x + y * vector4i.y + z * vector4i.z + w * vector4i.w;
+	public int dot(Vector4i vector) {
+		return x * vector.x + y * vector.y + z * vector.z + w * vector.w;
+	}
+	
+	@Override
+	public float distance(Vector4i vector) {
+		return distance(vector.x, vector.y, vector.z, vector.w);
+	}
+	
+	public float distance(int x, int y, int z, int w) {
+		return MathUtils.sqrt(distanceSquared(x, y, z, w));
+	}
+	
+	@Override
+	public float distanceSquared(Vector4i vector) {
+		return distanceSquared(vector.x, vector.y, vector.z, vector.w);
+	}
+	
+	public float distanceSquared(int x, int y, int z, int w) {
+		return MathUtils.square(x - this.x) + MathUtils.square(y - this.y) + MathUtils.square(z - this.z) + MathUtils.square(w - this.w);
 	}
 	
 	@Override
@@ -121,12 +182,24 @@ public class Vector4i extends VectorInt<Vector4i> {
 		return new Vector4i(x, y, z, w);
 	}
 	
+	@Override
+	public Vector4i self() {
+		return this;
+	}
+	
 	/**
 	 * Converts this vector to a string representation in the format "(x,y,z,w)".
 	 */
 	@Override
 	public @NotNull String toString() {
 		return String.format("(%s,%s,%s,%s)", x, y, z, w);
+	}
+	
+	/**
+	 * Creates a new vector (0, 0, 0, 0)
+	 */
+	public static Vector4i zero() {
+		return new Vector4i(0, 0, 0, 0);
 	}
 	
 	/**

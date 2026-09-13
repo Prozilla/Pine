@@ -1,5 +1,6 @@
 package dev.prozilla.pine.examples.ui;
 
+import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationBuilder;
 
 public class Main {
@@ -13,6 +14,7 @@ public class Main {
 		applicationBuilder.setWindowSize(900, 600);
 		applicationBuilder.setTargetFps(120);
 		applicationBuilder.getRenderConfig().snapPixels.set(true);
+		applicationBuilder.getConfig().stopOnException.set(Application.isDevMode());
 		
 		applicationBuilder.build().run();
 	}

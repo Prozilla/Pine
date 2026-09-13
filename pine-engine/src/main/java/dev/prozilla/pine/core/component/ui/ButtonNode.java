@@ -8,20 +8,12 @@ import dev.prozilla.pine.core.entity.Entity;
  */
 public class ButtonNode extends Component {
 	
-	public boolean isHovering;
-	
 	public ClickCallback clickCallback;
 	
-	public ButtonNode() {
-		isHovering = false;
-	}
-	
 	public void click() {
-		if (clickCallback == null) {
-			return;
+		if (clickCallback != null) {
+			clickCallback.click(entity);
 		}
-		
-		clickCallback.click(entity);
 	}
 	
 	@Override

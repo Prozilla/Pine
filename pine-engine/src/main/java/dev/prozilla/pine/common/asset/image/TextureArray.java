@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.glTexSubImage3D;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL30.GL_TEXTURE_2D_ARRAY;
 import static org.lwjgl.opengl.GL42.glTexStorage3D;
@@ -76,12 +76,13 @@ public class TextureArray implements Cloneable<TextureArray>, Destructible, Text
 	
 	@Override
 	public void bind() {
-		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, id);
 	}
-	
+
 	@Override
 	public void unbind() {
+		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 	}
 	

@@ -19,10 +19,10 @@ public final class LayoutNodeResizer extends UpdateSystem {
 	protected void process(EntityChunk chunk, float deltaTime) {
 		LayoutNode layoutNode = chunk.getComponent(LayoutNode.class);
 		Node node = chunk.getComponent(Node.class);
-		resizeCanvasGroup(layoutNode, node);
+		resizeLayoutNode(layoutNode, node);
 	}
 	
-	public static void resizeCanvasGroup(LayoutNode layoutNode, Node parentNode) {
+	public static void resizeLayoutNode(LayoutNode layoutNode, Node parentNode) {
 		// New inner size of the node without padding
 		float innerWidth = 0, innerHeight = 0;
 		float currentGap = layoutNode.getGap();
@@ -46,7 +46,7 @@ public final class LayoutNodeResizer extends UpdateSystem {
 		// Calculate width
 		if (innerWidth != 0) {
 			// Subtract padding to get inner size
-			innerWidth -= parentNode.getPaddingX() * 2;
+			innerWidth -= parentNode.getBoxX() * 2;
 			
 			// Logic for space between distribution
 			if (layoutNode.distribution == LayoutNode.Distribution.SPACE_BETWEEN && !layoutNode.childNodes.isEmpty()) {
@@ -93,7 +93,7 @@ public final class LayoutNodeResizer extends UpdateSystem {
 		// Calculate height
 		if (innerHeight != 0) {
 			// Subtract padding to get inner size
-			innerHeight -= parentNode.getPaddingY() * 2;
+			innerHeight -= parentNode.getBoxY() * 2;
 			
 			// Logic for space between distribution
 			if (layoutNode.distribution == LayoutNode.Distribution.SPACE_BETWEEN && !layoutNode.childNodes.isEmpty()) {
@@ -138,8 +138,8 @@ public final class LayoutNodeResizer extends UpdateSystem {
 		layoutNode.innerSize.y = innerHeight;
 		
 		// Inner size of the node (with padding)
-		parentNode.currentInnerSize.x = layoutNode.innerSize.x + parentNode.getPaddingX() * 2;
-		parentNode.currentInnerSize.y = layoutNode.innerSize.y + parentNode.getPaddingY() * 2;
+		parentNode.currentInnerSize.x = layoutNode.innerSize.x + parentNode.getBoxX() * 2;
+		parentNode.currentInnerSize.y = layoutNode.innerSize.y + parentNode.getBoxY() * 2;
 		
 		// Outer size of the node (with margin)
 		parentNode.currentOuterSize.x = parentNode.currentInnerSize.x + parentNode.getMarginX() * 2;
@@ -156,9 +156,9 @@ public final class LayoutNodeResizer extends UpdateSystem {
 		if (layoutNode.content.size() >= 2) {
 			float newGap;
 			if (layoutNode.direction.isVertical()) {
-				newGap = parentNode.size.computeY(parentNode) - parentNode.getPaddingY() * 2 - layoutNode.totalContentSize.y;
+				newGap = parentNode.size.computeY(parentNode) - parentNode.getBoxY() * 2 - layoutNode.totalContentSize.y;
 			} else {
-				newGap = parentNode.size.computeX(parentNode) - parentNode.getPaddingX() * 2 - layoutNode.totalContentSize.x;
+				newGap = parentNode.size.computeX(parentNode) - parentNode.getBoxX() * 2 - layoutNode.totalContentSize.x;
 			}
 			newGap = newGap / (layoutNode.content.size() - 1);
 			

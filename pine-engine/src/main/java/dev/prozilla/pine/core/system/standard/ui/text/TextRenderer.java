@@ -2,11 +2,12 @@ package dev.prozilla.pine.core.system.standard.ui.text;
 
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.component.Transform;
+import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.system.render.RenderPass;
 import dev.prozilla.pine.core.system.render.RenderSystem;
 
 /**
@@ -16,32 +17,37 @@ public final class TextRenderer extends RenderSystem {
 	
 	public TextRenderer() {
 		super(TextNode.class, Node.class);
+		setRenderPass(RenderPass.OVERLAY);
 	}
 	
 	@Override
 	public void process(EntityChunk chunk, Renderer renderer) {
-		Transform transform = chunk.getTransform();
 		TextNode textNode = chunk.getComponent(TextNode.class);
 		Node node = chunk.getComponent(Node.class);
 		
-		if (!node.readyToRender) {
+		if (!node.canBeRendered()) {
 			return;
 		}
 		
-		renderText(renderer, textNode, node, transform.getDepth());
+		renderText(renderer, textNode, node);
 	}
 	
-	public static void renderText(Renderer renderer, TextNode textNode, Node node, float z) {
-		float x = node.currentPosition.x + node.getPaddingX();
-		float y = node.currentPosition.y + node.getPaddingY();
+	public static void renderText(Renderer renderer, TextNode textNode, Node node) {
+		float x = node.currentPosition.x + node.getBoxX();
+		float y = node.currentPosition.y + node.getBoxY();
 		float width = node.currentInnerSize.x;
 		float height = node.currentInnerSize.y;
 		
-		renderText(renderer, textNode, x, y, z, width, height, node.color);
+		if (textNode.offset != null) {
+			x += textNode.offset.x;
+			y += textNode.offset.y;
+		}
+		
+		renderText(renderer, textNode, x, y, width, height, node.color);
 	}
 	
-	public static void renderText(Renderer renderer, TextNode textNode, float x, float y, float z, float width, float height, Color color) {
-		renderText(renderer, textNode.text, textNode.font, x, y, z, width, height, color);
+	public static void renderText(Renderer renderer, TextNode textNode, float x, float y, float width, float height, Color color) {
+		renderText(renderer, textNode.text, textNode.font, x, y, textNode.getTransform().position.z, width, height, color);
 	}
 	
 	/**
@@ -60,12 +66,12 @@ public final class TextRenderer extends RenderSystem {
 			int roundedWidth = Math.round(width);
 			int roundedHeight = Math.round(height);
 			
-			renderer.setRegion(roundedX, roundedY, roundedWidth, roundedHeight);
+//			renderer.setRegion(roundedX, roundedY, roundedWidth, roundedHeight);
 			
 			x = roundedX;
 			y = roundedY;
 		} else {
-			renderer.setRegion(x, y, width, height);
+//			renderer.setRegion(x, y, width, height);
 		}
 		
 		if (font == null) {
@@ -76,4 +82,23 @@ public final class TextRenderer extends RenderSystem {
 		
 		renderer.resetRegion();
 	}
+	
+	public static int getTextWidth(Renderer renderer, TextNode textNode) {
+		return getTextWidth(renderer, textNode, StringUtils.lengthOf(textNode.text));
+	}
+	
+	public static int getTextWidth(Renderer renderer, TextNode textNode, int length) {
+		return getTextWidth(renderer, textNode, 0, length);
+	}
+	
+	public static int getTextWidth(Renderer renderer, TextNode textNode, int start, int end) {
+		start = Math.max(start, 0);
+		end = Math.min(end, textNode.text.length());
+		if (start >= end) {
+			return 0;
+		}
+		String text = textNode.text.substring(start, end);
+		return textNode.font == null ? renderer.getTextWidth(text) : renderer.getTextWidth(textNode.font, text);
+	}
+	
 }

@@ -3,11 +3,11 @@ package dev.prozilla.pine.core.system.standard.ui;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.ui.BorderImage;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.system.render.RenderPass;
 import dev.prozilla.pine.core.system.render.RenderSystem;
 import dev.prozilla.pine.core.system.standard.ui.image.ImageRenderer;
 
@@ -15,28 +15,36 @@ public final class BorderImageRenderer extends RenderSystem {
 	
 	public BorderImageRenderer() {
 		super(Node.class, BorderImage.class);
+		setRenderPass(RenderPass.OVERLAY);
 	}
 	
 	@Override
 	protected void process(EntityChunk chunk, Renderer renderer) {
-		Transform transform = chunk.getTransform();
 		Node node = chunk.getComponent(Node.class);
 		BorderImage borderImage = chunk.getComponent(BorderImage.class);
 		
-		renderBorderImage(renderer, borderImage.texture, node, borderImage.slice, borderImage.fill, transform.getDepth());
+		if (node.controlledRender) {
+			return;
+		}
+		
+		renderBorderImage(renderer, borderImage.texture, node, borderImage.slice, borderImage.fill);
 	}
 	
-	public static void renderBorderImage(Renderer renderer, Node node, float z) {
-		renderBorderImage(renderer, node.borderImage, node, node.borderImageSlice, node.borderImageSliceFill, z);
+	public static void renderBorderImage(Renderer renderer, Node node) {
+		renderBorderImage(renderer, node.borderImage, node, node.borderImageSlice, node.borderImageSliceFill);
 	}
 	
-	public static void renderBorderImage(Renderer renderer, TextureAsset texture, Node node, Vector4f slice, boolean fill, float z) {
+	public static void renderBorderImage(Renderer renderer, TextureAsset texture, Node node, Vector4f slice, boolean fill) {
 		float borderWidth = node.getBorderWidth();
+		if (borderWidth <= 0) {
+			return;
+		}
 		
 		float nodeX = node.currentPosition.x;
 		float nodeY = node.currentPosition.y;
 		float nodeWidth = node.currentInnerSize.x;
 		float nodeHeight = node.currentInnerSize.y;
+		float z = node.getTransform().position.z;
 		
 		float textureWidth = texture.getWidth();
 		float textureHeight = texture.getHeight();

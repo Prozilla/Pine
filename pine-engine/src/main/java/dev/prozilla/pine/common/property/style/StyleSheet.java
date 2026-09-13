@@ -5,23 +5,27 @@ import dev.prozilla.pine.common.Transceivable;
 import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
+import dev.prozilla.pine.common.math.dimension.Unit;
+import dev.prozilla.pine.common.math.vector.Alignment;
+import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.math.vector.EdgeAlignment;
-import dev.prozilla.pine.common.math.vector.GridAlignment;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveIntProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveObjectProperty;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
-import dev.prozilla.pine.common.property.style.selector.Selector;
+import dev.prozilla.pine.common.property.style.selector.*;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.DirectoryWatcher;
 import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.Node;
+import dev.prozilla.pine.core.component.ui.style.LineStyle;
+import dev.prozilla.pine.core.state.input.CursorType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +43,8 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 	private final Map<StyledPropertyKey<?>, Style<?, ?>> styles;
 	
 	public String path;
+	
+	public static final StyleSheet DEFAULT = createDefault();
 	
 	public StyleSheet() {
 		this(null);
@@ -62,7 +68,15 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 	}
 	
 	public <T> void addRule(Selector selector, StyledPropertyKey<T> key, T value) {
-		addRule(key, new StyleRule<>(selector, value));
+		addRule(selector, key, value, false);
+	}
+	
+	protected <T> void addDefaultRule(Selector selector, StyledPropertyKey<T> key, T value) {
+		addRule(selector, key, value, true);
+	}
+	
+	protected <T> void addRule(Selector selector, StyledPropertyKey<T> key, T value, boolean isDefault) {
+		addRule(key, new StyleRule<>(selector, value, isDefault));
 	}
 	
 	protected <T> void addRule(StyledPropertyKey<T> key, StyleRule<T> rule) {
@@ -71,7 +85,15 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 	}
 	
 	public void addTransition(Selector selector, StyledPropertyKey<?> key, AnimationCurve value) {
-		addTransition(key, new StyleRule<>(selector, value));
+		addTransition(selector, key, value, false);
+	}
+	
+	protected void addDefaultTransition(Selector selector, StyledPropertyKey<?> key, AnimationCurve value) {
+		addTransition(selector, key, value, true);
+	}
+	
+	protected void addTransition(Selector selector, StyledPropertyKey<?> key, AnimationCurve value, boolean isDefault) {
+		addTransition(key, new StyleRule<>(selector, value, isDefault));
 	}
 	
 	protected void addTransition(StyledPropertyKey<?> key, StyleRule<AnimationCurve> transitionRule) {
@@ -136,6 +158,46 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 		return createStyledDistributionProperty(StyledPropertyKey.DISTRIBUTION, node, LayoutNode.DEFAULT_DISTRIBUTION);
 	}
 	
+	@Contract("_ -> new")
+	public StyledCursorProperty createCursorProperty(Node node) {
+		return createStyledCursorProperty(StyledPropertyKey.CURSOR, node, CursorType.DEFAULT);
+	}
+	
+	@Contract("_ -> new")
+	public StyledDimensionProperty createBorderWidthProperty(Node node) {
+		return createStyledDimensionProperty(StyledPropertyKey.BORDER_WIDTH, node, Dimension.zero());
+	}
+	
+	@Contract("_ -> new")
+	public StyledLineStyleProperty createBorderStyleProperty(Node node) {
+		return createStyledLineStyleProperty(StyledPropertyKey.BORDER_STYLE, node, LineStyle.NONE);
+	}
+	
+	@Contract("_ -> new")
+	public StyledColorProperty createBorderColorProperty(Node node) {
+		return createStyledColorProperty(StyledPropertyKey.BORDER_COLOR, node, Node.DEFAULT_BORDER_COLOR.clone());
+	}
+	
+	@Contract("_ -> new")
+	public StyledDimensionProperty createOutlineWidthProperty(Node node) {
+		return createStyledDimensionProperty(StyledPropertyKey.OUTLINE_WIDTH, node, Dimension.zero());
+	}
+	
+	@Contract("_ -> new")
+	public StyledLineStyleProperty createOutlineStyleProperty(Node node) {
+		return createStyledLineStyleProperty(StyledPropertyKey.OUTLINE_STYLE, node, LineStyle.NONE);
+	}
+	
+	@Contract("_ -> new")
+	public StyledColorProperty createOutlineColorProperty(Node node) {
+		return createStyledColorProperty(StyledPropertyKey.OUTLINE_COLOR, node, Node.DEFAULT_OUTLINE_COLOR.clone());
+	}
+	
+	@Contract("_ -> new")
+	public StyledDimensionProperty createOutlineOffsetProperty(Node node) {
+		return createStyledDimensionProperty(StyledPropertyKey.OUTLINE_OFFSET, node, Dimension.zero());
+	}
+	
 	protected StyledColorProperty createStyledColorProperty(StyledPropertyKey<Color> key, Node node, Color fallbackValue) {
 		return createStyledProperty(key, node, new AdaptiveColorProperty(fallbackValue),  (Style.StyledPropertyFactory<Color, AdaptiveObjectProperty<Color>, StyledColorProperty>)StyledColorProperty::new);
 	}
@@ -148,8 +210,8 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<DualDimension, AdaptiveObjectProperty<DualDimension>, StyledDualDimensionProperty>)StyledDualDimensionProperty::new);
 	}
 	
-	protected StyledGridAlignmentProperty createStyledGridAlignmentProperty(StyledPropertyKey<GridAlignment> key, Node node, GridAlignment fallbackValue) {
-		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<GridAlignment, AdaptiveObjectProperty<GridAlignment>, StyledGridAlignmentProperty>)StyledGridAlignmentProperty::new);
+	protected StyledGridAlignmentProperty createStyledGridAlignmentProperty(StyledPropertyKey<Anchor> key, Node node, Anchor fallbackValue) {
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<Anchor, AdaptiveObjectProperty<Anchor>, StyledGridAlignmentProperty>)StyledGridAlignmentProperty::new);
 	}
 	
 	protected StyledIntProperty createStyledIntProperty(StyledPropertyKey<Integer> key, Node node, int fallbackValue) {
@@ -160,12 +222,20 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<Direction, AdaptiveObjectProperty<Direction>, StyledDirectionProperty>)StyledDirectionProperty::new);
 	}
 	
-	protected StyledEdgeAlignmentProperty createStyledEdgeAlignmentProperty(StyledPropertyKey<EdgeAlignment> key, Node node, EdgeAlignment fallbackValue) {
-		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<EdgeAlignment, AdaptiveObjectProperty<EdgeAlignment>, StyledEdgeAlignmentProperty>)StyledEdgeAlignmentProperty::new);
+	protected StyledEdgeAlignmentProperty createStyledEdgeAlignmentProperty(StyledPropertyKey<Alignment> key, Node node, Alignment fallbackValue) {
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<Alignment, AdaptiveObjectProperty<Alignment>, StyledEdgeAlignmentProperty>)StyledEdgeAlignmentProperty::new);
 	}
 	
 	protected StyledDistributionProperty createStyledDistributionProperty(StyledPropertyKey<LayoutNode.Distribution> key, Node node, LayoutNode.Distribution fallbackValue) {
 		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<LayoutNode.Distribution, AdaptiveObjectProperty<LayoutNode.Distribution>, StyledDistributionProperty>)StyledDistributionProperty::new);
+	}
+	
+	protected StyledCursorProperty createStyledCursorProperty(StyledPropertyKey<CursorType> key, Node node, CursorType fallbackValue) {
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<CursorType, AdaptiveObjectProperty<CursorType>, StyledCursorProperty>)StyledCursorProperty::new);
+	}
+	
+	protected StyledLineStyleProperty createStyledLineStyleProperty(StyledPropertyKey<LineStyle> key, Node node, LineStyle fallbackValue) {
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<LineStyle, AdaptiveObjectProperty<LineStyle>, StyledLineStyleProperty>)StyledLineStyleProperty::new);
 	}
 	
 	protected  <T, A extends AdaptiveProperty<T, ?>, P extends StyledProperty<T, ?, A, ?>> P createStyledProperty(StyledPropertyKey<T> name, Node node, A fallbackValue, Style.StyledPropertyFactory<T, A, P> factory) {
@@ -296,6 +366,59 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 	
 	public HotStyleSheet toHotStyleSheet(DirectoryWatcher directoryWatcher) {
 		return HotStyleSheet.fromStyleSheet(directoryWatcher, this);
+	}
+	
+	private static StyleSheet createDefault() {
+		StyleSheet styleSheet = new StyleSheet();
+		
+		// Colors
+		Color buttonText = new Color(0, 0, 0);
+		Color buttonFace = new Color(233, 233, 237);
+		Color buttonHoverFace = new Color(208, 208, 215);
+		Color buttonBorder = new Color(143, 143, 157);
+		Color buttonBorderHover = new Color(103, 103, 116);
+		Color accentColor = new Color(0, 96, 223);
+		Color fieldColor = new Color(255, 255, 255);
+		Color fieldText = new Color(0, 0, 0);
+		
+		styleSheet.addDefaultRule(Selector.UNIVERSAL, StyledPropertyKey.COLOR, Color.white());
+		
+		// Text
+		styleSheet.addDefaultRule(TypeSelector.P, StyledPropertyKey.MARGIN, new DualDimension(Dimension.auto(), new Dimension(1, Unit.ELEMENT_SIZE)));
+		styleSheet.addDefaultRule(TypeSelector.P, StyledPropertyKey.CURSOR, CursorType.TEXT);
+		
+		// Input
+		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.PADDING, new DualDimension(new Dimension(1), new Dimension(4)));
+		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.COLOR, fieldText);
+		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.BACKGROUND_COLOR, fieldColor);
+		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.SIZE, new DualDimension( new Dimension(160), new Dimension(16)));
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, ModifierSelector.FOCUS_VISIBLE), StyledPropertyKey.OUTLINE_WIDTH, new Dimension(2));
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, ModifierSelector.FOCUS_VISIBLE), StyledPropertyKey.OUTLINE_STYLE, LineStyle.SOLID);
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, ModifierSelector.FOCUS_VISIBLE), StyledPropertyKey.OUTLINE_COLOR, accentColor);
+		
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, new AttributeSelector(Node.TYPE_ATTRIBUTE, "text")), StyledPropertyKey.CURSOR, CursorType.TEXT);
+		styleSheet.addDefaultRule(PseudoElementSelector.PLACEHOLDER, StyledPropertyKey.COLOR, new Color(0, 0, 0, 0.5f));
+
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.INPUT, new AttributeSelector(Node.TYPE_ATTRIBUTE, "range")), StyledPropertyKey.BACKGROUND_COLOR, Color.transparent());
+		styleSheet.addDefaultRule(PseudoElementSelector.RANGE_TRACK, StyledPropertyKey.BACKGROUND_COLOR, buttonFace);
+		styleSheet.addDefaultRule(PseudoElementSelector.RANGE_PROGRESS, StyledPropertyKey.BACKGROUND_COLOR, accentColor);
+		styleSheet.addDefaultRule(PseudoElementSelector.RANGE_THUMB, StyledPropertyKey.BACKGROUND_COLOR, buttonText);
+		
+		// Buttons
+		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.PADDING, new DualDimension(new Dimension(1), new Dimension(4)));
+		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.COLOR, buttonText);
+		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.BACKGROUND_COLOR, buttonFace);
+		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.BORDER_COLOR, buttonBorder);
+		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.BORDER_STYLE, LineStyle.SOLID);
+		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.BORDER_WIDTH, new Dimension(2));
+		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.CURSOR, CursorType.POINTER);
+		styleSheet.addDefaultRule( new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.HOVER), StyledPropertyKey.BACKGROUND_COLOR, buttonHoverFace);
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.HOVER), StyledPropertyKey.BORDER_COLOR, buttonBorderHover);
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.FOCUS_VISIBLE), StyledPropertyKey.OUTLINE_WIDTH, new Dimension(2));
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.FOCUS_VISIBLE), StyledPropertyKey.OUTLINE_STYLE, LineStyle.SOLID);
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.FOCUS_VISIBLE), StyledPropertyKey.OUTLINE_COLOR, accentColor);
+		
+		return styleSheet;
 	}
 	
 }

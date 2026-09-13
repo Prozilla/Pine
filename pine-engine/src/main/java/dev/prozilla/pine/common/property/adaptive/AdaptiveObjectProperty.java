@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.adaptive;
 
 import dev.prozilla.pine.common.property.Property;
+import dev.prozilla.pine.common.property.fixed.FixedProperty;
 
 public class AdaptiveObjectProperty<T> extends AdaptiveProperty<T, Property<T>> {
 	
@@ -12,7 +13,7 @@ public class AdaptiveObjectProperty<T> extends AdaptiveProperty<T, Property<T>> 
 	 */
 	public AdaptiveObjectProperty(Property<T> property) {
 		super(property);
-		this.fixedValue = null;
+		this.fixedValue = property instanceof FixedProperty<T> fixedProperty ? fixedProperty.getValue() : null;
 	}
 	
 	/**
@@ -25,7 +26,12 @@ public class AdaptiveObjectProperty<T> extends AdaptiveProperty<T, Property<T>> 
 	
 	@Override
 	public T getValue() {
-		return property != null ? property.getValue() : fixedValue;
+		return isDynamic() ? property.getValue() : fixedValue;
+	}
+	
+	@Override
+	public boolean isDynamic() {
+		return fixedValue == null;
 	}
 	
 	/**
@@ -48,6 +54,9 @@ public class AdaptiveObjectProperty<T> extends AdaptiveProperty<T, Property<T>> 
 	 * @param property The property to adapt
 	 */
 	public static <T> AdaptiveObjectProperty<T> adapt(Property<T> property) {
+		if (property instanceof AdaptiveObjectProperty<T> adaptiveProperty) {
+			return adaptiveProperty;
+		}
 		return new AdaptiveObjectProperty<>(property);
 	}
 	

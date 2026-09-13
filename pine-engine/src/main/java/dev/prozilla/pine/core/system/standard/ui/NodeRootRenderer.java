@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.system.standard.ui;
 
 import dev.prozilla.pine.core.component.ui.NodeRoot;
 import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.system.render.RenderPass;
 import dev.prozilla.pine.core.system.render.RenderSystemBase;
 
 /**
@@ -11,6 +12,7 @@ public final class NodeRootRenderer extends RenderSystemBase {
 	
 	public NodeRootRenderer() {
 		super(NodeRoot.class);
+		setRenderPass(RenderPass.OVERLAY);
 	}
 	
 	@Override

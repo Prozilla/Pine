@@ -4,6 +4,8 @@ import dev.prozilla.pine.common.property.style.*;
 import dev.prozilla.pine.core.component.animation.AnimationData;
 import dev.prozilla.pine.core.component.ui.Node;
 
+import java.util.Set;
+
 public class LayoutNodeStyle extends NodeStyleBase {
 	
 	protected StyledDimensionProperty gapProperty;
@@ -15,16 +17,22 @@ public class LayoutNodeStyle extends NodeStyleBase {
 		this(animationData, node, null);
 	}
 	
-	public LayoutNodeStyle(AnimationData animationData, Node node, StyleSheet styleSheet) {
-		super(animationData, node, styleSheet);
+	public LayoutNodeStyle(AnimationData animationData, Node node, Set<StyleSheet> styleSheets) {
+		super(animationData, node, styleSheets);
 	}
 	
 	@Override
-	public void applyStyleSheet(StyleSheet styleSheet) {
+	public boolean applyStyleSheet(StyleSheet styleSheet) {
+		if (!super.applyStyleSheet(styleSheet)) {
+			return false;
+		}
+		
 		setGapProperty(styleSheet.createGapProperty(node));
 		setDirectionProperty(styleSheet.createDirectionProperty(node));
 		setAlignmentProperty(styleSheet.createAlignmentProperty(node));
 		setDistributionProperty(styleSheet.createDistributionProperty(node));
+		
+		return true;
 	}
 	
 	public StyledDimensionProperty getGapProperty() {
@@ -32,8 +40,7 @@ public class LayoutNodeStyle extends NodeStyleBase {
 	}
 	
 	public void setGapProperty(StyledDimensionProperty gapProperty) {
-		changeProperty(this.gapProperty, gapProperty);
-		this.gapProperty = gapProperty;
+		this.gapProperty = changeProperty(this.gapProperty, gapProperty);
 	}
 	
 	public StyledDirectionProperty getDirectionProperty() {
@@ -41,8 +48,7 @@ public class LayoutNodeStyle extends NodeStyleBase {
 	}
 	
 	public void setDirectionProperty(StyledDirectionProperty directionProperty) {
-		changeProperty(this.directionProperty, directionProperty);
-		this.directionProperty = directionProperty;
+		this.directionProperty = changeProperty(this.directionProperty, directionProperty);
 	}
 	
 	public StyledEdgeAlignmentProperty getAlignmentProperty() {
@@ -50,8 +56,7 @@ public class LayoutNodeStyle extends NodeStyleBase {
 	}
 	
 	public void setAlignmentProperty(StyledEdgeAlignmentProperty alignmentProperty) {
-		changeProperty(this.alignmentProperty, alignmentProperty);
-		this.alignmentProperty = alignmentProperty;
+		this.alignmentProperty = changeProperty(this.alignmentProperty, alignmentProperty);
 	}
 	
 	public StyledDistributionProperty getDistributionProperty() {
@@ -59,8 +64,7 @@ public class LayoutNodeStyle extends NodeStyleBase {
 	}
 	
 	public void setDistributionProperty(StyledDistributionProperty distributionProperty) {
-		changeProperty(this.distributionProperty, distributionProperty);
-		this.distributionProperty = distributionProperty;
+		this.distributionProperty = changeProperty(this.distributionProperty, distributionProperty);
 	}
 	
 }

@@ -8,11 +8,11 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.entity.EntityQuery;
 import dev.prozilla.pine.core.scene.Scene;
-import dev.prozilla.pine.core.scene.World;
 import dev.prozilla.pine.core.system.init.InitSystemBase;
 
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -37,9 +37,8 @@ public abstract class SystemBase {
 	 */
 	private final Set<Integer> processedEntityIds;
 	
-	protected World world;
-	protected Application application;
 	protected Scene scene;
+	protected Application application;
 	protected Logger logger;
 	
 	public SystemBase(Class<? extends Component>[] componentTypes) {
@@ -90,25 +89,26 @@ public abstract class SystemBase {
 	
 	/**
 	 * Initializes this system and creates the query.
-	 * If there are already entities in the world, this will register each entity in this system.
+	 * If there are already entities in the scene, this will register each entity in this system.
 	 */
-	public void initSystem(World world) {
-		Checks.isNotNull(world, "world");
-		
-		this.world = world;
-		application = world.application;
-		scene = world.scene;
+	public void initSystem(Scene scene) {
+		Checks.isNotNull(scene, "scene");
+
+		this.scene = scene;
+		application = scene.getApplication();
 		logger = application.getLogger();
-		
-		// Create entity query
-		query = world.queryPool.getQuery(includedComponentTypes, excludedComponentTypes, runOnce, entityTag);
+		query = createQuery();
 		
 		// Process existing entities
-		if (world.entityManager.hasEntities()) {
-			for (Entity entity : world.entityManager.getEntities()) {
+		if (query != null && scene.getEntityManager().hasEntities()) {
+			for (Entity entity : scene.getEntityManager().getEntities()) {
 				register(entity);
 			}
 		}
+	}
+	
+	protected EntityQuery createQuery() {
+		return scene.getQueryPool().getQuery(includedComponentTypes, excludedComponentTypes, runOnce, entityTag);
 	}
 	
 	/**
@@ -116,12 +116,12 @@ public abstract class SystemBase {
 	 * @see EntityQuery
 	 */
 	public void register(Entity entity) {
-		if (query.register(entity)) {
-			if (runOnce && !processedEntityIds.contains(entity.id)) {
-				if (world.initialized && this instanceof InitSystemBase initSystemBase) {
-					initSystemBase.init();
-				}
-			}
+		if (query == null || !query.register(entity) || !runOnce || processedEntityIds.contains(entity.id)) {
+			return;
+		}
+		
+		if (scene.initialized && this instanceof InitSystemBase initSystemBase) {
+			initSystemBase.init();
 		}
 	}
 	
@@ -134,7 +134,9 @@ public abstract class SystemBase {
 			processedEntityIds.remove(entity.id);
 		}
 		
-		query.unregister(entity);
+		if (query != null) {
+			query.unregister(entity);
+		}
 	}
 	
 	/**
@@ -153,12 +155,17 @@ public abstract class SystemBase {
 				}
 				
 				EntityChunk entityChunk = query.entityChunks.get(i);
-				if (entityChunk.isActive()) {
+				if (isChunkActive(entityChunk)) {
+					beforeChunk(entityChunk);
 					accept(entityChunk, action);
+					afterChunk(entityChunk);
 				}
 			}
 		} catch (Exception e) {
 			logger.error("Failed to iterate over entities in system: " + getClass().getSimpleName(), e);
+			if (application.getConfig().stopOnException.get()) {
+				application.stop();
+			}
 		} finally {
 			if (contextId == application.getContextId()) {
 				query.entityChunks.endIteration();
@@ -182,8 +189,10 @@ public abstract class SystemBase {
 				}
 				
 				EntityChunk entityChunk = query.entityChunks.get(i);
-				if (entityChunk.isActive()) {
+				if (isChunkActive(entityChunk)) {
+					beforeChunk(entityChunk);
 					accept(entityChunk, action);
+					afterChunk(entityChunk);
 				}
 			}
 		} catch (Exception e) {
@@ -193,6 +202,18 @@ public abstract class SystemBase {
 				query.entityChunks.endIteration();
 			}
 		}
+	}
+	
+	protected boolean isChunkActive(EntityChunk chunk) {
+		return chunk.isActive();
+	}
+	
+	protected void beforeChunk(EntityChunk chunk) {
+	
+	}
+	
+	protected void afterChunk(EntityChunk chunk) {
+	
 	}
 	
 	/**
@@ -212,6 +233,9 @@ public abstract class SystemBase {
 			action.accept(entityChunk);
 		} catch (Exception e) {
 			logger.error("Failed to run action on entity in system: " + getClass().getSimpleName(), e);
+			if (application.getConfig().stopOnException.get()) {
+				application.stop();
+			}
 		} finally {
 			if (runOnce) {
 				processedEntityIds.add(entityChunk.getEntity().id);
@@ -223,7 +247,13 @@ public abstract class SystemBase {
 	 * Sorts the entity chunks in this system based on a comparator.
 	 */
 	protected void sort(Comparator<EntityChunk> comparator) {
-		query.entityChunks.sort(comparator);
+		if (query != null) {
+			query.entityChunks.sort(comparator);
+		}
+	}
+	
+	protected List<EntityChunk> getChunks() {
+		return query.entityChunks;
 	}
 	
 	/**
@@ -231,7 +261,7 @@ public abstract class SystemBase {
 	 * @see EntityQuery
 	 */
 	public boolean hasEntityChunks() {
-		return query.hasEntityChunks();
+		return query != null && query.hasEntityChunks();
 	}
 	
 	public boolean shouldRun() {

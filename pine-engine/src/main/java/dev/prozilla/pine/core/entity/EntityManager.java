@@ -3,13 +3,13 @@ package dev.prozilla.pine.core.entity;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.ECSManager;
-import dev.prozilla.pine.core.scene.World;
+import dev.prozilla.pine.core.scene.Scene;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manages entities in the world.
+ * Manages entities in a scene.
  */
 public class EntityManager extends ECSManager {
 	
@@ -18,8 +18,8 @@ public class EntityManager extends ECSManager {
 	
 	private static int lastEntityId = 0;
 	
-	public EntityManager(World world) {
-		super(world);
+	public EntityManager(Scene scene) {
+		super(scene);
 		
 		entities = new ArrayList<>();
 	}

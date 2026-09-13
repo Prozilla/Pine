@@ -1,8 +1,8 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
+import dev.prozilla.pine.common.math.vector.Alignment;
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.math.vector.EdgeAlignment;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.animation.AnimationData;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
@@ -18,7 +18,7 @@ import dev.prozilla.pine.core.entity.prefab.Components;
 public class LayoutPrefab extends NodePrefab {
 	
 	protected Direction direction;
-	protected EdgeAlignment alignment;
+	protected Alignment alignment;
 	protected LayoutNode.Distribution distribution;
 	protected DimensionBase gap;
 	protected boolean arrangeChildren;
@@ -35,7 +35,7 @@ public class LayoutPrefab extends NodePrefab {
 		this.direction = direction;
 	}
 	
-	public void setAlignment(EdgeAlignment alignment) {
+	public void setAlignment(Alignment alignment) {
 		this.alignment = alignment;
 	}
 	
@@ -70,10 +70,10 @@ public class LayoutPrefab extends NodePrefab {
 			layoutNode.distribution = distribution;
 		}
 		
-		if (styleSheet != null) {
+		if (!styleSheets.isEmpty()) {
 			Node node = entity.getComponent(Node.class);
 			AnimationData animationData = entity.getComponent(AnimationData.class);
-			entity.addComponent(new LayoutNodeStyle(animationData, node, styleSheet));
+			entity.addComponent(new LayoutNodeStyle(animationData, node, styleSheets));
 		}
 	}
 }

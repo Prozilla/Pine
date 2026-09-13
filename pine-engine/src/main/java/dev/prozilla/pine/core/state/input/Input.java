@@ -20,8 +20,10 @@ import dev.prozilla.pine.core.state.config.InputConfig;
 import dev.prozilla.pine.core.state.input.gamepad.Gamepad;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadEventType;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadInput;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 
+import java.nio.DoubleBuffer;
 import java.util.*;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -177,12 +179,19 @@ public class Input implements Initializable, Destructible {
 			scrollCallback = new ScrollCallback();
 			cursorPosCallback = new CursorPosCallback();
 			mouseButtonCallback = new MouseButtonCallback();
+			
+			// Get initial position
+			DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
+			DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
+			glfwGetCursorPos(window.getId(), x, y);
+			cursorPosition.set((int)x.get(), (int)y.get());
 		} else if (!isInitialized) {
 			return;
 		} else {
 			scrollCallback = GLFWUtils.free(scrollCallback);
 			cursorPosCallback = GLFWUtils.free(cursorPosCallback);
 			mouseButtonCallback = GLFWUtils.free(mouseButtonCallback);
+			cursorPosition.set(0, 0);
 		}
 		glfwSetScrollCallback(window.getId(), scrollCallback);
 		glfwSetCursorPosCallback(window.getId(), cursorPosCallback);
@@ -746,7 +755,7 @@ public class Input implements Initializable, Destructible {
 	}
 	
 	/**
-	 * Returns the position of the cursor inside the world.
+	 * Returns the position of the cursor in world space.
 	 * Returns <code>null</code> if the cursor is being blocked.
 	 * @return Position of the cursor
 	 */
@@ -755,7 +764,7 @@ public class Input implements Initializable, Destructible {
 	}
 	
 	/**
-	 * Returns the position of the cursor inside the world.
+	 * Returns the position of the cursor in world space.
 	 * Returns <code>null</code> if the cursor is being blocked, unless blocks are being ignored.
 	 * @param ignoreBlock Whether to ignore blocks.
 	 * @return Position of the cursor
@@ -883,6 +892,18 @@ public class Input implements Initializable, Destructible {
 	}
 	
 	//endregion Mouse
+	
+	//region Clipboard
+	
+	public String getClipboard() {
+		return glfwGetClipboardString(window.getId());
+	}
+	
+	public void setClipboard(String content) {
+		glfwSetClipboardString(window.getId(), content);
+	}
+	
+	//endregion Clipboard
 	
 	private void setInputMode(int mode, int value) {
 		glfwSetInputMode(window.getId(), mode, value);
