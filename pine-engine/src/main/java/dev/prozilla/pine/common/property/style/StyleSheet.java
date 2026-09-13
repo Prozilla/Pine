@@ -149,8 +149,8 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 	}
 	
 	@Contract("_ -> new")
-	public StyledEdgeAlignmentProperty createAlignmentProperty(Node node) {
-		return createStyledEdgeAlignmentProperty(StyledPropertyKey.ALIGNMENT, node, LayoutNode.DEFAULT_ALIGNMENT);
+	public StyledAlignmentProperty createAlignmentProperty(Node node) {
+		return createStyledAlignmentProperty(StyledPropertyKey.ALIGNMENT, node, LayoutNode.DEFAULT_ALIGNMENT);
 	}
 	
 	@Contract("_ -> new")
@@ -222,8 +222,8 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<Direction, AdaptiveObjectProperty<Direction>, StyledDirectionProperty>)StyledDirectionProperty::new);
 	}
 	
-	protected StyledEdgeAlignmentProperty createStyledEdgeAlignmentProperty(StyledPropertyKey<Alignment> key, Node node, Alignment fallbackValue) {
-		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<Alignment, AdaptiveObjectProperty<Alignment>, StyledEdgeAlignmentProperty>)StyledEdgeAlignmentProperty::new);
+	protected StyledAlignmentProperty createStyledAlignmentProperty(StyledPropertyKey<Alignment> key, Node node, Alignment fallbackValue) {
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<Alignment, AdaptiveObjectProperty<Alignment>, StyledAlignmentProperty>)StyledAlignmentProperty::new);
 	}
 	
 	protected StyledDistributionProperty createStyledDistributionProperty(StyledPropertyKey<LayoutNode.Distribution> key, Node node, LayoutNode.Distribution fallbackValue) {

@@ -8,13 +8,13 @@ import dev.prozilla.pine.core.component.ui.Node;
 
 import java.util.List;
 
-public final class StyledEdgeAlignmentProperty extends StyledObjectProperty<Alignment> {
+public final class StyledAlignmentProperty extends StyledObjectProperty<Alignment> {
 	
-	public StyledEdgeAlignmentProperty(StyledPropertyKey<Alignment> name, Node node, List<StyleRule<Alignment>> styleRules, AdaptiveObjectProperty<Alignment> defaultValue) {
+	public StyledAlignmentProperty(StyledPropertyKey<Alignment> name, Node node, List<StyleRule<Alignment>> styleRules, AdaptiveObjectProperty<Alignment> defaultValue) {
 		this(name, node, styleRules, defaultValue, null);
 	}
 	
-	public StyledEdgeAlignmentProperty(StyledPropertyKey<Alignment> name, Node node, List<StyleRule<Alignment>> styleRules, AdaptiveObjectProperty<Alignment> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
+	public StyledAlignmentProperty(StyledPropertyKey<Alignment> name, Node node, List<StyleRule<Alignment>> styleRules, AdaptiveObjectProperty<Alignment> defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
 		super(name, node, styleRules, defaultValue, transitionRules);
 	}
 	

@@ -10,7 +10,7 @@ public class LayoutNodeStyle extends NodeStyleBase {
 	
 	protected StyledDimensionProperty gapProperty;
 	protected StyledDirectionProperty directionProperty;
-	protected StyledEdgeAlignmentProperty alignmentProperty;
+	protected StyledAlignmentProperty alignmentProperty;
 	protected StyledDistributionProperty distributionProperty;
 	
 	public LayoutNodeStyle(AnimationData animationData, Node node) {
@@ -51,11 +51,11 @@ public class LayoutNodeStyle extends NodeStyleBase {
 		this.directionProperty = changeProperty(this.directionProperty, directionProperty);
 	}
 	
-	public StyledEdgeAlignmentProperty getAlignmentProperty() {
+	public StyledAlignmentProperty getAlignmentProperty() {
 		return alignmentProperty;
 	}
 	
-	public void setAlignmentProperty(StyledEdgeAlignmentProperty alignmentProperty) {
+	public void setAlignmentProperty(StyledAlignmentProperty alignmentProperty) {
 		this.alignmentProperty = changeProperty(this.alignmentProperty, alignmentProperty);
 	}
 	
