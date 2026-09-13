@@ -4,7 +4,6 @@ import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.property.random.LocalRandomFloatProperty;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
 import dev.prozilla.pine.common.system.Directory;
-import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
@@ -81,9 +80,9 @@ public class GameScene extends SceneBase {
 		addSystem(new GroundInitializer());
 		addSystem(new GroundMover());
 		
-		if (Application.isDevMode()) {
+//		if (Application.isDevMode()) {
 //			addSystem(new ColliderRenderSystem());
-		}
+//		}
 		
 		// Create empty parent for obstacles
 		obstacles = addEntity(new Entity(this));

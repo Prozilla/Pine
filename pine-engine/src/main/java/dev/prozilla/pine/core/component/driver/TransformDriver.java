@@ -8,6 +8,7 @@ public class TransformDriver extends Driver {
 	protected AdaptiveVector3fProperty positionProperty;
 	protected AdaptiveVector3fProperty rotationProperty;
 	protected AdaptiveVector3fProperty scaleProperty;
+	protected AdaptiveVector3fProperty originProperty;
 	
 	public TransformDriver(AnimationData animationData) {
 		super(animationData);
@@ -18,8 +19,7 @@ public class TransformDriver extends Driver {
 	}
 	
 	public void setPositionProperty(AdaptiveVector3fProperty positionProperty) {
-		replaceProperty(this.positionProperty, positionProperty);
-		this.positionProperty = positionProperty;
+		this.positionProperty = replaceProperty(this.positionProperty, positionProperty);
 	}
 	
 	public AdaptiveVector3fProperty getRotationProperty() {
@@ -27,8 +27,7 @@ public class TransformDriver extends Driver {
 	}
 	
 	public void setRotationProperty(AdaptiveVector3fProperty rotationProperty) {
-		replaceProperty(this.rotationProperty, rotationProperty);
-		this.rotationProperty = rotationProperty;
+		this.rotationProperty = replaceProperty(this.rotationProperty, rotationProperty);
 	}
 	
 	public AdaptiveVector3fProperty getScaleProperty() {
@@ -36,7 +35,14 @@ public class TransformDriver extends Driver {
 	}
 	
 	public void setScaleProperty(AdaptiveVector3fProperty scaleProperty) {
-		replaceProperty(this.scaleProperty, scaleProperty);
-		this.scaleProperty = scaleProperty;
+		this.scaleProperty = replaceProperty(this.scaleProperty, scaleProperty);
+	}
+	
+	public AdaptiveVector3fProperty getOriginProperty() {
+		return originProperty;
+	}
+	
+	public void setOriginProperty(AdaptiveVector3fProperty originProperty) {
+		this.originProperty = replaceProperty(this.originProperty, originProperty);
 	}
 }

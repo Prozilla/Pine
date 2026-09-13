@@ -27,8 +27,9 @@ public class PlayerMover extends UpdateSystem {
 		PlayerData playerData = chunk.getComponent(PlayerData.class);
 		
 		// Check if player hit floor or ceiling
-		float groundY = GroundData.TOP_Y - playerData.collider.offset.y + playerData.collider.radius;
-		if (transform.position.y <= groundY || transform.position.y + PlayerData.HEIGHT >= FlappyBird.HEIGHT / 2f) {
+		float groundOffsetY = playerData.collider.getOriginY() - transform.position.y;
+		float groundY = GroundData.TOP_Y - groundOffsetY + playerData.collider.radius;
+		if (transform.position.y <= groundY || transform.position.y + PlayerData.TOP_EXTENT >= FlappyBird.HEIGHT / 2f) {
 			playerData.gameScene.endGame();
 		}
 		

@@ -149,8 +149,8 @@ public class CameraData extends Component {
 	
 	public Matrix4f getProjectionMatrix() {
 		if (orthographic) {
-			float right = width / 2f;
-			float top = height / 2f;
+			float right = getCenterX() / getZoom();
+			float top = getCenterY() / getZoom();
 			projectionMatrix.setOrtho(-right, right, -top, top, nearClipPlane, farClipPlane);
 		} else {
 			projectionMatrix.setPerspective((float)Math.toRadians(fieldOfView), width / height, nearClipPlane, farClipPlane);

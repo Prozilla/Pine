@@ -28,12 +28,14 @@ public class Prefab {
 	protected AdaptiveVector3fProperty positionProperty;
 	protected AdaptiveVector3fProperty rotationProperty;
 	protected AdaptiveVector3fProperty scaleProperty;
+	protected AdaptiveVector3fProperty originProperty;
 	
 	public Prefab() {
 		children = new ArrayList<>();
 		positionProperty = AdaptiveVector3fProperty.adapt(new Vector3f());
 		rotationProperty = AdaptiveVector3fProperty.adapt(new Vector3f());
 		scaleProperty = AdaptiveVector3fProperty.adapt(Vector3f.one());
+		originProperty = AdaptiveVector3fProperty.adapt(new Vector3f());
 	}
 	
 	public void setName(String name) {
@@ -87,6 +89,14 @@ public class Prefab {
 	
 	public void setScale(Vector3fProperty scale) {
 		scaleProperty = AdaptiveVector3fProperty.adapt(scale);
+	}
+	
+	public void setOrigin(Vector3f origin) {
+		originProperty = AdaptiveVector3fProperty.adapt(origin);
+	}
+	
+	public void setOrigin(Vector3fProperty origin) {
+		originProperty = AdaptiveVector3fProperty.adapt(origin);
 	}
 	
 	public Entity instantiate(Scene scene, Vector3f position) {
@@ -150,6 +160,7 @@ public class Prefab {
 		entity.transform.setPosition(positionProperty.getValue());
 		entity.transform.setRotation(rotationProperty.getValue());
 		entity.transform.setScale(scaleProperty.getValue());
+		entity.transform.setOrigin(originProperty.getValue());
 		if (positionProperty.isDynamic() || rotationProperty.isDynamic() || scaleProperty.isDynamic()) {
 			AnimationData animationData = entity.addComponent(new AnimationData());
 			TransformDriver driver = entity.addComponent(new TransformDriver(animationData));
@@ -162,6 +173,9 @@ public class Prefab {
 			}
 			if (scaleProperty.isDynamic()) {
 				driver.setScaleProperty(scaleProperty);
+			}
+			if (originProperty.isDynamic()) {
+				driver.setOriginProperty(originProperty);
 			}
 		}
 		

@@ -4,7 +4,6 @@ import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
-import dev.prozilla.pine.examples.flappybird.FlappyBird;
 import dev.prozilla.pine.examples.flappybird.GameManager;
 import dev.prozilla.pine.examples.flappybird.component.PipeData;
 
@@ -28,10 +27,7 @@ public class PipeInitializer extends InitSystem {
 		transform.scale.set(PipeData.SCALE);
 		if (pipeData.isTop) {
 			// Flip sprite
-			transform.rotation.z = 180;
+			spriteRenderer.getMesh().setFlipVertical(true);
 		}
-		
-		// Set initial position
-		transform.position.x = FlappyBird.WIDTH / 2f;
 	}
 }

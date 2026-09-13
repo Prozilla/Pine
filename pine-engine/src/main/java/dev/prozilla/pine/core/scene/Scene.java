@@ -360,7 +360,6 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		
 		// Remove all references
 		cameraData = null;
-		renderLayerUpdater = null;
 		devConsoleRoot = null;
 		devConsole = null;
 		

@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.property.random.RandomFloatProperty;
 import dev.prozilla.pine.core.component.audio.AudioEffectPlayer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.LayerPrefab;
+import dev.prozilla.pine.examples.flappybird.FlappyBird;
 import dev.prozilla.pine.examples.flappybird.component.PipesData;
 
 public class PipesPrefab extends LayerPrefab {
@@ -20,8 +21,9 @@ public class PipesPrefab extends LayerPrefab {
 		PipePrefab pipePrefab = new PipePrefab();
 		
 		// Add pipes
-		Entity bottomPipe = entity.addChild(pipePrefab.instantiate(entity.getScene(), false));
-		Entity topPipe = entity.addChild(pipePrefab.instantiate(entity.getScene(), true));
+		float pipeX = FlappyBird.WIDTH / 2f;
+		Entity bottomPipe = entity.addChild(pipePrefab.instantiate(entity.getScene(), pipeX, 0, false));
+		Entity topPipe = entity.addChild(pipePrefab.instantiate(entity.getScene(), pipeX, 0, true));
 		
 		entity.addComponent(new PipesData(bottomPipe, topPipe));
 		

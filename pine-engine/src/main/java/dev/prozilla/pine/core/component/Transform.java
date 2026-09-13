@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.component;
 
 import dev.prozilla.pine.common.math.vector.Vector3f;
+import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.entity.Entity;
 import org.joml.Matrix4f;
@@ -18,6 +19,7 @@ public class Transform extends Component {
 	public Vector3f scale;
 	/** The velocity vector is added to the position each frame. */
 	public Vector3f velocity;
+	public Vector3f origin;
 	
 	/** Children of the entity */
 	public final List<Transform> children;
@@ -42,6 +44,7 @@ public class Transform extends Component {
 		this.position = position;
 		this.rotation = rotation;
 		scale = Vector3f.one();
+		origin = new Vector3f();
 		modelMatrix = new Matrix4f();
 		
 		children = new ArrayList<>();
@@ -223,11 +226,24 @@ public class Transform extends Component {
 		} else {
 			modelMatrix.identity();
 		}
-		return modelMatrix.translate(position.x, position.y, position.z)
-			.rotateX(-getPitch())
-			.rotateY(-getYaw())
-			.rotateZ(-getRoll())
-			.scale(scale.x, scale.y, scale.z);
+		return modelMatrix.translate(origin.x, origin.y, origin.z)
+			.translate(position.x, position.y, position.z)
+			.rotateX(getPitch())
+			.rotateY(getYaw())
+			.rotateZ(getRoll())
+			.scale(scale.x, scale.y, scale.z)
+			.translate(-origin.x, -origin.y, -origin.z);
+	}
+	
+	/**
+	 * Rotates a vector by this transform's current rotation.
+	 * @param vector The vector to rotate
+	 * @return The rotated vector
+	 */
+	public Vector3f rotateVector(Vector3f vector) {
+		Vector4f rotated = dev.prozilla.pine.common.math.matrix.Matrix4f.rotation(rotation.x, rotation.y, rotation.z)
+			.multiply(vector.expand(0));
+		return new Vector3f(rotated.x, rotated.y, rotated.z);
 	}
 	
 	public float getPitch() {
@@ -265,6 +281,7 @@ public class Transform extends Component {
 		setRotation(0, 0, 0);
 		setScale(1, 1, 1);
 		setVelocity(0, 0, 0);
+		setOrigin(0, 0, 0);
 	}
 	
 	public void translate(float deltaX, float deltaY, float deltaZ) {
@@ -313,8 +330,15 @@ public class Transform extends Component {
 	}
 	
 	public void setVelocity(float x, float y, float z) {
-		velocity.x = x;
-		velocity.y = y;
-		velocity.z = z;
+		velocity.set(x, y, z);
+	}
+	
+	public void setOrigin(Vector3f origin) {
+		Checks.isNotNull(origin, "origin");
+		setOrigin(origin.x, origin.y, origin.z);
+	}
+	
+	public void setOrigin(float x, float y, float z) {
+		origin.set(x, y, z);
 	}
 }

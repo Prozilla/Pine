@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
+import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.rendering.mesh.ColoredRenderable;
 
@@ -35,20 +36,22 @@ public class Collider extends Component implements ColoredRenderable {
 		return false;
 	}
 	
-	public Vector3f getOrigin() {
-		return new Vector3f(getOriginX(), getOriginY(), getOriginZ());
-	}
-	
 	public float getOriginX() {
-		return getTransform().position.x + offset.x;
+		return getOrigin().x;
 	}
 	
 	public float getOriginY() {
-		return getTransform().position.y + offset.y;
+		return getOrigin().y;
 	}
 	
 	public float getOriginZ() {
-		return getTransform().position.z + offset.z;
+		return getOrigin().z;
+	}
+	
+	public Vector3f getOrigin() {
+		Transform transform = getTransform();
+		Vector3f rotated = transform.rotateVector(offset.clone().subtract(transform.origin));
+		return transform.position.clone().add(transform.origin).add(rotated);
 	}
 	
 	/**

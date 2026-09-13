@@ -46,10 +46,15 @@ public class CircleCollider extends Collider {
 		float deltaX = rectX - circleX;
 		float deltaY = rectY - circleY;
 		
-		// Normalize delta vector
+		// If the circle's center is inside the rectangle, they are colliding
 		float deltaLength = MathUtils.sqrt(MathUtils.square(deltaX) + MathUtils.square(deltaY));
+		if (deltaLength == 0) {
+			return true;
+		}
+		
+		// Normalize delta vector
 		deltaX /= deltaLength;
-		deltaY /=  deltaLength;
+		deltaY /= deltaLength;
 		
 		// Calculate point on the intersection between this circle and
 		// the line connecting the centers of this circle and the rect

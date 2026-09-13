@@ -26,13 +26,14 @@ public class AnimationData extends Component implements Animatable {
 		properties = new ArrayList<>();
 	}
 	
-	public void replaceProperty(Animatable oldProperty, Animatable newProperty) {
+	public <A extends Animatable> A replaceProperty(A oldProperty, A newProperty) {
 		if (oldProperty != null) {
 			properties.remove(oldProperty);
 		}
 		if (newProperty != null) {
 			properties.add(newProperty);
 		}
+		return newProperty;
 	}
 	
 	@Override

@@ -14,6 +14,7 @@ public class PlayerPrefab extends SpritePrefab {
 	public PlayerPrefab() {
 		super("flappybird/bird.png");
 		setName("Player");
+		setOrigin(PlayerData.ORIGIN);
 	}
 	
 	@Override

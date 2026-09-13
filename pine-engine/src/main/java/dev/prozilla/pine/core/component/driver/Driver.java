@@ -12,7 +12,7 @@ public class Driver extends Component {
 		this.animationData = animationData;
 	}
 	
-	public void replaceProperty(Animatable oldProperty, Animatable newProperty) {
-		animationData.replaceProperty(oldProperty, newProperty);
+	public <A extends Animatable> A replaceProperty(A oldProperty, A newProperty) {
+		return animationData.replaceProperty(oldProperty, newProperty);
 	}
 }

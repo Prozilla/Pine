@@ -32,5 +32,10 @@ public class TransformDriverUpdater extends UpdateSystem {
 		if (scale != null) {
 			transform.setScale(scale);
 		}
+		
+		Vector3f origin = Property.getValueOf(driver.getOriginProperty());
+		if (origin != null) {
+			transform.setOrigin(origin);
+		}
 	}
 }
