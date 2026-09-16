@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
 import dev.prozilla.pine.common.property.bindable.BindableFloatProperty;
+import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.RangeInputNode;
 import dev.prozilla.pine.core.entity.Entity;
 
@@ -13,7 +14,7 @@ public class RangeInputPrefab extends NodePrefab {
 	
 	public RangeInputPrefab() {
 		setName("RangeInput");
-		setHTMLTag("input");
+		setHTMLTag(Node.INPUT_TAG);
 		setTabIndex(0);
 		
 		min = RangeInputNode.DEFAULT_MIN;

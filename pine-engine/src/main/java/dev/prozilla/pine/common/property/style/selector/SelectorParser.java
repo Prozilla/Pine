@@ -45,7 +45,7 @@ public class SelectorParser extends SequentialParser<Selector> {
 					return fail(getError());
 				}
 			} else if (c == ':') {
-				if (getInput().startsWith(":not(", getCursor())) {
+				if (startsWith(":not(")) {
 					moveCursor(5);
 					int end = StringUtils.findClosingParenthesis(input, getCursor() - 1);
 					if (end == -1) {
@@ -60,7 +60,7 @@ public class SelectorParser extends SequentialParser<Selector> {
 					}
 				} else {
 					moveCursor(); // skip ':'
-					if (getChar() == ':') {
+					if (!endOfInput() && getChar() == ':') {
 						moveCursor();
 						String pseudoElement = readWhile(SelectorParser::isValidNameChar);
 						if (pseudoElement.isEmpty()) {

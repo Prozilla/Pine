@@ -38,6 +38,10 @@ public class Prefab {
 		originProperty = AdaptiveVector3fProperty.adapt(new Vector3f());
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -46,15 +50,23 @@ public class Prefab {
 		this.tag = tag;
 	}
 	
+	public boolean isActive() {
+		return isActive;
+	}
+	
 	public void setActive(boolean active) {
 		isActive = active;
+	}
+	
+	public List<Prefab> getChildren() {
+		return children;
 	}
 	
 	public void addChildren(Prefab... children) {
 		addChildren(List.of(children));
 	}
 	
-	public void addChildren(Collection<Prefab> children) {
+	public void addChildren(Collection<? extends Prefab> children) {
 		this.children.addAll(children);
 	}
 	
@@ -67,12 +79,28 @@ public class Prefab {
 		children.remove(child);
 	}
 	
+	public Vector3f getPosition() {
+		return positionProperty.getValue();
+	}
+	
+	public AdaptiveVector3fProperty getPositionProperty() {
+		return positionProperty;
+	}
+	
 	public void setPosition(Vector3f position) {
 		positionProperty = AdaptiveVector3fProperty.adapt(position);
 	}
 	
 	public void setPosition(Vector3fProperty position) {
 		positionProperty = AdaptiveVector3fProperty.adapt(position);
+	}
+	
+	public Vector3f getRotation() {
+		return rotationProperty.getValue();
+	}
+	
+	public AdaptiveVector3fProperty getRotationProperty() {
+		return rotationProperty;
 	}
 	
 	public void setRotation(Vector3f rotation) {
@@ -83,12 +111,28 @@ public class Prefab {
 		rotationProperty = AdaptiveVector3fProperty.adapt(rotation);
 	}
 	
+	public Vector3f getScale() {
+		return scaleProperty.getValue();
+	}
+	
+	public AdaptiveVector3fProperty getScaleProperty() {
+		return scaleProperty;
+	}
+	
 	public void setScale(Vector3f scale) {
 		scaleProperty = AdaptiveVector3fProperty.adapt(scale);
 	}
 	
 	public void setScale(Vector3fProperty scale) {
 		scaleProperty = AdaptiveVector3fProperty.adapt(scale);
+	}
+	
+	public Vector3f getOrigin() {
+		return originProperty.getValue();
+	}
+	
+	public AdaptiveVector3fProperty getOriginProperty() {
+		return originProperty;
 	}
 	
 	public void setOrigin(Vector3f origin) {

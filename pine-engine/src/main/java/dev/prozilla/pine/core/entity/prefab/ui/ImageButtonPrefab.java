@@ -25,7 +25,7 @@ public class ImageButtonPrefab extends ImagePrefab {
 		super(image);
 		setName("ImageButton");
 		addClass("button");
-		setHTMLTag("button");
+		setHTMLTag(Node.BUTTON_TAG);
 		setTabIndex(0);
 	}
 	

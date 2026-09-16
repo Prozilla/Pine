@@ -24,7 +24,7 @@ public class TextInputPrefab extends TextPrefab {
 		super(value);
 		setName("TextInput");
 		setSize(new DualDimension(64, 24));
-		setHTMLTag("input");
+		setHTMLTag(Node.INPUT_TAG);
 		setTabIndex(0);
 	}
 	

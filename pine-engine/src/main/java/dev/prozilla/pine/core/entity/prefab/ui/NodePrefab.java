@@ -22,10 +22,7 @@ import dev.prozilla.pine.core.entity.prefab.Components;
 import dev.prozilla.pine.core.entity.prefab.LayerPrefab;
 import dev.prozilla.pine.core.state.input.CursorType;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Prefab for UI elements.
@@ -53,6 +50,7 @@ public class NodePrefab extends LayerPrefab {
 	
 	protected String htmlTag;
 	protected Set<String> classes;
+	protected Map<String, String> attributes;
 	
 	protected final LinkedHashSet<StyleSheet> styleSheets;
 	protected boolean useDefaultStyleSheet;
@@ -64,10 +62,22 @@ public class NodePrefab extends LayerPrefab {
 		tabIndex = -1;
 		autoFocus = false;
 		
+		attributes = new HashMap<>();
+		
 		styleSheets = new LinkedHashSet<>();
 		useDefaultStyleSheet = true;
 		
 		setName("Node");
+	}
+	
+	public void setStyleSheets(List<? extends StyleSheet> styleSheets) {
+		this.styleSheets.clear();
+		this.styleSheets.addAll(styleSheets);
+	}
+	
+	public void setStyleSheet(StyleSheet styleSheet) {
+		this.styleSheets.clear();
+		this.styleSheets.add(styleSheet);
 	}
 	
 	/**
@@ -275,6 +285,14 @@ public class NodePrefab extends LayerPrefab {
 		classes.add(className);
 	}
 	
+	public void setAttributes(Map<String, String> attributes) {
+		this.attributes.putAll(attributes);
+	}
+	
+	public void setAttribute(String key, String value) {
+		attributes.put(key, value);
+	}
+	
 	public void setTabIndex(int tabIndex) {
 		this.tabIndex = tabIndex;
 	}
@@ -343,6 +361,9 @@ public class NodePrefab extends LayerPrefab {
 		
 		if (classes != null) {
 			node.classes.addAll(classes);
+		}
+		if (!attributes.isEmpty()) {
+			node.setAttributes(attributes);
 		}
 		
 		if (useDefaultStyleSheet) {

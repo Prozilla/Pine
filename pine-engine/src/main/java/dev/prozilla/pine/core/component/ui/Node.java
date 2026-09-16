@@ -116,6 +116,14 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public static final String ID_ATTRIBUTE = "id";
 	public static final String TYPE_ATTRIBUTE = "type";
 	
+	// HTML tags
+	public static final String PARAGRAPH_TAG = "p";
+	public static final String BUTTON_TAG = "button";
+	public static final String INPUT_TAG = "input";
+	public static final String IMAGE_TAG = "img";
+	public static final String DIV_TAG = "div";
+	public static final String TITLE_TAG = "title";
+	
 	public Node() {
 		currentPosition = new Vector2f();
 		currentInnerSize = new Vector2f();
@@ -445,7 +453,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		return pseudoName != null;
 	}
 	
-	public void addStyleSheets(Set<StyleSheet> styleSheets) {
+	public void addStyleSheets(Set<? extends StyleSheet> styleSheets) {
 		for (StyleSheet styleSheet : styleSheets) {
 			addStyleSheet(styleSheet);
 		}
@@ -506,6 +514,14 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 			case ID_ATTRIBUTE -> entity.tag;
 			default -> attributes.get(name);
 		};
+	}
+	
+	public void setAttributes(Map<String, String> attributes) {
+		if (attributes != null) {
+			for (Map.Entry<String, String> attribute : attributes.entrySet()) {
+				setAttribute(attribute.getKey(), attribute.getValue());
+			}
+		}
 	}
 	
 	public void setAttribute(String name, String value) {

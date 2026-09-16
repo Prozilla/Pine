@@ -10,9 +10,9 @@ public class TypeSelector extends Selector {
 
 	private final String type;
 	
-	public static final TypeSelector P = new TypeSelector("p");
-	public static final TypeSelector BUTTON = new TypeSelector("button");
-	public static final TypeSelector INPUT = new TypeSelector("input");
+	public static final TypeSelector P = new TypeSelector(Node.PARAGRAPH_TAG);
+	public static final TypeSelector BUTTON = new TypeSelector(Node.BUTTON_TAG);
+	public static final TypeSelector INPUT = new TypeSelector(Node.INPUT_TAG);
 	
 	public TypeSelector(String type) {
 		this.type = type.toLowerCase();

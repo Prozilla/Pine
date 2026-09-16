@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.Transceivable;
-import dev.prozilla.pine.common.asset.Asset;
+import dev.prozilla.pine.common.asset.TextAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.dimension.Dimension;
@@ -20,7 +20,6 @@ import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.style.selector.*;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.DirectoryWatcher;
-import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.Node;
@@ -29,7 +28,6 @@ import dev.prozilla.pine.core.state.input.CursorType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -38,7 +36,7 @@ import java.util.StringJoiner;
 /**
  * Manages style rules for different properties of nodes.
  */
-public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
+public class StyleSheet implements Printable, TextAsset, Transceivable<StyleSheet> {
 	
 	private final Map<StyledPropertyKey<?>, Style<?, ?>> styles;
 	
@@ -265,13 +263,6 @@ public class StyleSheet implements Printable, Asset, Transceivable<StyleSheet> {
 		}
 		
 		return style;
-	}
-	
-	public InputStream createInputStream() {
-		if (path == null) {
-			return null;
-		}
-		return ResourceUtils.getResourceStream(path);
 	}
 	
 	@Override

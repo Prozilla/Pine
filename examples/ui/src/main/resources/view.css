@@ -1,0 +1,11 @@
+div {
+    anchor: center;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+p {
+    color: white;
+}

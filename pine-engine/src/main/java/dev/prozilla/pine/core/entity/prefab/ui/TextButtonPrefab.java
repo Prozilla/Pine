@@ -24,7 +24,7 @@ public class TextButtonPrefab extends TextPrefab {
 		super(text);
 		setName("TextButton");
 		addClass("button");
-		setHTMLTag("button");
+		setHTMLTag(Node.BUTTON_TAG);
 		setBackgroundColor(Color.white());
 		setColor(Color.black());
 		setTabIndex(0);

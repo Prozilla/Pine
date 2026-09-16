@@ -76,6 +76,10 @@ public abstract class SequentialParser<T> extends Parser<T> {
 		return isMethodCall;
 	}
 	
+	protected boolean startsWith(String prefix) {
+		return getRemainingCharCount() >= prefix.length() && input.startsWith(prefix, cursor);
+	}
+	
 	protected String readBetweenParentheses() {
 		return readBetweenCharacters('(', ')');
 	}
@@ -84,10 +88,18 @@ public abstract class SequentialParser<T> extends Parser<T> {
 		return readBetweenCharacters('[', ']');
 	}
 	
+	protected String readBetweenQuotes() {
+		return readBetweenCharacters('"', '"');
+	}
+	
 	protected String readBetweenCharacters(char before, char after) {
 		skipUntilChar(before);
 		moveCursor();
 		return readWhile((character) -> character != after);
+	}
+	
+	protected String readUntilWhitespace() {
+		return readWhile((character) -> !Character.isWhitespace(character));
 	}
 	
 	/**
@@ -197,8 +209,12 @@ public abstract class SequentialParser<T> extends Parser<T> {
 	/**
 	 * Returns the character the cursor is pointing to.
 	 * @return The character the cursor is pointing to.
+	 * @throws IllegalStateException If the cursor is at the end.
 	 */
-	protected char getChar() {
+	protected char getChar() throws IllegalStateException {
+		if (endOfInput()) {
+			throw new IllegalStateException("End of input reached");
+		}
 		return input.charAt(cursor);
 	}
 	
@@ -250,6 +266,10 @@ public abstract class SequentialParser<T> extends Parser<T> {
 	 */
 	protected boolean endOfInput() {
 		return cursor >= getCharCount();
+	}
+	
+	protected int getRemainingCharCount() {
+		return Math.max(getCharCount() - cursor, 0);
 	}
 	
 	/**

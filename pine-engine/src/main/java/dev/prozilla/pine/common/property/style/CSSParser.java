@@ -4,26 +4,19 @@ import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.AnimationCurveParser;
 import dev.prozilla.pine.common.property.style.selector.Selector;
 import dev.prozilla.pine.common.property.style.selector.SelectorParser;
-import dev.prozilla.pine.common.util.parser.SequentialParser;
+import dev.prozilla.pine.common.util.parser.SuppliedSequentialParser;
 
-import java.util.Objects;
-
-public class CSSParser extends SequentialParser<StyleSheet> {
+public class CSSParser extends SuppliedSequentialParser<StyleSheet> {
 	
 	private static final SelectorParser selectorParser = new SelectorParser();
 	private static final AnimationCurveParser animationCurveParser = new AnimationCurveParser();
 	
+	public CSSParser() {
+		super(StyleSheet::new);
+	}
+	
 	@Override
-	public boolean parse(String input) {
-		return parse(input, null);
-	}
-	
-	public boolean parse(String input, StyleSheet target) {
-		startStep(input, Objects.requireNonNullElse(target, new StyleSheet()));
-		return parseStyleSheet();
-	}
-	
-	private boolean parseStyleSheet() {
+	protected boolean parse() {
 		while (!endOfInput()) {
 			skipWhitespace();
 			if (endOfInput())
