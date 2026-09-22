@@ -24,11 +24,15 @@ public class LayoutPrefab extends NodePrefab {
 	protected boolean arrangeChildren;
 	
 	public LayoutPrefab() {
+		this(Node.DIV_TAG);
+	}
+	
+	public LayoutPrefab(String htmlTag) {
 		arrangeChildren = true;
 		
 		setName("Layout");
 		addClass("container");
-		setHTMLTag(Node.DIV_TAG);
+		setHTMLTag(htmlTag);
 	}
 	
 	public void setDirection(Direction direction) {

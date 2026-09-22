@@ -44,7 +44,6 @@ public class NodePrefab extends LayerPrefab {
 	protected CursorType cursor;
 	protected boolean absolutePosition;
 	protected boolean passThrough;
-	protected String tooltipText;
 	public int tabIndex;
 	public boolean autoFocus;
 	
@@ -246,7 +245,7 @@ public class NodePrefab extends LayerPrefab {
 	 * Sets the text that appears in a tooltip when the cursor hovers over this node.
 	 */
 	public void setTooltipText(String tooltipText) {
-		this.tooltipText = tooltipText;
+		setAttribute(Node.TITLE_ATTRIBUTE, tooltipText);
 	}
 	
 	public void setBorder(Dimension border) {
@@ -343,9 +342,6 @@ public class NodePrefab extends LayerPrefab {
 		}
 		if (anchor != null) {
 			node.anchor = anchor;
-		}
-		if (tooltipText != null) {
-			node.tooltipText = tooltipText;
 		}
 		if (border != null) {
 			node.borderWidth = border.clone();

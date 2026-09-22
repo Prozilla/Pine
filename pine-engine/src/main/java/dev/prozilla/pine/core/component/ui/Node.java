@@ -53,7 +53,6 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public boolean absolutePosition;
 	/** If true, this node won't be rendered by the node rendering system. */
 	public boolean controlledRender;
-	public String tooltipText;
 	public int tabIndex;
 	public boolean autoFocus;
 	public boolean alwaysVisibleFocus;
@@ -115,13 +114,26 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public static final String CLASS_ATTRIBUTE = "class";
 	public static final String ID_ATTRIBUTE = "id";
 	public static final String TYPE_ATTRIBUTE = "type";
+	public static final String TITLE_ATTRIBUTE = "title";
 	
 	// HTML tags
 	public static final String PARAGRAPH_TAG = "p";
+	public static final String HEADING_1_TAG = "h1";
+	public static final String HEADING_2_TAG = "h2";
+	public static final String HEADING_3_TAG = "h3";
+	public static final String HEADING_4_TAG = "h4";
+	public static final String HEADING_5_TAG = "h5";
+	public static final String HEADING_6_TAG = "h6";
 	public static final String BUTTON_TAG = "button";
 	public static final String INPUT_TAG = "input";
 	public static final String IMAGE_TAG = "img";
 	public static final String DIV_TAG = "div";
+	public static final String SPAN_TAG = "span";
+	public static final String HTML_TAG = "html";
+	public static final String HEAD_TAG = "head";
+	public static final String HEADER_TAG = "header";
+	public static final String BODY_TAG = "body";
+	public static final String FOOTER_TAG = "footer";
 	public static final String TITLE_TAG = "title";
 	
 	public Node() {
@@ -493,6 +505,14 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		if (nodeStyle != null) {
 			setter.accept(nodeStyle, null);
 		}
+	}
+	
+	public String getTooltipText() {
+		return getAttribute(TITLE_ATTRIBUTE);
+	}
+	
+	public void setTooltipText(String text) {
+		setAttribute(TITLE_ATTRIBUTE, text);
 	}
 	
 	public boolean hasAttribute(String name) {

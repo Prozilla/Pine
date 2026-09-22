@@ -131,6 +131,22 @@ public class HTMLParserTest {
 	}
 	
 	@Test
+	void testHeading1() {
+		HTMLParser parser = new HTMLParser();
+		if (!parser.parse("<h1>FooBar</h1>")) {
+			fail(parser.getError());
+		}
+		
+		NodePrefab result = parser.getResult();
+		assertNotNull(result, "parsing of heading 1 should have result");
+		assertEquals(Node.HEADING_1_TAG, result.htmlTag, "result should have the correct html tag");
+		assertInstanceOf(TextPrefab.class, result);
+		
+		TextPrefab textPrefab = (TextPrefab)result;
+		assertEquals("FooBar", textPrefab.text, "result should have the correct text content");
+	}
+	
+	@Test
 	void testDivWithParagraph() {
 		HTMLParser parser = new HTMLParser();
 		if (!parser.parse("<div><p>FooBar</p></div>")) {

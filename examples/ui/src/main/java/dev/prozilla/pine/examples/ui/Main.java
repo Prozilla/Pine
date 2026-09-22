@@ -13,7 +13,7 @@ public class Main {
 	private static final int sceneIndex = 1;
 	private static final List<Supplier<Scene>> sceneFactories = List.of(
 		MainScene::new,
-		() -> new ViewScene("view.html", "view.css", true)
+		() -> new ViewScene("view.html", "view.css", Application.isDevMode())
 	);
 	
 	public static void main(String[] args) {

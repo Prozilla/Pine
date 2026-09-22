@@ -170,10 +170,26 @@ public class HTMLParser extends SequentialParser<NodePrefab> {
 	
 	private NodePrefab createPrefab(String tag, Map<String, String> attributes, String text) {
 		NodePrefab prefab = switch (tag) {
-			case Node.PARAGRAPH_TAG -> new TextPrefab(text);
+			case Node.PARAGRAPH_TAG,
+			     Node.HEADING_1_TAG,
+			     Node.HEADING_2_TAG,
+			     Node.HEADING_3_TAG,
+			     Node.HEADING_4_TAG,
+			     Node.HEADING_5_TAG,
+			     Node.HEADING_6_TAG -> {
+				TextPrefab textPrefab = new TextPrefab(text);
+				textPrefab.setHTMLTag(tag);
+				yield textPrefab;
+			}
 			case Node.BUTTON_TAG -> new TextButtonPrefab(text);
 			case Node.INPUT_TAG -> "range".equals(attributes.get(Node.TYPE_ATTRIBUTE)) ? new RangeInputPrefab() : new TextInputPrefab(text);
-			case Node.DIV_TAG -> new LayoutPrefab();
+			case Node.DIV_TAG,
+			     Node.SPAN_TAG,
+			     Node.HTML_TAG,
+			     Node.HEAD_TAG,
+			     Node.HEADER_TAG,
+			     Node.BODY_TAG,
+			     Node.FOOTER_TAG -> new LayoutPrefab(tag);
 			case Node.TITLE_TAG -> {
 				if (title == null) {
 					title = text;
