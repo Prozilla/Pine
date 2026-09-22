@@ -22,17 +22,13 @@ public class LayoutNodeStyle extends NodeStyleBase {
 	}
 	
 	@Override
-	public boolean applyStyleSheet(StyleSheet styleSheet) {
-		if (!super.applyStyleSheet(styleSheet)) {
-			return false;
-		}
+	protected void createProperties() {
+		StyleSheet styleSheet = StyleSheet.mergeAll(getStyleSheets());
 		
 		setGapProperty(styleSheet.createGapProperty(node));
 		setDirectionProperty(styleSheet.createDirectionProperty(node));
 		setAlignmentProperty(styleSheet.createAlignmentProperty(node));
 		setDistributionProperty(styleSheet.createDistributionProperty(node));
-		
-		return true;
 	}
 	
 	public StyledDimensionProperty getGapProperty() {

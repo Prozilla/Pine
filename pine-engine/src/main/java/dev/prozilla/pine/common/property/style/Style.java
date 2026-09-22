@@ -40,6 +40,10 @@ public class Style<T, A extends AdaptiveProperty<T, ?>> {
 		transitionRules.add(transitionRule);
 	}
 	
+	public A getDefaultValue() {
+		return defaultValue;
+	}
+	
 	public void setDefaultValue(A defaultValue) {
 		this.defaultValue = defaultValue;
 	}

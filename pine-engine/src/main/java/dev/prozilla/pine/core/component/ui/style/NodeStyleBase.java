@@ -9,7 +9,7 @@ import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.animation.AnimationData;
 import dev.prozilla.pine.core.component.ui.Node;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public abstract class NodeStyleBase extends Component {
@@ -23,7 +23,7 @@ public abstract class NodeStyleBase extends Component {
 		this.animationData = animationData;
 		this.node = node;
 
-		this.styleSheets = new HashSet<>();
+		this.styleSheets = new LinkedHashSet<>();
 		
 		if (styleSheets != null) {
 			for (StyleSheet styleSheet : styleSheets) {
@@ -36,18 +36,19 @@ public abstract class NodeStyleBase extends Component {
 		return styleSheets;
 	}
 	
-	public boolean applyStyleSheet(StyleSheet styleSheet) {
-		boolean added = styleSheets.add(styleSheet);
-		if (added) {
+	public void applyStyleSheet(StyleSheet styleSheet) {
+		if (styleSheets.add(styleSheet)) {
 			for (Node pseudoElement : node.pseudoElements.values()) {
 				pseudoElement.addStyleSheet(styleSheet);
 			}
 			for (Node childNode : node.children) {
 				childNode.addStyleSheet(styleSheet);
 			}
+			createProperties();
 		}
-		return added;
 	}
+	
+	protected abstract void createProperties();
 	
 	protected <T, P extends Property<T>, A extends AdaptiveProperty<T, P>, R extends TransitionedProperty<T>, S extends StyledProperty<T, P, A, R>> S changeProperty(S oldProperty, S newProperty) {
 		animationData.replaceProperty(oldProperty, newProperty);

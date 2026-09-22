@@ -28,10 +28,7 @@ import dev.prozilla.pine.core.state.input.CursorType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 
 /**
  * Manages style rules for different properties of nodes.
@@ -39,9 +36,11 @@ import java.util.StringJoiner;
 public class StyleSheet implements Printable, TextAsset, Transceivable<StyleSheet> {
 	
 	private final Map<StyledPropertyKey<?>, Style<?, ?>> styles;
+	private List<StyleSheet> sources;
 	
 	public String path;
 	
+	private static final Map<Key, StyleSheet> CACHE = new HashMap<>();
 	public static final StyleSheet DEFAULT = createDefault();
 	
 	public StyleSheet() {
@@ -80,6 +79,7 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 	protected <T> void addRule(StyledPropertyKey<T> key, StyleRule<T> rule) {
 		Style<T, ?> style = getStyle(key, true);
 		style.addRule(rule);
+		invalidateCached(this);
 	}
 	
 	public void addTransition(Selector selector, StyledPropertyKey<?> key, AnimationCurve value) {
@@ -97,6 +97,7 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 	protected void addTransition(StyledPropertyKey<?> key, StyleRule<AnimationCurve> transitionRule) {
 		Style<?, ?> style = getStyle(key, true);
 		style.addTransitionRule(transitionRule);
+		invalidateCached(this);
 	}
 	
 	public <T, A extends AdaptiveProperty<T, ?>> void setDefaultValue(StyledPropertyKey<T> key, A defaultValue) {
@@ -104,6 +105,11 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 		
 		Style<T, A> style = getStyle(key, true, defaultValue.getClass());
 		style.setDefaultValue(defaultValue);
+		invalidateCached(this);
+	}
+	
+	protected void trackProperty(StyledProperty<?, ?, ?, ?> property) {
+	
 	}
 	
 	@Contract("_ -> new")
@@ -236,9 +242,22 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<LineStyle, AdaptiveObjectProperty<LineStyle>, StyledLineStyleProperty>)StyledLineStyleProperty::new);
 	}
 	
-	protected  <T, A extends AdaptiveProperty<T, ?>, P extends StyledProperty<T, ?, A, ?>> P createStyledProperty(StyledPropertyKey<T> name, Node node, A fallbackValue, Style.StyledPropertyFactory<T, A, P> factory) {
+	@SuppressWarnings("unchecked")
+	protected <T, A extends AdaptiveProperty<T, ?>, P extends StyledProperty<T, ?, A, ?>> P createStyledProperty(StyledPropertyKey<T> name, Node node, A fallbackValue, Style.StyledPropertyFactory<T, A, P> factory) {
 		Style<T, A> style = getStyle(name, false, fallbackValue.getClass());
-		return style != null ? style.toProperty(name, node, fallbackValue, factory) : null;
+		if (style == null) {
+			return null;
+		}
+		
+		P property = style.toProperty(name, node, fallbackValue, factory);
+		List<StyleSheet> sources = this.sources != null ? this.sources : List.of(this);
+		property.setSources(sources);
+		
+		for (StyleSheet source : sources) {
+			source.trackProperty(property);
+		}
+		
+		return property;
 	}
 	
 	@Contract("_, true, _ -> !null")
@@ -284,6 +303,7 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 	
 	public void reset() {
 		styles.clear();
+		invalidateCached(this);
 	}
 	
 	@Override
@@ -359,6 +379,79 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 		return HotStyleSheet.fromStyleSheet(directoryWatcher, this);
 	}
 	
+	public StyleSheet merge(StyleSheet styleSheet) {
+		return mergeAll(List.of(this, styleSheet));
+	}
+	
+	public static StyleSheet mergeAll(Collection<? extends StyleSheet> sheets) {
+		Key key = new Key(sheets);
+		StyleSheet merged = CACHE.get(key);
+		
+		if (merged == null) {
+			merged = createMerged(key.sheets);
+			merged.sources = key.sheets;
+			CACHE.put(key, merged);
+		}
+		
+		return merged;
+	}
+	
+	private static void invalidateCached(StyleSheet styleSheet) {
+		CACHE.entrySet().removeIf(entry -> entry.getKey().contains(styleSheet));
+	}
+	
+	private static StyleSheet createMerged(List<StyleSheet> styleSheets) {
+		StyleSheet merged = new StyleSheet();
+		Map<StyledPropertyKey<?>, List<Style<?, ?>>> sources = new LinkedHashMap<>();
+		
+		for (StyleSheet sheet : styleSheets) {
+			for (Map.Entry<StyledPropertyKey<?>, Style<?, ?>> entry : sheet.styles.entrySet()) {
+				sources.computeIfAbsent(entry.getKey(), key -> new ArrayList<>()).add(entry.getValue());
+			}
+		}
+		
+		for (Map.Entry<StyledPropertyKey<?>, List<Style<?, ?>>> entry : sources.entrySet()) {
+			merged.styles.put(entry.getKey(), mergeStyles(entry.getValue()));
+		}
+		
+		return merged;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static <T, A extends AdaptiveProperty<T, ?>> Style<T, A> mergeStyles(List<Style<?, ?>> sources) {
+		Style<T, A> merged = new Style<>();
+		
+		for (Style<?, ?> source : sources) {
+			for (StyleRule<?> rule : source.getRules()) {
+				if (rule.isDefault()) {
+					merged.addRule((StyleRule<T>)rule);
+				}
+			}
+		}
+		
+		for (int i = sources.size() - 1; i >= 0; i--) {
+			for (StyleRule<?> rule : sources.get(i).getRules()) {
+				if (!rule.isDefault()) {
+					merged.addRule((StyleRule<T>)rule);
+				}
+			}
+		}
+		
+		for (int i = sources.size() - 1; i >= 0; i--) {
+			for (StyleRule<AnimationCurve> transitionRule : sources.get(i).getTransitionRules()) {
+				merged.addTransitionRule(transitionRule);
+			}
+		}
+		
+		for (Style<?, ?> source : sources) {
+			if (source.getDefaultValue() != null) {
+				merged.setDefaultValue((A)source.getDefaultValue());
+			}
+		}
+		
+		return merged;
+	}
+	
 	private static StyleSheet createDefault() {
 		StyleSheet styleSheet = new StyleSheet();
 		
@@ -403,13 +496,59 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.BORDER_STYLE, LineStyle.SOLID);
 		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.BORDER_WIDTH, new Dimension(2));
 		styleSheet.addDefaultRule(TypeSelector.BUTTON, StyledPropertyKey.CURSOR, CursorType.POINTER);
-		styleSheet.addDefaultRule( new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.HOVER), StyledPropertyKey.BACKGROUND_COLOR, buttonHoverFace);
+		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.HOVER), StyledPropertyKey.BACKGROUND_COLOR, buttonHoverFace);
 		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.HOVER), StyledPropertyKey.BORDER_COLOR, buttonBorderHover);
 		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.FOCUS_VISIBLE), StyledPropertyKey.OUTLINE_WIDTH, new Dimension(2));
 		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.FOCUS_VISIBLE), StyledPropertyKey.OUTLINE_STYLE, LineStyle.SOLID);
 		styleSheet.addDefaultRule(new CompoundSelector(TypeSelector.BUTTON, ModifierSelector.FOCUS_VISIBLE), StyledPropertyKey.OUTLINE_COLOR, accentColor);
 		
 		return styleSheet;
+	}
+	
+	private static final class Key {
+		
+		private final List<StyleSheet> sheets;
+		private final int hash;
+		
+		private Key(Collection<? extends StyleSheet> sheets) {
+			this.sheets = List.copyOf(sheets);
+			int hash = 1;
+			for (StyleSheet sheet : this.sheets) {
+				hash = 31 * hash + System.identityHashCode(sheet);
+			}
+			this.hash = hash;
+		}
+		
+		private boolean contains(StyleSheet styleSheet) {
+			for (StyleSheet sheet : sheets) {
+				if (sheet == styleSheet) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		@Override
+		public boolean equals(Object object) {
+			if (this == object) {
+				return true;
+			}
+			if (!(object instanceof Key other) || hash != other.hash || sheets.size() != other.sheets.size()) {
+				return false;
+			}
+			for (int i = 0; i < sheets.size(); i++) {
+				if (sheets.get(i) != other.sheets.get(i)) {
+					return false;
+				}
+			}
+			return true;
+		}
+		
+		@Override
+		public int hashCode() {
+			return hash;
+		}
+		
 	}
 	
 }

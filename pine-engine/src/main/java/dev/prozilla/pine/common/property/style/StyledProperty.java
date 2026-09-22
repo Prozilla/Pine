@@ -35,6 +35,8 @@ public abstract class StyledProperty<T, P extends Property<T>, A extends Adaptiv
 	private StyleRule<AnimationCurve> currentTransitionRule;
 	private R transitionedProperty;
 	
+	private List<StyleSheet> sources;
+	
 	/**
 	 * Creates a styled property without any transitions.
 	 * @param node The node this property belongs to
@@ -55,16 +57,16 @@ public abstract class StyledProperty<T, P extends Property<T>, A extends Adaptiv
 	public StyledProperty(StyledPropertyKey<T> name, Node node, List<StyleRule<T>> rules, A defaultValue, List<StyleRule<AnimationCurve>> transitionRules) {
 		this.name = name;
 		this.node = Checks.isNotNull(node, "node");
-		this.rules = Objects.requireNonNullElse(rules, new ArrayList<>());
+		this.rules = rules != null ? new ArrayList<>(rules) : new ArrayList<>();
 		this.adaptiveProperty = Checks.isNotNull(defaultValue, "defaultValue");
-		this.transitionRules = Objects.requireNonNullElse(transitionRules, new ArrayList<>());
+		this.transitionRules = transitionRules != null ? new ArrayList<>(transitionRules) : new ArrayList<>();
 		fallbackProperty = this.adaptiveProperty;
 		
 		// Re-apply style when selector changes
 		node.addListener(NodeEvent.Type.SELECTOR_CHANGE, (changedNode) -> this.invalidate());
 	}
 	
-	public void applyStyle(Style<T, A> style) {
+	public void applyStyle(Style<T, ?> style) {
 		if (style == null) {
 			rules.clear();
 			transitionRules.clear();
@@ -115,6 +117,14 @@ public abstract class StyledProperty<T, P extends Property<T>, A extends Adaptiv
 	
 	public @NotNull A getFallbackProperty() {
 		return fallbackProperty;
+	}
+	
+	List<StyleSheet> getSources() {
+		return sources;
+	}
+	
+	void setSources(List<StyleSheet> sources) {
+		this.sources = sources;
 	}
 	
 	public void addTransitionRule(StyleRule<AnimationCurve> transitionRule) {

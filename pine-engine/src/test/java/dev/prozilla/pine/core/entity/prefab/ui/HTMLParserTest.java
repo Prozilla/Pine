@@ -32,6 +32,7 @@ public class HTMLParserTest {
 		NodePrefab result = parser.getResult();
 		assertNotNull(result, "parsing of empty div should have result");
 		assertEquals(Node.DIV_TAG, result.htmlTag, "result should have the correct html tag");
+		assertTrue(result.useDefaultStyleSheet, "result uses default style sheet");
 	}
 	
 	@Test

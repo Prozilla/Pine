@@ -35,10 +35,8 @@ public class NodeStyle extends NodeStyleBase {
 	}
 	
 	@Override
-	public boolean applyStyleSheet(StyleSheet styleSheet) {
-		if (!super.applyStyleSheet(styleSheet)) {
-			return false;
-		}
+	protected void createProperties() {
+		StyleSheet styleSheet = StyleSheet.mergeAll(getStyleSheets());
 		
 		setColorProperty(styleSheet.createColorProperty(node));
 		setBackgroundColorProperty(styleSheet.createBackgroundColorProperty(node));
@@ -54,8 +52,6 @@ public class NodeStyle extends NodeStyleBase {
 		setOutlineStyleProperty(styleSheet.createOutlineStyleProperty(node));
 		setOutlineColorProperty(styleSheet.createOutlineColorProperty(node));
 		setOutlineOffsetProperty(styleSheet.createOutlineOffsetProperty(node));
-		
-		return true;
 	}
 	
 	public StyledColorProperty getColorProperty() {

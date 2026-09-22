@@ -21,6 +21,11 @@ public class ViewScene extends Scene {
 		setStyleSheet(styleSheetPath);
 	}
 	
+	public ViewScene(String viewPath, String styleSheetPath, boolean hot) {
+		this(viewPath);
+		setStyleSheet(styleSheetPath, hot);
+	}
+	
 	public ViewScene(String viewPath) {
 		this(AssetPools.views.load(viewPath));
 	}
@@ -43,7 +48,7 @@ public class ViewScene extends Scene {
 			getConfig().window.title.setValue(view.name);
 		}
 		if (styleSheet != null) {
-			view.prefab.setStyleSheet(styleSheet);
+			view.prefab.addStyleSheet(styleSheet);
 		}
 		
 		NodeRootPrefab rootPrefab = new NodeRootPrefab();
@@ -55,6 +60,10 @@ public class ViewScene extends Scene {
 	
 	public void setStyleSheet(String path) {
 		setStyleSheet(AssetPools.styleSheets.load(path));
+	}
+	
+	public void setStyleSheet(String path, boolean hot) {
+		setStyleSheet(AssetPools.styleSheets.load(path, hot));
 	}
 	
 	public void setStyleSheet(StyleSheet styleSheet) {
