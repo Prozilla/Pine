@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.util.parser;
 
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.exception.ParsingException;
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.property.ParsedProperty;
 import dev.prozilla.pine.common.property.StringProperty;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -41,6 +42,14 @@ public abstract class Parser<T> implements Printable {
 		T result = this.result;
 		this.result = null;
 		return result;
+	}
+	
+	public void printError() {
+		printError(Logger.system);
+	}
+	
+	public void printError(Logger logger) {
+		logger.error(getError());
 	}
 	
 	/**

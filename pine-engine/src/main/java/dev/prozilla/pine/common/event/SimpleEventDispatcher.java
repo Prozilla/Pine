@@ -14,7 +14,7 @@ public class SimpleEventDispatcher<EventType extends Enum<EventType>, Target> ex
 	 * @param eventType The type of event to invoke
 	 */
 	public void invoke(EventType eventType) {
-		invoke(eventType, null);
+		invoke(eventType, (Target)null);
 	}
 	
 	@Override

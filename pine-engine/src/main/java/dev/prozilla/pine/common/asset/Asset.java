@@ -8,7 +8,8 @@ import dev.prozilla.pine.common.lifecycle.Destructible;
 public interface Asset extends Destructible {
 	
 	/**
-	 * Returns the path to the file this asset was loaded from.
+	 * Returns the path to the file this asset was loaded from,
+	 * or {@code null} if this asset was not loaded from a file.
 	 * @return The path of this asset.
 	 */
 	String getPath();

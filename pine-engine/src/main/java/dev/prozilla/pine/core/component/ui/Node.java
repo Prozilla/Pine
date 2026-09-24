@@ -12,6 +12,8 @@ import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedProperty;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.property.style.StyledProperty;
+import dev.prozilla.pine.common.property.style.selector.Selector;
+import dev.prozilla.pine.common.property.style.selector.SelectorParser;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.core.component.Component;
@@ -135,6 +137,8 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public static final String BODY_TAG = "body";
 	public static final String FOOTER_TAG = "footer";
 	public static final String TITLE_TAG = "title";
+	
+	private static final SelectorParser selectorParser = new SelectorParser();
 	
 	public Node() {
 		currentPosition = new Vector2f();
@@ -585,6 +589,36 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		getRoot().removeNode(this);
 		super.destroy();
 		eventDispatcher.destroy();
+	}
+	
+	public Node querySelector(String selector) {
+		if (!selectorParser.parse(selector)) {
+			selectorParser.printError(getLogger());
+			return null;
+		} else {
+			return querySelector(selectorParser.getResult());
+		}
+	}
+	
+	public Node querySelector(Selector selector) {
+		return selector != null ? selector.query(this) : null;
+	}
+	
+	public List<Node> querySelectorAll(String selector) {
+		if (!selectorParser.parse(selector)) {
+			selectorParser.printError(getLogger());
+			return new ArrayList<>();
+		} else {
+			return querySelectorAll(selectorParser.getResult());
+		}
+	}
+	
+	public List<Node> querySelectorAll(Selector selector) {
+		List<Node> out = new ArrayList<>();
+		if (selector != null) {
+			selector.queryAll(this, out);
+		}
+		return out;
 	}
 	
 	/**

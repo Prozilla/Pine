@@ -8,6 +8,7 @@ import dev.prozilla.pine.common.util.checks.Checks;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Represents an object that can dispatch events.
@@ -69,6 +70,13 @@ public abstract class EventDispatcher<EventType extends Enum<EventType>, Target,
 		}
 		
 		eventListeners.remove(listener);
+	}
+	
+	public boolean invoke(EventType eventType, Supplier<Target> targetFactory) {
+		if (!shouldInvoke(eventType)) {
+			return false;
+		}
+		return invoke(createEvent(eventType, targetFactory.get()));
 	}
 	
 	@Override

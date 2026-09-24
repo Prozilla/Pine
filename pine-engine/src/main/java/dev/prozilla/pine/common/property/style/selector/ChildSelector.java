@@ -3,6 +3,8 @@ package dev.prozilla.pine.common.property.style.selector;
 import dev.prozilla.pine.core.component.ui.Node;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
  * A selector that matches elements with a specific tag.
  */
@@ -14,6 +16,33 @@ public class ChildSelector extends Selector {
 	public ChildSelector(Selector parentSelector, Selector childSelector) {
 		this.parentSelector = parentSelector;
 		this.childSelector = childSelector;
+	}
+	
+	@Override
+	public Node query(Node node) {
+		if (!parentSelector.matches(node)) {
+			return null;
+		}
+		
+		for (Node child : node.children) {
+			Node match = childSelector.query(child);
+			if (match != null) {
+				return match;
+			}
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public void queryAll(Node node, List<Node> out) {
+		if (!parentSelector.matches(node)) {
+			return;
+		}
+		
+		for (Node child : node.children) {
+			childSelector.queryAll(child, out);
+		}
 	}
 	
 	@Override

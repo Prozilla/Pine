@@ -6,6 +6,7 @@ import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.NodeRoot;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
+import dev.prozilla.pine.core.entity.prefab.ui.Controller;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.View;
 
@@ -52,22 +53,28 @@ public class ViewScene extends Scene {
 		}
 		
 		NodeRootPrefab rootPrefab = new NodeRootPrefab();
-		rootPrefab.addChild(view.prefab);
 		
 		Entity root = addEntity(rootPrefab);
+		view.instantiate(root);
 		nodeRoot = root.getComponent(NodeRoot.class);
 	}
 	
-	public void setStyleSheet(String path) {
-		setStyleSheet(AssetPools.styleSheets.load(path));
+	public ViewScene setStyleSheet(String path) {
+		return setStyleSheet(AssetPools.styleSheets.load(path));
 	}
 	
-	public void setStyleSheet(String path, boolean hot) {
-		setStyleSheet(AssetPools.styleSheets.load(path, hot));
+	public ViewScene setStyleSheet(String path, boolean hot) {
+		return setStyleSheet(AssetPools.styleSheets.load(path, hot));
 	}
 	
-	public void setStyleSheet(StyleSheet styleSheet) {
+	public ViewScene setStyleSheet(StyleSheet styleSheet) {
 		this.styleSheet = styleSheet;
+		return this;
+	}
+	
+	public ViewScene addController(Controller controller) {
+		view.controller = controller;
+		return this;
 	}
 	
 	public NodeRoot getRoot() {

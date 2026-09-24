@@ -4,10 +4,37 @@ import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.core.component.ui.Node;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
  * A selector for nodes based on <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors">CSS selectors</a>.
  */
 public abstract class Selector implements Printable {
+	
+	public Node query(Node node) {
+		if (matches(node)) {
+			return node;
+		}
+		
+		for (Node child : node.children) {
+			Node match = query(child);
+			if (match != null) {
+				return match;
+			}
+		}
+		
+		return null;
+	}
+	
+	public void queryAll(Node node, List<Node> out) {
+		if (matches(node)) {
+			out.add(node);
+		}
+		
+		for (Node child : node.children) {
+			queryAll(child, out);
+		}
+	}
 	
 	/**
 	 * Checks whether this selector matches a given node.

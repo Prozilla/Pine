@@ -1,7 +1,10 @@
 package dev.prozilla.pine.examples.ui;
 
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationBuilder;
+import dev.prozilla.pine.core.component.ui.Node;
+import dev.prozilla.pine.core.entity.prefab.ui.Controller;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.scene.ViewScene;
 
@@ -14,6 +17,12 @@ public class Main {
 	private static final List<Supplier<Scene>> sceneFactories = List.of(
 		MainScene::new,
 		() -> new ViewScene("view.html", "view.css", Application.isDevMode())
+			      .addController(new Controller() {
+				      @Override
+				      public void initialize(Node view) {
+					      Logger.system.log(view.querySelector("button").getTooltipText());
+				      }
+			      })
 	);
 	
 	public static void main(String[] args) {

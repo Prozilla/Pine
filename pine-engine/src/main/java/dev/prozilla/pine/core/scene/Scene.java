@@ -249,6 +249,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		initialSystems.add(new ImageInitializer());
 		initialSystems.add(new TextInputInitializer());
 		initialSystems.add(new RangeInputInitializer());
+		initialSystems.add(new ViewInitializer());
 		
 		initialSystems.add(new NodeRootInputHandler());
 		initialSystems.add(new LayoutNodeInputHandler());
