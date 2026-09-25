@@ -51,8 +51,8 @@ public class ChildSelector extends Selector {
 	}
 	
 	@Override
-	public int getSpecificity() {
-		return childSelector.getSpecificity();
+	public int getSpecificity(Node node) {
+		return childSelector.getSpecificity(node);
 	}
 	
 	@Override

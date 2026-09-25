@@ -75,6 +75,17 @@ public class SelectorParser extends SequentialParser<Selector> {
 						parts.add(new ModifierSelector(modifier));
 					}
 				}
+			} else if (c == ',') {
+				moveCursor();
+				Selector previousSelector = createSelector(parts);
+				parts.clear();
+				if (parseRecursively(getRemainingInput())) {
+					Selector nextSelector = getResult();
+					parts.add(nextSelector.or(previousSelector));
+					moveCursorToEnd();
+				} else {
+					return fail(getError());
+				}
 			} else if (isValidNameChar(c)) {
 				// Type selector
 				String typeName = readWhile(SelectorParser::isValidNameChar);

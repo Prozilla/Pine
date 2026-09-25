@@ -20,8 +20,8 @@ public class NotSelector extends Selector {
 	}
 	
 	@Override
-	public int getSpecificity() {
-		return selector.getSpecificity();
+	public int getSpecificity(Node node) {
+		return selector.getSpecificity(node);
 	}
 	
 	@Override

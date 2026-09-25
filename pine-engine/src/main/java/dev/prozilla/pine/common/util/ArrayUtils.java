@@ -59,6 +59,19 @@ public final class ArrayUtils {
 	}
 	
 	/**
+	 * Adds an element to an array.
+	 * @param array The array to expand
+	 * @param element The element to add
+	 * @return The expanded array
+	 * @param <E> The type of elements in the array
+	 */
+	public static <E> E[] add(E[] array, E element) {
+		E[] newArray = Arrays.copyOf(array, array.length + 1);
+		newArray[array.length] = element;
+		return newArray;
+	}
+	
+	/**
 	 * Finds the element in an array of which the result of {@link Object#toString()} is equal to a given string.
 	 * @param array The array to search in
 	 * @param string The string representation of the element to search for

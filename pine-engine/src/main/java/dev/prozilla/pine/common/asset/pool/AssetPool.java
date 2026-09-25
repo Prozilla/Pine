@@ -103,7 +103,13 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 	 */
 	@Contract("_, _, _ -> null")
 	protected T fail(String path, String reason, Exception exception) {
-		eventDispatcher.invoke(AssetPoolEvent.Type.FAILED, this, path, reason, exception);
+		if (!eventDispatcher.invoke(AssetPoolEvent.Type.FAILED, this, path, reason, exception)) {
+			String message = String.format("Failed to load asset: %s", path);
+			if (reason != null) {
+				message += System.lineSeparator() + reason;
+			}
+			Logger.system.error(message, exception);
+		}
 		return null;
 	}
 	

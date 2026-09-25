@@ -1,22 +1,30 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
+import dev.prozilla.pine.common.property.style.CSSParser;
 import dev.prozilla.pine.common.property.style.StyleSheet;
+import dev.prozilla.pine.common.util.ArrayUtils;
+import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.common.util.parser.SequentialParser;
 import dev.prozilla.pine.core.component.ui.Node;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HTMLParser extends SequentialParser<NodePrefab> {
 	
 	protected List<NodePrefab> children;
+	protected boolean ignoreChild;
 	
 	protected String title;
-	protected List<StyleSheet> styleSheets; // TODO: parse style sheets
+	protected Set<StyleSheet> styleSheets;
 	
 	public static final String MISSING_CLOSING_TAG_ERROR = "Missing closing tag";
+	public static final String[] METADATA_TAGS = new String[] {
+		Node.HEAD_TAG,
+		Node.STYLE_TAG,
+		Node.TITLE_TAG
+	};
+	
+	private static final CSSParser cssParser = new CSSParser();
 	
 	@Override
 	public boolean parse(String input) {
@@ -35,13 +43,15 @@ public class HTMLParser extends SequentialParser<NodePrefab> {
 		String tag = readWhile((character) -> !Character.isWhitespace(character) && character != '>' && character != '/')
             .toLowerCase();
 		if (tag.isEmpty()) {
-			return succeed(new NodePrefab());
+			return succeed(createEmptyPrefab());
 		}
 		skipWhitespace();
 		
 		if (endOfInput()) {
 			return fail(String.format("%s of %s", MISSING_CLOSING_TAG_ERROR, tag));
 		}
+		
+		ignoreChild = ArrayUtils.contains(METADATA_TAGS, tag);
 		
 		Map<String, String> attributes = parseAttributes();
 		
@@ -111,22 +121,28 @@ public class HTMLParser extends SequentialParser<NodePrefab> {
 		// Save
 		NodePrefab parent = intermediate;
 		List<NodePrefab> children = this.children;
+		boolean ignoreChild = this.ignoreChild;
 		
 		// Recurse
 		intermediate = null;
 		this.children = null;
+		this.ignoreChild = false;
 		
 		boolean success = parse();
 		if (success) {
-			if (children == null) {
-				children = new ArrayList<>();
+			NodePrefab result = getResult();
+			if (!this.ignoreChild) {
+				if (children == null) {
+					children = new ArrayList<>();
+				}
+				children.add(result);
 			}
-			children.add(getResult());
 		}
 		
 		// Restore
 		intermediate = parent;
 		this.children = children;
+		this.ignoreChild = ignoreChild;
 		
 		return success;
 	}
@@ -176,13 +192,9 @@ public class HTMLParser extends SequentialParser<NodePrefab> {
 			     Node.HEADING_3_TAG,
 			     Node.HEADING_4_TAG,
 			     Node.HEADING_5_TAG,
-			     Node.HEADING_6_TAG -> {
-				TextPrefab textPrefab = new TextPrefab(text);
-				textPrefab.setHTMLTag(tag);
-				yield textPrefab;
-			}
+			     Node.HEADING_6_TAG -> createTextPrefab(tag, text);
 			case Node.BUTTON_TAG -> new TextButtonPrefab(text);
-			case Node.INPUT_TAG -> "range".equals(attributes.get(Node.TYPE_ATTRIBUTE)) ? new RangeInputPrefab() : new TextInputPrefab(text);
+			case Node.INPUT_TAG -> createInputPrefab(attributes, text);
 			case Node.DIV_TAG,
 			     Node.SPAN_TAG,
 			     Node.HTML_TAG,
@@ -190,13 +202,9 @@ public class HTMLParser extends SequentialParser<NodePrefab> {
 			     Node.HEADER_TAG,
 			     Node.BODY_TAG,
 			     Node.FOOTER_TAG -> new LayoutPrefab(tag);
-			case Node.TITLE_TAG -> {
-				if (title == null) {
-					title = text;
-				}
-				yield new NodePrefab();
-			}
-			default -> new NodePrefab();
+			case Node.TITLE_TAG -> createTitlePrefab(text);
+			case Node.STYLE_TAG -> createStylePrefab(text);
+			default -> createEmptyPrefab();
 		};
 		
 		prefab.setAttributes(attributes);
@@ -208,8 +216,43 @@ public class HTMLParser extends SequentialParser<NodePrefab> {
 		return prefab;
 	}
 	
-	public List<StyleSheet> getStyleSheets() {
-		List<StyleSheet> styleSheets = this.styleSheets;
+	private TextPrefab createTextPrefab(String tag, String text) {
+		TextPrefab textPrefab = new TextPrefab(text);
+		textPrefab.setHTMLTag(tag);
+		return textPrefab;
+	}
+	
+	private NodePrefab createInputPrefab(Map<String, String> attributes, String text) {
+		return "range".equals(attributes.get(Node.TYPE_ATTRIBUTE)) ? new RangeInputPrefab() : new TextInputPrefab(text);
+	}
+	
+	private NodePrefab createTitlePrefab(String text) {
+		if (title == null) {
+			title = text;
+		}
+		return createEmptyPrefab();
+	}
+	
+	private NodePrefab createStylePrefab(String text) {
+		if (!StringUtils.isBlank(text) && cssParser.parse(text)) {
+			addStyleSheet(cssParser.getResult());
+		}
+		return createEmptyPrefab();
+	}
+	
+	private NodePrefab createEmptyPrefab() {
+		return new NodePrefab();
+	}
+	
+	private void addStyleSheet(StyleSheet styleSheet) {
+		if (styleSheets == null) {
+			styleSheets = new HashSet<>();
+		}
+		styleSheets.add(styleSheet);
+	}
+	
+	public Set<StyleSheet> getStyleSheets() {
+		Set<StyleSheet> styleSheets = this.styleSheets;
 		this.styleSheets = null;
 		return styleSheets;
 	}

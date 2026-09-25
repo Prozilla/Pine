@@ -93,6 +93,10 @@ public class NodePrefab extends LayerPrefab {
 		styleSheets.add(styleSheet);
 	}
 	
+	public void addStyleSheets(Collection<? extends StyleSheet> styleSheets) {
+		this.styleSheets.addAll(styleSheets);
+	}
+	
 	public void removeStyleSheet(StyleSheet styleSheet) {
 		styleSheets.remove(styleSheet);
 	}

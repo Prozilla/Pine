@@ -5,12 +5,12 @@ import dev.prozilla.pine.common.event.EventDispatcher;
 
 public class AssetPoolEventDispatcher<T extends Asset> extends EventDispatcher<AssetPoolEvent.Type, AssetPool<T>, AssetPoolEvent<T>> {
 	
-	public void invoke(AssetPoolEvent.Type type, AssetPool<T> target, String path) {
-		invoke(type, target, path, null, null);
+	public boolean invoke(AssetPoolEvent.Type type, AssetPool<T> target, String path) {
+		return invoke(type, target, path, null, null);
 	}
 	
-	public void invoke(AssetPoolEvent.Type type, AssetPool<T> target, String path, String error, Exception exception) {
-		invoke(new AssetPoolEvent<>(type, target, path, error, exception));
+	public boolean invoke(AssetPoolEvent.Type type, AssetPool<T> target, String path, String error, Exception exception) {
+		return invoke(new AssetPoolEvent<>(type, target, path, error, exception));
 	}
 	
 	@Override

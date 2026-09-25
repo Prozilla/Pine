@@ -88,6 +88,7 @@ public interface EventDispatcherContext<EventType extends Enum<EventType>, Targe
 	 * Invokes the event of a given type with a given target.
 	 * @param eventType The type of event to invoke
 	 * @param target The target of the event
+	 * @return {@code true} if this event has reached any listener.
 	 */
 	boolean invoke(EventType eventType, Target target);
 	

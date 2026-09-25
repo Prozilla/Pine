@@ -133,6 +133,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public static final String SPAN_TAG = "span";
 	public static final String HTML_TAG = "html";
 	public static final String HEAD_TAG = "head";
+	public static final String STYLE_TAG = "style";
 	public static final String HEADER_TAG = "header";
 	public static final String BODY_TAG = "body";
 	public static final String FOOTER_TAG = "footer";

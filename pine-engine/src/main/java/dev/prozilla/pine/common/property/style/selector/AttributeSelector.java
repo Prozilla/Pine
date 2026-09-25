@@ -45,7 +45,7 @@ public class AttributeSelector extends Selector {
 	}
 	
 	@Override
-	public int getSpecificity() {
+	public int getSpecificity(Node node) {
 		return 10;
 	}
 	

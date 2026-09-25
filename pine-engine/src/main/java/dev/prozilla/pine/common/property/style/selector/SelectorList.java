@@ -1,57 +1,67 @@
 package dev.prozilla.pine.common.property.style.selector;
 
+import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.core.component.ui.Node;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.StringJoiner;
+
 /**
- * A selector that combines multiple other selectors.
+ * A list of selectors.
  * 
- * <p>This selector matches a node if all selectors match the node.</p>
+ * <p>This selector matches a node if any selector in the list matches the node.</p>
  */
-public class CompoundSelector extends Selector {
+public class SelectorList extends Selector {
 	
 	private final Selector[] selectors;
 	
-	public CompoundSelector(Selector... selectors) {
+	public SelectorList(Selector... selectors) {
 		this.selectors = selectors;
 	}
 	
 	@Override
 	public boolean matches(Node node) {
 		for (Selector selector : selectors) {
-			if (!selector.matches(node)) {
-				return false;
+			if (selector.matches(node)) {
+				return true;
 			}
 		}
 		
-		return true;
+		return false;
 	}
 	
 	@Override
 	public int getSpecificity(Node node) {
-		int specificity = 0;
 		for (Selector selector : selectors) {
-			specificity += selector.getSpecificity(node);
+			if (selector.matches(node)) {
+				return selector.getSpecificity(node);
+			}
 		}
-		return specificity;
+		
+		return 0;
+	}
+	
+	@Override
+	public SelectorList or(Selector selector) {
+		return new SelectorList(ArrayUtils.add(selectors, selector));
 	}
 	
 	@Override
 	public @NotNull String toString() {
-		StringBuilder stringBuilder = new StringBuilder();
+		StringJoiner stringJoiner = new StringJoiner(", ");
 		for (Selector selector : selectors) {
-			stringBuilder.append(selector.toString());
+			stringJoiner.add(selector.toString());
 		}
-		return stringBuilder.toString();
+		return stringJoiner.toString();
 	}
 	
 	@Override
 	public boolean equals(Selector other) {
-		if (!(other instanceof CompoundSelector otherCompoundSelector)) {
+		if (!(other instanceof SelectorList otherSelectorList)) {
 			return false;
 		}
 		
-		Selector[] otherSelectors = otherCompoundSelector.selectors;
+		Selector[] otherSelectors = otherSelectorList.selectors;
 		
 		if (selectors.length != otherSelectors.length) {
 			return false;

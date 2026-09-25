@@ -1,7 +1,10 @@
 package dev.prozilla.pine.common.asset.pool;
 
+import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.core.entity.prefab.ui.HTMLParser;
 import dev.prozilla.pine.core.entity.prefab.ui.View;
+
+import java.util.Set;
 
 public final class ViewPool extends TextAssetPool<View> implements MultiAssetLoader<View> {
 	
@@ -18,7 +21,14 @@ public final class ViewPool extends TextAssetPool<View> implements MultiAssetLoa
 			return fail(content, "Error while parsing: " + parser.getError(), null);
 		}
 		
-		return new View(parser.getResult(), parser.getTitle(), path);
+		View view = new View(parser.getResult(), parser.getTitle(), path);
+		
+		Set<StyleSheet> styleSheets = parser.getStyleSheets();
+		if (styleSheets != null) {
+			view.prefab.addStyleSheets(styleSheets);
+		}
+		
+		return view;
 	}
 	
 }

@@ -10,6 +10,10 @@ public class ModifierSelector extends Selector {
 
 	private final String modifier;
 	
+	public final static ModifierSelector HOVER = new ModifierSelector(Node.HOVER_MODIFIER);
+	public final static ModifierSelector FOCUS = new ModifierSelector(Node.FOCUS_MODIFIER);
+	public final static ModifierSelector FOCUS_VISIBLE = new ModifierSelector(Node.FOCUS_VISIBLE_MODIFIER);
+	
 	public ModifierSelector(String modifier) {
 		this.modifier = modifier;
 	}
@@ -20,7 +24,7 @@ public class ModifierSelector extends Selector {
 	}
 	
 	@Override
-	public int getSpecificity() {
+	public int getSpecificity(Node node) {
 		return 10;
 	}
 	
@@ -28,10 +32,6 @@ public class ModifierSelector extends Selector {
 	public @NotNull String toString() {
 		return ":" + modifier;
 	}
-	
-	public final static ModifierSelector HOVER = new ModifierSelector(Node.HOVER_MODIFIER);
-	public final static ModifierSelector FOCUS = new ModifierSelector(Node.FOCUS_MODIFIER);
-	public final static ModifierSelector FOCUS_VISIBLE = new ModifierSelector(Node.FOCUS_VISIBLE_MODIFIER);
 	
 	@Override
 	public boolean equals(Selector other) {

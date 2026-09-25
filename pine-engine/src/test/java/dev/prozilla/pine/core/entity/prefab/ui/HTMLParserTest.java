@@ -1,5 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
+import dev.prozilla.pine.common.property.style.CSSParser;
+import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.test.TestLoggingExtension;
@@ -8,6 +10,8 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -161,6 +165,37 @@ public class HTMLParserTest {
 		assertInstanceOf(TextPrefab.class, childPrefab);
 		TextPrefab textPrefab = (TextPrefab)childPrefab;
 		assertEquals("FooBar", textPrefab.text, "result should have the correct text content");
+	}
+	
+	@Test
+	void testMetadata() {
+		HTMLParser parser = new HTMLParser();
+		if (!parser.parse("<html><head><title>FooBar</title></head></html>")) {
+			fail(parser.getError());
+		}
+		
+		NodePrefab result = parser.getResult();
+		assertNotNull(result, "parsing of html with metadata should have result");
+		assertEquals(Node.HTML_TAG, result.htmlTag, "result should have the correct html tag");
+		assertTrue(result.getChildren().isEmpty(), "result should have no children");
+		assertEquals("FooBar", parser.getTitle(), "metadata should have an effect");
+	}
+	
+	@Test
+	void testStyle() {
+		String style = "p { color: red; }";
+		StyleSheet expected = new CSSParser().read(style);
+		
+		HTMLParser parser = new HTMLParser();
+		if (!parser.parse(String.format("<style>%s</style>", style))) {
+			fail(parser.getError());
+		}
+		
+		Set<StyleSheet> styleSheets = parser.getStyleSheets();
+		assertEquals(1, styleSheets.size(), "set of style sheets should have one element");
+		
+		StyleSheet styleSheet = styleSheets.iterator().next();
+		assertEquals(expected, styleSheet, "style sheet should have the correct styles");
 	}
 
 }

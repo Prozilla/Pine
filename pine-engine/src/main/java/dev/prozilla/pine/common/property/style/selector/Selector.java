@@ -47,7 +47,15 @@ public abstract class Selector implements Printable {
 	 * Returns an integer representing the specificity of this selector.
 	 * @return The specificity of this selector
 	 */
-	public abstract int getSpecificity();
+	public abstract int getSpecificity(Node node);
+	
+	/**
+	 * Creates a selector list containing this selector and the given selector.
+	 * @return The new selector list.
+	 */
+	public SelectorList or(Selector selector) {
+		return new SelectorList(this, selector);
+	}
 	
 	@Override
 	public boolean equals(Object other) {
@@ -68,7 +76,7 @@ public abstract class Selector implements Printable {
 		}
 		
 		@Override
-		public int getSpecificity() {
+		public int getSpecificity(Node node) {
 			return 0;
 		}
 		

@@ -13,8 +13,11 @@ import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.handler.LogHandler;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.system.Ansi;
+import dev.prozilla.pine.common.system.DirectoryWatcher;
 import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.entity.prefab.ui.View;
+import dev.prozilla.pine.core.rendering.Shader;
 import dev.prozilla.pine.core.state.config.LogConfig;
 
 import java.util.StringJoiner;
@@ -32,7 +35,10 @@ public class AppLogger extends Logger implements Initializable {
 	protected final EventListener<AssetPoolEvent<TextureAsset>> onTextureLoad;
 	protected final EventListener<AssetPoolEvent<Font>> onFontLoad;
 	protected final EventListener<AssetPoolEvent<StyleSheet>> onStyleSheetLoad;
+	protected final EventListener<AssetPoolEvent<View>> onViewLoad;
 	protected final EventListener<AssetPoolEvent<AudioSource>> onAudioSourceLoad;
+	protected final EventListener<AssetPoolEvent<Shader>> onShaderLoad;
+	protected final EventListener<AssetPoolEvent<DirectoryWatcher>> onDirectoryWatcherLoad;
 	
 	protected int errorCount;
 	protected int warningCount;
@@ -44,7 +50,10 @@ public class AppLogger extends Logger implements Initializable {
 		onTextureLoad = createAssetPoolListener("texture");
 		onFontLoad = createAssetPoolListener("font");
 		onStyleSheetLoad = createAssetPoolListener("style sheet");
+		onViewLoad = createAssetPoolListener("view");
 		onAudioSourceLoad = createAssetPoolListener("audio source");
+		onShaderLoad = createAssetPoolListener("shader");
+		onDirectoryWatcherLoad = createAssetPoolListener("directory watcher");
 	}
 	
 	/**
@@ -80,13 +89,19 @@ public class AppLogger extends Logger implements Initializable {
 				addAssetPoolListener(AssetPools.textures, onTextureLoad);
 				addAssetPoolListener(AssetPools.fonts, onFontLoad);
 				addAssetPoolListener(AssetPools.styleSheets, onStyleSheetLoad);
+				addAssetPoolListener(AssetPools.views, onViewLoad);
 				addAssetPoolListener(AssetPools.audioSources, onAudioSourceLoad);
+				addAssetPoolListener(AssetPools.shaders, onShaderLoad);
+				addAssetPoolListener(AssetPools.directoryWatchers, onDirectoryWatcherLoad);
 			} else {
 				removeAssetPoolListener(AssetPools.images, onImageLoad);
 				removeAssetPoolListener(AssetPools.textures, onTextureLoad);
 				removeAssetPoolListener(AssetPools.fonts, onFontLoad);
 				removeAssetPoolListener(AssetPools.styleSheets, onStyleSheetLoad);
+				removeAssetPoolListener(AssetPools.views, onViewLoad);
 				removeAssetPoolListener(AssetPools.audioSources, onAudioSourceLoad);
+				removeAssetPoolListener(AssetPools.shaders, onShaderLoad);
+				removeAssetPoolListener(AssetPools.directoryWatchers, onDirectoryWatcherLoad);
 			}
 		});
 	}

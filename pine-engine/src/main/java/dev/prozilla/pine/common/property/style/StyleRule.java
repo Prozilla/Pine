@@ -25,8 +25,8 @@ public record StyleRule<T>(Selector selector, T value, boolean isDefault) implem
 	 * Returns the specificity of the selector of this rule.
 	 * @return The specificity of the selector.
 	 */
-	public int getSpecificity() {
-		return selector.getSpecificity();
+	public int getSpecificity(Node node) {
+		return selector.getSpecificity(node);
 	}
 	
 	@Override
