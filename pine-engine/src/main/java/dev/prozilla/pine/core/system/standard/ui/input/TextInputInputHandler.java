@@ -57,7 +57,9 @@ public final class TextInputInputHandler extends InputSystem {
 			}
 			
 			textInputNode.dragSelection(delta);
-		} else if (input.getKeyRepeated(Key.LEFT_ARROW)) {
+		}
+		
+		if (input.getKeyRepeated(Key.LEFT_ARROW)) {
 			if (shiftKey) {
 				textInputNode.dragSelection(-1);
 			} else {
