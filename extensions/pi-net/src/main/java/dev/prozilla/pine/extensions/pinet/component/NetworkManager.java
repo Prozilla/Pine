@@ -72,11 +72,10 @@ public class NetworkManager extends Component implements Synchronizable {
 	 */
 	public void createClient(String address, int port, ServerResponseHandler responseHandler) {
 		disconnect();
-		try {
-			session = ClientSession.createRemote(address, port, responseHandler, codec, getLogger());
-		} catch (IOException e) {
-			getLogger().error("Failed to connect to server", e);
-		}
+		ClientSession.createRemote(address, port, responseHandler, codec, getLogger(),
+			(client) -> session = client,
+			(cause) -> getLogger().error(String.format("Failed to connect to %s on port %s", address, port), cause)
+		);
 	}
 	
 	/**

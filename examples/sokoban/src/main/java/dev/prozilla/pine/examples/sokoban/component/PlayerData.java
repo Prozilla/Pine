@@ -111,10 +111,6 @@ public class PlayerData extends Component {
 		
 		spriteRenderer.getMesh().setOffset(0, 0);
 		
-		if (pushingCrateSprite != null) {
-			pushingCrateSprite.getMesh().setOffset(0, 0);
-		}
-		
 		if (pendingMove != null) {
 			if (pendingMove.pushedCrate() && pushingCrateTile != null) {
 				pushingCrateTile.moveTo(new Vector2i(pendingMove.crateEnd()));
@@ -162,6 +158,10 @@ public class PlayerData extends Component {
 	
 	private void startMove(Direction direction) {
 		this.direction = direction;
+		
+		if (pushingCrateSprite != null) {
+			pushingCrateSprite.getMesh().setOffset(0, 0);
+		}
 		
 		pushingCrateTile = null;
 		pushingCrateSprite = null;

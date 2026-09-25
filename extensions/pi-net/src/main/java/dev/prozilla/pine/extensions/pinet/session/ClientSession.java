@@ -17,9 +17,9 @@ import io.netty.channel.MultiThreadIoEventLoopGroup;
 import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
-import java.io.IOException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 /**
  * A connection between a client and a {@link Server}, from the perspective of the client.
@@ -93,7 +93,7 @@ public class ClientSession extends Session {
 		}
 	}
 	
-	public static ClientSession createRemote(String host, int port, ServerResponseHandler responseHandler, PacketCodec codec, Logger logger) throws IOException {
+	public static void createRemote(String host, int port, ServerResponseHandler responseHandler, PacketCodec codec, Logger logger, Consumer<ClientSession> onConnect, Consumer<Throwable> onError) {
 		EventLoopGroup group = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 		RemoteConnection connection = new RemoteConnection();
 		
@@ -102,16 +102,16 @@ public class ClientSession extends Session {
 			.channel(NioSocketChannel.class)
 			.handler(new RemoteConnection.Initializer(() -> connection, codec));
 		
-		try {
-			bootstrap.connect(host, port).sync();
-			ClientSession client = new ClientSession(connection, responseHandler, group, logger);
-			connection.bind(client);
-			return client;
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-			group.shutdownGracefully();
-			throw new IOException("Failed to create remote connection", e);
-		}
+		bootstrap.connect(host, port).addListener((future) -> {
+			if (future.isSuccess()) {
+				ClientSession client = new ClientSession(connection, responseHandler, group, logger);
+				connection.bind(client);
+				onConnect.accept(client);
+			} else {
+				group.shutdownGracefully();
+				onError.accept(future.cause());
+			}
+		});
 	}
 	
 	public static ClientSession createLocal(LocalConnection connection, ServerResponseHandler responseHandler, Logger logger) {

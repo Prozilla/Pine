@@ -177,7 +177,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		TileRenderer tileRenderer = chunk.getComponent(TileRenderer.class);
 		
 		Vector2i coordinate = tileRenderer.getCoordinate();
-		if (coordinate.equals(move.end())) {
+		if (playerData.pendingMove == null && coordinate.equals(move.end())) {
 			return;
 		}
 		
@@ -185,6 +185,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 			return;
 		}
 		
+		playerData.finishMove();
 		playerData.beginMove(move, scene.getForegroundGrid());
 	}
 	
@@ -268,9 +269,6 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		}
 		
 		history.push(move);
-		if (!playerData.awaitingConfirm) {
-			playerData.beginMove(move, scene.getForegroundGrid());
-		}
 		request.replyToAll(new PlayerMovePacket(move));
 	}
 	

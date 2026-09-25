@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.component.sprite;
 
+import dev.prozilla.pine.common.exception.InvalidObjectException;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.util.MappedIterator;
@@ -55,14 +56,14 @@ public class GridGroup extends Component implements Iterable<TileRenderer> {
 	
 	/**
 	 * Adds a tile to this grid based on the tile's current coordinate.
-	 * @param tile Tile to add to this grid
-	 * @throws IllegalStateException If there is already a tile in this grid with the same coordinate
+	 * @param tile The tile to add to this grid
+	 * @return The added tile, or {@code null} if there is already a tile on this coordinate.
 	 */
-	public TileRenderer addTile(TileRenderer tile) throws NullPointerException, IllegalStateException {
+	public TileRenderer addTile(TileRenderer tile) throws InvalidObjectException {
 		Checks.isNotNull(tile, "tile");
 		
 		if (coordinateToTile.containsKey(tile.getCoordinate())) {
-			throw new IllegalStateException("multiple tiles cannot be placed on the same coordinate in one grid");
+			return null;
 		}
 		
 		tile.setSize(size);
@@ -158,7 +159,7 @@ public class GridGroup extends Component implements Iterable<TileRenderer> {
 	
 	public void moveTile(Vector2i oldCoordinate, Vector2i newCoordinate) {
 		TileRenderer tile = getTile(oldCoordinate);
-		if (removeTile(tile)) {
+		if (!hasTile(newCoordinate) && removeTile(tile)) {
 			tile.setCoordinate(newCoordinate);
 			addTile(tile);
 		}
