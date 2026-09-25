@@ -211,4 +211,12 @@ public final class ArrayUtils {
 		return null;
 	}
 	
+	public static <E> E getRandom(E[] array) {
+		return getRandom(array, new Random());
+	}
+	
+	public static <E> E getRandom(E[] array, Random random) {
+		return array[random.nextInt(array.length)];
+	}
+	
 }

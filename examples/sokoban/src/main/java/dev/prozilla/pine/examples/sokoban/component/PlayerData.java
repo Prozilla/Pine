@@ -8,7 +8,7 @@ import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.examples.sokoban.EntityTag;
-import dev.prozilla.pine.examples.sokoban.GameMap;
+import dev.prozilla.pine.examples.sokoban.GameManager;
 
 import java.util.Map;
 
@@ -62,7 +62,7 @@ public class PlayerData extends Component {
 		Vector2i start = tileRenderer.getCoordinate();
 		Vector2i end = direction.toIntVector().add(start);
 		
-		if (!GameMap.contains(end)) {
+		if (!GameManager.instance.level.contains(end)) {
 			return null;
 		}
 		
@@ -79,7 +79,7 @@ public class PlayerData extends Component {
 			crateStart = end.clone();
 			crateEnd = direction.toIntVector().add(crateStart);
 			
-			if (!GameMap.contains(crateEnd) || grid.hasTile(crateEnd)) {
+			if (!GameManager.instance.level.contains(crateEnd) || grid.hasTile(crateEnd)) {
 				return null;
 			}
 			

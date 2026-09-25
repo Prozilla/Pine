@@ -2,6 +2,7 @@ package dev.prozilla.pine.core.component.sprite;
 
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
+import dev.prozilla.pine.common.util.MappedIterator;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.Transform;
@@ -9,14 +10,17 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
 import dev.prozilla.pine.core.system.standard.sprite.TileMover;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A component that groups 2D tiles together and aligns them in a grid pattern.
  */
-public class GridGroup extends Component {
+public class GridGroup extends Component implements Iterable<TileRenderer> {
 	
 	public int size;
 	public final Map<Vector2i, TileProvider> coordinateToTile;
@@ -222,6 +226,16 @@ public class GridGroup extends Component {
 				return Integer.compare(coordinateB.x, coordinateA.x);
 			}
 		});
+	}
+	
+	public Set<Vector2i> getCoordinates() {
+		return coordinateToTile.keySet();
+	}
+	
+	@Override
+	public @NotNull Iterator<TileRenderer> iterator() {
+		Iterator<TileProvider> iterator = coordinateToTile.values().iterator();
+		return new MappedIterator<>(iterator, TileProvider::getTile);
 	}
 	
 	/**

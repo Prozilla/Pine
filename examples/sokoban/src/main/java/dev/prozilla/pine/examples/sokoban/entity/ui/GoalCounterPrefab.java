@@ -16,7 +16,7 @@ public class GoalCounterPrefab extends LayoutPrefab {
 		
 		TextPrefab textPrefab = new TextPrefab("0/0");
 		textPrefab.setFont(GameManager.instance.font);
-		textPrefab.setText(() -> GameManager.instance.completedCrates + "/" + GameManager.instance.totalCrates);
+		textPrefab.setText(() -> GameManager.instance.completedCrates + "/" + GameManager.instance.getCrateCount());
 		
 		ImagePrefab imagePrefab = new ImagePrefab("images/crates/crate_02.png");
 		imagePrefab.addClass("goal-counter-image");

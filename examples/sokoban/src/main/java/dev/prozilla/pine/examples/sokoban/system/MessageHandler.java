@@ -5,25 +5,24 @@ import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector3i;
 import dev.prozilla.pine.core.component.audio.AudioEffectPlayer;
 import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
-import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.NoOpUpdateSystem;
 import dev.prozilla.pine.examples.sokoban.EntityTag;
 import dev.prozilla.pine.examples.sokoban.GameManager;
-import dev.prozilla.pine.examples.sokoban.GameMap;
 import dev.prozilla.pine.examples.sokoban.component.History;
 import dev.prozilla.pine.examples.sokoban.component.Move;
 import dev.prozilla.pine.examples.sokoban.component.PlayerData;
-import dev.prozilla.pine.examples.sokoban.entity.CratePrefab;
-import dev.prozilla.pine.examples.sokoban.entity.PlayerPrefab;
+import dev.prozilla.pine.examples.sokoban.entity.*;
+import dev.prozilla.pine.examples.sokoban.level.Level;
 import dev.prozilla.pine.examples.sokoban.packet.*;
 import dev.prozilla.pine.examples.sokoban.request.MoveRequest;
 import dev.prozilla.pine.examples.sokoban.request.RestartRequest;
 import dev.prozilla.pine.examples.sokoban.request.UndoRequest;
+import dev.prozilla.pine.examples.sokoban.scene.GameScene;
+import dev.prozilla.pine.extensions.pinet.Server;
 import dev.prozilla.pine.extensions.pinet.component.NetworkIdentity;
-import dev.prozilla.pine.extensions.pinet.component.NetworkManager;
 import dev.prozilla.pine.extensions.pinet.message.ServerMessageHandler;
 import dev.prozilla.pine.extensions.pinet.message.request.ServerRequest;
 import dev.prozilla.pine.extensions.pinet.message.response.ServerResponse;
@@ -33,23 +32,14 @@ import java.util.*;
 
 public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHandler {
 	
-	private final NetworkManager network;
-	private final GridGroup foregroundGrid;
-	private final List<Vector2i> crateSpawns;
+	private final GameScene scene;
+	private boolean isLevelLoaded;
 	
-	public MessageHandler(NetworkManager network, GridGroup foregroundGrid) {
+	public MessageHandler(GameScene scene) {
 		super(NetworkIdentity.class, PlayerData.class, TileRenderer.class, SpriteRenderer.class, AudioEffectPlayer.class, History.class);
 		setRequiredTag(EntityTag.PLAYER);
-		this.network = network;
-		this.foregroundGrid = foregroundGrid;
-		
-		crateSpawns = new ArrayList<>();
-		for (Vector2i coordinate : foregroundGrid.coordinateToTile.keySet()) {
-			TileRenderer tile = foregroundGrid.getTile(coordinate);
-			if (tile != null && tile.getEntity().hasTag(EntityTag.CRATE)) {
-				crateSpawns.add(tile.getCoordinate().clone());
-			}
-		}
+		this.scene = scene;
+		isLevelLoaded = false;
 	}
 	
 	@Override
@@ -65,10 +55,12 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 	@Override
 	public void handleJoin(ServerRequest request) {
 		Vector2i spawn = findSpawn();
-		foregroundGrid.addTile(new PlayerPrefab(request.getSenderId()), spawn.x, spawn.y);
+		scene.getForegroundGrid().addTile(new PlayerPrefab(request.getSenderId()), spawn.x, spawn.y);
 		
-		request.reply(new WelcomePacket(request.getSenderId()));
-		request.reply(createSnapshot());
+		request.reply(new WelcomePacket(request.getSenderId(), GameManager.instance.level));
+		if (!request.isSentByHost()) {
+			request.reply(createSnapshot());
+		}
 		request.replyToOthers(new PlayerJoinPacket(request.getSenderId(), spawn));
 	}
 	
@@ -85,9 +77,10 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 	@Override
 	public void handleResponse(ServerResponse response) {
 		switch (response.getPayload()) {
-			case WelcomePacket(int playerId) -> {
+			case WelcomePacket(int playerId, Level level) -> {
 				response.acknowledge();
-				network.setLocalClientId(playerId);
+				scene.getNetwork().setLocalClientId(playerId);
+				loadLevel(level);
 			}
 			case GameStatePacket state -> {
 				response.acknowledge();
@@ -107,7 +100,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 			}
 			case RejectionPacket ignored -> {
 				response.acknowledge();
-				rejectPendingMove(network.getLocalClientId());
+				rejectPendingMove(scene.getNetwork().getLocalClientId());
 			}
 			default -> {}
 		}
@@ -119,8 +112,40 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		GameManager.instance.leaveSession();
 	}
 	
+	private void loadLevel(Level level) {
+		GameManager.instance.level = level;
+		logger.log("Loading level");
+		
+		BlockPrefab blockPrefab = new BlockPrefab();
+		for (Vector2i coordinate : level.walls) {
+			scene.getForegroundGrid().addTile(blockPrefab, coordinate.clone());
+		}
+		
+		GoalPrefab goalPrefab = new GoalPrefab();
+		for (Vector2i coordinate : level.goals) {
+			scene.getGoalGrid().addTile(goalPrefab, coordinate.clone());
+		}
+		
+		if (!GameManager.instance.isMultiplayer() || GameManager.instance.isHost()) {
+			CratePrefab cratePrefab = new CratePrefab();
+			for (Vector2i coordinate : level.crates) {
+				scene.getForegroundGrid().addTile(cratePrefab, coordinate.clone());
+			}
+		}
+		
+		GroundPrefab groundPrefab = new GroundPrefab();
+		for (int x = 0; x < level.getWidth(); x++) {
+			for (int y = 0; y < level.getHeight(); y++) {
+				scene.getBackgroundGrid().addTile(groundPrefab, x, y);
+			}
+		}
+		
+		scene.resetCamera();
+		isLevelLoaded = true;
+	}
+	
 	private void applyGameState(GameStatePacket state) {
-		clearAwaitingConfirm(network.getLocalClientId());
+		clearAwaitingConfirm(scene.getNetwork().getLocalClientId());
 		
 		Map<Integer, Vector2i> playerPositions = new HashMap<>();
 		for (Vector3i player : state.players()) {
@@ -138,7 +163,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 	private void applyMove(PlayerMovePacket packet) {
 		Move move = packet.move();
 		
-		int localId = network.getLocalClientId();
+		int localId = scene.getNetwork().getLocalClientId();
 		if (move.playerId() == localId) {
 			clearAwaitingConfirm(localId);
 		}
@@ -160,7 +185,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 			return;
 		}
 		
-		playerData.beginMove(move, foregroundGrid);
+		playerData.beginMove(move, scene.getForegroundGrid());
 	}
 	
 	private void rejectPendingMove(int playerId) {
@@ -169,7 +194,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 			return;
 		}
 		
-		chunk.getComponent(History.class).revertPending(foregroundGrid);
+		chunk.getComponent(History.class).revertPending(scene.getForegroundGrid());
 		clearAwaitingConfirm(playerId);
 	}
 	
@@ -196,12 +221,12 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 				return;
 			}
 			
-			foregroundGrid.removeTile(chunk.getComponent(TileRenderer.class));
+			scene.getForegroundGrid().removeTile(chunk.getComponent(TileRenderer.class));
 		});
 		
 		clearCrates();
 		for (Vector2i cratePosition : crateCoordinates) {
-			foregroundGrid.addTile(new CratePrefab(), cratePosition.x, cratePosition.y);
+			scene.getForegroundGrid().addTile(new CratePrefab(), cratePosition.x, cratePosition.y);
 		}
 		
 		for (Map.Entry<Integer, Vector2i> entry : playerCoordinates.entrySet()) {
@@ -213,12 +238,12 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		EntityChunk chunk = getPlayer(playerId);
 		if (chunk != null) {
 			PlayerData playerData = chunk.getComponent(PlayerData.class);
-			playerData.teleportTo(foregroundGrid, coordinate, playerData.direction);
+			playerData.teleportTo(scene.getForegroundGrid(), coordinate, playerData.direction);
 			return;
 		}
 		
-		if (!foregroundGrid.hasTile(coordinate)) {
-			foregroundGrid.addTile(new PlayerPrefab(playerId), coordinate);
+		if (!scene.getForegroundGrid().hasTile(coordinate)) {
+			scene.getForegroundGrid().addTile(new PlayerPrefab(playerId), coordinate);
 		}
 	}
 	
@@ -236,7 +261,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 			playerData.finishMove();
 		}
 		
-		Move move = playerData.computeMove(foregroundGrid, direction);
+		Move move = playerData.computeMove(scene.getForegroundGrid(), direction);
 		if (move == null) {
 			reject(request);
 			return;
@@ -244,7 +269,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		
 		history.push(move);
 		if (!playerData.awaitingConfirm) {
-			playerData.beginMove(move, foregroundGrid);
+			playerData.beginMove(move, scene.getForegroundGrid());
 		}
 		request.replyToAll(new PlayerMovePacket(move));
 	}
@@ -258,7 +283,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		
 		chunk.getComponent(PlayerData.class).finishMove();
 		
-		if (chunk.getComponent(History.class).undo(foregroundGrid) != null) {
+		if (chunk.getComponent(History.class).undo(scene.getForegroundGrid()) != null) {
 			request.replyToAll(createSnapshot());
 		} else {
 			reject(request);
@@ -273,7 +298,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		}
 		
 		Map<Integer, Vector2i> playerPositions = new HashMap<>();
-		Set<Vector2i> reserved = new HashSet<>(crateSpawns);
+		Set<Vector2i> reserved = new HashSet<>(GameManager.instance.level.crates);
 		forEach(chunk -> {
 			int id = chunk.getComponent(NetworkIdentity.class).id;
 			Vector2i spawn = findSpawn(reserved, false);
@@ -282,7 +307,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 			playerPositions.put(id, spawn);
 		});
 		
-		applyState(playerPositions, crateSpawns);
+		applyState(playerPositions, GameManager.instance.level.crates);
 		
 		forEach(chunk -> chunk.getComponent(History.class).clear());
 		
@@ -296,8 +321,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 	
 	private void clearCrates() {
 		List<Entity> crates = new ArrayList<>();
-		for (Vector2i coordinate : new ArrayList<>(foregroundGrid.coordinateToTile.keySet())) {
-			TileRenderer tile = foregroundGrid.getTile(coordinate);
+		for (TileRenderer tile : scene.getForegroundGrid()) {
 			if (tile != null && tile.getEntity().hasTag(EntityTag.CRATE)) {
 				crates.add(tile.getEntity());
 			}
@@ -326,13 +350,13 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 	}
 	
 	private Vector2i findSpawn(Set<Vector2i> reserved, boolean avoidLiveTiles) {
-		Vector2i spawn = GameMap.getSpawnPoint();
+		Vector2i spawn = GameManager.instance.level.spawn;
 		if (isSpawnable(spawn, reserved, avoidLiveTiles)) {
 			return spawn;
 		}
 		
-		int width = GameMap.getWidth();
-		int height = GameMap.getHeight();
+		int width = GameManager.instance.level.getWidth();
+		int height = GameManager.instance.level.getHeight();
 		for (int radius = 1; radius < Math.max(width, height); radius++) {
 			for (int dx = -radius; dx <= radius; dx++) {
 				for (int dy = -radius; dy <= radius; dy++) {
@@ -341,7 +365,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 					}
 					
 					Vector2i candidate = new Vector2i(spawn.x + dx, spawn.y + dy);
-					if (GameMap.contains(candidate) && isSpawnable(candidate, reserved, avoidLiveTiles)) {
+					if (GameManager.instance.level.contains(candidate) && isSpawnable(candidate, reserved, avoidLiveTiles)) {
 						return candidate;
 					}
 				}
@@ -352,26 +376,32 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 	
 	private boolean isSpawnable(Vector2i coordinate, Set<Vector2i> reserved, boolean avoidLiveTiles) {
 		return !reserved.contains(coordinate)
-			&& !(avoidLiveTiles && foregroundGrid.hasTile(coordinate))
-			&& !GameMap.isWall(coordinate);
+			&& !(avoidLiveTiles && scene.getForegroundGrid().hasTile(coordinate))
+			&& !GameManager.instance.level.isWall(coordinate);
 	}
 	
 	private Packet createSnapshot() {
 		List<Vector3i> players = new ArrayList<>();
 		List<Vector2i> crates = new ArrayList<>();
 		
-		for (Vector2i coordinate : foregroundGrid.coordinateToTile.keySet()) {
-			TileRenderer tile = foregroundGrid.getTile(coordinate);
-			if (tile == null) {
-				continue;
+		if (isLevelLoaded) {
+			for (Vector2i coordinate : scene.getForegroundGrid().getCoordinates()) {
+				TileRenderer tile = scene.getForegroundGrid().getTile(coordinate);
+				if (tile == null) {
+					continue;
+				}
+				
+				Entity entity = tile.getEntity();
+				if (entity.hasTag(EntityTag.PLAYER)) {
+					players.add(new Vector3i(entity.getComponent(NetworkIdentity.class).id, coordinate.x, coordinate.y));
+				} else if (entity.hasTag(EntityTag.CRATE)) {
+					crates.add(coordinate);
+				}
 			}
-			
-			Entity entity = tile.getEntity();
-			if (entity.hasTag(EntityTag.PLAYER)) {
-				players.add(new Vector3i(entity.getComponent(NetworkIdentity.class).id, coordinate.x, coordinate.y));
-			} else if (entity.hasTag(EntityTag.CRATE)) {
-				crates.add(coordinate);
-			}
+		} else {
+			Vector2i spawn = GameManager.instance.level.spawn;
+			players.add(new Vector3i(Server.HOST_ID, spawn.x, spawn.y));
+			crates.addAll(GameManager.instance.level.crates);
 		}
 		
 		return new GameStatePacket(players.toArray(new Vector3i[0]), crates.toArray(new Vector2i[0]));

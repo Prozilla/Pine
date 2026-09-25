@@ -5,19 +5,19 @@ import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.property.style.StyleSheet;
+import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.entity.prefab.sprite.GridPrefab;
-import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.ModifierKey;
 import dev.prozilla.pine.examples.sokoban.GameManager;
-import dev.prozilla.pine.examples.sokoban.GameMap;
-import dev.prozilla.pine.examples.sokoban.entity.*;
 import dev.prozilla.pine.examples.sokoban.entity.ui.UIPrefab;
+import dev.prozilla.pine.examples.sokoban.level.Level;
+import dev.prozilla.pine.examples.sokoban.level.LevelParser;
 import dev.prozilla.pine.examples.sokoban.packet.*;
 import dev.prozilla.pine.examples.sokoban.request.MoveRequest;
 import dev.prozilla.pine.examples.sokoban.request.RestartRequest;
@@ -39,9 +39,14 @@ public class GameScene extends Scene {
 	private boolean cameraMovementEnabled = false;
 	
 	private NetworkManager network;
+	private GridGroup foregroundGrid;
+	private GridGroup goalGrid;
+	private GridGroup backgroundGrid;
 	
 	public static final float MOVEMENT_SPEED = 300f;
 	public static final float ROTATION_SPEED = 6f;
+	
+	private static final LevelParser levelParser = new LevelParser();
 	
 	@Override
 	protected void load() {
@@ -49,14 +54,15 @@ public class GameScene extends Scene {
 		
 		cameraData.orthographic = true;
 		
-		boolean isMultiplayer = GameManager.instance.isMultiplayer();
-		boolean isHost = isMultiplayer && GameManager.instance.getSessionConfig().hosting();
+		if (GameManager.instance.isHost()) {
+			GameManager.instance.level = levelParser.read(ArrayUtils.getRandom(Level.LEVELS));
+		}
 		
 		// Create grid entities
 		GridPrefab gridPrefab = new GridPrefab(GameManager.TILE_SIZE);
-		GridGroup backgroundGrid = addEntity(gridPrefab).getComponent(GridGroup.class);
-		GridGroup goalGrid = addEntity(gridPrefab).getComponent(GridGroup.class);
-		GridGroup foregroundGrid = addEntity(gridPrefab).getComponent(GridGroup.class);
+		backgroundGrid = addEntity(gridPrefab).getComponent(GridGroup.class);
+		goalGrid = addEntity(gridPrefab).getComponent(GridGroup.class);
+		foregroundGrid = addEntity(gridPrefab).getComponent(GridGroup.class);
 		
 		// Create network
 		network = addEntity(new NetworkManagerPrefab()).getComponent(NetworkManager.class);
@@ -69,49 +75,13 @@ public class GameScene extends Scene {
 			.addDecoder(PlayerJoinPacket.ID, PlayerJoinPacket::decode)
 			.addDecoder(PlayerLeavePacket.ID, PlayerLeavePacket::decode)
 			.addDecoder(PlayerMovePacket.ID, PlayerMovePacket::decode)
-			.addDecoder(RejectionPacket.ID, RejectionPacket::decode);
-		
-		// Create tile entities
-		BlockPrefab blockPrefab = new BlockPrefab();
-		GroundPrefab groundPrefab = new GroundPrefab();
-		GoalPrefab goalPrefab = new GoalPrefab();
-		PlayerPrefab playerPrefab = new PlayerPrefab();
-		CratePrefab cratePrefab = new CratePrefab();
-		
-		GameManager.instance.totalCrates = 0;
-		String[] map = GameMap.MAP;
-		
-		for (int i = 0; i < map.length; i++) {
-			String row = map[i];
-			
-			for (int j = 0; j < row.length(); j++) {
-				char tileName = row.charAt(j);
-				
-				if (tileName == '.') {
-					goalGrid.addTile(goalPrefab, j, i);
-				} else {
-					TilePrefab tilePrefab = switch (tileName) {
-						case 'O' -> blockPrefab;
-						case 's' -> isMultiplayer ? null : playerPrefab;
-						case 'x' -> {
-							GameManager.instance.totalCrates++;
-							yield isMultiplayer && !isHost ? null : cratePrefab;
-						}
-						default -> null;
-					};
-					
-					if (tilePrefab != null) {
-						foregroundGrid.addTile(tilePrefab, j, i);
-					}
-				}
-				
-				backgroundGrid.addTile(groundPrefab, j, i);
-			}
-		}
+			.addDecoder(RejectionPacket.ID, RejectionPacket::decode)
+			.addDecoder(LevelPacket.ID, LevelPacket::decode)
+			.addObjectCodec(Level.class, Level::encode, Level::decode);
 		
 		// Add systems
 		addSystem(new NetworkSynchronizer());
-		ServerMessageHandler messageHandler = addSystem(new MessageHandler(network, foregroundGrid))
+		ServerMessageHandler messageHandler = addSystem(new MessageHandler(this))
 			.then(ServerMessageFilter.unacknowledged())
 			.then(new ServerMessageLogger(logger));
 		addSystem(new PlayerInputHandler(foregroundGrid, network));
@@ -131,13 +101,11 @@ public class GameScene extends Scene {
 			renderLayerUpdater.setDepthMultiplier(25f);
 		}
 		
-		resetCamera();
-		
 		// Connect to network
-		if (isMultiplayer) {
+		if (GameManager.instance.isMultiplayer()) {
 			GameManager.SessionConfig sessionConfig = GameManager.instance.getSessionConfig();
 			
-			if (isHost) {
+			if (GameManager.instance.isHost()) {
 				network.createHost(sessionConfig.port(), messageHandler);
 			} else {
 				network.createClient(sessionConfig.address(), sessionConfig.port(), messageHandler);
@@ -163,6 +131,8 @@ public class GameScene extends Scene {
 				cameraData.orthographic = true;
 				resetCamera();
 			}
+		} else if (input.getKeyDown(Key.ESCAPE)) {
+			GameManager.instance.leaveSession();
 		}
 		
 		if (cameraMovementEnabled) {
@@ -206,10 +176,10 @@ public class GameScene extends Scene {
 		}
 	}
 	
-	private void resetCamera() {
+	public void resetCamera() {
 		// Move camera to center of map
-		int width = GameMap.getWidth();
-		int height = GameMap.getHeight();
+		int width = GameManager.instance.level.getWidth();
+		int height = GameManager.instance.level.getHeight();
 		
 		float depthMultiplier = 1f;
 		if (renderLayerUpdater != null) {
@@ -218,6 +188,22 @@ public class GameScene extends Scene {
 		
 		cameraData.getTransform().reset();
 		cameraData.getTransform().translate((width * GameManager.TILE_SIZE) / 2f, (height * GameManager.TILE_SIZE) / 2f, 10f * depthMultiplier);
+	}
+	
+	public NetworkManager getNetwork() {
+		return network;
+	}
+	
+	public GridGroup getForegroundGrid() {
+		return foregroundGrid;
+	}
+	
+	public GridGroup getGoalGrid() {
+		return goalGrid;
+	}
+	
+	public GridGroup getBackgroundGrid() {
+		return backgroundGrid;
 	}
 	
 	@Override

@@ -6,6 +6,7 @@ import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationManager;
+import dev.prozilla.pine.examples.sokoban.level.Level;
 import dev.prozilla.pine.examples.sokoban.scene.GameScene;
 
 public class GameManager extends ApplicationManager {
@@ -14,8 +15,8 @@ public class GameManager extends ApplicationManager {
 	
 	public Font font;
 	
+	public Level level;
 	public int completedCrates;
-	public int totalCrates;
 	
 	private SessionConfig sessionConfig;
 	
@@ -30,7 +31,6 @@ public class GameManager extends ApplicationManager {
 		super(application);
 		
 		completedCrates = 0;
-		totalCrates = 0;
 		
 		instance = this;
 	}
@@ -67,9 +67,17 @@ public class GameManager extends ApplicationManager {
 		return sessionConfig != null;
 	}
 	
+	public boolean isHost() {
+		return sessionConfig == null || sessionConfig.hosting;
+	}
+	
 	public void leaveSession() {
 		sessionConfig = null;
 		application.loadScene(0);
+	}
+	
+	public int getCrateCount() {
+		return level != null ? level.getCrateCount() : 0;
 	}
 	
 	public record SessionConfig(boolean hosting, String address, int port) {}

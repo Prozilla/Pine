@@ -7,6 +7,9 @@ import io.netty.buffer.ByteBuf;
 import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A buffer that contains the data of a {@link Packet} as bytes.
@@ -159,6 +162,23 @@ public final class PacketBuffer {
 			array[i] = readObject(type);
 		}
 		return array;
+	}
+	
+	public <E> PacketBuffer writeList(Collection<E> elements) {
+		writeVarInt(elements.size());
+		for (E element : elements) {
+			writeObject(element);
+		}
+		return this;
+	}
+	
+	public <E> List<E> readList(Class<E> type) {
+		int size = readVarInt();
+		List<E> list = new ArrayList<>(size);
+		for (int i = 0; i < size; i++) {
+			list.add(readObject(type));
+		}
+		return list;
 	}
 	
 	public PacketBuffer writeString(String string) {

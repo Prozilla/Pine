@@ -94,6 +94,8 @@ public class NetworkManager extends Component implements Synchronizable {
 		standaloneRequestHandler = Checks.isNotNull(requestHandler, "requestHandler");
 		standaloneResponseHandler = Checks.isNotNull(responseHandler, "responseHandler");
 		localClientId = Server.HOST_ID;
+		
+		standaloneRequestHandler.handleJoin(new StandaloneServerRequest(null));
 	}
 	
 	/**
