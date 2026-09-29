@@ -1,6 +1,6 @@
 package dev.prozilla.pine.extensions.pinet.message.request;
 
-import dev.prozilla.pine.extensions.pinet.Pipeline;
+import dev.prozilla.pine.common.util.collection.Pipeline;
 
 import java.util.Collection;
 

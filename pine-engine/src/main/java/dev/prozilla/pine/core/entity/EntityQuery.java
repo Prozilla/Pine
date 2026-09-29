@@ -2,8 +2,8 @@ package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.util.DeferredList;
 import dev.prozilla.pine.common.util.checks.Checks;
+import dev.prozilla.pine.common.util.collection.DeferredList;
 import dev.prozilla.pine.core.component.Component;
 
 import java.util.HashMap;

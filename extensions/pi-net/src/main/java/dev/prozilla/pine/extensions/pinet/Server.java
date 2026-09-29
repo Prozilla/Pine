@@ -2,8 +2,8 @@ package dev.prozilla.pine.extensions.pinet;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.util.QueueUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
+import dev.prozilla.pine.common.util.collection.QueueUtils;
 import dev.prozilla.pine.extensions.pinet.connection.LocalConnection;
 import dev.prozilla.pine.extensions.pinet.connection.RemoteConnection;
 import dev.prozilla.pine.extensions.pinet.connection.ServerConnection;

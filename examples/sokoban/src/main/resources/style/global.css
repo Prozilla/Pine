@@ -1,0 +1,15 @@
+div {
+    anchor: center;
+}
+
+button {
+    padding: 40px 12px;
+    background-color: black;
+    color: white;
+    border-color: black;
+}
+
+button:hover, button:focus-visible {
+    border-color: white;
+    outline-style: none;
+}

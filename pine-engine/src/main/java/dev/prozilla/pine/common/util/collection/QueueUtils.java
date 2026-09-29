@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.util;
+package dev.prozilla.pine.common.util.collection;
 
 import java.util.Queue;
 import java.util.function.Consumer;

@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.event.Event;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventDispatcherProvider;
+import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.*;
@@ -12,6 +13,7 @@ import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedProperty;
 import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.property.style.StyledProperty;
+import dev.prozilla.pine.common.property.style.selector.IdSelector;
 import dev.prozilla.pine.common.property.style.selector.Selector;
 import dev.prozilla.pine.common.property.style.selector.SelectorParser;
 import dev.prozilla.pine.common.system.Color;
@@ -117,9 +119,13 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public static final String ID_ATTRIBUTE = "id";
 	public static final String TYPE_ATTRIBUTE = "type";
 	public static final String TITLE_ATTRIBUTE = "title";
+	public static final String REL_ATTRIBUTE = "rel";
+	public static final String HREF_ATTRIBUTE = "href";
+	public static final String VALUE_ATTRIBUTE = "value";
 	
 	// HTML tags
 	public static final String PARAGRAPH_TAG = "p";
+	public static final String ANCHOR_TAG = "a";
 	public static final String HEADING_1_TAG = "h1";
 	public static final String HEADING_2_TAG = "h2";
 	public static final String HEADING_3_TAG = "h3";
@@ -134,6 +140,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	public static final String HTML_TAG = "html";
 	public static final String HEAD_TAG = "head";
 	public static final String STYLE_TAG = "style";
+	public static final String LINK_TAG = "link";
 	public static final String HEADER_TAG = "header";
 	public static final String BODY_TAG = "body";
 	public static final String FOOTER_TAG = "footer";
@@ -536,7 +543,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 				}
 				yield stringJoiner.toString();
 			}
-			case ID_ATTRIBUTE -> entity.tag;
+			case ID_ATTRIBUTE -> getId();
 			default -> attributes.get(name);
 		};
 	}
@@ -550,12 +557,31 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	}
 	
 	public void setAttribute(String name, String value) {
-		// TODO: handle setting of class attribute
 		switch (StringUtils.toLowerCase(name)) {
-			case ID_ATTRIBUTE -> entity.tag = value;
+			case CLASS_ATTRIBUTE -> {
+				classes.clear();
+				if (value != null) {
+					classes.addAll(Arrays.asList(value.split("\\s+")));
+				}
+				invalidateSelector();
+			}
+			case ID_ATTRIBUTE -> setId(value);
 			case null -> {}
 			default -> attributes.put(name, value);
 		}
+	}
+	
+	public String getId() {
+		return entity.tag;
+	}
+	
+	public void setId(String id) {
+		if (Objects.equals(entity.tag, id)) {
+			return;
+		}
+		
+		entity.tag = id;
+		invalidateSelector();
 	}
 	
 	private void invalidateSelector() {
@@ -581,6 +607,10 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		return readyToRender && !controlledRender;
 	}
 	
+	public EventListener<NodeEvent> onClick(EventListener<NodeEvent> listener) {
+		return addListener(NodeEvent.Type.CLICK, listener);
+	}
+	
 	public void invoke(NodeEvent.Type type) {
 		invoke(type, this);
 	}
@@ -590,6 +620,10 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		getRoot().removeNode(this);
 		super.destroy();
 		eventDispatcher.destroy();
+	}
+	
+	public Node getNodeById(String id) {
+		return querySelector(new IdSelector(id));
 	}
 	
 	public Node querySelector(String selector) {

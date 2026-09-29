@@ -5,7 +5,7 @@ import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.lifecycle.Updatable;
 import dev.prozilla.pine.common.property.FloatProperty;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
-import dev.prozilla.pine.common.util.DeferredList;
+import dev.prozilla.pine.common.util.collection.DeferredList;
 import dev.prozilla.pine.common.util.function.Callback;
 
 import java.util.List;

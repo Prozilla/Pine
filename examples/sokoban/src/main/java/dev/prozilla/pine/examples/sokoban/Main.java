@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.asset.image.Texture;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationBuilder;
+import dev.prozilla.pine.examples.sokoban.controller.BackButtonController;
 import dev.prozilla.pine.examples.sokoban.scene.MenuScene;
 
 public class Main {
@@ -27,6 +28,7 @@ public class Main {
 		
 		AssetPools.textures.setDefaultTextureFilter(Texture.Filter.NEAREST);
 		AssetPools.textures.setDefaultTextureWrap(Texture.Wrap.MIRROR_CLAMP_TO_EDGE);
+		AssetPools.views.addController("views/back-button.html", new BackButtonController());
 		
 		applicationBuilder.build().run();
 	}

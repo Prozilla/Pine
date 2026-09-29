@@ -1,4 +1,4 @@
-package dev.prozilla.pine.extensions.pinet;
+package dev.prozilla.pine.common.util.collection;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,12 +43,16 @@ public class Pipeline<E> implements Iterable<E> {
 	}
 	
 	public Pipeline<E> add(E element) {
-		elements.add(element);
+		if (element != null) {
+			elements.add(element);
+		}
 		return this;
 	}
 	
 	public Pipeline<E> addAll(Collection<? extends  E> elements) {
-		this.elements.addAll(elements);
+		for (E element : elements) {
+			add(element);
+		}
 		return this;
 	}
 	

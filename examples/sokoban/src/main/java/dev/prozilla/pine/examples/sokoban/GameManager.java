@@ -24,9 +24,6 @@ public class GameManager extends ApplicationManager {
 	public static final int TILE_SIZE = 64;
 	public static final Color BACKGROUND_COLOR = Color.hex("#596A6C");
 	
-	public static final String DEFAULT_HOST = "localhost";
-	public static final int DEFAULT_PORT = 1234;
-	
 	public GameManager(Application application) {
 		super(application);
 		
@@ -57,6 +54,10 @@ public class GameManager extends ApplicationManager {
 	public void joinGame(String address, int port) {
 		sessionConfig = new SessionConfig(false, address, port);
 		application.loadScene(new GameScene());
+	}
+	
+	public void loadMenu() {
+		application.loadScene(0);
 	}
 	
 	public SessionConfig getSessionConfig() {

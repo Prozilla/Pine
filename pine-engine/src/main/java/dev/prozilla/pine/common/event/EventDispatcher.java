@@ -2,8 +2,8 @@ package dev.prozilla.pine.common.event;
 
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.util.DeferredList;
 import dev.prozilla.pine.common.util.checks.Checks;
+import dev.prozilla.pine.common.util.collection.DeferredList;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  * Represents an object that can dispatch events.
  * @param <E> The type of event this object can dispatch
  */
-public abstract class EventDispatcher<EventType extends Enum<EventType>, Target, E extends Event<EventType, ? super Target>> implements EventDispatcherContext<EventType, Target, E>, Destructible {
+public abstract class EventDispatcher<EventType extends Enum<EventType>, Target, E extends Event<EventType, Target>> implements EventDispatcherContext<EventType, Target, E>, Destructible {
 	
 	private final Map<EventType, DeferredList<EventListener<E>>> listeners;
 	

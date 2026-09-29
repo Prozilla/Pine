@@ -3,9 +3,9 @@ package dev.prozilla.pine.core.rendering.mesh;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector3f;
-import dev.prozilla.pine.common.util.ListUtils;
-import dev.prozilla.pine.common.util.ObservableArrayList;
-import dev.prozilla.pine.common.util.ObservableList;
+import dev.prozilla.pine.common.util.collection.ListUtils;
+import dev.prozilla.pine.common.util.collection.ObservableArrayList;
+import dev.prozilla.pine.common.util.collection.ObservableList;
 
 import java.util.ArrayList;
 import java.util.Arrays;

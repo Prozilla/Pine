@@ -1,15 +1,29 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
+import dev.prozilla.pine.common.util.collection.Pipable;
 import dev.prozilla.pine.core.component.ui.Node;
 
-public interface Controller {
+public interface Controller extends Pipable<Controller, ControllerPipeline> {
 	
 	/**
-	 * Initializes an instance of a view.
-	 * @param view The view instance to initialize
+	 * Loads an instance of a view.
+	 * @param view The view instance to load
 	 */
-	default void initialize(Node view) {
+	default void load(Node view) {
 	
+	}
+	
+	/**
+	 * Unloads an instance of a view.
+	 * @param view The view instance to unload
+	 */
+	default void unload(Node view) {
+		
+	}
+	
+	@Override
+	default ControllerPipeline then(Controller controller) {
+		return new ControllerPipeline(this, controller);
 	}
 	
 }

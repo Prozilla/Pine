@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.util;
+package dev.prozilla.pine.common.util.collection;
 
 import dev.prozilla.pine.common.property.selection.WrapMode;
 import org.jetbrains.annotations.Contract;

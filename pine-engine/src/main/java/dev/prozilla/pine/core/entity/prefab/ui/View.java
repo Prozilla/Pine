@@ -49,6 +49,12 @@ public class View implements Asset {
 		return entity;
 	}
 	
+	public void addController(Controller controller) {
+		if (controller != null) {
+			this.controller = this.controller != null ? this.controller.then(controller) : controller;
+		}
+	}
+	
 	@Override
 	public String getPath() {
 		return path;

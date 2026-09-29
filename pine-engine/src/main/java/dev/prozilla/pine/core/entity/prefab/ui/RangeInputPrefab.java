@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
 import dev.prozilla.pine.common.property.bindable.BindableFloatProperty;
+import dev.prozilla.pine.common.property.bindable.SimpleBindableFloatProperty;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.RangeInputNode;
 import dev.prozilla.pine.core.entity.Entity;
@@ -32,6 +33,10 @@ public class RangeInputPrefab extends NodePrefab {
 	
 	public void setStep(float step) {
 		this.step = step;
+	}
+	
+	public void setValue(float value) {
+		setValueProperty(new SimpleBindableFloatProperty(value));
 	}
 	
 	public void setValueProperty(BindableFloatProperty valueProperty) {

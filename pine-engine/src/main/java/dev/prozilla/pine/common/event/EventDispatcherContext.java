@@ -3,9 +3,10 @@ package dev.prozilla.pine.common.event;
 import dev.prozilla.pine.common.ContextOf;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 @ContextOf(EventDispatcher.class)
-public interface EventDispatcherContext<EventType extends Enum<EventType>, Target, E extends Event<EventType, ? super Target>> {
+public interface EventDispatcherContext<EventType extends Enum<EventType>, Target, E extends Event<EventType, Target>> {
 	
 	/**
 	 * Equivalent of {@link #addListener(Enum, EventListener)}.
@@ -33,6 +34,16 @@ public interface EventDispatcherContext<EventType extends Enum<EventType>, Targe
 	 */
 	default void dispatchEvent(EventType eventType, Target target) {
 		invoke(eventType, target);
+	}
+	
+	/**
+	 * Adds a listener that listens to a given type of event and consumes its target.
+	 * @param eventType The type of event to listen to
+	 * @param callback The function to call with the target of the event
+	 * @return The listener that was added.
+	 */
+	default EventListener<E> addTargetListener(EventType eventType, Consumer<Target> callback) {
+		return addListener(eventType, (event) -> callback.accept(event.getTarget()));
 	}
 	
 	/**

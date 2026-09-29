@@ -101,7 +101,10 @@ public class GameScene extends Scene {
 			renderLayerUpdater.setDepthMultiplier(25f);
 		}
 		
-		// Connect to network
+		connect(messageHandler);
+	}
+	
+	private void connect(ServerMessageHandler messageHandler) {
 		if (GameManager.instance.isMultiplayer()) {
 			GameManager.SessionConfig sessionConfig = GameManager.instance.getSessionConfig();
 			

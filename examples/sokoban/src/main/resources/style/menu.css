@@ -1,0 +1,9 @@
+div {
+    gap: 16px;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    anchor: center;
+}

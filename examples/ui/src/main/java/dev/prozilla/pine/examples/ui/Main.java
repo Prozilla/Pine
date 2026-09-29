@@ -19,7 +19,7 @@ public class Main {
 		() -> new ViewScene("view.html", "view.css", Application.isDevMode())
 			      .addController(new Controller() {
 				      @Override
-				      public void initialize(Node view) {
+				      public void load(Node view) {
 					      Logger.system.log(view.querySelector("button").getTooltipText());
 				      }
 			      })

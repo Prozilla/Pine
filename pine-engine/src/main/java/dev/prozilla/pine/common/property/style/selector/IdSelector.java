@@ -3,6 +3,8 @@ package dev.prozilla.pine.common.property.style.selector;
 import dev.prozilla.pine.core.component.ui.Node;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * A selector that matches elements with a specific tag.
  */
@@ -16,7 +18,7 @@ public class IdSelector extends Selector {
 	
 	@Override
 	public boolean matches(Node node) {
-		return node.getEntity().hasTag(id);
+		return Objects.equals(node.getId(), id);
 	}
 	
 	@Override

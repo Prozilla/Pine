@@ -1,4 +1,4 @@
-package dev.prozilla.pine.common.util;
+package dev.prozilla.pine.common.util.collection;
 
 import dev.prozilla.pine.common.event.EventDispatcherContext;
 import dev.prozilla.pine.common.event.EventListener;

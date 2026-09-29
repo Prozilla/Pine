@@ -73,7 +73,7 @@ public class ViewScene extends Scene {
 	}
 	
 	public ViewScene addController(Controller controller) {
-		view.controller = controller;
+		view.addController(controller);
 		return this;
 	}
 	

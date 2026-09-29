@@ -2,11 +2,12 @@ package dev.prozilla.pine.core.entity;
 
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.event.Event;
+import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.common.event.SimpleEventDispatcher;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.logging.AppLogger;
-import dev.prozilla.pine.common.util.ListUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
+import dev.prozilla.pine.common.util.collection.ListUtils;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.component.Component;
@@ -351,6 +352,10 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 		}
 		
 		return matches;
+	}
+	
+	public EventListener<Event<EventType, Entity>> onDestroy(EventListener<Event<EventType, Entity>> listener) {
+		return addListener(EventType.DESTROY, listener);
 	}
 	
 	@Override

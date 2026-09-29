@@ -41,7 +41,7 @@ public class LevelParser extends SuppliedSequentialParser<Level> {
 			moveCursor();
 		}
 		
-		intermediate.size = new Vector2i(maxX + 1, y + 1);
+		intermediate.size = new Vector2i(maxX, y + 1);
 		
 		return succeed();
 	}

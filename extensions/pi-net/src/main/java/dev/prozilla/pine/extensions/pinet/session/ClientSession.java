@@ -1,8 +1,8 @@
 package dev.prozilla.pine.extensions.pinet.session;
 
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.util.QueueUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
+import dev.prozilla.pine.common.util.collection.QueueUtils;
 import dev.prozilla.pine.extensions.pinet.Server;
 import dev.prozilla.pine.extensions.pinet.connection.Connection;
 import dev.prozilla.pine.extensions.pinet.connection.LocalConnection;
