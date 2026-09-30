@@ -2,11 +2,16 @@ div {
     anchor: center;
 }
 
+p, h1 {
+    color: #333333;
+}
+
 button {
     padding: 40px 12px;
-    background-color: black;
-    color: white;
-    border-color: black;
+    background-color: #C98949;
+    color: #333333;
+    border-color: #D9944E;
+    border-width: 4px;
 }
 
 button:hover, button:focus-visible {

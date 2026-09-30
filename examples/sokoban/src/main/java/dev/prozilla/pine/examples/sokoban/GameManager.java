@@ -22,7 +22,7 @@ public class GameManager extends ApplicationManager {
 	
 	public static final boolean ENABLE_MUSIC = false;
 	public static final int TILE_SIZE = 64;
-	public static final Color BACKGROUND_COLOR = Color.hex("#596A6C");
+	public static final Color BACKGROUND_COLOR = Color.hex("#3399da");
 	
 	public GameManager(Application application) {
 		super(application);
