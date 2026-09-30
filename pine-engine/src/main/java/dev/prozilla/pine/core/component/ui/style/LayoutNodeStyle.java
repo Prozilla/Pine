@@ -1,6 +1,10 @@
 package dev.prozilla.pine.core.component.ui.style;
 
-import dev.prozilla.pine.common.property.style.*;
+import dev.prozilla.pine.common.asset.style.StyleSheet;
+import dev.prozilla.pine.common.property.style.StyledAlignmentProperty;
+import dev.prozilla.pine.common.property.style.StyledDimensionProperty;
+import dev.prozilla.pine.common.property.style.StyledDirectionProperty;
+import dev.prozilla.pine.common.property.style.StyledDistributionProperty;
 import dev.prozilla.pine.core.component.animation.AnimationData;
 import dev.prozilla.pine.core.component.ui.Node;
 

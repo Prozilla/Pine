@@ -1,8 +1,8 @@
 package dev.prozilla.pine.common.asset.pool;
 
-import dev.prozilla.pine.core.entity.prefab.ui.Controller;
-import dev.prozilla.pine.core.entity.prefab.ui.HTMLParser;
-import dev.prozilla.pine.core.entity.prefab.ui.View;
+import dev.prozilla.pine.common.asset.view.Controller;
+import dev.prozilla.pine.common.asset.view.HTMLParser;
+import dev.prozilla.pine.common.asset.view.View;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +29,7 @@ public final class ViewPool extends TextAssetPool<View> implements MultiAssetLoa
 	@Override
 	protected View parse(String path, String content) {
 		if (!parser.parse(content)) {
-			return fail(content, "Error while parsing: " + parser.getError(), null);
+			return fail(content, "Error while parsing: " + parser.getError());
 		}
 		
 		View view = new View(parser.getResult(), parser.getTitle(), path);

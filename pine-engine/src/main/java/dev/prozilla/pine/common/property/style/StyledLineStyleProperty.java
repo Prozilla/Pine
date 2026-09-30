@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.property.style;
 
+import dev.prozilla.pine.common.asset.style.StyleRule;
+import dev.prozilla.pine.common.asset.style.StyledPropertyKey;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveObjectProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedObjectProperty;

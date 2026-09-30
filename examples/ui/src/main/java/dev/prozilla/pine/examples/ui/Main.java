@@ -1,10 +1,10 @@
 package dev.prozilla.pine.examples.ui;
 
+import dev.prozilla.pine.common.asset.view.Controller;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationBuilder;
 import dev.prozilla.pine.core.component.ui.Node;
-import dev.prozilla.pine.core.entity.prefab.ui.Controller;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.scene.ViewScene;
 

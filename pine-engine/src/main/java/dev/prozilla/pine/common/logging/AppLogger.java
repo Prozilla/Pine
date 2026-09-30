@@ -7,16 +7,16 @@ import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPool;
 import dev.prozilla.pine.common.asset.pool.AssetPoolEvent;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.asset.style.StyleSheet;
 import dev.prozilla.pine.common.asset.text.Font;
+import dev.prozilla.pine.common.asset.view.View;
 import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.handler.LogHandler;
-import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.system.Ansi;
 import dev.prozilla.pine.common.system.DirectoryWatcher;
 import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.core.Application;
-import dev.prozilla.pine.core.entity.prefab.ui.View;
 import dev.prozilla.pine.core.rendering.Shader;
 import dev.prozilla.pine.core.state.config.LogConfig;
 

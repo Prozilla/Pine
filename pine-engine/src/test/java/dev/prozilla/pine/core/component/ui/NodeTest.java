@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.component.ui;
 
-import dev.prozilla.pine.common.property.style.selector.Selector;
+import dev.prozilla.pine.common.asset.style.selector.Selector;
 import dev.prozilla.pine.test.TestLoggingExtension;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;

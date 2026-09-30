@@ -1,9 +1,9 @@
 package dev.prozilla.pine.core.component.ui.style;
 
+import dev.prozilla.pine.common.asset.style.StyleSheet;
 import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedProperty;
-import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.property.style.StyledProperty;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.animation.AnimationData;

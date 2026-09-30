@@ -1,7 +1,7 @@
 package dev.prozilla.pine.examples.sokoban.controller;
 
+import dev.prozilla.pine.common.asset.view.Controller;
 import dev.prozilla.pine.core.component.ui.Node;
-import dev.prozilla.pine.core.entity.prefab.ui.Controller;
 import dev.prozilla.pine.examples.sokoban.GameManager;
 
 public class BackButtonController implements Controller {

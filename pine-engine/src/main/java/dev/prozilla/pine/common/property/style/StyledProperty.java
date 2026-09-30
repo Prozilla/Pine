@@ -2,6 +2,10 @@ package dev.prozilla.pine.common.property.style;
 
 import dev.prozilla.pine.common.Animatable;
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.asset.style.Style;
+import dev.prozilla.pine.common.asset.style.StyleRule;
+import dev.prozilla.pine.common.asset.style.StyleSheet;
+import dev.prozilla.pine.common.asset.style.StyledPropertyKey;
 import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.AnimationCurve;
@@ -119,11 +123,15 @@ public abstract class StyledProperty<T, P extends Property<T>, A extends Adaptiv
 		return fallbackProperty;
 	}
 	
-	List<StyleSheet> getSources() {
+	public StyledPropertyKey<T> getName() {
+		return name;
+	}
+	
+	public List<StyleSheet> getSources() {
 		return sources;
 	}
 	
-	void setSources(List<StyleSheet> sources) {
+	public void setSources(List<StyleSheet> sources) {
 		this.sources = sources;
 	}
 	

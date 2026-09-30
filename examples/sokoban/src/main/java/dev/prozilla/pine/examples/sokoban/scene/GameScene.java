@@ -1,10 +1,10 @@
 package dev.prozilla.pine.examples.sokoban.scene;
 
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.asset.style.StyleSheet;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector3f;
-import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.component.Transform;

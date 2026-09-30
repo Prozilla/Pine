@@ -45,7 +45,7 @@ public final class ImagePool extends AssetPool<Image> implements MultiAssetLoade
 			imageBuffer = stbi_load(filePath, w, h, comp, 4);
 			
 			if (imageBuffer == null) {
-				return fail(path, stbi_failure_reason(), null);
+				return fail(path, stbi_failure_reason());
 			}
 			
 			// Get image dimensions

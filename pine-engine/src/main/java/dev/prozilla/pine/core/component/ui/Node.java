@@ -1,6 +1,10 @@
 package dev.prozilla.pine.core.component.ui;
 
 import dev.prozilla.pine.common.asset.image.TextureAsset;
+import dev.prozilla.pine.common.asset.style.StyleSheet;
+import dev.prozilla.pine.common.asset.style.selector.IdSelector;
+import dev.prozilla.pine.common.asset.style.selector.Selector;
+import dev.prozilla.pine.common.asset.style.selector.SelectorParser;
 import dev.prozilla.pine.common.event.Event;
 import dev.prozilla.pine.common.event.EventDispatcher;
 import dev.prozilla.pine.common.event.EventDispatcherProvider;
@@ -11,11 +15,7 @@ import dev.prozilla.pine.common.math.vector.*;
 import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveProperty;
 import dev.prozilla.pine.common.property.animated.transitioned.TransitionedProperty;
-import dev.prozilla.pine.common.property.style.StyleSheet;
 import dev.prozilla.pine.common.property.style.StyledProperty;
-import dev.prozilla.pine.common.property.style.selector.IdSelector;
-import dev.prozilla.pine.common.property.style.selector.Selector;
-import dev.prozilla.pine.common.property.style.selector.SelectorParser;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.StringUtils;
 import dev.prozilla.pine.core.component.Component;

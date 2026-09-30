@@ -1,7 +1,8 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
-import dev.prozilla.pine.common.property.style.CSSParser;
-import dev.prozilla.pine.common.property.style.StyleSheet;
+import dev.prozilla.pine.common.asset.style.CSSParser;
+import dev.prozilla.pine.common.asset.style.StyleSheet;
+import dev.prozilla.pine.common.asset.view.HTMLParser;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.test.TestLoggingExtension;

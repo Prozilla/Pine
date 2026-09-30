@@ -46,7 +46,7 @@ public final class AudioSourcePool extends AssetPool<AudioSource> implements Mul
 			
 			if (audioBuffer == null) {
 				// Audio failed to load
-				return fail(path, UNKNOWN_ERROR, null);
+				return fail(path, UNKNOWN_ERROR);
 			}
 			
 			// Retrieve the extra information that was stored in the buffers by the function
@@ -109,7 +109,7 @@ public final class AudioSourcePool extends AssetPool<AudioSource> implements Mul
 			
 			return new AudioSource(path, pcm, channels, sampleRate);
 		} catch (Exception e) {
-			return fail(path, null, e);
+			return fail(path, e);
 		}
 	}
 	

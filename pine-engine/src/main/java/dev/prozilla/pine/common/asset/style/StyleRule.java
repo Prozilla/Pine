@@ -1,0 +1,37 @@
+package dev.prozilla.pine.common.asset.style;
+
+import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.asset.style.selector.Selector;
+import dev.prozilla.pine.core.component.ui.Node;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * A rule that defines the value of a styled property of any node that matches its selector.
+ * @param value The value this rule assigns to styled properties of elements that match its selector
+ * @param <T> The type of the property
+ */
+public record StyleRule<T>(Selector selector, T value, boolean isDefault) implements Printable {
+	
+	/**
+	 * Checks whether this rule applies to a given node.
+	 * @param node The node
+	 * @return True if the selectors of this rule matches the node.
+	 */
+	public boolean matches(Node node) {
+		return selector.matches(node);
+	}
+	
+	/**
+	 * Returns the specificity of the selector of this rule.
+	 * @return The specificity of the selector.
+	 */
+	public int getSpecificity(Node node) {
+		return selector.getSpecificity(node);
+	}
+	
+	@Override
+	public @NotNull String toString() {
+		return String.format("%s { %s }", selector, value);
+	}
+	
+}

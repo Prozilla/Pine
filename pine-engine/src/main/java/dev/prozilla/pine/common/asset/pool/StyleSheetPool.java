@@ -1,8 +1,8 @@
 package dev.prozilla.pine.common.asset.pool;
 
-import dev.prozilla.pine.common.property.style.CSSParser;
-import dev.prozilla.pine.common.property.style.HotStyleSheet;
-import dev.prozilla.pine.common.property.style.StyleSheet;
+import dev.prozilla.pine.common.asset.style.CSSParser;
+import dev.prozilla.pine.common.asset.style.HotStyleSheet;
+import dev.prozilla.pine.common.asset.style.StyleSheet;
 import dev.prozilla.pine.common.system.DirectoryWatcher;
 import dev.prozilla.pine.common.system.PathUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -95,7 +95,7 @@ public final class StyleSheetPool extends TextAssetPool<StyleSheet> implements M
 	@Override
 	protected StyleSheet parse(String path, String content) {
 		if (!parser.parse(content, styleSheet)) {
-			return fail(content, "Error while parsing: " + parser.getError(), null);
+			return fail(content, "Error while parsing: " + parser.getError());
 		} else {
 			styleSheet = parser.getResult();
 		}

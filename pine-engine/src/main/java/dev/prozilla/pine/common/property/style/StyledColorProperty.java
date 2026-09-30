@@ -1,5 +1,7 @@
 package dev.prozilla.pine.common.property.style;
 
+import dev.prozilla.pine.common.asset.style.StyleRule;
+import dev.prozilla.pine.common.asset.style.StyledPropertyKey;
 import dev.prozilla.pine.common.property.ColorProperty;
 import dev.prozilla.pine.common.property.Property;
 import dev.prozilla.pine.common.property.adaptive.AdaptiveColorProperty;

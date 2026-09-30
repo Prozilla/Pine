@@ -30,7 +30,7 @@ public abstract class TextAssetPool<T extends Asset> extends AssetPool<T> {
 				stringBuilder.append(line).append("\n");
 			}
 		} catch (IOException e) {
-			return fail(path, null, e);
+			return fail(path, e);
 		}
 		
 		T result = parse(path, preprocess(stringBuilder));

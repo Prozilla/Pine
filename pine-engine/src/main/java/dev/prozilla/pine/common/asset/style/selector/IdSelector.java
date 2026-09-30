@@ -1,0 +1,43 @@
+package dev.prozilla.pine.common.asset.style.selector;
+
+import dev.prozilla.pine.core.component.ui.Node;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+
+/**
+ * A selector that matches elements with a specific tag.
+ */
+public class IdSelector extends Selector {
+	
+	private final String id;
+	
+	public IdSelector(String id) {
+		this.id = id;
+	}
+	
+	@Override
+	public boolean matches(Node node) {
+		return Objects.equals(node.getId(), id);
+	}
+	
+	@Override
+	public int getSpecificity(Node node) {
+		return 100;
+	}
+	
+	@Override
+	public @NotNull String toString() {
+		return "#" + id;
+	}
+	
+	@Override
+	public boolean equals(Selector other) {
+		if (!(other instanceof IdSelector otherIdSelector)) {
+			return false;
+		}
+		
+		return id.equals(otherIdSelector.id);
+	}
+	
+}

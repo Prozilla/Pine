@@ -19,6 +19,7 @@ public final class AssetPools {
 	public static final AudioSourcePool audioSources = new AudioSourcePool();
 	public static final ShaderPool shaders = new ShaderPool();
 	public static final DirectoryWatcherPool directoryWatchers = new DirectoryWatcherPool();
+	public static final ModelPool models = new ModelPool();
 	
 	/**
 	 * Clears all asset pools.
@@ -32,6 +33,7 @@ public final class AssetPools {
 		audioSources.destroy();
 		shaders.destroy();
 		directoryWatchers.destroy();
+		models.destroy();
 	}
 	
 	/**
@@ -55,6 +57,7 @@ public final class AssetPools {
 		logger.log("Audio sources: " + audioSources.count());
 		logger.log("Shaders: " + shaders.count());
 		logger.log("Directory watchers: " + directoryWatchers.count());
+		logger.log("Models: " + models.count());
 	}
 	
 }

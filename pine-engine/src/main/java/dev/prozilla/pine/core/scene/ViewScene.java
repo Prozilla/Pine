@@ -1,14 +1,14 @@
 package dev.prozilla.pine.core.scene;
 
 import dev.prozilla.pine.common.asset.pool.AssetPools;
-import dev.prozilla.pine.common.property.style.StyleSheet;
+import dev.prozilla.pine.common.asset.style.StyleSheet;
+import dev.prozilla.pine.common.asset.view.Controller;
+import dev.prozilla.pine.common.asset.view.View;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.NodeRoot;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
-import dev.prozilla.pine.core.entity.prefab.ui.Controller;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.View;
 
 public class ViewScene extends Scene {
 	

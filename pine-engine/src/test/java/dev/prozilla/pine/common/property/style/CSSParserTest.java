@@ -1,7 +1,10 @@
 package dev.prozilla.pine.common.property.style;
 
-import dev.prozilla.pine.common.property.style.selector.IdSelector;
-import dev.prozilla.pine.common.property.style.selector.Selector;
+import dev.prozilla.pine.common.asset.style.CSSParser;
+import dev.prozilla.pine.common.asset.style.StyleSheet;
+import dev.prozilla.pine.common.asset.style.StyledPropertyKey;
+import dev.prozilla.pine.common.asset.style.selector.IdSelector;
+import dev.prozilla.pine.common.asset.style.selector.Selector;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.test.TestLoggingExtension;
 import dev.prozilla.pine.test.TestUtils;

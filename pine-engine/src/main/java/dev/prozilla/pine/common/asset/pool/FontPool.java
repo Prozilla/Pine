@@ -31,7 +31,7 @@ public final class FontPool extends AssetPool<Font> implements MultiAssetLoader<
 			font = new Font(stream, size);
 			font.path = path;
 		} catch (IOException e) {
-			return fail(path, null, e);
+			return fail(path, e);
 		}
 		
 		return font;

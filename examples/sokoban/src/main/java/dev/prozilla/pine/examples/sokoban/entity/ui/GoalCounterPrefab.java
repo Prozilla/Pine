@@ -1,6 +1,6 @@
 package dev.prozilla.pine.examples.sokoban.entity.ui;
 
-import dev.prozilla.pine.common.property.style.StyleSheet;
+import dev.prozilla.pine.common.asset.style.StyleSheet;
 import dev.prozilla.pine.core.entity.prefab.ui.ImagePrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;

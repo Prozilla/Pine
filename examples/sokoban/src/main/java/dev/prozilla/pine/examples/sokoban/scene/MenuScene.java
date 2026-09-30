@@ -1,7 +1,7 @@
 package dev.prozilla.pine.examples.sokoban.scene;
 
+import dev.prozilla.pine.common.asset.view.Controller;
 import dev.prozilla.pine.core.component.ui.Node;
-import dev.prozilla.pine.core.entity.prefab.ui.Controller;
 import dev.prozilla.pine.core.scene.ViewScene;
 import dev.prozilla.pine.examples.sokoban.GameManager;
 
