@@ -1,8 +1,6 @@
 package dev.prozilla.pine.core.rendering;
 
 import dev.prozilla.pine.common.asset.image.TextureAsset;
-import dev.prozilla.pine.common.asset.pool.AssetPoolEvent;
-import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
@@ -11,20 +9,23 @@ import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.common.system.Platform;
+import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.rendering.material.LitMaterial;
+import dev.prozilla.pine.core.rendering.material.Material;
+import dev.prozilla.pine.core.rendering.shader.ShaderProgram;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.config.RenderConfig;
 import org.jetbrains.annotations.Contract;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Objects;
 
 import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
@@ -40,12 +41,17 @@ public class Renderer implements Initializable, Destructible {
 	private VertexBufferObject vertexBufferObject;
 	private ShaderProgram program;
 	private FrameBufferObject frameBufferObject;
+	private Material<?> defaultMaterial;
 	
 	// State
 	private FloatBuffer vertices;
+	private final Vertex vertex;
 	private int numVertices;
 	private boolean isRendering;
 	private TextureAsset activeTexture;
+	private Matrix4f projectionMatrix;
+	private Matrix4f viewMatrix;
+	private Matrix4f modelMatrix;
 	
 	// Render stats
 	private int renderedVertices;
@@ -62,34 +68,35 @@ public class Renderer implements Initializable, Destructible {
 	// Transformation
 	private boolean isRenderRegionEnabled;
 	
-	// Constants
-	private final static int STRIDE_LENGTH = 11;
-	/** The amount of strides to fit into a single vertex buffer. */
-	private final static int VERTEX_BUFFER_SIZE = 32;
-	
 	// Config options
 	private Color fallbackColor;
 	private RenderMode renderMode;
 	private boolean snapPixels;
 	
-	// Paths
-	private final static String VERTEX_SHADER_PATH = "/shaders/default.vert";
-	private final static String FRAGMENT_SHADER_PATH = "/shaders/default.frag";
-	private final static String FONT_PATH = "/fonts/Inconsolata.ttf";
-	
 	private final Application application;
 	private final Tracker tracker;
 	private final Logger logger;
+	
+	// Constants
+	/** The amount of vertices that fit into a single batch. */
+	public final static int BATCH_VERTEX_CAPACITY = 1024;
+	/** The maximum amount of floats a single vertex of any material can use. */
+	public final static int MAX_VERTEX_FLOATS = 16;
+	public final static String DEFAULT_FONT_PATH = "/fonts/Inconsolata.ttf";
 	
 	public Renderer(Application application) {
 		this.application = application;
 		tracker = application.getTracker();
 		logger = application.getLogger();
+		vertex = new Vertex();
+		projectionMatrix = new Matrix4f();
+		viewMatrix = new Matrix4f();
+		modelMatrix = new Matrix4f();
 	}
 	
 	@Override
 	public void init() {
-		setupShaderProgram();
+		setupBuffers();
 		
 		// Optimization: discard triangles with opacity < 0.1
 //		glEnable(GL_ALPHA_TEST);
@@ -126,14 +133,14 @@ public class Renderer implements Initializable, Destructible {
 			logger.error("Failed to create frame buffer", e);
 		}
 		
-		setupShaderProgram();
+		setupBuffers();
 		createFont();
 		reset();
 	}
 	
 	private void createFont() {
 		try {
-			defaultFont = new Font(getClass().getResourceAsStream(FONT_PATH), 16);
+			defaultFont = new Font(getClass().getResourceAsStream(DEFAULT_FONT_PATH), 16);
 		} catch (IOException e) {
 			logger.error("Failed to create font", e);
 			defaultFont = new Font(12);
@@ -241,9 +248,9 @@ public class Renderer implements Initializable, Destructible {
 			vertexArrayObject.bind();
 		} else {
 			vertexBufferObject.bind(VertexBufferObject.Target.ARRAY_BUFFER);
-			specifyVertexAttributes();
+			program.init();
 		}
-		program.use();
+		program.bind();
 		
 		// Bind the active texture
 		if (activeTexture != null) {
@@ -431,7 +438,7 @@ public class Renderer implements Initializable, Destructible {
 		float x2 = x + width;
 		float y2 = y + height;
 		
-		drawTextureRegion(null, x, y, z, x2, y2, z, 0, 0, 0, 0, c);
+		drawQuad(null, x, y, z, x2, y2, z, 0, 0, 0, 0, c);
 	}
 	
 	/**
@@ -463,7 +470,7 @@ public class Renderer implements Initializable, Destructible {
 		float s2 = 1f;
 		float t2 = 1f;
 		
-		drawTextureRegion(texture, x, y, z, x2, y2, z, s1, t1, s2, t2, c);
+		drawQuad(texture, x, y, z, x2, y2, z, s1, t1, s2, t2, c);
 	}
 	
 	/**
@@ -476,8 +483,8 @@ public class Renderer implements Initializable, Destructible {
 	 * @param regWidth  Width of the texture region
 	 * @param regHeight Height of the texture region
 	 */
-	public void drawTextureRegion(TextureAsset texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight) {
-		drawTextureRegion(texture, x, y, z, regX, regY, regWidth, regHeight, fallbackColor);
+	public void drawQuad(TextureAsset texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight) {
+		drawQuad(texture, x, y, z, regX, regY, regWidth, regHeight, fallbackColor);
 	}
 	
 	/**
@@ -491,7 +498,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @param regHeight Height of the texture region
 	 * @param c         The color to use
 	 */
-	public void drawTextureRegion(TextureAsset texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c) {
+	public void drawQuad(TextureAsset texture, float x, float y, float z, float regX, float regY, float regWidth, float regHeight, Color c) {
 		// Vertex positions
 		float x2 = x + regWidth;
 		float y2 = y + regHeight;
@@ -507,7 +514,7 @@ public class Renderer implements Initializable, Destructible {
 		float s2 = (regX + regWidth) / texture.getWidth();
 		float t2 = (regY + regHeight) / texture.getHeight();
 		
-		drawTextureRegion(texture, x, y, z, x2, y2, z, s1, t1, s2, t2, c);
+		drawQuad(texture, x, y, z, x2, y2, z, s1, t1, s2, t2, c);
 	}
 	
 	/**
@@ -521,8 +528,8 @@ public class Renderer implements Initializable, Destructible {
 	 * @param s2 Top right s coordinate
 	 * @param t2 Top right t coordinate
 	 */
-	public void drawTextureRegion(TextureAsset texture, float x1, float y1, float z1, float x2, float y2, float z2, float s1, float t1, float s2, float t2) {
-		drawTextureRegion(texture, x1, y1, z1, x2, y2, z2, s1, t1, s2, t2, fallbackColor);
+	public void drawQuad(TextureAsset texture, float x1, float y1, float z1, float x2, float y2, float z2, float s1, float t1, float s2, float t2) {
+		drawQuad(texture, x1, y1, z1, x2, y2, z2, s1, t1, s2, t2, fallbackColor);
 	}
 	
 	/**
@@ -537,25 +544,25 @@ public class Renderer implements Initializable, Destructible {
 	 * @param t2 Top right t coordinate
 	 * @param c  The color to use
 	 */
-	public void drawTextureRegion(TextureAsset texture,
-	                              float x1, float y1, float z1,
-	                              float x2, float y2, float z2,
-	                              float s1, float t1, float s2, float t2,
-	                              Color c) {
+	public void drawQuad(TextureAsset texture,
+	                     float x1, float y1, float z1,
+	                     float x2, float y2, float z2,
+	                     float s1, float t1, float s2, float t2,
+	                     Color c) {
 		float z3 = (z1 + z2) / 2;
-		drawTextureRegion(texture, x1, y1, z1, x1, y2, z3, x2, y2, z2, x2, y1, z3, s1, t1, s2, t2, c);
+		drawQuad(texture, x1, y1, z1, x1, y2, z3, x2, y2, z2, x2, y1, z3, s1, t1, s2, t2, c);
 	}
 	
 	/**
 	 * Draws a texture region on specified coordinates.
 	 */
-	public void drawTextureRegion(TextureAsset texture,
-	                              float x1, float y1, float z1,
-	                              float x2, float y2, float z2,
-	                              float x3, float y3, float z3,
-	                              float x4, float y4, float z4,
-	                              float s1, float t1, float s2, float t2,
-	                              Color c) {
+	public void drawQuad(TextureAsset texture,
+	                     float x1, float y1, float z1,
+	                     float x2, float y2, float z2,
+	                     float x3, float y3, float z3,
+	                     float x4, float y4, float z4,
+	                     float s1, float t1, float s2, float t2,
+	                     Color c) {
 		requireRendering();
 		totalVertices += 6;
 		
@@ -565,35 +572,21 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		// Check if previous batch should be finished first
-		if (vertices.remaining() < STRIDE_LENGTH * 6 || (texture != null && activeTexture != null && !texture.hasEqualLocation(activeTexture))) {
+		if (vertices.remaining() < program.getStrideLength() * 6 || (texture != null && activeTexture != null && !texture.hasEqualLocation(activeTexture))) {
 			flush();
 		}
 		
-		// Get color components
-		float r = c.getRed();
-		float g = c.getGreen();
-		float b = c.getBlue();
-		float a = c.getAlpha();
-		
-		// Get texture ID and type
-		int texId = -1;
-		float texType = 0f;
-		if (texture != null) {
-			texId = texture.getId();
-			texType = texture.isInArray() ? 1f : 0f;
-		}
-		
-		// Handle depth render mode
+		// Handle render mode
 		if (renderMode == RenderMode.DEPTH) {
 			float depth = MathUtils.square((z1 + z2 + z3 + z4) / 4);
-			r = depth;
-			g = depth;
-			b = depth;
-			a = 1f;
-			texId = -1;
+			vertex.color.set(depth, depth, depth, 1f);
+			vertex.resetTexture();
+		} else {
+			vertex.setColor(c);
+			vertex.setTexture(texture);
 		}
 		
-		if (a <= 0) {
+		if (vertex.color.getAlpha() <= 0) {
 			return;
 		}
 		
@@ -611,15 +604,13 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		// Push the vertices to the buffer
-		vertices.put(x1).put(y1).put(z1).put(r).put(g).put(b).put(a).put(s1).put(t1).put(texId).put(texType);
-		vertices.put(x2).put(y2).put(z2).put(r).put(g).put(b).put(a).put(s1).put(t2).put(texId).put(texType);
-		vertices.put(x3).put(y3).put(z3).put(r).put(g).put(b).put(a).put(s2).put(t2).put(texId).put(texType);
+		drawVertex(x1, y1, z1, s1, t1);
+		drawVertex(x2, y2, z2, s1, t2);
+		drawVertex(x3, y3, z3, s2, t2);
 		
-		vertices.put(x1).put(y1).put(z1).put(r).put(g).put(b).put(a).put(s1).put(t1).put(texId).put(texType);
-		vertices.put(x3).put(y3).put(z3).put(r).put(g).put(b).put(a).put(s2).put(t2).put(texId).put(texType);
-		vertices.put(x4).put(y4).put(z4).put(r).put(g).put(b).put(a).put(s2).put(t1).put(texId).put(texType);
-		
-		numVertices += 6;
+		drawVertex(x1, y1, z1, s1, t1);
+		drawVertex(x3, y3, z3, s2, t2);
+		drawVertex(x4, y4, z4, s2, t1);
 		
 		replaceActiveTexture(texture);
 	}
@@ -711,35 +702,21 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		// Check if previous batch should be finished first
-		if (vertices.remaining() < STRIDE_LENGTH * 3 || (texture != null && activeTexture != null && !texture.hasEqualLocation(activeTexture))) {
+		if (vertices.remaining() < program.getStrideLength() * 3 || (texture != null && activeTexture != null && !texture.hasEqualLocation(activeTexture))) {
 			flush();
 		}
 		
-		// Get color components
-		float r = c.getRed();
-		float g = c.getGreen();
-		float b = c.getBlue();
-		float a = c.getAlpha();
-		
-		// Get texture ID and type
-		int texId = -1;
-		float texType = 0f;
-		if (texture != null) {
-			texId = texture.getId();
-			texType = texture.isInArray() ? 1f : 0f;
-		}
-		
-		// Handle depth render mode
+		// Handle render mode
 		if (renderMode == RenderMode.DEPTH) {
 			float depth = MathUtils.square((z1 + z2 + z3) / 3);
-			r = depth;
-			g = depth;
-			b = depth;
-			a = 1f;
-			texId = -1;
+			vertex.color.set(depth, depth, depth, 1f);
+			vertex.resetTexture();
+		} else {
+			vertex.setColor(c);
+			vertex.setTexture(texture);
 		}
 		
-		if (a <= 0) {
+		if (vertex.color.getAlpha() <= 0) {
 			return;
 		}
 		
@@ -755,13 +732,18 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		// Push the vertices to the buffer
-		vertices.put(x1).put(y1).put(z1).put(r).put(g).put(b).put(a).put(u1).put(v1).put(texId).put(texType);
-		vertices.put(x2).put(y2).put(z2).put(r).put(g).put(b).put(a).put(u2).put(v2).put(texId).put(texType);
-		vertices.put(x3).put(y3).put(z3).put(r).put(g).put(b).put(a).put(u3).put(v3).put(texId).put(texType);
-		
-		numVertices += 3;
+		drawVertex(x1, y1, z1, u1, v1);
+		drawVertex(x2, y2, z2, u2, v2);
+		drawVertex(x3, y3, z3, u3, v3);
 		
 		replaceActiveTexture(texture);
+	}
+	
+	public void drawVertex(float x, float y, float z, float u, float v) {
+		vertex.position.set(x, y, z);
+		vertex.textureCoordinates.set(u, v);
+		program.writeVertex(vertices, vertex);
+		numVertices++;
 	}
 	
 	private void replaceActiveTexture(TextureAsset newTexture) {
@@ -824,19 +806,17 @@ public class Renderer implements Initializable, Destructible {
 	public void destroy() {
 		MemoryUtil.memFree(vertices);
 		
-		// Dispose of shader program
-		Destructible.destroy(vertexArrayObject, vertexBufferObject, program, frameBufferObject);
+		// Dispose of shader programs
+		ShaderProgram.destroyAll();
+		Destructible.destroy(vertexArrayObject, vertexBufferObject, frameBufferObject);
 		
 		// Dispose of fonts
 		Destructible.destroy(defaultFont, debugFont);
 	}
 	
-	/**
-	 * Initializes the default shader program.
-	 */
-	private void setupShaderProgram() {
+	private void setupBuffers() {
 		if (vertexArrayObject != null || vertexBufferObject != null) {
-			throw new IllegalStateException("shader program has already been set up");
+			throw new IllegalStateException("renderer has already been set up");
 		}
 		
 		// Generate Vertex Array Object
@@ -848,58 +828,26 @@ public class Renderer implements Initializable, Destructible {
 		vertexBufferObject.bind(VertexBufferObject.Target.ARRAY_BUFFER);
 		
 		// Create FloatBuffer
-		vertices = MemoryUtil.memAllocFloat(VERTEX_BUFFER_SIZE * STRIDE_LENGTH);
+		vertices = MemoryUtil.memAllocFloat(BATCH_VERTEX_CAPACITY * MAX_VERTEX_FLOATS);
 		
 		// Upload null data to allocate storage for the VBO
-		long size = (long) vertices.capacity() * Float.BYTES;
+		long size = (long)vertices.capacity() * Float.BYTES;
 		vertexBufferObject.uploadData(VertexBufferObject.Target.ARRAY_BUFFER, size, VertexBufferObject.Usage.DYNAMIC_DRAW);
 		
 		// Initialize variables */
 		numVertices = 0;
 		isRendering = false;
 		
-		// Load shaders
-		AssetPools.shaders.addListener(AssetPoolEvent.Type.FAILED, this::handleShaderLoadingError);
-		Shader vertexShader = AssetPools.shaders.loadVertexShader(VERTEX_SHADER_PATH);
-		Shader fragmentShader = AssetPools.shaders.loadFragmentShader(FRAGMENT_SHADER_PATH);
-		AssetPools.shaders.removeListener(AssetPoolEvent.Type.FAILED, this::handleShaderLoadingError);
-		
-		// Create shader program
-		program = new ShaderProgram();
-		program.attachShader(vertexShader);
-		program.attachShader(fragmentShader);
-		if (GL.getCapabilities().OpenGL32) {
-			program.bindFragmentDataLocation(0, "color");
-		}
-		program.link();
-		program.use();
-		
-		// Delete linked shaders */
-		vertexShader.destroy();
-		fragmentShader.destroy();
-		
-		// Specify Vertex Pointers
-		specifyVertexAttributes();
-		
-		// Set uniforms
-		program.setUniform("uTexture", 0);
-		if (Platform.get() != Platform.MACOS) {
-			program.setUniform("uTextureArray", 1);
-		}
-
 		resize();
-		setProjectionMatrix(new Matrix4f());
-		setViewMatrix(new Matrix4f());
-		setModelMatrix(new Matrix4f());
-	}
-	
-	private void handleShaderLoadingError(AssetPoolEvent<Shader> event) {
-		String message = String.format("Failed to load shader: %s", event.getPath());
-		String error = event.getError();
-		if (error != null) {
-			message += System.lineSeparator() + error;
-		}
-		logger.error(message, event.getException());
+		
+		// Reset matrices
+		projectionMatrix.identity();
+		viewMatrix.identity();
+		modelMatrix.identity();
+		
+		// Set default material
+		defaultMaterial = new LitMaterial();
+		setMaterial(defaultMaterial);
 	}
 	
 	/**
@@ -934,12 +882,14 @@ public class Renderer implements Initializable, Destructible {
 	
 	public void setProjectionMatrix(Matrix4f projectionMatrix) {
 		flush();
-		program.setUniform("uProjection", projectionMatrix);
+		this.projectionMatrix = projectionMatrix;
+		program.setProjectionMatrix(projectionMatrix);
 	}
 	
 	public void setViewMatrix(Matrix4f viewMatrix) {
 		flush();
-		program.setUniform("uView", viewMatrix);
+		this.viewMatrix = viewMatrix;
+		program.setViewMatrix(viewMatrix);
 	}
 	
 	public void resetModelMatrix() {
@@ -948,18 +898,32 @@ public class Renderer implements Initializable, Destructible {
 	
 	public void setModelMatrix(Matrix4f modelMatrix) {
 		flush();
-		program.setUniform("uModel", modelMatrix);
+		this.modelMatrix = modelMatrix;
+		program.setModelMatrix(modelMatrix);
 	}
 	
-	/**
-	 * Specifies the vertex pointers.
-	 */
-	private void specifyVertexAttributes() {
-		program.setVertexAttributes(
-			new CharSequence[]{"vPosition", "vColor", "vTexCoords", "vTexId", "vIsArrayTexture"},
-			new int[]{3, 4, 2, 1, 1},
-			STRIDE_LENGTH
-		);
+	public void resetMaterial() {
+		setMaterial(defaultMaterial);
+	}
+	
+	public void setMaterial(Material<?> material) {
+		material.bind(this);
+	}
+	
+	public void setProgram(ShaderProgram program) {
+		Checks.isNotNull(program, "program");
+		if (Objects.equals(this.program, program)) {
+			return;
+		}
+		
+		flush();
+		
+		this.program = program;
+		program.init();
+		program.setLogger(logger);
+		program.setProjectionMatrix(projectionMatrix);
+		program.setViewMatrix(viewMatrix);
+		program.setModelMatrix(modelMatrix);
 	}
 	
 	public int getWidth() {

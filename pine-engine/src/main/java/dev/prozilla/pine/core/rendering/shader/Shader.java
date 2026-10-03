@@ -1,4 +1,4 @@
-package dev.prozilla.pine.core.rendering;
+package dev.prozilla.pine.core.rendering.shader;
 
 import dev.prozilla.pine.common.IntEnum;
 import dev.prozilla.pine.common.asset.Asset;

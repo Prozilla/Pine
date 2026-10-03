@@ -265,7 +265,7 @@ public class Font implements Asset {
 			}
 			Glyph glyph = glyphs.get(character);
 			if (glyph != null) {
-				renderer.drawTextureRegion(texture, drawX, drawY - glyph.y, z, glyph.regionX, glyph.regionY, glyph.regionWidth, glyph.regionHeight, c);
+				renderer.drawQuad(texture, drawX, drawY - glyph.y, z, glyph.regionX, glyph.regionY, glyph.regionWidth, glyph.regionHeight, c);
 				drawX += glyph.advance;
 			}
 		}

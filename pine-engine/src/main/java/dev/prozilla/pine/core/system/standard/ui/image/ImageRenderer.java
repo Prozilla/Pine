@@ -50,9 +50,9 @@ public final class ImageRenderer extends RenderSystem {
 		float t2 = (regY + regHeight) / texture.getHeight();
 		
 		if (color == null) {
-			renderer.drawTextureRegion(texture, x, y, z, x2, y2, z, s1, t1, s2, t2);
+			renderer.drawQuad(texture, x, y, z, x2, y2, z, s1, t1, s2, t2);
 		} else {
-			renderer.drawTextureRegion(texture, x, y, z, x2, y2, z, s1, t1, s2, t2, color);
+			renderer.drawQuad(texture, x, y, z, x2, y2, z, s1, t1, s2, t2, color);
 		}
 	}
 }

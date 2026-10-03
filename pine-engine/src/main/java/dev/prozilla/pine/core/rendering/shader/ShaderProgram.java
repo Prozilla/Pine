@@ -1,7 +1,11 @@
-package dev.prozilla.pine.core.rendering;
+package dev.prozilla.pine.core.rendering.shader;
 
+import dev.prozilla.pine.common.asset.pool.AssetPoolEvent;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.exception.GLException;
 import dev.prozilla.pine.common.lifecycle.Destructible;
+import dev.prozilla.pine.common.lifecycle.Initializable;
+import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.lwjgl.GLUtils;
 import dev.prozilla.pine.common.math.matrix.Matrix2f;
 import dev.prozilla.pine.common.math.matrix.Matrix3f;
@@ -9,6 +13,9 @@ import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.math.vector.Vector4f;
+import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.core.rendering.Vertex;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.FloatBuffer;
@@ -20,18 +27,67 @@ import static org.lwjgl.opengl.GL31.GL_INVALID_INDEX;
 /**
  * Represents an OpenGL shader program.
  */
-public class ShaderProgram implements Destructible {
+public abstract class ShaderProgram implements Destructible, Initializable {
 	
-	/**
-	 * Stores the handle of the program.
-	 */
+	/** Stores the handle of the program. */
 	private final int id;
+	private boolean isInitialized;
+	protected Logger logger;
+	
+	private static UnlitShaderProgram unlitShaderProgram;
+	private static LitShaderProgram litShaderProgram;
+	
+	// Uniforms
+	public static final String PROJECTION_UNIFORM = "uProjection";
+	public static final String VIEW_UNIFORM = "uView";
+	public static final String MODEL_UNIFORM = "uModel";
+	
+	public static final String DEFAULT_OUTPUT_VARIABLE = "color";
 	
 	/**
 	 * Creates a shader program.
 	 */
 	public ShaderProgram() {
 		id = glCreateProgram();
+	}
+	
+	@Override
+	public void init() {
+		if (isInitialized) {
+			return;
+		}
+		
+		// Load shaders
+		AssetPools.shaders.addListener(AssetPoolEvent.Type.FAILED, this::handleShaderLoadingError);
+		Shader vertexShader = AssetPools.shaders.loadVertexShader(getVertexShaderPath());
+		Shader fragmentShader = AssetPools.shaders.loadFragmentShader(getFragmentShaderPath());
+		AssetPools.shaders.removeListener(AssetPoolEvent.Type.FAILED, this::handleShaderLoadingError);
+		
+		// Create shader program
+		attachShader(vertexShader);
+		attachShader(fragmentShader);
+		if (GL.getCapabilities().OpenGL32) {
+			bindFragmentDataLocation(0, getOutputVariableName());
+		}
+		link();
+		use();
+		
+		// Delete linked shaders */
+		vertexShader.destroy();
+		fragmentShader.destroy();
+		
+		setupUniforms();
+		
+		isInitialized = true;
+	}
+	
+	private void handleShaderLoadingError(AssetPoolEvent<Shader> event) {
+		String message = String.format("Failed to load shader: %s", event.getPath());
+		String error = event.getError();
+		if (error != null) {
+			message += System.lineSeparator() + error;
+		}
+		getLogger().error(message, event.getException());
 	}
 	
 	/**
@@ -41,6 +97,47 @@ public class ShaderProgram implements Destructible {
 	public void attachShader(Shader shader) {
 		glAttachShader(id, shader.getId());
 	}
+	
+	public void bind() {
+		use();
+		setVertexAttributes(getAttributeNames(), getAttributeSizes(), getStrideLength());
+	}
+	
+	public void setProjectionMatrix(org.joml.Matrix4f projectionMatrix) {
+		setUniform(PROJECTION_UNIFORM, projectionMatrix);
+	}
+	
+	public void setViewMatrix(org.joml.Matrix4f viewMatrix) {
+		setUniform(VIEW_UNIFORM, viewMatrix);
+	}
+	
+	public void setModelMatrix(org.joml.Matrix4f modelMatrix) {
+		setUniform(MODEL_UNIFORM, modelMatrix);
+	}
+	
+	protected abstract String getVertexShaderPath();
+	
+	protected abstract String getFragmentShaderPath();
+	
+	protected String getOutputVariableName() {
+		return DEFAULT_OUTPUT_VARIABLE;
+	}
+	
+	protected abstract CharSequence[] getAttributeNames();
+	
+	public int getStrideLength() {
+		int stride = 0;
+		for (int size : getAttributeSizes()) {
+			stride += size;
+		}
+		return stride;
+	}
+	
+	protected abstract int[] getAttributeSizes();
+	
+	protected void setupUniforms() {}
+	
+	public abstract void writeVertex(FloatBuffer buffer, Vertex vertex);
 	
 	/**
 	 * Binds the fragment out color variable.
@@ -158,6 +255,26 @@ public class ShaderProgram implements Destructible {
 	 */
 	public void setUniform(int location, float value) {
 		glUniform1f(location, value);
+	}
+	
+	public void setUniform(CharSequence name, Color value) {
+		setUniform(name, value, true);
+	}
+	
+	public void setUniform(int location, Color value) {
+		setUniform(location, value, true);
+	}
+	
+	public void setUniform(CharSequence name, Color value, boolean withAlpha) {
+		setUniform(requireUniformLocation(name), value, withAlpha);
+	}
+	
+	public void setUniform(int location, Color value, boolean withAlpha) {
+		if (withAlpha) {
+			setUniform(location, value.toVector4f());
+		} else {
+			setUniform(location, value.toVector3f());
+		}
 	}
 	
 	public void setUniform(CharSequence name, Vector2f value) {
@@ -369,8 +486,38 @@ public class ShaderProgram implements Destructible {
 		glDeleteProgram(id);
 	}
 	
+	public void setLogger(Logger logger) {
+		this.logger = logger;
+	}
+	
+	public Logger getLogger() {
+		return logger != null ? logger : Logger.system;
+	}
+	
 	public static int getMaxVertexAttributes() {
 		return GLUtils.getInt(GL_MAX_VERTEX_ATTRIBS);
+	}
+	
+	public static UnlitShaderProgram getUnlit() {
+		if (unlitShaderProgram != null) {
+			return unlitShaderProgram;
+		}
+		
+		unlitShaderProgram = new UnlitShaderProgram();
+		return unlitShaderProgram;
+	}
+	
+	public static LitShaderProgram getLit() {
+		if (litShaderProgram != null) {
+			return litShaderProgram;
+		}
+		
+		litShaderProgram = new LitShaderProgram();
+		return litShaderProgram;
+	}
+	
+	public static void destroyAll() {
+		Destructible.destroy(unlitShaderProgram, litShaderProgram);
 	}
 	
 }

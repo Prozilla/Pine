@@ -1,7 +1,7 @@
 package dev.prozilla.pine.common.asset.pool;
 
 import dev.prozilla.pine.common.system.Platform;
-import dev.prozilla.pine.core.rendering.Shader;
+import dev.prozilla.pine.core.rendering.shader.Shader;
 
 public final class ShaderPool extends TextAssetPool<Shader> {
 	

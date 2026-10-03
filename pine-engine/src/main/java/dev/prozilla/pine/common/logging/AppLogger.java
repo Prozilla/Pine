@@ -17,7 +17,7 @@ import dev.prozilla.pine.common.system.Ansi;
 import dev.prozilla.pine.common.system.DirectoryWatcher;
 import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.core.Application;
-import dev.prozilla.pine.core.rendering.Shader;
+import dev.prozilla.pine.core.rendering.shader.Shader;
 import dev.prozilla.pine.core.state.config.LogConfig;
 
 import java.util.StringJoiner;
