@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Represents a polygon mesh using a vertex array, UV array and an array of triangles, where each element corresponds to the index of a vertex in the vertex array.
  */
-public abstract class Mesh implements TexturedRenderable, Cloneable<Mesh>, Memoizable {
+public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoizable {
 	
 	protected final Vector3f origin;
 	private float[] vertices;

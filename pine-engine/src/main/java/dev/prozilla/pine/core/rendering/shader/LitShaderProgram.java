@@ -18,14 +18,16 @@ public class LitShaderProgram extends ShaderProgram {
 	
 	// Uniforms
 	public static final String SURFACE_UNIFORM = "uSurface";
-	public static final String AMBIENT_UNIFORM = SURFACE_UNIFORM + ".ambient";
-	public static final String DIFFUSE_UNIFORM = SURFACE_UNIFORM + ".diffuse";
-	public static final String SPECULAR_UNIFORM = SURFACE_UNIFORM + ".specular";
-	public static final String REFLECTANCE_UNIFORM = SURFACE_UNIFORM + ".reflectance";
-	public static final String SUN_LIGHT_UNIFORM = "uSunLight";
-	public static final String SUN_LIGHT_COLOR_UNIFORM = SUN_LIGHT_UNIFORM + ".color";
-	public static final String SUN_LIGHT_DIRECTION_UNIFORM = SUN_LIGHT_UNIFORM + ".direction";
-	public static final String SUN_LIGHT_INTENSITY_UNIFORM = SUN_LIGHT_UNIFORM + ".intensity";
+	public static final String SURFACE_AMBIENT_UNIFORM = SURFACE_UNIFORM + ".ambient";
+	public static final String SURFACE_DIFFUSE_UNIFORM = SURFACE_UNIFORM + ".diffuse";
+	public static final String SURFACE_SPECULAR_UNIFORM = SURFACE_UNIFORM + ".specular";
+	public static final String SURFACE_REFLECTANCE_UNIFORM = SURFACE_UNIFORM + ".reflectance";
+	
+	public static final String SUNLIGHT_UNIFORM = "uSunlight";
+	public static final String SUNLIGHT_COLOR_UNIFORM = SUNLIGHT_UNIFORM + ".color";
+	public static final String SUNLIGHT_DIRECTION_UNIFORM = SUNLIGHT_UNIFORM + ".direction";
+	public static final String SUNLIGHT_INTENSITY_UNIFORM = SUNLIGHT_UNIFORM + ".intensity";
+	
 	public static final String SKY_LIGHT_UNIFORM = "uSkyLight";
 	public static final String SKY_LIGHT_COLOR_UNIFORM = SKY_LIGHT_UNIFORM + ".color";
 	public static final String SKY_LIGHT_INTENSITY_UNIFORM = SKY_LIGHT_UNIFORM + ".intensity";
@@ -62,22 +64,50 @@ public class LitShaderProgram extends ShaderProgram {
 		setModelMatrix(new Matrix4f());
 		
 		setSurface(new Color(), new Color(), new Color(), 1f);
-		setSunLight(Color.white(), Vector3f.one(), 1f);
+		setSunlight(Color.white(), Vector3f.one(), 1f);
 		setSkyLight(Color.white(), 0.25f);
 	}
 	
 	public void setSurface(Color ambient, Color diffuse, Color specular, float reflectance) {
-		setUniform(AMBIENT_UNIFORM, ambient);
-		setUniform(DIFFUSE_UNIFORM, diffuse);
-		setUniform(SPECULAR_UNIFORM, specular);
-		setUniform(REFLECTANCE_UNIFORM, reflectance);
+		setSurfaceAmbient(ambient);
+		setSurfaceDiffuse(diffuse);
+		setSurfaceSpecular(specular);
+		setSurfaceReflectance(reflectance);
+	}
+	
+	public void setSurfaceAmbient(Color ambient) {
+		setUniform(SURFACE_AMBIENT_UNIFORM, ambient);
+	}
+	
+	public void setSurfaceDiffuse(Color diffuse) {
+		setUniform(SURFACE_DIFFUSE_UNIFORM, diffuse);
+	}
+	
+	public void setSurfaceSpecular(Color specular) {
+		setUniform(SURFACE_SPECULAR_UNIFORM, specular);
+	}
+	
+	public void setSurfaceReflectance(float reflectance) {
+		setUniform(SURFACE_REFLECTANCE_UNIFORM, reflectance);
 	}
 	
 	// TODO: Replace with UBO + read sunlight from scene
-	public void setSunLight(Color color, Vector3f direction, float intensity) {
-		setUniform(SUN_LIGHT_COLOR_UNIFORM, color, false);
-		setUniform(SUN_LIGHT_DIRECTION_UNIFORM, direction);
-		setUniform(SUN_LIGHT_INTENSITY_UNIFORM, intensity);
+	public void setSunlight(Color color, Vector3f direction, float intensity) {
+		setSunlightColor(color);
+		setSunlightDirection(direction);
+		setSunlightIntensity(intensity);
+	}
+	
+	public void setSunlightColor(Color color) {
+		setUniform(SUNLIGHT_COLOR_UNIFORM, color, false);
+	}
+	
+	public void setSunlightDirection(Vector3f direction) {
+		setUniform(SUNLIGHT_DIRECTION_UNIFORM, direction);
+	}
+	
+	public void setSunlightIntensity(float intensity) {
+		setUniform(SUNLIGHT_INTENSITY_UNIFORM, intensity);
 	}
 	
 	public void setSkyLight(Color color, float intensity) {

@@ -32,7 +32,7 @@ public class PlayerMover extends UpdateSystem {
 				sprite = sprites[0];
 			}
 			
-			spriteRenderer.texture = AssetPools.textures.load(sprite);
+			spriteRenderer.material.texture = AssetPools.textures.load(sprite);
 		}
 		
 		// Move player

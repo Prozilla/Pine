@@ -41,7 +41,7 @@ public class PlayerTailUpdater extends UpdateSystem {
 		float regionOffsetY;
 		if (tailData.nextTile == null) {
 			// Snake butt segment
-			sprite.texture = AssetPools.textures.load("snake/snake_tail.png");
+			sprite.material.texture = AssetPools.textures.load("snake/snake_tail.png");
 			tailData.isCurved = false;
 			
 			if (direction.y == 1) {
@@ -59,7 +59,7 @@ public class PlayerTailUpdater extends UpdateSystem {
 			
 			if (dotProduct != 0) {
 				// Straight tail segment
-				sprite.texture = AssetPools.textures.load("snake/snake_body_straight.png");
+				sprite.material.texture = AssetPools.textures.load("snake/snake_body_straight.png");
 				tailData.isCurved = false;
 				
 				if (direction.x != 0) {
@@ -69,7 +69,7 @@ public class PlayerTailUpdater extends UpdateSystem {
 				}
 			} else {
 				// Curved tail segment
-				sprite.texture = AssetPools.textures.load("snake/snake_body_curved.png");
+				sprite.material.texture = AssetPools.textures.load("snake/snake_body_curved.png");
 				tailData.isCurved = true;
 				
 				direction.add(otherDirection);
@@ -90,7 +90,7 @@ public class PlayerTailUpdater extends UpdateSystem {
 			}
 		}
 		
-		sprite.getMesh().setRegion(new Vector2f(0, regionOffsetY), new Vector2f(GameScene.CELL_SIZE), new Vector2f(sprite.texture.getSize()));
+		sprite.getMesh().setRegion(new Vector2f(0, regionOffsetY), new Vector2f(GameScene.CELL_SIZE), new Vector2f(sprite.material.texture.getSize()));
 		tailData.isDirty = false;
 	}
 }

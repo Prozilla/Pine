@@ -17,8 +17,8 @@ public final class ParticleInitializer extends InitSystem {
 		ParticleRenderer particleRenderer = chunk.getComponent(ParticleRenderer.class);
 		SpriteRenderer spriteRenderer = chunk.getComponent(SpriteRenderer.class);
 		
-		float textureWidth = spriteRenderer.texture.getWidth();
-		float textureHeight = spriteRenderer.texture.getHeight() / (float)particleRenderer.frameCount;
+		float textureWidth = spriteRenderer.getTexture().getWidth();
+		float textureHeight = spriteRenderer.getTexture().getHeight() / (float)particleRenderer.frameCount;
 		spriteRenderer.getMesh().setRegion(0, textureHeight * (particleRenderer.frameCount - particleRenderer.initialFrame - 1), textureWidth, textureHeight);
 		
 		spriteRenderer.getMesh().setOffset(-textureWidth / 2f, -textureHeight / 2f);
@@ -29,7 +29,7 @@ public final class ParticleInitializer extends InitSystem {
 		}
 		if (particleRenderer.colorAnimation != null) {
 			particleRenderer.colorAnimation.setDuration(particleRenderer.lifetime);
-			spriteRenderer.color.receive(particleRenderer.colorAnimation.getRestartedValue());
+			spriteRenderer.getColor().receive(particleRenderer.colorAnimation.getRestartedValue());
 		}
 	}
 }

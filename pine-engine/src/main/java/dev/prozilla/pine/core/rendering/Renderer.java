@@ -11,8 +11,8 @@ import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
-import dev.prozilla.pine.core.rendering.material.LitMaterial;
 import dev.prozilla.pine.core.rendering.material.Material;
+import dev.prozilla.pine.core.rendering.material.UnlitMaterial;
 import dev.prozilla.pine.core.rendering.shader.ShaderProgram;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
@@ -846,7 +846,7 @@ public class Renderer implements Initializable, Destructible {
 		modelMatrix.identity();
 		
 		// Set default material
-		defaultMaterial = new LitMaterial();
+		defaultMaterial = new UnlitMaterial();
 		setMaterial(defaultMaterial);
 	}
 	

@@ -22,12 +22,12 @@ struct Surface {
 };
 uniform Surface uSurface;
 
-struct SunLight {
+struct Sunlight {
     vec3 color;
     vec3 direction;
     float intensity;
 };
-uniform SunLight uSunLight;
+uniform Sunlight uSunlight;
 
 struct SkyLight
 {
@@ -56,7 +56,7 @@ vec4 computeLightColor(vec4 diffuse, vec4 specular, vec3 lightColor, float light
     return diffuseColor + specularColor;
 }
 
-vec4 computeSunLight(vec4 diffuse, vec4 specular, SunLight light, vec3 position, vec3 normal) {
+vec4 computeSunlight(vec4 diffuse, vec4 specular, Sunlight light, vec3 position, vec3 normal) {
     return computeLightColor(diffuse, specular, light.color, light.intensity, position, normalize(light.direction), normal);
 }
 
@@ -89,5 +89,5 @@ void main() {
     vec4 diffuse = color + uSurface.diffuse;
     vec4 specular = color + uSurface.specular;
 
-    color = ambient + computeSunLight(diffuse, specular, uSunLight, fPosition, fNormal);
+    color = ambient + computeSunlight(diffuse, specular, uSunlight, fPosition, fNormal);
 }

@@ -19,11 +19,7 @@ public final class MeshRenderSystem extends RenderSystem {
 			return;
 		}
 		
-		if (meshRenderer.color == null) {
-			meshRenderer.mesh.draw(renderer, meshRenderer.texture);
-		} else {
-			meshRenderer.mesh.draw(renderer, meshRenderer.texture, meshRenderer.color);
-		}
+		meshRenderer.mesh.draw(renderer, meshRenderer.material);
 	}
 	
 }

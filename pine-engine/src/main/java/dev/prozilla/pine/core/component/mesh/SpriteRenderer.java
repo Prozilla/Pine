@@ -3,6 +3,8 @@ package dev.prozilla.pine.core.component.mesh;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.core.rendering.material.Material;
+import dev.prozilla.pine.core.rendering.material.UnlitMaterial;
 import dev.prozilla.pine.core.rendering.mesh.Sprite;
 
 public class SpriteRenderer extends MeshRenderer<Sprite> {
@@ -20,23 +22,15 @@ public class SpriteRenderer extends MeshRenderer<Sprite> {
 	}
 	
 	public SpriteRenderer(TextureAsset texture, Color color) {
-		this(new Sprite(texture), texture, color);
+		this(new Sprite(texture), new UnlitMaterial(texture, color));
 	}
 	
 	public SpriteRenderer(Sprite sprite) {
 		super(sprite);
 	}
 	
-	public SpriteRenderer(Sprite sprite, Color color) {
-		super(sprite, color);
-	}
-	
-	public SpriteRenderer(Sprite sprite, TextureAsset texture) {
-		super(sprite, texture);
-	}
-	
-	public SpriteRenderer(Sprite sprite, TextureAsset texture, Color color) {
-		super(sprite, texture, color);
+	public SpriteRenderer(Sprite sprite, Material<?> material) {
+		super(sprite, material);
 	}
 	
 }

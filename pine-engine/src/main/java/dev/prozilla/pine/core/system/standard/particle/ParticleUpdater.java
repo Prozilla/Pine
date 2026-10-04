@@ -33,8 +33,8 @@ public final class ParticleUpdater extends UpdateSystem {
 		// Update sprite region based on current frame
 		if (particleRenderer.animateSprite) {
 			int currentFrame = (int)Math.floor((particleRenderer.lifetime / particleRenderer.initialLifetime) * particleRenderer.frameCount);
-			float textureHeight = (float)spriteRenderer.texture.getHeight() / particleRenderer.frameCount;
-			spriteRenderer.getMesh().setRegion(0, currentFrame * textureHeight, spriteRenderer.texture.getWidth(), textureHeight);
+			float textureHeight = (float)spriteRenderer.getTexture().getHeight() / particleRenderer.frameCount;
+			spriteRenderer.getMesh().setRegion(0, currentFrame * textureHeight, spriteRenderer.getTexture().getWidth(), textureHeight);
 		}
 		
 		// Update position based on velocity
@@ -49,7 +49,7 @@ public final class ParticleUpdater extends UpdateSystem {
 		
 		// Update color based on animation
 		if (particleRenderer.colorAnimation != null) {
-			particleRenderer.colorAnimation.applyUpdatedValue(deltaTime, spriteRenderer.color);
+			particleRenderer.colorAnimation.applyUpdatedValue(deltaTime, spriteRenderer.getColor());
 		}
 	}
 }

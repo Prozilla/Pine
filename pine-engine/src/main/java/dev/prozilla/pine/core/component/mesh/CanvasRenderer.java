@@ -1,7 +1,6 @@
 package dev.prozilla.pine.core.component.mesh;
 
-import dev.prozilla.pine.common.asset.image.TextureAsset;
-import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.core.rendering.material.Material;
 import dev.prozilla.pine.core.rendering.mesh.Canvas;
 
 public class CanvasRenderer extends MeshRenderer<Canvas> {
@@ -10,16 +9,8 @@ public class CanvasRenderer extends MeshRenderer<Canvas> {
 		super(canvas);
 	}
 	
-	public CanvasRenderer(Canvas canvas, Color color) {
-		super(canvas, color);
-	}
-	
-	public CanvasRenderer(Canvas canvas, TextureAsset texture) {
-		super(canvas, texture);
-	}
-	
-	public CanvasRenderer(Canvas canvas, TextureAsset texture, Color color) {
-		super(canvas, texture, color);
+	public CanvasRenderer(Canvas canvas, Material<?> material) {
+		super(canvas, material);
 	}
 	
 }

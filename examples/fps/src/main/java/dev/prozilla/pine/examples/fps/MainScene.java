@@ -6,7 +6,10 @@ import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.entity.prefab.mesh.MeshPrefab;
+import dev.prozilla.pine.core.rendering.Renderer;
+import dev.prozilla.pine.core.rendering.material.LitMaterial;
 import dev.prozilla.pine.core.rendering.mesh.StaticMesh;
+import dev.prozilla.pine.core.rendering.shader.ShaderProgram;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
@@ -19,6 +22,8 @@ public class MainScene extends Scene {
 	private float cameraPitch = -30f;
 	private float cameraDistance = 25f;
 	
+	private static final float scale = 0.125f;
+	
 	private static final Vector3f CAMERA_CENTER = new Vector3f(0, 5, 0);
 	private static final float ORBIT_SPEED = 3.75f;
 	private static final float ZOOM_SPEED = 5f;
@@ -29,10 +34,13 @@ public class MainScene extends Scene {
 	protected void load() {
 		super.load();
 		
-		StaticMesh mesh = AssetPools.models.load("teapot.obj").getFirstMesh();
-		MeshPrefab<StaticMesh> meshPrefab = new MeshPrefab<>(mesh);
-		meshPrefab.setScale(new Vector3f(0.125f));
-		addEntity(meshPrefab);
+		LitMaterial material = new LitMaterial();
+		
+		for (StaticMesh mesh : AssetPools.models.load("teapot.obj").meshes) {
+			MeshPrefab<StaticMesh> meshPrefab = new MeshPrefab<>(mesh, material);
+			meshPrefab.setScale(new Vector3f(0.125f));
+			addEntity(meshPrefab);
+		}
 		
 		updateCamera();
 		
@@ -47,11 +55,9 @@ public class MainScene extends Scene {
 		if (input.getKeyDown(Key.ESCAPE)) {
 			application.stop();
 			return;
-		}
-		if (input.getKeyDown(Key.P)) {
+		} else if (input.getKeyDown(Key.P) || input.getKeyDown(Key.SPACE)) {
 			application.togglePause();
-		}
-		if (input.getKeyDown(Key.F5)) {
+		} else if (input.getKeyDown(Key.F5)) {
 			application.reloadScene();
 		}
 		
@@ -73,6 +79,13 @@ public class MainScene extends Scene {
 		}
 		
 		updateCamera();
+	}
+	
+	@Override
+	public void render(Renderer renderer) throws IllegalStateException {
+		super.render(renderer);
+		
+		ShaderProgram.getLit().setSunlightDirection(new Vector3f((float)Math.cos(getTimer().getScaledTime()), 1f, (float)Math.sin(getTimer().getScaledTime())));
 	}
 	
 	private void updateCamera() {
