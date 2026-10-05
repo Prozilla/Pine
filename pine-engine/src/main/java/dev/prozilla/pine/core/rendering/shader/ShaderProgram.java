@@ -37,6 +37,7 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	private static UnlitShaderProgram unlitShaderProgram;
 	private static LitShaderProgram litShaderProgram;
 	private static DepthShaderProgram depthShaderProgram;
+	private static WireframeShaderProgram wireframeShaderProgram;
 	
 	// Uniforms
 	public static final String PROJECTION_UNIFORM = "uProjection";
@@ -136,7 +137,11 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	
 	protected abstract int[] getAttributeSizes();
 	
-	protected void setupUniforms() {}
+	protected void setupUniforms() {
+		setProjectionMatrix(new org.joml.Matrix4f());
+		setViewMatrix(new org.joml.Matrix4f());
+		setModelMatrix(new org.joml.Matrix4f());
+	}
 	
 	public abstract void writeVertex(FloatBuffer buffer, Vertex vertex);
 	
@@ -527,8 +532,17 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 		return depthShaderProgram;
 	}
 	
+	public static WireframeShaderProgram getWireframe() {
+		if (wireframeShaderProgram != null) {
+			return wireframeShaderProgram;
+		}
+		
+		wireframeShaderProgram = new WireframeShaderProgram();
+		return wireframeShaderProgram;
+	}
+	
 	public static void destroyAll() {
-		Destructible.destroy(unlitShaderProgram, litShaderProgram, depthShaderProgram);
+		Destructible.destroy(unlitShaderProgram, litShaderProgram, depthShaderProgram, wireframeShaderProgram);
 	}
 	
 }

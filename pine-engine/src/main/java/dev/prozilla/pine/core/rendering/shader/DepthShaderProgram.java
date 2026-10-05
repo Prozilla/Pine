@@ -37,13 +37,6 @@ public class DepthShaderProgram extends ShaderProgram {
 	}
 	
 	@Override
-	protected void setupUniforms() {
-		setProjectionMatrix(new Matrix4f());
-		setViewMatrix(new Matrix4f());
-		setModelMatrix(new Matrix4f());
-	}
-	
-	@Override
 	public void setProjectionMatrix(Matrix4f projectionMatrix) {
 		super.setProjectionMatrix(projectionMatrix);
 		

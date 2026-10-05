@@ -5,7 +5,6 @@ import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
-import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
@@ -15,6 +14,7 @@ import dev.prozilla.pine.core.rendering.material.Material;
 import dev.prozilla.pine.core.rendering.material.UnlitMaterial;
 import dev.prozilla.pine.core.rendering.shader.DepthShaderProgram;
 import dev.prozilla.pine.core.rendering.shader.ShaderProgram;
+import dev.prozilla.pine.core.rendering.shader.WireframeShaderProgram;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.config.RenderConfig;
@@ -121,20 +121,6 @@ public class Renderer implements Initializable, Destructible {
 		config.snapPixels.read((snapPixels) -> {
 			this.snapPixels = snapPixels;
 		});
-		config.renderMode.addObserver((renderMode) -> {
-			if (renderMode == RenderMode.DEPTH) {
-				DepthShaderProgram program = ShaderProgram.getDepth();
-				program.init();
-				program.setLogger(logger);
-				program.setProjectionMatrix(projectionMatrix);
-				program.setViewMatrix(viewMatrix);
-				program.setModelMatrix(modelMatrix);
-			} else {
-				program.setProjectionMatrix(projectionMatrix);
-				program.setViewMatrix(viewMatrix);
-				program.setModelMatrix(modelMatrix);
-			}
-		});
 		
 		createFont();
 		reset();
@@ -185,8 +171,27 @@ public class Renderer implements Initializable, Destructible {
 	
 	private void updateRenderMode() {
 		switch (renderMode) {
-			case NORMAL, DEPTH -> glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			case WIREFRAME -> glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			case DEPTH -> {
+				DepthShaderProgram program = ShaderProgram.getDepth();
+				program.init();
+				program.setLogger(logger);
+				program.setProjectionMatrix(projectionMatrix);
+				program.setViewMatrix(viewMatrix);
+				program.setModelMatrix(modelMatrix);
+			}
+			case WIREFRAME -> {
+				WireframeShaderProgram program = ShaderProgram.getWireframe();
+				program.init();
+				program.setLogger(logger);
+				program.setProjectionMatrix(projectionMatrix);
+				program.setViewMatrix(viewMatrix);
+				program.setModelMatrix(modelMatrix);
+			}
+			case null, default -> {
+				program.setProjectionMatrix(projectionMatrix);
+				program.setViewMatrix(viewMatrix);
+				program.setModelMatrix(modelMatrix);
+			}
 		}
 	}
 	
@@ -745,14 +750,8 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		// Handle render mode
-		if (renderMode == RenderMode.DEPTH) {
-			float depth = MathUtils.square((z1 + z2 + z3) / 3);
-			vertex.color.set(depth, depth, depth, 1f);
-			vertex.resetTexture();
-		} else {
-			vertex.setColor(c);
-			vertex.setTexture(texture);
-		}
+		vertex.setColor(c);
+		vertex.setTexture(texture);
 		
 		if (vertex.color.getAlpha() <= 0) {
 			return;
@@ -954,11 +953,11 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	protected ShaderProgram getProgram() {
-		if (renderMode == RenderMode.DEPTH) {
-			return ShaderProgram.getDepth();
-		} else {
-			return program;
-		}
+		return switch (renderMode) {
+			case DEPTH -> ShaderProgram.getDepth();
+			case WIREFRAME -> ShaderProgram.getWireframe();
+			case null, default -> program;
+		};
 	}
 	
 	public void setProgram(ShaderProgram program) {

@@ -4,7 +4,6 @@ import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.Platform;
 import dev.prozilla.pine.core.rendering.Vertex;
-import org.joml.Matrix4f;
 
 import java.nio.FloatBuffer;
 
@@ -54,14 +53,12 @@ public class LitShaderProgram extends ShaderProgram {
 	
 	@Override
 	protected void setupUniforms() {
+		super.setupUniforms();
+		
 		setUniform("uTexture", 0);
 		if (Platform.get() != Platform.MACOS) {
 			setUniform("uTextureArray", 1);
 		}
-		
-		setProjectionMatrix(new Matrix4f());
-		setViewMatrix(new Matrix4f());
-		setModelMatrix(new Matrix4f());
 		
 		setSurface(new Color(), new Color(), new Color(), 1f);
 		setSunlight(Color.white(), Vector3f.one(), 1f);

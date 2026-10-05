@@ -1,6 +1,6 @@
 #version 410 core
 
-const float SPECULAR_POWER = 10;
+const float SPECULAR_POWER = 50;
 
 in vec3 fPosition;
 in vec3 fNormal;

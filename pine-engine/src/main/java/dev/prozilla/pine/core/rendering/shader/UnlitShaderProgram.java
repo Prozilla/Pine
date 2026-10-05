@@ -2,7 +2,6 @@ package dev.prozilla.pine.core.rendering.shader;
 
 import dev.prozilla.pine.common.system.Platform;
 import dev.prozilla.pine.core.rendering.Vertex;
-import org.joml.Matrix4f;
 
 import java.nio.FloatBuffer;
 
@@ -36,14 +35,12 @@ public class UnlitShaderProgram extends ShaderProgram {
 	
 	@Override
 	protected void setupUniforms() {
+		super.setupUniforms();
+		
 		setUniform("uTexture", 0);
 		if (Platform.get() != Platform.MACOS) {
 			setUniform("uTextureArray", 1);
 		}
-		
-		setProjectionMatrix(new Matrix4f());
-		setViewMatrix(new Matrix4f());
-		setModelMatrix(new Matrix4f());
 	}
 	
 	@Override
