@@ -622,7 +622,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @param triangles Array of triangles (every triangle is made up of 3 vertex indices)
 	 * @throws IllegalArgumentException if any array has an invalid length
 	 */
-	public void drawTriangles(TextureAsset texture, float[] vertices, float[] uvArray, int[] triangles, Color c) {
+	public void drawTriangles(TextureAsset texture, float[] vertices, int[] triangles, float[] normals, float[] uvArray, Color c) {
 		if (vertices.length % 3 != 0) {
 			throw new IllegalArgumentException("Vertex array length must be a multiple of 3");
 		}
@@ -660,7 +660,34 @@ public class Renderer implements Initializable, Destructible {
 			float u3 = uvArray[i3 * 2];
 			float v3 = uvArray[i3 * 2 + 1];
 			
-			drawTriangle(texture, x1, y1, z1, x2, y2, z2, x3, y3, z3, u1, v1, u2, v2, u3, v3, c);
+			float a1 = 0, b1 = 0, c1 = 0;
+			float a2 = 0, b2 = 0, c2 = 0;
+			float a3 = 0, b3 = 0, c3 = 0;
+			if (normals != null && normals.length > 0) {
+				if (normals.length == vertices.length) {
+					a1 = normals[i1 * 3];
+					b1 = normals[i1 * 3 + 1];
+					c1 = normals[i1 * 3 + 2];
+					a2 = normals[i2 * 3];
+					b2 = normals[i2 * 3 + 1];
+					c2 = normals[i2 * 3 + 2];
+					a3 = normals[i3 * 3];
+					b3 = normals[i3 * 3 + 1];
+					c3 = normals[i3 * 3 + 2];
+				} else {
+					a1 = normals[i * 3];
+					b1 = normals[i * 3 + 1];
+					c1 = normals[i * 3 + 2];
+					a2 = a1;
+					b2 = b1;
+					c2 = c1;
+					a3 = a1;
+					b3 = b1;
+					c3 = c1;
+				}
+			}
+			
+			drawTriangle(texture, x1, y1, z1, x2, y2, z2, x3, y3, z3, a1, b1, c1, a2, b2, c2, a3, b3, c3, u1, v1, u2, v2, u3, v3, c);
 		}
 	}
 	
@@ -692,6 +719,9 @@ public class Renderer implements Initializable, Destructible {
 	                         float x1, float y1, float z1,
 	                         float x2, float y2, float z2,
 	                         float x3, float y3, float z3,
+							 float a1, float b1, float c1,
+							 float a2, float b2, float c2,
+							 float a3, float b3, float c3,
 	                         float u1, float v1, float u2, float v2, float u3, float v3,
 	                         Color c) {
 		totalVertices += 3;
@@ -732,15 +762,20 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		// Push the vertices to the buffer
-		drawVertex(x1, y1, z1, u1, v1);
-		drawVertex(x2, y2, z2, u2, v2);
-		drawVertex(x3, y3, z3, u3, v3);
+		drawVertex(x1, y1, z1, a1, b1, c1, u1, v1);
+		drawVertex(x2, y2, z2, a2, b2, c2, u2, v2);
+		drawVertex(x3, y3, z3, a3, b3, c3, u3, v3);
 		
 		replaceActiveTexture(texture);
 	}
 	
 	public void drawVertex(float x, float y, float z, float u, float v) {
+		drawVertex(x, y, z, 0, 0, 0, u, v);
+	}
+	
+	public void drawVertex(float x, float y, float z, float a, float b, float c, float u, float v) {
 		vertex.position.set(x, y, z);
+		vertex.normal.set(a, b, c);
 		vertex.textureCoordinates.set(u, v);
 		program.writeVertex(vertices, vertex);
 		numVertices++;

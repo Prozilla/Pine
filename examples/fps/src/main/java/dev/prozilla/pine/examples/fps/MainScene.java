@@ -4,7 +4,10 @@ import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector3f;
+import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.core.component.Transform;
+import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.mesh.MeshPrefab;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.rendering.material.LitMaterial;
@@ -14,6 +17,10 @@ import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class MainScene extends Scene {
 	
 	private Vector2i previousCursorPosition;
@@ -22,29 +29,69 @@ public class MainScene extends Scene {
 	private float cameraPitch = -30f;
 	private float cameraDistance = 25f;
 	
-	private static final float scale = 0.125f;
+	private static final float SCALE = 0.125f;
+	private static final int OBJECT_COUNT = 15;
+	private static final int MAX_OFFSET = 50;
+	private static final int MAX_ROTATION = 360;
+	private static final Color[] COLORS = new Color[]{
+		Color.red(),
+		Color.orange(),
+		Color.yellow(),
+		Color.green(),
+		Color.blue(),
+		Color.magenta(),
+		Color.purple()
+	};
+	private static final float REFLECTANCE = 0.75f;
+	
+	private static final Random random = new Random();
 	
 	private static final Vector3f CAMERA_CENTER = new Vector3f(0, 5, 0);
 	private static final float ORBIT_SPEED = 3.75f;
-	private static final float ZOOM_SPEED = 5f;
+	private static final float ZOOM_SPEED = 10f;
 	private static final float MIN_DISTANCE = 3f;
-	private static final float MAX_DISTANCE = 50f;
+	private static final float MAX_DISTANCE = 100f;
 	
 	@Override
 	protected void load() {
 		super.load();
 		
-		LitMaterial material = new LitMaterial();
-		
+		Prefab teapot = new Prefab();
+		List<MeshPrefab<StaticMesh>> meshPrefabs = new ArrayList<>();
 		for (StaticMesh mesh : AssetPools.models.load("teapot.obj").meshes) {
-			MeshPrefab<StaticMesh> meshPrefab = new MeshPrefab<>(mesh, material);
-			meshPrefab.setScale(new Vector3f(0.125f));
-			addEntity(meshPrefab);
+			MeshPrefab<StaticMesh> meshPrefab = new MeshPrefab<>(mesh);
+			meshPrefab.setScale(new Vector3f(SCALE));
+			meshPrefabs.add(meshPrefab);
+			teapot.addChild(meshPrefab);
+		}
+		
+		spawnObject(teapot, meshPrefabs, new Vector3f(), new Vector3f());
+		for (int i = 0; i < OBJECT_COUNT; i++) {
+			Vector3f position = new Vector3f(random.nextFloat(-MAX_OFFSET, MAX_OFFSET), random.nextFloat(-MAX_OFFSET, MAX_OFFSET), random.nextFloat(-MAX_OFFSET, MAX_OFFSET));
+			Vector3f rotation = new Vector3f(random.nextFloat(-MAX_ROTATION, MAX_ROTATION), random.nextFloat(-MAX_ROTATION, MAX_ROTATION), random.nextFloat(-MAX_ROTATION, MAX_ROTATION));
+			spawnObject(teapot, meshPrefabs, position, rotation);
 		}
 		
 		updateCamera();
-		
 		getInput().disableCursor();
+	}
+	
+	private void spawnObject(Prefab teapot, List<MeshPrefab<StaticMesh>> meshPrefabs, Vector3f position, Vector3f rotation) {
+		Color color = ArrayUtils.getRandom(COLORS);
+		
+		LitMaterial material = new LitMaterial();
+		material.ambient = color;
+		material.diffuse = color;
+		material.reflectance = REFLECTANCE;
+		
+		for (MeshPrefab<StaticMesh> meshPrefab : meshPrefabs) {
+			meshPrefab.setMaterial(material);
+		}
+		
+		teapot.setPosition(position);
+		teapot.setRotation(rotation);
+		
+		addEntity(teapot);
 	}
 	
 	@Override

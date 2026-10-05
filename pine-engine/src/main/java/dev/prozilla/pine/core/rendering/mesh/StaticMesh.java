@@ -7,12 +7,16 @@ import java.util.Objects;
 
 public class StaticMesh extends Mesh {
 	
-	public StaticMesh(float[] vertices, float[] uvArray, int[] triangles) {
-		this(vertices, uvArray, triangles, new Vector3f());
+	public StaticMesh(float[] vertices, int[] triangles, float[] normals, float[] uvArray) {
+		this(vertices, triangles, normals, uvArray, new Vector3f());
 	}
 	
-	public StaticMesh(float[] vertices, float[] uvArray, int[] triangles, Vector3f origin) {
-		super(vertices, uvArray, triangles, origin);
+	public StaticMesh(float[] vertices, int[] triangles, float[] normals, float[] uvArray, Vector3f origin) {
+		super(vertices, triangles, normals, uvArray, origin);
+		
+		if (normals == null || normals.length == 0) {
+			recalculateNormals();
+		}
 	}
 	
 	@Override
@@ -23,6 +27,15 @@ public class StaticMesh extends Mesh {
 	@Override
 	protected int[] generateTriangles() {
 		return getTriangles();
+	}
+	
+	@Override
+	protected float[] generateNormals() {
+		float[] normals = getNormals();
+		if (isDirty() || normals == null || normals.length == 0) {
+			normals = super.generateNormals();
+		}
+		return normals;
 	}
 	
 	@Override
@@ -44,12 +57,13 @@ public class StaticMesh extends Mesh {
 		return staticMesh != null && Objects.equals(staticMesh.origin, origin)
 			       && Arrays.equals(staticMesh.getVertices(), getVertices())
 			       && Arrays.equals(staticMesh.getTriangles(), getTriangles())
+			       && Arrays.equals(staticMesh.getNormals(), getNormals())
 			       && Arrays.equals(staticMesh.getUVArray(), getUVArray());
 	}
 	
 	@Override
 	public Mesh clone() {
-		return new StaticMesh(getVertices(), getUVArray(), getTriangles(), origin.clone());
+		return new StaticMesh(getVertices(), getTriangles(), getNormals(), getUVArray(), origin.clone());
 	}
 	
 }

@@ -22,9 +22,9 @@ public class BevelModifier extends MeshModifier {
 	}
 	
 	@Override
-	public ModifiedMesh apply(float[] vertices, float[] uvArray, int[] triangles) {
+	public ModifiedMesh apply(float[] vertices, int[] triangles, float[] normals, float[] uvArray) {
 		if (segments < 1 || bevelAmount == 0) {
-			return new ModifiedMesh(vertices, uvArray, triangles);
+			return new ModifiedMesh(vertices, triangles, normals, uvArray);
 		}
 		
 		List<Vector3f> polygon = extractPolygonFromTriangles(vertices, triangles);
@@ -63,7 +63,7 @@ public class BevelModifier extends MeshModifier {
 		
 		float[] newUVs = generateUVs(newVertices);
 		
-		return new ModifiedMesh(newVertices, newUVs, newTriangles);
+		return new ModifiedMesh(newVertices, newTriangles, normals, newUVs);
 	}
 	
 	private float[] generateUVs(float[] newVertices) {

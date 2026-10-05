@@ -20,11 +20,13 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 	
 	protected final Vector3f origin;
 	private float[] vertices;
+	private float[] normals;
 	private int[] triangles;
 	private float[] uvArray;
 	/** If {@code true}, the vertices, triangles and UVs of this mesh will be re-generated before the next draw call. */
 	private boolean isDirty;
 	private boolean isGenerating;
+	private boolean smoothShading;
 	
 	private final List<MeshModifier> modifiers = new ArrayList<>();
 	
@@ -34,8 +36,8 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 	 * @param uvArray The UV array
 	 * @param triangles The array of vertex indices representing triangles
 	 */
-	public Mesh(float[] vertices, float[] uvArray, int[] triangles) {
-		this(vertices, uvArray, triangles, new Vector3f());
+	public Mesh(float[] vertices, int[] triangles, float[] normals, float[] uvArray) {
+		this(vertices, triangles, normals, uvArray, new Vector3f());
 	}
 	
 	/**
@@ -44,13 +46,15 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 	 * @param uvArray The UV array
 	 * @param triangles The array of vertex indices representing triangles
 	 */
-	public Mesh(float[] vertices, float[] uvArray, int[] triangles, Vector3f origin) {
+	public Mesh(float[] vertices, int[] triangles, float[] normals, float[] uvArray, Vector3f origin) {
 		this.vertices = vertices;
-		this.uvArray = uvArray;
 		this.triangles = triangles;
+		this.normals = normals;
+		this.uvArray = uvArray;
 		this.origin = Checks.isNotNull(origin, "origin");
 		isDirty = false;
 		isGenerating = false;
+		smoothShading = true;
 	}
 	
 	/**
@@ -79,16 +83,18 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 		isGenerating = true;
 		vertices = generateVertices();
 		if (vertices != null && vertices.length > 0) {
-			uvArray = generateUVs();
 			triangles = generateTriangles();
+			normals = generateNormals();
+			uvArray = generateUVs();
 		}
 		
 		if (!modifiers.isEmpty() && vertices != null) {
 			for (MeshModifier modifier : modifiers) {
-				MeshModifier.ModifiedMesh result = modifier.apply(vertices, uvArray, triangles);
+				MeshModifier.ModifiedMesh result = modifier.apply(vertices, triangles, normals, uvArray);
 				vertices = result.vertices;
-				uvArray = result.uvArray;
 				triangles = result.triangles;
+				normals = result.normals;
+				uvArray = result.uvArray;
 			}
 		}
 		
@@ -104,6 +110,63 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 	abstract protected float[] generateVertices();
 	
 	/**
+	 * Generates the triangles for this mesh.
+	 * <p>Every three elements define a triangle, represented by the indices of the corresponding vertices.</p>
+	 * @return The array of triangles.
+	 */
+	abstract protected int[] generateTriangles();
+	
+	public void recalculateNormals() {
+		normals = generateNormals();
+	}
+	
+	protected float[] generateNormals() {
+		if (vertices == null || triangles == null) {
+			return null;
+		}
+		
+		int vertexCount = vertices.length / 3;
+		int triangleCount = triangles.length / 3;
+		float[] result = new float[smoothShading ? vertices.length : triangleCount * 3];
+		
+		for (int t = 0; t < triangleCount; t++) {
+			int i0 = triangles[t * 3];
+			int i1 = triangles[t * 3 + 1];
+			int i2 = triangles[t * 3 + 2];
+			
+			if (i0 < 0 || i1 < 0 || i2 < 0 || i0 >= vertexCount || i1 >= vertexCount || i2 >= vertexCount) {
+				continue;
+			}
+			
+			int a = i0 * 3;
+			int b = i1 * 3;
+			int c = i2 * 3;
+			
+			float e1x = vertices[b] - vertices[a];
+			float e1y = vertices[b + 1] - vertices[a + 1];
+			float e1z = vertices[b + 2] - vertices[a + 2];
+			
+			float e2x = vertices[c] - vertices[a];
+			float e2y = vertices[c + 1] - vertices[a + 1];
+			float e2z = vertices[c + 2] - vertices[a + 2];
+			
+			float nx = e1y * e2z - e1z * e2y;
+			float ny = e1z * e2x - e1x * e2z;
+			float nz = e1x * e2y - e1y * e2x;
+			
+			if (smoothShading) {
+				addNormal(result, a, nx, ny, nz);
+				addNormal(result, b, nx, ny, nz);
+				addNormal(result, c, nx, ny, nz);
+			} else {
+				addNormal(result, t * 3, nx, ny, nz);
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
 	 * Generates the UV array for this mesh.
 	 * <p>Every two elements define a UV coordinate (u, v).</p>
 	 * @return The array of UV coordinates.
@@ -111,15 +174,8 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 	abstract protected float[] generateUVs();
 	
 	/**
-	 * Generates the triangles for this mesh.
-	 * <p>Every three elements define a triangle, represented by the indices of the corresponding vertices.</p>
-	 * @return The array of triangles.
-	 */
-	abstract protected int[] generateTriangles();
-	
-	/**
 	 * Draws this mesh using its vertex and UV arrays.
-	 * @see Renderer#drawTriangles(TextureAsset, float[], float[], int[], Color)
+	 * @see Renderer#drawTriangles(TextureAsset, float[], int[], float[], float[], Color)
 	 */
 	@Override
 	public void draw(Renderer renderer, TextureAsset texture, Color color) {
@@ -129,7 +185,7 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 			return;
 		}
 		
-		renderer.drawTriangles(texture, vertices, uvArray, triangles, color);
+		renderer.drawTriangles(texture, vertices, triangles, normals, uvArray, color);
 	}
 	
 	public float[] getVertices() {
@@ -137,14 +193,19 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 		return vertices;
 	}
 	
-	public float[] getUVArray() {
-		generate();
-		return uvArray;
-	}
-	
 	public int[] getTriangles() {
 		generate();
 		return triangles;
+	}
+	
+	public float[] getNormals() {
+		generate();
+		return normals;
+	}
+	
+	public float[] getUVArray() {
+		generate();
+		return uvArray;
 	}
 	
 	public Vector3f getOrigin() {
@@ -198,6 +259,15 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 		}
 		
 		this.origin.set(origin);
+		markAsDirty();
+	}
+	
+	public void setSmoothShading(boolean smoothShading) {
+		if (this.smoothShading == smoothShading) {
+			return;
+		}
+		
+		this.smoothShading = smoothShading;
 		markAsDirty();
 	}
 	
@@ -256,5 +326,11 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 	
 	@Override
 	public abstract Mesh clone();
+	
+	private static void addNormal(float[] normals, int index, float x, float y, float z) {
+		normals[index] += x;
+		normals[index + 1] += y;
+		normals[index + 2] += z;
+	}
 	
 }

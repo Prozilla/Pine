@@ -13,8 +13,8 @@ public class LitShaderProgram extends ShaderProgram {
 	public final static String VERTEX_SHADER_PATH = "/shaders/lit.vert";
 	public final static String FRAGMENT_SHADER_PATH = "/shaders/lit.frag";
 	
-	public static final CharSequence[] ATTRIBUTE_NAMES = { "vPosition", "vColor", "vTexCoords", "vTexId", "vIsArrayTexture" };
-	public static final int[] ATTRIBUTE_SIZES = { 3, 4, 2, 1, 1 };
+	public static final CharSequence[] ATTRIBUTE_NAMES = { "vPosition", "vNormal", "vColor", "vTexCoords", "vTexId", "vIsArrayTexture" };
+	public static final int[] ATTRIBUTE_SIZES = { 3, 3, 4, 2, 1, 1 };
 	
 	// Uniforms
 	public static final String SURFACE_UNIFORM = "uSurface";
@@ -111,13 +111,22 @@ public class LitShaderProgram extends ShaderProgram {
 	}
 	
 	public void setSkyLight(Color color, float intensity) {
+		setSkyLightColor(color);
+		setSkyLightIntensity(intensity);
+	}
+	
+	public void setSkyLightColor(Color color) {
 		setUniform(SKY_LIGHT_COLOR_UNIFORM, color, false);
+	}
+	
+	public void setSkyLightIntensity(float intensity) {
 		setUniform(SKY_LIGHT_INTENSITY_UNIFORM, intensity);
 	}
 	
 	@Override
 	public void writeVertex(FloatBuffer buffer, Vertex vertex) {
 		buffer.put(vertex.position.x).put(vertex.position.y).put(vertex.position.z);
+		buffer.put(vertex.normal.x).put(vertex.normal.y).put(vertex.normal.z);
 		buffer.put(vertex.color.getRed()).put(vertex.color.getGreen()).put(vertex.color.getBlue()).put(vertex.color.getAlpha());
 		buffer.put(vertex.textureCoordinates.x).put(vertex.textureCoordinates.y);
 		buffer.put(vertex.textureId).put(vertex.textureType);

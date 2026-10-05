@@ -76,23 +76,11 @@ public class ModelPool extends AssetPool<Model> {
 		
 		float[] vertices = new float[totalVertices * 3];
 		AIVector3D.Buffer aiVertices = aiMesh.mVertices();
-		
 		for (int j = 0; j < totalVertices; j++) {
 			AIVector3D aiVertex = aiVertices.get(j);
 			vertices[j * 3] = aiVertex.x();
 			vertices[j * 3 + 1] = aiVertex.y();
 			vertices[j * 3 + 2] = aiVertex.z();
-		}
-		
-		float[] uvArray = new float[totalVertices * 2];
-		AIVector3D.Buffer aiUVs = aiMesh.mTextureCoords(0);
-		
-		if (aiUVs != null) {
-			for (int j = 0; j < totalVertices; j++) {
-				AIVector3D aiUV = aiUVs.get(j);
-				uvArray[j * 2] = aiUV.x();
-				uvArray[j * 2 + 1] = aiUV.y();
-			}
 		}
 		
 		int totalFaces = aiMesh.mNumFaces();
@@ -107,18 +95,38 @@ public class ModelPool extends AssetPool<Model> {
 		
 		int[] triangles = new int[totalTriangles * 3];
 		int offset = 0;
-		
 		for (int j = 0; j < totalFaces; j++) {
 			AIFace aiFace = aiFaces.get(j);
 			if (aiFace.mNumIndices() == 3) {
 				IntBuffer indices = aiFace.mIndices();
-				triangles[offset++] = indices.get(0);
-				triangles[offset++] = indices.get(1);
-				triangles[offset++] = indices.get(2);
+				triangles[offset] = indices.get(0);
+				triangles[offset + 1] = indices.get(1);
+				triangles[offset + 2] = indices.get(2);
+				offset += 3;
 			}
 		}
 		
-		return new StaticMesh(vertices, uvArray, triangles);
+		AIVector3D.Buffer aiNormals = aiMesh.mNormals();
+		int totalNormals = aiNormals != null ? aiNormals.remaining() : 0;
+		float[] normals = new float[totalNormals * 3];
+		for (int j = 0; j < totalNormals; j++) {
+			AIVector3D aiNormal = aiNormals.get(j);
+			normals[j * 3] = aiNormal.x();
+			normals[j * 3 + 1] = aiNormal.y();
+			normals[j * 3 + 2] = aiNormal.z();
+		}
+		
+		float[] uvArray = new float[totalVertices * 2];
+		AIVector3D.Buffer aiUVs = aiMesh.mTextureCoords(0);
+		if (aiUVs != null) {
+			for (int j = 0; j < totalVertices; j++) {
+				AIVector3D aiUV = aiUVs.get(j);
+				uvArray[j * 2] = aiUV.x();
+				uvArray[j * 2 + 1] = aiUV.y();
+			}
+		}
+		
+		return new StaticMesh(vertices, triangles, normals, uvArray);
 	}
 	
 	@Override

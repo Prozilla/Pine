@@ -36,6 +36,8 @@ struct SkyLight
 };
 uniform SkyLight uSkyLight;
 
+uniform mat4 uView;
+
 out vec4 color;
 
 vec4 computeLightColor(vec4 diffuse, vec4 specular, vec3 lightColor, float lightIntensity, vec3 position, vec3 lightDirection, vec3 normal) {
@@ -57,7 +59,8 @@ vec4 computeLightColor(vec4 diffuse, vec4 specular, vec3 lightColor, float light
 }
 
 vec4 computeSunlight(vec4 diffuse, vec4 specular, Sunlight light, vec3 position, vec3 normal) {
-    return computeLightColor(diffuse, specular, light.color, light.intensity, position, normalize(light.direction), normal);
+    vec3 lightDirection = normalize(mat3(uView) * uSunlight.direction);
+    return computeLightColor(diffuse, specular, light.color, light.intensity, position, lightDirection, normal);
 }
 
 vec4 computeSkyLight(SkyLight light, vec4 ambient) {

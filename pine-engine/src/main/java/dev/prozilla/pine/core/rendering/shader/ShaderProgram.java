@@ -57,6 +57,8 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 			return;
 		}
 		
+		isInitialized = true;
+		
 		// Load shaders
 		AssetPools.shaders.addListener(AssetPoolEvent.Type.FAILED, this::handleShaderLoadingError);
 		Shader vertexShader = AssetPools.shaders.loadVertexShader(getVertexShaderPath());
@@ -77,8 +79,6 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 		fragmentShader.destroy();
 		
 		setupUniforms();
-		
-		isInitialized = true;
 	}
 	
 	private void handleShaderLoadingError(AssetPoolEvent<Shader> event) {
@@ -457,6 +457,7 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	 * @return Location of the uniform
 	 */
 	public int getUniformLocation(CharSequence name) {
+		init();
 		return glGetUniformLocation(id, name);
 	}
 	

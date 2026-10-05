@@ -24,7 +24,7 @@ public class UVModifier extends MeshModifier {
 	}
 	
 	@Override
-	public ModifiedMesh apply(float[] vertices, float[] uvArray, int[] triangles) {
+	public ModifiedMesh apply(float[] vertices, int[] triangles, float[] normals, float[] uvArray) {
 		int uvCount = uvArray.length / 2;
 		float[] newUvArray = new float[uvArray.length];
 		
@@ -49,7 +49,7 @@ public class UVModifier extends MeshModifier {
 			newUvArray[i * 2 + 1] = newV;
 		}
 		
-		return new ModifiedMesh(vertices, newUvArray, triangles);
+		return new ModifiedMesh(vertices, triangles, normals, newUvArray);
 	}
 	
 	public void resetRegion() {
