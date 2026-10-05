@@ -36,6 +36,7 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	
 	private static UnlitShaderProgram unlitShaderProgram;
 	private static LitShaderProgram litShaderProgram;
+	private static DepthShaderProgram depthShaderProgram;
 	
 	// Uniforms
 	public static final String PROJECTION_UNIFORM = "uProjection";
@@ -517,8 +518,17 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 		return litShaderProgram;
 	}
 	
+	public static DepthShaderProgram getDepth() {
+		if (depthShaderProgram != null) {
+			return depthShaderProgram;
+		}
+		
+		depthShaderProgram = new DepthShaderProgram();
+		return depthShaderProgram;
+	}
+	
 	public static void destroyAll() {
-		Destructible.destroy(unlitShaderProgram, litShaderProgram);
+		Destructible.destroy(unlitShaderProgram, litShaderProgram, depthShaderProgram);
 	}
 	
 }

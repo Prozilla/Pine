@@ -13,6 +13,7 @@ import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.rendering.material.Material;
 import dev.prozilla.pine.core.rendering.material.UnlitMaterial;
+import dev.prozilla.pine.core.rendering.shader.DepthShaderProgram;
 import dev.prozilla.pine.core.rendering.shader.ShaderProgram;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
@@ -119,6 +120,20 @@ public class Renderer implements Initializable, Destructible {
 		});
 		config.snapPixels.read((snapPixels) -> {
 			this.snapPixels = snapPixels;
+		});
+		config.renderMode.addObserver((renderMode) -> {
+			if (renderMode == RenderMode.DEPTH) {
+				DepthShaderProgram program = ShaderProgram.getDepth();
+				program.init();
+				program.setLogger(logger);
+				program.setProjectionMatrix(projectionMatrix);
+				program.setViewMatrix(viewMatrix);
+				program.setModelMatrix(modelMatrix);
+			} else {
+				program.setProjectionMatrix(projectionMatrix);
+				program.setViewMatrix(viewMatrix);
+				program.setModelMatrix(modelMatrix);
+			}
 		});
 		
 		createFont();
@@ -248,9 +263,9 @@ public class Renderer implements Initializable, Destructible {
 			vertexArrayObject.bind();
 		} else {
 			vertexBufferObject.bind(VertexBufferObject.Target.ARRAY_BUFFER);
-			program.init();
+			getProgram().init();
 		}
-		program.bind();
+		getProgram().bind();
 		
 		// Bind the active texture
 		if (activeTexture != null) {
@@ -572,19 +587,12 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		// Check if previous batch should be finished first
-		if (vertices.remaining() < program.getStrideLength() * 6 || (texture != null && activeTexture != null && !texture.hasEqualLocation(activeTexture))) {
+		if (vertices.remaining() < getProgram().getStrideLength() * 6 || (texture != null && activeTexture != null && !texture.hasEqualLocation(activeTexture))) {
 			flush();
 		}
 		
-		// Handle render mode
-		if (renderMode == RenderMode.DEPTH) {
-			float depth = MathUtils.square((z1 + z2 + z3 + z4) / 4);
-			vertex.color.set(depth, depth, depth, 1f);
-			vertex.resetTexture();
-		} else {
-			vertex.setColor(c);
-			vertex.setTexture(texture);
-		}
+		vertex.setColor(c);
+		vertex.setTexture(texture);
 		
 		if (vertex.color.getAlpha() <= 0) {
 			return;
@@ -732,7 +740,7 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		// Check if previous batch should be finished first
-		if (vertices.remaining() < program.getStrideLength() * 3 || (texture != null && activeTexture != null && !texture.hasEqualLocation(activeTexture))) {
+		if (vertices.remaining() < getProgram().getStrideLength() * 3 || (texture != null && activeTexture != null && !texture.hasEqualLocation(activeTexture))) {
 			flush();
 		}
 		
@@ -777,7 +785,7 @@ public class Renderer implements Initializable, Destructible {
 		vertex.position.set(x, y, z);
 		vertex.normal.set(a, b, c);
 		vertex.textureCoordinates.set(u, v);
-		program.writeVertex(vertices, vertex);
+		getProgram().writeVertex(vertices, vertex);
 		numVertices++;
 	}
 	
@@ -918,13 +926,13 @@ public class Renderer implements Initializable, Destructible {
 	public void setProjectionMatrix(Matrix4f projectionMatrix) {
 		flush();
 		this.projectionMatrix = projectionMatrix;
-		program.setProjectionMatrix(projectionMatrix);
+		getProgram().setProjectionMatrix(projectionMatrix);
 	}
 	
 	public void setViewMatrix(Matrix4f viewMatrix) {
 		flush();
 		this.viewMatrix = viewMatrix;
-		program.setViewMatrix(viewMatrix);
+		getProgram().setViewMatrix(viewMatrix);
 	}
 	
 	public void resetModelMatrix() {
@@ -934,7 +942,7 @@ public class Renderer implements Initializable, Destructible {
 	public void setModelMatrix(Matrix4f modelMatrix) {
 		flush();
 		this.modelMatrix = modelMatrix;
-		program.setModelMatrix(modelMatrix);
+		getProgram().setModelMatrix(modelMatrix);
 	}
 	
 	public void resetMaterial() {
@@ -943,6 +951,14 @@ public class Renderer implements Initializable, Destructible {
 	
 	public void setMaterial(Material<?> material) {
 		material.bind(this);
+	}
+	
+	protected ShaderProgram getProgram() {
+		if (renderMode == RenderMode.DEPTH) {
+			return ShaderProgram.getDepth();
+		} else {
+			return program;
+		}
 	}
 	
 	public void setProgram(ShaderProgram program) {
