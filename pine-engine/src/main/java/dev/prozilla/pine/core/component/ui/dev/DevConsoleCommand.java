@@ -20,6 +20,16 @@ public abstract class DevConsoleCommand {
 			return null;
 		}
 	};
+	public static final DevConsoleCommand SCENE = new DevConsoleCommand("scene") {
+		@Override
+		public String execute(String[] args, DevConsoleData env) {
+			if (args.length < 2) {
+				return "Expected 1 argument, received " + (args.length - 1);
+			}
+			env.getApplication().loadScene(Integer.parseInt(args[1]));
+			return null;
+		}
+	};
 	
 	public DevConsoleCommand(String name) {
 		this.name = name;

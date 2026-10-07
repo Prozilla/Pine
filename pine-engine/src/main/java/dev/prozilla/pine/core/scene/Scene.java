@@ -594,6 +594,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 				
 				devConsole = devConsoleRoot.getEntity().addChild(devConsolePrefab);
 			}
+			logger.log("Activating dev console");
 			devConsole.setActive(true);
 		} else if (devConsole != null) {
 			devConsole.setActive(false);

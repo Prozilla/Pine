@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.rendering.shader;
 
+import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.asset.pool.AssetPoolEvent;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.exception.GLException;
@@ -56,6 +57,7 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	@Override
 	public void init() {
 		if (isInitialized) {
+			use();
 			return;
 		}
 		
@@ -543,6 +545,13 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	
 	public static void destroyAll() {
 		Destructible.destroy(unlitShaderProgram, litShaderProgram, depthShaderProgram, wireframeShaderProgram);
+	}
+	
+	@Override
+	public String toString() {
+		return Printable.objectToString(this,
+			"id", id,
+			"isInitialized", isInitialized);
 	}
 	
 }

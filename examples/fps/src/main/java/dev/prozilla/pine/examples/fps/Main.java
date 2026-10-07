@@ -14,11 +14,10 @@ public class Main {
 		applicationBuilder.setInitialScene(new MainScene());
 		applicationBuilder.setTargetFps(120);
 		applicationBuilder.setEnableLocalStorage(true);
+		applicationBuilder.setFullscreen(true);
 		
-		if (!Application.isDevMode()) {
-			applicationBuilder.setFullscreen(true);
-		}
-		
-		applicationBuilder.build().run();
+		Application application = applicationBuilder.build();
+		application.addScene(new SponzaScene());
+		application.run();
 	}
 }

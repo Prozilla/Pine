@@ -12,9 +12,7 @@ import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.rendering.material.Material;
 import dev.prozilla.pine.core.rendering.material.UnlitMaterial;
-import dev.prozilla.pine.core.rendering.shader.DepthShaderProgram;
 import dev.prozilla.pine.core.rendering.shader.ShaderProgram;
-import dev.prozilla.pine.core.rendering.shader.WireframeShaderProgram;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.config.RenderConfig;
@@ -171,27 +169,9 @@ public class Renderer implements Initializable, Destructible {
 	
 	private void updateRenderMode() {
 		switch (renderMode) {
-			case DEPTH -> {
-				DepthShaderProgram program = ShaderProgram.getDepth();
-				program.init();
-				program.setLogger(logger);
-				program.setProjectionMatrix(projectionMatrix);
-				program.setViewMatrix(viewMatrix);
-				program.setModelMatrix(modelMatrix);
-			}
-			case WIREFRAME -> {
-				WireframeShaderProgram program = ShaderProgram.getWireframe();
-				program.init();
-				program.setLogger(logger);
-				program.setProjectionMatrix(projectionMatrix);
-				program.setViewMatrix(viewMatrix);
-				program.setModelMatrix(modelMatrix);
-			}
-			case null, default -> {
-				program.setProjectionMatrix(projectionMatrix);
-				program.setViewMatrix(viewMatrix);
-				program.setModelMatrix(modelMatrix);
-			}
+			case DEPTH -> initProgram(ShaderProgram.getDepth());
+			case WIREFRAME -> initProgram(ShaderProgram.getWireframe());
+			case null, default -> initProgram(program);
 		}
 	}
 	
@@ -949,7 +929,12 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	public void setMaterial(Material<?> material) {
-		material.bind(this);
+		ShaderProgram program = material.getShaderProgram();
+		setProgram(program);
+		if (Objects.equals(getProgram(), program)) {
+			program.use();
+			material.bind();
+		}
 	}
 	
 	protected ShaderProgram getProgram() {
@@ -966,9 +951,17 @@ public class Renderer implements Initializable, Destructible {
 			return;
 		}
 		
-		flush();
+		if (!Objects.equals(getProgram(), program)) {
+			flush();
+		}
 		
 		this.program = program;
+		if (Objects.equals(getProgram(), program)) {
+			initProgram(program);
+		}
+	}
+	
+	private void initProgram(ShaderProgram program) {
 		program.init();
 		program.setLogger(logger);
 		program.setProjectionMatrix(projectionMatrix);

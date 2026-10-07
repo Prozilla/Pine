@@ -44,6 +44,7 @@ public class DevConsoleData extends Component {
 		addCommand(new PrintableCommand("window", this::getWindow));
 		addCommand(new LoggingCommand("assetpools", AssetPools::printInfo));
 		addCommand(new LoggingCommand("system", Pine::print));
+		addCommand(DevConsoleCommand.SCENE);
 	}
 	
 	public void addCommand(DevConsoleCommand command) {
@@ -72,7 +73,11 @@ public class DevConsoleData extends Component {
 		
 		for (DevConsoleCommand command : commands) {
 			if (command.name.equals(args[0])) {
-				return command.execute(args, this);
+				try {
+					return command.execute(args, this);
+				} catch (Exception e) {
+					return String.format("Command failed: %s", e.getMessage());
+				}
 			}
 		}
 

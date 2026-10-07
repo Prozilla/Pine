@@ -1,16 +1,15 @@
 package dev.prozilla.pine.core.rendering.material;
 
+import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.rendering.shader.LitShaderProgram;
 import dev.prozilla.pine.core.rendering.shader.ShaderProgram;
 
 public class LitMaterial extends Material<LitShaderProgram> {
 	
 	public Color ambient;
-	public Color diffuse;
 	public Color specular;
 	public float reflectance;
 	
@@ -37,15 +36,24 @@ public class LitMaterial extends Material<LitShaderProgram> {
 	public LitMaterial(TextureAsset texture, Color color) {
 		super(ShaderProgram.getLit(), texture, color);
 		ambient = new Color();
-		diffuse = new Color();
 		specular = new Color();
 		reflectance = 1f;
 	}
 	
 	@Override
-	public void bind(Renderer renderer) {
-		super.bind(renderer);
-		shaderProgram.setSurface(ambient, diffuse, specular, reflectance);
+	public void bind() {
+		shaderProgram.setSurface(ambient, specular, reflectance);
+	}
+	
+	@Override
+	public String toString() {
+		return Printable.objectToString(this,
+			"shaderProgram", shaderProgram,
+			"texture", texture,
+			"diffuse", color,
+			"ambient", ambient,
+			"specular", specular,
+			"reflectance", reflectance);
 	}
 	
 }

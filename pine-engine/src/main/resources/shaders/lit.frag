@@ -16,7 +16,6 @@ uniform sampler2D uTexture;
 
 struct Surface {
     vec4 ambient;
-    vec4 diffuse;
     vec4 specular;
     float reflectance;
 };
@@ -29,8 +28,7 @@ struct Sunlight {
 };
 uniform Sunlight uSunlight;
 
-struct SkyLight
-{
+struct SkyLight {
     vec3 color;
     float intensity;
 };
@@ -40,34 +38,34 @@ uniform mat4 uView;
 
 out vec4 color;
 
-vec4 computeLightColor(vec4 diffuse, vec4 specular, vec3 lightColor, float lightIntensity, vec3 position, vec3 lightDirection, vec3 normal) {
-    vec4 diffuseColor = vec4(0, 0, 0, 1);
-    vec4 specularColor = vec4(0, 0, 0, 1);
+vec3 computeLightColor(vec3 diffuse, vec3 specular, vec3 lightColor, float lightIntensity, vec3 position, vec3 lightDirection, vec3 normal) {
+    // Diffuse
+    float diffuseFactor = max(dot(normal, lightDirection), 0);
+    vec3 diffuseColor = diffuse * lightColor * lightIntensity * diffuseFactor;
 
-    // Diffuse Light
-    float diffuseFactor = max(dot(normal, lightDirection), 0.0);
-    diffuseColor = diffuse * vec4(lightColor, 1.0) * lightIntensity * diffuseFactor;
-
-    // Specular Light
-    vec3 cameraDirection = normalize(-position);
-    vec3 reflectedLight = normalize(reflect(-lightDirection, normal));
-    float specularFactor = max(dot(cameraDirection, reflectedLight), 0.0);
-    specularFactor = pow(specularFactor, SPECULAR_POWER);
-    specularColor = specular * lightIntensity * specularFactor * uSurface.reflectance * vec4(lightColor, 1.0);
+    // Specular
+    vec3 specularColor = vec3(0);
+    if (diffuseFactor > 0) {
+        vec3 cameraDirection = normalize(-position);
+        vec3 reflectedLight = reflect(-lightDirection, normal);
+        float specularFactor = pow(max(dot(cameraDirection, reflectedLight), 0), SPECULAR_POWER);
+        specularColor = specular * lightColor * lightIntensity * specularFactor * uSurface.reflectance;
+    }
 
     return diffuseColor + specularColor;
 }
 
-vec4 computeSunlight(vec4 diffuse, vec4 specular, Sunlight light, vec3 position, vec3 normal) {
-    vec3 lightDirection = normalize(mat3(uView) * uSunlight.direction);
+vec3 computeSunlight(vec3 diffuse, vec3 specular, Sunlight light, vec3 position, vec3 normal) {
+    vec3 lightDirection = normalize(mat3(uView) * light.direction);
     return computeLightColor(diffuse, specular, light.color, light.intensity, position, lightDirection, normal);
 }
 
-vec4 computeSkyLight(SkyLight light, vec4 ambient) {
-    return vec4(light.intensity * light.color, 1) * ambient;
+vec3 computeSkyLight(SkyLight light, vec3 ambient, vec3 diffuse) {
+    return light.intensity * light.color * ambient * diffuse;
 }
 
 void main() {
+    vec4 base = fColor;
     if (fTexId >= 0) {
         vec4 textureColor = vec4(1, 0, 1, 1); // Fallback color
 
@@ -83,14 +81,13 @@ void main() {
             textureColor = texture(uTexture, fTexCoords);
         }
 
-        color = fColor * textureColor;
-    } else {
-        color = fColor;
+        base = fColor * textureColor;
     }
 
-    vec4 ambient = computeSkyLight(uSkyLight, color + uSurface.ambient);
-    vec4 diffuse = color + uSurface.diffuse;
-    vec4 specular = color + uSurface.specular;
+    vec3 normal = normalize(fNormal);
 
-    color = ambient + computeSunlight(diffuse, specular, uSunlight, fPosition, fNormal);
+    vec3 ambient = computeSkyLight(uSkyLight, uSurface.ambient.rgb, base.rgb);
+    vec3 lit = ambient + computeSunlight(base.rgb, uSurface.specular.rgb, uSunlight, fPosition, normal);
+
+    color = vec4(lit, base.a);
 }

@@ -18,7 +18,6 @@ public class LitShaderProgram extends ShaderProgram {
 	// Uniforms
 	public static final String SURFACE_UNIFORM = "uSurface";
 	public static final String SURFACE_AMBIENT_UNIFORM = SURFACE_UNIFORM + ".ambient";
-	public static final String SURFACE_DIFFUSE_UNIFORM = SURFACE_UNIFORM + ".diffuse";
 	public static final String SURFACE_SPECULAR_UNIFORM = SURFACE_UNIFORM + ".specular";
 	public static final String SURFACE_REFLECTANCE_UNIFORM = SURFACE_UNIFORM + ".reflectance";
 	
@@ -60,24 +59,19 @@ public class LitShaderProgram extends ShaderProgram {
 			setUniform("uTextureArray", 1);
 		}
 		
-		setSurface(new Color(), new Color(), new Color(), 1f);
+		setSurface(new Color(), new Color(), 1f);
 		setSunlight(Color.white(), Vector3f.one(), 1f);
 		setSkyLight(Color.white(), 0.25f);
 	}
 	
-	public void setSurface(Color ambient, Color diffuse, Color specular, float reflectance) {
+	public void setSurface(Color ambient, Color specular, float reflectance) {
 		setSurfaceAmbient(ambient);
-		setSurfaceDiffuse(diffuse);
 		setSurfaceSpecular(specular);
 		setSurfaceReflectance(reflectance);
 	}
 	
 	public void setSurfaceAmbient(Color ambient) {
 		setUniform(SURFACE_AMBIENT_UNIFORM, ambient);
-	}
-	
-	public void setSurfaceDiffuse(Color diffuse) {
-		setUniform(SURFACE_DIFFUSE_UNIFORM, diffuse);
 	}
 	
 	public void setSurfaceSpecular(Color specular) {

@@ -29,6 +29,7 @@ public class MainScene extends Scene {
 	private float cameraPitch = -30f;
 	private float cameraDistance = 25f;
 	
+	public static final String MODEL_PATH = "teapot.obj";
 	private static final float SCALE = 0.125f;
 	private static final int OBJECT_COUNT = 15;
 	private static final int MAX_OFFSET = 50;
@@ -56,20 +57,19 @@ public class MainScene extends Scene {
 	protected void load() {
 		super.load();
 		
-		Prefab teapot = new Prefab();
+		Prefab parentPrefab = new Prefab();
 		List<MeshPrefab<StaticMesh>> meshPrefabs = new ArrayList<>();
-		for (StaticMesh mesh : AssetPools.models.load("teapot.obj").meshes) {
-			MeshPrefab<StaticMesh> meshPrefab = new MeshPrefab<>(mesh);
+		for (MeshPrefab<StaticMesh> meshPrefab : AssetPools.models.load(MODEL_PATH).createPrefabs()) {
 			meshPrefab.setScale(new Vector3f(SCALE));
 			meshPrefabs.add(meshPrefab);
-			teapot.addChild(meshPrefab);
+			parentPrefab.addChild(meshPrefab);
 		}
 		
-		spawnObject(teapot, meshPrefabs, new Vector3f(), new Vector3f());
+		spawnObject(parentPrefab, meshPrefabs, new Vector3f(), new Vector3f());
 		for (int i = 0; i < OBJECT_COUNT; i++) {
 			Vector3f position = new Vector3f(random.nextFloat(-MAX_OFFSET, MAX_OFFSET), random.nextFloat(-MAX_OFFSET, MAX_OFFSET), random.nextFloat(-MAX_OFFSET, MAX_OFFSET));
 			Vector3f rotation = new Vector3f(random.nextFloat(-MAX_ROTATION, MAX_ROTATION), random.nextFloat(-MAX_ROTATION, MAX_ROTATION), random.nextFloat(-MAX_ROTATION, MAX_ROTATION));
-			spawnObject(teapot, meshPrefabs, position, rotation);
+			spawnObject(parentPrefab, meshPrefabs, position, rotation);
 		}
 		
 		updateCamera();
@@ -79,9 +79,8 @@ public class MainScene extends Scene {
 	private void spawnObject(Prefab teapot, List<MeshPrefab<StaticMesh>> meshPrefabs, Vector3f position, Vector3f rotation) {
 		Color color = ArrayUtils.getRandom(COLORS);
 		
-		LitMaterial material = new LitMaterial();
+		LitMaterial material = new LitMaterial(color);
 		material.ambient = color;
-		material.diffuse = color;
 		material.reflectance = REFLECTANCE;
 		
 		for (MeshPrefab<StaticMesh> meshPrefab : meshPrefabs) {
@@ -136,6 +135,10 @@ public class MainScene extends Scene {
 	}
 	
 	private void updateCamera() {
+		if (cameraData == null) {
+			return;
+		}
+		
 		Transform cameraTransform = cameraData.getTransform();
 		
 		float pitch = (float)Math.toRadians(cameraPitch);

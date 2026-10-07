@@ -25,8 +25,16 @@ public class MeshPrefab<M extends Mesh> extends Prefab {
 		this.material = material;
 	}
 	
+	public M getMesh() {
+		return mesh;
+	}
+	
 	public void setMesh(M mesh) {
 		this.mesh = mesh;
+	}
+	
+	public Material<?> getMaterial() {
+		return material;
 	}
 	
 	public void setMaterial(Material<?> material) {

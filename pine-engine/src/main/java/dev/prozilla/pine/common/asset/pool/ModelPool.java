@@ -1,14 +1,17 @@
 package dev.prozilla.pine.common.asset.pool;
 
 import dev.prozilla.pine.common.asset.model.Model;
+import dev.prozilla.pine.common.property.selection.WrapMode;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.ResourceUtils;
+import dev.prozilla.pine.core.rendering.material.LitMaterial;
+import dev.prozilla.pine.core.rendering.material.Material;
 import dev.prozilla.pine.core.rendering.mesh.StaticMesh;
 import org.lwjgl.PointerBuffer;
-import org.lwjgl.assimp.AIFace;
-import org.lwjgl.assimp.AIMesh;
-import org.lwjgl.assimp.AIScene;
-import org.lwjgl.assimp.AIVector3D;
+import org.lwjgl.assimp.*;
+import org.lwjgl.system.MemoryStack;
 
+import java.io.File;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.assimp.Assimp.*;
@@ -45,6 +48,21 @@ public class ModelPool extends AssetPool<Model> {
 		}
 		
 		try {
+			PointerBuffer aiMaterials = aiScene.mMaterials();
+			Material<?>[] materials = new Material[aiScene.mNumMaterials()];
+			if (aiMaterials != null) {
+				for (int i = 0; i < materials.length; i++) {
+					AIMaterial aiMaterial;
+					try {
+						aiMaterial = AIMaterial.create(aiMaterials.get(i));
+					} catch (Exception e) {
+						return fail(path, "Invalid material", e);
+					}
+					
+					materials[i] = createMaterial(aiMaterial, path);
+				}
+			}
+			
 			PointerBuffer aiMeshes = aiScene.mMeshes();
 			
 			if (aiMeshes == null) {
@@ -52,6 +70,7 @@ public class ModelPool extends AssetPool<Model> {
 			}
 			
 			StaticMesh[] meshes = new StaticMesh[aiScene.mNumMeshes()];
+			Material<?>[] meshMaterials = new Material[meshes.length];
 			for (int i = 0; i < meshes.length; i++) {
 				AIMesh aiMesh;
 				try {
@@ -61,9 +80,10 @@ public class ModelPool extends AssetPool<Model> {
 				}
 				
 				meshes[i] = createMesh(aiMesh);
+				meshMaterials[i] = WrapMode.CLIP.getElement(aiMesh.mMaterialIndex(), materials);
 			}
 			
-			return new Model(meshes);
+			return new Model(meshes, meshMaterials);
 		} catch (Exception e) {
 			return fail(path, e);
 		} finally {
@@ -127,6 +147,49 @@ public class ModelPool extends AssetPool<Model> {
 		}
 		
 		return new StaticMesh(vertices, triangles, normals, uvArray);
+	}
+	
+	private Material<?> createMaterial(AIMaterial aiMaterial, String path) {
+		LitMaterial material = new LitMaterial();
+		AIColor4D color = AIColor4D.create();
+		
+		int result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT, aiTextureType_NONE, 0, color);
+		if (result == aiReturn_SUCCESS) {
+			material.ambient = new Color(color.r(), color.g(), color.b(), color.a());
+		}
+		
+		result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, color);
+		if (result == aiReturn_SUCCESS) {
+			material.color = new Color(color.r(), color.g(), color.b(), color.a());
+		}
+		
+		result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_SPECULAR, aiTextureType_NONE, 0, color);
+		if (result == aiReturn_SUCCESS) {
+			material.specular = new Color(color.r(), color.g(), color.b(), color.a());
+		}
+		
+		float reflectance = 0.0f;
+		float[] shininessFactor = new float[]{0.0f};
+		int[] pMax = new int[]{1};
+		result = aiGetMaterialFloatArray(aiMaterial, AI_MATKEY_SHININESS, aiTextureType_NONE, 0, shininessFactor, pMax);
+		if (result == aiReturn_SUCCESS) {
+			reflectance = shininessFactor[0];
+		}
+		material.reflectance = reflectance;
+		
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			AIString aiTexturePath = AIString.calloc(stack);
+			aiGetMaterialTexture(aiMaterial, aiTextureType_DIFFUSE, 0, aiTexturePath, (IntBuffer)null,
+				null, null, null, null, null);
+		
+			String texturePath = aiTexturePath.dataString();
+			if (!texturePath.isEmpty()) {
+				material.texture = AssetPools.textures.load(path + File.separator + new File(texturePath).getName());
+				material.color = null;
+			}
+		}
+		
+		return material;
 	}
 	
 	@Override

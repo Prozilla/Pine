@@ -17,6 +17,7 @@ public final class NodeRootRenderer extends RenderSystemBase {
 	
 	@Override
 	public void render(Renderer renderer) {
+		renderer.resetMaterial();
 		renderer.resetTransform();
 	}
 }

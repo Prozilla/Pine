@@ -37,7 +37,8 @@ public abstract class RenderSystemBase extends SystemBase implements Renderable 
 	
 	@Override
 	protected void beforeChunk(EntityChunk chunk) {
-		application.getRenderer().setModelMatrix(chunk.getTransform().getModelMatrix());
+		Renderer renderer = application.getRenderer();
+		renderer.setModelMatrix(chunk.getTransform().getModelMatrix());
 	}
 	
 	/**

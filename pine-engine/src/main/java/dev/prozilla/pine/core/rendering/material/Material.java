@@ -1,9 +1,9 @@
 package dev.prozilla.pine.core.rendering.material;
 
+import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.checks.Checks;
-import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.rendering.shader.ShaderProgram;
 
 public class Material<S extends ShaderProgram> {
@@ -35,8 +35,14 @@ public class Material<S extends ShaderProgram> {
 		return shaderProgram;
 	}
 	
-	public void bind(Renderer renderer) {
-		renderer.setProgram(shaderProgram);
+	public void bind() {}
+	
+	@Override
+	public String toString() {
+		return Printable.objectToString(this,
+			"shaderProgram", shaderProgram,
+			"texture", texture,
+			"color", color);
 	}
 	
 }
