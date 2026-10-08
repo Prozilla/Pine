@@ -958,8 +958,8 @@ public class Input implements Initializable, Destructible {
 	private class ScrollCallback extends GLFWScrollCallback {
 		@Override
 		public void invoke(long window, double xOffset, double yOffset) {
-			scroll.x = (float)xOffset;
-			scroll.y = (float)yOffset;
+			scroll.x += (float)xOffset;
+			scroll.y += (float)yOffset;
 		}
 	}
 	

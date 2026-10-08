@@ -11,13 +11,13 @@ public class Main {
 		applicationBuilder.setTitle("FPS");
 		applicationBuilder.setCompanyName("Pine");
 		applicationBuilder.setWindowSize(900, 600);
-		applicationBuilder.setInitialScene(new MainScene());
+		applicationBuilder.setInitialScene(new SponzaScene());
 		applicationBuilder.setTargetFps(120);
 		applicationBuilder.setEnableLocalStorage(true);
 		applicationBuilder.setFullscreen(true);
 		
 		Application application = applicationBuilder.build();
-		application.addScene(new SponzaScene());
+		application.addScene(new MainScene());
 		application.run();
 	}
 }

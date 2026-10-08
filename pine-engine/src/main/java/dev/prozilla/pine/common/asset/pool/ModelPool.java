@@ -3,6 +3,7 @@ package dev.prozilla.pine.common.asset.pool;
 import dev.prozilla.pine.common.asset.model.Model;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.common.system.PathUtils;
 import dev.prozilla.pine.common.system.ResourceUtils;
 import dev.prozilla.pine.core.rendering.material.LitMaterial;
 import dev.prozilla.pine.core.rendering.material.Material;
@@ -168,8 +169,8 @@ public class ModelPool extends AssetPool<Model> {
 			material.specular = new Color(color.r(), color.g(), color.b(), color.a());
 		}
 		
-		float reflectance = 0.0f;
-		float[] shininessFactor = new float[]{0.0f};
+		float reflectance = 0f;
+		float[] shininessFactor = new float[]{0f};
 		int[] pMax = new int[]{1};
 		result = aiGetMaterialFloatArray(aiMaterial, AI_MATKEY_SHININESS, aiTextureType_NONE, 0, shininessFactor, pMax);
 		if (result == aiReturn_SUCCESS) {
@@ -184,7 +185,7 @@ public class ModelPool extends AssetPool<Model> {
 		
 			String texturePath = aiTexturePath.dataString();
 			if (!texturePath.isEmpty()) {
-				material.texture = AssetPools.textures.load(path + File.separator + new File(texturePath).getName());
+				material.texture = AssetPools.textures.load(PathUtils.addTrailingSlash(PathUtils.getParent(path)) + new File(texturePath).getName());
 				material.color = null;
 			}
 		}

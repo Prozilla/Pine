@@ -25,9 +25,9 @@ public class MainScene extends Scene {
 	
 	private Vector2i previousCursorPosition;
 	
-	private float cameraYaw = -45f;
-	private float cameraPitch = -30f;
-	private float cameraDistance = 25f;
+	private float cameraYaw;
+	private float cameraPitch;
+	private float cameraDistance;
 	
 	public static final String MODEL_PATH = "teapot.obj";
 	private static final float SCALE = 0.125f;
@@ -49,9 +49,15 @@ public class MainScene extends Scene {
 	
 	private static final Vector3f CAMERA_CENTER = new Vector3f(0, 5, 0);
 	private static final float ORBIT_SPEED = 3.75f;
-	private static final float ZOOM_SPEED = 10f;
+	private static final float ZOOM_SPEED = 50f;
 	private static final float MIN_DISTANCE = 3f;
 	private static final float MAX_DISTANCE = 100f;
+	
+	public MainScene() {
+		cameraYaw = -45f;
+		cameraPitch = -30f;
+		cameraDistance = 25f;
+	}
 	
 	@Override
 	protected void load() {

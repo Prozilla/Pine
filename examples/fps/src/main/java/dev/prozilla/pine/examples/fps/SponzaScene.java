@@ -18,18 +18,22 @@ public class SponzaScene extends Scene {
 	
 	private Vector2i previousCursorPosition;
 	
-	private float cameraYaw = -45f;
-	private float cameraPitch = -30f;
-	private float cameraDistance = 25f;
+	private float cameraYaw;
+	private float cameraPitch;
+	private float cameraDistance;
 	
-	public static final String MODEL_PATH = "sponza.obj";
-	private static final float SCALE = 12.5f;
+	public static final String MODEL_PATH = "sponza/sponza.gltf";
+	private static final float SCALE = 0.05f;
 	
-	private static final Vector3f CAMERA_CENTER = new Vector3f(0, 1, 0);
+	private static final Vector3f CAMERA_CENTER = new Vector3f(0, 10, 0);
 	private static final float ORBIT_SPEED = 3.75f;
-	private static final float ZOOM_SPEED = 10f;
+	private static final float ZOOM_SPEED = 50f;
 	private static final float MIN_DISTANCE = 3f;
 	private static final float MAX_DISTANCE = 100f;
+	
+	public SponzaScene() {
+		cameraDistance = 25f;
+	}
 	
 	@Override
 	protected void load() {
@@ -37,7 +41,6 @@ public class SponzaScene extends Scene {
 		
 		Prefab parentPrefab = new Prefab();
 		for (MeshPrefab<StaticMesh> meshPrefab : AssetPools.models.load(MODEL_PATH).createPrefabs()) {
-			logger.log(meshPrefab.getMaterial());
 			meshPrefab.setScale(new Vector3f(SCALE));
 			parentPrefab.addChild(meshPrefab);
 		}

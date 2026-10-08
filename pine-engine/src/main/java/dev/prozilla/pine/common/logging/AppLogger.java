@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.asset.audio.AudioSource;
 import dev.prozilla.pine.common.asset.image.Image;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
+import dev.prozilla.pine.common.asset.model.Model;
 import dev.prozilla.pine.common.asset.pool.AssetPool;
 import dev.prozilla.pine.common.asset.pool.AssetPoolEvent;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
@@ -39,6 +40,7 @@ public class AppLogger extends Logger implements Initializable {
 	protected final EventListener<AssetPoolEvent<AudioSource>> onAudioSourceLoad;
 	protected final EventListener<AssetPoolEvent<Shader>> onShaderLoad;
 	protected final EventListener<AssetPoolEvent<DirectoryWatcher>> onDirectoryWatcherLoad;
+	protected final EventListener<AssetPoolEvent<Model>> onModelLoad;
 	
 	protected int errorCount;
 	protected int warningCount;
@@ -54,6 +56,7 @@ public class AppLogger extends Logger implements Initializable {
 		onAudioSourceLoad = createAssetPoolListener("audio source");
 		onShaderLoad = createAssetPoolListener("shader");
 		onDirectoryWatcherLoad = createAssetPoolListener("directory watcher");
+		onModelLoad = createAssetPoolListener("model");
 	}
 	
 	/**
@@ -93,6 +96,7 @@ public class AppLogger extends Logger implements Initializable {
 				addAssetPoolListener(AssetPools.audioSources, onAudioSourceLoad);
 				addAssetPoolListener(AssetPools.shaders, onShaderLoad);
 				addAssetPoolListener(AssetPools.directoryWatchers, onDirectoryWatcherLoad);
+				addAssetPoolListener(AssetPools.models, onModelLoad);
 			} else {
 				removeAssetPoolListener(AssetPools.images, onImageLoad);
 				removeAssetPoolListener(AssetPools.textures, onTextureLoad);
@@ -102,6 +106,7 @@ public class AppLogger extends Logger implements Initializable {
 				removeAssetPoolListener(AssetPools.audioSources, onAudioSourceLoad);
 				removeAssetPoolListener(AssetPools.shaders, onShaderLoad);
 				removeAssetPoolListener(AssetPools.directoryWatchers, onDirectoryWatcherLoad);
+				removeAssetPoolListener(AssetPools.models, onModelLoad);
 			}
 		});
 	}
