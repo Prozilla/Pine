@@ -89,6 +89,7 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 			// TODO: Support separate cameras
 			renderSystems.forEach((renderSystem) -> {
 				if (renderSystem.getRenderPass() == currentPass) {
+					renderer.setRenderPass(currentPass);
 					renderSystem.render(renderer);
 				}
 			});

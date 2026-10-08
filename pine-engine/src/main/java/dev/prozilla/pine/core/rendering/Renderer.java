@@ -16,6 +16,7 @@ import dev.prozilla.pine.core.rendering.shader.ShaderProgram;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.config.RenderConfig;
+import dev.prozilla.pine.core.system.render.RenderPass;
 import org.jetbrains.annotations.Contract;
 import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryStack;
@@ -51,6 +52,7 @@ public class Renderer implements Initializable, Destructible {
 	private Matrix4f projectionMatrix;
 	private Matrix4f viewMatrix;
 	private Matrix4f modelMatrix;
+	private int renderPass;
 	
 	// Render stats
 	private int renderedVertices;
@@ -91,6 +93,7 @@ public class Renderer implements Initializable, Destructible {
 		projectionMatrix = new Matrix4f();
 		viewMatrix = new Matrix4f();
 		modelMatrix = new Matrix4f();
+		renderPass = RenderPass.DEFAULT;
 	}
 	
 	@Override
@@ -199,6 +202,15 @@ public class Renderer implements Initializable, Destructible {
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 	
+	public void setRenderPass(int renderPass) {
+		ShaderProgram previousProgram = getProgram();
+		this.renderPass = renderPass;
+		ShaderProgram currentProgram = getProgram();
+		if (!Objects.equals(previousProgram, currentProgram)) {
+			initProgram(currentProgram);
+		}
+	}
+	
 	/**
 	 * Begin rendering.
 	 */
@@ -215,6 +227,7 @@ public class Renderer implements Initializable, Destructible {
 		numVertices = 0;
 		renderedVertices = 0;
 		totalVertices = 0;
+		renderPass = RenderPass.DEFAULT;
 	}
 	
 	/**
@@ -938,6 +951,10 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	protected ShaderProgram getProgram() {
+		if (renderPass == RenderPass.OVERLAY) {
+			return program;
+		}
+		
 		return switch (renderMode) {
 			case DEPTH -> ShaderProgram.getDepth();
 			case WIREFRAME -> ShaderProgram.getWireframe();

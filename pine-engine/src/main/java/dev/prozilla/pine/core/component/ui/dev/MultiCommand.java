@@ -1,7 +1,5 @@
 package dev.prozilla.pine.core.component.ui.dev;
 
-import dev.prozilla.pine.common.util.ArrayUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,13 +7,13 @@ public class MultiCommand extends DevConsoleCommand {
 	
 	private final List<DevConsoleCommand> subCommands;
 	
-	public MultiCommand(String name, DevConsoleCommand... subCommands) {
-		this(name);
+	public MultiCommand(String name, String[] aliases, DevConsoleCommand... subCommands) {
+		this(name, aliases);
 		addSubCommands(subCommands);
 	}
 	
-	public MultiCommand(String name) {
-		super(name);
+	public MultiCommand(String name, String[] aliases) {
+		super(name, aliases);
 		subCommands = new ArrayList<>();
 	}
 	
@@ -30,20 +28,20 @@ public class MultiCommand extends DevConsoleCommand {
 	}
 	
 	@Override
-	public String execute(String[] args, DevConsoleData env) {
-		if (args.length < 2) {
-			return String.format("%s: Missing subcommand", args[0]);
+	public String execute(Execution execution) {
+		if (execution.getArgumentCount() < 1) {
+			return String.format("%s: Missing subcommand", execution.getCommandName());
 		}
 		
-		String subCommandName = args[1];
+		String subCommandName = execution.getFirstArgument();
 		
 		for (DevConsoleCommand subCommand : subCommands) {
 			if (subCommand.name.equals(subCommandName)) {
-				return subCommand.execute(ArrayUtils.removeFirst(args), env);
+				return subCommand.execute(new Execution(execution.getArguments(), execution.getConsole()));
 			}
 		}
 		
-		return String.format("%s: Invalid subcommand: %s", args[0], subCommandName);
+		return String.format("%s: Invalid subcommand: %s", execution.getCommandName(), subCommandName);
 	}
 	
 }

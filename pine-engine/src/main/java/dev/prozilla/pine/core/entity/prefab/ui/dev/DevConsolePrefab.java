@@ -25,6 +25,7 @@ public class DevConsolePrefab extends LayoutPrefab {
 		inputPrefab.setColor(Color.white());
 		inputPrefab.setBackgroundColor(Color.black().setAlpha(0.5f));
 		inputPrefab.setSize(new DualDimension(Dimension.parentSize(), new Dimension(24)));
+		inputPrefab.setAutoFocus(true);
 		
 		LayoutPrefab logsPrefab = new LayoutPrefab();
 		logsPrefab.setDirection(Direction.DOWN);

@@ -1,40 +1,77 @@
 package dev.prozilla.pine.core.component.ui.dev;
 
+import dev.prozilla.pine.common.util.checks.Checks;
+import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.ApplicationProvider;
+
+import java.util.Arrays;
+
 public abstract class DevConsoleCommand {
 	
 	public final String name;
+	public final String[] aliases;
 	
-	public static final DevConsoleCommand HELP = new DevConsoleCommand("help") {
-		@Override
-		public String execute(String[] args, DevConsoleData env) {
-			for (DevConsoleCommand command : env.commands) {
-				env.addLog(command.name);
-			}
-			return null;
-		}
-	};
-	public static final DevConsoleCommand CLEAR = new DevConsoleCommand("clear") {
-		@Override
-		public String execute(String[] args, DevConsoleData env) {
-			env.clearLogs();
-			return null;
-		}
-	};
-	public static final DevConsoleCommand SCENE = new DevConsoleCommand("scene") {
-		@Override
-		public String execute(String[] args, DevConsoleData env) {
-			if (args.length < 2) {
-				return "Expected 1 argument, received " + (args.length - 1);
-			}
-			env.getApplication().loadScene(Integer.parseInt(args[1]));
-			return null;
-		}
-	};
-	
-	public DevConsoleCommand(String name) {
-		this.name = name;
+	public DevConsoleCommand(String name, String[] aliases) {
+		this.name = Checks.isNotNull(name, "name");
+		this.aliases = aliases;
 	}
 	
-	public abstract String execute(String[] args, DevConsoleData env);
+	public abstract String execute(Execution execution);
+	
+	public static String formatError(String commandName, String message) {
+		return String.format("%s: %s", commandName, message);
+	}
+	
+	public static class Execution implements ApplicationProvider {
+		
+		private final String[] arguments;
+		private final DevConsoleData console;
+		
+		public Execution(String[] arguments, DevConsoleData console) {
+			this.arguments = arguments;
+			this.console = console;
+		}
+		
+		public String getCommandName() {
+			return arguments[0];
+		}
+		
+		public String getFirstArgument() {
+			return getArgument(0);
+		}
+		
+		public String getLastArgument() {
+			return getArgument(arguments.length - 2);
+		}
+		
+		public String getArgument(int index) {
+			if (index + 1 >= arguments.length) {
+				return null;
+			}
+			return arguments[index + 1];
+		}
+		
+		public int getArgumentCount() {
+			return arguments.length - 1;
+		}
+		
+		public String[] getArguments() {
+			return Arrays.copyOfRange(this.arguments, 1, this.arguments.length);
+		}
+		
+		@Override
+		public Application getApplication() {
+			return console.getApplication();
+		}
+		
+		public DevConsoleData getConsole() {
+			return console;
+		}
+		
+		public String reject(String message) {
+			return formatError(getCommandName(), message);
+		}
+		
+	}
 	
 }
