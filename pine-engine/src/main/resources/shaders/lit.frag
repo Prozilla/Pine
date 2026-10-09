@@ -65,6 +65,10 @@ vec3 computeSkyLight(SkyLight light, vec3 ambient, vec3 diffuse) {
 }
 
 void main() {
+    if (!gl_FrontFacing) {
+        discard;
+    }
+
     vec4 base = fColor;
     if (fTexId >= 0) {
         vec4 textureColor = vec4(1, 0, 1, 1); // Fallback color
@@ -85,9 +89,6 @@ void main() {
     }
 
     vec3 normal = fNormal;
-    if (!gl_FrontFacing) {
-        normal = -normal;
-    }
 
     vec3 ambient = computeSkyLight(uSkyLight, uSurface.ambient.rgb, base.rgb);
     vec3 lit = ambient + computeSunlight(base.rgb, uSurface.specular.rgb, uSunlight, fPosition, normal);

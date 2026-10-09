@@ -29,8 +29,6 @@ public class SponzaScene extends Scene {
 	private static final Vector3f CAMERA_CENTER = new Vector3f(0, 10, 0);
 	private static final float ORBIT_SPEED = 3.75f;
 	private static final float ZOOM_SPEED = 50f;
-	private static final float MIN_DISTANCE = 3f;
-	private static final float MAX_DISTANCE = 100f;
 	
 	public SponzaScene() {
 		cameraDistance = 25f;
@@ -89,7 +87,7 @@ public class SponzaScene extends Scene {
 		float scrollY = input.getScrollY();
 		if (scrollY != 0) {
 			cameraDistance -= scrollY * ZOOM_SPEED * deltaTime;
-			cameraDistance = MathUtils.clamp(cameraDistance, MIN_DISTANCE, MAX_DISTANCE);
+			cameraDistance = MathUtils.max(cameraDistance, 0.01f);
 		}
 		
 		updateCamera();
