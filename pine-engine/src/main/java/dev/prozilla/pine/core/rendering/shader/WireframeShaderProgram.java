@@ -2,7 +2,6 @@ package dev.prozilla.pine.core.rendering.shader;
 
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.Vertex;
-import org.joml.Matrix4f;
 
 import java.nio.FloatBuffer;
 
@@ -39,8 +38,8 @@ public class WireframeShaderProgram extends ShaderProgram {
 	}
 	
 	@Override
-	public void setProjectionMatrix(Matrix4f projectionMatrix) {
-		super.setProjectionMatrix(projectionMatrix);
+	protected void setupUniforms() {
+		super.setupUniforms();
 		
 		setLineWidth(2);
 		setLineColor(Color.black());

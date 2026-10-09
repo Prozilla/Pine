@@ -113,7 +113,7 @@ public class MainScene extends Scene {
 			application.reloadScene();
 		}
 		
-		Vector2i cursorPosition = input.getCursor();
+		Vector2i cursorPosition = input.getCursor(true);
 		if (previousCursorPosition != null) {
 			Vector2i cursorMovement = previousCursorPosition.subtract(cursorPosition);
 			cameraYaw += cursorMovement.x * deltaTime * ORBIT_SPEED;
@@ -135,9 +135,8 @@ public class MainScene extends Scene {
 	
 	@Override
 	public void render(Renderer renderer) throws IllegalStateException {
-		super.render(renderer);
-		
 		ShaderProgram.getLit().setSunlightDirection(new Vector3f((float)Math.cos(getTimer().getScaledTime()), 1f, (float)Math.sin(getTimer().getScaledTime())));
+		super.render(renderer);
 	}
 	
 	private void updateCamera() {

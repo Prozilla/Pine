@@ -1,39 +1,44 @@
 package dev.prozilla.pine.core.component.ui.dev;
 
+import dev.prozilla.pine.common.util.ArrayUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationProvider;
 
 import java.util.Arrays;
 
-public abstract class DevConsoleCommand {
+public abstract class DevCommand {
 	
 	public final String name;
 	public final String[] aliases;
 	
-	public DevConsoleCommand(String name, String[] aliases) {
+	public DevCommand(String name, String[] aliases) {
 		this.name = Checks.isNotNull(name, "name");
 		this.aliases = aliases;
 	}
 	
-	public abstract String execute(Execution execution);
+	public boolean matches(String name) {
+		return this.name.equals(name) || (aliases != null && ArrayUtils.contains(aliases, name));
+	}
+	
+	public abstract void execute(Context context);
 	
 	public static String formatError(String commandName, String message) {
 		return String.format("%s: %s", commandName, message);
 	}
 	
-	public static class Execution implements ApplicationProvider {
+	public static class Context implements ApplicationProvider {
 		
-		private final String[] arguments;
-		private final DevConsoleData console;
+		private final String[] input;
+		private final DevConsole console;
 		
-		public Execution(String[] arguments, DevConsoleData console) {
-			this.arguments = arguments;
+		public Context(String[] input, DevConsole console) {
+			this.input = input;
 			this.console = console;
 		}
 		
 		public String getCommandName() {
-			return arguments[0];
+			return input[0];
 		}
 		
 		public String getFirstArgument() {
@@ -41,22 +46,22 @@ public abstract class DevConsoleCommand {
 		}
 		
 		public String getLastArgument() {
-			return getArgument(arguments.length - 2);
+			return getArgument(input.length - 2);
 		}
 		
 		public String getArgument(int index) {
-			if (index + 1 >= arguments.length) {
+			if (index + 1 >= input.length) {
 				return null;
 			}
-			return arguments[index + 1];
+			return input[index + 1];
 		}
 		
 		public int getArgumentCount() {
-			return arguments.length - 1;
+			return input.length - 1;
 		}
 		
 		public String[] getArguments() {
-			return Arrays.copyOfRange(this.arguments, 1, this.arguments.length);
+			return Arrays.copyOfRange(this.input, 1, this.input.length);
 		}
 		
 		@Override
@@ -64,12 +69,16 @@ public abstract class DevConsoleCommand {
 			return console.getApplication();
 		}
 		
-		public DevConsoleData getConsole() {
+		public DevConsole getConsole() {
 			return console;
 		}
 		
-		public String reject(String message) {
+		public String fail(String message) {
 			return formatError(getCommandName(), message);
+		}
+		
+		public Context fork() {
+			return new Context(getArguments(), console);
 		}
 		
 	}

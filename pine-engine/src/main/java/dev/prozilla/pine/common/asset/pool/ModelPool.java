@@ -22,7 +22,7 @@ public class ModelPool extends AssetPool<Model> {
 	private int flags;
 	private int defaultFlags;
 	
-	public static final int DEFAULT_FLAGS = aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FixInfacingNormals;
+	public static final int DEFAULT_FLAGS = aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_SortByPType;
 	
 	public ModelPool() {
 		defaultFlags = DEFAULT_FLAGS;
@@ -169,10 +169,10 @@ public class ModelPool extends AssetPool<Model> {
 			material.specular = new Color(color.r(), color.g(), color.b(), color.a());
 		}
 		
-		float reflectance = 0f;
+		float reflectance = 1f;
 		float[] shininessFactor = new float[]{0f};
 		int[] pMax = new int[]{1};
-		result = aiGetMaterialFloatArray(aiMaterial, AI_MATKEY_SHININESS, aiTextureType_NONE, 0, shininessFactor, pMax);
+		result = aiGetMaterialFloatArray(aiMaterial, AI_MATKEY_SHININESS_STRENGTH, aiTextureType_NONE, 0, shininessFactor, pMax);
 		if (result == aiReturn_SUCCESS) {
 			reflectance = shininessFactor[0];
 		}

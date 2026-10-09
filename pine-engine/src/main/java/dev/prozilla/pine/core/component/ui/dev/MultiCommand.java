@@ -3,11 +3,11 @@ package dev.prozilla.pine.core.component.ui.dev;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultiCommand extends DevConsoleCommand {
+public class MultiCommand extends DevCommand {
 	
-	private final List<DevConsoleCommand> subCommands;
+	private final List<DevCommand> subCommands;
 	
-	public MultiCommand(String name, String[] aliases, DevConsoleCommand... subCommands) {
+	public MultiCommand(String name, String[] aliases, DevCommand... subCommands) {
 		this(name, aliases);
 		addSubCommands(subCommands);
 	}
@@ -17,31 +17,33 @@ public class MultiCommand extends DevConsoleCommand {
 		subCommands = new ArrayList<>();
 	}
 	
-	public void addSubCommands(DevConsoleCommand... subCommands) {
-		for (DevConsoleCommand subCommand : subCommands) {
+	public void addSubCommands(DevCommand... subCommands) {
+		for (DevCommand subCommand : subCommands) {
 			addSubCommand(subCommand);
 		}
 	}
 	
-	public void addSubCommand(DevConsoleCommand subCommand) {
+	public void addSubCommand(DevCommand subCommand) {
 		subCommands.add(subCommand);
 	}
 	
 	@Override
-	public String execute(Execution execution) {
-		if (execution.getArgumentCount() < 1) {
-			return String.format("%s: Missing subcommand", execution.getCommandName());
+	public void execute(Context context) {
+		if (context.getArgumentCount() < 1) {
+			context.fail("Missing subcommand");
+			return;
 		}
 		
-		String subCommandName = execution.getFirstArgument();
+		String subCommandName = context.getFirstArgument();
 		
-		for (DevConsoleCommand subCommand : subCommands) {
+		for (DevCommand subCommand : subCommands) {
 			if (subCommand.name.equals(subCommandName)) {
-				return subCommand.execute(new Execution(execution.getArguments(), execution.getConsole()));
+				subCommand.execute(context.fork());
+				return;
 			}
 		}
 		
-		return String.format("%s: Invalid subcommand: %s", execution.getCommandName(), subCommandName);
+		context.getConsole().log(String.format("%s: Invalid subcommand: %s", context.getCommandName(), subCommandName));
 	}
 	
 }

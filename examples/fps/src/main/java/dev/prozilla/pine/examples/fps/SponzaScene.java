@@ -4,6 +4,7 @@ import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector3f;
+import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.mesh.MeshPrefab;
@@ -39,6 +40,8 @@ public class SponzaScene extends Scene {
 	protected void load() {
 		super.load();
 		
+		cameraData.setBackgroundColor(Color.lightCyan());
+		
 		Prefab parentPrefab = new Prefab();
 		for (MeshPrefab<StaticMesh> meshPrefab : AssetPools.models.load(MODEL_PATH).createPrefabs()) {
 			meshPrefab.setScale(new Vector3f(SCALE));
@@ -72,7 +75,7 @@ public class SponzaScene extends Scene {
 			application.reloadScene();
 		}
 		
-		Vector2i cursorPosition = input.getCursor();
+		Vector2i cursorPosition = input.getCursor(true);
 		if (previousCursorPosition != null) {
 			Vector2i cursorMovement = previousCursorPosition.subtract(cursorPosition);
 			cameraYaw += cursorMovement.x * deltaTime * ORBIT_SPEED;
@@ -94,9 +97,8 @@ public class SponzaScene extends Scene {
 	
 	@Override
 	public void render(Renderer renderer) throws IllegalStateException {
-		super.render(renderer);
-		
 		ShaderProgram.getLit().setSunlightDirection(new Vector3f((float)Math.cos(getTimer().getScaledTime()), 1f, (float)Math.sin(getTimer().getScaledTime())));
+		super.render(renderer);
 	}
 	
 	private void updateCamera() {

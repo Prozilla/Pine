@@ -7,14 +7,13 @@ import dev.prozilla.pine.common.util.function.Callback;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class DevCommandBuilder {
 	
 	protected String name;
 	protected final List<String> aliases;
-	protected Function<DevConsoleCommand.Execution, String> execute;
+	protected Consumer<DevCommand.Context> executor;
 	protected final List<DevCommandBuilder> subCommandBuilders;
 	
 	public DevCommandBuilder(String name) {
@@ -34,36 +33,25 @@ public class DevCommandBuilder {
 		return this;
 	}
 	
-	public DevCommandBuilder setExecute(Supplier<Printable> supplier) {
-		return setExecute((execution) -> {
-			return String.valueOf(supplier.get());
+	public DevCommandBuilder setGenerator(Supplier<Printable> generator) {
+		return setExecutor((context) -> {
+			context.getConsole().log(String.valueOf(generator.get()));
 		});
 	}
 	
-	public DevCommandBuilder setExecute(Consumer<DevConsoleCommand.Execution> execute) {
-		return setExecute((execution) -> {
-			execute.accept(execution);
-			return null;
-		});
-	}
-	
-	public DevCommandBuilder setExecute(Callback callback) {
-		return setExecute((execution) -> {
+	public DevCommandBuilder setCallback(Callback callback) {
+		return setExecutor((context) -> {
 			callback.run();
 		});
 	}
 	
-	public DevCommandBuilder setExecute(Function<DevConsoleCommand.Execution, String> execute) {
-		this.execute = execute;
+	public DevCommandBuilder setExecutor(Consumer<DevCommand.Context> executor) {
+		this.executor = executor;
 		return this;
 	}
 	
-	public DevCommandBuilder addSimpleSubCommand(String name, Consumer<DevConsoleCommand.Execution> execute) {
-		return addSubCommand(name, (subCommand) -> subCommand.setExecute(execute));
-	}
-	
-	public DevCommandBuilder addSimpleSubCommand(String name, Function<DevConsoleCommand.Execution, String> execute) {
-		return addSubCommand(name, (subCommand) -> subCommand.setExecute(execute));
+	public DevCommandBuilder addSimpleSubCommand(String name, Consumer<DevCommand.Context> execute) {
+		return addSubCommand(name, (subCommand) -> subCommand.setExecutor(execute));
 	}
 	
 	public DevCommandBuilder addSubCommand(String name, Consumer<DevCommandBuilder> builder) {
@@ -73,19 +61,19 @@ public class DevCommandBuilder {
 		return this;
 	}
 	
-	public DevConsoleCommand build() {
+	public DevCommand build() {
 		if (!subCommandBuilders.isEmpty()) {
-			DevConsoleCommand[] subCommands = new DevConsoleCommand[subCommandBuilders.size()];
+			DevCommand[] subCommands = new DevCommand[subCommandBuilders.size()];
 			for (int i = 0; i < subCommands.length; i++) {
 				subCommands[i] = subCommandBuilders.get(i).build();
 			}
 			return new MultiCommand(name, aliases.toArray(new String[0]), subCommands);
 		}
 		
-		return new DevConsoleCommand(name, aliases.toArray(new String[0])) {
+		return new DevCommand(name, aliases.toArray(new String[0])) {
 			@Override
-			public String execute(Execution execution) {
-				return execute.apply(execution);
+			public void execute(Context context) {
+				executor.accept(context);
 			}
 		};
 	}

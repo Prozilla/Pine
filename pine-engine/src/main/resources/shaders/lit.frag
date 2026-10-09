@@ -6,8 +6,8 @@ in vec3 fPosition;
 in vec3 fNormal;
 in vec4 fColor;
 in vec2 fTexCoords;
-in float fTexId;
-in float fIsArrayTexture;
+flat in float fTexId;
+flat in float fIsArrayTexture;
 
 uniform sampler2D uTexture;
 #if PLATFORM != MACOS
@@ -84,10 +84,17 @@ void main() {
         base = fColor * textureColor;
     }
 
-    vec3 normal = normalize(fNormal);
+    vec3 normal = fNormal;
+    if (!gl_FrontFacing) {
+        normal = -normal;
+    }
 
     vec3 ambient = computeSkyLight(uSkyLight, uSurface.ambient.rgb, base.rgb);
     vec3 lit = ambient + computeSunlight(base.rgb, uSurface.specular.rgb, uSunlight, fPosition, normal);
+
+    if (base.a <= 0.0) {
+        discard;
+    }
 
     color = vec4(lit, base.a);
 }

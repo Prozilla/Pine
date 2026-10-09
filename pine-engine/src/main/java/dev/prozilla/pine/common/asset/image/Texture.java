@@ -29,7 +29,7 @@ public class Texture implements TextureAsset, Printable, Cloneable<Texture> {
 	/** The path of the image of this texture */
 	private final String path;
 
-	public static final Wrap DEFAULT_WRAP = Wrap.CLAMP_TO_BORDER;
+	public static final Wrap DEFAULT_WRAP = Wrap.REPEAT;
 	public static final Filter DEFAULT_FILTER = Filter.LINEAR;
 	
 	/**

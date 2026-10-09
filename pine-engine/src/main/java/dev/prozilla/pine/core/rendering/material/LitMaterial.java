@@ -35,8 +35,8 @@ public class LitMaterial extends Material<LitShaderProgram> {
 	
 	public LitMaterial(TextureAsset texture, Color color) {
 		super(ShaderProgram.getLit(), texture, color);
-		ambient = new Color();
-		specular = new Color();
+		ambient = Color.white();
+		specular = Color.white();
 		reflectance = 1f;
 	}
 	

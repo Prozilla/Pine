@@ -59,7 +59,7 @@ public class LitShaderProgram extends ShaderProgram {
 			setUniform("uTextureArray", 1);
 		}
 		
-		setSurface(new Color(), new Color(), 1f);
+		setSurface(Color.white(), Color.white(), 1f);
 		setSunlight(Color.white(), Vector3f.one(), 1f);
 		setSkyLight(Color.white(), 0.25f);
 	}

@@ -203,6 +203,10 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	public void setRenderPass(int renderPass) {
+		if (this.renderPass == renderPass) {
+			return;
+		}
+		flush();
 		ShaderProgram previousProgram = getProgram();
 		this.renderPass = renderPass;
 		ShaderProgram currentProgram = getProgram();
@@ -638,6 +642,12 @@ public class Renderer implements Initializable, Destructible {
 		if (triangles.length % 3 != 0) {
 			throw new IllegalArgumentException("Triangle array length must be a multiple of 3");
 		}
+		if (normals != null && normals.length % 3 != 0) {
+			throw new IllegalArgumentException("Normals array length must be a multiple of 3");
+		}
+		if (normals != null && normals.length > 0 && normals.length != vertices.length && normals.length != triangles.length) {
+			throw new IllegalArgumentException("Normals array length must match the vertices or triangles");
+		}
 		
 		int triangleCount = triangles.length / 3;
 		if (triangleCount == 0) {
@@ -958,6 +968,7 @@ public class Renderer implements Initializable, Destructible {
 		return switch (renderMode) {
 			case DEPTH -> ShaderProgram.getDepth();
 			case WIREFRAME -> ShaderProgram.getWireframe();
+			case NORMAL -> ShaderProgram.getNormal();
 			case null, default -> program;
 		};
 	}

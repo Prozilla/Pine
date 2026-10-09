@@ -28,7 +28,7 @@ public class RenderConfig {
 	/** Enables depth testing. Defaults to <code>true</code>. */
 	public final BooleanConfigOption enableDepthTest = new BooleanConfigOption(true);
 	/** Determines how vertices appear on the screen. Only accepts values that are not {@code null}. Defaults to <code>RenderMode.NORMAL</code>. */
-	public final ObjectConfigOption<RenderMode> renderMode = new ObjectConfigOption<>(RenderMode.NORMAL, Objects::nonNull);
+	public final ObjectConfigOption<RenderMode> renderMode = new ObjectConfigOption<>(RenderMode.DEFAULT, Objects::nonNull);
 	/** Enables snapping of pixels to whole numbers. Defaults to <code>false</code>. */
 	public final BooleanConfigOption snapPixels = new BooleanConfigOption(false);
 	/** Enables the snapping of pixels that make up text. Defaults to <code>true</code>. */
