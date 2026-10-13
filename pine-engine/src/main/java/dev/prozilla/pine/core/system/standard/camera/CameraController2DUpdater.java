@@ -2,7 +2,7 @@ package dev.prozilla.pine.core.system.standard.camera;
 
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.component.camera.CameraControlData;
+import dev.prozilla.pine.core.component.camera.CameraController2D;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.update.UpdateSystem;
@@ -10,17 +10,17 @@ import dev.prozilla.pine.core.system.update.UpdateSystem;
 /**
  * Updates controllable cameras based on their target positions and zoom and their velocity.
  */
-public final class CameraControlUpdater extends UpdateSystem {
+public final class CameraController2DUpdater extends UpdateSystem {
 	
-	public CameraControlUpdater() {
-		super(CameraControlData.class, CameraData.class, Transform.class);
+	public CameraController2DUpdater() {
+		super(CameraController2D.class, CameraData.class, Transform.class);
 	}
 	
 	@Override
 	protected void process(EntityChunk chunk, float deltaTime) {
 		Transform transform = chunk.getComponent(Transform.class);
 		CameraData cameraData = chunk.getComponent(CameraData.class);
-		CameraControlData cameraControlData = chunk.getComponent(CameraControlData.class);
+		CameraController2D cameraControlData = chunk.getComponent(CameraController2D.class);
 		
 		if (cameraControlData.disableControlsOnPause && application.isPaused()) {
 			transform.position.x = cameraControlData.targetX;

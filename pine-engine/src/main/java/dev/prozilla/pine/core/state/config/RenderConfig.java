@@ -31,7 +31,5 @@ public class RenderConfig {
 	public final ObjectConfigOption<RenderMode> renderMode = new ObjectConfigOption<>(RenderMode.DEFAULT, Objects::nonNull);
 	/** Enables snapping of pixels to whole numbers. Defaults to <code>false</code>. */
 	public final BooleanConfigOption snapPixels = new BooleanConfigOption(false);
-	/** Enables the snapping of pixels that make up text. Defaults to <code>true</code>. */
-	public final BooleanConfigOption snapText = new BooleanConfigOption(true);
 	
 }

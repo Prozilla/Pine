@@ -42,6 +42,7 @@ public class LitMaterial extends Material<LitShaderProgram> {
 	
 	@Override
 	public void bind() {
+		super.bind();
 		shaderProgram.setSurface(ambient, specular, reflectance);
 	}
 	

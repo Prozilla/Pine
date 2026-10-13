@@ -32,4 +32,8 @@ void main() {
     } else {
         color = fColor;
     }
+
+    if (color.a <= 0) {
+        discard;
+    }
 }

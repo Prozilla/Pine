@@ -10,6 +10,8 @@ layout (location=5) in float vIsArrayTexture;
 uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProjection;
+uniform bool uSnapPixels;
+uniform vec2 uViewportSize;
 
 out vec3 fPosition;
 out vec3 fNormal;
@@ -17,6 +19,14 @@ out vec4 fColor;
 out vec2 fTexCoords;
 flat out float fTexId;
 flat out float fIsArrayTexture;
+
+vec4 snapToPixel(vec4 position) {
+    vec2 normalizedPosition = position.xy / position.w;
+    vec2 pixelPosition = (normalizedPosition * 0.5 + 0.5) * uViewportSize;
+    pixelPosition = round(pixelPosition);
+    normalizedPosition = (pixelPosition / uViewportSize) * 2 - 1;
+    return vec4(normalizedPosition * position.w, position.z, position.w);
+}
 
 void main() {
     // Pass properties to fragment shader
@@ -28,7 +38,11 @@ void main() {
     // Calculate position
     mat4 modelView = uView * uModel;
     vec4 modelViewPosition =  modelView * vec4(vPosition, 1.0);
-    gl_Position = uProjection * modelViewPosition;
+    vec4 position = uProjection * modelViewPosition;
+    if (uSnapPixels) {
+        position = snapToPixel(position);
+    }
+    gl_Position = position;
     fPosition = modelViewPosition.xyz;
 
     // Calculate normal

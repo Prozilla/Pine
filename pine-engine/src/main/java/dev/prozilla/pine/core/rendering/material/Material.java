@@ -12,6 +12,7 @@ public class Material<S extends ShaderProgram> {
 	
 	public TextureAsset texture;
 	public Color color;
+	public boolean snapPixels;
 	
 	public Material(S shaderProgram) {
 		this(shaderProgram, null, null);
@@ -29,13 +30,16 @@ public class Material<S extends ShaderProgram> {
 		this.shaderProgram = Checks.isNotNull(shaderProgram, "shaderProgram");
 		this.texture = texture;
 		this.color = color;
+		snapPixels = false;
 	}
 	
 	public S getShaderProgram() {
 		return shaderProgram;
 	}
 	
-	public void bind() {}
+	public void bind() {
+		shaderProgram.setSnapPixels(snapPixels);
+	}
 	
 	@Override
 	public String toString() {

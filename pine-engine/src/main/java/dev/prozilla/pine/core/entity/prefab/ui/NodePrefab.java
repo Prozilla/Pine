@@ -74,6 +74,10 @@ public class NodePrefab extends LayerPrefab {
 		this.styleSheets.addAll(styleSheets);
 	}
 	
+	public void setStyleSheet(String filePath) {
+		setStyleSheet(AssetPools.styleSheets.load(filePath));
+	}
+	
 	public void setStyleSheet(StyleSheet styleSheet) {
 		this.styleSheets.clear();
 		this.styleSheets.add(styleSheet);

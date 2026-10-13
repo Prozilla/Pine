@@ -4,7 +4,6 @@ import dev.prozilla.pine.Pine;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.property.selection.SingleSelectionProperty;
-import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.ApplicationProvider;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
@@ -34,8 +33,6 @@ public class DevConsole extends Component {
 		this.logsNode = logsNode;
 		
 		logPrefab = new TextPrefab();
-		logPrefab.setColor(Color.white());
-		
 		logger = new Logger(this::log, this::log);
 		history = new SingleSelectionProperty<>();
 		commands = new ArrayList<>();
@@ -121,6 +118,7 @@ public class DevConsole extends Component {
 	public void log(String text) {
 		logPrefab.setText(text);
 		logsNode.getEntity().addChild(logPrefab);
+		getLogger().log(logsNode.direction);
 	}
 	
 	public void clearLogs() {
@@ -146,6 +144,7 @@ public class DevConsole extends Component {
 				} catch (Exception e) {
 					log(DevCommand.formatError(command.name, e.getMessage()));
 				}
+				return;
 			}
 		}
 		

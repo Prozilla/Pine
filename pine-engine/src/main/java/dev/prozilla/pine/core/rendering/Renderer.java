@@ -83,7 +83,6 @@ public class Renderer implements Initializable, Destructible {
 	public final static int BATCH_VERTEX_CAPACITY = 1024;
 	/** The maximum amount of floats a single vertex of any material can use. */
 	public final static int MAX_VERTEX_FLOATS = 16;
-	public final static String DEFAULT_FONT_PATH = "/fonts/Inconsolata.ttf";
 	
 	public Renderer(Application application) {
 		this.application = application;
@@ -142,7 +141,7 @@ public class Renderer implements Initializable, Destructible {
 	
 	private void createFont() {
 		try {
-			defaultFont = new Font(getClass().getResourceAsStream(DEFAULT_FONT_PATH), 16);
+			defaultFont = new Font(getClass().getResourceAsStream(Font.DEFAULT_FONT_PATH), 16);
 		} catch (IOException e) {
 			logger.error("Failed to create font", e);
 			defaultFont = new Font(12);
@@ -174,6 +173,8 @@ public class Renderer implements Initializable, Destructible {
 		switch (renderMode) {
 			case DEPTH -> initProgram(ShaderProgram.getDepth());
 			case WIREFRAME -> initProgram(ShaderProgram.getWireframe());
+			case NORMAL -> initProgram(ShaderProgram.getNormal());
+			case UNLIT -> initProgram(ShaderProgram.getUnlit());
 			case null, default -> initProgram(program);
 		}
 	}
@@ -600,19 +601,6 @@ public class Renderer implements Initializable, Destructible {
 			return;
 		}
 		
-		// Avoid subpixel issues by snapping to nearest pixel
-		if (snapPixels) {
-			x1 = Math.round(x1);
-			x2 = Math.round(x2);
-			x3 = Math.round(x3);
-			x4 = Math.round(x4);
-			
-			y1 = Math.round(y1);
-			y2 = Math.round(y2);
-			y3 = Math.round(y3);
-			y4 = Math.round(y4);
-		}
-		
 		// Push the vertices to the buffer
 		drawVertex(x1, y1, z1, s1, t1);
 		drawVertex(x2, y2, z2, s1, t2);
@@ -758,17 +746,6 @@ public class Renderer implements Initializable, Destructible {
 		
 		if (vertex.color.getAlpha() <= 0) {
 			return;
-		}
-		
-		// Avoid subpixel issues by snapping to nearest pixel
-		if (snapPixels) {
-			x1 = Math.round(x1);
-			x2 = Math.round(x2);
-			x3 = Math.round(x3);
-			
-			y1 = Math.round(y1);
-			y2 = Math.round(y2);
-			y3 = Math.round(y3);
 		}
 		
 		// Push the vertices to the buffer
@@ -969,6 +946,7 @@ public class Renderer implements Initializable, Destructible {
 			case DEPTH -> ShaderProgram.getDepth();
 			case WIREFRAME -> ShaderProgram.getWireframe();
 			case NORMAL -> ShaderProgram.getNormal();
+			case UNLIT -> ShaderProgram.getUnlit();
 			case null, default -> program;
 		};
 	}
@@ -995,6 +973,10 @@ public class Renderer implements Initializable, Destructible {
 		program.setProjectionMatrix(projectionMatrix);
 		program.setViewMatrix(viewMatrix);
 		program.setModelMatrix(modelMatrix);
+		if (snapPixels) {
+			program.setSnapPixels(true);
+		}
+		program.setViewportSize(new Vector2f(viewWidth, viewHeight));
 	}
 	
 	public int getWidth() {

@@ -15,6 +15,7 @@ import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.system.Color;
+import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.core.rendering.Vertex;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
@@ -45,6 +46,8 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	public static final String PROJECTION_UNIFORM = "uProjection";
 	public static final String VIEW_UNIFORM = "uView";
 	public static final String MODEL_UNIFORM = "uModel";
+	public static final String SNAP_PIXELS_UNIFORM = "uSnapPixels";
+	public static final String VIEWPORT_SIZE_UNIFORM = "uViewportSize";
 	
 	public static final String DEFAULT_OUTPUT_VARIABLE = "color";
 	
@@ -108,18 +111,6 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 		setVertexAttributes(getAttributeNames(), getAttributeSizes(), getStrideLength());
 	}
 	
-	public void setProjectionMatrix(org.joml.Matrix4f projectionMatrix) {
-		setUniform(PROJECTION_UNIFORM, projectionMatrix);
-	}
-	
-	public void setViewMatrix(org.joml.Matrix4f viewMatrix) {
-		setUniform(VIEW_UNIFORM, viewMatrix);
-	}
-	
-	public void setModelMatrix(org.joml.Matrix4f modelMatrix) {
-		setUniform(MODEL_UNIFORM, modelMatrix);
-	}
-	
 	protected abstract String getVertexShaderPath();
 	
 	protected abstract String getFragmentShaderPath();
@@ -144,6 +135,48 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 		setProjectionMatrix(new org.joml.Matrix4f());
 		setViewMatrix(new org.joml.Matrix4f());
 		setModelMatrix(new org.joml.Matrix4f());
+		setSnapPixels(false);
+		setViewportSize(new Vector2f());
+	}
+	
+	public void setProjectionMatrix(org.joml.Matrix4f projectionMatrix) {
+		int location = getUniformLocation(PROJECTION_UNIFORM);
+		if (location == GL_INVALID_INDEX) {
+			return;
+		}
+		setUniform(location, projectionMatrix);
+	}
+	
+	public void setViewMatrix(org.joml.Matrix4f viewMatrix) {
+		int location = getUniformLocation(VIEW_UNIFORM);
+		if (location == GL_INVALID_INDEX) {
+			return;
+		}
+		setUniform(location, viewMatrix);
+	}
+	
+	public void setModelMatrix(org.joml.Matrix4f modelMatrix) {
+		int location = getUniformLocation(MODEL_UNIFORM);
+		if (location == GL_INVALID_INDEX) {
+			return;
+		}
+		setUniform(location, modelMatrix);
+	}
+	
+	public void setSnapPixels(boolean snapPixels) {
+		int location = getUniformLocation(SNAP_PIXELS_UNIFORM);
+		if (location == GL_INVALID_INDEX) {
+			return;
+		}
+		setUniform(location, snapPixels);
+	}
+	
+	public void setViewportSize(Vector2f viewportSize) {
+		int location = getUniformLocation(VIEWPORT_SIZE_UNIFORM);
+		if (location == GL_INVALID_INDEX) {
+			return;
+		}
+		setUniform(location, viewportSize);
 	}
 	
 	public abstract void writeVertex(FloatBuffer buffer, Vertex vertex);
@@ -238,6 +271,14 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	 */
 	public int getAttributeLocation(CharSequence name) {
 		return glGetAttribLocation(id, name);
+	}
+	
+	public void setUniform(CharSequence name, boolean value) {
+		setUniform(requireUniformLocation(name), value);
+	}
+	
+	public void setUniform(int location, boolean value) {
+		setUniform(location, BooleanUtils.toInt(value));
 	}
 	
 	public void setUniform(CharSequence name, int value) {

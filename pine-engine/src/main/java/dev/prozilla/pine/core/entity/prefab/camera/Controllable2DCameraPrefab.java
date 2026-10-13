@@ -1,13 +1,13 @@
 package dev.prozilla.pine.core.entity.prefab.camera;
 
 import dev.prozilla.pine.core.component.Transform;
-import dev.prozilla.pine.core.component.camera.CameraControlData;
+import dev.prozilla.pine.core.component.camera.CameraController2D;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.Components;
 
-@Components({ CameraControlData.class, CameraData.class, Transform.class })
-public class ControllableCameraPrefab extends CameraPrefab {
+@Components({ CameraController2D.class, CameraData.class, Transform.class })
+public class Controllable2DCameraPrefab extends CameraPrefab {
 	
 	protected float movementSpeed;
 	protected float velocityDamping;
@@ -29,7 +29,7 @@ public class ControllableCameraPrefab extends CameraPrefab {
 	 * @param minZoom Minimum zoom factor
 	 * @param maxZoom Maximum zoom factor
 	 */
-	public ControllableCameraPrefab(float movementSpeed, float velocityDamping, float zoomSpeed, float minZoom, float maxZoom) {
+	public Controllable2DCameraPrefab(float movementSpeed, float velocityDamping, float zoomSpeed, float minZoom, float maxZoom) {
 		this.movementSpeed = movementSpeed;
 		this.velocityDamping = velocityDamping;
 		this.zoomSpeed = zoomSpeed;
@@ -96,7 +96,7 @@ public class ControllableCameraPrefab extends CameraPrefab {
 	protected void apply(Entity entity) {
 		super.apply(entity);
 		
-		CameraControlData cameraControlData = entity.addComponent(new CameraControlData());
+		CameraController2D cameraControlData = entity.addComponent(new CameraController2D());
 		
 		cameraControlData.movementSpeed = movementSpeed;
 		cameraControlData.velocityDamping = velocityDamping;

@@ -1,0 +1,24 @@
+#dev-console {
+    flex-direction: column-reverse;
+    size: 33.3% 33.3%;
+    margin: 16px;
+    background-color: rgba(0, 0, 0, 0.85);
+}
+
+#dev-console > input {
+    size: 100% 16px;
+    padding: 8px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.85);
+}
+
+#dev-console > div {
+    flex-direction: column;
+    size: 100% 100%;
+    padding: 8px;
+}
+
+p {
+    color: white;
+    margin: 0;
+}

@@ -8,4 +8,5 @@ public enum RenderMode {
 	/** A rendering mode that uses the depth value as the color for each vertex. */
 	DEPTH,
 	NORMAL,
+	UNLIT,
 }

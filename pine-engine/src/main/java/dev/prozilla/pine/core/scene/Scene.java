@@ -219,12 +219,15 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		
 		// Camera
 		initialSystems.add(new CameraInitializer());
-		initialSystems.add(new CameraControlInitializer());
+		initialSystems.add(new CameraController2DInitializer());
+		initialSystems.add(new CameraController3DInitializer());
 		
-		initialSystems.add(new CameraControlInputHandler());
+		initialSystems.add(new CameraController2DInputHandler());
+		initialSystems.add(new CameraController3DInputHandler());
 		
 		initialSystems.add(new CameraResizer());
-		initialSystems.add(new CameraControlUpdater());
+		initialSystems.add(new CameraController2DUpdater());
+		initialSystems.add(new CameraController3DUpdater());
 		
 		// Particles
 		initialSystems.add(new ParticleInitializer());

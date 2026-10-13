@@ -1,9 +1,10 @@
 package dev.prozilla.pine.core.component.camera;
 
+import dev.prozilla.pine.common.property.input.InputBinding;
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.state.input.KeyBindings;
+import dev.prozilla.pine.core.state.input.Key;
 
-public class CameraControlData extends Component {
+public class CameraController2D extends Component {
 	
 	public float movementSpeed;
 	public float velocityDamping;
@@ -26,23 +27,28 @@ public class CameraControlData extends Component {
 	public float boundsWidth;
 	public float boundsHeight;
 	
-	public KeyBindings<Action> keyBindings;
+	public final InputBinding forward;
+	public final InputBinding backwards;
+	public final InputBinding left;
+	public final InputBinding right;
+	public final InputBinding zoomIn;
+	public final InputBinding zoomOut;
+	public final InputBinding speedUp;
+	public final InputBinding slowDown;
 	
-	public enum Action {
-		FORWARD,
-		BACKWARDS,
-		RIGHT,
-		LEFT,
-		ZOOM_IN,
-		ZOOM_OUT,
-		SPEED_UP,
-		SLOW_DOWN,
-	}
-	
-	public CameraControlData() {
+	public CameraController2D() {
 		enableZoom = true;
 		enableMovement = true;
 		enableBounds = false;
+		
+		forward = new InputBinding(Key.W);
+		backwards = new InputBinding(Key.S);
+		left = new InputBinding(Key.A);
+		right = new InputBinding(Key.D);
+		zoomIn = new InputBinding(Key.X);
+		zoomOut = new InputBinding(Key.Z);
+		speedUp = new InputBinding(Key.L_SHIFT);
+		slowDown = new InputBinding(Key.R_SHIFT);
 	}
 	
 	/**

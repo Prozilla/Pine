@@ -1,7 +1,7 @@
 package dev.prozilla.pine.core.system.standard.camera;
 
 import dev.prozilla.pine.common.math.MathUtils;
-import dev.prozilla.pine.core.component.camera.CameraControlData;
+import dev.prozilla.pine.core.component.camera.CameraController2D;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.state.input.Input;
@@ -10,19 +10,19 @@ import dev.prozilla.pine.core.system.input.InputSystem;
 /**
  * Handles input for controllable cameras.
  */
-public final class CameraControlInputHandler extends InputSystem {
+public final class CameraController2DInputHandler extends InputSystem {
 	
-	public CameraControlInputHandler() {
-		super(CameraControlData.class, CameraData.class);
+	public CameraController2DInputHandler() {
+		super(CameraController2D.class, CameraData.class);
 	}
 	
 	@Override
 	public void process(EntityChunk chunk, Input input, float deltaTime) {
-		CameraControlData cameraControlData = chunk.getComponent(CameraControlData.class);
+		CameraController2D cameraControlData = chunk.getComponent(CameraController2D.class);
 		CameraData cameraData = chunk.getComponent(CameraData.class);
 		
 		if (!cameraControlData.disableControlsOnPause || !application.isPaused()) {
-			handleMovementInput(deltaTime, cameraControlData, cameraData);
+			handleMovementInput(deltaTime, cameraControlData, cameraData, input);
 			handleZoomInput(deltaTime, cameraControlData, input);
 		}
 	}
@@ -31,28 +31,28 @@ public final class CameraControlInputHandler extends InputSystem {
 	 * Handle camera movement input.
 	 * @param deltaTime Delta time in seconds
 	 */
-	private void handleMovementInput(float deltaTime, CameraControlData cameraControlData, CameraData cameraData) {
+	private void handleMovementInput(float deltaTime, CameraController2D cameraControlData, CameraData cameraData, Input input) {
 		if (cameraControlData.movementSpeed == 0 || !cameraControlData.enableMovement)
 			return;
 		
 		float deltaX = 0f, deltaY = 0f;
 		
 		// Handle movement by key presses
-		if (cameraControlData.keyBindings.isActive(CameraControlData.Action.RIGHT))
+		if (cameraControlData.right.isPressed(input))
 			deltaX += 1f;
-		if (cameraControlData.keyBindings.isActive(CameraControlData.Action.LEFT))
+		if (cameraControlData.left.isPressed(input))
 			deltaX -= 1f;
-		if (cameraControlData.keyBindings.isActive(CameraControlData.Action.FORWARD))
+		if (cameraControlData.forward.isPressed(input))
 			deltaY += 1f;
-		if (cameraControlData.keyBindings.isActive(CameraControlData.Action.BACKWARDS))
+		if (cameraControlData.backwards.isPressed(input))
 			deltaY -= 1f;
 		
 		float movementFactor = (cameraControlData.movementSpeed / (cameraData.zoomFactor * cameraData.zoomFactor)) * deltaTime;
 		
 		// Apply speed modifiers
-		if (cameraControlData.keyBindings.isActive(CameraControlData.Action.SPEED_UP)) {
+		if (cameraControlData.speedUp.isPressed(input)) {
 			movementFactor *= 2f;
-		} else if (cameraControlData.keyBindings.isActive(CameraControlData.Action.SLOW_DOWN)) {
+		} else if (cameraControlData.slowDown.isPressed(input)) {
 			movementFactor *= 0.5f;
 		}
 		
@@ -67,16 +67,16 @@ public final class CameraControlInputHandler extends InputSystem {
 	 * Handle camera zoom input.
 	 * @param deltaTime Delta time in seconds
 	 */
-	private void handleZoomInput(float deltaTime, CameraControlData cameraControlData, Input input) {
+	private void handleZoomInput(float deltaTime, CameraController2D cameraControlData, Input input) {
 		if (cameraControlData.zoomSpeed == 0 || !cameraControlData.enableZoom)
 			return;
 		
 		float deltaZoom = 0f;
 		
 		// Handle zooming by key presses
-		if (cameraControlData.keyBindings.isActive(CameraControlData.Action.ZOOM_IN))
+		if (cameraControlData.zoomIn.isPressed(input))
 			deltaZoom += 0.01f;
-		if (cameraControlData.keyBindings.isActive(CameraControlData.Action.ZOOM_OUT))
+		if (cameraControlData.zoomOut.isPressed(input))
 			deltaZoom -= 0.01f;
 		
 		// Handle zooming by scrolling
@@ -89,9 +89,9 @@ public final class CameraControlInputHandler extends InputSystem {
 		deltaZoom = deltaZoom * cameraControlData.zoomSpeed * deltaTime;
 		
 		// Apply speed modifiers
-		if (cameraControlData.keyBindings.isActive(CameraControlData.Action.SPEED_UP)) {
+		if (cameraControlData.speedUp.isPressed(input)) {
 			deltaZoom *= 2f;
-		} else if (cameraControlData.keyBindings.isActive(CameraControlData.Action.SLOW_DOWN)) {
+		} else if (cameraControlData.slowDown.isPressed(input)) {
 			deltaZoom *= 0.5f;
 		}
 		

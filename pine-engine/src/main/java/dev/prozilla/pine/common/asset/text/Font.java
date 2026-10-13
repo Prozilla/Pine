@@ -43,6 +43,7 @@ public class Font implements Asset {
 	
 	public static final int DEFAULT_SIZE = 16;
 	public static final Color DEFAULT_COLOR = Color.white();
+	public final static String DEFAULT_FONT_PATH = "/fonts/Rubik.ttf";
 	
 	public static final int FIRST_CHAR = 32;
 	public static final int CHAR_COUNT = 224;
@@ -65,7 +66,7 @@ public class Font implements Asset {
 	}
 	
 	public Font(int size) {
-		try (InputStream defaultFont = Font.class.getResourceAsStream("/fonts/Inconsolata.ttf")) {
+		try (InputStream defaultFont = Font.class.getResourceAsStream(DEFAULT_FONT_PATH)) {
 			if (defaultFont == null) {
 				throw new RuntimeException("Default font missing.");
 			}
@@ -265,7 +266,9 @@ public class Font implements Asset {
 			}
 			Glyph glyph = glyphs.get(character);
 			if (glyph != null) {
-				renderer.drawQuad(texture, drawX, drawY - glyph.y, z, glyph.regionX, glyph.regionY, glyph.regionWidth, glyph.regionHeight, c);
+				float glyphX = Math.round(drawX);
+				float glyphY = Math.round(drawY) - glyph.y;
+				renderer.drawQuad(texture, glyphX, glyphY, z, glyph.regionX, glyph.regionY, glyph.regionWidth, glyph.regionHeight, c);
 				drawX += glyph.advance;
 			}
 		}

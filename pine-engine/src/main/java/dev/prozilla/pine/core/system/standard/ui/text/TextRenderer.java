@@ -60,20 +60,6 @@ public final class TextRenderer extends RenderSystem {
 			return;
 		}
 		
-		if (renderer.getConfig().snapText.get()) {
-			int roundedX = Math.round(x);
-			int roundedY = Math.round(y);
-			int roundedWidth = Math.round(width);
-			int roundedHeight = Math.round(height);
-			
-//			renderer.setRegion(roundedX, roundedY, roundedWidth, roundedHeight);
-			
-			x = roundedX;
-			y = roundedY;
-		} else {
-//			renderer.setRegion(x, y, width, height);
-		}
-		
 		if (font == null) {
 			renderer.drawText(text, x, y, z, color);
 		} else {

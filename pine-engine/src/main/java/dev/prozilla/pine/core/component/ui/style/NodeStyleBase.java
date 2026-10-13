@@ -38,6 +38,7 @@ public abstract class NodeStyleBase extends Component {
 	
 	public void applyStyleSheet(StyleSheet styleSheet) {
 		if (styleSheets.add(styleSheet)) {
+			node.updateHierarchy();
 			for (Node pseudoElement : node.pseudoElements.values()) {
 				pseudoElement.addStyleSheet(styleSheet);
 			}

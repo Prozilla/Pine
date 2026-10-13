@@ -1,9 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.ui.dev;
 
-import dev.prozilla.pine.common.math.dimension.Dimension;
-import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.Direction;
-import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.ui.LayoutNode;
 import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.TextInputNode;
@@ -16,21 +13,15 @@ public class DevConsolePrefab extends LayoutPrefab {
 	
 	public DevConsolePrefab() {
 		setName("DevConsole");
-		setSize(new DualDimension(Dimension.subtract(Dimension.parentSize(), new Dimension(32)), Dimension.subtract(Dimension.parentSize(), new Dimension(32))));
-		setBackgroundColor(Color.black().setAlpha(0.85f));
-		setDirection(Direction.UP);
-		setMargin(new DualDimension(16));
+		setTag("dev-console");
 		
 		TextInputPrefab inputPrefab = new TextInputPrefab();
-		inputPrefab.setColor(Color.white());
-		inputPrefab.setBackgroundColor(Color.black().setAlpha(0.5f));
-		inputPrefab.setSize(new DualDimension(Dimension.parentSize(), new Dimension(24)));
 		inputPrefab.setAutoFocus(true);
-		
 		LayoutPrefab logsPrefab = new LayoutPrefab();
 		logsPrefab.setDirection(Direction.DOWN);
-		
 		addChildren(inputPrefab, logsPrefab);
+		
+		setStyleSheet("style/dev-console.css");
 	}
 	
 	@Override
