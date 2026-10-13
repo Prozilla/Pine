@@ -1,0 +1,9 @@
+{
+	"mainClass": "dev.prozilla.pine.examples.gallery.Main",
+	"gameName": "Gallery",
+	"developer": "Prozilla",
+	"version": "1.0.0.0",
+	"jreVersion": "21",
+	"jar": "build/libs/gallery-1.0.0.0-all.jar",
+	"includeJre": false
+}

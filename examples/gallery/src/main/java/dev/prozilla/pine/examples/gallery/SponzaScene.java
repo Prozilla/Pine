@@ -1,4 +1,4 @@
-package dev.prozilla.pine.examples.fps;
+package dev.prozilla.pine.examples.gallery;
 
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector3f;
@@ -20,9 +20,10 @@ public class SponzaScene extends Scene {
 	
 	@Override
 	protected void load() {
-		super.load(new Controllable3DCameraPrefab(10f, 0.5f));
+		super.load(new Controllable3DCameraPrefab(10f, 0.05f));
 		
 		cameraData.setBackgroundColor(Color.lightCyan());
+		cameraData.fieldOfView = 70;
 		
 		Prefab parentPrefab = new Prefab();
 		for (MeshPrefab<StaticMesh> meshPrefab : AssetPools.models.load(MODEL_PATH).createPrefabs()) {

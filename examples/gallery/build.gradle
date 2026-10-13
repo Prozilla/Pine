@@ -5,9 +5,9 @@ plugins {
 }
 
 application {
-	mainClass = "dev.prozilla.pine.examples.fps.Main"
+	mainClass = "dev.prozilla.pine.examples.gallery.Main"
 }
 
 tasks.register("start", JavaExec) {
-	mainClass = "dev.prozilla.pine.examples.fps.Main"
+	mainClass = "dev.prozilla.pine.examples.gallery.Main"
 }

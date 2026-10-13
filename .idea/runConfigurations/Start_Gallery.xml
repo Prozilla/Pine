@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Start FPS" type="GradleRunConfiguration" factoryName="Gradle" folderName="FPS" singleton="false">
+  <configuration default="false" name="Start Gallery" type="GradleRunConfiguration" factoryName="Gradle" folderName="Gallery" singleton="false">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -10,7 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value=":examples:fps:start" />
+          <option value=":examples:gallery:start" />
         </list>
       </option>
       <option name="vmOptions" />

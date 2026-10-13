@@ -1,4 +1,4 @@
-package dev.prozilla.pine.examples.fps;
+package dev.prozilla.pine.examples.gallery;
 
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationBuilder;
@@ -8,7 +8,7 @@ public class Main {
 	public static void main(String[] args) {
 		ApplicationBuilder applicationBuilder = new ApplicationBuilder();
 		
-		applicationBuilder.setTitle("FPS");
+		applicationBuilder.setTitle("Gallery");
 		applicationBuilder.setCompanyName("Pine");
 		applicationBuilder.setWindowSize(900, 600);
 		applicationBuilder.setInitialScene(new SponzaScene());

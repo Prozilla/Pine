@@ -1,4 +1,4 @@
-package dev.prozilla.pine.examples.fps;
+package dev.prozilla.pine.examples.gallery;
 
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.MathUtils;
