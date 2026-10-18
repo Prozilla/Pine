@@ -3,6 +3,8 @@ package dev.prozilla.pine.core.rendering.shader;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.system.Platform;
+import dev.prozilla.pine.core.component.light.SunLight;
+import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.rendering.Vertex;
 
 import java.nio.FloatBuffer;
@@ -62,6 +64,15 @@ public class LitShaderProgram extends ShaderProgram {
 		setSurface(Color.white(), Color.white(), 1f);
 		setSunlight(Color.white(), Vector3f.one(), 1f);
 		setSkyLight(Color.white(), 0.25f);
+	}
+	
+	@Override
+	public void setRenderer(Renderer renderer) {
+		super.setRenderer(renderer);
+		SunLight sunLight = renderer.getApplication().getCurrentScene().getSunLight();
+		if (sunLight != null) {
+			setSunlight(sunLight.color, sunLight.getDirection(), sunLight.intensity);
+		}
 	}
 	
 	public void setSurface(Color ambient, Color specular, float reflectance) {

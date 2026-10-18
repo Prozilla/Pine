@@ -205,7 +205,7 @@ public class Prefab {
 		entity.transform.setRotation(rotationProperty.getValue());
 		entity.transform.setScale(scaleProperty.getValue());
 		entity.transform.setOrigin(originProperty.getValue());
-		if (positionProperty.isDynamic() || rotationProperty.isDynamic() || scaleProperty.isDynamic()) {
+		if (positionProperty.isDynamic() || rotationProperty.isDynamic() || scaleProperty.isDynamic() || originProperty.isDynamic()) {
 			AnimationData animationData = entity.addComponent(new AnimationData());
 			TransformDriver driver = entity.addComponent(new TransformDriver(animationData));
 			

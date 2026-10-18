@@ -193,6 +193,10 @@ public class Transform extends Component {
 		}
 	}
 	
+	public Vector3f getBackwards() {
+		return getForward().negate();
+	}
+	
 	public Vector3f getForward() {
 		float pitch = getPitch();
 		float yaw = getYaw();
@@ -204,9 +208,17 @@ public class Transform extends Component {
 		return new Vector3f(sinY * cosP, -sinP, -cosY * cosP);
 	}
 	
+	public Vector3f getLeft() {
+		return getRight().negate();
+	}
+	
 	public Vector3f getRight() {
 		float yaw = getYaw();
 		return new Vector3f((float)Math.cos(yaw), 0, (float)Math.sin(yaw));
+	}
+	
+	public Vector3f getDown() {
+		return getUp().negate();
 	}
 	
 	public Vector3f getUp() {

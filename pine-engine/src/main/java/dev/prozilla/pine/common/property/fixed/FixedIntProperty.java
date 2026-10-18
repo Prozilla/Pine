@@ -12,6 +12,11 @@ public class FixedIntProperty implements IntProperty, FixedProperty<Integer> {
 	
 	protected final int value;
 	
+	/** A property with value {@code 0}. */
+	public static final FixedIntProperty ZERO = new FixedIntProperty(0);
+	/** A property with value {@code 1}. */
+	public static final FixedIntProperty ONE = new FixedIntProperty(1);
+	
 	/**
 	 * Creates a fixed property with the given value.
 	 */

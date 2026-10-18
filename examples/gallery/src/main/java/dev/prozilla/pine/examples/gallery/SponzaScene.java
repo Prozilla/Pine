@@ -2,13 +2,14 @@ package dev.prozilla.pine.examples.gallery;
 
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector3f;
+import dev.prozilla.pine.common.property.fixed.FixedFloatProperty;
+import dev.prozilla.pine.common.property.vector.delegated.DelegatedVector3fProperty;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.camera.Controllable3DCameraPrefab;
+import dev.prozilla.pine.core.entity.prefab.light.SunLightPrefab;
 import dev.prozilla.pine.core.entity.prefab.mesh.MeshPrefab;
-import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.rendering.mesh.StaticMesh;
-import dev.prozilla.pine.core.rendering.shader.ShaderProgram;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.input.Input;
 import dev.prozilla.pine.core.state.input.Key;
@@ -33,6 +34,10 @@ public class SponzaScene extends Scene {
 		
 		spawnObject(parentPrefab, new Vector3f(), new Vector3f());
 		
+		SunLightPrefab sunLightPrefab = new SunLightPrefab(Color.white(), 1f);
+		sunLightPrefab.setRotation(new DelegatedVector3fProperty(() -> (float)Math.cos(getTimer().getScaledTime() / 2f) * 180f, FixedFloatProperty.ZERO, () -> (float)Math.sin(getTimer().getScaledTime() / 2f) * 180f));
+		addEntity(sunLightPrefab);
+		
 		getInput().disableCursor();
 	}
 	
@@ -55,12 +60,6 @@ public class SponzaScene extends Scene {
 		} else if (input.getKeyDown(Key.F5)) {
 			application.reloadScene();
 		}
-	}
-	
-	@Override
-	public void render(Renderer renderer) throws IllegalStateException {
-		ShaderProgram.getLit().setSunlightDirection(new Vector3f((float)Math.cos(getTimer().getScaledTime()), 1f, (float)Math.sin(getTimer().getScaledTime())));
-		super.render(renderer);
 	}
 	
 }

@@ -13,6 +13,11 @@ public class FixedFloatProperty implements FloatProperty, FixedProperty<Float> {
 	
 	protected final float value;
 	
+	/** A property with value {@code 0f}. */
+	public static final FixedFloatProperty ZERO = new FixedFloatProperty(0);
+	/** A property with value {@code 1f}. */
+	public static final FixedFloatProperty ONE = new FixedFloatProperty(1);
+	
 	/**
 	 * Creates a fixed property with the given value.
 	 */

@@ -16,6 +16,7 @@ import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.BooleanUtils;
+import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.rendering.Vertex;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
@@ -34,7 +35,7 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	/** Stores the handle of the program. */
 	private final int id;
 	private boolean isInitialized;
-	protected Logger logger;
+	protected Renderer renderer;
 	
 	private static UnlitShaderProgram unlitShaderProgram;
 	private static LitShaderProgram litShaderProgram;
@@ -537,12 +538,12 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 		glDeleteProgram(id);
 	}
 	
-	public void setLogger(Logger logger) {
-		this.logger = logger;
+	public void setRenderer(Renderer renderer) {
+		this.renderer = renderer;
 	}
 	
 	public Logger getLogger() {
-		return logger != null ? logger : Logger.system;
+		return renderer != null ? renderer.getLogger() : Logger.system;
 	}
 	
 	public static int getMaxVertexAttributes() {

@@ -11,6 +11,7 @@ import dev.prozilla.pine.core.component.ComponentManager;
 import dev.prozilla.pine.core.component.Transform;
 import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.component.camera.OverlayCameraData;
+import dev.prozilla.pine.core.component.light.SunLight;
 import dev.prozilla.pine.core.component.ui.NodeRoot;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityManager;
@@ -32,6 +33,7 @@ import dev.prozilla.pine.core.system.standard.camera.*;
 import dev.prozilla.pine.core.system.standard.driver.TransformDriverUpdater;
 import dev.prozilla.pine.core.system.standard.layer.RenderLayerInitializer;
 import dev.prozilla.pine.core.system.standard.layer.RenderLayerUpdater;
+import dev.prozilla.pine.core.system.standard.light.SunLightCollector;
 import dev.prozilla.pine.core.system.standard.mesh.MeshRenderSystem;
 import dev.prozilla.pine.core.system.standard.mesh.QuadRenderSystem;
 import dev.prozilla.pine.core.system.standard.particle.ParticleFlowUpdater;
@@ -84,6 +86,9 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	protected LayoutPrefab devConsolePrefab;
 	protected Entity devConsole;
 	protected NodeRoot devConsoleRoot;
+	
+	// Lighting
+	protected SunLightCollector sunLightCollector;
 	
 	// Scene state
 	public boolean loaded;
@@ -283,6 +288,10 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		
 		// Sprite input
 		initialSystems.add(new GridInputHandler());
+		
+		// Lighting
+		sunLightCollector = new SunLightCollector();
+		initialSystems.add(sunLightCollector);
 	}
 	
 	/**
@@ -366,6 +375,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		cameraData = null;
 		devConsoleRoot = null;
 		devConsole = null;
+		sunLightCollector = null;
 		
 		reset();
 	}
@@ -609,4 +619,9 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 			renderLayerUpdater.updateZIndices();
 		}
 	}
+	
+	public SunLight getSunLight() {
+		return sunLightCollector != null ? sunLightCollector.getSunLight() : null;
+	}
+	
 }

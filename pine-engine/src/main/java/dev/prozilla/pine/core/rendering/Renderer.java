@@ -233,6 +233,7 @@ public class Renderer implements Initializable, Destructible {
 		renderedVertices = 0;
 		totalVertices = 0;
 		renderPass = RenderPass.DEFAULT;
+		resetMaterial();
 	}
 	
 	/**
@@ -969,7 +970,7 @@ public class Renderer implements Initializable, Destructible {
 	
 	private void initProgram(ShaderProgram program) {
 		program.init();
-		program.setLogger(logger);
+		program.setRenderer(this);
 		program.setProjectionMatrix(projectionMatrix);
 		program.setViewMatrix(viewMatrix);
 		program.setModelMatrix(modelMatrix);
@@ -999,6 +1000,14 @@ public class Renderer implements Initializable, Destructible {
 	
 	public FrameBufferObject getFrameBufferObject() {
 		return frameBufferObject;
+	}
+	
+	public Application getApplication() {
+		return application;
+	}
+	
+	public Logger getLogger() {
+		return logger;
 	}
 	
 	public RenderConfig getConfig() {
