@@ -904,15 +904,21 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	public void setProjectionMatrix(Matrix4f projectionMatrix) {
+		if (getProgram().projectionUniform.hasValue(projectionMatrix)) {
+			return;
+		}
 		flush();
 		this.projectionMatrix = projectionMatrix;
-		getProgram().setProjectionMatrix(projectionMatrix);
+		getProgram().projectionUniform.setValue(projectionMatrix);
 	}
 	
 	public void setViewMatrix(Matrix4f viewMatrix) {
+		if (getProgram().viewUniform.hasValue(viewMatrix)) {
+			return;
+		}
 		flush();
 		this.viewMatrix = viewMatrix;
-		getProgram().setViewMatrix(viewMatrix);
+		getProgram().viewUniform.setValue(viewMatrix);
 	}
 	
 	public void resetModelMatrix() {
@@ -920,9 +926,12 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	public void setModelMatrix(Matrix4f modelMatrix) {
+		if (getProgram().modelUniform.hasValue(modelMatrix)) {
+			return;
+		}
 		flush();
 		this.modelMatrix = modelMatrix;
-		getProgram().setModelMatrix(modelMatrix);
+		getProgram().modelUniform.setValue(modelMatrix);
 	}
 	
 	public void resetMaterial() {
@@ -971,13 +980,13 @@ public class Renderer implements Initializable, Destructible {
 	private void initProgram(ShaderProgram program) {
 		program.init();
 		program.setRenderer(this);
-		program.setProjectionMatrix(projectionMatrix);
-		program.setViewMatrix(viewMatrix);
-		program.setModelMatrix(modelMatrix);
+		program.projectionUniform.setValue(projectionMatrix);
+		program.viewUniform.setValue(viewMatrix);
+		program.modelUniform.setValue(modelMatrix);
 		if (snapPixels) {
-			program.setSnapPixels(true);
+			program.snapPixelsUniform.set(true);
 		}
-		program.setViewportSize(new Vector2f(viewWidth, viewHeight));
+		program.viewportSizeUniform.setValue(new Vector2f(viewWidth, viewHeight));
 	}
 	
 	public int getWidth() {

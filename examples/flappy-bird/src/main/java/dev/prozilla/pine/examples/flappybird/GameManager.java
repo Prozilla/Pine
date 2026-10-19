@@ -18,8 +18,8 @@ public class GameManager extends ApplicationManager {
 		
 		// Load seed
 		seed = application.getLocalStorage().getInt("seed", 1);
-		playerVariant = 2;
-		pipeVariant = 1;
+		playerVariant = 0;
+		pipeVariant = 0;
 		backgroundVariant = 0;
 		
 		instance = this;

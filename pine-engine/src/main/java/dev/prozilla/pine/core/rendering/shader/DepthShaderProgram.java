@@ -1,7 +1,6 @@
 package dev.prozilla.pine.core.rendering.shader;
 
 import dev.prozilla.pine.core.rendering.Vertex;
-import org.joml.Matrix4f;
 
 import java.nio.FloatBuffer;
 
@@ -36,13 +35,13 @@ public class DepthShaderProgram extends ShaderProgram {
 		return ATTRIBUTE_SIZES;
 	}
 	
-	@Override
-	public void setProjectionMatrix(Matrix4f projectionMatrix) {
-		super.setProjectionMatrix(projectionMatrix);
-		
-		setNear(projectionMatrix.perspectiveNear());
-		setFar(projectionMatrix.perspectiveFar());
-	}
+//	@Override
+//	public void setProjectionMatrix(Matrix4f projectionMatrix) {
+//		super.setProjectionMatrix(projectionMatrix);
+//zd
+//		setNear(projectionMatrix.perspectiveNear());
+//		setFar(projectionMatrix.perspectiveFar());
+//	}
 	
 	public void setNear(float near) {
 		setUniform(NEAR_UNIFORM, near);

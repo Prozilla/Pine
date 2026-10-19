@@ -26,7 +26,6 @@ import dev.prozilla.pine.examples.flappybird.system.obstacle.PipesMover;
 import dev.prozilla.pine.examples.flappybird.system.player.PlayerInitializer;
 import dev.prozilla.pine.examples.flappybird.system.player.PlayerInputHandler;
 import dev.prozilla.pine.examples.flappybird.system.player.PlayerMover;
-import dev.prozilla.pine.examples.flappybird.system.ui.ScoreTextUpdater;
 
 public class GameScene extends SceneBase {
 	
@@ -63,7 +62,7 @@ public class GameScene extends SceneBase {
 		
 		// Create prefabs for entities
 		PlayerPrefab playerPrefab = new PlayerPrefab();
-		ScorePrefab scorePrefab = new ScorePrefab(font);
+		ScorePrefab scorePrefab = new ScorePrefab(font, this);
 		GameOverPrefab gameOverPrefab = new GameOverPrefab(font);
 		GroundPrefab groundPrefab = new GroundPrefab();
 		pipesPrefab = new PipesPrefab();
@@ -76,7 +75,6 @@ public class GameScene extends SceneBase {
 		addSystem(new PipeInitializer());
 		addSystem(new PipesInitializer());
 		addSystem(new PipesMover());
-		addSystem(new ScoreTextUpdater());
 		addSystem(new GroundInitializer());
 		addSystem(new GroundMover());
 		

@@ -38,7 +38,7 @@ public class Material<S extends ShaderProgram> {
 	}
 	
 	public void bind() {
-		shaderProgram.setSnapPixels(snapPixels);
+		shaderProgram.snapPixelsUniform.set(snapPixels);
 	}
 	
 	@Override

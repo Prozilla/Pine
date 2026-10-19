@@ -18,6 +18,9 @@ import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.rendering.Vertex;
+import dev.prozilla.pine.core.rendering.shader.uniform.BooleanUniform;
+import dev.prozilla.pine.core.rendering.shader.uniform.Matrix4fUniform;
+import dev.prozilla.pine.core.rendering.shader.uniform.Vector2fUniform;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
@@ -37,18 +40,17 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	private boolean isInitialized;
 	protected Renderer renderer;
 	
+	public Matrix4fUniform projectionUniform;
+	public Matrix4fUniform viewUniform;
+	public Matrix4fUniform modelUniform;
+	public BooleanUniform snapPixelsUniform;
+	public Vector2fUniform viewportSizeUniform;
+	
 	private static UnlitShaderProgram unlitShaderProgram;
 	private static LitShaderProgram litShaderProgram;
 	private static DepthShaderProgram depthShaderProgram;
 	private static WireframeShaderProgram wireframeShaderProgram;
 	private static NormalShaderProgram normalShaderProgram;
-	
-	// Uniforms
-	public static final String PROJECTION_UNIFORM = "uProjection";
-	public static final String VIEW_UNIFORM = "uView";
-	public static final String MODEL_UNIFORM = "uModel";
-	public static final String SNAP_PIXELS_UNIFORM = "uSnapPixels";
-	public static final String VIEWPORT_SIZE_UNIFORM = "uViewportSize";
 	
 	public static final String DEFAULT_OUTPUT_VARIABLE = "color";
 	
@@ -133,51 +135,11 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	protected abstract int[] getAttributeSizes();
 	
 	protected void setupUniforms() {
-		setProjectionMatrix(new org.joml.Matrix4f());
-		setViewMatrix(new org.joml.Matrix4f());
-		setModelMatrix(new org.joml.Matrix4f());
-		setSnapPixels(false);
-		setViewportSize(new Vector2f());
-	}
-	
-	public void setProjectionMatrix(org.joml.Matrix4f projectionMatrix) {
-		int location = getUniformLocation(PROJECTION_UNIFORM);
-		if (location == GL_INVALID_INDEX) {
-			return;
-		}
-		setUniform(location, projectionMatrix);
-	}
-	
-	public void setViewMatrix(org.joml.Matrix4f viewMatrix) {
-		int location = getUniformLocation(VIEW_UNIFORM);
-		if (location == GL_INVALID_INDEX) {
-			return;
-		}
-		setUniform(location, viewMatrix);
-	}
-	
-	public void setModelMatrix(org.joml.Matrix4f modelMatrix) {
-		int location = getUniformLocation(MODEL_UNIFORM);
-		if (location == GL_INVALID_INDEX) {
-			return;
-		}
-		setUniform(location, modelMatrix);
-	}
-	
-	public void setSnapPixels(boolean snapPixels) {
-		int location = getUniformLocation(SNAP_PIXELS_UNIFORM);
-		if (location == GL_INVALID_INDEX) {
-			return;
-		}
-		setUniform(location, snapPixels);
-	}
-	
-	public void setViewportSize(Vector2f viewportSize) {
-		int location = getUniformLocation(VIEWPORT_SIZE_UNIFORM);
-		if (location == GL_INVALID_INDEX) {
-			return;
-		}
-		setUniform(location, viewportSize);
+		projectionUniform = new Matrix4fUniform("uProjection", this);
+		viewUniform = new Matrix4fUniform("uView", this);
+		modelUniform = new Matrix4fUniform("uModel", this);
+		snapPixelsUniform = new BooleanUniform("uSnapPixels", this);
+		viewportSizeUniform = new Vector2fUniform("uViewportSize", this);
 	}
 	
 	public abstract void writeVertex(FloatBuffer buffer, Vertex vertex);

@@ -4,13 +4,12 @@ import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.math.dimension.DualDimension;
 import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
-import dev.prozilla.pine.examples.flappybird.EntityTag;
+import dev.prozilla.pine.examples.flappybird.scene.GameScene;
 
 public class ScorePrefab extends TextPrefab {
 	
-	public ScorePrefab(Font font) {
+	public ScorePrefab(Font font, GameScene gameScene) {
 		super("0");
 		setName("ScoreText");
 		
@@ -19,12 +18,8 @@ public class ScorePrefab extends TextPrefab {
 		setColor(Color.white());
 		setMargin(new DualDimension(16));
 		setFont(font);
+		
+		setText(() -> String.valueOf(gameScene.playerScore));
 	}
 	
-	@Override
-	protected void apply(Entity entity) {
-		super.apply(entity);
-		
-		entity.tag = EntityTag.SCORE_TAG;
-	}
 }
