@@ -136,7 +136,7 @@ public class BuildTool {
 		logger.log(String.format("Downloading and preparing JRE... (version: %S)", config.getJreVersion()));
 		
 		String os = Platform.get().getIdentifier();
-		String jreUrl = "https://api.adoptium.net/v3/binary/latest/%s/ga/%s/x64/jdk/hotspot/normal/adoptium".formatted(config.getJreVersion(), os);
+		String jreUrl = "https://api.adoptium.net/v3/binary/latest/%s/ga/%s/x64/jre/hotspot/normal/adoptium".formatted(config.getJreVersion(), os);
 		
 		Path tempZip = Files.createTempFile("jre", ".zip");
 		
@@ -158,9 +158,9 @@ public class BuildTool {
 		logger.log("Extracting JRE");
 		FileSystem.unzip(tempZip, jreOutputDir);
 		
-		// Pull contents of JDK directory up and remove JDK directory
-		Path jdkDir = Objects.requireNonNull(FileSystem.getSubdirectory(jreOutputDir), "JRE output directory not found");
-		FileSystem.unwrapDirectory(jdkDir);
+		// Pull contents of JRE directory up and remove JRE directory
+		Path jreDir = Objects.requireNonNull(FileSystem.getSubdirectory(jreOutputDir), "JRE output directory not found");
+		FileSystem.unwrapDirectory(jreDir);
 		
 		return jreOutputDir;
 	}
@@ -217,7 +217,7 @@ public class BuildTool {
 			config.getMainClass(),
 		    output,
 			config.getJreVersion(),
-			jrePath != null ? String.format("<path>%s</path>", jrePath) : "",
+			jrePath != null ? String.format("<path>%s</path>", buildDir.relativize(jrePath)) : "",
 			icon != null ? String.format("<icon>%s</icon>", icon) : "",
 			config.getDeveloper(),
 			config.getGameName(),
@@ -243,6 +243,9 @@ public class BuildTool {
 		logger.log("Bundling resources...");
 		
 		Path targetDir = Files.createDirectories(buildDir.resolve("resources/"));
+		FileSystem.deleteDirectoryIfExists(targetDir);
+		Files.createDirectories(targetDir);
+		
 		Path resourcesDir = projectDir.resolve(config.getResourcesPath());
 		
 		FileSystem.copyDirectory(resourcesDir.toFile(), targetDir.toFile());
@@ -307,6 +310,18 @@ public class BuildTool {
 		
 		String nsisScript = """
 		!include MUI2.nsh
+		!include LogicLib.nsh
+		!include nsDialogs.nsh
+		Var InstalledVersion
+		!include WordFunc.nsh
+		!insertmacro VersionCompare
+		
+		!macro CommandLink Y TEXT NOTE HANDLER
+			nsDialogs::CreateControl BUTTON 0x5001000E 0 0u ${Y}u 100%% 30u "${TEXT}"
+			Pop $0
+			SendMessage $0 0x1609 0 "STR:${NOTE}"
+			${NSD_OnClick} $0 ${HANDLER}
+		!macroend
 		
 		!define APP_NAME "%s"
 		!define APP_VERSION "%s"
@@ -326,7 +341,7 @@ public class BuildTool {
 		; Installer info
 		
 		OutFile "%s"
-		InstallDir "$PROGRAMFILES\\${APP_NAME}"
+		InstallDir "$PROGRAMFILES64\\${APP_NAME}"
 		Name "${APP_NAME}"
 		RequestExecutionLevel admin
 		ManifestDPIAware true
@@ -342,10 +357,15 @@ public class BuildTool {
 		;--------------------------------
 		; Pages
 		
-		!insertmacro MUI_PAGE_WELCOME
-		!insertmacro MUI_PAGE_COMPONENTS
+		Page custom MaintenancePage MaintenanceLeave
+        !insertmacro MUI_PAGE_COMPONENTS
+		!define MUI_PAGE_CUSTOMFUNCTION_PRE DirectoryPre
 		!insertmacro MUI_PAGE_DIRECTORY
 		!insertmacro MUI_PAGE_INSTFILES
+		!define MUI_FINISHPAGE_RUN
+		!define MUI_FINISHPAGE_RUN_TEXT "Launch ${APP_NAME}"
+		!define MUI_FINISHPAGE_RUN_FUNCTION RunApp
+		!define MUI_PAGE_CUSTOMFUNCTION_SHOW FinishShow
 		!insertmacro MUI_PAGE_FINISH
 		!insertmacro MUI_UNPAGE_CONFIRM
 		!insertmacro MUI_UNPAGE_INSTFILES
@@ -357,11 +377,29 @@ public class BuildTool {
 		Section "Install" SecMain
 			SectionIn RO
 			SetOutPath "$INSTDIR"
+			${If} $InstalledVersion == ""
+				DetailPrint "Installing version ${APP_VERSION}..."
+			${Else}
+				DetailPrint "Updating from version $InstalledVersion to ${APP_VERSION}..."
+			${EndIf}
+		
+			CheckRunning:
+				Delete "$INSTDIR\\${EXE_FILE}"
+				IfFileExists "$INSTDIR\\${EXE_FILE}" 0 Closed
+				MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "${APP_NAME} is running. Close it and try again." IDRETRY CheckRunning
+				Abort
+			Closed:
+		
+			RMDir /r "$INSTDIR\\resources"
+			RMDir /r "$INSTDIR\\jre"
+			Delete "$DESKTOP\\${APP_NAME}.lnk"
+			RMDir /r "$SMPROGRAMS\\${APP_NAME}"
 		
 			File /r /x "${INSTALLER_WORKING_DIR}" /x "${INSTALLER_OUTFILE}" /x "${ZIP_FILE}" "..\\*.*"
 		
 			WriteUninstaller "$INSTDIR\\Uninstall.exe"
 		
+			WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "InstallLocation" "$INSTDIR"
 			WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "DisplayName" "${APP_NAME}"
 			WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "UninstallString" "$INSTDIR\\Uninstall.exe"
 			WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "DisplayVersion" "${APP_VERSION}"
@@ -387,6 +425,86 @@ public class BuildTool {
 			RMDir /r "$SMPROGRAMS\\${APP_NAME}"
 			DeleteRegKey HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}"
 		SectionEnd
+		
+		;--------------------------------
+		; Functions
+		
+		Function .onInit
+			SetRegView 64
+			ReadRegStr $InstalledVersion HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "DisplayVersion"
+			ReadRegStr $0 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${APP_NAME}" "InstallLocation"
+			StrCmp $0 "" +2
+				StrCpy $INSTDIR $0
+		FunctionEnd
+		
+		Function un.onInit
+			SetRegView 64
+		FunctionEnd
+		
+		Function FinishShow
+			${If} $InstalledVersion != ""
+				${NSD_SetText} $mui.FinishPage.Title "Update complete"
+				${NSD_SetText} $mui.FinishPage.Text "${APP_NAME} was updated to version ${APP_VERSION}."
+			${EndIf}
+		FunctionEnd
+		
+		Function DirectoryPre
+			${If} $InstalledVersion != ""
+				Abort
+			${EndIf}
+		FunctionEnd
+		
+		Function MaintenancePage
+			!insertmacro MUI_HEADER_TEXT "${APP_NAME} Setup" "Choose what you want to do."
+			nsDialogs::Create 1018
+			Pop $0
+			${If} $0 == error
+				Abort
+			${EndIf}
+		
+			GetDlgItem $0 $HWNDPARENT 1
+			ShowWindow $0 ${SW_HIDE}
+		
+			${If} $InstalledVersion == ""
+				!insertmacro CommandLink 5 "Install" "Install version ${APP_VERSION}" OnProceed
+				!insertmacro CommandLink 40 "Cancel" "Exit without making changes" OnCancel
+			${Else}
+				${VersionCompare} $InstalledVersion "${APP_VERSION}" $1
+				${If} $1 == 2
+					!insertmacro CommandLink 5 "Update" "Update from version $InstalledVersion to ${APP_VERSION}" OnProceed
+				${ElseIf} $1 == 1
+					!insertmacro CommandLink 5 "Downgrade" "Replace version $InstalledVersion with version ${APP_VERSION}" OnProceed
+				${Else}
+					!insertmacro CommandLink 5 "Repair" "Reinstall version ${APP_VERSION} over the existing installation" OnProceed
+				${EndIf}
+				!insertmacro CommandLink 40 "Uninstall" "Remove the installation" OnUninstall
+				!insertmacro CommandLink 75 "Cancel" "Exit without making changes" OnCancel
+			${EndIf}
+		
+			nsDialogs::Show
+		FunctionEnd
+		
+		Function MaintenanceLeave
+			GetDlgItem $0 $HWNDPARENT 1
+			ShowWindow $0 ${SW_SHOW}
+		FunctionEnd
+		
+		Function OnProceed
+			SendMessage $HWNDPARENT 0x408 1 0
+		FunctionEnd
+		
+		Function OnUninstall
+			Exec '"$INSTDIR\\Uninstall.exe"'
+			Quit
+		FunctionEnd
+		
+		Function OnCancel
+			SendMessage $HWNDPARENT 0x10 0 0
+		FunctionEnd
+		
+		Function RunApp
+			Exec '"$WINDIR\\explorer.exe" "$INSTDIR\\${EXE_FILE}"'
+		FunctionEnd
 		
 		;--------------------------------
 		; Component descriptions
