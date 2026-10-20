@@ -46,8 +46,10 @@ void main() {
     fPosition = modelViewPosition.xyz;
 
     // Calculate normal
+    // TODO: Support non-uniform scaling
     fNormal = (modelView * vec4(vNormal, 0.0)).xyz;
     if (length(fNormal) > 0) {
+        // TODO: Normalize on CPU
         fNormal = normalize(fNormal);
     }
 }

@@ -69,15 +69,18 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 	 */
 	public Mesh(Vector3f origin) {
 		this.origin = Checks.isNotNull(origin, "origin");
+		isGenerating = false;
+		smoothShading = true;
 		markAsDirty();
 	}
 	
 	/**
 	 * Generates the vertices, triangles and UVs of this mesh and applies each modifier.
+	 * @return {@code true} if this mesh was regenerated, meaning it was previously dirty.
 	 */
-	public void generate() {
+	public boolean generate() {
 		if (!isDirty || isGenerating) {
-			return;
+			return false;
 		}
 		
 		isGenerating = true;
@@ -100,6 +103,8 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 		
 		isDirty = false;
 		isGenerating = false;
+		
+		return true;
 	}
 	
 	/**

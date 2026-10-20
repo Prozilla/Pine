@@ -46,7 +46,7 @@ public class Renderer implements Initializable, Destructible {
 	// State
 	private FloatBuffer vertices;
 	private final Vertex vertex;
-	private int numVertices;
+	private int storedVertices;
 	private boolean isRendering;
 	private TextureAsset activeTexture;
 	private Matrix4f projectionMatrix;
@@ -229,7 +229,7 @@ public class Renderer implements Initializable, Destructible {
 		}
 		
 		isRendering = true;
-		numVertices = 0;
+		storedVertices = 0;
 		renderedVertices = 0;
 		totalVertices = 0;
 		renderPass = RenderPass.DEFAULT;
@@ -257,7 +257,7 @@ public class Renderer implements Initializable, Destructible {
 	 * Flushes the data to the GPU to let it get rendered.
 	 */
 	public void flush() {
-		if (numVertices <= 0) {
+		if (storedVertices <= 0) {
 			return;
 		}
 		
@@ -265,8 +265,9 @@ public class Renderer implements Initializable, Destructible {
 		
 		if (vertexArrayObject != null) {
 			vertexArrayObject.bind();
-		} else {
-			vertexBufferObject.bind(VertexBufferObject.Target.ARRAY_BUFFER);
+		}
+		vertexBufferObject.bind(VertexBufferObject.Target.ARRAY_BUFFER);
+		if (vertexArrayObject == null) {
 			getProgram().init();
 		}
 		getProgram().bind();
@@ -276,17 +277,14 @@ public class Renderer implements Initializable, Destructible {
 			activeTexture.bind();
 		}
 		
-		// Upload the new vertex data
-		vertexBufferObject.bind(VertexBufferObject.Target.ARRAY_BUFFER);
+		// Upload and draw batch
 		vertexBufferObject.uploadSubData(VertexBufferObject.Target.ARRAY_BUFFER, 0, vertices);
-		
-		// Draw batch
-		glDrawArrays(GL_TRIANGLES, 0, numVertices);
+		glDrawArrays(GL_TRIANGLES, 0, storedVertices);
 		
 		// Clear vertex data for next batch
 		vertices.clear();
-		renderedVertices += numVertices;
-		numVertices = 0;
+		increaseRenderedVertices(storedVertices);
+		storedVertices = 0;
 	}
 	
 	//region --- Transformation state ---
@@ -523,7 +521,7 @@ public class Renderer implements Initializable, Destructible {
 		float y2 = y + regHeight;
 		
 		if (outOfBounds(x, y, x, y2, x2, y2, x2, y)) {
-			totalVertices += 6;
+			increaseTotalVertices(6);
 			return;
 		}
 		
@@ -582,8 +580,7 @@ public class Renderer implements Initializable, Destructible {
 	                     float x4, float y4, float z4,
 	                     float s1, float t1, float s2, float t2,
 	                     Color c) {
-		requireRendering();
-		totalVertices += 6;
+		increaseTotalVertices(6);
 		
 		// Discard draw call if object is outside the viewport bounds
 		if (outOfBounds(x1, y1, x2, y2, x3, y3, x4, y4)) {
@@ -611,7 +608,7 @@ public class Renderer implements Initializable, Destructible {
 		drawVertex(x3, y3, z3, s2, t2);
 		drawVertex(x4, y4, z4, s2, t1);
 		
-		replaceActiveTexture(texture);
+		setTexture(texture);
 	}
 	
 	/**
@@ -729,7 +726,7 @@ public class Renderer implements Initializable, Destructible {
 							 float a3, float b3, float c3,
 	                         float u1, float v1, float u2, float v2, float u3, float v3,
 	                         Color c) {
-		totalVertices += 3;
+		increaseTotalVertices(3);
 		
 		// Discard draw call if object is outside the viewport bounds
 		if (outOfBounds(x1, y1, x2, y2, x3, y3)) {
@@ -754,7 +751,7 @@ public class Renderer implements Initializable, Destructible {
 		drawVertex(x2, y2, z2, a2, b2, c2, u2, v2);
 		drawVertex(x3, y3, z3, a3, b3, c3, u3, v3);
 		
-		replaceActiveTexture(texture);
+		setTexture(texture);
 	}
 	
 	public void drawVertex(float x, float y, float z, float u, float v) {
@@ -762,20 +759,37 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	public void drawVertex(float x, float y, float z, float a, float b, float c, float u, float v) {
+		requireRendering();
 		vertex.position.set(x, y, z);
 		vertex.normal.set(a, b, c);
 		vertex.textureCoordinates.set(u, v);
 		getProgram().writeVertex(vertices, vertex);
-		numVertices++;
+		storedVertices++;
 	}
 	
-	private void replaceActiveTexture(TextureAsset newTexture) {
-		if (newTexture != null && (activeTexture == null || !activeTexture.hasEqualLocation(newTexture))) {
-			if (activeTexture != null) {
-				activeTexture.unbind();
-			}
-			activeTexture = newTexture;
+	public void increaseVertices(int amount) {
+		increaseTotalVertices(amount);
+		increaseRenderedVertices(amount);
+	}
+	
+	public void increaseTotalVertices(int amount) {
+		totalVertices += amount;
+	}
+	
+	public void increaseRenderedVertices(int amount) {
+		renderedVertices += amount;
+	}
+	
+	public void setTexture(TextureAsset newTexture) {
+		if (newTexture == null || (activeTexture != null && activeTexture.hasEqualLocation(newTexture))) {
+			return;
 		}
+		
+		if (activeTexture != null) {
+			activeTexture.unbind();
+		}
+		
+		activeTexture = newTexture;
 	}
 	
 	//endregion Drawing
@@ -858,7 +872,7 @@ public class Renderer implements Initializable, Destructible {
 		vertexBufferObject.uploadData(VertexBufferObject.Target.ARRAY_BUFFER, size, VertexBufferObject.Usage.DYNAMIC_DRAW);
 		
 		// Initialize variables */
-		numVertices = 0;
+		storedVertices = 0;
 		isRendering = false;
 		
 		resize();
@@ -947,7 +961,7 @@ public class Renderer implements Initializable, Destructible {
 		}
 	}
 	
-	protected ShaderProgram getProgram() {
+	public ShaderProgram getProgram() {
 		if (renderPass == RenderPass.OVERLAY) {
 			return program;
 		}

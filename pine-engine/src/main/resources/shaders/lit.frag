@@ -89,6 +89,9 @@ void main() {
     }
 
     vec3 normal = fNormal;
+    if (length(normal) > 0) {
+        normal = normalize(normal);
+    }
 
     vec3 ambient = computeSkyLight(uSkyLight, uSurface.ambient.rgb, base.rgb);
     vec3 lit = ambient + computeSunlight(base.rgb, uSurface.specular.rgb, uSunlight, fPosition, normal);

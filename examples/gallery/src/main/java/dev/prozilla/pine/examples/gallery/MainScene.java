@@ -135,7 +135,6 @@ public class MainScene extends Scene {
 	
 	@Override
 	public void render(Renderer renderer) throws IllegalStateException {
-		ShaderProgram.getLit().init();
 		ShaderProgram.getLit().sunlightDirectionUniform.setValue(new Vector3f((float)Math.cos(getTimer().getScaledTime()), 1f, (float)Math.sin(getTimer().getScaledTime())));
 		super.render(renderer);
 	}
