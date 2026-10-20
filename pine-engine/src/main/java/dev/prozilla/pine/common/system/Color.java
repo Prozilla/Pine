@@ -1,8 +1,7 @@
 package dev.prozilla.pine.common.system;
 
-import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
-import dev.prozilla.pine.common.Transceivable;
+import dev.prozilla.pine.common.Transferable;
 import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.math.vector.Vector4f;
@@ -15,7 +14,7 @@ import java.util.Objects;
 /**
  * Represents an RGBA color.
  */
-public class Color implements Printable, Cloneable<Color>, Transceivable<Color> {
+public class Color implements Printable, Transferable<Color> {
 	
 	/** This value specifies the red component. */
 	private float red;

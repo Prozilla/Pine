@@ -1,19 +1,20 @@
 package dev.prozilla.pine.core.rendering.shader;
 
 import dev.prozilla.pine.core.rendering.Vertex;
+import dev.prozilla.pine.core.rendering.shader.uniform.FloatUniform;
 
 import java.nio.FloatBuffer;
 
 public class DepthShaderProgram extends ShaderProgram {
+	
+	public FloatUniform nearUniform;
+	public FloatUniform farUniform;
 	
 	public final static String VERTEX_SHADER_PATH = "/shaders/depth.vert";
 	public final static String FRAGMENT_SHADER_PATH = "/shaders/depth.frag";
 	
 	public static final CharSequence[] ATTRIBUTE_NAMES = { "vPosition" };
 	public static final int[] ATTRIBUTE_SIZES = { 3 };
-	
-	public static final String NEAR_UNIFORM = "uNear";
-	public static final String FAR_UNIFORM = "uFar";
 	
 	@Override
 	protected String getVertexShaderPath() {
@@ -35,20 +36,13 @@ public class DepthShaderProgram extends ShaderProgram {
 		return ATTRIBUTE_SIZES;
 	}
 	
-//	@Override
-//	public void setProjectionMatrix(Matrix4f projectionMatrix) {
-//		super.setProjectionMatrix(projectionMatrix);
-//zd
-//		setNear(projectionMatrix.perspectiveNear());
-//		setFar(projectionMatrix.perspectiveFar());
-//	}
-	
-	public void setNear(float near) {
-		setUniform(NEAR_UNIFORM, near);
-	}
-	
-	public void setFar(float far) {
-		setUniform(FAR_UNIFORM, far);
+	@Override
+	protected void setupUniforms() {
+		super.setupUniforms();
+		
+		// TODO: automatically read from projection matrix
+		nearUniform = new FloatUniform("uNear", this);
+		farUniform = new FloatUniform("uFar", this);
 	}
 	
 	@Override

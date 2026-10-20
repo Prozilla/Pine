@@ -7,7 +7,7 @@ import dev.prozilla.pine.core.rendering.shader.ShaderProgram;
 public class Vector2fUniform extends ObjectUniform<Vector2f> implements Vector2fProperty {
 	
 	public Vector2fUniform(String name, ShaderProgram program) {
-		this(name, program, new Vector2f());
+		super(name, program);
 	}
 	
 	public Vector2fUniform(String name, ShaderProgram program, Vector2f initialValue) {

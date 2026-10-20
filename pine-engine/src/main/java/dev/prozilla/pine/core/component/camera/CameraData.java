@@ -1,12 +1,11 @@
 package dev.prozilla.pine.core.component.camera;
 
+import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.Transform;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 public class CameraData extends Component {
 	
@@ -141,19 +140,20 @@ public class CameraData extends Component {
 	
 	public Matrix4f getViewMatrix() {
 		Transform transform = getTransform();
-		return viewMatrix.identity()
-			.rotate((float)Math.toRadians(transform.rotation.x), new Vector3f(1, 0, 0))
-			.rotate((float)Math.toRadians(transform.rotation.y), new Vector3f(0, 1, 0))
+		return viewMatrix.setIdentity()
+			.rotate(transform.rotation.x, 1, 0, 0)
+			.rotate(transform.rotation.y, 0, 1, 0)
 			.translate(-transform.position.x, -transform.position.y, -transform.position.z);
 	}
 	
 	public Matrix4f getProjectionMatrix() {
+		projectionMatrix.setIdentity();
 		if (orthographic) {
 			float right = getCenterX() / getZoom();
 			float top = getCenterY() / getZoom();
-			projectionMatrix.setOrtho(-right, right, -top, top, nearClipPlane, farClipPlane);
+			projectionMatrix.orthographic(-right, right, -top, top, nearClipPlane, farClipPlane);
 		} else {
-			projectionMatrix.setPerspective((float)Math.toRadians(fieldOfView), width / height, nearClipPlane, farClipPlane);
+			projectionMatrix.perspective(fieldOfView, width / height, nearClipPlane, farClipPlane);
 		}
 		return projectionMatrix;
 	}

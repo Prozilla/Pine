@@ -2,20 +2,22 @@ package dev.prozilla.pine.core.rendering.shader;
 
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.Vertex;
+import dev.prozilla.pine.core.rendering.shader.uniform.ColorUniform;
+import dev.prozilla.pine.core.rendering.shader.uniform.FloatUniform;
 
 import java.nio.FloatBuffer;
 
 public class WireframeShaderProgram extends ShaderProgram {
+	
+	public FloatUniform lineWidthUniform;
+	public ColorUniform lineColorUniform;
+	public FloatUniform fillAlphaUniform;
 	
 	public final static String VERTEX_SHADER_PATH = "/shaders/wireframe.vert";
 	public final static String FRAGMENT_SHADER_PATH = "/shaders/wireframe.frag";
 	
 	public static final CharSequence[] ATTRIBUTE_NAMES = { "vPosition", "vColor", "vTexCoords", "vTexId", "vIsArrayTexture" };
 	public static final int[] ATTRIBUTE_SIZES = { 3, 4, 2, 1, 1 };
-	
-	public static final String LINE_WIDTH_UNIFORM = "uLineWidth";
-	public static final String LINE_COLOR_UNIFORM = "uLineColor";
-	public static final String FILL_ALPHA_UNIFORM = "uFillAlpha";
 	
 	@Override
 	protected String getVertexShaderPath() {
@@ -41,21 +43,9 @@ public class WireframeShaderProgram extends ShaderProgram {
 	protected void setupUniforms() {
 		super.setupUniforms();
 		
-		setLineWidth(2);
-		setLineColor(Color.black());
-		setFillAlpha(0.5f);
-	}
-	
-	public void setLineWidth(float width) {
-		setUniform(LINE_WIDTH_UNIFORM, width);
-	}
-	
-	public void setLineColor(Color color) {
-		setUniform(LINE_COLOR_UNIFORM, color);
-	}
-	
-	public void setFillAlpha(float alpha) {
-		setUniform(FILL_ALPHA_UNIFORM, alpha);
+		lineWidthUniform = new FloatUniform("uLineWidth", this, 2);
+		lineColorUniform = new ColorUniform("uLineColor", this, Color.black());
+		fillAlphaUniform = new FloatUniform("uFillAlpha", this, 0.5f);
 	}
 	
 	@Override

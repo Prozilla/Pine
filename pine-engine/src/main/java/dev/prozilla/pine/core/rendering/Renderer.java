@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
+import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
@@ -18,7 +19,6 @@ import dev.prozilla.pine.core.state.config.Config;
 import dev.prozilla.pine.core.state.config.RenderConfig;
 import dev.prozilla.pine.core.system.render.RenderPass;
 import org.jetbrains.annotations.Contract;
-import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
@@ -864,9 +864,9 @@ public class Renderer implements Initializable, Destructible {
 		resize();
 		
 		// Reset matrices
-		projectionMatrix.identity();
-		viewMatrix.identity();
-		modelMatrix.identity();
+		projectionMatrix.setIdentity();
+		viewMatrix.setIdentity();
+		modelMatrix.setIdentity();
 		
 		// Set default material
 		defaultMaterial = new UnlitMaterial();

@@ -10,16 +10,16 @@ public class FloatUniform extends SimpleMutableFloatProperty implements Uniform<
 	protected final int location;
 	protected final ShaderProgram program;
 	
-	public FloatUniform(String name, ShaderProgram program) {
-		this(name, program, 0);
-	}
-	
 	public FloatUniform(String name, ShaderProgram program, float initialValue) {
-		this(program.getUniformLocation(name), program, initialValue);
+		this(name, program);
+		set(initialValue);
 	}
 	
-	protected FloatUniform(int location, ShaderProgram program, float initialValue) {
-		super(initialValue);
+	public FloatUniform(String name, ShaderProgram program) {
+		this(program.getUniformLocation(name), program);
+	}
+	
+	protected FloatUniform(int location, ShaderProgram program) {
 		this.location = location;
 		this.program = program;
 	}
@@ -36,8 +36,9 @@ public class FloatUniform extends SimpleMutableFloatProperty implements Uniform<
 	
 	@Override
 	public boolean set(float value) {
-		boolean changed =  super.set(value);
+		boolean changed = super.set(value);
 		if (changed && location != GL_INVALID_INDEX) {
+			program.use();
 			program.setUniform(location, value);
 		}
 		return changed;

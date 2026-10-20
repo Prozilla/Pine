@@ -38,7 +38,7 @@ public class SponzaScene extends Scene {
 		spawnObject(parentPrefab, new Vector3f(), new Vector3f());
 		
 		SunLightPrefab sunLightPrefab = new SunLightPrefab(Color.white(), 1f);
-		sunLightPrefab.setRotation(new DelegatedVector3fProperty(() -> (float)Math.cos(getTimer().getScaledTime() / 2f) * 180f, FixedFloatProperty.ZERO, () -> (float)Math.sin(getTimer().getScaledTime() / 2f) * 180f));
+		sunLightPrefab.setRotation(new DelegatedVector3fProperty(new FixedFloatProperty(35), () -> getTimer().getScaledTime() * 18f, FixedFloatProperty.ZERO));
 		addEntity(sunLightPrefab);
 		
 		NodeRootPrefab nodeRootPrefab = new NodeRootPrefab();

@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.property.mutable;
 
 public class SimpleMutableFloatProperty implements MutableFloatProperty {
 	
-	private float value;
+	protected float value;
 	
 	public SimpleMutableFloatProperty() {
 		this(0);

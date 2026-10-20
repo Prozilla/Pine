@@ -10,16 +10,16 @@ public class BooleanUniform extends SimpleMutableBooleanProperty implements Unif
 	protected final int location;
 	protected final ShaderProgram program;
 	
-	public BooleanUniform(String name, ShaderProgram program) {
-		this(name, program, false);
-	}
-	
 	public BooleanUniform(String name, ShaderProgram program, boolean initialValue) {
-		this(program.getUniformLocation(name), program, initialValue);
+		this(name, program);
+		set(initialValue);
 	}
 	
-	protected BooleanUniform(int location, ShaderProgram program, boolean initialValue) {
-		super(initialValue);
+	public BooleanUniform(String name, ShaderProgram program) {
+		this(program.getUniformLocation(name), program);
+	}
+	
+	protected BooleanUniform(int location, ShaderProgram program) {
 		this.location = location;
 		this.program = program;
 	}
@@ -36,8 +36,9 @@ public class BooleanUniform extends SimpleMutableBooleanProperty implements Unif
 	
 	@Override
 	public boolean set(boolean value) {
-		boolean changed =  super.set(value);
+		boolean changed = super.set(value);
 		if (changed && location != GL_INVALID_INDEX) {
+			program.use();
 			program.setUniform(location, value);
 		}
 		return changed;

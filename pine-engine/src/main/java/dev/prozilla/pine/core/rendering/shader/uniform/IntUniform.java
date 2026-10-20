@@ -10,16 +10,16 @@ public class IntUniform extends SimpleMutableIntProperty implements Uniform<Inte
 	protected final int location;
 	protected final ShaderProgram program;
 	
-	public IntUniform(String name, ShaderProgram program) {
-		this(name, program, 0);
-	}
-	
 	public IntUniform(String name, ShaderProgram program, int initialValue) {
-		this(program.getUniformLocation(name), program, initialValue);
+		this(name, program);
+		set(initialValue);
 	}
 	
-	protected IntUniform(int location, ShaderProgram program, int initialValue) {
-		super(initialValue);
+	public IntUniform(String name, ShaderProgram program) {
+		this(program.getUniformLocation(name), program);
+	}
+	
+	protected IntUniform(int location, ShaderProgram program) {
 		this.location = location;
 		this.program = program;
 	}
@@ -36,8 +36,9 @@ public class IntUniform extends SimpleMutableIntProperty implements Uniform<Inte
 	
 	@Override
 	public boolean set(int value) {
-		boolean changed =  super.set(value);
+		boolean changed = super.set(value);
 		if (changed && location != GL_INVALID_INDEX) {
+			program.use();
 			program.setUniform(location, value);
 		}
 		return changed;

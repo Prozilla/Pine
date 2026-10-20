@@ -7,7 +7,7 @@ import java.util.Objects;
  */
 public class SimpleMutableObjectProperty<T> implements MutableObjectProperty<T> {
 	
-	private T value;
+	protected T value;
 	
 	/**
 	 * Creates a mutable property without an initial value.

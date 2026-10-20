@@ -30,7 +30,7 @@ import java.nio.FloatBuffer;
 /**
  * Represents a 3x3-Matrix. GLSL equivalent to mat3.
  */
-public class Matrix3f {
+public class Matrix3f extends MatrixFloat<Vector3f, Matrix3f> {
 
     private float m00, m01, m02;
     private float m10, m11, m12;
@@ -45,7 +45,6 @@ public class Matrix3f {
 
     /**
      * Creates a 3x3 matrix with specified columns.
-     *
      * @param col1 Vector with values of the first column
      * @param col2 Vector with values of the second column
      * @param col3 Vector with values of the third column
@@ -64,10 +63,8 @@ public class Matrix3f {
         m22 = col3.z;
     }
 
-    /**
-     * Sets this matrix to the identity matrix.
-     */
-    public final void setIdentity() {
+    @Override
+    public final Matrix3f setIdentity() {
         m00 = 1f;
         m11 = 1f;
         m22 = 1f;
@@ -78,150 +75,159 @@ public class Matrix3f {
         m12 = 0f;
         m20 = 0f;
         m21 = 0f;
+        
+        return this;
     }
-
-    /**
-     * Adds this matrix to another matrix.
-     *
-     * @param other The other matrix
-     *
-     * @return Sum of this + other
-     */
+    
+    @Override
+    public Matrix3f set(Matrix3f other) {
+        m00 = other.m00;
+        m10 = other.m10;
+        m20 = other.m20;
+        
+        m01 = other.m01;
+        m11 = other.m11;
+        m21 = other.m21;
+        
+        m02 = other.m02;
+        m12 = other.m12;
+        m22 = other.m22;
+        
+        return this;
+    }
+    
+    @Override
     public Matrix3f add(Matrix3f other) {
-        Matrix3f result = new Matrix3f();
+        m00 += other.m00;
+        m10 += other.m10;
+        m20 += other.m20;
 
-        result.m00 = this.m00 + other.m00;
-        result.m10 = this.m10 + other.m10;
-        result.m20 = this.m20 + other.m20;
+        m01 += other.m01;
+        m11 += other.m11;
+        m21 += other.m21;
 
-        result.m01 = this.m01 + other.m01;
-        result.m11 = this.m11 + other.m11;
-        result.m21 = this.m21 + other.m21;
+        m02 += other.m02;
+        m12 += other.m12;
+        m22 += other.m22;
 
-        result.m02 = this.m02 + other.m02;
-        result.m12 = this.m12 + other.m12;
-        result.m22 = this.m22 + other.m22;
-
-        return result;
+        return this;
     }
-
-    /**
-     * Negates this matrix.
-     *
-     * @return Negated matrix
-     */
-    public Matrix3f negate() {
-        return multiply(-1f);
-    }
-
-    /**
-     * Subtracts this matrix from another matrix.
-     *
-     * @param other The other matrix
-     *
-     * @return Difference of this - other
-     */
+    
+    @Override
     public Matrix3f subtract(Matrix3f other) {
-        return this.add(other.negate());
+        m00 -= other.m00;
+        m10 -= other.m10;
+        m20 -= other.m20;
+        
+        m01 -= other.m01;
+        m11 -= other.m11;
+        m21 -= other.m21;
+        
+        m02 -= other.m02;
+        m12 -= other.m12;
+        m22 -= other.m22;
+        
+        return this;
     }
-
-    /**
-     * Multiplies this matrix with a scalar.
-     *
-     * @param scalar The scalar
-     *
-     * @return Scalar product of this * scalar
-     */
+    
+    @Override
     public Matrix3f multiply(float scalar) {
-        Matrix3f result = new Matrix3f();
+        m00 *= scalar;
+        m10 *= scalar;
+        m20 *= scalar;
+        
+        m01 *= scalar;
+        m11 *= scalar;
+        m21 *= scalar;
+        
+        m02 *= scalar;
+        m12 *= scalar;
+        m22 *= scalar;
 
-        result.m00 = this.m00 * scalar;
-        result.m10 = this.m10 * scalar;
-        result.m20 = this.m20 * scalar;
-
-        result.m01 = this.m01 * scalar;
-        result.m11 = this.m11 * scalar;
-        result.m21 = this.m21 * scalar;
-
-        result.m02 = this.m02 * scalar;
-        result.m12 = this.m12 * scalar;
-        result.m22 = this.m22 * scalar;
-
-        return result;
+        return this;
     }
 
-    /**
-     * Multiplies this matrix to a vector.
-     *
-     * @param vector The vector
-     *
-     * @return Vector product of this * other
-     */
+    @Override
     public Vector3f multiply(Vector3f vector) {
-        float x = this.m00 * vector.x + this.m01 * vector.y + this.m02 * vector.z;
-        float y = this.m10 * vector.x + this.m11 * vector.y + this.m12 * vector.z;
-        float z = this.m20 * vector.x + this.m21 * vector.y + this.m22 * vector.z;
-        return new Vector3f(x, y, z);
+        float x = m00 * vector.x + m01 * vector.y + m02 * vector.z;
+        float y = m10 * vector.x + m11 * vector.y + m12 * vector.z;
+        float z = m20 * vector.x + m21 * vector.y + m22 * vector.z;
+        
+        return vector.set(x, y, z);
     }
 
-    /**
-     * Multiplies this matrix to another matrix.
-     *
-     * @param other The other matrix
-     *
-     * @return Matrix product of this * other
-     */
+    @Override
     public Matrix3f multiply(Matrix3f other) {
-        Matrix3f result = new Matrix3f();
+        float m00 = this.m00 * other.m00 + this.m01 * other.m10 + this.m02 * other.m20;
+        float m10 = this.m10 * other.m00 + this.m11 * other.m10 + this.m12 * other.m20;
+        float m20 = this.m20 * other.m00 + this.m21 * other.m10 + this.m22 * other.m20;
 
-        result.m00 = this.m00 * other.m00 + this.m01 * other.m10 + this.m02 * other.m20;
-        result.m10 = this.m10 * other.m00 + this.m11 * other.m10 + this.m12 * other.m20;
-        result.m20 = this.m20 * other.m00 + this.m21 * other.m10 + this.m22 * other.m20;
+        float m01 = this.m00 * other.m01 + this.m01 * other.m11 + this.m02 * other.m21;
+        float m11 = this.m10 * other.m01 + this.m11 * other.m11 + this.m12 * other.m21;
+        float m21 = this.m20 * other.m01 + this.m21 * other.m11 + this.m22 * other.m21;
 
-        result.m01 = this.m00 * other.m01 + this.m01 * other.m11 + this.m02 * other.m21;
-        result.m11 = this.m10 * other.m01 + this.m11 * other.m11 + this.m12 * other.m21;
-        result.m21 = this.m20 * other.m01 + this.m21 * other.m11 + this.m22 * other.m21;
+        float m02 = this.m00 * other.m02 + this.m01 * other.m12 + this.m02 * other.m22;
+        float m12 = this.m10 * other.m02 + this.m11 * other.m12 + this.m12 * other.m22;
+        float m22 = this.m20 * other.m02 + this.m21 * other.m12 + this.m22 * other.m22;
 
-        result.m02 = this.m00 * other.m02 + this.m01 * other.m12 + this.m02 * other.m22;
-        result.m12 = this.m10 * other.m02 + this.m11 * other.m12 + this.m12 * other.m22;
-        result.m22 = this.m20 * other.m02 + this.m21 * other.m12 + this.m22 * other.m22;
-
-        return result;
+        this.m00 = m00;
+        this.m10 = m10;
+        this.m20 = m20;
+        
+        this.m01 = m01;
+        this.m11 = m11;
+        this.m21 = m21;
+        
+        this.m02 = m02;
+        this.m12 = m12;
+        this.m22 = m22;
+        
+        return this;
     }
 
-    /**
-     * Transposes this matrix.
-     *
-     * @return Transposed matrix
-     */
+    @Override
     public Matrix3f transpose() {
-        Matrix3f result = new Matrix3f();
+        float m01 = this.m01;
+        float m10 = this.m10;
+        float m02 = this.m02;
+        float m20 = this.m20;
+        float m12 = this.m12;
+        float m21 = this.m21;
+        
+        this.m01 = m10;
+        this.m10 = m01;
+        this.m02 = m20;
+        this.m20 = m02;
+        this.m12 = m21;
+        this.m21 = m12;
 
-        result.m00 = this.m00;
-        result.m10 = this.m01;
-        result.m20 = this.m02;
-
-        result.m01 = this.m10;
-        result.m11 = this.m11;
-        result.m21 = this.m12;
-
-        result.m02 = this.m20;
-        result.m12 = this.m21;
-        result.m22 = this.m22;
-
-        return result;
+        return this;
     }
 
-    /**
-     * Stores the matrix in a given Buffer.
-     *
-     * @param buffer The buffer to store the matrix data
-     */
+    @Override
     public void toBuffer(FloatBuffer buffer) {
         buffer.put(m00).put(m10).put(m20);
         buffer.put(m01).put(m11).put(m21);
         buffer.put(m02).put(m12).put(m22);
         buffer.flip();
     }
-
+    
+    @Override
+    public boolean equals(Matrix3f other) {
+        return other != null
+            && other.m00 == m00 && other.m01 == m01 && other.m02 == m02
+            && other.m10 == m10 && other.m11 == m11 && other.m12 == m12
+            && other.m20 == m20 && other.m21 == m21 && other.m22 == m22;
+    }
+    
+    @Override
+    public Matrix3f clone() {
+        return new Matrix3f().set(this);
+    }
+    
+    @Override
+    public Matrix3f self() {
+        return this;
+    }
+    
 }

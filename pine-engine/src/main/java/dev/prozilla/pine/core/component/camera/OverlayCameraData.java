@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.component.camera;
 
-import org.joml.Matrix4f;
+import dev.prozilla.pine.common.math.matrix.Matrix4f;
 
 public class OverlayCameraData extends CameraData {
 	
@@ -9,10 +9,10 @@ public class OverlayCameraData extends CameraData {
 	}
 	
 	public Matrix4f getViewMatrix() {
-		return viewMatrix.identity().translate(0, 0, -farClipPlane);
+		return viewMatrix.setIdentity().translate(0, 0, -farClipPlane);
 	}
 	
 	public Matrix4f getProjectionMatrix() {
-		return projectionMatrix.setOrtho(0, width, 0, height, nearClipPlane, farClipPlane);
+		return projectionMatrix.setIdentity().orthographic(0, width, 0, height, nearClipPlane, farClipPlane);
 	}
 }

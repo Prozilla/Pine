@@ -19,6 +19,7 @@ import dev.prozilla.pine.common.util.BooleanUtils;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.rendering.Vertex;
 import dev.prozilla.pine.core.rendering.shader.uniform.BooleanUniform;
+import dev.prozilla.pine.core.rendering.shader.uniform.IntUniform;
 import dev.prozilla.pine.core.rendering.shader.uniform.Matrix4fUniform;
 import dev.prozilla.pine.core.rendering.shader.uniform.Vector2fUniform;
 import org.lwjgl.opengl.GL;
@@ -45,6 +46,8 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	public Matrix4fUniform modelUniform;
 	public BooleanUniform snapPixelsUniform;
 	public Vector2fUniform viewportSizeUniform;
+	public IntUniform textureUniform;
+	public IntUniform textureArrayUniform;
 	
 	private static UnlitShaderProgram unlitShaderProgram;
 	private static LitShaderProgram litShaderProgram;
@@ -138,6 +141,10 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 		projectionUniform = new Matrix4fUniform("uProjection", this);
 		viewUniform = new Matrix4fUniform("uView", this);
 		modelUniform = new Matrix4fUniform("uModel", this);
+		
+		textureUniform = new IntUniform("uTexture", this);
+		textureArrayUniform = new IntUniform("uTextureArray", this, 1);
+		
 		snapPixelsUniform = new BooleanUniform("uSnapPixels", this);
 		viewportSizeUniform = new Vector2fUniform("uViewportSize", this);
 	}
@@ -388,57 +395,6 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			FloatBuffer buffer = stack.mallocFloat(4 * 4);
 			value.toBuffer(buffer);
-			glUniformMatrix4fv(location, false, buffer);
-		}
-	}
-	
-	public void setUniform(CharSequence name, org.joml.Matrix2f value) {
-		setUniform(requireUniformLocation(name), value);
-	}
-	
-	/**
-	 * Sets the uniform variable for specified location.
-	 * @param location Uniform location
-	 * @param value    Value to set
-	 */
-	public void setUniform(int location, org.joml.Matrix2f value) {
-		try (MemoryStack stack = MemoryStack.stackPush()) {
-			FloatBuffer buffer = stack.mallocFloat(2 * 2);
-			value.get(buffer);
-			glUniformMatrix2fv(location, false, buffer);
-		}
-	}
-	
-	public void setUniform(CharSequence name, org.joml.Matrix3f value) {
-		setUniform(requireUniformLocation(name), value);
-	}
-	
-	/**
-	 * Sets the uniform variable for specified location.
-	 * @param location Uniform location
-	 * @param value    Value to set
-	 */
-	public void setUniform(int location, org.joml.Matrix3f value) {
-		try (MemoryStack stack = MemoryStack.stackPush()) {
-			FloatBuffer buffer = stack.mallocFloat(3 * 3);
-			value.get(buffer);
-			glUniformMatrix3fv(location, false, buffer);
-		}
-	}
-	
-	public void setUniform(CharSequence name, org.joml.Matrix4f value) {
-		setUniform(requireUniformLocation(name), value);
-	}
-	
-	/**
-	 * Sets the uniform variable for specified location.
-	 * @param location Uniform location
-	 * @param value    Value to set
-	 */
-	public void setUniform(int location, org.joml.Matrix4f value) {
-		try (MemoryStack stack = MemoryStack.stackPush()) {
-			FloatBuffer buffer = stack.mallocFloat(4 * 4);
-			value.get(buffer);
 			glUniformMatrix4fv(location, false, buffer);
 		}
 	}

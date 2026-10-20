@@ -160,4 +160,16 @@ public final class MathUtils {
 		return (float)Math.sqrt(value);
 	}
 	
+	public static float toRadians(float angle) {
+		return (float)Math.toRadians(angle);
+	}
+	
+	public static float cos(float angle) {
+		return (float)Math.cos(angle);
+	}
+	
+	public static float sin(float angle) {
+		return (float)Math.sin(angle);
+	}
+	
 }

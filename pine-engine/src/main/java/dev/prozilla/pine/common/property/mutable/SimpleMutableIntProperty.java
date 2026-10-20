@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.property.mutable;
 
 public class SimpleMutableIntProperty implements MutableIntProperty {
 	
-	private int value;
+	protected int value;
 	
 	public SimpleMutableIntProperty() {
 		this(0);

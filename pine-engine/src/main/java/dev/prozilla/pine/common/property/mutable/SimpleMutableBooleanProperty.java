@@ -2,7 +2,7 @@ package dev.prozilla.pine.common.property.mutable;
 
 public class SimpleMutableBooleanProperty implements MutableBooleanProperty {
 	
-	private boolean value;
+	protected boolean value;
 	
 	public SimpleMutableBooleanProperty() {
 		this(false);

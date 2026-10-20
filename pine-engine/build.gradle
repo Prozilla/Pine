@@ -37,7 +37,6 @@ jar {
 // Extra properties
 ext {
 	lwjglVersion = "3.3.6"
-	jomlVersion = "1.10.9"
 	groupId = "dev.prozilla"
 	artifactId = "pine"
 	githubUsername = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
@@ -102,9 +101,6 @@ dependencies {
 
     // Annotations
     compileOnly "org.jetbrains:annotations:26.0.2"
-	
-	// JOML
-	implementation "org.joml:joml:${jomlVersion}"
 }
 
 tasks.register("runBuildTool", JavaExec) {

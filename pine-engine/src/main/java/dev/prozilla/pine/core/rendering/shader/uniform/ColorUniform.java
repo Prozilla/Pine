@@ -6,17 +6,26 @@ import dev.prozilla.pine.core.rendering.shader.ShaderProgram;
 
 public class ColorUniform extends ObjectUniform<Color> implements ColorProperty {
 	
+	protected final boolean withAlpha;
+	
 	public ColorUniform(String name, ShaderProgram program) {
-		this(name, program, Color.black());
+		super(name, program);
+		withAlpha = true;
 	}
 	
 	public ColorUniform(String name, ShaderProgram program, Color initialValue) {
-		super(name, program, initialValue);
+		this(name, program, initialValue, true);
+	}
+	
+	public ColorUniform(String name, ShaderProgram program, Color initialValue, boolean withAlpha) {
+		super(name, program);
+		this.withAlpha = withAlpha;
+		setValue(initialValue);
 	}
 	
 	@Override
 	protected void applyValue(Color value) {
-		program.setUniform(location, value);
+		program.setUniform(location, value, withAlpha);
 	}
 	
 }

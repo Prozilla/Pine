@@ -1,8 +1,7 @@
 package dev.prozilla.pine.common.math.vector;
 
-import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Printable;
-import dev.prozilla.pine.common.Transceivable;
+import dev.prozilla.pine.common.Transferable;
 import dev.prozilla.pine.common.exception.InvalidArrayException;
 import dev.prozilla.pine.common.exception.InvalidStringException;
 import dev.prozilla.pine.common.math.MathUtils;
@@ -15,7 +14,7 @@ import java.util.function.Function;
 /**
  * Abstract class for vectors.
  */
-public abstract class Vector<V extends Vector<V>> implements Printable, Cloneable<V>, Transceivable<V> {
+public abstract class Vector<V extends Vector<V>> implements Printable, Transferable<V> {
 	
 	/**
 	 * Copies all values from the given vector into this vector.

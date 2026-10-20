@@ -1,10 +1,11 @@
 package dev.prozilla.pine.core.component;
 
+import dev.prozilla.pine.common.math.MathUtils;
+import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.entity.Entity;
-import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -198,12 +199,12 @@ public class Transform extends Component {
 	}
 	
 	public Vector3f getForward() {
-		float pitch = getPitch();
-		float yaw = getYaw();
-		float cosY = (float)Math.cos(yaw);
-		float sinY = (float)Math.sin(yaw);
-		float cosP = (float)Math.cos(pitch);
-		float sinP = (float)Math.sin(pitch);
+		float pitch = MathUtils.toRadians(getPitch());
+		float yaw = MathUtils.toRadians(getYaw());
+		float cosY = MathUtils.cos(yaw);
+		float sinY = MathUtils.sin(yaw);
+		float cosP = MathUtils.cos(pitch);
+		float sinP = MathUtils.sin(pitch);
 		
 		return new Vector3f(sinY * cosP, -sinP, -cosY * cosP);
 	}
@@ -213,8 +214,10 @@ public class Transform extends Component {
 	}
 	
 	public Vector3f getRight() {
-		float yaw = getYaw();
-		return new Vector3f((float)Math.cos(yaw), 0, (float)Math.sin(yaw));
+		float yaw = MathUtils.toRadians(getYaw());
+		float cos = MathUtils.cos(yaw);
+		float sin = MathUtils.sin(yaw);
+		return new Vector3f(cos, 0, sin);
 	}
 	
 	public Vector3f getDown() {
@@ -222,12 +225,12 @@ public class Transform extends Component {
 	}
 	
 	public Vector3f getUp() {
-		float pitch = getPitch();
-		float yaw = getYaw();
-		float cosY  = (float)Math.cos(yaw);
-		float sinY  = (float)Math.sin(yaw);
-		float cosP  = (float)Math.cos(pitch);
-		float sinP  = (float)Math.sin(pitch);
+		float pitch = MathUtils.toRadians(getPitch());
+		float yaw = MathUtils.toRadians(getYaw());
+		float cosY = MathUtils.cos(yaw);
+		float sinY = MathUtils.sin(yaw);
+		float cosP = MathUtils.cos(pitch);
+		float sinP = MathUtils.sin(pitch);
 		
 		return new Vector3f(sinY * sinP, cosP, -cosY * sinP);
 	}
@@ -236,14 +239,13 @@ public class Transform extends Component {
 		if (parent != null) {
 			modelMatrix.set(parent.getModelMatrix());
 		} else {
-			modelMatrix.identity();
+			modelMatrix.setIdentity();
 		}
-		return modelMatrix.translate(origin.x, origin.y, origin.z)
-			.translate(position.x, position.y, position.z)
-			.rotateX(getPitch())
-			.rotateY(getYaw())
-			.rotateZ(getRoll())
-			.scale(scale.x, scale.y, scale.z)
+		
+		return modelMatrix.translate(origin)
+			.translate(position)
+			.rotation(rotation)
+			.scale(scale)
 			.translate(-origin.x, -origin.y, -origin.z);
 	}
 	
@@ -253,21 +255,21 @@ public class Transform extends Component {
 	 * @return The rotated vector
 	 */
 	public Vector3f rotateVector(Vector3f vector) {
-		Vector4f rotated = dev.prozilla.pine.common.math.matrix.Matrix4f.rotation(rotation.x, rotation.y, rotation.z)
+		Vector4f rotated = new Matrix4f().rotation(rotation.x, rotation.y, rotation.z)
 			.multiply(vector.expand(0));
 		return new Vector3f(rotated.x, rotated.y, rotated.z);
 	}
 	
 	public float getPitch() {
-		return (float)Math.toRadians(rotation.x);
+		return rotation.x;
 	}
 	
 	public float getYaw() {
-		return (float)Math.toRadians(rotation.y);
+		return rotation.y;
 	}
 	
 	public float getRoll() {
-		return (float)Math.toRadians(rotation.z);
+		return rotation.z;
 	}
 	
 	public void setParent(Transform parent) {

@@ -2,35 +2,33 @@ package dev.prozilla.pine.core.rendering.shader;
 
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.system.Color;
-import dev.prozilla.pine.common.system.Platform;
 import dev.prozilla.pine.core.component.light.SunLight;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.rendering.Vertex;
+import dev.prozilla.pine.core.rendering.shader.uniform.ColorUniform;
+import dev.prozilla.pine.core.rendering.shader.uniform.FloatUniform;
+import dev.prozilla.pine.core.rendering.shader.uniform.Vector3fUniform;
 
 import java.nio.FloatBuffer;
 
 public class LitShaderProgram extends ShaderProgram {
+	
+	public ColorUniform surfaceAmbientUniform;
+	public ColorUniform surfaceSpecularUniform;
+	public FloatUniform surfaceReflectanceUniform;
+	
+	public ColorUniform sunlightColorUniform;
+	public Vector3fUniform sunlightDirectionUniform;
+	public FloatUniform sunlightIntensityUniform;
+	
+	public ColorUniform skyLightColorUniform;
+	public FloatUniform skyLightIntensityUniform;
 	
 	public final static String VERTEX_SHADER_PATH = "/shaders/lit.vert";
 	public final static String FRAGMENT_SHADER_PATH = "/shaders/lit.frag";
 	
 	public static final CharSequence[] ATTRIBUTE_NAMES = { "vPosition", "vNormal", "vColor", "vTexCoords", "vTexId", "vIsArrayTexture" };
 	public static final int[] ATTRIBUTE_SIZES = { 3, 3, 4, 2, 1, 1 };
-	
-	// Uniforms
-	public static final String SURFACE_UNIFORM = "uSurface";
-	public static final String SURFACE_AMBIENT_UNIFORM = SURFACE_UNIFORM + ".ambient";
-	public static final String SURFACE_SPECULAR_UNIFORM = SURFACE_UNIFORM + ".specular";
-	public static final String SURFACE_REFLECTANCE_UNIFORM = SURFACE_UNIFORM + ".reflectance";
-	
-	public static final String SUNLIGHT_UNIFORM = "uSunlight";
-	public static final String SUNLIGHT_COLOR_UNIFORM = SUNLIGHT_UNIFORM + ".color";
-	public static final String SUNLIGHT_DIRECTION_UNIFORM = SUNLIGHT_UNIFORM + ".direction";
-	public static final String SUNLIGHT_INTENSITY_UNIFORM = SUNLIGHT_UNIFORM + ".intensity";
-	
-	public static final String SKY_LIGHT_UNIFORM = "uSkyLight";
-	public static final String SKY_LIGHT_COLOR_UNIFORM = SKY_LIGHT_UNIFORM + ".color";
-	public static final String SKY_LIGHT_INTENSITY_UNIFORM = SKY_LIGHT_UNIFORM + ".intensity";
 	
 	@Override
 	protected String getVertexShaderPath() {
@@ -56,19 +54,22 @@ public class LitShaderProgram extends ShaderProgram {
 	protected void setupUniforms() {
 		super.setupUniforms();
 		
-		setUniform("uTexture", 0);
-		if (Platform.get() != Platform.MACOS) {
-			setUniform("uTextureArray", 1);
-		}
-		
-		setSurface(Color.white(), Color.white(), 1f);
-		setSunlight(Color.white(), Vector3f.one(), 1f);
-		setSkyLight(Color.white(), 0.25f);
+		surfaceAmbientUniform = new ColorUniform("uSurface.ambient", this, Color.white());
+		surfaceSpecularUniform = new ColorUniform("uSurface.specular", this, Color.white());
+		surfaceReflectanceUniform = new FloatUniform("uSurface.reflectance", this, 1f);
+
+		sunlightColorUniform = new ColorUniform("uSunlight.color", this, Color.white(), false);
+		sunlightDirectionUniform = new Vector3fUniform("uSunlight.direction", this, Vector3f.one());
+		sunlightIntensityUniform = new FloatUniform("uSunlight.intensity", this, 1f);
+
+		skyLightColorUniform = new ColorUniform("uSkyLight.color", this, Color.white(), false);
+		skyLightIntensityUniform = new FloatUniform("uSkyLight.intensity", this, 0.25f);
 	}
 	
 	@Override
 	public void setRenderer(Renderer renderer) {
 		super.setRenderer(renderer);
+		
 		SunLight sunLight = renderer.getApplication().getCurrentScene().getSunLight();
 		if (sunLight != null) {
 			setSunlight(sunLight.color, sunLight.getDirection(), sunLight.intensity);
@@ -76,53 +77,21 @@ public class LitShaderProgram extends ShaderProgram {
 	}
 	
 	public void setSurface(Color ambient, Color specular, float reflectance) {
-		setSurfaceAmbient(ambient);
-		setSurfaceSpecular(specular);
-		setSurfaceReflectance(reflectance);
-	}
-	
-	public void setSurfaceAmbient(Color ambient) {
-		setUniform(SURFACE_AMBIENT_UNIFORM, ambient);
-	}
-	
-	public void setSurfaceSpecular(Color specular) {
-		setUniform(SURFACE_SPECULAR_UNIFORM, specular);
-	}
-	
-	public void setSurfaceReflectance(float reflectance) {
-		setUniform(SURFACE_REFLECTANCE_UNIFORM, reflectance);
+		surfaceAmbientUniform.setValue(ambient);
+		surfaceSpecularUniform.setValue(specular);
+		surfaceReflectanceUniform.set(reflectance);
 	}
 	
 	// TODO: Replace with UBO + read sunlight from scene
 	public void setSunlight(Color color, Vector3f direction, float intensity) {
-		setSunlightColor(color);
-		setSunlightDirection(direction);
-		setSunlightIntensity(intensity);
-	}
-	
-	public void setSunlightColor(Color color) {
-		setUniform(SUNLIGHT_COLOR_UNIFORM, color, false);
-	}
-	
-	public void setSunlightDirection(Vector3f direction) {
-		setUniform(SUNLIGHT_DIRECTION_UNIFORM, direction);
-	}
-	
-	public void setSunlightIntensity(float intensity) {
-		setUniform(SUNLIGHT_INTENSITY_UNIFORM, intensity);
+		sunlightColorUniform.setValue(color);
+		sunlightDirectionUniform.setValue(direction);
+		sunlightIntensityUniform.set(intensity);
 	}
 	
 	public void setSkyLight(Color color, float intensity) {
-		setSkyLightColor(color);
-		setSkyLightIntensity(intensity);
-	}
-	
-	public void setSkyLightColor(Color color) {
-		setUniform(SKY_LIGHT_COLOR_UNIFORM, color, false);
-	}
-	
-	public void setSkyLightIntensity(float intensity) {
-		setUniform(SKY_LIGHT_INTENSITY_UNIFORM, intensity);
+		skyLightColorUniform.setValue(color);
+		skyLightIntensityUniform.set(intensity);
 	}
 	
 	@Override
