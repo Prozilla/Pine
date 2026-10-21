@@ -1,7 +1,6 @@
 package dev.prozilla.pine.examples.gallery;
 
 import dev.prozilla.pine.common.asset.pool.AssetPools;
-import dev.prozilla.pine.common.math.vector.Anchor;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.property.fixed.FixedFloatProperty;
 import dev.prozilla.pine.common.property.vector.delegated.DelegatedVector3fProperty;
@@ -10,8 +9,6 @@ import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.camera.Controllable3DCameraPrefab;
 import dev.prozilla.pine.core.entity.prefab.light.SunLightPrefab;
 import dev.prozilla.pine.core.entity.prefab.mesh.MeshPrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
 import dev.prozilla.pine.core.rendering.mesh.StaticMesh;
 import dev.prozilla.pine.core.scene.Scene;
 import dev.prozilla.pine.core.state.input.Input;
@@ -40,16 +37,6 @@ public class SponzaScene extends Scene {
 		SunLightPrefab sunLightPrefab = new SunLightPrefab(Color.white(), 1f);
 		sunLightPrefab.setRotation(new DelegatedVector3fProperty(new FixedFloatProperty(35), () -> getTimer().getScaledTime() * 18f, FixedFloatProperty.ZERO));
 		addEntity(sunLightPrefab);
-		
-		NodeRootPrefab nodeRootPrefab = new NodeRootPrefab();
-		TextPrefab fpsPrefab = new TextPrefab();
-		fpsPrefab.setColor(Color.white());
-		fpsPrefab.setBackgroundColor(Color.black());
-		fpsPrefab.setAbsolutePosition(true);
-		fpsPrefab.setAnchor(Anchor.TOP_LEFT);
-		fpsPrefab.setText(() -> String.valueOf(getTimer().getFPS()));
-		nodeRootPrefab.addChild(fpsPrefab);
-		addEntity(nodeRootPrefab);
 		
 		getInput().disableCursor();
 	}

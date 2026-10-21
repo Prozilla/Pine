@@ -1,0 +1,7 @@
+#fps-counter {
+    anchor: top-left;
+    margin: 16px;
+    padding: 4px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.85);
+}

@@ -21,6 +21,7 @@ import dev.prozilla.pine.core.entity.prefab.camera.CameraPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.dev.DevConsolePrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.dev.FPSCounterPrefab;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.system.SystemBase;
@@ -82,10 +83,12 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	protected Prefab cameraPrefab;
 	protected RenderLayerUpdater renderLayerUpdater;
 	
-	// Developer console
+	// Developer tools
+	protected NodeRoot devRoot;
 	protected LayoutPrefab devConsolePrefab;
 	protected Entity devConsole;
-	protected NodeRoot devConsoleRoot;
+	protected Prefab fpsCounterPrefab;
+	protected Entity fpsCounter;
 	
 	// Lighting
 	protected SunLightCollector sunLightCollector;
@@ -142,6 +145,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	public void setApplication(Application application) {
 		this.application = Checks.isNotNull(application, "application");
 		logger = application.getLogger();
+		fpsCounterPrefab = new FPSCounterPrefab(application.getTimer());
 	}
 	
 	/**
@@ -336,6 +340,8 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		
 		if (getInput().getKeyDown(Key.F12)) {
 			toggleDevConsole();
+		} else if (getInput().getKeyDown(Key.F3)) {
+			toggleFPSCounter();
 		}
 	}
 	
@@ -373,8 +379,9 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		
 		// Remove all references
 		cameraData = null;
-		devConsoleRoot = null;
+		devRoot = null;
 		devConsole = null;
+		fpsCounter = null;
 		sunLightCollector = null;
 		
 		reset();
@@ -599,19 +606,49 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		
 		if (active) {
 			if (devConsole == null) {
-				addSystem(new DevConsoleInputHandler());
-				
-				if (devConsoleRoot == null) {
-					devConsoleRoot = addEntity(new NodeRootPrefab()).getComponent(NodeRoot.class);
+				if (devConsolePrefab == null) {
+					return;
 				}
 				
-				devConsole = devConsoleRoot.getEntity().addChild(devConsolePrefab);
+				addSystem(new DevConsoleInputHandler());
+				devConsole = getDevRoot().getEntity().addChild(devConsolePrefab);
 			}
 			logger.log("Activating dev console");
 			devConsole.setActive(true);
 		} else if (devConsole != null) {
 			devConsole.setActive(false);
 		}
+	}
+	
+	public void toggleFPSCounter() {
+		toggleFPSCounter(fpsCounter == null || !fpsCounter.isActive());
+	}
+	
+	public void toggleFPSCounter(boolean active) {
+		if (!Application.isDevMode()) {
+			return;
+		}
+		
+		if (active) {
+			if (fpsCounter == null) {
+				if (fpsCounterPrefab == null) {
+					return;
+				}
+				fpsCounter = getDevRoot().getEntity().addChild(fpsCounterPrefab);
+			}
+			logger.log("Activating FPS counter");
+			fpsCounter.setActive(true);
+		} else if (fpsCounter != null) {
+			fpsCounter.setActive(false);
+		}
+	}
+	
+	private NodeRoot getDevRoot() {
+		if (devRoot == null) {
+			devRoot = addEntity(new NodeRootPrefab()).getComponent(NodeRoot.class);
+		}
+		
+		return devRoot;
 	}
 	
 	public void updateZIndices() {
