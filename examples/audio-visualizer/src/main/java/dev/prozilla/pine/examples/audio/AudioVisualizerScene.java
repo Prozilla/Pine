@@ -180,7 +180,7 @@ public class AudioVisualizerScene extends Scene {
 			rect.setOriginX((position) * (Main.WIDTH));
 			
 			rect.setWidth((float)Main.WIDTH / barCount - BAR_GAP);
-			rectRenderer.color.setRGB(Color.hsl(position, 0.9f, 0.65f));
+			rectRenderer.material.color.setRGB(Color.hsl(position, 0.9f, 0.65f));
 		}
 	}
 	

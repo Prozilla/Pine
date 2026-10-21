@@ -45,8 +45,11 @@ public final class TextInputInitializer extends InitSystem {
 						textInputNode.moveCursor(1);
 					}
 					node.invoke(NodeEvent.Type.INPUT);
+					return true;
 				}
 			}
+			
+			return false;
 		};
 		textInputNode.textNode = textNode;
 		textInputNode.getTextProperty().setValue(textNode.text);

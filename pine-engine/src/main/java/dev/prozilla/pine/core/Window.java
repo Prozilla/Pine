@@ -68,6 +68,7 @@ public class Window implements Initializable, Destructible, Printable {
 		setHint(WindowHint.GL_FORWARD_COMPATIBLE, true);
 		setHint(WindowHint.GL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		setHint(WindowHint.RETINA_FRAMEBUFFER, false);
+		setHint(WindowHint.FOCUSED, true);
 		setVisible(true);
 		
 		// On macOS, windows can't be initialized in fullscreen mode
@@ -127,10 +128,8 @@ public class Window implements Initializable, Destructible, Printable {
 		}
 		glfwMakeContextCurrent(id);
 		
-		// Enable VSync
-		if (config.enableVSync.get()) {
-			glfwSwapInterval(1);
-		}
+		// Toggle VSync
+		glfwSwapInterval(config.enableVSync.get() ? 1 : 0);
 		
 		// Detect window resizes
 		glfwSetWindowSizeCallback(id, windowSizeCallback = new GLFWWindowSizeCallback() {
@@ -148,8 +147,13 @@ public class Window implements Initializable, Destructible, Printable {
 		}
 		
 		if (deferredFullscreen) {
-			application.defer(() -> config.fullscreen.set(true));
+			application.defer(() -> {
+				config.fullscreen.set(true);
+				focus();
+			});
 		}
+		
+		focus();
 	}
 	
 	/**
@@ -450,6 +454,11 @@ public class Window implements Initializable, Destructible, Printable {
 			logger.warn("Unknown window hint: " + hint);
 		}
 		glfwWindowHint(hint, value);
+	}
+	
+	public void focus() {
+		checkStatus();
+		glfwFocusWindow(id);
 	}
 	
 	/**

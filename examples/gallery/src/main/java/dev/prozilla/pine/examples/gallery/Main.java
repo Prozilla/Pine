@@ -13,6 +13,7 @@ public class Main {
 		applicationBuilder.setWindowSize(900, 600);
 		applicationBuilder.setInitialScene(new SponzaScene());
 		applicationBuilder.setTargetFps(0);
+		applicationBuilder.getConfig().window.enableVSync.set(false);
 		applicationBuilder.setEnableLocalStorage(true);
 		applicationBuilder.setFullscreen(true);
 		

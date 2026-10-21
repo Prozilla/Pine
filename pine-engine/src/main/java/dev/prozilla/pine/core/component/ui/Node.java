@@ -600,7 +600,7 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 	
 	public boolean isFocused() {
 		Node focusedNode = getRoot().getFocusedNode();
-		return focusedNode != null && focusedNode.equals(this);
+		return focusedNode != null && focusedNode.equals(this) && isActive();
 	}
 	
 	public boolean canBeRendered() {

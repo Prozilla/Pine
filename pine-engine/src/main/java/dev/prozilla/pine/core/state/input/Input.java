@@ -41,6 +41,9 @@ public class Input implements Initializable, Destructible {
 	/** Array of keys that are repeated in the current frame. */
 	private final Set<Integer> keysRepeated;
 	private final Set<Integer> previousKeysDown;
+	private final Set<Integer> consumedKeys;
+	private final Set<Integer> consumedTextKeys;
+	private int lastKeyPressed;
 	private final List<TextListener> textListeners;
 	
 	// Mouse
@@ -92,7 +95,20 @@ public class Input implements Initializable, Destructible {
 	@FunctionalInterface
 	public interface TextListener {
 		
-		void handle(char character);
+		boolean handle(char character);
+		
+	}
+	
+	@FunctionalInterface
+	public interface TextConsumer extends TextListener {
+		
+		@Override
+		default boolean handle(char character) {
+			consume(character);
+			return true;
+		}
+		
+		void consume(char character);
 		
 	}
 	
@@ -109,7 +125,10 @@ public class Input implements Initializable, Destructible {
 		keysDown = new HashSet<>();
 		keysRepeated = new HashSet<>();
 		previousKeysDown = new HashSet<>();
+		consumedKeys = new HashSet<>();
+		consumedTextKeys = new HashSet<>();
 		textListeners = new ArrayList<>();
+		lastKeyPressed = GLFW_KEY_UNKNOWN;
 		
 		mouseButtonsPressed = new HashSet<>();
 		mouseButtonsDown = new HashSet<>();
@@ -264,6 +283,7 @@ public class Input implements Initializable, Destructible {
 		}
 		
 		previousKeysDown.addAll(keysDown);
+		consumedKeys.clear();
 		previousMouseButtonsDown.addAll(mouseButtonsDown);
 	}
 	
@@ -556,16 +576,24 @@ public class Input implements Initializable, Destructible {
 	}
 	
 	private boolean handleKey(boolean active, int key, boolean stopPropagation) {
-		if (active && stopPropagation) {
-			stopKeyPropagation(key);
+		if (consumedKeys.contains(key) || consumedTextKeys.contains(key)) {
+			return false;
 		}
+		
+		if (active && stopPropagation) {
+			consumedKeys.add(key);
+		}
+		
 		return active;
 	}
 	
-	private void stopKeyPropagation(Integer key) {
-		keysPressed.remove(key);
-		keysDown.remove(key);
-		keysRepeated.remove(key);
+	public String getKeyName(Key key) {
+		return key != null ? getKeyName(key.getValue()) : null;
+	}
+	
+	public String getKeyName(int key) {
+		int scancode = glfwGetKeyScancode(key);
+		return glfwGetKeyName(key, scancode);
 	}
 	
 	public void addTextListener(TextListener listener) {
@@ -915,12 +943,18 @@ public class Input implements Initializable, Destructible {
 			if (action == GLFW_PRESS) {
 				keysPressed.add(key);
 				keysDown.add(key);
+				lastKeyPressed = key;
 			} else if (action == GLFW_RELEASE) {
 				Integer keyInt = key;
 				keysPressed.remove(keyInt);
 				keysRepeated.remove(keyInt);
+				consumedTextKeys.remove(keyInt);
+				if (lastKeyPressed == key) {
+					lastKeyPressed = GLFW_KEY_UNKNOWN;
+				}
 			} else if (action == GLFW_REPEAT) {
 				keysRepeated.add(key);
+				lastKeyPressed = key;
 			}
 		}
 	}
@@ -929,8 +963,14 @@ public class Input implements Initializable, Destructible {
 		@Override
 		public void invoke(long window, int codepoint) {
 			char character = (char)codepoint;
+			
 			for (TextListener listener : textListeners) {
-				listener.handle(character);
+				if (listener.handle(character)) {
+					if (lastKeyPressed != GLFW_KEY_UNKNOWN) {
+						consumedTextKeys.add(lastKeyPressed);
+					}
+					return;
+				}
 			}
 		}
 	}
