@@ -317,8 +317,29 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 		return isDirty;
 	}
 	
+	/**
+	 * Joins this mesh with another mesh.
+	 * @param mesh The other mesh
+	 * @return The joint meshes.
+	 */
 	public <M extends Mesh> Meshes<Mesh, M> join(M mesh) {
 		return new Meshes<>(this, mesh);
+	}
+	
+	/**
+	 * Derives an optimized static mesh from this mesh.
+	 * @return The optimized static mesh.
+	 */
+	public StaticMesh optimized() {
+		return cached();
+	}
+	
+	/**
+	 * Derives an optimized cached mesh from this mesh.
+	 * @return The cached mesh.
+	 */
+	public CachedMesh<? extends Mesh> cached() {
+		return new CachedMesh<>(this);
 	}
 	
 	public Mesh cloneWithModifiers() {

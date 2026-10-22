@@ -114,6 +114,11 @@ public class Meshes<A extends Mesh, B extends Mesh> extends Mesh {
 	}
 	
 	@Override
+	public CachedMesh<Meshes<A, B>> cached() {
+		return new CachedMesh<>(this);
+	}
+	
+	@Override
 	public Meshes<A, B> clone() {
 		return new Meshes<>(meshA, meshB, origin);
 	}

@@ -587,15 +587,6 @@ public class Input implements Initializable, Destructible {
 		return active;
 	}
 	
-	public String getKeyName(Key key) {
-		return key != null ? getKeyName(key.getValue()) : null;
-	}
-	
-	public String getKeyName(int key) {
-		int scancode = glfwGetKeyScancode(key);
-		return glfwGetKeyName(key, scancode);
-	}
-	
 	public void addTextListener(TextListener listener) {
 		textListeners.add(listener);
 	}

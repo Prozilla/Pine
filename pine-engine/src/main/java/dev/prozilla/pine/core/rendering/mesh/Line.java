@@ -262,6 +262,11 @@ public class Line extends Mesh {
 	}
 	
 	@Override
+	public CachedMesh<Line> cached() {
+		return new CachedMesh<>(this);
+	}
+	
+	@Override
 	public Line clone() {
 		return new Line(origin, points, thickness);
 	}

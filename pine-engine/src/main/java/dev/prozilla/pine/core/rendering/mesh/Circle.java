@@ -136,6 +136,11 @@ public class Circle extends Mesh {
 	}
 	
 	@Override
+	public CachedMesh<Circle> cached() {
+		return new CachedMesh<>(this);
+	}
+	
+	@Override
 	public Mesh clone() {
 		return new Circle(origin, radius, edges);
 	}

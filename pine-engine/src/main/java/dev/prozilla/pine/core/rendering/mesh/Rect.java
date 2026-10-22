@@ -150,6 +150,11 @@ public class Rect extends Mesh {
 	}
 	
 	@Override
+	public CachedMesh<Rect> cached() {
+		return new CachedMesh<>(this);
+	}
+	
+	@Override
 	public Rect clone() {
 		return new Rect(origin, size);
 	}

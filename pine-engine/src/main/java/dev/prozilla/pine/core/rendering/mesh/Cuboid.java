@@ -225,6 +225,11 @@ public class Cuboid extends Mesh {
 	}
 	
 	@Override
+	public CachedMesh<Cuboid> cached() {
+		return new CachedMesh<>(this);
+	}
+	
+	@Override
 	public Cuboid clone() {
 		return new Cuboid(size, origin);
 	}

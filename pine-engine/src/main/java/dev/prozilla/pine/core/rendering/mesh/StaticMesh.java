@@ -18,6 +18,14 @@ import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * An optimized static mesh that reduces the amount of uploads to the GPU.
+ * <p>
+ *     In most situations, this mesh will only be uploaded to the GPU once, before its first render. It will only be
+ *     uploaded again if the previous data cannot be reused for the current render (e.g., when rendering with different
+ *     shaders).
+ * </p>
+ */
 public class StaticMesh extends Mesh {
 	
 	private VertexArrayObject vertexArrayObject;
@@ -168,6 +176,11 @@ public class StaticMesh extends Mesh {
 			&& Arrays.equals(staticMesh.getTriangles(), getTriangles())
 			&& Arrays.equals(staticMesh.getNormals(), getNormals())
 			&& Arrays.equals(staticMesh.getUVArray(), getUVArray());
+	}
+	
+	@Override
+	public StaticMesh optimized() {
+		return this;
 	}
 	
 	@Override

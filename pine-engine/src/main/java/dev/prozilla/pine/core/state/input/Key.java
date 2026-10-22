@@ -158,8 +158,25 @@ public enum Key implements IntEnum {
 		this.usString = usString;
 	}
 	
+	@Override
 	public int getValue() {
 		return value;
+	}
+	
+	/**
+	 * Returns the layout-specific name for this key.
+	 * @return The layout-specific name for this key.
+	 */
+	public String getName() {
+		return glfwGetKeyName(value, getScancode());
+	}
+	
+	/**
+	 * Returns the platform dependent scancode for this key.
+	 * @return The platform dependent scancode for this key.
+	 */
+	public int getScancode() {
+		return glfwGetKeyScancode(value);
 	}
 	
 	@Override

@@ -177,6 +177,11 @@ public class Canvas extends Mesh {
 	}
 	
 	@Override
+	public CachedMesh<Canvas> cached() {
+		return new CachedMesh<>(this);
+	}
+	
+	@Override
 	public Canvas clone() {
 		Canvas canvas = new Canvas(origin);
 		canvas.meshes.addAll(meshes);
