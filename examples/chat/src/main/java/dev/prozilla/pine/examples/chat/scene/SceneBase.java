@@ -24,7 +24,7 @@ public abstract class SceneBase extends Scene {
 	protected void load() {
 		super.load();
 		
-		cameraData.setBackgroundColor(Chat.BACKGROUND_COLOR_A);
+		cameraData.setSkybox(Chat.BACKGROUND_COLOR_A);
 		
 		font = AssetPools.fonts.load(Chat.FONT, 16);
 		

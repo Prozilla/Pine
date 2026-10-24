@@ -54,6 +54,7 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	private static DepthShaderProgram depthShaderProgram;
 	private static WireframeShaderProgram wireframeShaderProgram;
 	private static NormalShaderProgram normalShaderProgram;
+	private static SkyboxShaderProgram skyboxShaderProgram;
 	
 	public static final String DEFAULT_OUTPUT_VARIABLE = "color";
 	
@@ -513,8 +514,17 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 		return normalShaderProgram;
 	}
 	
+	public static SkyboxShaderProgram getSkybox() {
+		if (skyboxShaderProgram != null) {
+			return skyboxShaderProgram;
+		}
+		
+		skyboxShaderProgram = new SkyboxShaderProgram();
+		return skyboxShaderProgram;
+	}
+	
 	public static void destroyAll() {
-		Destructible.destroy(unlitShaderProgram, litShaderProgram, depthShaderProgram, wireframeShaderProgram, normalShaderProgram);
+		Destructible.destroy(unlitShaderProgram, litShaderProgram, depthShaderProgram, wireframeShaderProgram, normalShaderProgram, skyboxShaderProgram);
 	}
 	
 	@Override

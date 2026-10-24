@@ -93,7 +93,7 @@ public class GameScene extends Scene {
 		addEntity(new UIPrefab(styleSheet));
 		
 		cameraData.zoomIn(-0.1f);
-		cameraData.setBackgroundColor(GameManager.BACKGROUND_COLOR);
+		cameraData.setSkybox(GameManager.BACKGROUND_COLOR);
 		cameraData.farClipPlane = 10000f;
 		overlayCameraData.farClipPlane = 10000f;
 		

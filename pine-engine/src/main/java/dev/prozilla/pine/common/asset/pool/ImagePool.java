@@ -15,6 +15,15 @@ import static org.lwjgl.stb.STBImage.*;
 
 public final class ImagePool extends AssetPool<Image> implements MultiAssetLoader<Image> {
 	
+	private boolean flipVertically = DEFAULT_FLIP_VERTICALLY;
+	
+	private static final boolean DEFAULT_FLIP_VERTICALLY = true;
+	
+	public Image load(String path, boolean flipVertically) {
+		this.flipVertically = flipVertically;
+		return load(path);
+	}
+	
 	@Override
 	public Image load(String path) {
 		return super.load(path);
@@ -41,7 +50,7 @@ public final class ImagePool extends AssetPool<Image> implements MultiAssetLoade
 			}
 			
 			// Load the image file
-			stbi_set_flip_vertically_on_load(true);
+			stbi_set_flip_vertically_on_load(flipVertically);
 			imageBuffer = stbi_load(filePath, w, h, comp, 4);
 			
 			if (imageBuffer == null) {
@@ -55,6 +64,11 @@ public final class ImagePool extends AssetPool<Image> implements MultiAssetLoade
 		}
 		
 		return new Image(path, imageBuffer, width, height, channels);
+	}
+	
+	@Override
+	protected void prepareNext() {
+		flipVertically = DEFAULT_FLIP_VERTICALLY;
 	}
 	
 	/**

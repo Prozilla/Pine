@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.logging;
 
 import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.asset.audio.AudioSource;
+import dev.prozilla.pine.common.asset.image.Cubemap;
 import dev.prozilla.pine.common.asset.image.Image;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.model.Model;
@@ -34,6 +35,7 @@ public class AppLogger extends Logger implements Initializable {
 	
 	protected final EventListener<AssetPoolEvent<Image>> onImageLoad;
 	protected final EventListener<AssetPoolEvent<TextureAsset>> onTextureLoad;
+	protected final EventListener<AssetPoolEvent<Cubemap>> onCubemapLoad;
 	protected final EventListener<AssetPoolEvent<Font>> onFontLoad;
 	protected final EventListener<AssetPoolEvent<StyleSheet>> onStyleSheetLoad;
 	protected final EventListener<AssetPoolEvent<View>> onViewLoad;
@@ -50,6 +52,7 @@ public class AppLogger extends Logger implements Initializable {
 		
 		onImageLoad = createAssetPoolListener("image");
 		onTextureLoad = createAssetPoolListener("texture");
+		onCubemapLoad = createAssetPoolListener("cubemap");
 		onFontLoad = createAssetPoolListener("font");
 		onStyleSheetLoad = createAssetPoolListener("style sheet");
 		onViewLoad = createAssetPoolListener("view");
@@ -90,6 +93,7 @@ public class AppLogger extends Logger implements Initializable {
 			if (enableAssetPoolLogs) {
 				addAssetPoolListener(AssetPools.images, onImageLoad);
 				addAssetPoolListener(AssetPools.textures, onTextureLoad);
+				addAssetPoolListener(AssetPools.cubemaps, onCubemapLoad);
 				addAssetPoolListener(AssetPools.fonts, onFontLoad);
 				addAssetPoolListener(AssetPools.styleSheets, onStyleSheetLoad);
 				addAssetPoolListener(AssetPools.views, onViewLoad);
@@ -100,6 +104,7 @@ public class AppLogger extends Logger implements Initializable {
 			} else {
 				removeAssetPoolListener(AssetPools.images, onImageLoad);
 				removeAssetPoolListener(AssetPools.textures, onTextureLoad);
+				removeAssetPoolListener(AssetPools.cubemaps, onCubemapLoad);
 				removeAssetPoolListener(AssetPools.fonts, onFontLoad);
 				removeAssetPoolListener(AssetPools.styleSheets, onStyleSheetLoad);
 				removeAssetPoolListener(AssetPools.views, onViewLoad);

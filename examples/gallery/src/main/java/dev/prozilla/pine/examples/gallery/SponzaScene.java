@@ -23,7 +23,7 @@ public class SponzaScene extends Scene {
 	protected void load() {
 		super.load(new Controllable3DCameraPrefab(10f, 0.05f));
 		
-		cameraData.setBackgroundColor(Color.lightCyan());
+		cameraData.setSkybox("skybox/right.jpg");
 		cameraData.fieldOfView = 70;
 		
 		Prefab parentPrefab = new Prefab();

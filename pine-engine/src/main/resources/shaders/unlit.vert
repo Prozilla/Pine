@@ -14,8 +14,8 @@ uniform vec2 uViewportSize;
 
 out vec4 fColor;
 out vec2 fTexCoords;
-out float fTexId;
-out float fIsArrayTexture;
+flat out float fTexId;
+flat out float fIsArrayTexture;
 
 vec4 snapToPixel(vec4 position) {
     vec2 normalizedPosition = position.xy / position.w;

@@ -13,6 +13,7 @@ public final class AssetPools {
 	// Pools
 	public static final ImagePool images = new ImagePool();
 	public static final TexturePool textures = new TexturePool(images);
+	public static final CubemapPool cubemaps = new CubemapPool(images);
 	public static final FontPool fonts = new FontPool();
 	public static final StyleSheetPool styleSheets = new StyleSheetPool();
 	public static final ViewPool views = new ViewPool();
@@ -27,6 +28,7 @@ public final class AssetPools {
 	public static void clear() {
 		images.destroy();
 		textures.destroy();
+		cubemaps.destroy();
 		fonts.destroy();
 		styleSheets.destroy();
 		views.destroy();
@@ -50,6 +52,7 @@ public final class AssetPools {
 		logger.log("Resource pool summary:");
 		logger.log("Images: " + images.count());
 		logger.log("Textures: " + textures.count());
+		logger.log("Cubemaps: " + cubemaps.count());
 		logger.log("Texture arrays: " + textures.textureArrayCount());
 		logger.log("Fonts: " + fonts.count());
 		logger.log("Style sheets: " + styleSheets.count());

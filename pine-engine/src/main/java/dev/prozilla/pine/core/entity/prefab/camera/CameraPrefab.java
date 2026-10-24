@@ -32,7 +32,7 @@ public class CameraPrefab extends Prefab {
 		CameraData cameraData = entity.addComponent(new CameraData());
 		
 		if (backgroundColor != null) {
-			cameraData.backgroundColor = backgroundColor;
+			cameraData.setSkybox(backgroundColor);
 		}
 	}
 }

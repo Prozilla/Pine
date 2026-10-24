@@ -5,7 +5,7 @@ import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.system.render.RenderPass;
 import dev.prozilla.pine.core.system.render.SceneRenderSystem;
 
-public class OverlayCameraRenderSystem extends SceneRenderSystem {
+public final class OverlayCameraRenderSystem extends SceneRenderSystem {
 	
 	public OverlayCameraRenderSystem() {
 		setRenderPass(RenderPass.OVERLAY);

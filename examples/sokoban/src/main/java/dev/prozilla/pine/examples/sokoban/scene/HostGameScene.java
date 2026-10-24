@@ -17,7 +17,7 @@ public class HostGameScene extends ViewScene {
 	@Override
 	protected void load() {
 		super.load();
-		cameraData.setBackgroundColor(GameManager.BACKGROUND_COLOR);
+		cameraData.setSkybox(GameManager.BACKGROUND_COLOR);
 	}
 	
 	private static class HostController implements Controller {

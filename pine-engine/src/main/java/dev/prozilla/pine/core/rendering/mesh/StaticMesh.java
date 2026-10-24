@@ -140,7 +140,8 @@ public class StaticMesh extends Mesh {
 				} else {
 					vertex.normal.set(0);
 				}
-				vertex.textureCoordinates.set(uvArray[i * 2], uvArray[i * 2 + 1]);
+				vertex.textureCoordinates.x = uvArray[i * 2];
+				vertex.textureCoordinates.y = uvArray[i * 2 + 1];
 				program.writeVertex(verticesBuffer, vertex);
 			}
 			verticesBuffer.flip();

@@ -53,7 +53,7 @@ public class AudioVisualizerScene extends Scene {
 		super.load();
 		
 		cameraData.orthographic = true;
-		cameraData.setBackgroundColor(Color.hsl(0f, 0f, 0.05f));
+		cameraData.setSkybox(Color.hsl(0f, 0f, 0.05f));
 		
 		tracks.addObserver((track) -> {
 			// Stop previous track

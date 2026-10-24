@@ -1,11 +1,14 @@
 package dev.prozilla.pine.core.component.camera;
 
+import dev.prozilla.pine.common.asset.image.Cubemap;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.Transform;
+import dev.prozilla.pine.core.rendering.material.SkyboxMaterial;
 
 public class CameraData extends Component {
 	
@@ -21,14 +24,18 @@ public class CameraData extends Component {
 	protected final Matrix4f viewMatrix;
 	protected final Matrix4f projectionMatrix;
 	
-	public Color backgroundColor;
+	public SkyboxMaterial skybox;
 	
 	public CameraData() {
 		this(Color.black());
 	}
 	
-	public CameraData(Color backgroundColor) {
-		this.backgroundColor = backgroundColor;
+	public CameraData(Color skybox) {
+		this(new SkyboxMaterial(skybox));
+	}
+	
+	public CameraData(SkyboxMaterial skybox) {
+		this.skybox = skybox;
 		
 		zoomFactor = 1;
 		
@@ -50,8 +57,26 @@ public class CameraData extends Component {
 		this.height = height;
 	}
 	
-	public void setBackgroundColor(Color color) {
-		backgroundColor = color;
+	public void setSkybox(String cubemapPath) {
+		setSkybox(AssetPools.cubemaps.load(cubemapPath));
+	}
+	
+	public void setSkybox(Cubemap cubemap) {
+		if (skybox == null) {
+			skybox = new SkyboxMaterial(cubemap);
+		} else {
+			skybox.cubemap = cubemap;
+			skybox.color = Color.white();
+		}
+	}
+	
+	public void setSkybox(Color color) {
+		if (skybox == null) {
+			skybox = new SkyboxMaterial(color);
+		} else {
+			skybox.color = color;
+			skybox.cubemap = null;
+		}
 	}
 	
 	/**

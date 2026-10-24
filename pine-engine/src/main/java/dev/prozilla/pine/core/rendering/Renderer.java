@@ -257,7 +257,12 @@ public class Renderer implements Initializable, Destructible {
 	 * Flushes the data to the GPU to let it get rendered.
 	 */
 	public void flush() {
-		if (storedVertices <= 0) {
+		flushVertices(storedVertices);
+		storedVertices = 0;
+	}
+	
+	public void flushVertices(int vertexCount) {
+		if (vertexCount <= 0) {
 			return;
 		}
 		
@@ -279,12 +284,11 @@ public class Renderer implements Initializable, Destructible {
 		
 		// Upload and draw batch
 		vertexBufferObject.uploadSubData(VertexBufferObject.Target.ARRAY_BUFFER, 0, vertices);
-		glDrawArrays(GL_TRIANGLES, 0, storedVertices);
+		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 		
 		// Clear vertex data for next batch
 		vertices.clear();
-		increaseRenderedVertices(storedVertices);
-		storedVertices = 0;
+		increaseRenderedVertices(vertexCount);
 	}
 	
 	//region --- Transformation state ---
@@ -759,10 +763,14 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	public void drawVertex(float x, float y, float z, float a, float b, float c, float u, float v) {
+		if (vertices.remaining() < getProgram().getStrideLength()) {
+			throw new IllegalStateException("Maximum batch size exceeded");
+		}
 		requireRendering();
 		vertex.position.set(x, y, z);
 		vertex.normal.set(a, b, c);
-		vertex.textureCoordinates.set(u, v);
+		vertex.textureCoordinates.x = u;
+		vertex.textureCoordinates.y = v;
 		getProgram().writeVertex(vertices, vertex);
 		storedVertices++;
 	}
@@ -777,6 +785,9 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	public void increaseRenderedVertices(int amount) {
+		if (renderedVertices > totalVertices) {
+			throw new IllegalStateException("Rendered vertex count exceeded total vertex count");
+		}
 		renderedVertices += amount;
 	}
 	
@@ -1001,6 +1012,10 @@ public class Renderer implements Initializable, Destructible {
 			program.snapPixelsUniform.set(true);
 		}
 		program.viewportSizeUniform.setValue(new Vector2f(viewWidth, viewHeight));
+	}
+	
+	public FloatBuffer getVertices() {
+		return vertices;
 	}
 	
 	public int getWidth() {

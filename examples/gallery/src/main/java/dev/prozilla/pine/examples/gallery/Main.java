@@ -16,6 +16,7 @@ public class Main {
 		applicationBuilder.getConfig().window.enableVSync.set(false);
 		applicationBuilder.setEnableLocalStorage(true);
 		applicationBuilder.setFullscreen(true);
+		applicationBuilder.getConfig().stopOnException.set(true);
 		
 		Application application = applicationBuilder.build();
 		application.addScene(new MainScene());

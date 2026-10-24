@@ -10,7 +10,7 @@ public class Vertex {
 	public final Vector3f position;
 	public final Vector3f normal;
 	public final Color color;
-	public final Vector2f textureCoordinates;
+	public final Vector3f textureCoordinates;
 	public float textureId;
 	public float textureType;
 	
@@ -18,7 +18,7 @@ public class Vertex {
 		position = new Vector3f();
 		normal = new Vector3f();
 		color = new Color();
-		textureCoordinates = new Vector2f();
+		textureCoordinates = new Vector3f();
 	}
 	
 	public Vertex setPosition(Vector3f position) {
@@ -36,8 +36,14 @@ public class Vertex {
 		return this;
 	}
 	
+	public Vertex setTextureCoordinates(Vector3f textureCoordinates) {
+		this.textureCoordinates.set(textureCoordinates);
+		return this;
+	}
+	
 	public Vertex setTextureCoordinates(Vector2f textureCoordinates) {
-		this.textureCoordinates.receive(textureCoordinates);
+		this.textureCoordinates.x = textureCoordinates.x;
+		this.textureCoordinates.y = textureCoordinates.y;
 		return this;
 	}
 	

@@ -37,6 +37,14 @@ public class Material<S extends ShaderProgram> {
 		return shaderProgram;
 	}
 	
+	public boolean hasTexture() {
+		return texture != null;
+	}
+	
+	public boolean hasColor() {
+		return color != null;
+	}
+	
 	public void bind() {
 		shaderProgram.snapPixelsUniform.set(snapPixels);
 	}

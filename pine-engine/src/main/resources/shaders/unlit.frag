@@ -2,8 +2,8 @@
 
 in vec4 fColor;
 in vec2 fTexCoords;
-in float fTexId;
-in float fIsArrayTexture;
+flat in float fTexId;
+flat in float fIsArrayTexture;
 
 uniform sampler2D uTexture;
 #if PLATFORM != MACOS
