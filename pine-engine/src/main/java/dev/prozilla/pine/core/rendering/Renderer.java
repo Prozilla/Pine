@@ -11,8 +11,13 @@ import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
+import dev.prozilla.pine.core.component.camera.CameraData;
+import dev.prozilla.pine.core.component.light.SunLight;
+import dev.prozilla.pine.core.rendering.light.CascadeShadow;
+import dev.prozilla.pine.core.rendering.light.ShadowBuffer;
 import dev.prozilla.pine.core.rendering.material.Material;
 import dev.prozilla.pine.core.rendering.material.UnlitMaterial;
+import dev.prozilla.pine.core.rendering.shader.LitShaderProgram;
 import dev.prozilla.pine.core.rendering.shader.ShaderProgram;
 import dev.prozilla.pine.core.state.Tracker;
 import dev.prozilla.pine.core.state.config.Config;
@@ -62,6 +67,11 @@ public class Renderer implements Initializable, Destructible {
 	private int viewWidth;
 	private int viewHeight;
 	
+	// Shadows
+	private ShadowBuffer shadowBuffer;
+	private final CascadeShadow[] cascadeShadows;
+	private boolean shadowsActive;
+	
 	// Fonts
 	private Font defaultFont;
 	private Font debugFont;
@@ -73,6 +83,9 @@ public class Renderer implements Initializable, Destructible {
 	private Color fallbackColor;
 	private RenderMode renderMode;
 	private boolean snapPixels;
+	private boolean shadowsEnabled;
+	private int shadowMapSize;
+	private int shadowDistance;
 	
 	private final Application application;
 	private final Tracker tracker;
@@ -93,6 +106,11 @@ public class Renderer implements Initializable, Destructible {
 		viewMatrix = new Matrix4f();
 		modelMatrix = new Matrix4f();
 		renderPass = RenderPass.DEFAULT;
+		
+		cascadeShadows = new CascadeShadow[CascadeShadow.COUNT];
+		for (int i = 0; i < cascadeShadows.length; i++) {
+			cascadeShadows[i] = new CascadeShadow();
+		}
 	}
 	
 	@Override
@@ -166,6 +184,16 @@ public class Renderer implements Initializable, Destructible {
 		config.rendering.renderMode.read((renderMode) -> {
 			this.renderMode = renderMode;
 			updateRenderMode();
+		});
+		
+		config.rendering.enableShadows.read((enableShadows) -> {
+			shadowsEnabled = enableShadows;
+		});
+		config.rendering.shadowMapSize.read((shadowMapSize) -> {
+			this.shadowMapSize = shadowMapSize;
+		});
+		config.rendering.shadowDistance.read((shadowDistance) -> {
+			this.shadowDistance = shadowDistance;
 		});
 	}
 	
@@ -591,6 +619,10 @@ public class Renderer implements Initializable, Destructible {
 			return;
 		}
 		
+		if (renderPass == RenderPass.SHADOW) {
+			texture = null;
+		}
+		
 		// Check if previous batch should be finished first
 		if (vertices.remaining() < getProgram().getStrideLength() * 6 || (texture != null && activeTexture != null && !texture.hasEqualLocation(activeTexture))) {
 			flush();
@@ -737,6 +769,10 @@ public class Renderer implements Initializable, Destructible {
 			return;
 		}
 		
+		if (renderPass == RenderPass.SHADOW) {
+			texture = null;
+		}
+		
 		// Check if previous batch should be finished first
 		if (vertices.remaining() < getProgram().getStrideLength() * 3 || (texture != null && activeTexture != null && !texture.hasEqualLocation(activeTexture))) {
 			flush();
@@ -803,6 +839,94 @@ public class Renderer implements Initializable, Destructible {
 		activeTexture = newTexture;
 	}
 	
+	/**
+	 * Renders the depth maps of the cascade shadows from the point of view of the sunlight.
+	 * @param camera The camera that the cascades are fitted to
+	 * @param sunLight The sunlight that casts the shadows
+	 * @param drawCasters Draws everything that casts shadows
+	 */
+	public void renderShadows(CameraData camera, SunLight sunLight, Runnable drawCasters) {
+		requireRendering();
+		
+		// Shadows need a depth buffer, a sun and a camera that has been sized
+		boolean canRender = shadowsEnabled && camera != null && sunLight != null
+			                    && camera.width > 0 && camera.height > 0 && getConfig().enableDepthTest.getValue();
+		if (!canRender) {
+			if (shadowsActive) {
+				ShaderProgram.getLit().shadowsEnabledUniform.set(false);
+				shadowsActive = false;
+			}
+			return;
+		}
+		
+		// (Re)create shadow buffer when the size changed
+		if (shadowBuffer != null && shadowBuffer.getSize() != shadowMapSize) {
+			shadowBuffer.destroy();
+			shadowBuffer = null;
+		}
+		if (shadowBuffer == null) {
+			ShadowBuffer buffer = new ShadowBuffer(shadowMapSize);
+			try {
+				buffer.init();
+				shadowBuffer = buffer;
+			} catch (Exception e) {
+				logger.error("Failed to create shadow buffer", e);
+				buffer.destroy();
+				shadowsEnabled = false;
+				return;
+			}
+		}
+		
+		CascadeShadow.update(cascadeShadows, camera.getViewMatrix(), camera.getProjectionMatrix(),
+			camera.nearClipPlane, camera.farClipPlane, shadowDistance, sunLight.getDirection());
+		
+		// Remember state of the main render
+		Matrix4f cameraViewMatrix = viewMatrix;
+		Matrix4f cameraProjectionMatrix = projectionMatrix;
+		int previousRenderedVertices = renderedVertices;
+		int previousTotalVertices = totalVertices;
+		
+		for (int i = 0; i < cascadeShadows.length; i++) {
+			CascadeShadow cascade = cascadeShadows[i];
+			
+			flush();
+			resetRegion();
+			shadowBuffer.bind(i);
+			setRenderPass(RenderPass.SHADOW);
+			setViewMatrix(cascade.viewMatrix);
+			setProjectionMatrix(cascade.projectionMatrix);
+			// Pixel snapping would use the viewport of the camera
+			ShaderProgram.getDepth().snapPixelsUniform.set(false);
+			
+			drawCasters.run();
+			flush();
+		}
+		
+		// Restore state of the main render
+		shadowBuffer.unbind();
+		if (frameBufferObject != null) {
+			frameBufferObject.bind(); // Also restores the viewport
+		} else {
+			glViewport(0, 0, viewWidth, viewHeight);
+		}
+		setRenderPass(RenderPass.DEFAULT);
+		setViewMatrix(cameraViewMatrix);
+		setProjectionMatrix(cameraProjectionMatrix);
+		ShaderProgram.getDepth().snapPixelsUniform.set(snapPixels);
+		renderedVertices = previousRenderedVertices;
+		totalVertices = previousTotalVertices;
+		
+		// Pass cascades and depth maps to the lit shader
+		LitShaderProgram litProgram = ShaderProgram.getLit();
+		litProgram.init();
+		for (int i = 0; i < cascadeShadows.length; i++) {
+			litProgram.setCascade(i, cascadeShadows[i].projViewMatrix, cascadeShadows[i].splitDistance);
+		}
+		litProgram.shadowsEnabledUniform.set(true);
+		shadowBuffer.bindTextures();
+		shadowsActive = true;
+	}
+	
 	//endregion Drawing
 	
 	/**
@@ -856,7 +980,7 @@ public class Renderer implements Initializable, Destructible {
 		
 		// Dispose of shader programs
 		ShaderProgram.destroyAll();
-		Destructible.destroy(vertexArrayObject, vertexBufferObject, frameBufferObject);
+		Destructible.destroy(vertexArrayObject, vertexBufferObject, frameBufferObject, shadowBuffer);
 		
 		// Dispose of fonts
 		Destructible.destroy(defaultFont, debugFont);
@@ -973,7 +1097,9 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	public ShaderProgram getProgram() {
-		if (renderPass == RenderPass.OVERLAY) {
+		if (renderPass == RenderPass.SHADOW) {
+			return ShaderProgram.getDepth();
+		} else if (renderPass == RenderPass.OVERLAY) {
 			return program;
 		}
 		
@@ -1012,6 +1138,10 @@ public class Renderer implements Initializable, Destructible {
 			program.snapPixelsUniform.set(true);
 		}
 		program.viewportSizeUniform.setValue(new Vector2f(viewWidth, viewHeight));
+	}
+	
+	public int getRenderPass() {
+		return renderPass;
 	}
 	
 	public FloatBuffer getVertices() {

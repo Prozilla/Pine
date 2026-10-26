@@ -32,9 +32,9 @@ import java.nio.FloatBuffer;
  */
 public class Matrix3f extends MatrixFloat<Vector3f, Matrix3f> {
 
-    private float m00, m01, m02;
-    private float m10, m11, m12;
-    private float m20, m21, m22;
+    public float m00, m01, m02;
+    public float m10, m11, m12;
+    public float m20, m21, m22;
 
     /**
      * Creates a 3x3 identity matrix.
@@ -64,7 +64,7 @@ public class Matrix3f extends MatrixFloat<Vector3f, Matrix3f> {
     }
 
     @Override
-    public final Matrix3f setIdentity() {
+    public Matrix3f setIdentity() {
         m00 = 1f;
         m11 = 1f;
         m22 = 1f;
@@ -77,6 +77,50 @@ public class Matrix3f extends MatrixFloat<Vector3f, Matrix3f> {
         m21 = 0f;
         
         return this;
+    }
+    
+    @Override
+    public Matrix3f invert() {
+        float a = Math.fma(m00, m11, -m10 * m01);
+        float b = Math.fma(m20, m01, -m00 * m21);
+        float c = Math.fma(m10, m21, -m20 * m11);
+        float d = Math.fma(a, m22, Math.fma(b, m12, c * m02));
+        float s = 1f / d;
+        
+        float n00 = Math.fma(m11, m22, -m12 * m21) * s;
+        float n10 = Math.fma(m12, m20, -m10 * m22) * s;
+        float n20 = c * s;
+        
+        float n01 = Math.fma(m02, m21, -m01 * m22) * s;
+        float n11 = Math.fma(m00, m22, -m02 * m20) * s;
+        float n21 = b * s;
+        
+        float n02 = Math.fma(m01, m12, -m02 * m11) * s;
+        float n12 = Math.fma(m02, m10, -m00 * m12) * s;
+        float n22 = a * s;
+        
+        m00 = n00;
+        m10 = n10;
+        m20 = n20;
+        
+        m01 = n01;
+        m11 = n11;
+        m21 = n21;
+        
+        m02 = n02;
+        m12 = n12;
+        m22 = n22;
+        
+        return this;
+    }
+    
+    @Override
+    public float getDeterminant() {
+        float a = Math.fma(m00, m11, -m10 * m01);
+        float b = Math.fma(m20, m01, -m00 * m21);
+        float c = Math.fma(m10, m21, -m20 * m11);
+        
+        return Math.fma(a, m22, Math.fma(b, m12, c * m02));
     }
     
     @Override

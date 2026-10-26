@@ -1,13 +1,14 @@
 package dev.prozilla.pine.core.rendering.shader;
 
+import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.light.SunLight;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.rendering.Vertex;
-import dev.prozilla.pine.core.rendering.shader.uniform.ColorUniform;
-import dev.prozilla.pine.core.rendering.shader.uniform.FloatUniform;
-import dev.prozilla.pine.core.rendering.shader.uniform.Vector3fUniform;
+import dev.prozilla.pine.core.rendering.light.CascadeShadow;
+import dev.prozilla.pine.core.rendering.light.ShadowBuffer;
+import dev.prozilla.pine.core.rendering.shader.uniform.*;
 
 import java.nio.FloatBuffer;
 
@@ -23,6 +24,11 @@ public class LitShaderProgram extends ShaderProgram {
 	
 	public ColorUniform skyLightColorUniform;
 	public FloatUniform skyLightIntensityUniform;
+	
+	public BooleanUniform shadowsEnabledUniform;
+	public Matrix4fUniform[] cascadeProjViewUniforms;
+	public FloatUniform[] cascadeSplitUniforms;
+	public IntUniform[] shadowMapUniforms;
 	
 	public final static String VERTEX_SHADER_PATH = "/shaders/lit.vert";
 	public final static String FRAGMENT_SHADER_PATH = "/shaders/lit.frag";
@@ -64,6 +70,17 @@ public class LitShaderProgram extends ShaderProgram {
 
 		skyLightColorUniform = new ColorUniform("uSkyLight.color", this, Color.white(), false);
 		skyLightIntensityUniform = new FloatUniform("uSkyLight.intensity", this, 0.25f);
+		
+		shadowsEnabledUniform = new BooleanUniform("uShadowsEnabled", this);
+		
+		cascadeProjViewUniforms = new Matrix4fUniform[CascadeShadow.COUNT];
+		cascadeSplitUniforms = new FloatUniform[CascadeShadow.COUNT];
+		shadowMapUniforms = new IntUniform[CascadeShadow.COUNT];
+		for (int i = 0; i < CascadeShadow.COUNT; i++) {
+			cascadeProjViewUniforms[i] = new Matrix4fUniform("uCascades[" + i + "].projView", this);
+			cascadeSplitUniforms[i] = new FloatUniform("uCascades[" + i + "].splitDistance", this);
+			shadowMapUniforms[i] = new IntUniform("uShadowMaps[" + i + "]", this, ShadowBuffer.FIRST_UNIT + i);
+		}
 	}
 	
 	@Override
@@ -92,6 +109,11 @@ public class LitShaderProgram extends ShaderProgram {
 	public void setSkyLight(Color color, float intensity) {
 		skyLightColorUniform.setValue(color);
 		skyLightIntensityUniform.set(intensity);
+	}
+	
+	public void setCascade(int index, Matrix4f projectionView, float splitDistance) {
+		cascadeProjViewUniforms[index].setValue(projectionView);
+		cascadeSplitUniforms[index].set(splitDistance);
 	}
 	
 	@Override

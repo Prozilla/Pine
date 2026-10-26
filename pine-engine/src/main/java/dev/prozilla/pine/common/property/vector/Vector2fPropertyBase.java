@@ -1,5 +1,6 @@
 package dev.prozilla.pine.common.property.vector;
 
+import dev.prozilla.pine.common.math.matrix.MatrixFloat;
 import dev.prozilla.pine.common.math.vector.VectorFloat;
 import dev.prozilla.pine.common.property.FloatProperty;
 import dev.prozilla.pine.common.property.Property;
@@ -7,7 +8,7 @@ import dev.prozilla.pine.common.property.Property;
 /**
  * A vector property with 2 dimensions.
  */
-public interface Vector2fPropertyBase<T extends VectorFloat<T>> extends Property<T> {
+public interface Vector2fPropertyBase<T extends VectorFloat<T, M>, M extends MatrixFloat<T, M>> extends Property<T> {
 	
 	default FloatProperty xProperty() {
 		return this::getX;

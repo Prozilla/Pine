@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.math.vector;
 
 import dev.prozilla.pine.common.math.MathUtils;
+import dev.prozilla.pine.common.math.matrix.Matrix2f;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,7 +11,7 @@ import java.util.Objects;
 /**
  * 2-dimensional vector with floating point precision. GLSL equivalent to <code>vec2</code>.
  */
-public class Vector2f extends VectorFloat<Vector2f> {
+public class Vector2f extends VectorFloat<Vector2f, Matrix2f> {
 	
 	public float x;
 	public float y;
@@ -147,6 +148,17 @@ public class Vector2f extends VectorFloat<Vector2f> {
 	
 	public float distanceSquared(float x, float y) {
 		return MathUtils.square(x - this.x) + MathUtils.square(y - this.y);
+	}
+	
+	@Override
+	public Vector2f multiply(Matrix2f matrix) {
+		float x = matrix.m00 * this.x + matrix.m01 * this.y;
+		float y = matrix.m10 * this.x + matrix.m11 * this.y;
+		
+		this.x = x;
+		this.y = y;
+		
+		return this;
 	}
 	
 	@Override

@@ -1,11 +1,12 @@
 package dev.prozilla.pine.common.property.vector.delegated;
 
+import dev.prozilla.pine.common.math.matrix.MatrixFloat;
 import dev.prozilla.pine.common.math.vector.VectorFloat;
 import dev.prozilla.pine.common.property.FloatProperty;
 import dev.prozilla.pine.common.property.vector.Vector4fPropertyBase;
 import dev.prozilla.pine.common.util.checks.Checks;
 
-public abstract class DelegatedVector4fPropertyBase<T extends VectorFloat<T>> extends DelegatedVector3fPropertyBase<T> implements Vector4fPropertyBase<T> {
+public abstract class DelegatedVector4fPropertyBase<T extends VectorFloat<T, M>, M extends MatrixFloat<T, M>> extends DelegatedVector3fPropertyBase<T, M> implements Vector4fPropertyBase<T, M> {
 	
 	protected final FloatProperty w;
 	

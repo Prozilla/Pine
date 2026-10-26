@@ -9,8 +9,8 @@ import java.nio.FloatBuffer;
  */
 public class Matrix2f extends MatrixFloat<Vector2f, Matrix2f> {
 
-    private float m00, m01;
-    private float m10, m11;
+    public float m00, m01;
+    public float m10, m11;
 
     /**
      * Creates a 2x2 identity matrix.
@@ -33,7 +33,7 @@ public class Matrix2f extends MatrixFloat<Vector2f, Matrix2f> {
     }
 
     @Override
-    public final Matrix2f setIdentity() {
+    public Matrix2f setIdentity() {
         m00 = 1f;
         m11 = 1f;
         
@@ -41,6 +41,28 @@ public class Matrix2f extends MatrixFloat<Vector2f, Matrix2f> {
         m10 = 0f;
         
         return this;
+    }
+    
+    @Override
+    public Matrix2f invert() {
+        float s = 1f / Math.fma(m00, m11, -m01 * m10);
+        
+        float n00 = m11 * s;
+        float n01 = -m01 * s;
+        float n10 = -m10 * s;
+        float n11 = m00 * s;
+        
+        m00 = n00;
+        m01 = n01;
+        m10 = n10;
+        m11 = n11;
+        
+        return this;
+    }
+    
+    @Override
+    public float getDeterminant() {
+        return Math.fma(m00, m11, -m01 * m10);
     }
     
     @Override

@@ -84,6 +84,8 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 	 */
 	@Override
 	public void render(Renderer renderer) {
+		renderer.renderShadows(scene.getCameraData(), scene.getSunLight(), () -> renderShadowCasters(renderer));
+		
 		for (int i = RenderPass.FIRST; i <= RenderPass.LAST; i++) {
 			int currentPass = i;
 			// TODO: Support separate cameras
@@ -94,6 +96,14 @@ public class SystemManager extends ECSManager implements Initializable, InputHan
 				}
 			});
 		}
+	}
+	
+	private void renderShadowCasters(Renderer renderer) {
+		renderSystems.forEach((renderSystem) -> {
+			if (renderSystem.castsShadows()) {
+				renderSystem.render(renderer);
+			}
+		});
 	}
 	
 	/**

@@ -1,6 +1,9 @@
 #version 410 core
 
 const float SPECULAR_POWER = 50;
+const int NUM_CASCADES = 3; // Must match CascadeShadow.COUNT
+const float SHADOW_BIAS = 0.0005;
+const bool DEBUG_SHADOWS = false;
 
 in vec3 fPosition;
 in vec3 fNormal;
@@ -8,6 +11,7 @@ in vec4 fColor;
 in vec2 fTexCoords;
 flat in float fTexId;
 flat in float fIsArrayTexture;
+in vec3 fWorldPosition;
 
 uniform sampler2D uTexture;
 #if PLATFORM != MACOS
@@ -33,6 +37,14 @@ struct SkyLight {
     float intensity;
 };
 uniform SkyLight uSkyLight;
+
+struct Cascade {
+    mat4 projView;
+    float splitDistance;
+};
+uniform Cascade uCascades[NUM_CASCADES];
+uniform sampler2D uShadowMaps[NUM_CASCADES];
+uniform bool uShadowsEnabled;
 
 uniform mat4 uView;
 
@@ -64,6 +76,37 @@ vec3 computeSkyLight(SkyLight light, vec3 ambient, vec3 diffuse) {
     return light.intensity * light.color * ambient * diffuse;
 }
 
+int computeCascadeIndex(float viewZ) {
+    int cascade = 0;
+    for (int i = 0; i < NUM_CASCADES - 1; i++) {
+        if (viewZ < uCascades[i].splitDistance) {
+            cascade = i + 1;
+        }
+    }
+    return cascade;
+}
+
+float sampleShadowMap(int cascade, vec2 coords) {
+    if (cascade == 0) return texture(uShadowMaps[0], coords).r;
+    if (cascade == 1) return texture(uShadowMaps[1], coords).r;
+    return texture(uShadowMaps[2], coords).r;
+}
+
+float computeShadow(int cascade, vec3 worldPosition) {
+    if (!uShadowsEnabled) {
+        return 1.0;
+    }
+
+    vec4 lightPosition = uCascades[cascade].projView * vec4(worldPosition, 1.0);
+    vec3 coords = lightPosition.xyz / lightPosition.w * 0.5 + 0.5;
+    if (coords.z > 1.0 || coords.x < 0.0 || coords.x > 1.0 || coords.y < 0.0 || coords.y > 1.0) {
+        return 1.0;
+    }
+
+    float closestDepth = sampleShadowMap(cascade, coords.xy);
+    return coords.z - SHADOW_BIAS > closestDepth ? 0.0 : 1.0;
+}
+
 void main() {
     if (!gl_FrontFacing) {
         discard;
@@ -88,16 +131,24 @@ void main() {
         base = fColor * textureColor;
     }
 
+    if (base.a <= 0.0) {
+        discard;
+    }
+
     vec3 normal = fNormal;
     if (length(normal) > 0) {
         normal = normalize(normal);
     }
 
-    vec3 ambient = computeSkyLight(uSkyLight, uSurface.ambient.rgb, base.rgb);
-    vec3 lit = ambient + computeSunlight(base.rgb, uSurface.specular.rgb, uSunlight, fPosition, normal);
+    int cascade = computeCascadeIndex(fPosition.z);
+    float shadow = computeShadow(cascade, fWorldPosition);
 
-    if (base.a <= 0.0) {
-        discard;
+    vec3 ambient = computeSkyLight(uSkyLight, uSurface.ambient.rgb, base.rgb);
+    vec3 lit = ambient + computeSunlight(base.rgb, uSurface.specular.rgb, uSunlight, fPosition, normal) * shadow;
+
+    if (DEBUG_SHADOWS && uShadowsEnabled) {
+        vec3 tint = cascade == 0 ? vec3(1.0, 0.25, 0.25) : (cascade == 1 ? vec3(0.25, 1.0, 0.25) : vec3(0.25, 0.25, 1.0));
+        lit *= tint;
     }
 
     color = vec4(lit, base.a);

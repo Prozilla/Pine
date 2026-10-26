@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.property.vector;
 
 import dev.prozilla.pine.common.Transmittable;
+import dev.prozilla.pine.common.math.matrix.Matrix2f;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.property.Property;
 import org.jetbrains.annotations.Contract;
@@ -9,7 +10,7 @@ import org.jetbrains.annotations.Contract;
  * A property with a {@link Vector2f} value.
  */
 @FunctionalInterface
-public interface Vector2fProperty extends Vector2fPropertyBase<Vector2f>, Transmittable<Vector2f> {
+public interface Vector2fProperty extends Vector2fPropertyBase<Vector2f, Matrix2f>, Transmittable<Vector2f> {
 	
 	@Override
 	default void transmit(Vector2f target) {
