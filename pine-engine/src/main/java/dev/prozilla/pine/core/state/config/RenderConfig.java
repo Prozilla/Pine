@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.state.config;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.RenderMode;
 import dev.prozilla.pine.core.state.config.option.BooleanConfigOption;
+import dev.prozilla.pine.core.state.config.option.IntConfigOption;
 import dev.prozilla.pine.core.state.config.option.ObjectConfigOption;
 
 import java.util.Objects;
@@ -19,6 +20,9 @@ public class RenderConfig {
 	public static final ConfigKey<RenderMode> RENDER_MODE = new ConfigKey<>("renderMode", RenderMode.class);
 	public static final ConfigKey<Boolean> SNAP_PIXELS = new ConfigKey<>("snapPixels", Boolean.class);
 	public static final ConfigKey<Boolean> SNAP_TEXT = new ConfigKey<>("snapText", Boolean.class);
+	public static final ConfigKey<Boolean> ENABLE_SHADOWS = new ConfigKey<>("enableShadows", Boolean.class);
+	public static final ConfigKey<Integer> SHADOW_MAP_SIZE = new ConfigKey<>("shadowMapSize", Integer.class);
+	public static final ConfigKey<Integer> SHADOW_DISTANCE = new ConfigKey<>("shadowDistance", Integer.class);
 	
 	// Predefines options
 	/** Used as the render color for objects when no color is passed to the renderer. Only accepts values that are not {@code null}. Defaults to white. */
@@ -31,5 +35,11 @@ public class RenderConfig {
 	public final ObjectConfigOption<RenderMode> renderMode = new ObjectConfigOption<>(RenderMode.DEFAULT, Objects::nonNull);
 	/** Enables snapping of pixels to whole numbers. Defaults to <code>false</code>. */
 	public final BooleanConfigOption snapPixels = new BooleanConfigOption(false);
+	/** Enables shadow casting. Defaults to <code>true</code>. */
+	public final BooleanConfigOption enableShadows = new BooleanConfigOption(true);
+	/** The width and height of each shadow map, in pixels. Only accepts positive values. Defaults to <code>2048</code>. */
+	public final IntConfigOption shadowMapSize = new IntConfigOption(2048, (size) -> size > 0);
+	/** The maximum distance from the camera that receives shadows. Only accepts positive values. Defaults to <code>100</code>. */
+	public final IntConfigOption shadowDistance = new IntConfigOption(100, (distance) -> distance > 0);
 	
 }

@@ -1,10 +1,11 @@
 package dev.prozilla.pine.common.property.vector.delegated;
 
+import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 import dev.prozilla.pine.common.property.FloatProperty;
 import dev.prozilla.pine.common.property.vector.Vector4fProperty;
 
-public class DelegatedVector4fProperty extends DelegatedVector4fPropertyBase<Vector4f> implements Vector4fProperty {
+public class DelegatedVector4fProperty extends DelegatedVector4fPropertyBase<Vector4f, Matrix4f> implements Vector4fProperty {
 	
 	/**
 	 * Creates a {@link Vector4fProperty} by combining four float properties.

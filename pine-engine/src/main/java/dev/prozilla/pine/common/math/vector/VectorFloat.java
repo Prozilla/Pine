@@ -1,13 +1,14 @@
 package dev.prozilla.pine.common.math.vector;
 
 import dev.prozilla.pine.common.math.MathUtils;
+import dev.prozilla.pine.common.math.matrix.MatrixFloat;
 
 import java.nio.FloatBuffer;
 
 /**
  * Abstract class for vectors with floating point precision.
  */
-public abstract class VectorFloat<V extends VectorFloat<V>> extends Vector<V> {
+public abstract class VectorFloat<V extends VectorFloat<V, M>, M extends MatrixFloat<V, M>> extends Vector<V> {
 	
 	public abstract V set(float value);
 	
@@ -26,6 +27,8 @@ public abstract class VectorFloat<V extends VectorFloat<V>> extends Vector<V> {
 	 * @return Dot product of this vector multiplied by another vector
 	 */
 	abstract public float dot(V vector);
+	
+	abstract public V multiply(M matrix);
 	
 	/**
 	 * Stores the vector in a given buffer.

@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.math.vector;
 
 import dev.prozilla.pine.common.math.MathUtils;
+import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,7 +11,7 @@ import java.util.Objects;
 /**
  * 4-dimensional vector with floating point precision. GLSL equivalent to <code>vec4</code>.
  */
-public class Vector4f extends VectorFloat<Vector4f> {
+public class Vector4f extends VectorFloat<Vector4f, Matrix4f> {
 	
 	public float x;
 	public float y;
@@ -174,6 +175,18 @@ public class Vector4f extends VectorFloat<Vector4f> {
 	
 	public float distanceSquared(float x, float y, float z, float w) {
 		return MathUtils.square(x - this.x) + MathUtils.square(y - this.y) + MathUtils.square(z - this.z) + MathUtils.square(w - this.w);
+	}
+	
+	@Override
+	public Vector4f multiply(Matrix4f mat) {
+		float x = this.x, y = this.y, z = this.z, w = this.w;
+		
+		this.x = Math.fma(mat.m00, x, Math.fma(mat.m01, y, Math.fma(mat.m02, z, mat.m03 * w)));
+		this.y = Math.fma(mat.m10, x, Math.fma(mat.m11, y, Math.fma(mat.m12, z, mat.m13 * w)));
+		this.z = Math.fma(mat.m20, x, Math.fma(mat.m21, y, Math.fma(mat.m22, z, mat.m23 * w)));
+		this.w = Math.fma(mat.m30, x, Math.fma(mat.m31, y, Math.fma(mat.m32, z, mat.m33 * w)));
+		
+		return this;
 	}
 	
 	@Override

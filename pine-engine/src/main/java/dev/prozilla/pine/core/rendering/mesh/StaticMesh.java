@@ -9,6 +9,7 @@ import dev.prozilla.pine.core.rendering.Vertex;
 import dev.prozilla.pine.core.rendering.VertexArrayObject;
 import dev.prozilla.pine.core.rendering.VertexBufferObject;
 import dev.prozilla.pine.core.rendering.shader.ShaderProgram;
+import dev.prozilla.pine.core.system.render.RenderPass;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
@@ -73,6 +74,11 @@ public class StaticMesh extends Mesh {
 	
 	@Override
 	public void draw(Renderer renderer, TextureAsset texture, Color color) {
+		if (renderer.getRenderPass() == RenderPass.SHADOW) {
+			super.draw(renderer, texture, color);
+			return;
+		}
+		
 		ShaderProgram program = renderer.getProgram();
 		boolean generated = generate();
 		if (generated || !Objects.equals(program, this.program) || !Objects.equals(color, this.color) || !Objects.equals(texture, this.texture)) {

@@ -6,13 +6,25 @@ import dev.prozilla.pine.common.util.checks.Checks;
 
 import java.nio.FloatBuffer;
 
-public abstract class MatrixFloat<V extends VectorFloat<V>, M extends MatrixFloat<V, M>> implements Transferable<M> {
+public abstract class MatrixFloat<V extends VectorFloat<V, M>, M extends MatrixFloat<V, M>> implements Transferable<M> {
 	
 	/**
 	 * Sets this matrix to the identity matrix.
 	 * @return This matrix.
 	 */
 	public abstract M setIdentity();
+	
+	/**
+	 * Inverts this matrix.
+	 * @return This matrix.
+	 */
+	public abstract M invert();
+	
+	/**
+	 * Calculates the determinant of this matrix.
+	 * @return The determinant of this matrix.
+	 */
+	public abstract float getDeterminant();
 	
 	/**
 	 * Copies the values from a given matrix into this matrix.

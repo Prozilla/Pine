@@ -9,6 +9,7 @@ public final class MeshRenderSystem extends RenderSystem {
 	
 	public MeshRenderSystem() {
 		super(MeshRenderer.class);
+		setCastsShadows(true);
 	}
 	
 	@Override

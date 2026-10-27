@@ -19,6 +19,7 @@ out vec4 fColor;
 out vec2 fTexCoords;
 flat out float fTexId;
 flat out float fIsArrayTexture;
+out vec3 fWorldPosition;
 
 vec4 snapToPixel(vec4 position) {
     vec2 normalizedPosition = position.xy / position.w;
@@ -44,6 +45,7 @@ void main() {
     }
     gl_Position = position;
     fPosition = modelViewPosition.xyz;
+    fWorldPosition = (uModel * vec4(vPosition, 1.0)).xyz;
 
     // Calculate normal
     // TODO: Support non-uniform scaling

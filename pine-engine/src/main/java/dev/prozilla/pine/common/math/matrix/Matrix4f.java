@@ -23,6 +23,7 @@
  */
 package dev.prozilla.pine.common.math.matrix;
 
+import dev.prozilla.pine.common.math.MathUtils;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.math.vector.Vector4f;
 
@@ -33,10 +34,10 @@ import java.nio.FloatBuffer;
  */
 public class Matrix4f extends MatrixFloat<Vector4f, Matrix4f> {
 
-    private float m00, m01, m02, m03;
-    private float m10, m11, m12, m13;
-    private float m20, m21, m22, m23;
-    private float m30, m31, m32, m33;
+    public float m00, m01, m02, m03;
+    public float m10, m11, m12, m13;
+    public float m20, m21, m22, m23;
+    public float m30, m31, m32, m33;
 
     /**
      * Creates a 4x4 identity matrix.
@@ -75,7 +76,7 @@ public class Matrix4f extends MatrixFloat<Vector4f, Matrix4f> {
     }
 
     @Override
-    public final Matrix4f setIdentity() {
+    public Matrix4f setIdentity() {
         m00 = 1f;
         m11 = 1f;
         m22 = 1f;
@@ -95,6 +96,85 @@ public class Matrix4f extends MatrixFloat<Vector4f, Matrix4f> {
         m32 = 0f;
         
         return this;
+    }
+    
+    @Override
+    public Matrix4f invert() {
+        float a = m00 * m11 - m10 * m01;
+        float b = m00 * m21 - m20 * m01;
+        float c = m00 * m31 - m30 * m01;
+        float d = m10 * m21 - m20 * m11;
+        float e = m10 * m31 - m30 * m11;
+        float f = m20 * m31 - m30 * m21;
+        float g = m02 * m13 - m12 * m03;
+        float h = m02 * m23 - m22 * m03;
+        float i = m02 * m33 - m32 * m03;
+        float j = m12 * m23 - m22 * m13;
+        float k = m12 * m33 - m32 * m13;
+        float l = m22 * m33 - m32 * m23;
+        
+        float det = a * l - b * k + c * j + d * i - e * h + f * g;
+        det = 1f / det;
+        
+        float n00 = Math.fma(m11, l, Math.fma(-m21, k, m31 * j)) * det;
+        float n10 = Math.fma(-m10, l, Math.fma(m20, k, -m30 * j)) * det;
+        float n20 = Math.fma(m13, f, Math.fma(-m23, e, m33 * d)) * det;
+        float n30 = Math.fma(-m12, f, Math.fma(m22, e, -m32 * d)) * det;
+        
+        float n01 = Math.fma(-m01, l, Math.fma(m21, i, -m31 * h)) * det;
+        float n11 = Math.fma(m00, l, Math.fma(-m20, i, m30 * h)) * det;
+        float n21 = Math.fma(-m03, f, Math.fma(m23, c, -m33 * b)) * det;
+        float n31 = Math.fma(m02, f, Math.fma(-m22, c, m32 * b)) * det;
+        
+        float n02 = Math.fma(m01, k, Math.fma(-m11, i, m31 * g)) * det;
+        float n12 = Math.fma(-m00, k, Math.fma(m10, i, -m30 * g)) * det;
+        float n22 = Math.fma(m03, e, Math.fma(-m13, c, m33 * a)) * det;
+        float n32 = Math.fma(-m02, e, Math.fma(m12, c, -m32 * a)) * det;
+        
+        float n03 = Math.fma(-m01, j, Math.fma(m11, h, -m21 * g)) * det;
+        float n13 = Math.fma(m00, j, Math.fma(-m10, h, m20 * g)) * det;
+        float n23 = Math.fma(-m03, d, Math.fma(m13, b, -m23 * a)) * det;
+        float n33 = Math.fma(m02, d, Math.fma(-m12, b, m22 * a)) * det;
+        
+        m00 = n00;
+        m10 = n10;
+        m20 = n20;
+        m30 = n30;
+        
+        m01 = n01;
+        m11 = n11;
+        m21 = n21;
+        m31 = n31;
+        
+        m02 = n02;
+        m12 = n12;
+        m22 = n22;
+        m32 = n32;
+        
+        m03 = n03;
+        m13 = n13;
+        m23 = n23;
+        m33 = n33;
+        
+        return this;
+    }
+    
+    @Override
+    public float getDeterminant() {
+        float a = m00 * m11 - m10 * m01;
+        float b = m00 * m21 - m20 * m01;
+        float c = m00 * m31 - m30 * m01;
+        float d = m10 * m21 - m20 * m11;
+        float e = m10 * m31 - m30 * m11;
+        float f = m20 * m31 - m30 * m21;
+        float g = m02 * m13 - m12 * m03;
+        float h = m02 * m23 - m22 * m03;
+        float i = m02 * m33 - m32 * m03;
+        float j = m12 * m23 - m22 * m13;
+        float k = m12 * m33 - m32 * m13;
+        float l = m22 * m33 - m32 * m23;
+        
+        return a * l - b * k + c * j + d * i - e * h + f * g;
     }
     
     /**
@@ -136,6 +216,14 @@ public class Matrix4f extends MatrixFloat<Vector4f, Matrix4f> {
         m32 *= rm22;
         
         return this;
+    }
+    
+    public float getPerspectiveNear() {
+        return m23 / (m32 + m22);
+    }
+    
+    public float getPerspectiveFar() {
+        return m23 / (m22 - m32);
     }
     
     /**
@@ -192,6 +280,56 @@ public class Matrix4f extends MatrixFloat<Vector4f, Matrix4f> {
         m12 = n12;
         m22 = n22;
         m32 = n32;
+        
+        return this;
+    }
+    
+    public Matrix4f lookAt(Vector3f eye, Vector3f center, Vector3f up) {
+        // Compute direction from position to lookAt
+        float dirX, dirY, dirZ;
+        dirX = eye.x - center.x;
+        dirY = eye.y - center.y;
+        dirZ = eye.z - center.z;
+        
+        // Normalize direction
+        float invDirLength = 1f / MathUtils.sqrt(dirX * dirX + dirY * dirY + dirZ * dirZ);
+        dirX *= invDirLength;
+        dirY *= invDirLength;
+        dirZ *= invDirLength;
+        
+        // left = up x direction
+        float leftX, leftY, leftZ;
+        leftX = up.y * dirZ - up.z * dirY;
+        leftY = up.z * dirX - up.x * dirZ;
+        leftZ = up.x * dirY - up.y * dirX;
+        
+        // normalize left
+        float invLeftLength = 1f / MathUtils.sqrt(leftX * leftX + leftY * leftY + leftZ * leftZ);
+        leftX *= invLeftLength;
+        leftY *= invLeftLength;
+        leftZ *= invLeftLength;
+        
+        // up = direction x left
+        float upnX = dirY * leftZ - dirZ * leftY;
+        float upnY = dirZ * leftX - dirX * leftZ;
+        float upnZ = dirX * leftY - dirY * leftX;
+        
+        m00 = leftX;
+        m10 = upnX;
+        m20 = dirX;
+        m30 = 0.0f;
+        m01 = leftY;
+        m11 = upnY;
+        m21 = dirY;
+        m31 = 0.0f;
+        m02 = leftZ;
+        m12 = upnZ;
+        m22 = dirZ;
+        m32 = 0.0f;
+        m03 = -(leftX * eye.x + leftY * eye.y + leftZ * eye.z);
+        m13 = -(upnX * eye.x + upnY * eye.y + upnZ * eye.z);
+        m23 = -(dirX * eye.x + dirY * eye.y + dirZ * eye.z);
+        m33 = 1.0f;
         
         return this;
     }

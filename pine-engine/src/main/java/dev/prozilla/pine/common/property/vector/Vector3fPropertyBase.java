@@ -1,12 +1,13 @@
 package dev.prozilla.pine.common.property.vector;
 
+import dev.prozilla.pine.common.math.matrix.MatrixFloat;
 import dev.prozilla.pine.common.math.vector.VectorFloat;
 import dev.prozilla.pine.common.property.FloatProperty;
 
 /**
  * A vector property with 3 dimensions.
  */
-public interface Vector3fPropertyBase<T extends VectorFloat<T>> extends Vector2fPropertyBase<T> {
+public interface Vector3fPropertyBase<T extends VectorFloat<T, M>, M extends MatrixFloat<T, M>> extends Vector2fPropertyBase<T, M> {
 	
 	default FloatProperty zProperty() {
 		return this::getZ;

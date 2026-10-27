@@ -14,11 +14,13 @@ import java.util.Comparator;
 public abstract class RenderSystemBase extends SystemBase implements Renderable {
 	
 	protected int renderPass;
+	protected boolean castsShadows;
 	
 	@SafeVarargs
 	public RenderSystemBase(Class<? extends Component>... componentTypes) {
 		super(componentTypes);
 		renderPass = RenderPass.DEFAULT;
+		castsShadows = false;
 	}
 	
 	protected void setRenderPass(int renderPass) {
@@ -27,6 +29,14 @@ public abstract class RenderSystemBase extends SystemBase implements Renderable 
 	
 	public int getRenderPass() {
 		return renderPass;
+	}
+	
+	public void setCastsShadows(boolean castsShadows) {
+		this.castsShadows = castsShadows;
+	}
+	
+	public boolean castsShadows() {
+		return castsShadows;
 	}
 	
 	/**

@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.math.vector;
 
 import dev.prozilla.pine.common.math.MathUtils;
+import dev.prozilla.pine.common.math.matrix.Matrix3f;
 import dev.prozilla.pine.common.property.selection.WrapMode;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,7 +11,7 @@ import java.util.Objects;
 /**
  * 3-dimensional vector with floating point precision. GLSL equivalent to <code>vec3</code>.
  */
-public class Vector3f extends VectorFloat<Vector3f> {
+public class Vector3f extends VectorFloat<Vector3f, Matrix3f> {
 	
 	public float x;
 	public float y;
@@ -165,6 +166,17 @@ public class Vector3f extends VectorFloat<Vector3f> {
 	
 	public float distanceSquared(float x, float y, float z) {
 		return MathUtils.square(x - this.x) + MathUtils.square(y - this.y) + MathUtils.square(z - this.z);
+	}
+	
+	@Override
+	public Vector3f multiply(Matrix3f matrix) {
+		float x = this.x, y = this.y, z = this.z;
+		
+		this.x = Math.fma(matrix.m00, x, Math.fma(matrix.m01, y, matrix.m02 * z));
+		this.y = Math.fma(matrix.m10, x, Math.fma(matrix.m11, y, matrix.m12 * z));
+		this.z = Math.fma(matrix.m20, x, Math.fma(matrix.m21, y, matrix.m22 * z));
+		
+		return this;
 	}
 	
 	@Override

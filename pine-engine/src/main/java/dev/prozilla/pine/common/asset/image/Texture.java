@@ -131,7 +131,21 @@ public class Texture implements TextureAsset, Printable, Cloneable<Texture> {
 	 * @param pixels Pixel data of the image
 	 */
 	public void uploadData(int internalFormat, int width, int height, int format, ByteBuffer pixels) {
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, pixels);
+		uploadData(internalFormat, width, height, format, GL_UNSIGNED_BYTE, pixels);
+	}
+	
+	/**
+	 * Uploads image data with specified internal format, width, height and
+	 * image format.
+	 * @param internalFormat Internal format of the image data
+	 * @param width Width of the image
+	 * @param height Height of the image
+	 * @param format Format of the image data
+	 * @param type Type of the image data.
+	 * @param pixels Pixel data of the image
+	 */
+	public void uploadData(int internalFormat, int width, int height, int format, int type, ByteBuffer pixels) {
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, pixels);
 	}
 	
 	@Override
