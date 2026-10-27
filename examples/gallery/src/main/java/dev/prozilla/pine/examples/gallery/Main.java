@@ -17,9 +17,10 @@ public class Main {
 		applicationBuilder.setEnableLocalStorage(true);
 		applicationBuilder.setFullscreen(true);
 		applicationBuilder.getConfig().stopOnException.set(true);
+//		applicationBuilder.getConfig().rendering.enableShadows.set(false);
 		
 		Application application = applicationBuilder.build();
-		application.addScene(new MainScene());
+		application.addScene(new ObjectScene());
 		application.addScene(new SponzaScene());
 		application.addScene(new BedroomScene());
 		application.addScene(new BreakfastRoomScene());

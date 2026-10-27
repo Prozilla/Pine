@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MainScene extends Scene {
+public class ObjectScene extends Scene {
 	
 	private Vector2i previousCursorPosition;
 	
@@ -53,7 +53,7 @@ public class MainScene extends Scene {
 	private static final float MIN_DISTANCE = 3f;
 	private static final float MAX_DISTANCE = 100f;
 	
-	public MainScene() {
+	public ObjectScene() {
 		cameraYaw = -45f;
 		cameraPitch = -30f;
 		cameraDistance = 25f;
@@ -62,6 +62,8 @@ public class MainScene extends Scene {
 	@Override
 	protected void load() {
 		super.load();
+		
+		cameraData.setSkybox("skybox/right.jpg");
 		
 		Prefab parentPrefab = new Prefab();
 		List<MeshPrefab<StaticMesh>> meshPrefabs = new ArrayList<>();

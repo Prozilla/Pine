@@ -118,8 +118,8 @@ vec3 desaturate(vec3 color, float factor) {
     return mix(color, vec3(greyscale), factor);
 }
 
-vec3 computeFog(vec3 position, vec3 color, Fog fog, vec3 ambientLight, Sunlight sunlight) {
-    vec3 fogColor = fog.color * (ambientLight + sunlight.color * sunlight.intensity);
+vec3 computeFog(vec3 position, vec3 color, Fog fog) {
+    vec3 fogColor = fog.color;
     float distance = length(position);
     float fogFactor = 1.0 / exp((distance * fog.density) * (distance * fog.density));
     fogFactor = clamp(fogFactor, 0.0, 1.0);
@@ -168,7 +168,7 @@ void main() {
 
     vec3 ambient = computeSkyLight(uSkyLight, uSurface.ambient.rgb, base.rgb);
     vec3 lit = ambient + computeSunlight(base.rgb, uSurface.specular.rgb, uSunlight, fPosition, normal) * shadow;
-    vec3 foggy = computeFog(fPosition, lit, uFog, uSurface.ambient.rgb, uSunlight);
+    vec3 foggy = computeFog(fPosition, lit, uFog);
 
     if (DEBUG_SHADOWS && uShadowsEnabled) {
         vec3 tint = cascade == 0 ? vec3(1.0, 0.25, 0.25) : (cascade == 1 ? vec3(0.25, 1.0, 0.25) : vec3(0.25, 0.25, 1.0));

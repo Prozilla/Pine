@@ -4,6 +4,8 @@ import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.rendering.Vertex;
 import dev.prozilla.pine.core.rendering.material.SkyboxMaterial;
+import dev.prozilla.pine.core.rendering.shader.uniform.ColorUniform;
+import dev.prozilla.pine.core.rendering.shader.uniform.FloatUniform;
 import dev.prozilla.pine.core.rendering.shader.uniform.IntUniform;
 
 import java.nio.FloatBuffer;
@@ -13,6 +15,10 @@ import static org.lwjgl.opengl.GL11.glDepthMask;
 public class SkyboxShaderProgram extends ShaderProgram {
 	
 	public IntUniform cubemapUniform;
+	
+	public ColorUniform fogColorUniform;
+	public FloatUniform fogStartUniform;
+	public FloatUniform fogEndUniform;
 	
 	private Vertex vertex;
 	
@@ -45,7 +51,12 @@ public class SkyboxShaderProgram extends ShaderProgram {
 	@Override
 	protected void setupUniforms() {
 		super.setupUniforms();
+		
 		cubemapUniform = new IntUniform("uCubemap", this, 0);
+		
+		fogColorUniform = new ColorUniform("uFogColor", this, Color.gray(), false);
+		fogStartUniform = new FloatUniform("uFogStart", this, 0);
+		fogEndUniform = new FloatUniform("uFogEnd", this, 0.5f);
 	}
 	
 	public void drawSkybox(Renderer renderer, SkyboxMaterial material) {
