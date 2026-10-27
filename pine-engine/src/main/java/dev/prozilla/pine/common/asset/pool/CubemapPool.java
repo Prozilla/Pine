@@ -77,10 +77,12 @@ public final class CubemapPool extends AssetPool<Cubemap> implements MultiAssetL
 	
 	public void setDefaultTextureWrap(Texture.Wrap defaultTextureWrap) {
 		this.defaultTextureWrap = defaultTextureWrap;
+		textureWrap = defaultTextureWrap;
 	}
 	
 	public void setDefaultTextureFilter(Texture.Filter defaultTextureFilter) {
 		this.defaultTextureFilter = defaultTextureFilter;
+		textureFilter = defaultTextureFilter;
 	}
 	
 }

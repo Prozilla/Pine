@@ -25,6 +25,7 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 	private float[] uvArray;
 	/** If {@code true}, the vertices, triangles and UVs of this mesh will be re-generated before the next draw call. */
 	private boolean isDirty;
+	private int version;
 	private boolean isGenerating;
 	private boolean smoothShading;
 	
@@ -53,6 +54,7 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 		this.uvArray = uvArray;
 		this.origin = Checks.isNotNull(origin, "origin");
 		isDirty = false;
+		version = 0;
 		isGenerating = false;
 		smoothShading = true;
 	}
@@ -79,7 +81,7 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 	 * @return {@code true} if this mesh was regenerated, meaning it was previously dirty.
 	 */
 	public boolean generate() {
-		if (!isDirty || isGenerating) {
+		if (!isDirty() || isGenerating) {
 			return false;
 		}
 		
@@ -103,6 +105,7 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 		
 		isDirty = false;
 		isGenerating = false;
+		version++;
 		
 		return true;
 	}
@@ -123,6 +126,7 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 	
 	public void recalculateNormals() {
 		normals = generateNormals();
+		version++;
 	}
 	
 	protected float[] generateNormals() {
@@ -310,11 +314,16 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 	@Override
 	public void markAsDirty() {
 		isDirty = true;
+		version++;
 	}
 	
 	@Override
 	public boolean isDirty() {
 		return isDirty;
+	}
+	
+	public int getVersion() {
+		return version;
 	}
 	
 	/**

@@ -55,6 +55,7 @@ public class TextInputNode extends Component {
 		
 		if (textListener != null) {
 			getInput().removeTextListener(textListener);
+			textListener = null;
 		}
 	}
 	

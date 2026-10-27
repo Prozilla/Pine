@@ -176,14 +176,17 @@ public final class TexturePool extends AssetPool<TextureAsset> implements MultiA
 	
 	public void setDefaultTextureArrayPolicy(TextureArrayPolicy defaultTextureArrayPolicy) {
 		this.defaultTextureArrayPolicy = defaultTextureArrayPolicy;
+		textureArrayPolicy = defaultTextureArrayPolicy;
 	}
 	
 	public void setDefaultTextureWrap(Texture.Wrap defaultTextureWrap) {
 		this.defaultTextureWrap = defaultTextureWrap;
+		textureWrap = defaultTextureWrap;
 	}
 	
 	public void setDefaultTextureFilter(Texture.Filter defaultTextureFilter) {
 		this.defaultTextureFilter = defaultTextureFilter;
+		textureFilter = defaultTextureFilter;
 	}
 	
 	/**

@@ -201,6 +201,7 @@ public class ModelPool extends AssetPool<Model> {
 	
 	public void setDefaultFlags(int defaultFlags) {
 		this.defaultFlags = defaultFlags;
+		flags = defaultFlags;
 	}
 	
 }

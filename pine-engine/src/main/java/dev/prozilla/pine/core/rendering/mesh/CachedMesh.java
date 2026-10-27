@@ -1,8 +1,7 @@
 package dev.prozilla.pine.core.rendering.mesh;
 
+import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.util.checks.Checks;
-
-import java.util.Objects;
 
 /**
  * An optimized static mesh that only gets uploaded to the GPU when its source gets changed.
@@ -16,15 +15,19 @@ import java.util.Objects;
 public class CachedMesh<M extends Mesh> extends StaticMesh {
 	
 	private M source;
+	private int sourceVersion;
 	
 	public CachedMesh(M source) {
-		super(source.getVertices(), source.getTriangles(), source.getNormals(), source.getUVArray(), source.getOrigin().clone());
+		super(Checks.isNotNull(source, "source").getVertices(), source.getTriangles(), source.getNormals(), source.getUVArray(), source.getOrigin());
 		this.source = source;
+		sourceVersion = source.getVersion();
 	}
 	
 	@Override
 	protected float[] generateVertices() {
-		return source.getVertices();
+		float[] vertices = source.getVertices();
+		sourceVersion = source.getVersion();
+		return vertices;
 	}
 	
 	@Override
@@ -34,7 +37,7 @@ public class CachedMesh<M extends Mesh> extends StaticMesh {
 	
 	@Override
 	protected float[] generateNormals() {
-		return source.getNormals();
+		return source != null ? source.getNormals() : null;
 	}
 	
 	@Override
@@ -44,7 +47,7 @@ public class CachedMesh<M extends Mesh> extends StaticMesh {
 	
 	@Override
 	public boolean isDirty() {
-		return super.isDirty() || source.isDirty();
+		return super.isDirty() || source.isDirty() || sourceVersion != source.getVersion();
 	}
 	
 	public M getSource() {
@@ -53,10 +56,44 @@ public class CachedMesh<M extends Mesh> extends StaticMesh {
 	
 	public void setSource(M source) {
 		Checks.isNotNull(source, "source");
-		if (Objects.equals(this.source, source)) {
+		if (this.source == source) {
 			return;
 		}
 		this.source = source;
+		markAsDirty();
+	}
+	
+	@Override
+	public void setOriginX(float x) {
+		source.setOriginX(x);
+	}
+	
+	@Override
+	public void setOriginY(float y) {
+		source.setOriginY(y);
+	}
+	
+	@Override
+	public void setOriginZ(float z) {
+		source.setOriginZ(z);
+	}
+	
+	@Override
+	public void setOrigin(Vector3f origin) {
+		source.setOrigin(origin);
+	}
+	
+	@Override
+	public void setSmoothShading(boolean smoothShading) {
+		source.setSmoothShading(smoothShading);
+	}
+	
+	@Override
+	public void recalculateNormals() {
+		if (source == null) {
+			return;
+		}
+		source.recalculateNormals();
 		markAsDirty();
 	}
 	

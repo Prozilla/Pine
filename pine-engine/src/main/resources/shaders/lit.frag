@@ -34,6 +34,12 @@ struct SkyLight {
 };
 uniform SkyLight uSkyLight;
 
+struct Fog {
+    vec3 color;
+    float density;
+};
+uniform Fog uFog;
+
 uniform mat4 uView;
 
 out vec4 color;
@@ -64,6 +70,23 @@ vec3 computeSkyLight(SkyLight light, vec3 ambient, vec3 diffuse) {
     return light.intensity * light.color * ambient * diffuse;
 }
 
+vec3 desaturate(vec3 color, float factor) {
+    float greyscale = dot(color.rgb, vec3(0.3, 0.59, 0.11));
+    return mix(color, vec3(greyscale), factor);
+}
+
+vec3 computeFog(vec3 position, vec3 color, Fog fog, vec3 ambientLight, Sunlight sunlight) {
+    vec3 fogColor = fog.color * (ambientLight + sunlight.color * sunlight.intensity);
+    float distance = length(position);
+    float fogFactor = 1.0 / exp((distance * fog.density) * (distance * fog.density));
+    fogFactor = clamp(fogFactor, 0.0, 1.0);
+
+    float desaturation = 1 - (fogFactor + 3.0) / 4.0;
+    vec3 desaturatedColor = desaturate(color.rgb, desaturation);
+
+    return mix(fogColor, desaturatedColor, fogFactor);
+}
+
 void main() {
     if (!gl_FrontFacing) {
         discard;
@@ -88,6 +111,10 @@ void main() {
         base = fColor * textureColor;
     }
 
+    if (base.a <= 0.0) {
+        discard;
+    }
+
     vec3 normal = fNormal;
     if (length(normal) > 0) {
         normal = normalize(normal);
@@ -95,10 +122,7 @@ void main() {
 
     vec3 ambient = computeSkyLight(uSkyLight, uSurface.ambient.rgb, base.rgb);
     vec3 lit = ambient + computeSunlight(base.rgb, uSurface.specular.rgb, uSunlight, fPosition, normal);
+    vec3 foggy = computeFog(fPosition, lit, uFog, uSurface.ambient.rgb, uSunlight);
 
-    if (base.a <= 0.0) {
-        discard;
-    }
-
-    color = vec4(lit, base.a);
+    color = vec4(foggy, base.a);
 }

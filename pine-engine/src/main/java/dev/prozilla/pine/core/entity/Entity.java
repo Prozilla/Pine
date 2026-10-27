@@ -78,22 +78,19 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	 */
 	@Override
 	public void destroy() {
-		// TODO: handle proper scene cleanUp when application stops
-		if (!application.isRunning() || application.isLoading()) {
-			return;
-		}
-		
 		destroyChildren();
 		destroyComponents();
 		
-		// Remove child from parent
-		if (transform.parent != null) {
-			transform.parent.getEntity().removeChild(this);
-		}
-		
-		// Unregister entity from scene
-		if (isRegistered()) {
-			scene.removeEntity(this);
+		if (application.isRunning() && !application.isLoading()) {
+			// Remove child from parent
+			if (transform.parent != null) {
+				transform.parent.getEntity().removeChild(this);
+			}
+			
+			// Unregister entity from scene
+			if (isRegistered()) {
+				scene.removeEntity(this);
+			}
 		}
 		
 		invoke(EventType.DESTROY, this);

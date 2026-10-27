@@ -24,6 +24,9 @@ public class LitShaderProgram extends ShaderProgram {
 	public ColorUniform skyLightColorUniform;
 	public FloatUniform skyLightIntensityUniform;
 	
+	public ColorUniform fogColorUniform;
+	public FloatUniform fogDensityUniform;
+	
 	public final static String VERTEX_SHADER_PATH = "/shaders/lit.vert";
 	public final static String FRAGMENT_SHADER_PATH = "/shaders/lit.frag";
 	
@@ -64,6 +67,9 @@ public class LitShaderProgram extends ShaderProgram {
 
 		skyLightColorUniform = new ColorUniform("uSkyLight.color", this, Color.white(), false);
 		skyLightIntensityUniform = new FloatUniform("uSkyLight.intensity", this, 0.25f);
+		
+		fogColorUniform = new ColorUniform("uFog.color", this, Color.gray(), false);
+		fogDensityUniform = new FloatUniform("uFog.density", this, 0.01f);
 	}
 	
 	@Override
@@ -92,6 +98,11 @@ public class LitShaderProgram extends ShaderProgram {
 	public void setSkyLight(Color color, float intensity) {
 		skyLightColorUniform.setValue(color);
 		skyLightIntensityUniform.set(intensity);
+	}
+	
+	public void setFog(Color color, float density) {
+		fogColorUniform.setValue(color);
+		fogDensityUniform.set(density);
 	}
 	
 	@Override

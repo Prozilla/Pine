@@ -20,6 +20,10 @@ public class Main {
 		
 		Application application = applicationBuilder.build();
 		application.addScene(new MainScene());
+		application.addScene(new SponzaScene());
+		application.addScene(new BedroomScene());
+		application.addScene(new BreakfastRoomScene());
+		application.addScene(new ConferenceScene());
 		application.run();
 	}
 }

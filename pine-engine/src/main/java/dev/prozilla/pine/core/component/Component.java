@@ -34,7 +34,7 @@ public abstract class Component implements Printable, Destructible, EntityProvid
 	 */
 	@Override
 	public void destroy() {
-		if (entity != null) {
+		if (entity != null && getApplication().isRunning() && !getApplication().isLoading()) {
 			entity.removeComponent(this);
 		}
 	}

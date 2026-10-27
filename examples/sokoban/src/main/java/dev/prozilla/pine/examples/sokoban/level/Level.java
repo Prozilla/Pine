@@ -39,9 +39,19 @@ public class Level {
 		   O  OO   O
 		   OOOOOOOOO
 		""";
+	public static final String LEVEL_2 = """
+		  OOO
+		  O.0
+		000x000
+		0.xsx.0
+		000x000
+		  0.0
+		  000
+		""";
 	public static final String[] LEVELS = new String[]{
 		LEVEL_0,
-		LEVEL_1
+		LEVEL_1,
+		LEVEL_2
 	};
 	
 	public Level() {
