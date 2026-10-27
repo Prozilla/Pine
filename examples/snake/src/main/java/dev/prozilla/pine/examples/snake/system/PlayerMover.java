@@ -1,5 +1,6 @@
 package dev.prozilla.pine.examples.snake.system;
 
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
@@ -35,6 +36,7 @@ public class PlayerMover extends UpdateSystem {
 		// Check if it's time to move
 		playerData.timeUntilNextMove -= deltaTime;
 		if (playerData.timeUntilNextMove <= 0) {
+			playerData.direction = playerData.nextDirection;
 			Vector2i currentCoordinate = headTile.getCoordinate();
 			Vector2i nextCoordinate = currentCoordinate.clone();
 			
@@ -52,7 +54,7 @@ public class PlayerMover extends UpdateSystem {
 				return;
 			}
 			
-			boolean shouldGrow = playerData.tails.isEmpty();
+			boolean shouldGrow = playerData.tails.size() < PlayerData.INITIAL_TAIL_LENGTH;
 			
 			// Check for collisions
 			TileRenderer nextTile = headTile.getGroup().getTile(nextCoordinate);
@@ -99,23 +101,25 @@ public class PlayerMover extends UpdateSystem {
 				
 				// Add tail segment and increase score
 				TileRenderer newTailTile = headTile.getGroup().addTile(playerTailPrefab);
-				playerData.tails.add(newTailTile.getComponent(PlayerTailData.class));
-				playerData.score++;
-				
-				// Link tail segments
-				PlayerTailData tailData = newTailTile.getComponent(PlayerTailData.class);
-				if (playerData.tails.size() == 1) {
-					tailData.previousTile = headTile;
-				} else {
-					TileRenderer previousTile = playerData.tails.get(playerData.tails.size() - 2).currentTile;
-					tailData.previousTile = previousTile;
-					previousTile.getComponent(PlayerTailData.class).nextTile = newTailTile;
+				if (newTailTile != null) {
+					playerData.tails.add(newTailTile.getComponent(PlayerTailData.class));
+					playerData.score++;
+					
+					// Link tail segments
+					PlayerTailData tailData = newTailTile.getComponent(PlayerTailData.class);
+					if (playerData.tails.size() == 1) {
+						tailData.previousTile = headTile;
+					} else {
+						TileRenderer previousTile = playerData.tails.get(playerData.tails.size() - 2).currentTile;
+						tailData.previousTile = previousTile;
+						previousTile.getComponent(PlayerTailData.class).nextTile = newTailTile;
+					}
 				}
 			}
 			
 			// Change sprite based on current direction
 			int spriteRegionY = GameScene.CELL_SIZE * (3 - playerData.direction);
-			sprite.getMesh().setRegion(0, spriteRegionY, GameScene.CELL_SIZE, GameScene.CELL_SIZE);
+			setRegion(sprite, spriteRegionY);
 			
 			// Reset timer
 			playerData.timeUntilNextMove += PlayerData.TIME_BETWEEN_MOVES;
@@ -133,5 +137,15 @@ public class PlayerMover extends UpdateSystem {
 			case 3 -> offset.x = delta;
 		}
 		sprite.getMesh().setOffset(offset);
+	}
+	
+	private void setRegion(SpriteRenderer sprite, int regionOffsetY) {
+		float size = GameScene.CELL_SIZE;
+		TextureAsset texture = sprite.material.texture;
+		float textureWidth = texture.getWidth();
+		float textureHeight = texture.getHeight();
+		
+		sprite.getMesh().setRegion(0, regionOffsetY, size, size);
+		sprite.getMesh().getUVModifier().setRegion(0.5f / textureWidth, (regionOffsetY + 0.5f) / textureHeight, 1f - 0.5f / textureWidth, (regionOffsetY + size - 0.5f) / textureHeight);
 	}
 }

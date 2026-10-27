@@ -36,8 +36,8 @@ public class PlayerInput extends InputSystem {
 			newDirection = 3;
 		}
 		
-		if (newDirection != -1 && (playerData.previousMoveDirection - newDirection) % 2 != 0) {
-			playerData.direction = newDirection;
+		if (newDirection != -1 && (playerData.direction - newDirection) % 2 != 0) {
+			playerData.nextDirection = newDirection;
 		}
 	}
 }

@@ -4,10 +4,16 @@ import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.component.particle.ParticleBurstEmitter;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
+import dev.prozilla.pine.examples.snake.GameScene;
 
 public class AppleData extends Component {
 	
 	public ParticleBurstEmitter particleEmitter;
+	public final GameScene gameScene;
+	
+	public AppleData(GameScene gameScene) {
+		this.gameScene = gameScene;
+	}
 	
 	public void eat() {
 		TileRenderer tileRenderer = getComponent(TileRenderer.class);
@@ -15,6 +21,8 @@ public class AppleData extends Component {
 		
 		particleEmitter.emit(position.x + tileRenderer.size / 2f, position.y + tileRenderer.size / 2f, position.z);
 		tileRenderer.remove();
+		
+		gameScene.spawnApple();
 	}
 	
 }

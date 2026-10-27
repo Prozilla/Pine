@@ -9,11 +9,11 @@ import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.sprite.GridPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
 import dev.prozilla.pine.core.scene.Scene;
-import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.examples.snake.entity.*;
 import dev.prozilla.pine.examples.snake.system.PlayerInput;
 import dev.prozilla.pine.examples.snake.system.PlayerMover;
+import dev.prozilla.pine.examples.snake.system.PlayerTailRenderer;
 import dev.prozilla.pine.examples.snake.system.PlayerTailUpdater;
 
 import java.util.Random;
@@ -33,20 +33,14 @@ public class GameScene extends Scene {
 	// Resources
 	public Font font;
 	
-	// Timing
-	private Timer.Interval appleSpawnInterval;
-	
 	private static final Random random = new Random();
 	
 	// Constants
-	private static final float MIN_TIME_BETWEEN_SPAWNS = 2;
-	private static final float MAX_TIME_BETWEEN_SPAWNS = 5;
-	
 	public static final int CELL_SIZE = 40;
-	public static final int SCALE = 1;
+	public static final int SCALE = 2;
 	
-	public static final int GRID_WIDTH = 20;
-	public static final int GRID_HEIGHT = 20;
+	public static final int GRID_WIDTH = 10;
+	public static final int GRID_HEIGHT = 10;
 	
 	public static final int WORLD_WIDTH = CELL_SIZE * GRID_WIDTH * SCALE;
 	public static final int WORLD_HEIGHT = CELL_SIZE * GRID_HEIGHT * SCALE;
@@ -54,6 +48,8 @@ public class GameScene extends Scene {
 	public static final int MIN_GRID_Y = GRID_HEIGHT / -2;
 	public static final int MAX_GRID_X = GRID_WIDTH / 2;
 	public static final int MAX_GRID_Y = GRID_HEIGHT / 2;
+	
+	public static final int APPLE_COUNT = 5;
 	
 	@Override
 	protected void load() {
@@ -66,12 +62,13 @@ public class GameScene extends Scene {
 		// Create prefabs
 		PlayerHeadPrefab playerHeadPrefab = new PlayerHeadPrefab(this);
 		BackgroundPrefab backgroundPrefab = new BackgroundPrefab();
-		applePrefab = new ApplePrefab();
+		applePrefab = new ApplePrefab(this);
 		
 		// Add systems
 		addSystem(new PlayerInput());
 		addSystem(new PlayerMover());
 		addSystem(new PlayerTailUpdater());
+		addSystem(new PlayerTailRenderer());
 		
 		// Create grid prefabs
 		GridPrefab backgroundGridPrefab = new GridPrefab(CELL_SIZE);
@@ -100,7 +97,9 @@ public class GameScene extends Scene {
 		gameOverText = nodeRoot.addChild(new GameOverPrefab(font));
 		
 		// Reset state
-		appleSpawnInterval = getTimer().startRandomInterval(this::spawnApple, MIN_TIME_BETWEEN_SPAWNS, MAX_TIME_BETWEEN_SPAWNS, true);
+		for (int i = 0; i < APPLE_COUNT; i++) {
+			spawnApple();
+		}
 		gameOver = false;
 	}
 	
@@ -118,12 +117,7 @@ public class GameScene extends Scene {
 	@Override
 	public void update(float deltaTime) throws IllegalStateException {
 		gameOverText.setActive(gameOver);
-		
 		super.update(deltaTime);
-		
-		if (gameOver) {
-			appleSpawnInterval.destroy();
-		}
 	}
 	
 	public void spawnApple() {

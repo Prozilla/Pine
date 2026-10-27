@@ -1,5 +1,6 @@
 package dev.prozilla.pine.examples.snake.system;
 
+import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
@@ -22,6 +23,10 @@ public class PlayerTailUpdater extends UpdateSystem {
 		PlayerTailData tailData = chunk.getComponent(PlayerTailData.class);
 		TileRenderer tile = chunk.getComponent(TileRenderer.class);
 		SpriteRenderer sprite = chunk.getComponent(SpriteRenderer.class);
+		
+		if (tailData.previousTile == null) {
+			return;
+		}
 		
 		Vector2i direction = tailData.previousTile.getCoordinate().clone().subtract(tile.getCoordinate().clone());
 		
@@ -71,6 +76,7 @@ public class PlayerTailUpdater extends UpdateSystem {
 				// Curved tail segment
 				sprite.material.texture = AssetPools.textures.load("snake/snake_body_curved.png");
 				tailData.isCurved = true;
+				sprite.getMesh().setOffset(0, 0);
 				
 				direction.add(otherDirection);
 				
@@ -90,7 +96,20 @@ public class PlayerTailUpdater extends UpdateSystem {
 			}
 		}
 		
-		sprite.getMesh().setRegion(new Vector2f(0, regionOffsetY), new Vector2f(GameScene.CELL_SIZE), new Vector2f(sprite.material.texture.getSize()));
+		setRegion(sprite, regionOffsetY, !tailData.isCurved, tailData.nextTile == null);
 		tailData.isDirty = false;
+	}
+	
+	private void setRegion(SpriteRenderer sprite, float regionOffsetY, boolean insetVertical, boolean insetHorizontal) {
+		float size = GameScene.CELL_SIZE;
+		TextureAsset texture = sprite.material.texture;
+		float textureWidth = texture.getWidth();
+		float textureHeight = texture.getHeight();
+		float insetU = insetHorizontal ? 0.5f / textureWidth : 0f;
+		
+		sprite.getMesh().setRegion(new Vector2f(0, regionOffsetY), new Vector2f(size), new Vector2f(texture.getSize()));
+		if (insetVertical || insetHorizontal) {
+			sprite.getMesh().getUVModifier().setRegion(insetU, (regionOffsetY + 0.5f) / textureHeight, 1f - insetU, (regionOffsetY + size - 0.5f) / textureHeight);
+		}
 	}
 }
