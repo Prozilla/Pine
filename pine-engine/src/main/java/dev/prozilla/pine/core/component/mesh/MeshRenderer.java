@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.component.mesh;
 
 import dev.prozilla.pine.common.asset.image.TextureAsset;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.component.Component;
 import dev.prozilla.pine.core.rendering.material.Material;
@@ -30,6 +31,12 @@ public class MeshRenderer<M extends Mesh> extends Component {
 	
 	public Color getColor() {
 		return material != null ? material.color : null;
+	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		mesh = Destructible.destroy(mesh);
 	}
 	
 }

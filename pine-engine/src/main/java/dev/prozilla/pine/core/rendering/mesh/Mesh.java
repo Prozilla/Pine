@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.rendering.mesh;
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.Memoizable;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
+import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -16,7 +17,7 @@ import java.util.List;
 /**
  * Represents a polygon mesh using a vertex array, UV array and an array of triangles, where each element corresponds to the index of a vertex in the vertex array.
  */
-public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoizable {
+public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoizable, Destructible {
 	
 	protected final Vector3f origin;
 	private float[] vertices;
@@ -350,6 +351,9 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 	public CachedMesh<? extends Mesh> cached() {
 		return new CachedMesh<>(this);
 	}
+	
+	@Override
+	public void destroy() {}
 	
 	public Mesh cloneWithModifiers() {
 		Mesh clone = clone();

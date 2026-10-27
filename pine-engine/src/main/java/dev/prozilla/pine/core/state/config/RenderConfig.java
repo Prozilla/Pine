@@ -19,7 +19,6 @@ public class RenderConfig {
 	public static final ConfigKey<Boolean> ENABLE_DEPTH_TEST = new ConfigKey<>("enableDepthTest", Boolean.class);
 	public static final ConfigKey<RenderMode> RENDER_MODE = new ConfigKey<>("renderMode", RenderMode.class);
 	public static final ConfigKey<Boolean> SNAP_PIXELS = new ConfigKey<>("snapPixels", Boolean.class);
-	public static final ConfigKey<Boolean> SNAP_TEXT = new ConfigKey<>("snapText", Boolean.class);
 	public static final ConfigKey<Boolean> ENABLE_SHADOWS = new ConfigKey<>("enableShadows", Boolean.class);
 	public static final ConfigKey<Integer> SHADOW_MAP_SIZE = new ConfigKey<>("shadowMapSize", Integer.class);
 	public static final ConfigKey<Integer> SHADOW_DISTANCE = new ConfigKey<>("shadowDistance", Integer.class);

@@ -58,6 +58,10 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	
 	public static final String DEFAULT_OUTPUT_VARIABLE = "color";
 	
+	public static final String COLOR_ATTRIBUTE = "vColor";
+	public static final String TEXTURE_ID_ATTRIBUTE = "vTexId";
+	public static final String TEXTURE_TYPE_ATTRIBUTE = "vIsArrayTexture";
+	
 	/**
 	 * Creates a shader program.
 	 */
@@ -214,6 +218,46 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	 */
 	public void disableVertexAttribute(int location) {
 		glDisableVertexAttribArray(location);
+	}
+	
+	public void setVertexAttributeValue(CharSequence name, Color value) {
+		setVertexAttributeValue(requireAttributeLocation(name), value);
+	}
+	
+	public void setVertexAttributeValue(int location, Color value) {
+		setVertexAttributeValue(location, value.toVector4f());
+	}
+	
+	public void setVertexAttributeValue(CharSequence name, float value) {
+		setVertexAttributeValue(requireAttributeLocation(name), value);
+	}
+	
+	public void setVertexAttributeValue(int location, float value) {
+		glVertexAttrib1f(location, value);
+	}
+	
+	public void setVertexAttributeValue(CharSequence name, Vector2f value) {
+		setVertexAttributeValue(requireAttributeLocation(name), value);
+	}
+	
+	public void setVertexAttributeValue(int location, Vector2f value) {
+		glVertexAttrib2f(location, value.x, value.y);
+	}
+	
+	public void setVertexAttributeValue(CharSequence name, Vector3f value) {
+		setVertexAttributeValue(requireAttributeLocation(name), value);
+	}
+	
+	public void setVertexAttributeValue(int location, Vector3f value) {
+		glVertexAttrib3f(location, value.x, value.y, value.z);
+	}
+	
+	public void setVertexAttributeValue(CharSequence name, Vector4f value) {
+		setVertexAttributeValue(requireAttributeLocation(name), value);
+	}
+	
+	public void setVertexAttributeValue(int location, Vector4f value) {
+		glVertexAttrib4f(location, value.x, value.y, value.z, value.w);
 	}
 	
 	/**
