@@ -1182,6 +1182,10 @@ public class Renderer implements Initializable, Destructible {
 		return application.getConfig().rendering;
 	}
 	
+	public CameraData getCameraData() {
+		return application.getCurrentScene().getCameraData();
+	}
+	
 	public Color getFallbackColor() {
 		return fallbackColor;
 	}

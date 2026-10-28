@@ -20,8 +20,8 @@ import dev.prozilla.pine.core.entity.prefab.Prefab;
 import dev.prozilla.pine.core.entity.prefab.camera.CameraPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.LayoutPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
+import dev.prozilla.pine.core.entity.prefab.ui.dev.DebugInfoPrefab;
 import dev.prozilla.pine.core.entity.prefab.ui.dev.DevConsolePrefab;
-import dev.prozilla.pine.core.entity.prefab.ui.dev.FPSCounterPrefab;
 import dev.prozilla.pine.core.rendering.Renderer;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.system.SystemBase;
@@ -87,8 +87,8 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	protected NodeRoot devRoot;
 	protected LayoutPrefab devConsolePrefab;
 	protected Entity devConsole;
-	protected Prefab fpsCounterPrefab;
-	protected Entity fpsCounter;
+	protected Prefab debugInfoPrefab;
+	protected Entity debugInfo;
 	
 	// Lighting
 	protected SunLightCollector sunLightCollector;
@@ -145,7 +145,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	public void setApplication(Application application) {
 		this.application = Checks.isNotNull(application, "application");
 		logger = application.getLogger();
-		fpsCounterPrefab = new FPSCounterPrefab(application.getTimer());
+		debugInfoPrefab = new DebugInfoPrefab(application.getTimer(), application.getTracker());
 	}
 	
 	/**
@@ -341,7 +341,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		if (getInput().getKeyDown(Key.F12)) {
 			toggleDevConsole();
 		} else if (getInput().getKeyDown(Key.F3)) {
-			toggleFPSCounter();
+			toggleDebugInfo();
 		}
 	}
 	
@@ -381,7 +381,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		cameraData = null;
 		devRoot = null;
 		devConsole = null;
-		fpsCounter = null;
+		debugInfo = null;
 		sunLightCollector = null;
 		
 		reset();
@@ -620,26 +620,26 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		}
 	}
 	
-	public void toggleFPSCounter() {
-		toggleFPSCounter(fpsCounter == null || !fpsCounter.isActive());
+	public void toggleDebugInfo() {
+		toggleDebugInfo(debugInfo == null || !debugInfo.isActive());
 	}
 	
-	public void toggleFPSCounter(boolean active) {
+	public void toggleDebugInfo(boolean active) {
 		if (!Application.isDevMode()) {
 			return;
 		}
 		
 		if (active) {
-			if (fpsCounter == null) {
-				if (fpsCounterPrefab == null) {
+			if (debugInfo == null) {
+				if (debugInfoPrefab == null) {
 					return;
 				}
-				fpsCounter = getDevRoot().getEntity().addChild(fpsCounterPrefab);
+				debugInfo = getDevRoot().getEntity().addChild(debugInfoPrefab);
 			}
-			logger.log("Activating FPS counter");
-			fpsCounter.setActive(true);
-		} else if (fpsCounter != null) {
-			fpsCounter.setActive(false);
+			logger.log("Activating debug info");
+			debugInfo.setActive(true);
+		} else if (debugInfo != null) {
+			debugInfo.setActive(false);
 		}
 	}
 	

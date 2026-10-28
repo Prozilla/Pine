@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.rendering.shader;
 
+import dev.prozilla.pine.core.component.camera.CameraData;
 import dev.prozilla.pine.core.rendering.Vertex;
 import dev.prozilla.pine.core.rendering.shader.uniform.FloatUniform;
 
@@ -40,9 +41,17 @@ public class DepthShaderProgram extends ShaderProgram {
 	protected void setupUniforms() {
 		super.setupUniforms();
 		
-		// TODO: automatically read from projection matrix
 		nearUniform = new FloatUniform("uNear", this);
 		farUniform = new FloatUniform("uFar", this);
+	}
+	
+	@Override
+	public void bind() {
+		super.bind();
+		
+		CameraData cameraData = renderer.getApplication().getCurrentScene().getCameraData();
+		nearUniform.set(cameraData.nearClipPlane);
+		farUniform.set(cameraData.farClipPlane);
 	}
 	
 	@Override

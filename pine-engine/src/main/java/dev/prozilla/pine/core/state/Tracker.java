@@ -33,6 +33,14 @@ public class Tracker {
 		componentCount = 0;
 	}
 	
+	public String getTitle() {
+		return application.getWindow().getTitle();
+	}
+	
+	public String getSceneName() {
+		return application.getCurrentScene().name;
+	}
+	
 	/**
 	 * Returns the current amount of frames rendered per second.
 	 * @return Frames per second
