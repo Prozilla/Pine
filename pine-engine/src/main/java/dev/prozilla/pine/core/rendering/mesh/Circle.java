@@ -136,8 +136,8 @@ public class Circle extends Mesh {
 	}
 	
 	@Override
-	public CachedMesh<Circle> cached() {
-		return new CachedMesh<>(this);
+	public MemoizedMesh<Circle> memoized() {
+		return new MemoizedMesh<>(this);
 	}
 	
 	@Override

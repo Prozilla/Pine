@@ -225,8 +225,8 @@ public class Cuboid extends Mesh {
 	}
 	
 	@Override
-	public CachedMesh<Cuboid> cached() {
-		return new CachedMesh<>(this);
+	public MemoizedMesh<Cuboid> memoized() {
+		return new MemoizedMesh<>(this);
 	}
 	
 	@Override

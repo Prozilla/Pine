@@ -262,8 +262,8 @@ public class Line extends Mesh {
 	}
 	
 	@Override
-	public CachedMesh<Line> cached() {
-		return new CachedMesh<>(this);
+	public MemoizedMesh<Line> memoized() {
+		return new MemoizedMesh<>(this);
 	}
 	
 	@Override

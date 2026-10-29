@@ -137,15 +137,12 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		initialSystems = new ArrayList<>();
 		useStandardSystems();
 		
-		devConsolePrefab = new DevConsolePrefab();
-		
 		reset();
 	}
 	
 	public void setApplication(Application application) {
 		this.application = Checks.isNotNull(application, "application");
 		logger = application.getLogger();
-		debugInfoPrefab = new DebugInfoPrefab(application.getTimer(), application.getTracker());
 	}
 	
 	/**
@@ -189,6 +186,13 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		
 		if (overlayCameraData == null) {
 			overlayCameraData = new OverlayCameraData();
+		}
+		
+		if (devConsolePrefab == null) {
+			devConsolePrefab = new DevConsolePrefab();
+		}
+		if (debugInfoPrefab == null) {
+			debugInfoPrefab = new DebugInfoPrefab(application.getTimer(), application.getTracker());
 		}
 		
 		loaded = true;

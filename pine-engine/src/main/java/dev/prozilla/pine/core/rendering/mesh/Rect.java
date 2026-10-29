@@ -150,8 +150,8 @@ public class Rect extends Mesh {
 	}
 	
 	@Override
-	public CachedMesh<Rect> cached() {
-		return new CachedMesh<>(this);
+	public MemoizedMesh<Rect> memoized() {
+		return new MemoizedMesh<>(this);
 	}
 	
 	@Override

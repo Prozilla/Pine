@@ -177,8 +177,8 @@ public class Canvas extends Mesh {
 	}
 	
 	@Override
-	public CachedMesh<Canvas> cached() {
-		return new CachedMesh<>(this);
+	public MemoizedMesh<Canvas> memoized() {
+		return new MemoizedMesh<>(this);
 	}
 	
 	@Override

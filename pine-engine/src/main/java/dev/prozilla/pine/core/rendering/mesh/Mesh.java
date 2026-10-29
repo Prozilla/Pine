@@ -341,15 +341,15 @@ public abstract class Mesh implements MaterialRenderable, Cloneable<Mesh>, Memoi
 	 * @return The optimized static mesh.
 	 */
 	public StaticMesh optimized() {
-		return cached();
+		return memoized();
 	}
 	
 	/**
-	 * Derives an optimized cached mesh from this mesh.
-	 * @return The cached mesh.
+	 * Derives an optimized memoized mesh from this mesh.
+	 * @return The memoized mesh.
 	 */
-	public CachedMesh<? extends Mesh> cached() {
-		return new CachedMesh<>(this);
+	public MemoizedMesh<? extends Mesh> memoized() {
+		return new MemoizedMesh<>(this);
 	}
 	
 	@Override

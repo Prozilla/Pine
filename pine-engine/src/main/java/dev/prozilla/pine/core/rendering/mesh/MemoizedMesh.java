@@ -12,12 +12,12 @@ import dev.prozilla.pine.common.util.checks.Checks;
  * </p>
  * @param <M> The type of the source mesh.
  */
-public class CachedMesh<M extends Mesh> extends StaticMesh {
+public class MemoizedMesh<M extends Mesh> extends StaticMesh {
 	
 	private M source;
 	private int sourceVersion;
 	
-	public CachedMesh(M source) {
+	public MemoizedMesh(M source) {
 		super(Checks.isNotNull(source, "source").getVertices(), source.getTriangles(), source.getNormals(), source.getUVArray(), source.getOrigin());
 		this.source = source;
 		sourceVersion = source.getVersion();
@@ -98,7 +98,7 @@ public class CachedMesh<M extends Mesh> extends StaticMesh {
 	}
 	
 	@Override
-	public CachedMesh<M> cached() {
+	public MemoizedMesh<M> memoized() {
 		return this;
 	}
 	

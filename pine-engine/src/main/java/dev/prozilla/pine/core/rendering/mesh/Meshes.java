@@ -114,8 +114,8 @@ public class Meshes<A extends Mesh, B extends Mesh> extends Mesh {
 	}
 	
 	@Override
-	public CachedMesh<Meshes<A, B>> cached() {
-		return new CachedMesh<>(this);
+	public MemoizedMesh<Meshes<A, B>> memoized() {
+		return new MemoizedMesh<>(this);
 	}
 	
 	@Override
