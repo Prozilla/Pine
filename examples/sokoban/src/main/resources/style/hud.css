@@ -8,8 +8,15 @@
 	gap: 8px;
 	anchor: top-left;
 	margin: 16px;
-	padding: 16px 8px;
-	background-color: #1c1c1c;
+	padding: 16px 0;
+	background-color: #89A4A6;
+	outline-style: solid;
+	outline-color: #9CBBBD;
+	outline-width: 4px;
+}
+
+.goal-counter > p {
+	color: #333333;
 }
 
 .goal-counter-image {
