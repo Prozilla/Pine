@@ -88,11 +88,19 @@ public class GameScene extends Scene {
 			.addObjectCodec(Level.class, Level::encode, Level::decode);
 		GameManager.instance.network = network;
 		
+		// Create message handler
+		ServerMessageHandler messageHandler;
+		if (Application.isDevMode() && GameManager.ENABLE_NETWORK_DEBUGGING) {
+			messageHandler = new ServerMessageLogger(logger)
+				.then(addSystem(new MessageHandler(this)));
+		} else {
+			messageHandler = addSystem(new MessageHandler(this))
+				.then(ServerMessageFilter.unacknowledged())
+				.then(new ServerMessageLogger(logger));
+		}
+		
 		// Add systems
 		addSystem(new NetworkSynchronizer());
-		ServerMessageHandler messageHandler = addSystem(new MessageHandler(this))
-			.then(ServerMessageFilter.unacknowledged())
-			.then(new ServerMessageLogger(logger));
 		addSystem(new PlayerInputHandler(foregroundGrid, network));
 		addSystem(new PlayerMover());
 		addSystem(new CrateUpdater(goalGrid));

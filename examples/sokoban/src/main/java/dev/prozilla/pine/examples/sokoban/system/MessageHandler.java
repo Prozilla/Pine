@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.math.vector.Vector3i;
 import dev.prozilla.pine.core.component.audio.AudioEffectPlayer;
 import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
+import dev.prozilla.pine.core.component.sprite.GridGroup;
 import dev.prozilla.pine.core.component.sprite.TileRenderer;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.EntityChunk;
@@ -107,9 +108,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 			}
 			case LevelPacket(Level level) -> {
 				response.acknowledge();
-				if (GameManager.instance.isMultiplayer() && !GameManager.instance.isHost()) {
-					swapLevel(level);
-				}
+				swapLevel(level);
 			}
 			default -> {}
 		}
@@ -123,7 +122,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 	
 	private void loadLevel(Level level) {
 		GameManager.instance.level = level;
-		logger.log("Loading level");
+		logger.log(String.format("Loading %sx%s level with %s crates", level.size.x, level.size.y, level.getCrateCount()));
 		
 		BlockPrefab blockPrefab = new BlockPrefab(level.blockType);
 		for (Vector2i coordinate : level.walls) {
@@ -319,11 +318,12 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		Level level = new LevelGenerator().generate();
 		swapLevel(level);
 		
-		request.replyToAll(new LevelPacket(level));
+		request.replyToOthers(new LevelPacket(level));
 		request.replyToAll(createSnapshot());
 	}
 	
 	private void swapLevel(Level level) {
+		logger.log("Swapping level");
 		unloadLevel();
 		loadLevel(level);
 		
@@ -346,15 +346,15 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		destroyTiles(scene.getBackgroundGrid());
 	}
 	
-	private void destroyTiles(Iterable<TileRenderer> tiles) {
-		List<Entity> entities = new ArrayList<>();
-		for (TileRenderer tile : tiles) {
+	private void destroyTiles(GridGroup grid) {
+		List<TileRenderer> tiles = new ArrayList<>();
+		for (TileRenderer tile : grid) {
 			if (tile != null && !tile.getEntity().hasTag(EntityTag.PLAYER)) {
-				entities.add(tile.getEntity());
+				tiles.add(tile);
 			}
 		}
-		for (Entity entity : entities) {
-			entity.destroy();
+		for (TileRenderer tile : tiles) {
+			grid.destroyTile(tile);
 		}
 	}
 	

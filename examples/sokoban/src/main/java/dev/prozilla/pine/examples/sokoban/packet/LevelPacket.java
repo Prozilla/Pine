@@ -15,7 +15,7 @@ public record LevelPacket(Level level) implements Packet {
 	
 	@Override
 	public void encode(PacketBuffer buffer) {
-		buffer.writeObject(Level.class);
+		buffer.writeObject(level);
 	}
 	
 	public static LevelPacket decode(PacketBuffer buffer) {
