@@ -14,6 +14,10 @@ public class Level {
 	public List<Vector2i> crates;
 	public Vector2i spawn;
 	
+	public final int blockType;
+	public final int crateType;
+	public final int groundType;
+	
 	public static final String LEVEL_0 = """
 		OOOOOOOOOOOO \s
 		O..  O     OOO
@@ -24,8 +28,7 @@ public class Level {
 		OOOOOO OOx x O
 		  O x  x x x O
 		  O    O     O
-		  OOOOOOOOOOOO
-		""";
+		  OOOOOOOOOOOO""";
 	public static final String LEVEL_1 = """
 		OOOOOO  OOO
 		O..  O OOsOO
@@ -37,17 +40,15 @@ public class Level {
 		   O  xO x O
 		   O x  x  O
 		   O  OO   O
-		   OOOOOOOOO
-		""";
+		   OOOOOOOOO""";
 	public static final String LEVEL_2 = """
 		  OOO
-		  O.0
-		000x000
-		0.xsx.0
-		000x000
-		  0.0
-		  000
-		""";
+		  O.O
+		OOOxOOO
+		O.xsx.O
+		OOOxOOO
+		  O.O
+		  OOO""";
 	public static final String[] LEVELS = new String[]{
 		LEVEL_0,
 		LEVEL_1,
@@ -55,15 +56,18 @@ public class Level {
 	};
 	
 	public Level() {
-		this(new Vector2i(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new Vector2i());
+		this(new Vector2i(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new Vector2i(), 0, 0, 0);
 	}
 	
-	public Level(Vector2i size, List<Vector2i> walls, List<Vector2i> goals, List<Vector2i> crates, Vector2i spawn) {
+	public Level(Vector2i size, List<Vector2i> walls, List<Vector2i> goals, List<Vector2i> crates, Vector2i spawn, int blockType, int crateType, int groundType) {
 		this.size = size;
 		this.walls = walls;
 		this.goals = goals;
 		this.crates = crates;
 		this.spawn = spawn;
+		this.blockType = blockType;
+		this.crateType = crateType;
+		this.groundType = groundType;
 	}
 	
 	public boolean contains(Vector2i coordinate) {
@@ -92,6 +96,9 @@ public class Level {
 		buffer.writeList(level.goals);
 		buffer.writeList(level.crates);
 		buffer.writeVector2i(level.spawn);
+		buffer.writeInt(level.blockType);
+		buffer.writeInt(level.crateType);
+		buffer.writeInt(level.groundType);
 	}
 	
 	public static Level decode(PacketBuffer buffer) {
@@ -100,7 +107,10 @@ public class Level {
 		List<Vector2i> goals = buffer.readList(Vector2i.class);
 		List<Vector2i> crates = buffer.readList(Vector2i.class);
 		Vector2i spawn = buffer.readVector2i();
-		return new Level(size, walls, goals, crates, spawn);
+		int blockType = buffer.readInt();
+		int crateType = buffer.readInt();
+		int groundType = buffer.readInt();
+		return new Level(size, walls, goals, crates, spawn, blockType, crateType, groundType);
 	}
 	
 }

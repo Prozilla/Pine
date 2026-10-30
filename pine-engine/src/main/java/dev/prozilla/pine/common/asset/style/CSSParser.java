@@ -113,8 +113,8 @@ public class CSSParser extends SuppliedSequentialParser<StyleSheet> {
 	}
 	
 	@Override
-	protected void setInput(String input) {
-		super.setInput(input.replaceAll("/\\*.*?\\*/", ""));
+	protected String preprocessInput(String input) {
+		return super.preprocessInput(input.replaceAll("/\\*.*?\\*/", ""));
 	}
 	
 }

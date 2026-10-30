@@ -21,6 +21,7 @@ public class GameManager extends ApplicationManager {
 	private SessionConfig sessionConfig;
 	
 	public static final boolean ENABLE_MUSIC = false;
+	public static final boolean ENABLE_LEVEL_GENERATION = true;
 	public static final int TILE_SIZE = 64;
 	public static final Color BACKGROUND_COLOR = Color.hex("#3399da");
 	

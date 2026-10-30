@@ -47,7 +47,8 @@ public class LevelParser extends SuppliedSequentialParser<Level> {
 	}
 	
 	@Override
-	protected void setInput(String input) {
-		super.setInput(input.trim());
+	protected String preprocessInput(String input) {
+		return input;
 	}
+	
 }

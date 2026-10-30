@@ -57,7 +57,11 @@ public abstract class SequentialParser<T> extends Parser<T> {
 	 */
 	protected void setInput(String input) {
 		resetCursor();
-		this.input = input.trim();
+		this.input = preprocessInput(input);
+	}
+	
+	protected String preprocessInput(String input) {
+		return input.trim();
 	}
 	
 	/**

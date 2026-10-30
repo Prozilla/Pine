@@ -4,8 +4,8 @@ import dev.prozilla.pine.core.entity.prefab.sprite.TilePrefab;
 
 public class GroundPrefab extends TilePrefab {
 	
-	public GroundPrefab() {
-		super("images/ground/ground_06.png");
+	public GroundPrefab(int type) {
+		super(String.format("images/ground/ground_%02d.png", type != 0 ? type + 4 : type + 1));
 	}
 	
 }

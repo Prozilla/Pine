@@ -1,22 +1,26 @@
 package dev.prozilla.pine.examples.flappybird.scene;
 
+import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.asset.view.View;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.property.random.LocalRandomFloatProperty;
 import dev.prozilla.pine.common.property.random.RandomFloatProperty;
 import dev.prozilla.pine.common.system.Directory;
-import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.Entity;
 import dev.prozilla.pine.core.entity.prefab.ui.NodeRootPrefab;
 import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.input.Key;
 import dev.prozilla.pine.core.state.input.gamepad.GamepadButton;
 import dev.prozilla.pine.core.storage.LocalStorage;
-import dev.prozilla.pine.examples.flappybird.EntityTag;
 import dev.prozilla.pine.examples.flappybird.FlappyBird;
 import dev.prozilla.pine.examples.flappybird.GameManager;
 import dev.prozilla.pine.examples.flappybird.component.BackgroundData;
 import dev.prozilla.pine.examples.flappybird.component.PlayerData;
-import dev.prozilla.pine.examples.flappybird.entity.*;
+import dev.prozilla.pine.examples.flappybird.controller.GameOverController;
+import dev.prozilla.pine.examples.flappybird.entity.GroundPrefab;
+import dev.prozilla.pine.examples.flappybird.entity.PipesPrefab;
+import dev.prozilla.pine.examples.flappybird.entity.PlayerPrefab;
+import dev.prozilla.pine.examples.flappybird.entity.ScorePrefab;
 import dev.prozilla.pine.examples.flappybird.system.background.BackgroundMover;
 import dev.prozilla.pine.examples.flappybird.system.ground.GroundInitializer;
 import dev.prozilla.pine.examples.flappybird.system.ground.GroundMover;
@@ -43,7 +47,7 @@ public class GameScene extends SceneBase {
 	private Entity obstacles;
 	public Entity player;
 	public PlayerData playerData;
-	public Entity gameOverText;
+	public Entity gameOverMenu;
 	
 	// Data
 	public Directory dataDirectory;
@@ -63,7 +67,6 @@ public class GameScene extends SceneBase {
 		// Create prefabs for entities
 		PlayerPrefab playerPrefab = new PlayerPrefab();
 		ScorePrefab scorePrefab = new ScorePrefab(font, this);
-		GameOverPrefab gameOverPrefab = new GameOverPrefab(font);
 		GroundPrefab groundPrefab = new GroundPrefab();
 		pipesPrefab = new PipesPrefab();
 		
@@ -98,7 +101,11 @@ public class GameScene extends SceneBase {
 		// Create user interface
 		Entity nodeRoot = addEntity(new NodeRootPrefab());
 		nodeRoot.addChild(scorePrefab);
-		gameOverText = nodeRoot.addChild(gameOverPrefab);
+		
+		View gameOverView = AssetPools.views.load("view/game-over.html");
+		gameOverView.addController(new GameOverController(this));
+		gameOverMenu = gameOverView.instantiate(nodeRoot);
+		gameOverMenu.setActive(false);
 		
 		// Set default values
 		gameOver = false;
@@ -120,9 +127,8 @@ public class GameScene extends SceneBase {
 	
 	@Override
 	public void update(float deltaTime) throws IllegalStateException {
-		if (gameOver && !gameOverText.isActive()) {
-			gameOverText.setActive(true);
-			gameOverText.getChildWithTag(EntityTag.FINAL_SCORE_TAG).getComponent(TextNode.class).setText(String.format("Your Score: %s", playerScore));
+		if (gameOver && !gameOverMenu.isActive()) {
+			gameOverMenu.setActive(true);
 		}
 		
 		super.update(deltaTime);

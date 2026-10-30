@@ -116,7 +116,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		GameManager.instance.level = level;
 		logger.log("Loading level");
 		
-		BlockPrefab blockPrefab = new BlockPrefab();
+		BlockPrefab blockPrefab = new BlockPrefab(level.blockType);
 		for (Vector2i coordinate : level.walls) {
 			scene.getForegroundGrid().addTile(blockPrefab, coordinate.clone());
 		}
@@ -127,13 +127,13 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		}
 		
 		if (!GameManager.instance.isMultiplayer() || GameManager.instance.isHost()) {
-			CratePrefab cratePrefab = new CratePrefab();
+			CratePrefab cratePrefab = new CratePrefab(level.crateType);
 			for (Vector2i coordinate : level.crates) {
 				scene.getForegroundGrid().addTile(cratePrefab, coordinate.clone());
 			}
 		}
 		
-		GroundPrefab groundPrefab = new GroundPrefab();
+		GroundPrefab groundPrefab = new GroundPrefab(level.groundType);
 		for (int x = 0; x < level.getWidth(); x++) {
 			for (int y = 0; y < level.getHeight(); y++) {
 				scene.getBackgroundGrid().addTile(groundPrefab, x, y);
@@ -227,7 +227,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		
 		clearCrates();
 		for (Vector2i cratePosition : crateCoordinates) {
-			scene.getForegroundGrid().addTile(new CratePrefab(), cratePosition.x, cratePosition.y);
+			scene.getForegroundGrid().addTile(new CratePrefab(GameManager.instance.level.crateType), cratePosition.x, cratePosition.y);
 		}
 		
 		for (Map.Entry<Integer, Vector2i> entry : playerCoordinates.entrySet()) {

@@ -154,6 +154,15 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	}
 	
 	/**
+	 * Reloads this scene.
+	 */
+	public void reload() {
+		if (isActive()) {
+			application.reloadScene();
+		}
+	}
+	
+	/**
 	 * Loads the entities, components and systems of this scene.
 	 */
 	protected void load() {

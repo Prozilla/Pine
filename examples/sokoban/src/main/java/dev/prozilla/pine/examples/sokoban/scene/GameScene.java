@@ -17,6 +17,7 @@ import dev.prozilla.pine.core.state.input.ModifierKey;
 import dev.prozilla.pine.examples.sokoban.GameManager;
 import dev.prozilla.pine.examples.sokoban.entity.ui.UIPrefab;
 import dev.prozilla.pine.examples.sokoban.level.Level;
+import dev.prozilla.pine.examples.sokoban.level.LevelGenerator;
 import dev.prozilla.pine.examples.sokoban.level.LevelParser;
 import dev.prozilla.pine.examples.sokoban.packet.*;
 import dev.prozilla.pine.examples.sokoban.request.MoveRequest;
@@ -55,7 +56,12 @@ public class GameScene extends Scene {
 		cameraData.orthographic = true;
 		
 		if (GameManager.instance.isHost()) {
-			GameManager.instance.level = levelParser.read(ArrayUtils.getRandom(Level.LEVELS));
+			if (GameManager.ENABLE_LEVEL_GENERATION) {
+				LevelGenerator generator = new LevelGenerator();
+				GameManager.instance.level = generator.generate();
+			} else {
+				GameManager.instance.level = levelParser.read(ArrayUtils.getRandom(Level.LEVELS));
+			}
 		}
 		
 		// Create grid entities

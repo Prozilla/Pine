@@ -48,7 +48,7 @@ public class PlayerData extends Component {
 		}
 	);
 	
-	public static final float TIME_TO_MOVE = 0.25f;
+	public static final float TIME_TO_MOVE = 0.225f;
 	public static final float JOYSTICK_THRESHOLD = 0.5f;
 	
 	public PlayerData(int index) {

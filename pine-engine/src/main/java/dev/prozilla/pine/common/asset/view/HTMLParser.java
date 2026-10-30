@@ -171,8 +171,8 @@ public class HTMLParser extends SequentialParser<NodePrefab> {
 	}
 	
 	@Override
-	protected void setInput(String input) {
-		super.setInput(input.replaceAll("<!--.*-->", ""));
+	protected String preprocessInput(String input) {
+		return super.preprocessInput(input.replaceAll("<!--.*-->", ""));
 	}
 	
 	@Override
