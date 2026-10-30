@@ -39,7 +39,7 @@ public class CrateUpdater extends UpdateSystemBase {
 			}
 		});
 		
-		GameManager.instance.completedCrates = completedCrates.get();
+		GameManager.instance.setCompletedCrateCount(completedCrates.get());
 	}
 
 }

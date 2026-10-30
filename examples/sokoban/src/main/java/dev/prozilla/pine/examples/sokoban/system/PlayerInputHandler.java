@@ -16,6 +16,7 @@ import dev.prozilla.pine.examples.sokoban.component.History;
 import dev.prozilla.pine.examples.sokoban.component.Move;
 import dev.prozilla.pine.examples.sokoban.component.PlayerData;
 import dev.prozilla.pine.examples.sokoban.request.MoveRequest;
+import dev.prozilla.pine.examples.sokoban.request.NextLevelRequest;
 import dev.prozilla.pine.examples.sokoban.request.RestartRequest;
 import dev.prozilla.pine.examples.sokoban.request.UndoRequest;
 import dev.prozilla.pine.extensions.pinet.component.NetworkIdentity;
@@ -44,6 +45,11 @@ public class PlayerInputHandler extends InputSystem {
 		
 		if (input.getKeyDown(Key.R) && network.isHost(networkIdentity.id)) {
 			network.send(new RestartRequest());
+			return;
+		}
+		
+		if (input.getKeyDown(Key.N) && network.isHost(networkIdentity.id)) {
+			network.send(new NextLevelRequest());
 			return;
 		}
 		

@@ -16,8 +16,10 @@ import dev.prozilla.pine.examples.sokoban.component.Move;
 import dev.prozilla.pine.examples.sokoban.component.PlayerData;
 import dev.prozilla.pine.examples.sokoban.entity.*;
 import dev.prozilla.pine.examples.sokoban.level.Level;
+import dev.prozilla.pine.examples.sokoban.level.LevelGenerator;
 import dev.prozilla.pine.examples.sokoban.packet.*;
 import dev.prozilla.pine.examples.sokoban.request.MoveRequest;
+import dev.prozilla.pine.examples.sokoban.request.NextLevelRequest;
 import dev.prozilla.pine.examples.sokoban.request.RestartRequest;
 import dev.prozilla.pine.examples.sokoban.request.UndoRequest;
 import dev.prozilla.pine.examples.sokoban.scene.GameScene;
@@ -48,6 +50,7 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 			case MoveRequest(Direction direction) -> move(request, direction);
 			case UndoRequest ignored -> undo(request);
 			case RestartRequest ignored -> restart(request);
+			case NextLevelRequest ignored -> nextLevel(request);
 			default -> {}
 		}
 	}
@@ -101,6 +104,12 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 			case RejectionPacket ignored -> {
 				response.acknowledge();
 				rejectPendingMove(scene.getNetwork().getLocalClientId());
+			}
+			case LevelPacket(Level level) -> {
+				response.acknowledge();
+				if (GameManager.instance.isMultiplayer() && !GameManager.instance.isHost()) {
+					swapLevel(level);
+				}
 			}
 			default -> {}
 		}
@@ -295,21 +304,58 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 			return;
 		}
 		
-		Map<Integer, Vector2i> playerPositions = new HashMap<>();
-		Set<Vector2i> reserved = new HashSet<>(GameManager.instance.level.crates);
+		applyState(findPlayerSpawns(), GameManager.instance.level.crates);
+		forEach(chunk -> chunk.getComponent(History.class).clear());
+		request.replyToAll(createSnapshot());
+	}
+	
+	private void nextLevel(ServerRequest request) {
+		boolean allowed = request.isSentByHost();
+		if (!allowed) {
+			reject(request);
+			return;
+		}
+		
+		Level level = new LevelGenerator().generate();
+		swapLevel(level);
+		
+		request.replyToAll(new LevelPacket(level));
+		request.replyToAll(createSnapshot());
+	}
+	
+	private void swapLevel(Level level) {
+		unloadLevel();
+		loadLevel(level);
+		
+		findPlayerSpawns().forEach(this::applyPlayer);
+	}
+	
+	private void unloadLevel() {
+		isLevelLoaded = false;
+		
 		forEach(chunk -> {
-			int id = chunk.getComponent(NetworkIdentity.class).id;
-			Vector2i spawn = findSpawn(reserved, false);
-			reserved.add(spawn);
+			chunk.getComponent(PlayerData.class).finishMove();
+			chunk.getComponent(History.class).clear();
+			clearAwaitingConfirm(chunk.getComponent(NetworkIdentity.class).id);
 			
-			playerPositions.put(id, spawn);
+			scene.getForegroundGrid().removeTile(chunk.getComponent(TileRenderer.class));
 		});
 		
-		applyState(playerPositions, GameManager.instance.level.crates);
-		
-		forEach(chunk -> chunk.getComponent(History.class).clear());
-		
-		request.replyToAll(createSnapshot());
+		destroyTiles(scene.getForegroundGrid());
+		destroyTiles(scene.getGoalGrid());
+		destroyTiles(scene.getBackgroundGrid());
+	}
+	
+	private void destroyTiles(Iterable<TileRenderer> tiles) {
+		List<Entity> entities = new ArrayList<>();
+		for (TileRenderer tile : tiles) {
+			if (tile != null && !tile.getEntity().hasTag(EntityTag.PLAYER)) {
+				entities.add(tile.getEntity());
+			}
+		}
+		for (Entity entity : entities) {
+			entity.destroy();
+		}
 	}
 	
 	private void reject(ServerRequest request) {
@@ -341,6 +387,20 @@ public class MessageHandler extends NoOpUpdateSystem implements ServerMessageHan
 		}
 		
 		return result;
+	}
+	
+	private Map<Integer, Vector2i> findPlayerSpawns() {
+		Map<Integer, Vector2i> spawns = new HashMap<>();
+		Set<Vector2i> reserved = new HashSet<>(GameManager.instance.level.crates);
+		
+		forEach(chunk -> {
+			int id = chunk.getComponent(NetworkIdentity.class).id;
+			Vector2i spawn = findSpawn(reserved, false);
+			reserved.add(spawn);
+			spawns.put(id, spawn.clone());
+		});
+		
+		return spawns;
 	}
 	
 	private Vector2i findSpawn() {

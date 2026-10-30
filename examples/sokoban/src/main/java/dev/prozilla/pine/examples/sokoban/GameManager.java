@@ -7,7 +7,9 @@ import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.Application;
 import dev.prozilla.pine.core.ApplicationManager;
 import dev.prozilla.pine.examples.sokoban.level.Level;
+import dev.prozilla.pine.examples.sokoban.request.NextLevelRequest;
 import dev.prozilla.pine.examples.sokoban.scene.GameScene;
+import dev.prozilla.pine.extensions.pinet.component.NetworkManager;
 
 public class GameManager extends ApplicationManager {
 	
@@ -15,6 +17,7 @@ public class GameManager extends ApplicationManager {
 	
 	public Font font;
 	
+	public NetworkManager network;
 	public Level level;
 	public int completedCrates;
 	
@@ -76,6 +79,13 @@ public class GameManager extends ApplicationManager {
 	public void leaveSession() {
 		sessionConfig = null;
 		application.loadScene(0);
+	}
+	
+	public void setCompletedCrateCount(int completedCrates) {
+		this.completedCrates = completedCrates;
+		if (completedCrates >= getCrateCount() && isHost() && network != null) {
+			network.send(new NextLevelRequest());
+		}
 	}
 	
 	public int getCrateCount() {

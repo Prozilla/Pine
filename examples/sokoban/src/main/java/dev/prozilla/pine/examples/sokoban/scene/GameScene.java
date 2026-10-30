@@ -21,6 +21,7 @@ import dev.prozilla.pine.examples.sokoban.level.LevelGenerator;
 import dev.prozilla.pine.examples.sokoban.level.LevelParser;
 import dev.prozilla.pine.examples.sokoban.packet.*;
 import dev.prozilla.pine.examples.sokoban.request.MoveRequest;
+import dev.prozilla.pine.examples.sokoban.request.NextLevelRequest;
 import dev.prozilla.pine.examples.sokoban.request.RestartRequest;
 import dev.prozilla.pine.examples.sokoban.request.UndoRequest;
 import dev.prozilla.pine.examples.sokoban.system.CrateUpdater;
@@ -76,6 +77,7 @@ public class GameScene extends Scene {
 			.addDecoder(MoveRequest.ID, MoveRequest::decode)
 			.addDecoder(UndoRequest.ID, UndoRequest::decode)
 			.addDecoder(RestartRequest.ID, RestartRequest::decode)
+			.addDecoder(NextLevelRequest.ID, NextLevelRequest::decode)
 			.addDecoder(WelcomePacket.ID, WelcomePacket::decode)
 			.addDecoder(GameStatePacket.ID, GameStatePacket::decode)
 			.addDecoder(PlayerJoinPacket.ID, PlayerJoinPacket::decode)
@@ -84,6 +86,7 @@ public class GameScene extends Scene {
 			.addDecoder(RejectionPacket.ID, RejectionPacket::decode)
 			.addDecoder(LevelPacket.ID, LevelPacket::decode)
 			.addObjectCodec(Level.class, Level::encode, Level::decode);
+		GameManager.instance.network = network;
 		
 		// Add systems
 		addSystem(new NetworkSynchronizer());
@@ -218,6 +221,7 @@ public class GameScene extends Scene {
 	@Override
 	public void destroy() {
 		network = Destructible.destroy(network);
+		GameManager.instance.network = null;
 		super.destroy();
 	}
 	
