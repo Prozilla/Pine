@@ -3,6 +3,7 @@ package dev.prozilla.pine.core.rendering.shader;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.asset.pool.AssetPoolEvent;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.event.EventListener;
 import dev.prozilla.pine.common.exception.GLException;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
@@ -79,13 +80,17 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 		isInitialized = true;
 		
 		// Load shaders
-		AssetPools.shaders.addListener(AssetPoolEvent.Type.FAILED, this::handleShaderLoadingError);
-		Shader vertexShader = AssetPools.shaders.loadVertexShader(getVertexShaderPath());
-		Shader fragmentShader = AssetPools.shaders.loadFragmentShader(getFragmentShaderPath());
-		AssetPools.shaders.removeListener(AssetPoolEvent.Type.FAILED, this::handleShaderLoadingError);
+		EventListener<AssetPoolEvent<Shader>> errorListener = AssetPools.shaders.addListener(AssetPoolEvent.Type.FAILED, this::handleShaderLoadingError);
+		Shader vertexShader = loadVertexShader();
+		Shader geometryShader = loadGeometryShader();
+		Shader fragmentShader = loadFragmentShader();
+		AssetPools.shaders.removeListener(AssetPoolEvent.Type.FAILED, errorListener);
 		
 		// Create shader program
 		attachShader(vertexShader);
+		if (geometryShader != null) {
+			attachShader(geometryShader);
+		}
 		attachShader(fragmentShader);
 		if (GL.getCapabilities().OpenGL32) {
 			bindFragmentDataLocation(0, getOutputVariableName());
@@ -93,9 +98,8 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 		link();
 		use();
 		
-		// Delete linked shaders */
-		vertexShader.destroy();
-		fragmentShader.destroy();
+		// Delete linked shaders
+		Destructible.destroy(vertexShader, geometryShader, fragmentShader);
 		
 		setupUniforms();
 	}
@@ -107,6 +111,19 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 			message += System.lineSeparator() + error;
 		}
 		getLogger().error(message, event.getException());
+	}
+	
+	protected Shader loadVertexShader() {
+		return AssetPools.shaders.loadVertexShader(getVertexShaderPath());
+	}
+	
+	protected Shader loadGeometryShader() {
+		String path = getGeometryShaderPath();
+		return path != null ? AssetPools.shaders.loadGeometryShader(path) : null;
+	}
+	
+	protected Shader loadFragmentShader() {
+		return AssetPools.shaders.loadFragmentShader(getFragmentShaderPath());
 	}
 	
 	/**
@@ -123,6 +140,10 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	}
 	
 	protected abstract String getVertexShaderPath();
+	
+	protected String getGeometryShaderPath() {
+		return null;
+	}
 	
 	protected abstract String getFragmentShaderPath();
 	

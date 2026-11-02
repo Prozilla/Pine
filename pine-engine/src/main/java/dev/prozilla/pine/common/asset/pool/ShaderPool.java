@@ -3,9 +3,19 @@ package dev.prozilla.pine.common.asset.pool;
 import dev.prozilla.pine.common.system.Platform;
 import dev.prozilla.pine.core.rendering.shader.Shader;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public final class ShaderPool extends TextAssetPool<Shader> {
 	
 	private int type;
+	private final Map<String, String> macros;
+	private final Map<String, String[]> constants;
+	
+	public ShaderPool() {
+		macros = new HashMap<>();
+		constants = new HashMap<>();
+	}
 	
 	public Shader loadVertexShader(String path) {
 		return load(Shader.Type.VERTEX, path);
@@ -34,17 +44,40 @@ public final class ShaderPool extends TextAssetPool<Shader> {
 	
 	@Override
 	protected String preprocess(StringBuilder stringBuilder) {
-		int nextLineStart = stringBuilder.indexOf("\n") + 1;
-		stringBuilder.insert(nextLineStart, Shader.define("PLATFORM", Platform.getOrdinal()));
-		for (Platform platform : Platform.values()) {
-			stringBuilder.insert(nextLineStart, Shader.define(platform.name(), platform.ordinal()));
+		int offset = stringBuilder.indexOf("\n") + 1;
+		
+		for (Map.Entry<String, String[]> constant : constants.entrySet()) {
+			stringBuilder.insert(offset, Shader.constant(constant.getKey(), constant.getValue()[0], constant.getValue()[1]));
 		}
+		for (Map.Entry<String, String> definition : macros.entrySet()) {
+			stringBuilder.insert(offset, Shader.define(definition.getKey(), definition.getValue()));
+		}
+		
+		stringBuilder.insert(offset, Shader.define("PLATFORM", Platform.getOrdinal()));
+		for (Platform platform : Platform.values()) {
+			stringBuilder.insert(offset, Shader.define(platform.name(), platform.ordinal()));
+		}
+		
 		return super.preprocess(stringBuilder);
 	}
 	
 	@Override
 	protected Shader parse(String path, String content) {
 		return Shader.createShader(type, content);
+	}
+	
+	@Override
+	protected void prepareNext() {
+		macros.clear();
+		constants.clear();
+	}
+	
+	public void addMacro(String name, String expression) {
+		macros.put(name, expression);
+	}
+	
+	public void addConstant(String type, String name, String expression) {
+		constants.put(name, new String[]{ type, expression });
 	}
 	
 }

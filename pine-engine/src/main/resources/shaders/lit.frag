@@ -1,7 +1,6 @@
 #version 410 core
 
 const float SPECULAR_POWER = 50;
-const int NUM_CASCADES = 3; // Must match CascadeShadow.COUNT
 const float SHADOW_BIAS = 0.0005;
 const bool DEBUG_SHADOWS = false;
 
@@ -42,8 +41,8 @@ struct Cascade {
     mat4 projView;
     float splitDistance;
 };
-uniform Cascade uCascades[NUM_CASCADES];
-uniform sampler2D uShadowMaps[NUM_CASCADES];
+uniform Cascade uCascades[CASCADE_COUNT];
+uniform sampler2D uShadowMaps[CASCADE_COUNT];
 uniform bool uShadowsEnabled;
 
 struct Fog {
@@ -84,7 +83,7 @@ vec3 computeSkyLight(SkyLight light, vec3 ambient, vec3 diffuse) {
 
 int computeCascadeIndex(float viewZ) {
     int cascade = 0;
-    for (int i = 0; i < NUM_CASCADES - 1; i++) {
+    for (int i = 0; i < CASCADE_COUNT - 1; i++) {
         if (viewZ < uCascades[i].splitDistance) {
             cascade = i + 1;
         }

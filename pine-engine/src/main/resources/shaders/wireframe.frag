@@ -18,12 +18,12 @@ uniform float uFillAlpha;
 out vec4 color;
 
 void main() {
-    vec3 width = fwidth(fBarycentric) * uLineWidth;
+    vec3 width = max(fwidth(fBarycentric) * uLineWidth, vec3(1e-6));
     vec3 edges = smoothstep(vec3(0.0), width, fBarycentric);
     float edge = min(min(edges.x, edges.y), edges.z);
 
     vec4 fill = fColor;
-    if (fTexId >= 0) {
+    if (fTexId >= 0.0) {
         vec4 textureColor = vec4(1, 0, 1, 1); // Fallback color
 
         if (fIsArrayTexture > 0.5) {

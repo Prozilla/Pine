@@ -115,6 +115,14 @@ public class Shader implements Asset {
 		return String.format("#define %s %d%n", name, value);
 	}
 	
+	public static String define(String name, String value) {
+		return String.format("#define %s %s%n", name, value);
+	}
+	
+	public static String constant(String name, String type, String expression) {
+		return String.format("const %s %s = %s;", type, name, expression);
+	}
+	
 	public enum Type implements IntEnum {
 		VERTEX(GL_VERTEX_SHADER),
 		FRAGMENT(GL_FRAGMENT_SHADER),

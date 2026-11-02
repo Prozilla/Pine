@@ -205,8 +205,8 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 		logger.log(getClass().getSimpleName() + ": " + count());
 	}
 	
-	public final void addListener(AssetPoolEvent.Type type, EventListener<AssetPoolEvent<T>> listener) {
-		eventDispatcher.addListener(type, listener);
+	public final EventListener<AssetPoolEvent<T>> addListener(AssetPoolEvent.Type type, EventListener<AssetPoolEvent<T>> listener) {
+		return eventDispatcher.addListener(type, listener);
 	}
 	
 	public final void removeListener(AssetPoolEvent.Type type, EventListener<AssetPoolEvent<T>> listener) {
