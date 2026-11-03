@@ -10,7 +10,7 @@ in vec3 fNormal;
 in vec4 fColor;
 in vec2 fTexCoords;
 flat in float fTexId;
-flat in float fIsArrayTexture;
+flat in int fTextureType;
 in vec3 fWorldPosition;
 
 uniform sampler2D uTexture;
@@ -139,7 +139,7 @@ void main() {
     if (fTexId >= 0) {
         vec4 textureColor = vec4(1, 0, 1, 1); // Fallback color
 
-        if (fIsArrayTexture > 0.5) {
+        if ((fTextureType & 1) != 0) {
             // Use texture array
             #if PLATFORM == MACOS
                 textureColor = vec4(1, 0, 1, 1);

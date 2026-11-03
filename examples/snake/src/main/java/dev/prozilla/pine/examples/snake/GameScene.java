@@ -57,7 +57,7 @@ public class GameScene extends Scene {
 		
 		cameraData.orthographic = true;
 		
-		font = AssetPools.fonts.load("snake/monomaniac.ttf", 64);
+		font = AssetPools.fonts.load("snake/monomaniac.ttf");
 		
 		// Create prefabs
 		PlayerHeadPrefab playerHeadPrefab = new PlayerHeadPrefab(this);

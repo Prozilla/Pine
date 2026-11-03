@@ -116,6 +116,7 @@ public final class StyledPropertyKey<T> {
 	public static final StyledPropertyKey<LineStyle> OUTLINE_STYLE = new StyledPropertyKey<>("outline-style", lineStyleParser);
 	public static final StyledPropertyKey<Color> OUTLINE_COLOR = new StyledPropertyKey<>("outline-color", colorParser);
 	public static final StyledPropertyKey<DimensionBase> OUTLINE_OFFSET = new StyledPropertyKey<>("outline-width", dimensionParser);
+	public static final StyledPropertyKey<DimensionBase> FONT_SIZE = new StyledPropertyKey<>("font-size", dimensionParser);
 	
 	private static final StyledPropertyKey<?>[] KEYS = new StyledPropertyKey<?>[] {
 		COLOR,
@@ -135,7 +136,8 @@ public final class StyledPropertyKey<T> {
 		OUTLINE_WIDTH,
 		OUTLINE_STYLE,
 		OUTLINE_COLOR,
-		OUTLINE_OFFSET
+		OUTLINE_OFFSET,
+		FONT_SIZE
 	};
 	
 	private final String string;

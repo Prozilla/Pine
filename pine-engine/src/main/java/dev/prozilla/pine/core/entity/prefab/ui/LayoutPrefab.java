@@ -74,10 +74,10 @@ public class LayoutPrefab extends NodePrefab {
 			layoutNode.distribution = distribution;
 		}
 		
-		if (!styleSheets.isEmpty()) {
+		if (!styleSheets.isEmpty() || useDefaultStyleSheet) {
 			Node node = entity.getComponent(Node.class);
 			AnimationData animationData = entity.getComponent(AnimationData.class);
-			entity.addComponent(new LayoutNodeStyle(animationData, node, styleSheets));
+			entity.addComponent(new LayoutNodeStyle(animationData, node, node.getStyleSheets()));
 		}
 	}
 }

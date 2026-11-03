@@ -64,6 +64,11 @@ public class TextureArrayLayer implements TextureAsset, Cloneable<TextureArrayLa
 	}
 	
 	@Override
+	public Texture.Encoding getEncoding() {
+		return textureArray.getEncoding();
+	}
+	
+	@Override
 	public String getPath() {
 		return path;
 	}

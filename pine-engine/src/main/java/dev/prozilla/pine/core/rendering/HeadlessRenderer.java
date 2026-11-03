@@ -27,26 +27,6 @@ public class HeadlessRenderer extends Renderer {
 	}
 	
 	@Override
-	public int getTextHeight(Font font, CharSequence text) {
-		return 0;
-	}
-	
-	@Override
-	public int getTextWidth(Font font, CharSequence text) {
-		return 0;
-	}
-	
-	@Override
-	public int getDebugTextHeight(CharSequence text) {
-		return 0;
-	}
-	
-	@Override
-	public int getDebugTextWidth(CharSequence text) {
-		return 0;
-	}
-	
-	@Override
 	public void resize() {
 	
 	}
@@ -63,11 +43,6 @@ public class HeadlessRenderer extends Renderer {
 	
 	@Override
 	public void drawText(Font font, CharSequence text, float x, float y, float z) {
-	
-	}
-	
-	@Override
-	public void drawDebugText(CharSequence text, float x, float y) {
 	
 	}
 	

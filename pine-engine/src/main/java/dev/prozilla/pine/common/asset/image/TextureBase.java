@@ -60,4 +60,8 @@ public interface TextureBase {
 	 */
 	int getHeight();
 	
+	default Texture.Encoding getEncoding() {
+		return Texture.Encoding.COLOR;
+	}
+	
 }

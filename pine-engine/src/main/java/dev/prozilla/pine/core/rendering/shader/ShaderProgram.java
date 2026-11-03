@@ -60,7 +60,7 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	
 	public static final String COLOR_ATTRIBUTE = "vColor";
 	public static final String TEXTURE_ID_ATTRIBUTE = "vTexId";
-	public static final String TEXTURE_TYPE_ATTRIBUTE = "vIsArrayTexture";
+	public static final String TEXTURE_TYPE_ATTRIBUTE = "vTextureType";
 	
 	/**
 	 * Creates a shader program.

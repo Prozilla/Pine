@@ -31,28 +31,33 @@ public class GameOverPrefab extends LayoutPrefab {
 		
 		TextPrefab gameOverText = new TextPrefab("Game Over");
 		gameOverText.setColor(Color.black());
-		gameOverText.setFont(font.setSize(48));
+		gameOverText.setFont(font);
+		gameOverText.setFontSize(new Dimension(48));
 		
 		TextPrefab restartText = new TextPrefab("Press 'R' to Restart.");
 		restartText.setColor(Color.black());
-		restartText.setFont(font.setSize(16));
+		restartText.setFont(font);
+		restartText.setFontSize(new Dimension(16));
 		
 		TextPrefab scoreText = new TextPrefab("Your Score: 0");
 		scoreText.setColor(Color.black());
-		scoreText.setFont(font.setSize(16));
+		scoreText.setFont(font);
+		scoreText.setFontSize(new Dimension(16));
 		scoreText.setTag(EntityTag.FINAL_SCORE_TAG);
 		
 		TextButtonPrefab restartButton = new TextButtonPrefab("Restart");
 		restartButton.setColor(Color.white());
 		restartButton.setBackgroundColor(Color.black());
-		restartButton.setFont(font.setSize(16));
+		restartButton.setFont(font);
+		restartButton.setFontSize(new Dimension(16));
 		restartButton.setPadding(new DualDimension(16, 4));
 		restartButton.setClickCallback(ApplicationProvider::reloadScene);
 		
 		TextButtonPrefab menuButton = new TextButtonPrefab("Back to Menu");
 		menuButton.setColor(Color.white());
 		menuButton.setBackgroundColor(Color.black());
-		menuButton.setFont(font.setSize(16));
+		menuButton.setFont(font);
+		menuButton.setFontSize(new Dimension(16));
 		menuButton.setPadding(new DualDimension(16, 4));
 		menuButton.setClickCallback(ApplicationProvider::nextScene);
 		

@@ -487,6 +487,14 @@ public class Node extends Component implements EventDispatcherProvider<NodeEvent
 		requireNodeStyle().applyStyleSheet(styleSheet);
 	}
 	
+	public Set<StyleSheet> getStyleSheets() {
+		NodeStyle nodeStyle = this.nodeStyle;
+		if (nodeStyle == null) {
+			nodeStyle = getEntity().getComponent(NodeStyle.class);
+		}
+		return nodeStyle != null ? nodeStyle.getStyleSheets() : null;
+	}
+	
 	public NodeStyle requireNodeStyle() {
 		if (nodeStyle == null) {
 			nodeStyle = getEntity().getOrAddComponent(NodeStyle.class, () -> {

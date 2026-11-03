@@ -28,9 +28,15 @@ public class Texture implements TextureAsset, Printable, Cloneable<Texture> {
 	private final int height;
 	/** The path of the image of this texture */
 	private final String path;
+	private final Encoding encoding;
 
 	public static final Wrap DEFAULT_WRAP = Wrap.REPEAT;
 	public static final Filter DEFAULT_FILTER = Filter.LINEAR;
+	public static final Encoding DEFAULT_ENCODING = Encoding.COLOR;
+	
+	public static final float SIGNED_DISTANCE_FIELD_EDGE = 128;
+	public static final int SIGNED_DISTANCE_FIELD_PADDING = 8;
+	public static final float SIGNED_DISTANCE_FIELD_SCALE = SIGNED_DISTANCE_FIELD_EDGE / SIGNED_DISTANCE_FIELD_PADDING;
 	
 	/**
 	 * Creates an empty texture.
@@ -65,9 +71,14 @@ public class Texture implements TextureAsset, Printable, Cloneable<Texture> {
 	}
 	
 	public Texture(String path, int width, int height, ByteBuffer pixels, Wrap wrap, Filter filter) {
+		this(path, width, height, pixels, wrap, filter, DEFAULT_ENCODING);
+	}
+	
+	public Texture(String path, int width, int height, ByteBuffer pixels, Wrap wrap, Filter filter, Encoding encoding) {
 		this.path = path;
 		this.width = width;
 		this.height = height;
+		this.encoding = encoding;
 		
 		Application.requireOpenGL();
 		
@@ -170,6 +181,11 @@ public class Texture implements TextureAsset, Printable, Cloneable<Texture> {
 	}
 	
 	@Override
+	public Encoding getEncoding() {
+		return encoding;
+	}
+	
+	@Override
 	public String getPath() {
 		return path;
 	}
@@ -210,7 +226,7 @@ public class Texture implements TextureAsset, Printable, Cloneable<Texture> {
 	
 	@Override
 	public Texture clone() {
-		return new Texture(path, width, height, AssetPools.images.load(path).getPixels());
+		return new Texture(path, width, height, AssetPools.images.load(path).getPixels(), DEFAULT_WRAP, DEFAULT_FILTER, encoding);
 	}
 	
 	@Override
@@ -259,6 +275,16 @@ public class Texture implements TextureAsset, Printable, Cloneable<Texture> {
 			return EnumUtils.hasIntValue(values(), value);
 		}
 		
+	}
+	
+	/**
+	 * Describes how the texel values of a texture are interpreted when it is sampled.
+	 */
+	public enum Encoding {
+		/** Texels are colors. */
+		COLOR,
+		/** The alpha channel of each texel stores the distance to the nearest edge of a shape. */
+		SIGNED_DISTANCE_FIELD
 	}
 	
 }

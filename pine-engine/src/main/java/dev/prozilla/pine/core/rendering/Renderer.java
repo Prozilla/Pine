@@ -7,7 +7,6 @@ import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector2f;
-import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
@@ -27,7 +26,6 @@ import org.jetbrains.annotations.Contract;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
-import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Objects;
@@ -74,7 +72,6 @@ public class Renderer implements Initializable, Destructible {
 	
 	// Fonts
 	private Font defaultFont;
-	private Font debugFont;
 	
 	// Transformation
 	private boolean isRenderRegionEnabled;
@@ -158,13 +155,7 @@ public class Renderer implements Initializable, Destructible {
 	}
 	
 	private void createFont() {
-		try {
-			defaultFont = new Font(getClass().getResourceAsStream(Font.DEFAULT_FONT_PATH), 16);
-		} catch (IOException e) {
-			logger.error("Failed to create font", e);
-			defaultFont = new Font(12);
-		}
-		debugFont = new Font(12);
+		defaultFont = new Font();
 	}
 	
 	private void reset() {
@@ -356,87 +347,18 @@ public class Renderer implements Initializable, Destructible {
 	
 	//endregion Transformation state
 	
-	//region --- Calculations ---
-	
-	/**
-	 * Calculates total width of a debug text.
-	 * @param text The text
-	 * @return Total width of the text
-	 */
-	public int getDebugTextWidth(CharSequence text) {
-		return (int)debugFont.getWidth(text);
-	}
-	
-	/**
-	 * Calculates total height of a debug text.
-	 * @param text The text
-	 * @return Total width of the text
-	 */
-	public int getDebugTextHeight(CharSequence text) {
-		return (int)debugFont.getHeight(text);
-	}
-	
-	/**
-	 * Draw debug text at the specified position.
-	 * @param text TextRenderer to draw
-	 * @param x    X coordinate of the text position
-	 * @param y    Y coordinate of the text position
-	 */
-	public void drawDebugText(CharSequence text, float x, float y) {
-		debugFont.drawText(this, text, x, y, 0);
-	}
-	
-	/**
-	 * Draw debug text at the specified position and color.
-	 * @param text TextRenderer to draw
-	 * @param x    X coordinate of the text position
-	 * @param y    Y coordinate of the text position
-	 * @param c    Color to use
-	 */
-	public void drawDebugText(CharSequence text, float x, float y, Color c) {
-		debugFont.drawText(this, text, x, y, 0, c);
-	}
-	
-	public Vector2i getTextSize(CharSequence text) {
-		return getTextSize(defaultFont, text);
-	}
-	
-	public Vector2i getTextSize(Font font, CharSequence text) {
-		return new Vector2i(getTextWidth(font, text), getTextHeight(font, text));
-	}
-	
-	public int getTextWidth(CharSequence text) {
-		return getTextWidth(defaultFont, text);
-	}
-	
-	/**
-	 * Calculates total width of a text.
-	 * @param text The text
-	 * @return Total width of the text
-	 */
-	public int getTextWidth(Font font, CharSequence text) {
-		return (int)font.getWidth(text);
-	}
-	
-	public int getTextHeight(CharSequence text) {
-		return getTextHeight(defaultFont, text);
-	}
-	
-	/**
-	 * Calculates total height of a text.
-	 * @param text The text
-	 * @return Total width of the text
-	 */
-	public int getTextHeight(Font font, CharSequence text) {
-		return (int)font.getHeight(text);
-	}
-	
-	//endregion Calculations
-	
 	//region --- Drawing ---
 	
 	public void drawText(CharSequence text, float x, float y, float z) {
 		drawText(defaultFont, text, x, y, z);
+	}
+	
+	public void drawText(CharSequence text, float x, float y, float z, Color c) {
+		drawText(defaultFont, text, x, y, z, c);
+	}
+	
+	public void drawText(CharSequence text, float x, float y, float z, Color c, float fontSize) {
+		drawText(defaultFont, text, x, y, z, c, fontSize);
 	}
 	
 	/**
@@ -446,11 +368,7 @@ public class Renderer implements Initializable, Destructible {
 	 * @param y    Y coordinate of the text position
 	 */
 	public void drawText(Font font, CharSequence text, float x, float y, float z) {
-		font.drawText(this, text, x, y, z);
-	}
-	
-	public void drawText(CharSequence text, float x, float y, float z, Color c) {
-		drawText(defaultFont, text, x, y, z, c);
+		drawText(font, text, x, y, z, fallbackColor);
 	}
 	
 	/**
@@ -461,7 +379,11 @@ public class Renderer implements Initializable, Destructible {
 	 * @param c    Color to use
 	 */
 	public void drawText(Font font, CharSequence text, float x, float y, float z, Color c) {
-		font.drawText(this, text, x, y, z, c);
+		drawText(font, text, x, y, z, c, Font.DEFAULT_SIZE);
+	}
+	
+	public void drawText(Font font, CharSequence text, float x, float y, float z, Color c, float fontSize) {
+		font.drawText(this, text, x, y, z, c, fontSize);
 	}
 	
 	/**
@@ -509,17 +431,42 @@ public class Renderer implements Initializable, Destructible {
 	 * @param c       The color to use
 	 */
 	public void drawTexture(TextureAsset texture, float x, float y, float z, Color c) {
-		// Vertex positions
-		float x2 = x + texture.getWidth();
-		float y2 = y + texture.getHeight();
+		drawTexture(texture, x, y, z, texture.getWidth(), texture.getHeight(), c);
+	}
+	
+	/**
+	 * Draws a texture on specified coordinates, scaled to a given size.
+	 */
+	public void drawTexture(TextureAsset texture, float x, float y, float z, float width, float height, Color c) {
+		float x2 = x + width;
+		float y2 = y + height;
 		
-		// Texture coordinates
-		float s1 = 0f;
-		float t1 = 0f;
-		float s2 = 1f;
-		float t2 = 1f;
+		drawQuad(texture, x, y, z, x2, y2, z, 0f, 0f, 1f, 1f, c);
+	}
+	
+	/**
+	 * Draws a texture region on specified coordinates, scaled to a given size.
+	 * @param texture The texture
+	 * @param x X position of the quad
+	 * @param y Y position of the quad
+	 * @param z Z position of the quad
+	 * @param regionX X position of the texture region
+	 * @param regionY Y position of the texture region
+	 * @param regionWidth Width of the texture region
+	 * @param regionHeight Height of the texture region
+	 * @param width Width to draw the region at
+	 * @param height Height to draw the region at
+	 * @param c The color to use
+	 */
+	public void drawQuad(TextureAsset texture, float x, float y, float z,
+	                     float regionX, float regionY, float regionWidth, float regionHeight,
+	                     float width, float height, Color c) {
+		float s1 = regionX / texture.getWidth();
+		float t1 = regionY / texture.getHeight();
+		float s2 = (regionX + regionWidth) / texture.getWidth();
+		float t2 = (regionY + regionHeight) / texture.getHeight();
 		
-		drawQuad(texture, x, y, z, x2, y2, z, s1, t1, s2, t2, c);
+		drawQuad(texture, x, y, z, x + width, y + height, z, s1, t1, s2, t2, c);
 	}
 	
 	/**
@@ -983,7 +930,7 @@ public class Renderer implements Initializable, Destructible {
 		Destructible.destroy(vertexArrayObject, vertexBufferObject, frameBufferObject, shadowBuffer);
 		
 		// Dispose of fonts
-		Destructible.destroy(defaultFont, debugFont);
+		Destructible.destroy(defaultFont);
 	}
 	
 	private void setupBuffers() {
@@ -1196,6 +1143,10 @@ public class Renderer implements Initializable, Destructible {
 	@Contract("-> new")
 	public Vector2f getViewportCenter() {
 		return new Vector2f(viewWidth / 2f, viewHeight / 2f);
+	}
+	
+	public Font getDefaultFont() {
+		return defaultFont;
 	}
 	
 }

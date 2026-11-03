@@ -2,12 +2,13 @@ package dev.prozilla.pine.core.component.ui;
 
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.text.Font;
+import dev.prozilla.pine.common.math.dimension.Dimension;
+import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.vector.Vector2f;
-import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.component.Component;
-import dev.prozilla.pine.core.rendering.Renderer;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -17,10 +18,13 @@ public class TextNode extends Component {
 	
 	public String text;
 	public Font font;
+	public DimensionBase fontSize;
 	
 	/** Result of size calculation */
-	public Vector2i size;
+	public Vector2f size;
 	public Vector2f offset;
+	
+	public Node node;
 	
 	public TextNode() {
 		this(null);
@@ -33,16 +37,13 @@ public class TextNode extends Component {
 			this.text = text;
 		}
 		
-		size = new Vector2i();
+		size = new Vector2f();
+		fontSize = new Dimension(Font.DEFAULT_SIZE);
 	}
 	
 	@Override
 	public String getName() {
 		return "TextRenderer";
-	}
-	
-	public void setFont(String fontPath, int size) {
-		setFont(AssetPools.fonts.load(fontPath, size));
 	}
 	
 	public void setFont(String fontPath) {
@@ -53,16 +54,19 @@ public class TextNode extends Component {
 	 * Setter for the font of this text.
 	 */
 	public void setFont(Font font) {
+		if (Objects.equals(this.font, font)) {
+			return;
+		}
 		this.font = font;
 		calculateSize();
 	}
 	
-	public int getFontSize() {
-		if (font != null) {
-			return font.getSize();
+	public void setFontSize(DimensionBase fontSize) {
+		if (Objects.equals(this.fontSize, fontSize)) {
+			return;
 		}
-		
-		return Font.DEFAULT_SIZE;
+		this.fontSize = fontSize;
+		calculateSize();
 	}
 	
 	public boolean changeText(Function<StringBuilder, String> textModifier) {
@@ -94,13 +98,15 @@ public class TextNode extends Component {
 	 * Calculates the size of this text.
 	 */
 	public void calculateSize() {
-		Renderer renderer = getRenderer();
-		
+		Font font = this.font;
 		if (font == null) {
-			size = renderer.getTextSize(text);
-		} else {
-			size = renderer.getTextSize(font, text);
+			font = getRenderer().getDefaultFont();
 		}
+		size = font.getSize(text, getFontSize());
+	}
+	
+	public float getFontSize() {
+		return fontSize != null ? fontSize.compute(node, false) : 0;
 	}
 	
 	public float getOffsetX() {

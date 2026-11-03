@@ -29,6 +29,7 @@ public class MenuPrefab extends NodeRootPrefab {
 		super.apply(entity);
 		
 		LayoutPrefab layoutPrefab = new LayoutPrefab();
+		layoutPrefab.removeDefaultStyleSheet();
 		layoutPrefab.setAnchor(Anchor.CENTER);
 		layoutPrefab.setDirection(Direction.DOWN);
 		layoutPrefab.setAlignment(Alignment.CENTER);
@@ -37,7 +38,9 @@ public class MenuPrefab extends NodeRootPrefab {
 		
 		// Title
 		TextPrefab titlePrefab = new TextPrefab(FlappyBird.TITLE);
-		titlePrefab.setFont(font.setSize(64));
+		titlePrefab.removeDefaultStyleSheet();
+		titlePrefab.setFont(font);
+		titlePrefab.setFontSize(new Dimension(64));
 		layout.addChild(titlePrefab);
 		
 		// Options
@@ -48,7 +51,9 @@ public class MenuPrefab extends NodeRootPrefab {
 		Entity buttonLayout = layout.addChild(layoutPrefab);
 		
 		TextButtonPrefab textButtonPrefab = new TextButtonPrefab();
-		textButtonPrefab.setFont(font.setSize(24));
+		textButtonPrefab.removeDefaultStyleSheet();
+		textButtonPrefab.setFont(font);
+		textButtonPrefab.setFontSize(new Dimension(24));
 		textButtonPrefab.setPadding(new DualDimension(16, 4));
 		
 		// Play button
@@ -68,7 +73,9 @@ public class MenuPrefab extends NodeRootPrefab {
 		
 		// High score
 		TextPrefab textPrefab = new TextPrefab("Highscore: 0", Color.black());
-		textPrefab.setFont(font.setSize(24));
+		textPrefab.removeDefaultStyleSheet();
+		textPrefab.setFont(font);
+		textPrefab.setFontSize(new Dimension(24));
 		textPrefab.setAbsolutePosition(true);
 		textPrefab.setAnchor(Anchor.BOTTOM_LEFT);
 		textPrefab.setMargin(new DualDimension(16));

@@ -22,7 +22,7 @@ public abstract class SceneBase extends Scene {
 		cameraData.setSkybox(Color.hex(GameManager.instance.backgroundVariant == 1 ? "#008894" : "#4DC1CB"));
 		cameraData.getTransform().setPosition(0, 0, 10);
 		
-		font = AssetPools.fonts.load("flappybird/flappy-bird.ttf", 32);
+		font = AssetPools.fonts.load("flappybird/flappy-bird.ttf");
 		
 		// Create prefabs
 		BackgroundPrefab backgroundPrefab = new BackgroundPrefab();

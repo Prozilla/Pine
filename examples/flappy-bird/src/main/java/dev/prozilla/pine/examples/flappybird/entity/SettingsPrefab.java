@@ -21,6 +21,7 @@ import dev.prozilla.pine.examples.flappybird.component.SettingsData;
 public class SettingsPrefab extends LayoutPrefab {
 	
 	public SettingsPrefab(Font font) {
+		removeDefaultStyleSheet();
 		setBackgroundColor(Color.white());
 		setSize(DualDimension.fullscreen());
 		setAlignment(Alignment.CENTER);
@@ -32,18 +33,24 @@ public class SettingsPrefab extends LayoutPrefab {
 		setTag(EntityTag.SETTINGS);
 		
 		TextPrefab titlePrefab = new TextPrefab("Options", Color.black());
+		titlePrefab.removeDefaultStyleSheet();
 		titlePrefab.setFont(font);
 		
 		LayoutPrefab seed = new LayoutPrefab();
+		seed.removeDefaultStyleSheet();
 		seed.setDirection(Direction.RIGHT);
 		seed.setGap(new Dimension(16));
 		seed.setAlignment(Alignment.CENTER);
 		
 		TextPrefab seedLabel = new TextPrefab("Seed", Color.black());
-		seedLabel.setFont(font.setSize(24));
+		seedLabel.removeDefaultStyleSheet();
+		seedLabel.setFont(font);
+		seedLabel.setFontSize(new Dimension(24));
 		
 		TextInputPrefab seedInput = new TextInputPrefab(String.valueOf(GameManager.instance.seed));
-		seedInput.setFont(font.setSize(24));
+		seedInput.removeDefaultStyleSheet();
+		seedInput.setFont(font);
+		seedInput.setFontSize(new Dimension(24));
 		seedInput.setColor(Color.white());
 		seedInput.setBackgroundColor(Color.black());
 		seedInput.setPadding(new DualDimension(16, 8));
@@ -52,13 +59,15 @@ public class SettingsPrefab extends LayoutPrefab {
 		seed.addChildren(seedLabel, seedInput);
 		
 		TextButtonPrefab backButton = new TextButtonPrefab("Back");
+		backButton.removeDefaultStyleSheet();
 		backButton.setColor(Color.white());
 		backButton.setBackgroundColor(Color.black());
-		backButton.setFont(font.setSize(24));
+		backButton.setFont(font);
+		backButton.setFontSize(new Dimension(24));
 		backButton.setPadding(new DualDimension(16, 8));
 		backButton.setClickCallback((entity) -> entity.getParentWithTag(EntityTag.SETTINGS).setActive(false));
 		
-		addChildren( backButton, seed, titlePrefab);
+		addChildren(backButton, seed, titlePrefab);
 	}
 	
 	@Override

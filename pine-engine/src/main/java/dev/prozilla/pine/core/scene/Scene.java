@@ -52,10 +52,7 @@ import dev.prozilla.pine.core.system.standard.ui.image.ImageInitializer;
 import dev.prozilla.pine.core.system.standard.ui.image.ImageRenderer;
 import dev.prozilla.pine.core.system.standard.ui.input.*;
 import dev.prozilla.pine.core.system.standard.ui.layout.*;
-import dev.prozilla.pine.core.system.standard.ui.text.DynamicTextUpdater;
-import dev.prozilla.pine.core.system.standard.ui.text.TextInitializer;
-import dev.prozilla.pine.core.system.standard.ui.text.TextRenderer;
-import dev.prozilla.pine.core.system.standard.ui.text.TextResizer;
+import dev.prozilla.pine.core.system.standard.ui.text.*;
 import dev.prozilla.pine.core.system.standard.ui.tooltip.TooltipInitializer;
 import dev.prozilla.pine.core.system.standard.ui.tooltip.TooltipInputHandler;
 import org.jetbrains.annotations.NotNull;
@@ -237,6 +234,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		initialSystems.add(new TransformDriverUpdater());
 		
 		initialSystems.add(new NodeStyler());
+		initialSystems.add(new TextNodeStyler());
 		initialSystems.add(new LayoutNodeStyler());
 		
 		// Camera

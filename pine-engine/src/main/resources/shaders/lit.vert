@@ -5,7 +5,7 @@ layout (location=1) in vec3 vNormal;
 layout (location=2) in vec4 vColor;
 layout (location=3) in vec2 vTexCoords;
 layout (location=4) in float vTexId;
-layout (location=5) in float vIsArrayTexture;
+layout (location=5) in float vTextureType;
 
 uniform mat4 uModel;
 uniform mat4 uView;
@@ -18,7 +18,7 @@ out vec3 fNormal;
 out vec4 fColor;
 out vec2 fTexCoords;
 flat out float fTexId;
-flat out float fIsArrayTexture;
+flat out int fTextureType;
 out vec3 fWorldPosition;
 
 vec4 snapToPixel(vec4 position) {
@@ -34,7 +34,7 @@ void main() {
     fColor = vColor;
     fTexCoords = vTexCoords;
     fTexId = vTexId;
-    fIsArrayTexture = vIsArrayTexture;
+    fTextureType = int(round(vTextureType));;
 
     // Calculate position
     mat4 modelView = uView * uModel;

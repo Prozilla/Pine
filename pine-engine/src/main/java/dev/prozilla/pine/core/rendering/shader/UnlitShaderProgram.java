@@ -9,7 +9,7 @@ public class UnlitShaderProgram extends ShaderProgram {
 	public final static String VERTEX_SHADER_PATH = "/shaders/unlit.vert";
 	public final static String FRAGMENT_SHADER_PATH = "/shaders/unlit.frag";
 	
-	public static final CharSequence[] ATTRIBUTE_NAMES = { "vPosition", "vColor", "vTexCoords", "vTexId", "vIsArrayTexture" };
+	public static final CharSequence[] ATTRIBUTE_NAMES = { "vPosition", "vColor", "vTexCoords", "vTexId", "vTextureType" };
 	public static final int[] ATTRIBUTE_SIZES = { 3, 4, 2, 1, 1 };
 	
 	@Override

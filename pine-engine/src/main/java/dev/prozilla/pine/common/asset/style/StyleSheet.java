@@ -5,6 +5,7 @@ import dev.prozilla.pine.common.Transceivable;
 import dev.prozilla.pine.common.asset.TextAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.style.selector.*;
+import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.math.dimension.Dimension;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
@@ -201,6 +202,11 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 	@Contract("_ -> new")
 	public StyledDimensionProperty createOutlineOffsetProperty(Node node) {
 		return createStyledDimensionProperty(StyledPropertyKey.OUTLINE_OFFSET, node, Dimension.zero());
+	}
+	
+	@Contract("_ -> new")
+	public StyledDimensionProperty createFontSizeProperty(Node node) {
+		return createStyledDimensionProperty(StyledPropertyKey.FONT_SIZE, node, new Dimension(Font.DEFAULT_SIZE));
 	}
 	
 	protected StyledColorProperty createStyledColorProperty(StyledPropertyKey<Color> key, Node node, Color fallbackValue) {
@@ -466,11 +472,21 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 		Color fieldColor = new Color(255, 255, 255);
 		Color fieldText = new Color(0, 0, 0);
 		
+		// Selectors
+		SelectorList text = new SelectorList(TypeSelector.P, TypeSelector.H1, TypeSelector.H2, TypeSelector.H3, TypeSelector.H4, TypeSelector.H5, TypeSelector.H6);
+		
 		styleSheet.addDefaultRule(Selector.UNIVERSAL, StyledPropertyKey.COLOR, Color.white());
 		
 		// Text
 		styleSheet.addDefaultRule(TypeSelector.P, StyledPropertyKey.MARGIN, new DualDimension(Dimension.auto(), new Dimension(1, Unit.ELEMENT_SIZE)));
-		styleSheet.addDefaultRule(TypeSelector.P, StyledPropertyKey.CURSOR, CursorType.TEXT);
+		styleSheet.addDefaultRule(text, StyledPropertyKey.CURSOR, CursorType.TEXT);
+		styleSheet.addDefaultRule(TypeSelector.P, StyledPropertyKey.FONT_SIZE, new Dimension(1, Unit.ELEMENT_SIZE));
+		styleSheet.addDefaultRule(TypeSelector.H1, StyledPropertyKey.FONT_SIZE, new Dimension(2.5f, Unit.ELEMENT_SIZE));
+		styleSheet.addDefaultRule(TypeSelector.H2, StyledPropertyKey.FONT_SIZE, new Dimension(2.25f, Unit.ELEMENT_SIZE));
+		styleSheet.addDefaultRule(TypeSelector.H3, StyledPropertyKey.FONT_SIZE, new Dimension(2f, Unit.ELEMENT_SIZE));
+		styleSheet.addDefaultRule(TypeSelector.H4, StyledPropertyKey.FONT_SIZE, new Dimension(1.75f, Unit.ELEMENT_SIZE));
+		styleSheet.addDefaultRule(TypeSelector.H5, StyledPropertyKey.FONT_SIZE, new Dimension(1.5f, Unit.ELEMENT_SIZE));
+		styleSheet.addDefaultRule(TypeSelector.H6, StyledPropertyKey.FONT_SIZE, new Dimension(1.25f, Unit.ELEMENT_SIZE));
 		
 		// Input
 		styleSheet.addDefaultRule(TypeSelector.INPUT, StyledPropertyKey.PADDING, new DualDimension(new Dimension(1), new Dimension(4)));

@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.rendering;
 
+import dev.prozilla.pine.common.asset.image.Texture;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector3f;
@@ -13,6 +14,9 @@ public class Vertex {
 	public final Vector3f textureCoordinates;
 	public float textureId;
 	public float textureType;
+	
+	public static final int ARRAY_TEXTURE_FLAG = 1;
+	public static final int SIGNED_DISTANCE_FIELD_FLAG = 2;
 	
 	public Vertex() {
 		position = new Vector3f();
@@ -61,8 +65,16 @@ public class Vertex {
 	
 	public Vertex setTexture(TextureAsset texture) {
 		if (texture != null) {
+			int flags = 0;
+			if (texture.isInArray()) {
+				flags |= ARRAY_TEXTURE_FLAG;
+			}
+			if (texture.getEncoding() == Texture.Encoding.SIGNED_DISTANCE_FIELD) {
+				flags |= SIGNED_DISTANCE_FIELD_FLAG;
+			}
+			
 			textureId = texture.getId();
-			textureType = texture.isInArray() ? 1f : 0f;
+			textureType = flags;
 		} else {
 			textureId = -1;
 			textureType = 0f;

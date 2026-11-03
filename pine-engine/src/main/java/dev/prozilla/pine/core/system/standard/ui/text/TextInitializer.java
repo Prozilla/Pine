@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.system.standard.ui.text;
 
+import dev.prozilla.pine.core.component.ui.Node;
 import dev.prozilla.pine.core.component.ui.TextNode;
 import dev.prozilla.pine.core.entity.EntityChunk;
 import dev.prozilla.pine.core.system.init.InitSystem;
@@ -10,12 +11,13 @@ import dev.prozilla.pine.core.system.init.InitSystem;
 public final class TextInitializer extends InitSystem {
 	
 	public TextInitializer() {
-		super(TextNode.class);
+		super(TextNode.class, Node.class);
 	}
 	
 	@Override
 	protected void process(EntityChunk chunk) {
 		TextNode textNode = chunk.getComponent(TextNode.class);
+		textNode.node = chunk.getComponent(Node.class);
 		textNode.calculateSize();
 	}
 }

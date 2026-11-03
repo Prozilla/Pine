@@ -47,7 +47,7 @@ public final class TextRenderer extends RenderSystem {
 	}
 	
 	public static void renderText(Renderer renderer, TextNode textNode, float x, float y, float width, float height, Color color) {
-		renderText(renderer, textNode.text, textNode.font, x, y, textNode.getTransform().position.z, width, height, color);
+		renderText(renderer, textNode.text, textNode.font, textNode.getFontSize(), x, y, textNode.getTransform().position.z, width, height, color);
 	}
 	
 	/**
@@ -55,36 +55,36 @@ public final class TextRenderer extends RenderSystem {
 	 * @param x X position
 	 * @param y Y position
 	 */
-	public static void renderText(Renderer renderer, String text, Font font, float x, float y,  float z, float width, float height, Color color) {
+	public static void renderText(Renderer renderer, String text, Font font, float fontSize, float x, float y,  float z, float width, float height, Color color) {
 		if (text.isBlank() || width == 0 || height == 0 || color == null) {
 			return;
 		}
 		
 		if (font == null) {
-			renderer.drawText(text, x, y, z, color);
+			renderer.drawText(text, x, y, z, color, fontSize);
 		} else {
-			renderer.drawText(font, text, x, y, z, color);
+			renderer.drawText(font, text, x, y, z, color, fontSize);
 		}
 		
 		renderer.resetRegion();
 	}
 	
-	public static int getTextWidth(Renderer renderer, TextNode textNode) {
+	public static float getTextWidth(Renderer renderer, TextNode textNode) {
 		return getTextWidth(renderer, textNode, StringUtils.lengthOf(textNode.text));
 	}
 	
-	public static int getTextWidth(Renderer renderer, TextNode textNode, int length) {
+	public static float getTextWidth(Renderer renderer, TextNode textNode, int length) {
 		return getTextWidth(renderer, textNode, 0, length);
 	}
 	
-	public static int getTextWidth(Renderer renderer, TextNode textNode, int start, int end) {
+	public static float getTextWidth(Renderer renderer, TextNode textNode, int start, int end) {
 		start = Math.max(start, 0);
 		end = Math.min(end, textNode.text.length());
 		if (start >= end) {
 			return 0;
 		}
 		String text = textNode.text.substring(start, end);
-		return textNode.font == null ? renderer.getTextWidth(text) : renderer.getTextWidth(textNode.font, text);
+		return textNode.font == null ? renderer.getDefaultFont().getWidth(text, textNode.getFontSize()) : textNode.font.getWidth(text, textNode.getFontSize());
 	}
 	
 }

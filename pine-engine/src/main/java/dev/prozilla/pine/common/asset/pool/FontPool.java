@@ -8,17 +8,6 @@ import java.io.InputStream;
 
 public final class FontPool extends AssetPool<Font> implements MultiAssetLoader<Font> {
 	
-	private int size;
-	
-	public FontPool() {
-		size = Font.DEFAULT_SIZE;
-	}
-	
-	public Font load(String path, int size) {
-		this.size = size;
-		return load(path);
-	}
-	
 	@Override
 	public Font load(String path) {
 		return super.load(path);
@@ -28,32 +17,17 @@ public final class FontPool extends AssetPool<Font> implements MultiAssetLoader<
 	protected Font createAsset(String path) {
 		Font font;
 		try (InputStream stream = FontPool.class.getResourceAsStream(path)) {
-			font = new Font(stream, size);
+			if (stream == null) {
+				return fail(path, NOT_FOUND_ERROR);
+			}
+			
+			font = new Font(stream);
 			font.path = path;
 		} catch (IOException e) {
 			return fail(path, e);
 		}
 		
 		return font;
-	}
-	
-	@Override
-	public boolean remove(Font asset) {
-		size = asset.getSize();
-		boolean removed = remove(asset.getPath());
-		size = Font.DEFAULT_SIZE;
-		return removed;
-	}
-	
-	@Override
-	protected void prepareNext() {
-		super.prepareNext();
-		size = Font.DEFAULT_SIZE;
-	}
-	
-	@Override
-	protected String createKey(String path) {
-		return Font.generateKey(path, size);
 	}
 	
 	@Override

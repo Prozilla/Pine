@@ -29,6 +29,7 @@ public class TextureArray implements Cloneable<TextureArray>, Destructible, Text
 	private final int height;
 	/** The amount of layers in this texture array */
 	private final int layers;
+	private final Texture.Encoding encoding;
 	
 	private final Map<Image, TextureArrayLayer> imageToLayer;
 	/** The index of the next layer in this texture array */
@@ -45,9 +46,14 @@ public class TextureArray implements Cloneable<TextureArray>, Destructible, Text
 	}
 	
 	public TextureArray(int width, int height, int layers, Texture.Wrap wrap, Texture.Filter filter) {
+		this(width, height, layers, wrap, filter, Texture.DEFAULT_ENCODING);
+	}
+	
+	public TextureArray(int width, int height, int layers, Texture.Wrap wrap, Texture.Filter filter, Texture.Encoding encoding) {
 		this.width = width;
 		this.height = height;
 		this.layers = layers;
+		this.encoding = encoding;
 		
 		Application.requireOpenGL();
 		
@@ -160,6 +166,11 @@ public class TextureArray implements Cloneable<TextureArray>, Destructible, Text
 		return height;
 	}
 	
+	@Override
+	public Texture.Encoding getEncoding() {
+		return encoding;
+	}
+	
 	public Collection<TextureArrayLayer> getLayers() {
 		return imageToLayer.values();
 	}
@@ -188,7 +199,7 @@ public class TextureArray implements Cloneable<TextureArray>, Destructible, Text
 	
 	@Override
 	public TextureArray clone() {
-		return new TextureArray(width, height, layers);
+		return new TextureArray(width, height, layers, Texture.DEFAULT_WRAP, Texture.DEFAULT_FILTER, encoding);
 	}
 	
 	/**

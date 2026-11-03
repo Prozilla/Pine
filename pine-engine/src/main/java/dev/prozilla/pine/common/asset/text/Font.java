@@ -1,21 +1,21 @@
 package dev.prozilla.pine.common.asset.text;
 
 import dev.prozilla.pine.common.asset.Asset;
+import dev.prozilla.pine.common.asset.RectPacker;
 import dev.prozilla.pine.common.asset.image.Texture;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.math.vector.Vector2f;
+import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.Renderer;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.stb.STBTTAlignedQuad;
-import org.lwjgl.stb.STBTTBakedChar;
 import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.system.MemoryStack;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,105 +36,78 @@ public class Font implements Asset {
 	private final Texture texture;
 	
 	/** Height of the font. */
-	private float fontHeight;
-	private float fontDescent;
-	private final int size;
+	private float lineHeight;
+	private float descent;
 	public String path;
 	
 	public static final int DEFAULT_SIZE = 16;
-	public static final Color DEFAULT_COLOR = Color.white();
 	public final static String DEFAULT_FONT_PATH = "/fonts/Rubik.ttf";
 	
 	public static final int FIRST_CHAR = 32;
 	public static final int CHAR_COUNT = 224;
 	public static final int DEL_CHAR = 127;
 	
-	/**
-	 * Creates a font from a TTF input stream.
-	 */
-	public Font(InputStream in, int size) throws IOException {
-		this(in, size, true);
-	}
+	/** The pixel height at which glyphs are generated. Text of any other size is scaled from this. */
+	public static final int BASE_SIZE = 32;
+	/** The amount of texels around each glyph that store distance information. */
+	public static final int GLYPH_PADDING = Texture.SIGNED_DISTANCE_FIELD_PADDING;
+	public static final int ATLAS_SIZE = 1024;
+	private static final int ATLAS_MARGIN = 1;
 	
-	/**
-	 * Creates a font from a TTF input stream.
-	 */
-	public Font(InputStream in, int size, boolean antiAlias) throws IOException {
-		glyphs = new HashMap<>();
-		this.size = size;
-		this.texture = createFontTexture(in, size);
-	}
-	
-	public Font(int size) {
-		try (InputStream defaultFont = Font.class.getResourceAsStream(DEFAULT_FONT_PATH)) {
-			if (defaultFont == null) {
+	public Font() {
+		try (InputStream inputStream = Font.class.getResourceAsStream(DEFAULT_FONT_PATH)) {
+			if (inputStream == null) {
 				throw new RuntimeException("Default font missing.");
 			}
 			glyphs = new HashMap<>();
-			this.size = size;
-			this.texture = createFontTexture(defaultFont, size);
+			this.texture = createFontTexture(inputStream);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
 	/**
+	 * Creates a font from a TTF input stream.
+	 */
+	public Font(InputStream in) throws IOException {
+		glyphs = new HashMap<>();
+		this.texture = createFontTexture(in);
+	}
+	
+	/**
 	 * Creates a font texture from a given input stream.
 	 * @param fontStream The input stream
-	 * @param fontSize The size of the font
 	 * @return The font texture
 	 */
-	private Texture createFontTexture(InputStream fontStream, int fontSize) throws IOException {
+	private Texture createFontTexture(InputStream fontStream) throws IOException {
 		ByteBuffer fontBuffer = null;
+		STBTTFontinfo fontInfo = STBTTFontinfo.malloc();
 		try {
-			// Load font bytes
 			byte[] fontBytes = fontStream.readAllBytes();
 			fontBuffer = memAlloc(fontBytes.length);
 			fontBuffer.put(fontBytes).flip();
 			
-			int bitmapWidth = 512;
-			int bitmapHeight = 512;
-			ByteBuffer bitmap = BufferUtils.createByteBuffer(bitmapWidth * bitmapHeight);
-			
-			// Bake ASCII glyphs into a bitmap
-			STBTTBakedChar.Buffer characterData = STBTTBakedChar.malloc(CHAR_COUNT);
-			stbtt_BakeFontBitmap(fontBuffer, fontSize, bitmap, bitmapWidth, bitmapHeight, FIRST_CHAR, characterData);
-			
-			ByteBuffer pixels = createPixelData(bitmapWidth, bitmapHeight, bitmap);
-			Texture texture = new Texture(null, bitmapWidth, bitmapHeight, pixels);
-			
-			STBTTFontinfo fontInfo = STBTTFontinfo.malloc();
 			if (!stbtt_InitFont(fontInfo, fontBuffer)) {
 				throw new IOException("Failed to initialize font");
 			}
 			
-			// Get vertical metrics for proper line height
+			float scale = stbtt_ScaleForPixelHeight(fontInfo, BASE_SIZE);
+			
+			// Get vertical metrics for line height
 			try (MemoryStack stack = MemoryStack.stackPush()) {
-				IntBuffer ascent = stack.mallocInt(1);
-				IntBuffer descent = stack.mallocInt(1);
-				IntBuffer lineGap = stack.mallocInt(1);
+				IntBuffer ascentBuffer = stack.mallocInt(1);
+				IntBuffer descentBuffer = stack.mallocInt(1);
+				IntBuffer lineGapBuffer = stack.mallocInt(1);
 				
-				stbtt_GetFontVMetrics(fontInfo, ascent, descent, lineGap);
+				stbtt_GetFontVMetrics(fontInfo, ascentBuffer, descentBuffer, lineGapBuffer);
 				
-				// Scale to pixel height
-				float scale = stbtt_ScaleForPixelHeight(fontInfo, fontSize);
-				fontHeight = (ascent.get(0) - descent.get(0) + lineGap.get(0)) * scale;
-				fontDescent = descent.get(0) * scale;
-				
-				// Measure each character’s quad size
-				FloatBuffer xPos = stack.floats(0.0f);
-				FloatBuffer yPos = stack.floats(0.0f);
-				STBTTAlignedQuad quad = STBTTAlignedQuad.malloc(stack);
-				
-				for (int i = 0; i < CHAR_COUNT; i++) {
-					createGlyph(i, xPos, yPos, characterData, bitmapWidth, bitmapHeight, quad);
-				}
+				lineHeight = (ascentBuffer.get(0) - descentBuffer.get(0) + lineGapBuffer.get(0)) * scale;
+				descent = descentBuffer.get(0) * scale;
 			}
 			
-			characterData.free();
-			fontInfo.free();
-			return texture;
+			return createSignedDistanceFieldTexture(fontInfo, scale);
 		} finally {
+			fontInfo.free();
 			if (fontBuffer != null) {
 				memFree(fontBuffer);
 			}
@@ -142,45 +115,103 @@ public class Font implements Asset {
 	}
 	
 	/**
-	 * Creates a glyph of a given character and stores it.
-	 * @param i The index of the character in the character data array
-	 * @param xPos The current x position
-	 * @param yPos The current y position
-	 * @param characterData The character data array
-	 * @param bitmapWidth The width of the bitmap
-	 * @param bitmapHeight The height of the bitmap
-	 * @param quad The quad struct to store the character metrics in
+	 * Generates a signed distance field for each glyph, packs them into an atlas and creates a glyph for each character.
+	 * @param fontInfo The font info
+	 * @param scale The scale to generate the glyphs at
+	 * @return The atlas texture
 	 */
-	private void createGlyph(int i, FloatBuffer xPos, FloatBuffer yPos, STBTTBakedChar.Buffer characterData, int bitmapWidth, int bitmapHeight, STBTTAlignedQuad quad) {
-		int code = FIRST_CHAR + i;
-		if (code == DEL_CHAR) {
-			return;
+	private Texture createSignedDistanceFieldTexture(STBTTFontinfo fontInfo, float scale) throws IOException {
+		ByteBuffer alphaMask = BufferUtils.createByteBuffer(ATLAS_SIZE * ATLAS_SIZE);
+		RectPacker packer = new RectPacker(ATLAS_SIZE, ATLAS_SIZE, ATLAS_MARGIN);
+		float distanceScale = Texture.SIGNED_DISTANCE_FIELD_SCALE;
+		
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			IntBuffer widthBuffer = stack.mallocInt(1);
+			IntBuffer heightBuffer = stack.mallocInt(1);
+			IntBuffer offsetXBuffer = stack.mallocInt(1);
+			IntBuffer offsetYBuffer = stack.mallocInt(1);
+			IntBuffer advanceBuffer = stack.mallocInt(1);
+			IntBuffer leftSideBearingBuffer = stack.mallocInt(1);
+			
+			for (int code = FIRST_CHAR; code < FIRST_CHAR + CHAR_COUNT; code++) {
+				if (code == DEL_CHAR) {
+					continue;
+				}
+				char character = (char)code;
+				
+				stbtt_GetCodepointHMetrics(fontInfo, code, advanceBuffer, leftSideBearingBuffer);
+				float advance = advanceBuffer.get(0) * scale;
+				
+				ByteBuffer distanceField = stbtt_GetCodepointSDF(fontInfo, scale, code, GLYPH_PADDING,
+					(byte)Texture.SIGNED_DISTANCE_FIELD_EDGE, distanceScale,
+					widthBuffer, heightBuffer, offsetXBuffer, offsetYBuffer);
+				
+				// Whitespace characters
+				if (distanceField == null) {
+					glyphs.put(character, new Glyph(0, 0, 0, 0, 0, 0, 0, advance));
+					continue;
+				}
+				
+				try {
+					int glyphWidth = widthBuffer.get(0);
+					int glyphHeight = heightBuffer.get(0);
+					
+					Vector2i position = packer.pack(glyphWidth, glyphHeight);
+					if (position == null) {
+						throw new IOException("Font atlas is too small");
+					}
+					
+					for (int row = 0; row < glyphHeight; row++) {
+						for (int column = 0; column < glyphWidth; column++) {
+							int destination = (position.y + row) * ATLAS_SIZE + position.x + column;
+							alphaMask.put(destination, distanceField.get(row * glyphWidth + column));
+						}
+					}
+					
+					float regionY = ATLAS_SIZE - (position.y + glyphHeight);
+					float x = offsetXBuffer.get(0);
+					float y = offsetYBuffer.get(0) + glyphHeight;
+					
+					glyphs.put(character, new Glyph(glyphWidth, glyphHeight, position.x, regionY, x, y, glyphHeight, advance));
+				} finally {
+					stbtt_FreeSDF(distanceField);
+				}
+			}
 		}
-		char character = (char)code;
 		
-		float startX = xPos.get(0);
-		stbtt_GetBakedQuad(characterData, bitmapWidth, bitmapHeight, i, xPos, yPos, quad, true);
-		float endX = xPos.get(0);
-		
-		float regionX = quad.s0() * bitmapWidth;
-		float regionY = (1f - quad.t1()) * bitmapHeight;
-		float regionWidth  = (quad.s1() - quad.s0()) * bitmapWidth;
-		float regionHeight = (quad.t1() - quad.t0()) * bitmapHeight;
-		
-		float y = quad.y1();
-		float height = quad.y1() - quad.y0();
-		float advance = endX - startX;
-		
-		Glyph glyph = new Glyph(regionWidth, regionHeight, regionX, regionY, y, height, advance);
-		glyphs.put(character, glyph);
+		return new Texture(null, ATLAS_SIZE, ATLAS_SIZE,
+			createPixelData(ATLAS_SIZE, ATLAS_SIZE, alphaMask),
+			Texture.Wrap.CLAMP_TO_EDGE, Texture.Filter.LINEAR,
+			Texture.Encoding.SIGNED_DISTANCE_FIELD);
+	}
+	
+	/**
+	 * Calculates the scale factor for drawing this font at a given size.
+	 * @param fontSize The font size, in pixels
+	 */
+	public float getScale(float fontSize) {
+		return fontSize / BASE_SIZE;
+	}
+	
+	public Vector2f getSize(CharSequence text) {
+		return getSize(text, Font.DEFAULT_SIZE);
+	}
+	
+	public Vector2f getSize(CharSequence text, float fontSize) {
+		return new Vector2f(getWidth(text, fontSize), getHeight(text, fontSize));
+	}
+	
+	public float getWidth(CharSequence text) {
+		return getWidth(text, Font.DEFAULT_SIZE);
 	}
 	
 	/**
 	 * Calculates the width of a character sequence in this font.
 	 * @param text The character sequence
+	 * @param fontSize The font size, in pixels
 	 * @return The width of the character sequence.
 	 */
-	public float getWidth(CharSequence text) {
+	public float getWidth(CharSequence text, float fontSize) {
 		float width = 0;
 		float lineWidth = 0;
 		for (int i = 0; i < text.length(); i++) {
@@ -198,40 +229,27 @@ public class Font implements Asset {
 				lineWidth += glyph.advance;
 			}
 		}
-		return Math.max(width, lineWidth);
+		return Math.max(width, lineWidth) * getScale(fontSize);
+	}
+	
+	public float getHeight(CharSequence text) {
+		return getHeight(text, Font.DEFAULT_SIZE);
 	}
 	
 	/**
 	 * Calculates the height of a character sequence in this font.
 	 * @param text The character sequence
+	 * @param fontSize The font size, in pixels
 	 * @return The height of the character sequence.
 	 */
-	public float getHeight(CharSequence text) {
-		float height = 0;
+	public float getHeight(CharSequence text, float fontSize) {
+		int lineCount = 1;
 		for (int i = 0; i < text.length(); i++) {
-			char character = text.charAt(i);
-			if (character == '\n') {
-				height += fontHeight;
+			if (text.charAt(i) == '\n') {
+				lineCount++;
 			}
 		}
-		height += fontHeight;
-		return height;
-	}
-	
-	public int getSize() {
-		return size;
-	}
-	
-	/**
-	 * Draws text on the screen at the given coordinates with the default text color using this font.
-	 * @param renderer The renderer to use
-	 * @param text The text to draw
-	 * @param x The x position
-	 * @param y The y position
-	 * @param z The z position
-	 */
-	public void drawText(Renderer renderer, CharSequence text, float x, float y, float z) {
-		drawText(renderer, text, x, y, z, DEFAULT_COLOR);
+		return lineCount * lineHeight * getScale(fontSize);
 	}
 	
 	/**
@@ -242,22 +260,25 @@ public class Font implements Asset {
 	 * @param y The y position
 	 * @param z The z position
 	 * @param c The color to draw the text in
+	 * @param fontSize The font size, in pixels
 	 */
-	public void drawText(Renderer renderer, CharSequence text, float x, float y, float z, Color c) {
+	public void drawText(Renderer renderer, CharSequence text, float x, float y, float z, Color c, float fontSize) {
+		float scale = getScale(fontSize);
+		float lineHeight = this.lineHeight * scale;
 		float drawX = x;
 		float drawY = y;
 		
-		float textHeight = getHeight(text);
-		if (textHeight > fontHeight) {
-			drawY += textHeight - fontHeight;
+		float textHeight = getHeight(text, fontSize);
+		if (textHeight > lineHeight) {
+			drawY += textHeight - lineHeight;
 		}
 		
-		drawY -= fontDescent;
+		drawY -= descent * scale;
 		
 		for (int i = 0; i < text.length(); i++) {
 			char character = text.charAt(i);
 			if (character == '\n') {
-				drawY -= fontHeight;
+				drawY -= lineHeight;
 				drawX = x;
 				continue;
 			}
@@ -265,20 +286,23 @@ public class Font implements Asset {
 				continue;
 			}
 			Glyph glyph = glyphs.get(character);
-			if (glyph != null) {
-				float glyphX = Math.round(drawX);
-				float glyphY = Math.round(drawY) - glyph.y;
-				renderer.drawQuad(texture, glyphX, glyphY, z, glyph.regionX, glyph.regionY, glyph.regionWidth, glyph.regionHeight, c);
-				drawX += glyph.advance;
+			if (glyph == null) {
+				continue;
 			}
+			
+			// Only draw non-whitespace glyphs
+			if (glyph.regionWidth > 0) {
+				float glyphX = Math.round(drawX);
+				float glyphY = Math.round(drawY);
+				
+				renderer.drawQuad(texture,
+					glyphX + glyph.x * scale, glyphY - glyph.y * scale, z,
+					glyph.regionX, glyph.regionY, glyph.regionWidth, glyph.regionHeight,
+					glyph.regionWidth * scale, glyph.regionHeight * scale, c);
+			}
+			
+			drawX += glyph.advance * scale;
 		}
-	}
-	
-	/**
-	 * Creates a new font from the same font file, but with a different size.
-	 */
-	public Font setSize(int size) {
-		return AssetPools.fonts.load(path, size);
 	}
 	
 	@Override
@@ -296,10 +320,6 @@ public class Font implements Asset {
 			AssetPools.fonts.remove(this);
 		}
 		texture.destroy();
-	}
-	
-	public static String generateKey(String path, int size) {
-		return String.format("%s:%s", path, size);
 	}
 	
 	/**
