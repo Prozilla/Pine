@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.rendering.shader;
 
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.matrix.Matrix4f;
 import dev.prozilla.pine.common.math.vector.Vector3f;
 import dev.prozilla.pine.common.system.Color;
@@ -38,6 +39,12 @@ public class LitShaderProgram extends ShaderProgram {
 	
 	public static final CharSequence[] ATTRIBUTE_NAMES = { "vPosition", "vNormal", "vColor", "vTexCoords", "vTexId", "vIsArrayTexture" };
 	public static final int[] ATTRIBUTE_SIZES = { 3, 3, 4, 2, 1, 1 };
+	
+	@Override
+	protected Shader loadFragmentShader() {
+		AssetPools.shaders.addConstant("int", "CASCADE_COUNT", String.valueOf(CascadeShadow.COUNT));
+		return super.loadFragmentShader();
+	}
 	
 	@Override
 	protected String getVertexShaderPath() {

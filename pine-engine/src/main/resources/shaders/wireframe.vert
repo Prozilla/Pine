@@ -12,29 +12,18 @@ uniform mat4 uProjection;
 uniform bool uSnapPixels;
 uniform vec2 uViewportSize;
 
-out vec3 fBarycentric;
-out vec4 fColor;
-out vec2 fTexCoords;
-out float fTexId;
-out float fIsArrayTexture;
+out vec4 gColor;
+out vec2 gTexCoords;
+out float gTexId;
+out float gIsArrayTexture;
 
-vec4 snapToPixel(vec4 position) {
-    vec2 normalizedPosition = position.xy / position.w;
-    vec2 pixelPosition = (normalizedPosition * 0.5 + 0.5) * uViewportSize;
-    pixelPosition = round(pixelPosition);
-    normalizedPosition = (pixelPosition / uViewportSize) * 2 - 1;
-    return vec4(normalizedPosition * position.w, position.z, position.w);
-}
+#include "common/snap-to-pixel.glsl"
 
 void main() {
-    // Pass properties to fragment shader
-    fColor = vColor;
-    fTexCoords = vTexCoords;
-    fTexId = vTexId;
-    fIsArrayTexture = vIsArrayTexture;
-
-    int corner = gl_VertexID % 3;
-    fBarycentric = vec3(corner == 0, corner == 1, corner == 2);
+    gColor = vColor;
+    gTexCoords = vTexCoords;
+    gTexId = vTexId;
+    gIsArrayTexture = vIsArrayTexture;
 
     vec4 position = uProjection * uView * uModel * vec4(vPosition, 1.0);
     if (uSnapPixels) {

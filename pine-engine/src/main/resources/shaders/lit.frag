@@ -1,7 +1,8 @@
 #version 410 core
 
+#include "common/desaturate.glsl"
+
 const float SPECULAR_POWER = 50;
-const int NUM_CASCADES = 3; // Must match CascadeShadow.COUNT
 const float SHADOW_BIAS = 0.0005;
 const bool DEBUG_SHADOWS = false;
 
@@ -42,8 +43,8 @@ struct Cascade {
     mat4 projView;
     float splitDistance;
 };
-uniform Cascade uCascades[NUM_CASCADES];
-uniform sampler2D uShadowMaps[NUM_CASCADES];
+uniform Cascade uCascades[CASCADE_COUNT];
+uniform sampler2D uShadowMaps[CASCADE_COUNT];
 uniform bool uShadowsEnabled;
 
 struct Fog {
@@ -84,7 +85,7 @@ vec3 computeSkyLight(SkyLight light, vec3 ambient, vec3 diffuse) {
 
 int computeCascadeIndex(float viewZ) {
     int cascade = 0;
-    for (int i = 0; i < NUM_CASCADES - 1; i++) {
+    for (int i = 0; i < CASCADE_COUNT - 1; i++) {
         if (viewZ < uCascades[i].splitDistance) {
             cascade = i + 1;
         }
@@ -111,11 +112,6 @@ float computeShadow(int cascade, vec3 worldPosition) {
 
     float closestDepth = sampleShadowMap(cascade, coords.xy);
     return coords.z - SHADOW_BIAS > closestDepth ? 0.0 : 1.0;
-}
-
-vec3 desaturate(vec3 color, float factor) {
-    float greyscale = dot(color.rgb, vec3(0.3, 0.59, 0.11));
-    return mix(color, vec3(greyscale), factor);
 }
 
 vec3 computeFog(vec3 position, vec3 color, Fog fog) {
