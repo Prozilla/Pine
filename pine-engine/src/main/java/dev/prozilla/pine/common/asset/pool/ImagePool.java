@@ -68,6 +68,7 @@ public final class ImagePool extends AssetPool<Image> implements MultiAssetLoade
 	
 	@Override
 	protected void prepareNext() {
+		super.prepareNext();
 		flipVertically = DEFAULT_FLIP_VERTICALLY;
 	}
 	

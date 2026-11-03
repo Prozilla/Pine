@@ -21,6 +21,7 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 	
 	protected final Map<String, T> pool;
 	protected final AssetPoolEventDispatcher<T> eventDispatcher;
+	protected StringBuilder errorBuilder;
 	
 	public static final String UNKNOWN_ERROR = "Unknown error";
 	public static final String NOT_FOUND_ERROR = "File not found";
@@ -28,6 +29,7 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 	public AssetPool() {
 		pool = new HashMap<>();
 		eventDispatcher = new AssetPoolEventDispatcher<>();
+		errorBuilder = new StringBuilder();
 	}
 	
 	/**
@@ -77,7 +79,7 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 	 * Prepares this pool for the next asset.
 	 */
 	protected void prepareNext() {
-	
+		errorBuilder = new StringBuilder();
 	}
 	
 	/**
@@ -88,37 +90,48 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 	protected abstract T createAsset(String path);
 	
 	/**
-	 * Utility method for marking the asset creation as failed.
+	 * Utility method for marking the asset creation as failed and reporting an error message.
 	 * @return {@code null}
+	 * @see #fail(String, String, Exception)
 	 */
 	protected T fail(String path) {
 		return fail(path, null, null);
 	}
 	
 	/**
-	 * Utility method for marking the asset creation as failed.
+	 * Utility method for marking the asset creation as failed and reporting an error message.
 	 * @param reason The reason of the failure
 	 * @return {@code null}
+	 * @see #fail(String, String, Exception) 
 	 */
 	protected T fail(String path, String reason) {
 		return fail(path, reason, null);
 	}
 	
 	/**
-	 * Utility method for marking the asset creation as failed.
+	 * Utility method for marking the asset creation as failed and reporting an error message.
 	 * @return {@code null}
+	 * @see #fail(String, String, Exception) 
 	 */
 	protected T fail(String path, Exception exception) {
 		return fail(path, null, exception);
 	}
 	
 	/**
-	 * Utility method for marking the asset creation as failed.
+	 * Utility method for marking the asset creation as failed and reporting an error message.
+	 * <p>
+	 *     This method should only be called at the end of the pipeline. Intermediate errors should be reported using {@link #error(String)}.
+	 * </p>
 	 * @param reason The reason of the failure
 	 * @return {@code null}
 	 */
 	@Contract("_, _, _ -> null")
 	protected T fail(String path, String reason, Exception exception) {
+		if (!errorBuilder.isEmpty()) {
+			error(reason);
+			reason = errorBuilder.toString();
+		}
+		
 		if (!eventDispatcher.invoke(AssetPoolEvent.Type.FAILED, this, path, reason, exception)) {
 			String message = String.format("Failed to load asset: %s", path);
 			if (reason != null) {
@@ -126,7 +139,24 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 			}
 			Logger.system.error(message, exception);
 		}
+		
+		prepareNext();
 		return null;
+	}
+	
+	/**
+	 * Prepends an error message to the current error string.
+	 * <p>
+	 *     The final concatenation of all error messages is appended to the reason and reported when {@link #fail(String, String, Exception)} is called.
+	 * </p>
+	 * @param message The error message
+	 */
+	protected void error(String message) {
+		if (message == null) {
+			return;
+		}
+		errorBuilder.insert(0, ": ");
+		errorBuilder.insert(0, message);
 	}
 	
 	/**
@@ -205,8 +235,8 @@ public abstract class AssetPool<T extends Asset> implements Destructible {
 		logger.log(getClass().getSimpleName() + ": " + count());
 	}
 	
-	public final void addListener(AssetPoolEvent.Type type, EventListener<AssetPoolEvent<T>> listener) {
-		eventDispatcher.addListener(type, listener);
+	public final EventListener<AssetPoolEvent<T>> addListener(AssetPoolEvent.Type type, EventListener<AssetPoolEvent<T>> listener) {
+		return eventDispatcher.addListener(type, listener);
 	}
 	
 	public final void removeListener(AssetPoolEvent.Type type, EventListener<AssetPoolEvent<T>> listener) {

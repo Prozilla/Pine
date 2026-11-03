@@ -14,6 +14,7 @@ public class WireframeShaderProgram extends ShaderProgram {
 	public FloatUniform fillAlphaUniform;
 	
 	public final static String VERTEX_SHADER_PATH = "/shaders/wireframe.vert";
+	public final static String GEOMETRY_SHADER_PATH = "/shaders/wireframe.geom";
 	public final static String FRAGMENT_SHADER_PATH = "/shaders/wireframe.frag";
 	
 	public static final CharSequence[] ATTRIBUTE_NAMES = { "vPosition", "vColor", "vTexCoords", "vTexId", "vTextureType" };
@@ -22,6 +23,11 @@ public class WireframeShaderProgram extends ShaderProgram {
 	@Override
 	protected String getVertexShaderPath() {
 		return VERTEX_SHADER_PATH;
+	}
+	
+	@Override
+	protected String getGeometryShaderPath() {
+		return GEOMETRY_SHADER_PATH;
 	}
 	
 	@Override

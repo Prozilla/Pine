@@ -168,6 +168,4 @@ public final class PathUtils {
 		return path.replaceFirst("[^/]*/?$", "");
 	}
 	
-	
-	
 }

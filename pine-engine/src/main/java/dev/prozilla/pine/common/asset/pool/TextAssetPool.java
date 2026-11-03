@@ -14,6 +14,9 @@ import java.io.InputStreamReader;
  */
 public abstract class TextAssetPool<T extends Asset> extends AssetPool<T> {
 	
+	public static final String PREPROCESS_ERROR = "Failed to preprocess";
+	public static final String PARSE_ERROR = "Failed to parse";
+	
 	/**
 	 * Creates a new asset by reading and parsing a text file.
 	 * @param path The path of the text file
@@ -38,10 +41,14 @@ public abstract class TextAssetPool<T extends Asset> extends AssetPool<T> {
 			return fail(path, e);
 		}
 		
-		T result = parse(path, preprocess(stringBuilder));
+		String content = preprocess(path, stringBuilder);
+		if (content == null) {
+			return fail(path, PREPROCESS_ERROR);
+		}
 		
+		T result = parse(path, content);
 		if (result == null) {
-			return fail(path, "Failed to parse");
+			return fail(path, PARSE_ERROR);
 		}
 		
 		return result;
@@ -53,10 +60,11 @@ public abstract class TextAssetPool<T extends Asset> extends AssetPool<T> {
 	
 	/**
 	 * Preprocesses the content of the text file.
+	 * @param path The path of the text file
 	 * @param stringBuilder The string builder containing the content of the text file.
-	 * @return The preprocessed content of the text file.
+	 * @return The preprocessed content of the text file, or {@code null} if preprocessing failed.
 	 */
-	protected String preprocess(StringBuilder stringBuilder) {
+	protected String preprocess(String path, StringBuilder stringBuilder) {
 		return stringBuilder.toString();
 	}
 	
