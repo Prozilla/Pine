@@ -8,6 +8,10 @@
     padding: 32px 16px;
 }
 
+h1, p, button {
+    font-family: flappy-bird;
+}
+
 h1, p {
     color: black;
     margin: 0;

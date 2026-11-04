@@ -103,6 +103,7 @@ public class GameScene extends SceneBase {
 		nodeRoot.addChild(scorePrefab);
 		
 		View gameOverView = AssetPools.views.load("view/game-over.html");
+		gameOverView.prefab.getStyleSheets().getFirst().addFontFamily("flappy-bird", font);
 		gameOverView.addController(new GameOverController(this));
 		gameOverMenu = gameOverView.instantiate(nodeRoot);
 		gameOverMenu.setActive(false);

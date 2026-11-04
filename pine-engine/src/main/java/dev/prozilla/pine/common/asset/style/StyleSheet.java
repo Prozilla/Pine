@@ -39,13 +39,16 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 	
 	private final Map<StyledPropertyKey<?>, Style<?, ?>> styles;
 	private List<StyleSheet> sources;
+	private final Map<String, Font> fontFamilies;
 	
 	public String path;
 	
 	private int holderCount;
 	
 	private static final Map<Key, StyleSheet> CACHE = new HashMap<>();
+	
 	public static final StyleSheet DEFAULT = createDefault();
+	public static final String DEFAULT_FONT_FAMILY = "default";
 	
 	public StyleSheet() {
 		this(null);
@@ -53,7 +56,9 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 	
 	public StyleSheet(String path) {
 		this.path = path;
+		
 		styles = new HashMap<>();
+		fontFamilies = new HashMap<>();
 	}
 	
 	public <T> void parseRule(Selector selector, StyledPropertyKey<T> key, String input) {
@@ -95,10 +100,7 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 	}
 	
 	protected void addTransition(Selector selector, StyledPropertyKey<?> key, AnimationCurve value, boolean isDefault) {
-		addTransition(key, new StyleRule<>(selector, value, isDefault));
-	}
-	
-	protected void addTransition(StyledPropertyKey<?> key, StyleRule<AnimationCurve> transitionRule) {
+		StyleRule<AnimationCurve> transitionRule = new StyleRule<>(selector, value, isDefault);
 		Style<?, ?> style = getStyle(key, true);
 		style.addTransitionRule(transitionRule);
 		invalidateCached(this);
@@ -112,8 +114,12 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 		invalidateCached(this);
 	}
 	
-	protected void trackProperty(StyledProperty<?, ?, ?, ?> property) {
+	public void addFontFamily(String name, Font font) {
+		fontFamilies.put(name, font);
+	}
 	
+	public Font getFontFamily(String name) {
+		return fontFamilies.get(name);
 	}
 	
 	@Contract("_ -> new")
@@ -211,6 +217,11 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 		return createStyledDimensionProperty(StyledPropertyKey.FONT_SIZE, node, new Dimension(Font.DEFAULT_SIZE));
 	}
 	
+	@Contract("_ -> new")
+	public StyledStringProperty createFontFamilyProperty(Node node) {
+		return createStyledStringProperty(StyledPropertyKey.FONT_FAMILY, node, DEFAULT_FONT_FAMILY);
+	}
+	
 	protected StyledColorProperty createStyledColorProperty(StyledPropertyKey<Color> key, Node node, Color fallbackValue) {
 		return createStyledProperty(key, node, new AdaptiveColorProperty(fallbackValue),  (Style.StyledPropertyFactory<Color, AdaptiveObjectProperty<Color>, StyledColorProperty>)StyledColorProperty::new);
 	}
@@ -251,6 +262,10 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<LineStyle, AdaptiveObjectProperty<LineStyle>, StyledLineStyleProperty>)StyledLineStyleProperty::new);
 	}
 	
+	protected StyledStringProperty createStyledStringProperty(StyledPropertyKey<String> key, Node node, String fallbackValue) {
+		return createStyledProperty(key, node, new AdaptiveObjectProperty<>(fallbackValue),  (Style.StyledPropertyFactory<String, AdaptiveObjectProperty<String>, StyledStringProperty>)StyledStringProperty::new);
+	}
+	
 	@SuppressWarnings("unchecked")
 	protected <T, A extends AdaptiveProperty<T, ?>, P extends StyledProperty<T, ?, A, ?>> P createStyledProperty(StyledPropertyKey<T> name, Node node, A fallbackValue, Style.StyledPropertyFactory<T, A, P> factory) {
 		Style<T, A> style = getStyle(name, false, fallbackValue.getClass());
@@ -267,6 +282,10 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 		}
 		
 		return property;
+	}
+	
+	protected void trackProperty(StyledProperty<?, ?, ?, ?> property) {
+	
 	}
 	
 	@Contract("_, true, _ -> !null")

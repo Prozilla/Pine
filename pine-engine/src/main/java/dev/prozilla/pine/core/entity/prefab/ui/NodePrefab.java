@@ -51,7 +51,7 @@ public class NodePrefab extends LayerPrefab {
 	protected Set<String> classes;
 	protected Map<String, String> attributes;
 	
-	protected final LinkedHashSet<StyleSheet> styleSheets;
+	protected final SequencedSet<StyleSheet> styleSheets;
 	protected boolean useDefaultStyleSheet;
 	
 	public NodePrefab() {
@@ -67,6 +67,10 @@ public class NodePrefab extends LayerPrefab {
 		useDefaultStyleSheet = true;
 		
 		setName("Node");
+	}
+	
+	public SequencedSet<StyleSheet> getStyleSheets() {
+		return styleSheets;
 	}
 	
 	public void setStyleSheets(List<? extends StyleSheet> styleSheets) {

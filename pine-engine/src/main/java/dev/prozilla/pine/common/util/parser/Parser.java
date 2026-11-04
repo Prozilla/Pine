@@ -21,6 +21,13 @@ public abstract class Parser<T> implements Printable {
 	public static final String GENERIC_ERROR = "Failed to parse input";
 	public static final String UNEXPECTED_END_OF_INPUT_ERROR = "Unexpected end of input";
 	
+	public static final Parser<String> STRING_PARSER = new Parser<>() {
+		@Override
+		public boolean parse(String input) {
+			return succeed(input);
+		}
+	};
+	
 	/**
 	 * Parses an input string and throws an exception if the parsing fails.
 	 * @param input The input string to parse

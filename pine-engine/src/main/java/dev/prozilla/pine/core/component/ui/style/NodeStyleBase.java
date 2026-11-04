@@ -45,6 +45,11 @@ public abstract class NodeStyleBase extends Component {
 			for (Node childNode : node.children) {
 				childNode.addStyleSheet(styleSheet);
 			}
+			for (NodeStyleBase nodeStyle : getComponents(NodeStyleBase.class)) {
+				if (nodeStyle != this) {
+					nodeStyle.applyStyleSheet(styleSheet);
+				}
+			}
 			createProperties();
 		}
 	}

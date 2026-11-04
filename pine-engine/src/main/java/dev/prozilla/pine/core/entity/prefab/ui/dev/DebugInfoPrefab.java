@@ -1,6 +1,7 @@
 package dev.prozilla.pine.core.entity.prefab.ui.dev;
 
 import dev.prozilla.pine.common.asset.pool.AssetPools;
+import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.core.entity.prefab.ui.TextPrefab;
 import dev.prozilla.pine.core.state.Timer;
 import dev.prozilla.pine.core.state.Tracker;
@@ -20,7 +21,7 @@ public class DebugInfoPrefab extends TextPrefab {
 			+ tracker.getComponentCount() + " components\n"
 			+ tracker.getSystemCount() + " systems"
 		);
-		setFont(AssetPools.fonts.load("fonts/JetBrainsMono.ttf"));
+		setFont(AssetPools.fonts.load(Font.MONO_FONT_PATH));
 		setStyleSheet("style/debug-info.css");
 	}
 	

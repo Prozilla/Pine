@@ -102,11 +102,7 @@ public final class StyledPropertyKey<T> {
 				default -> null;
 			};
 			
-			if (cursor == null) {
-				return fail();
-			}
-			
-			return succeed(cursor);
+			return cursor != null ? succeed(cursor) : fail();
 		}
 	});
 	public static final StyledPropertyKey<DimensionBase> BORDER_WIDTH = new StyledPropertyKey<>("border-width", dimensionParser);
@@ -117,6 +113,7 @@ public final class StyledPropertyKey<T> {
 	public static final StyledPropertyKey<Color> OUTLINE_COLOR = new StyledPropertyKey<>("outline-color", colorParser);
 	public static final StyledPropertyKey<DimensionBase> OUTLINE_OFFSET = new StyledPropertyKey<>("outline-width", dimensionParser);
 	public static final StyledPropertyKey<DimensionBase> FONT_SIZE = new StyledPropertyKey<>("font-size", dimensionParser);
+	public static final StyledPropertyKey<String> FONT_FAMILY = new StyledPropertyKey<>("font-family", Parser.STRING_PARSER);
 	
 	private static final StyledPropertyKey<?>[] KEYS = new StyledPropertyKey<?>[] {
 		COLOR,
@@ -137,7 +134,8 @@ public final class StyledPropertyKey<T> {
 		OUTLINE_STYLE,
 		OUTLINE_COLOR,
 		OUTLINE_OFFSET,
-		FONT_SIZE
+		FONT_SIZE,
+		FONT_FAMILY
 	};
 	
 	private final String string;

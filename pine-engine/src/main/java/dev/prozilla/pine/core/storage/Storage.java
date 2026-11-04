@@ -483,6 +483,7 @@ public abstract class Storage implements Initializable, Destructible, Transceiva
 	}
 	
 	protected boolean shouldSave() {
+		// TODO: Only save if modified
 		return isInitialized && config.saveOnWrite.get();
 	}
 	

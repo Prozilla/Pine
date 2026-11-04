@@ -10,6 +10,7 @@
     padding: 8px;
     color: white;
     background-color: rgba(0, 0, 0, 0.85);
+    font-family: monospace;
 }
 
 #dev-console > div {
@@ -21,4 +22,5 @@
 p {
     color: white;
     margin: 0;
+    font-family: monospace;
 }

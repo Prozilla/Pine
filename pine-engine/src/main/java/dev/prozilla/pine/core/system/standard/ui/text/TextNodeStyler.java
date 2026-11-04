@@ -19,6 +19,9 @@ public final class TextNodeStyler extends UpdateSystem {
 		if (textNodeStyle.getFontSizeProperty() != null) {
 			textNode.setFontSize(textNodeStyle.getFontSizeProperty().getValue());
 		}
+		if (textNodeStyle.getFontFamilyProperty() != null) {
+			textNode.setFont(textNodeStyle.getFont());
+		}
 	}
 	
 }

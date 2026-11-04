@@ -41,8 +41,11 @@ public class Font implements Asset {
 	
 	private int holderCount;
 	
+	public static final String BODY_FONT_PATH = "/fonts/Rubik.ttf";
+	public static final String MONO_FONT_PATH = "/fonts/JetBrainsMono.ttf";
+	
 	public static final int DEFAULT_SIZE = 16;
-	public final static String DEFAULT_FONT_PATH = "/fonts/Rubik.ttf";
+	public final static String DEFAULT_FONT_PATH = BODY_FONT_PATH;
 	
 	public static final int FIRST_CHAR = 32;
 	public static final int CHAR_COUNT = 224;
