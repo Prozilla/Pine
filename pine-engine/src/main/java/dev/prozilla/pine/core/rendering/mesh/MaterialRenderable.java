@@ -17,10 +17,10 @@ public interface MaterialRenderable extends TexturedRenderable {
 			draw(renderer);
 		} else {
 			renderer.setMaterial(material);
-			if (material.color != null && material.texture != null) {
-				draw(renderer, material.texture, material.color);
+			if (material.color != null && material.getTexture() != null) {
+				draw(renderer, material.getTexture(), material.color);
 			} else if (material.color == null) {
-				draw(renderer, material.texture);
+				draw(renderer, material.getTexture());
 			} else {
 				draw(renderer, material.color);
 			}

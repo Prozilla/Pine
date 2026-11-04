@@ -20,7 +20,7 @@ public final class MeshRenderSystem extends RenderSystem {
 			return;
 		}
 		
-		meshRenderer.mesh.draw(renderer, meshRenderer.material);
+		meshRenderer.mesh.draw(renderer, meshRenderer.getMaterial());
 	}
 	
 }

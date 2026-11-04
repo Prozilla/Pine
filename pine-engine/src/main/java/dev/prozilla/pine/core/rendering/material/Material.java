@@ -1,18 +1,22 @@
 package dev.prozilla.pine.core.rendering.material;
 
+import dev.prozilla.pine.common.Holdable;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.rendering.shader.ShaderProgram;
 
-public class Material<S extends ShaderProgram> {
+public class Material<S extends ShaderProgram> implements Holdable {
 
 	protected final S shaderProgram;
 	
-	public TextureAsset texture;
+	protected TextureAsset texture;
 	public Color color;
 	public boolean snapPixels;
+	
+	private int holderCount;
 	
 	public Material(S shaderProgram) {
 		this(shaderProgram, null, null);
@@ -28,7 +32,7 @@ public class Material<S extends ShaderProgram> {
 	
 	public Material(S shaderProgram, TextureAsset texture, Color color) {
 		this.shaderProgram = Checks.isNotNull(shaderProgram, "shaderProgram");
-		this.texture = texture;
+		this.texture = Holdable.hold(texture);
 		this.color = color;
 		snapPixels = false;
 	}
@@ -41,12 +45,45 @@ public class Material<S extends ShaderProgram> {
 		return texture != null;
 	}
 	
+	public TextureAsset getTexture() {
+		return texture;
+	}
+	
+	public void setTexture(String texturePath) {
+		setTexture(AssetPools.textures.load(texturePath));
+	}
+	
+	public void setTexture(TextureAsset texture) {
+		this.texture = Holdable.swap(this.texture, texture);
+	}
+	
 	public boolean hasColor() {
 		return color != null;
 	}
 	
 	public void bind() {
 		shaderProgram.snapPixelsUniform.set(snapPixels);
+	}
+	
+	@Override
+	public void hold() {
+		holderCount++;
+	}
+	
+	@Override
+	public void drop() {
+		holderCount--;
+		checkHoldState();
+	}
+	
+	@Override
+	public int getHolderCount() {
+		return holderCount;
+	}
+	
+	@Override
+	public void destroy() {
+		texture = Holdable.drop(texture);
 	}
 	
 	@Override

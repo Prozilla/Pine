@@ -8,7 +8,6 @@ import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.common.system.Color;
 import dev.prozilla.pine.core.rendering.Renderer;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.system.MemoryStack;
@@ -40,6 +39,8 @@ public class Font implements Asset {
 	private float descent;
 	public String path;
 	
+	private int holderCount;
+	
 	public static final int DEFAULT_SIZE = 16;
 	public final static String DEFAULT_FONT_PATH = "/fonts/Rubik.ttf";
 	
@@ -60,7 +61,7 @@ public class Font implements Asset {
 				throw new RuntimeException("Default font missing.");
 			}
 			glyphs = new HashMap<>();
-			this.texture = createFontTexture(inputStream);
+			texture = createFontTexture(inputStream);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -69,9 +70,9 @@ public class Font implements Asset {
 	/**
 	 * Creates a font from a TTF input stream.
 	 */
-	public Font(InputStream in) throws IOException {
+	public Font(InputStream inputStream) throws IOException {
 		glyphs = new HashMap<>();
-		this.texture = createFontTexture(in);
+		texture = createFontTexture(inputStream);
 	}
 	
 	/**
@@ -310,31 +311,44 @@ public class Font implements Asset {
 		return path;
 	}
 	
+	@Override
+	public void hold() {
+		holderCount++;
+	}
+	
+	@Override
+	public void drop() {
+		holderCount--;
+		checkHoldState();
+	}
+	
+	@Override
+	public int getHolderCount() {
+		return holderCount;
+	}
+	
 	/**
 	 * Deletes the font.
 	 */
 	@Override
 	public void destroy() {
-		String path = getPath();
-		if (path != null) {
-			AssetPools.fonts.remove(this);
-		}
+		AssetPools.fonts.remove(this);
 		texture.destroy();
 	}
 	
 	/**
 	 * Converts a bitmap to a buffer with RGBA values for each pixel.
-	 * @param bitmapWidth The width of the bitmap
-	 * @param bitmapHeight The height of the bitmap
+	 * @param width The width of the bitmap
+	 * @param height The height of the bitmap
 	 * @param bitmap The bitmap
 	 * @return The buffer containing RGBA values for each pixel
 	 */
-	private static @NotNull ByteBuffer createPixelData(int bitmapWidth, int bitmapHeight, ByteBuffer bitmap) {
-		ByteBuffer rgba = BufferUtils.createByteBuffer(bitmapWidth * bitmapHeight * 4);
-		for (int y = 0; y < bitmapHeight; y++) {
-			for (int x = 0; x < bitmapWidth; x++) {
-				int source = y * bitmapWidth + x;
-				int destination = (bitmapHeight - 1 - y) * bitmapWidth + x;
+	private static ByteBuffer createPixelData(int width, int height, ByteBuffer bitmap) {
+		ByteBuffer rgba = BufferUtils.createByteBuffer(width * height * 4);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				int source = y * width + x;
+				int destination = (height - 1 - y) * width + x;
 				
 				byte alpha = bitmap.get(source);
 				

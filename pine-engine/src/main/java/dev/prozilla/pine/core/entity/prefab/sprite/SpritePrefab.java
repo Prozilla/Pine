@@ -42,6 +42,10 @@ public class SpritePrefab extends LayerPrefab {
 		setName("Sprite");
 	}
 	
+	public TextureAsset getTexture() {
+		return texture;
+	}
+	
 	/**
 	 * Crops the sprite to a given region.
 	 */

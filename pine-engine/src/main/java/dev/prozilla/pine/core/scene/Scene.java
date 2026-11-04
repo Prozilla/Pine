@@ -1,6 +1,8 @@
 package dev.prozilla.pine.core.scene;
 
+import dev.prozilla.pine.common.Holdable;
 import dev.prozilla.pine.common.Printable;
+import dev.prozilla.pine.common.asset.Asset;
 import dev.prozilla.pine.common.lifecycle.*;
 import dev.prozilla.pine.common.logging.Logger;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -58,7 +60,9 @@ import dev.prozilla.pine.core.system.standard.ui.tooltip.TooltipInputHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Represents a collection of entities, components and systems.
@@ -106,6 +110,9 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	 */
 	private final List<SystemBase> initialSystems;
 	
+	// Assets
+	protected final Set<Asset> assets;
+	
 	private static int lastId = 0;
 	
 	/**
@@ -133,6 +140,8 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		
 		initialSystems = new ArrayList<>();
 		useStandardSystems();
+		
+		assets = new HashSet<>();
 		
 		reset();
 	}
@@ -394,6 +403,7 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		devConsole = null;
 		debugInfo = null;
 		sunLightCollector = null;
+		clearAssets();
 		
 		reset();
 	}
@@ -670,6 +680,41 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	
 	public SunLight getSunLight() {
 		return sunLightCollector != null ? sunLightCollector.getSunLight() : null;
+	}
+	
+	/**
+	 * Holds an asset in this scene to preserve it during the lifetime of this scene.
+	 * @param asset The asset to hold
+	 * @return {@code asset}
+	 * @param <A> The type of asset.
+	 * @see Holdable#hold()
+	 */
+	public <A extends Asset> A addAsset(A asset) {
+		if (asset != null && assets.add(asset)) {
+			asset.hold();
+		}
+		return asset;
+	}
+	
+	/**
+	 * Drops an asset from this scene.
+	 * @param asset The asset to drop
+	 * @see Holdable#drop()
+	 */
+	public boolean removeAsset(Asset asset) {
+		if (asset != null && assets.remove(asset)) {
+			asset.drop();
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Drops all assets in this scene.
+	 * @see Holdable#drop()
+	 */
+	public void clearAssets() {
+		Holdable.dropAndClear(assets);
 	}
 	
 }

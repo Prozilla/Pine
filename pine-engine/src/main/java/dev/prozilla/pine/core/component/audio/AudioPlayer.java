@@ -33,6 +33,7 @@ public class AudioPlayer extends Component implements AudioSourceContext {
 	
 	public AudioPlayer(AudioSource source, float volume) {
 		this.source = Checks.isNotNull(source, "source");
+		this.source.hold();
 		this.volume = DEFAULT_VOLUME;
 		
 		setVolume(volume);
@@ -57,7 +58,9 @@ public class AudioPlayer extends Component implements AudioSourceContext {
 	}
 	
 	public void setSource(AudioSource source) {
+		this.source.drop();
 		this.source = Checks.isNotNull(source, "source");
+		this.source.hold();
 	}
 	
 	@Override
@@ -121,7 +124,7 @@ public class AudioPlayer extends Component implements AudioSourceContext {
 	@Override
 	public void destroy() {
 		super.destroy();
-		source.destroy();
+		source.drop();
 	}
 	
 }

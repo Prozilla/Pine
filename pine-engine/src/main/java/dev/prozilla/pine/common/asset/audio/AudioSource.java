@@ -2,6 +2,7 @@ package dev.prozilla.pine.common.asset.audio;
 
 import dev.prozilla.pine.common.Cloneable;
 import dev.prozilla.pine.common.asset.Asset;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.lifecycle.Initializable;
 import dev.prozilla.pine.common.util.checks.Checks;
@@ -28,6 +29,8 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	private boolean capture;
 	
 	private final String path;
+	
+	private int holderCount;
 	
 	public AudioSource(ShortBuffer buffer, int channels, int sampleRate) {
 		this(null, buffer, channels, sampleRate);
@@ -79,7 +82,24 @@ public class AudioSource implements Initializable, Destructible, Asset, AudioSou
 	}
 	
 	@Override
+	public void hold() {
+		holderCount++;
+	}
+	
+	@Override
+	public void drop() {
+		holderCount--;
+		checkHoldState();
+	}
+	
+	@Override
+	public int getHolderCount() {
+		return holderCount;
+	}
+	
+	@Override
 	public void destroy() {
+		AssetPools.audioSources.remove(this);
 		if (initialized) {
 			alDeleteSources(sourcePointer);
 			alDeleteBuffers(bufferPointer);

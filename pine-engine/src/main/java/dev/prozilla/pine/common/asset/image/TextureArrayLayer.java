@@ -103,6 +103,21 @@ public class TextureArrayLayer implements TextureAsset, Cloneable<TextureArrayLa
 		return textureArray.addLayer(path);
 	}
 	
+	@Override
+	public void hold() {
+		textureArray.hold();
+	}
+	
+	@Override
+	public void drop() {
+		textureArray.drop();
+	}
+	
+	@Override
+	public int getHolderCount() {
+		return textureArray.getHolderCount();
+	}
+	
 	/**
 	 * Destroys the texture array.
 	 */
@@ -111,4 +126,5 @@ public class TextureArrayLayer implements TextureAsset, Cloneable<TextureArrayLa
 		TextureAsset.super.destroy();
 		textureArray.destroy();
 	}
+	
 }

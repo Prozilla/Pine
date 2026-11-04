@@ -137,11 +137,12 @@ public class PlayerMover extends UpdateSystem {
 			case 3 -> offset.x = delta;
 		}
 		sprite.getMesh().setOffset(offset);
+		sprite.preserveTexture();
 	}
 	
 	private void setRegion(SpriteRenderer sprite, int regionOffsetY) {
 		float size = GameScene.CELL_SIZE;
-		TextureAsset texture = sprite.material.texture;
+		TextureAsset texture = sprite.getTexture();
 		float textureWidth = texture.getWidth();
 		float textureHeight = texture.getHeight();
 		

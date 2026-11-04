@@ -45,7 +45,7 @@ public class MeshPrefab<M extends Mesh> extends Prefab {
 		if (material == null) {
 			material = new UnlitMaterial(texture);
 		} else {
-			material.texture = texture;
+			material.setTexture(texture);
 		}
 	}
 	

@@ -24,6 +24,8 @@ public class DirectoryWatcher extends EventDispatcher<DirectoryWatcher.EventType
 	private WatchService watchService;
 	private volatile boolean watching = true;
 	
+	private int holderCount;
+	
 	private static final Map<WatchEvent.Kind<?>, EventType> DIRECTORY_EVENT_TYPE_MAP = Map.of(
 		ENTRY_CREATE, EventType.CREATED,
 		ENTRY_DELETE, EventType.DELETED,
@@ -116,6 +118,22 @@ public class DirectoryWatcher extends EventDispatcher<DirectoryWatcher.EventType
 	@Override
 	public String getPath() {
 		return path;
+	}
+	
+	@Override
+	public void hold() {
+		holderCount++;
+	}
+	
+	@Override
+	public void drop() {
+		holderCount--;
+		checkHoldState();
+	}
+	
+	@Override
+	public int getHolderCount() {
+		return holderCount;
 	}
 	
 	/**

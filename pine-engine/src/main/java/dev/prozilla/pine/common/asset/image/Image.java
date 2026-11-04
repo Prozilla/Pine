@@ -15,14 +15,18 @@ import static org.lwjgl.stb.STBImage.stbi_image_free;
  */
 public class Image implements Asset, Cloneable<Image> {
 
-	public final int id;
+	public int id;
 	private final ByteBuffer pixels;
 	private final int width;
 	private final int height;
 	private final int channels;
 	private final String path;
 	
+	private int holderCount;
+	
 	private static int lastId = 0;
+	
+	public static final int INVALID_ID = -1;
 	
 	public Image(String path, ByteBuffer pixels, int width, int height, int channels) {
 		this.path = path;
@@ -30,6 +34,8 @@ public class Image implements Asset, Cloneable<Image> {
 		this.width = width;
 		this.height = height;
 		this.channels = channels;
+		
+		holderCount = 0;
 		
 		id = lastId++;
 	}
@@ -63,9 +69,29 @@ public class Image implements Asset, Cloneable<Image> {
 	}
 	
 	@Override
+	public void hold() {
+		holderCount++;
+	}
+	
+	@Override
+	public void drop() {
+		holderCount--;
+		checkHoldState();
+	}
+	
+	@Override
+	public int getHolderCount() {
+		return holderCount;
+	}
+	
+	@Override
 	public void destroy() {
+		if (id == INVALID_ID) {
+			return;
+		}
 		AssetPools.images.remove(this);
 		stbi_image_free(pixels);
+		id = INVALID_ID;
 	}
 	
 	@Override

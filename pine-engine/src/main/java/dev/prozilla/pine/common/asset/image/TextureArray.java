@@ -1,8 +1,8 @@
 package dev.prozilla.pine.common.asset.image;
 
 import dev.prozilla.pine.common.Cloneable;
+import dev.prozilla.pine.common.Holdable;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
-import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.core.Application;
 
 import java.nio.ByteBuffer;
@@ -21,10 +21,10 @@ import static org.lwjgl.opengl.GL42.glTexStorage3D;
  * Represents a <a href="https://www.khronos.org/opengl/wiki/Array_Texture">OpenGL Array Texture</a>.
  * An Array Texture contains multiple images of the same size.
  */
-public class TextureArray implements Cloneable<TextureArray>, Destructible, TextureBase {
+public class TextureArray implements Cloneable<TextureArray>, Holdable, TextureBase {
 	
 	/** The handle of the texture array */
-	private final int id;
+	private int id;
 	private final int width;
 	private final int height;
 	/** The amount of layers in this texture array */
@@ -34,6 +34,8 @@ public class TextureArray implements Cloneable<TextureArray>, Destructible, Text
 	private final Map<Image, TextureArrayLayer> imageToLayer;
 	/** The index of the next layer in this texture array */
 	private int nextLayer;
+	
+	private int holderCount;
 	
 	public static final int DEFAULT_LAYER_COUNT = 32;
 	
@@ -202,13 +204,33 @@ public class TextureArray implements Cloneable<TextureArray>, Destructible, Text
 		return new TextureArray(width, height, layers, Texture.DEFAULT_WRAP, Texture.DEFAULT_FILTER, encoding);
 	}
 	
+	@Override
+	public void hold() {
+		holderCount++;
+	}
+	
+	@Override
+	public void drop() {
+		holderCount--;
+		checkHoldState();
+	}
+	
+	@Override
+	public int getHolderCount() {
+		return holderCount;
+	}
+	
 	/**
 	 * Removes this texture array from the resource pool and deletes it.
 	 */
 	@Override
 	public void destroy() {
+		if (id == Texture.INVALID_ID) {
+			return;
+		}
 		AssetPools.textures.removeTextureArray(this);
 		glDeleteTextures(id);
+		id = Texture.INVALID_ID;
 	}
 	
 }

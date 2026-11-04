@@ -42,6 +42,8 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 	
 	public String path;
 	
+	private int holderCount;
+	
 	private static final Map<Key, StyleSheet> CACHE = new HashMap<>();
 	public static final StyleSheet DEFAULT = createDefault();
 	
@@ -300,6 +302,22 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 	public void transmit(StyleSheet target) {
 		target.reset();
 		target.styles.putAll(styles);
+	}
+	
+	@Override
+	public void hold() {
+		holderCount++;
+	}
+	
+	@Override
+	public void drop() {
+		holderCount--;
+		checkHoldState();
+	}
+	
+	@Override
+	public int getHolderCount() {
+		return holderCount;
 	}
 	
 	@Override

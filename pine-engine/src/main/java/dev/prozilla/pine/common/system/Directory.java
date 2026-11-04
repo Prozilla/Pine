@@ -1,6 +1,7 @@
 package dev.prozilla.pine.common.system;
 
 import dev.prozilla.pine.common.Cloneable;
+import dev.prozilla.pine.common.Holdable;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.lifecycle.Destructible;
 import dev.prozilla.pine.common.property.deserialized.FileDeserializer;
@@ -74,6 +75,7 @@ public class Directory implements Destructible, Cloneable<Directory>, Printable 
 	public DirectoryWatcher getWatcher() {
 		if (watcher == null) {
 			watcher = new DirectoryWatcher(path);
+			watcher.hold();
 		}
 		
 		return watcher;
@@ -121,7 +123,7 @@ public class Directory implements Destructible, Cloneable<Directory>, Printable 
 	 */
 	@Override
 	public void destroy() {
-		watcher = Destructible.destroy(watcher);
+		watcher = Holdable.drop(watcher);
 	}
 	
 	public static Directory of(String path) {

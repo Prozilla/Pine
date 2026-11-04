@@ -14,6 +14,8 @@ public class View implements Asset {
 	public String path;
 	public Controller controller;
 	
+	private int holderCount;
+	
 	public View(NodePrefab prefab) {
 		this(prefab, null);
 	}
@@ -59,6 +61,22 @@ public class View implements Asset {
 	@Override
 	public String getPath() {
 		return path;
+	}
+	
+	@Override
+	public void hold() {
+		holderCount++;
+	}
+	
+	@Override
+	public void drop() {
+		holderCount--;
+		checkHoldState();
+	}
+	
+	@Override
+	public int getHolderCount() {
+		return holderCount;
 	}
 	
 	@Override

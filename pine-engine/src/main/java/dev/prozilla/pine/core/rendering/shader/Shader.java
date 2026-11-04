@@ -28,6 +28,7 @@ public class Shader implements Asset {
 	private final int id;
 	
 	private String path;
+	private int holderCount;
 	
 	private static final Pattern LOG_LINE_PATTERN = Pattern.compile(
 		"\\s*(?:(?:ERROR|WARNING):\\s*\\d+:(\\d{1,9})|\\d+\\((\\d{1,9})\\)|\\d+:(\\d{1,9})\\(\\d+\\))",
@@ -69,6 +70,22 @@ public class Shader implements Asset {
 		if (status != GL_TRUE) {
 			throw new GLException(formatCompileError(glGetShaderInfoLog(id), source));
 		}
+	}
+	
+	@Override
+	public void hold() {
+		holderCount++;
+	}
+	
+	@Override
+	public void drop() {
+		holderCount--;
+		checkHoldState();
+	}
+	
+	@Override
+	public int getHolderCount() {
+		return holderCount;
 	}
 	
 	/**

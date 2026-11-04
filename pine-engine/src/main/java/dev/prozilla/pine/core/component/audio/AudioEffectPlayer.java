@@ -36,6 +36,9 @@ public class AudioEffectPlayer extends Component implements Initializable {
 	
 	public AudioEffectPlayer(List<AudioSource> sources, float volume) {
 		this.sources = new ArrayList<>(sources);
+		for (AudioSource source : sources) {
+			source.hold();
+		}
 		initialSourcesCount = sources.size();
 		maxSources = initialSourcesCount * (DEFAULT_MAX_SOURCE_CLONES + 1);
 		
@@ -221,6 +224,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 		if (count > initialSourcesCount) {
 			for (int i = 0; i < count - initialSourcesCount; i++) {
 				AudioSource source = sources.get(i % initialSourcesCount).clone();
+				source.hold();
 				sources.add(source);
 			}
 		}
@@ -254,7 +258,7 @@ public class AudioEffectPlayer extends Component implements Initializable {
 	public void destroy() {
 		super.destroy();
 		for (AudioSource source : sources) {
-			source.destroy();
+			source.drop();
 		}
 	}
 	

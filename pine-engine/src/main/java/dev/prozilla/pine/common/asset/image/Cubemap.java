@@ -3,6 +3,7 @@ package dev.prozilla.pine.common.asset.image;
 import dev.prozilla.pine.common.IntEnum;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.asset.Asset;
+import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.util.EnumUtils;
 import dev.prozilla.pine.common.util.checks.Checks;
 import dev.prozilla.pine.core.Application;
@@ -18,13 +19,15 @@ import static org.lwjgl.opengl.GL13.*;
 public class Cubemap implements Asset, TextureBase, Printable {
 	
 	/** The handle of this cubemap */
-	private final int id;
+	private int id;
 	/** The width of this cubemap */
 	private final int width;
 	/** The height of this cubemap */
 	private final int height;
 	/** The path of the image of this cubemap */
 	private final String path;
+	
+	private int holderCount;
 
 	public static final Texture.Wrap DEFAULT_WRAP = Texture.Wrap.CLAMP_TO_EDGE;
 	public static final Texture.Filter DEFAULT_FILTER = Texture.Filter.LINEAR;
@@ -141,8 +144,29 @@ public class Cubemap implements Asset, TextureBase, Printable {
 	}
 	
 	@Override
+	public void hold() {
+		holderCount++;
+	}
+	
+	@Override
+	public void drop() {
+		holderCount--;
+		checkHoldState();
+	}
+	
+	@Override
+	public int getHolderCount() {
+		return holderCount;
+	}
+	
+	@Override
 	public void destroy() {
+		if (id == Texture.INVALID_ID) {
+			return;
+		}
+		AssetPools.cubemaps.remove(this);
 		glDeleteTextures(id);
+		id = Texture.INVALID_ID;
 	}
 	
 	@Override

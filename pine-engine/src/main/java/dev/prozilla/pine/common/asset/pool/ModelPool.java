@@ -185,7 +185,7 @@ public class ModelPool extends AssetPool<Model> {
 		
 			String texturePath = aiTexturePath.dataString();
 			if (!texturePath.isEmpty()) {
-				material.texture = AssetPools.textures.load(PathUtils.addTrailingSlash(PathUtils.getParent(path)) + new File(texturePath).getName());
+				material.setTexture(PathUtils.addTrailingSlash(PathUtils.getParent(path)) + new File(texturePath).getName());
 				material.color = null;
 			}
 		}

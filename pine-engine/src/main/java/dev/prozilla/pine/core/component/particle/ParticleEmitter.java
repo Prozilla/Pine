@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.component.particle;
 
+import dev.prozilla.pine.common.Holdable;
 import dev.prozilla.pine.common.property.IntProperty;
 import dev.prozilla.pine.common.property.fixed.FixedIntProperty;
 import dev.prozilla.pine.core.component.Component;
@@ -24,6 +25,12 @@ public abstract class ParticleEmitter extends Component {
 	public ParticleEmitter(ParticlePrefab particlePrefab, IntProperty count) {
 		this.particlePrefab = particlePrefab;
 		this.count = count;
+		Holdable.hold(particlePrefab.getTexture());
+	}
+	
+	@Override
+	public void destroy() {
+		Holdable.drop(particlePrefab.getTexture());
 	}
 	
 }

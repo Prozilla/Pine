@@ -21,7 +21,7 @@ import static org.lwjgl.opengl.GL44.GL_MIRROR_CLAMP_TO_EDGE;
 public class Texture implements TextureAsset, Printable, Cloneable<Texture> {
 	
 	/** The handle of this texture */
-	private final int id;
+	private int id;
 	/** The width of this texture */
 	private final int width;
 	/** The height of this texture */
@@ -29,6 +29,10 @@ public class Texture implements TextureAsset, Printable, Cloneable<Texture> {
 	/** The path of the image of this texture */
 	private final String path;
 	private final Encoding encoding;
+	
+	private int holderCount;
+	
+	public static final int INVALID_ID = -1;
 
 	public static final Wrap DEFAULT_WRAP = Wrap.REPEAT;
 	public static final Filter DEFAULT_FILTER = Filter.LINEAR;
@@ -86,6 +90,7 @@ public class Texture implements TextureAsset, Printable, Cloneable<Texture> {
 		Checks.isPositive(height, false, "texture height must be positive");
 		
 		id = glGenTextures();
+		holderCount = 0;
 		
 		init(pixels, wrap, filter);
 	}
@@ -160,9 +165,29 @@ public class Texture implements TextureAsset, Printable, Cloneable<Texture> {
 	}
 	
 	@Override
+	public void hold() {
+		holderCount++;
+	}
+	
+	@Override
+	public void drop() {
+		holderCount--;
+		checkHoldState();
+	}
+	
+	@Override
+	public int getHolderCount() {
+		return holderCount;
+	}
+	
+	@Override
 	public void destroy() {
+		if (id == INVALID_ID) {
+			return;
+		}
 		TextureAsset.super.destroy();
 		glDeleteTextures(id);
+		id = INVALID_ID;
 	}
 	
 	@Override

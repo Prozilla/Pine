@@ -1,7 +1,6 @@
 package dev.prozilla.pine.examples.snake.system;
 
 import dev.prozilla.pine.common.asset.image.TextureAsset;
-import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector2f;
 import dev.prozilla.pine.common.math.vector.Vector2i;
 import dev.prozilla.pine.core.component.mesh.SpriteRenderer;
@@ -46,7 +45,7 @@ public class PlayerTailUpdater extends UpdateSystem {
 		float regionOffsetY;
 		if (tailData.nextTile == null) {
 			// Snake butt segment
-			sprite.material.texture = AssetPools.textures.load("snake/snake_tail.png");
+			sprite.getMaterial().setTexture("snake/snake_tail.png");
 			tailData.isCurved = false;
 			
 			if (direction.y == 1) {
@@ -64,7 +63,7 @@ public class PlayerTailUpdater extends UpdateSystem {
 			
 			if (dotProduct != 0) {
 				// Straight tail segment
-				sprite.material.texture = AssetPools.textures.load("snake/snake_body_straight.png");
+				sprite.getMaterial().setTexture("snake/snake_body_straight.png");
 				tailData.isCurved = false;
 				
 				if (direction.x != 0) {
@@ -74,7 +73,7 @@ public class PlayerTailUpdater extends UpdateSystem {
 				}
 			} else {
 				// Curved tail segment
-				sprite.material.texture = AssetPools.textures.load("snake/snake_body_curved.png");
+				sprite.getMaterial().setTexture("snake/snake_body_curved.png");
 				tailData.isCurved = true;
 				sprite.getMesh().setOffset(0, 0);
 				
@@ -98,11 +97,12 @@ public class PlayerTailUpdater extends UpdateSystem {
 		
 		setRegion(sprite, regionOffsetY, !tailData.isCurved, tailData.nextTile == null);
 		tailData.isDirty = false;
+		sprite.preserveTexture();
 	}
 	
 	private void setRegion(SpriteRenderer sprite, float regionOffsetY, boolean insetVertical, boolean insetHorizontal) {
 		float size = GameScene.CELL_SIZE;
-		TextureAsset texture = sprite.material.texture;
+		TextureAsset texture = sprite.getTexture();
 		float textureWidth = texture.getWidth();
 		float textureHeight = texture.getHeight();
 		float insetU = insetHorizontal ? 0.5f / textureWidth : 0f;

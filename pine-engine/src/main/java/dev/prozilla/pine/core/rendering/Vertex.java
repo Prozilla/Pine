@@ -64,7 +64,7 @@ public class Vertex {
 	}
 	
 	public Vertex setTexture(TextureAsset texture) {
-		if (texture != null) {
+		if (texture != null && texture.isValid()) {
 			int flags = 0;
 			if (texture.isInArray()) {
 				flags |= ARRAY_TEXTURE_FLAG;

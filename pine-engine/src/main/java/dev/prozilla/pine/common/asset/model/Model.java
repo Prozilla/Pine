@@ -13,6 +13,8 @@ public class Model implements Asset {
 	public StaticMesh[] meshes;
 	public Material<?>[] materials;
 	
+	private int holderCount;
+	
 	public Model(StaticMesh... meshes) {
 		this(meshes, null);
 	}
@@ -58,6 +60,22 @@ public class Model implements Asset {
 	@Override
 	public String getPath() {
 		return path;
+	}
+	
+	@Override
+	public void hold() {
+		holderCount++;
+	}
+	
+	@Override
+	public void drop() {
+		holderCount--;
+		checkHoldState();
+	}
+	
+	@Override
+	public int getHolderCount() {
+		return holderCount;
 	}
 	
 	@Override

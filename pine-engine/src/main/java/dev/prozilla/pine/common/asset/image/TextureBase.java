@@ -42,6 +42,10 @@ public interface TextureBase {
 	 */
 	void setParameter(int name, int value);
 	
+	default boolean isValid() {
+		return getId() != Texture.INVALID_ID;
+	}
+	
 	int getId();
 	
 	default Vector2i getSize() {

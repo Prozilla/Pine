@@ -18,9 +18,7 @@ public final class ShaderPool extends TextAssetPool<Shader> {
 	private final Map<String, String> macros;
 	private final Map<String, String[]> constants;
 	
-	private static final Pattern INCLUDE_PATTERN = Pattern.compile(
-		"[ \\t]*#[ \\t]*include[ \\t]+(?:\"([^\"]+)\"|<([^>]+)>)[ \\t]*(?://.*)?"
-	);
+	private static final Pattern INCLUDE_PATTERN = Pattern.compile("[ \\t]*#[ \\t]*include[ \\t]+(?:\"([^\"]+)\"|<([^>]+)>)[ \\t]*(?://.*)?");
 	private static final Pattern INCLUDE_START_PATTERN = Pattern.compile("[ \\t]*#[ \\t]*include\\b.*");
 	private static final Pattern VERSION_PATTERN = Pattern.compile("[ \\t]*#[ \\t]*version\\b.*");
 	
@@ -97,13 +95,12 @@ public final class ShaderPool extends TextAssetPool<Shader> {
 	
 	/**
 	 * Appends the source of a file to {@code out}, replacing #include directives with the files they refer to.
-	 * Directives inside block comments are left alone.
 	 * @param source The source of the file
 	 * @param sourcePath The normalized path of the file
 	 * @param isRoot Whether this is the shader itself, as opposed to an included file
-	 * @param context State shared by all files of the shader
+	 * @param context The state shared by all files of the shader
 	 * @param out The output
-	 * @return {@code false} if an include failed, in which case {@code context.error} is set.
+	 * @return {@code false} if an expansion failed.
 	 */
 	private boolean expand(String source, String sourcePath, boolean isRoot, IncludeContext context, StringBuilder out) {
 		context.stack.addLast(sourcePath);
@@ -145,7 +142,7 @@ public final class ShaderPool extends TextAssetPool<Shader> {
 	
 	/**
 	 * Expands a single include directive.
-	 * @return {@code false} if the include failed, in which case {@code context.error} is set.
+	 * @return {@code false} if the inclusion failed.
 	 */
 	private boolean expandInclude(String line, String sourcePath, IncludeContext context, StringBuilder out) {
 		Matcher matcher = INCLUDE_PATTERN.matcher(line);
@@ -277,10 +274,10 @@ public final class ShaderPool extends TextAssetPool<Shader> {
 		
 		/** Files that are currently being expanded (used to detect cycles). */
 		public final Deque<String> stack = new ArrayDeque<>();
-		/** Files that have already been included once. */
+		/** Files that have already been included. */
 		public final Set<String> included = new HashSet<>();
 		
-		/** Position in the output right after the shader's own version directive, or {@code -1} if it has none. */
+		/** Position in the output right after the shader's version directive, or {@code -1} if it has none. */
 		public int versionDirectiveEnd = -1;
 		
 		public IncludeContext(String rootPath) {

@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.rendering.shader;
 
+import dev.prozilla.pine.common.Holdable;
 import dev.prozilla.pine.common.Printable;
 import dev.prozilla.pine.common.asset.pool.AssetPoolEvent;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
@@ -98,8 +99,8 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 		link();
 		use();
 		
-		// Delete linked shaders
-		Destructible.destroy(vertexShader, geometryShader, fragmentShader);
+		// Drop linked shaders
+		Holdable.drop(vertexShader, geometryShader, fragmentShader);
 		
 		setupUniforms();
 	}
@@ -132,6 +133,7 @@ public abstract class ShaderProgram implements Destructible, Initializable {
 	 */
 	public void attachShader(Shader shader) {
 		glAttachShader(id, shader.getId());
+		shader.hold();
 	}
 	
 	public void bind() {

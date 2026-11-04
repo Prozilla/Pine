@@ -32,10 +32,10 @@ public class CrateUpdater extends UpdateSystemBase {
 			
 			// Update sprite based on whether create is on a goal tile
 			if (goalGrid.getTile(tileRenderer.getCoordinate()) != null) {
-				spriteRenderer.material.texture = CrateData.getSunkenSprite(crateData.type);
+				spriteRenderer.getMaterial().setTexture(CrateData.getSunkenSprite(crateData.type));
 				completedCrates.addAndGet(1);
 			} else {
-				spriteRenderer.material.texture = CrateData.getNormalSprite(crateData.type);
+				spriteRenderer.getMaterial().setTexture(CrateData.getNormalSprite(crateData.type));
 			}
 		});
 		
