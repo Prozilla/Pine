@@ -65,7 +65,7 @@ public class NodePrefab extends LayerPrefab {
 		attributes = new HashMap<>();
 		
 		styleSheets = new LinkedHashSet<>();
-		useDefaultStyleSheet = TriState.UNDEFINED;
+		useDefaultStyleSheet = TriState.TRUE;
 		
 		setName("Node");
 	}
