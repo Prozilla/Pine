@@ -13,58 +13,56 @@ public interface EntityProvider extends EntityContext {
 	Entity getEntity();
 	
 	default Transform getTransform() {
-		if (getEntity() == null) {
-			return null;
-		}
-		return getEntity().transform;
+		Entity entity = getEntity();
+		return entity != null ? entity.transform : null;
 	}
 	
 	@Override
 	default Entity getFirstChild() {
-		if (getTransform() == null) {
-			return null;
-		}
-		return getTransform().getFirstChild();
+		Transform transform = getTransform();
+		return transform != null ? transform.getFirstChild() : null;
 	}
 	
 	@Override
 	default Entity getLastChild() {
-		if (getTransform() == null) {
-			return null;
-		}
-		return getTransform().getLastChild();
+		Transform transform = getTransform();
+		return transform != null ? transform.getLastChild() : null;
 	}
 	
 	@Override
 	default Entity getChild(int i) {
-		if (getTransform() == null) {
-			return null;
-		}
-		return getTransform().getChild(i);
+		Transform transform = getTransform();
+		return transform != null ? transform.getChild(i) : null;
+	}
+	
+	@Override
+	default Entity getParent() {
+		Transform transform = getTransform();
+		return transform != null && transform.parent != null ? transform.parent.getEntity() : null;
+	}
+	
+	@Override
+	default boolean hasParent() {
+		Transform transform = getTransform();
+		return transform != null && transform.parent != null;
 	}
 	
 	@Override
 	default boolean isDescendantOf(Transform parent) {
-		if (getTransform() == null) {
-			return false;
-		}
-		return getTransform().isDescendantOf(parent);
+		Transform transform = getTransform();
+		return transform != null && transform.isDescendantOf(parent);
 	}
 	
 	@Override
 	default Entity getChildWithTag(String tag) {
-		if (getTransform() == null) {
-			return null;
-		}
-		return getTransform().getChildWithTag(tag);
+		Transform transform = getTransform();
+		return transform != null ? transform.getChildWithTag(tag) : null;
 	}
 	
 	@Override
 	default Entity getParentWithTag(String tag) {
-		if (getTransform() == null) {
-			return null;
-		}
-		return getTransform().getParentWithTag(tag);
+		Transform transform = getTransform();
+		return transform != null ? transform.getParentWithTag(tag) : null;
 	}
 	
 }

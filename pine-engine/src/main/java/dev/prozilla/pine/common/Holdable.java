@@ -40,7 +40,7 @@ public interface Holdable extends Destructible {
 	 */
 	default boolean checkHoldState() {
 		if (getHolderCount() < 0) {
-			throw new IllegalStateException("Holder count must not be negative");
+			throw new IllegalStateException("Holdable object was dropped more times than it was held");
 		}
 		if (!isHeld()) {
 			destroy();

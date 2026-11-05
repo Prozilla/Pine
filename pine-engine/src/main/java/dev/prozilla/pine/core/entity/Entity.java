@@ -210,6 +210,21 @@ public class Entity extends SimpleEventDispatcher<Entity.EventType, Entity> impl
 	}
 	
 	@Override
+	public Entity getParent() {
+		Transform parent = transform.parent;
+		return parent != null ? parent.getEntity() : null;
+	}
+	
+	public boolean isRoot() {
+		return !hasParent();
+	}
+	
+	@Override
+	public boolean hasParent() {
+		return transform.parent != null;
+	}
+	
+	@Override
 	public boolean isDescendantOf(Transform parent) {
 		return transform.isDescendantOf(parent);
 	}

@@ -247,6 +247,11 @@ public class Renderer implements Initializable, Destructible {
 			frameBufferObject.bind();
 		}
 		
+		if (activeTexture != null) {
+			activeTexture.unbind();
+			activeTexture = null;
+		}
+		
 		isRendering = true;
 		storedVertices = 0;
 		renderedVertices = 0;
