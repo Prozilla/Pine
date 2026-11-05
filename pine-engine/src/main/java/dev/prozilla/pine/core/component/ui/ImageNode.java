@@ -1,6 +1,6 @@
 package dev.prozilla.pine.core.component.ui;
 
-import dev.prozilla.pine.common.asset.image.Texture;
+import dev.prozilla.pine.common.Holdable;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.math.vector.Vector2i;
@@ -25,6 +25,7 @@ public class ImageNode extends Component {
 		Checks.isNotNull(image, "image");
 		
 		this.image = image;
+		this.image.hold();
 		
 		regionOffset = new Vector2i();
 		regionSize = new Vector2i(image.getWidth(), image.getHeight());
@@ -35,8 +36,9 @@ public class ImageNode extends Component {
 		return "ImageRenderer";
 	}
 	
-	public void setImage(Texture image) {
-		this.image = image;
+	public void setImage(TextureAsset image) {
+		Checks.isNotNull(image, "image");
+		this.image = Holdable.swap(this.image, image);
 		regionOffset.x = 0;
 		regionOffset.y = 0;
 		regionSize.x = image.getWidth();
@@ -48,6 +50,16 @@ public class ImageNode extends Component {
 		regionOffset.y = regY;
 		regionSize.x = regWidth;
 		regionSize.y = regHeight;
+	}
+	
+	public void preserveImage() {
+		getScene().addAsset(image);
+	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		image.drop();
 	}
 	
 }

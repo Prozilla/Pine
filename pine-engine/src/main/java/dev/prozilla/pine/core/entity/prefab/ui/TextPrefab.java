@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
+import dev.prozilla.pine.common.TriState;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.text.Font;
 import dev.prozilla.pine.common.math.dimension.Dimension;
@@ -29,7 +30,16 @@ public class TextPrefab extends NodePrefab {
 	protected AdaptiveStringProperty textProperty;
 	
 	public TextPrefab() {
-		this(null);
+		this((String)null);
+	}
+	
+	public TextPrefab(StringProperty textProperty) {
+		this(textProperty, Color.white());
+	}
+	
+	public TextPrefab(StringProperty textProperty, Color color) {
+		this(textProperty.getValue(), color);
+		setText(textProperty);
 	}
 	
 	public TextPrefab(String text) {
@@ -88,7 +98,7 @@ public class TextPrefab extends NodePrefab {
 			entity.addComponent(new DynamicText(textProperty));
 		}
 		
-		if (!styleSheets.isEmpty() || useDefaultStyleSheet) {
+		if (!styleSheets.isEmpty() || useDefaultStyleSheet == TriState.TRUE) {
 			Node node = entity.getComponent(Node.class);
 			AnimationData animationData = entity.getComponent(AnimationData.class);
 			entity.addComponent(new TextNodeStyle(animationData, node, node.getStyleSheets()));

@@ -107,7 +107,7 @@ public class GameScene extends Scene {
 		
 		// Add user interface
 		StyleSheet styleSheet = AssetPools.styleSheets.load("style/hud.css", Application.isDevMode());
-		addEntity(new UIPrefab(styleSheet));
+		addEntity(new UIPrefab(styleSheet, GameManager.instance.level));
 		
 		cameraData.zoomIn(-0.1f);
 		cameraData.setSkybox(GameManager.BACKGROUND_COLOR);

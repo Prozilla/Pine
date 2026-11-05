@@ -39,6 +39,9 @@ public interface Holdable extends Destructible {
 	 * @return {@code false} if the object was not being held and has been destroyed.
 	 */
 	default boolean checkHoldState() {
+		if (getHolderCount() < 0) {
+			throw new IllegalStateException("Holder count must not be negative");
+		}
 		if (!isHeld()) {
 			destroy();
 			return false;
@@ -60,6 +63,12 @@ public interface Holdable extends Destructible {
 	 */
 	int getHolderCount();
 	
+	/**
+	 * Increases the holder count of a given object, unless it is {@code null}.
+	 * @param holdable The object to hold, or {@code null}
+	 * @return {@code holdable}
+	 * @see #hold()
+	 */
 	static <H extends Holdable> H hold(H holdable) {
 		if (holdable != null) {
 			holdable.hold();
@@ -67,6 +76,11 @@ public interface Holdable extends Destructible {
 		return holdable;
 	}
 	
+	/**
+	 * Decreases the holder count of every object in a given array.
+	 * @param holdables The objects to drop
+	 * @see #drop()
+	 */
 	static void drop(Holdable... holdables) {
 		for (Holdable holdable : holdables) {
 			if (holdable != null) {
@@ -75,6 +89,12 @@ public interface Holdable extends Destructible {
 		}
 	}
 	
+	/**
+	 * Decreases the holder count of a given object, unless it is {@code null}.
+	 * @param holdable The object to drop, or {@code null}
+	 * @return {@code holdable}
+	 * @see #drop()
+	 */
 	@Contract("_ -> null")
 	static <H extends Holdable> H drop(H holdable) {
 		if (holdable != null) {
@@ -83,6 +103,17 @@ public interface Holdable extends Destructible {
 		return null;
 	}
 	
+	/**
+	 * Utility method for swapping two holdable objects.
+	 * <p>
+	 *     This works by holding the new object, dropping the old object and returning the new object.
+	 * </p>
+	 * @param oldHoldable The object to drop
+	 * @param newHoldable The object to hold
+	 * @return {@code newHoldable}
+	 * @see #hold()
+	 * @see #drop()
+	 */
 	static <H extends Holdable> H swap(H oldHoldable, H newHoldable) {
 		if (oldHoldable != newHoldable) {
 			if (newHoldable != null) {
@@ -96,6 +127,10 @@ public interface Holdable extends Destructible {
 		return newHoldable;
 	}
 	
+	/**
+	 * Drops all objects in a collection and clears it.
+	 * @param holdables The collection of objects to drop
+	 */
 	static <H extends Holdable> void dropAndClear(Collection<H> holdables) {
 		if (holdables.isEmpty()) {
 			return;
