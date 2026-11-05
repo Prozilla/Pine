@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
+import dev.prozilla.pine.common.TriState;
 import dev.prozilla.pine.common.asset.image.TextureAsset;
 import dev.prozilla.pine.common.asset.pool.AssetPools;
 import dev.prozilla.pine.common.asset.style.StyleSheet;
@@ -52,7 +53,7 @@ public class NodePrefab extends LayerPrefab {
 	protected Map<String, String> attributes;
 	
 	protected final LinkedHashSet<StyleSheet> styleSheets;
-	protected boolean useDefaultStyleSheet;
+	protected TriState useDefaultStyleSheet;
 	
 	public NodePrefab() {
 		size = new DualDimension();
@@ -64,7 +65,7 @@ public class NodePrefab extends LayerPrefab {
 		attributes = new HashMap<>();
 		
 		styleSheets = new LinkedHashSet<>();
-		useDefaultStyleSheet = true;
+		useDefaultStyleSheet = TriState.UNDEFINED;
 		
 		setName("Node");
 	}
@@ -108,11 +109,15 @@ public class NodePrefab extends LayerPrefab {
 	}
 	
 	public void addDefaultStyleSheet() {
-		useDefaultStyleSheet = true;
+		setUseDefaultStyleSheet(TriState.TRUE);
 	}
 	
 	public void removeDefaultStyleSheet() {
-		useDefaultStyleSheet = false;
+		setUseDefaultStyleSheet(TriState.FALSE);
+	}
+	
+	public void setUseDefaultStyleSheet(TriState useDefaultStyleSheet) {
+		this.useDefaultStyleSheet = useDefaultStyleSheet;
 	}
 	
 	/**
@@ -372,7 +377,7 @@ public class NodePrefab extends LayerPrefab {
 			node.setAttributes(attributes);
 		}
 		
-		if (useDefaultStyleSheet) {
+		if (useDefaultStyleSheet == TriState.TRUE || (useDefaultStyleSheet == TriState.UNDEFINED && !styleSheets.isEmpty())) {
 			node.addStyleSheet(StyleSheet.DEFAULT);
 		}
 		node.addStyleSheets(styleSheets);

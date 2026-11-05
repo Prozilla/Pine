@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
+import dev.prozilla.pine.common.TriState;
 import dev.prozilla.pine.common.math.dimension.DimensionBase;
 import dev.prozilla.pine.common.math.vector.Alignment;
 import dev.prozilla.pine.common.math.vector.Direction;
@@ -74,7 +75,7 @@ public class LayoutPrefab extends NodePrefab {
 			layoutNode.distribution = distribution;
 		}
 		
-		if (!styleSheets.isEmpty() || useDefaultStyleSheet) {
+		if (!styleSheets.isEmpty() || useDefaultStyleSheet == TriState.TRUE) {
 			Node node = entity.getComponent(Node.class);
 			AnimationData animationData = entity.getComponent(AnimationData.class);
 			entity.addComponent(new LayoutNodeStyle(animationData, node, node.getStyleSheets()));
