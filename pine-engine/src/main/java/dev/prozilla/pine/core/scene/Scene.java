@@ -63,6 +63,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Represents a collection of entities, components and systems.
@@ -86,9 +87,9 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 	
 	// Developer tools
 	protected NodeRoot devRoot;
-	protected LayoutPrefab devConsolePrefab;
+	protected Supplier<LayoutPrefab> devConsolePrefabFactory;
 	protected Entity devConsole;
-	protected Prefab debugInfoPrefab;
+	protected Supplier<Prefab> debugInfoPrefabFactory;
 	protected Entity debugInfo;
 	
 	// Lighting
@@ -203,11 +204,11 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 			overlayCameraData = new OverlayCameraData();
 		}
 		
-		if (devConsolePrefab == null) {
-			devConsolePrefab = new DevConsolePrefab();
+		if (devConsolePrefabFactory == null) {
+			devConsolePrefabFactory = DevConsolePrefab::new;
 		}
-		if (debugInfoPrefab == null) {
-			debugInfoPrefab = new DebugInfoPrefab(application.getTimer(), application.getTracker());
+		if (debugInfoPrefabFactory == null) {
+			debugInfoPrefabFactory = () -> new DebugInfoPrefab(application.getTimer(), application.getTracker());
 		}
 		
 		loaded = true;
@@ -628,6 +629,11 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		
 		if (active) {
 			if (devConsole == null) {
+				if (devConsolePrefabFactory == null) {
+					return;
+				}
+				
+				LayoutPrefab devConsolePrefab = devConsolePrefabFactory.get();
 				if (devConsolePrefab == null) {
 					return;
 				}
@@ -653,9 +659,15 @@ public class Scene implements Initializable, InputHandler, Updatable, Renderable
 		
 		if (active) {
 			if (debugInfo == null) {
+				if (debugInfoPrefabFactory == null) {
+					return;
+				}
+				
+				Prefab debugInfoPrefab = debugInfoPrefabFactory.get();
 				if (debugInfoPrefab == null) {
 					return;
 				}
+				
 				debugInfo = getDevRoot().getEntity().addChild(debugInfoPrefab);
 			}
 			logger.log("Activating debug info");

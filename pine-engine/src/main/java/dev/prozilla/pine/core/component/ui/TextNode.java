@@ -101,6 +101,9 @@ public class TextNode extends Component {
 		Font font = this.font;
 		if (font == null) {
 			font = getRenderer().getDefaultFont();
+			if (font == null) {
+				return;
+			}
 		}
 		size = font.getSize(text, getFontSize());
 	}

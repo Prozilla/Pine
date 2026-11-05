@@ -17,7 +17,7 @@ public final class SceneCameraRenderSystem extends SceneRenderSystem {
 	}
 	
 	private void renderSkybox(Renderer renderer, SkyboxMaterial material) {
-		if (!material.hasCubemap()) {
+		if (material == null || !material.hasCubemap()) {
 			return;
 		}
 		

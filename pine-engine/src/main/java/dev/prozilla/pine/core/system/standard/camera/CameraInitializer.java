@@ -24,7 +24,7 @@ public final class CameraInitializer extends InitSystemBase {
 		forEach(chunk -> {
 			CameraData cameraData = chunk.getComponent(CameraData.class);
 			
-			if (application.getMode().usesOpenGL && cameraData.skybox.hasColor()) {
+			if (application.getMode().usesOpenGL && cameraData.skybox != null && cameraData.skybox.hasColor()) {
 				renderBackgroundColor(cameraData.skybox.color);
 			}
 			cameraData.setSize(width, height);

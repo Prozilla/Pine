@@ -27,7 +27,7 @@ public class CameraData extends Component {
 	public SkyboxMaterial skybox;
 	
 	public CameraData() {
-		this(Color.black());
+		this((SkyboxMaterial)null);
 	}
 	
 	public CameraData(Color skybox) {

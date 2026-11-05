@@ -1,5 +1,6 @@
 package dev.prozilla.pine.core.entity.prefab.ui;
 
+import dev.prozilla.pine.common.TriState;
 import dev.prozilla.pine.common.asset.style.CSSParser;
 import dev.prozilla.pine.common.asset.style.StyleSheet;
 import dev.prozilla.pine.common.asset.view.HTMLParser;
@@ -37,7 +38,7 @@ public class HTMLParserTest {
 		NodePrefab result = parser.getResult();
 		assertNotNull(result, "parsing of empty div should have result");
 		assertEquals(Node.DIV_TAG, result.htmlTag, "result should have the correct html tag");
-		assertTrue(result.useDefaultStyleSheet, "result uses default style sheet");
+		assertEquals(TriState.TRUE, result.useDefaultStyleSheet, "result uses default style sheet");
 	}
 	
 	@Test
