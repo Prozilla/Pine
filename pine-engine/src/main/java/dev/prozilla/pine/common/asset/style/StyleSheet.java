@@ -467,22 +467,12 @@ public class StyleSheet implements Printable, TextAsset, Transceivable<StyleShee
 		
 		for (Style<?, ?> source : sources) {
 			for (StyleRule<?> rule : source.getRules()) {
-				if (rule.isDefault()) {
-					merged.addRule((StyleRule<T>)rule);
-				}
+				merged.addRule((StyleRule<T>)rule);
 			}
 		}
 		
-		for (int i = sources.size() - 1; i >= 0; i--) {
-			for (StyleRule<?> rule : sources.get(i).getRules()) {
-				if (!rule.isDefault()) {
-					merged.addRule((StyleRule<T>)rule);
-				}
-			}
-		}
-		
-		for (int i = sources.size() - 1; i >= 0; i--) {
-			for (StyleRule<AnimationCurve> transitionRule : sources.get(i).getTransitionRules()) {
+		for (Style<?, ?> style : sources) {
+			for (StyleRule<AnimationCurve> transitionRule : style.getTransitionRules()) {
 				merged.addTransitionRule(transitionRule);
 			}
 		}

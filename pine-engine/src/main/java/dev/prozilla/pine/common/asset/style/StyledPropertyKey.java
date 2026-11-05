@@ -111,7 +111,7 @@ public final class StyledPropertyKey<T> {
 	public static final StyledPropertyKey<DimensionBase> OUTLINE_WIDTH = new StyledPropertyKey<>("outline-width", dimensionParser);
 	public static final StyledPropertyKey<LineStyle> OUTLINE_STYLE = new StyledPropertyKey<>("outline-style", lineStyleParser);
 	public static final StyledPropertyKey<Color> OUTLINE_COLOR = new StyledPropertyKey<>("outline-color", colorParser);
-	public static final StyledPropertyKey<DimensionBase> OUTLINE_OFFSET = new StyledPropertyKey<>("outline-width", dimensionParser);
+	public static final StyledPropertyKey<DimensionBase> OUTLINE_OFFSET = new StyledPropertyKey<>("outline-offset", dimensionParser);
 	public static final StyledPropertyKey<DimensionBase> FONT_SIZE = new StyledPropertyKey<>("font-size", dimensionParser);
 	public static final StyledPropertyKey<String> FONT_FAMILY = new StyledPropertyKey<>("font-family", Parser.STRING_PARSER);
 	
@@ -138,16 +138,16 @@ public final class StyledPropertyKey<T> {
 		FONT_FAMILY
 	};
 	
-	private final String string;
+	private final String name;
 	private final Parser<T> valueParser;
 	
-	private StyledPropertyKey(String string, Parser<T> valueParser) {
-		this.string = string;
+	private StyledPropertyKey(String name, Parser<T> valueParser) {
+		this.name = name;
 		this.valueParser = valueParser;
 	}
 	
 	public String toString() {
-		return string;
+		return name;
 	}
 	
 	public T parseValue(String input) {
@@ -164,7 +164,7 @@ public final class StyledPropertyKey<T> {
 	}
 	
 	public boolean equals(StyledPropertyKey<?> styledPropertyKey) {
-		return styledPropertyKey != null && Objects.equals(string, styledPropertyKey.string);
+		return styledPropertyKey != null && Objects.equals(name, styledPropertyKey.name);
 	}
 	
 }

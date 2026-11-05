@@ -183,12 +183,16 @@ public abstract class StyledProperty<T, P extends Property<T>, A extends Adaptiv
 	
 	protected <U> StyleRule<U> getBestMatch(List<StyleRule<U>> rules) {
 		StyleRule<U> bestMatch = null;
+		int bestSpecificity = 0;
 		for (StyleRule<U> rule : rules) {
-			if (rule.matches(node) && (bestMatch == null || rule.getSpecificity(node) > bestMatch.getSpecificity(node) || bestMatch.isDefault() && !rule.isDefault())) {
-				bestMatch = rule;
+			if (rule.matches(node)) {
+				int specificity = rule.getSpecificity(node);
+				if (bestMatch == null || (bestMatch.isDefault() && !rule.isDefault()) || (bestMatch.isDefault() == rule.isDefault() && specificity >= bestSpecificity)) {
+					bestMatch = rule;
+					bestSpecificity = specificity;
+				}
 			}
 		}
-		
 		return bestMatch;
 	}
 	

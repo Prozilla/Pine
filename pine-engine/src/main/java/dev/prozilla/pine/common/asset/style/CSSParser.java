@@ -6,6 +6,9 @@ import dev.prozilla.pine.common.property.animated.AnimationCurve;
 import dev.prozilla.pine.common.property.animated.AnimationCurveParser;
 import dev.prozilla.pine.common.util.parser.SuppliedSequentialParser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CSSParser extends SuppliedSequentialParser<StyleSheet> {
 	
 	private static final SelectorParser selectorParser = new SelectorParser();
@@ -87,34 +90,64 @@ public class CSSParser extends SuppliedSequentialParser<StyleSheet> {
 			if (propertyName.equalsIgnoreCase("transition")) {
 				parseTransitionProperty(value, selector);
 			} else if (propertyKey != null) {
-				// Parse normal property
 				intermediate.parseRule(selector, propertyKey, value);
+			} else {
+				StyledPropertyShorthand shorthand = StyledPropertyShorthand.parse(propertyName);
+				if (shorthand != null) {
+					shorthand.apply(intermediate, selector, value);
+				}
 			}
 		}
 	}
 	
 	private void parseTransitionProperty(String value, Selector selector) {
-		StyledPropertyKey<?> propertyKey;
-		for (String transitionValue : value.split(",")) {
-			String[] parts = transitionValue.trim().split(" ", 2);
+		for (String transitionValue : splitTopLevel(value, ',')) {
+			String[] parts = transitionValue.trim().split("\\s+", 2);
 			
-			if (parts.length == 2) {
-				propertyKey = StyledPropertyKey.parse(parts[0]);
+			if (parts.length == 2 && animationCurveParser.parse(parts[1])) {
+				AnimationCurve curve = animationCurveParser.getResult();
 				
-				if (animationCurveParser.parse(parts[1])) {
-				    AnimationCurve animationCurve = animationCurveParser.getResult();
-					
-					if (propertyKey != null && animationCurve != null) {
-						intermediate.addTransition(selector, propertyKey, animationCurve);
+				if (curve != null) {
+					StyledPropertyKey<?> key = StyledPropertyKey.parse(parts[0]);
+					if (key != null) {
+						intermediate.addTransition(selector, key, curve);
+					} else {
+						StyledPropertyShorthand shorthand = StyledPropertyShorthand.parse(parts[0]);
+						if (shorthand != null) {
+							for (StyledPropertyKey<?> longhand : shorthand.getLonghands()) {
+								intermediate.addTransition(selector, longhand, curve);
+							}
+						}
 					}
 				}
 			}
 		}
 	}
 	
+	private static List<String> splitTopLevel(String input, char delimiter) {
+		List<String> parts = new ArrayList<>(2);
+		int depth = 0, start = 0;
+		
+		for (int i = 0; i < input.length(); i++) {
+			char character = input.charAt(i);
+			if (character == '(') {
+				depth++;
+			} else if (character == ')') {
+				depth--;
+			} else if (character == delimiter && depth == 0) {
+				parts.add(input.substring(start, i));
+				start = i + 1;
+			}
+		}
+		
+		parts.add(input.substring(start));
+		
+		return parts;
+	}
+	
 	@Override
 	protected String preprocessInput(String input) {
-		return super.preprocessInput(input.replaceAll("/\\*.*?\\*/", ""));
+		return super.preprocessInput(input.replaceAll("(?s)/\\*.*?\\*/", ""));
 	}
 	
 }
